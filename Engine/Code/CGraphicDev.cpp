@@ -17,13 +17,9 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd,
 	const _uint& iSizeY, 
 	CGraphicDev** ppGraphicDev)
 {
-	// 1. 장치 조사를 위한 객체 생성
-
 	m_pSDK = Direct3DCreate9(D3D_SDK_VERSION);
 	if (nullptr == m_pSDK)
 		return E_FAIL;
-
-	// 2. 장치 성능 조사
 
 	D3DCAPS9	DeviceCaps;
 	ZeroMemory(&DeviceCaps, sizeof(D3DCAPS9));
@@ -36,8 +32,6 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd,
 	}
 
 	_ulong	dwFlag(0);
-
-	// 버텍스 프로세싱 = 정점 변환 + 조명 연산
 
 	if (DeviceCaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
 		dwFlag |= D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED;
@@ -55,16 +49,12 @@ HRESULT CGraphicDev::Ready_GraphicDev(HWND hWnd,
 	
 	d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
 	d3dpp.MultiSampleQuality = 0;
-	
-	// D3DSWAPEFFECT_DISCARD : 스왑 체인 방식
- 	// D3DSWAPEFFECT_FLIP : 하나의 버퍼를 뒤집어가면서 사용 
-	// D3DSWAPEFFECT_COPY : 더블 버퍼링과 유사
 
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	
 	d3dpp.hDeviceWindow = hWnd;
 	
-	d3dpp.Windowed = eMode;	// FALSE 일 떄 전체 화면, TRUE일 때 창 모드
+	d3dpp.Windowed = eMode;
 
 	d3dpp.EnableAutoDepthStencil = TRUE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
