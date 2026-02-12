@@ -13,6 +13,15 @@
     <Filter Include="99. Defines">
       <UniqueIdentifier>{e7229af7-7022-43a2-815d-a47a3d9f6eb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. Timers">
+      <UniqueIdentifier>{ec13b709-e201-4e8d-a89b-94b8d9fbd85e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Device\Graphic">
+      <UniqueIdentifier>{f9fcfb20-5a4a-4528-8915-51ed655e83ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Device\Input">
+      <UniqueIdentifier>{7bad3a1a-fab6-4a60-9712-f0e6fdab5d5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -39,6 +48,15 @@
     <ClInclude Include="..\Public\GameInstance.h">
       <Filter>00. GameInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Timer_Manager.h">
+      <Filter>02. Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Timer.h">
+      <Filter>02. Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Graphic_Device.h">
+      <Filter>01. Device\Graphic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -46,6 +64,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameInstance.cpp">
       <Filter>00. GameInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Timer.cpp">
+      <Filter>02. Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Timer_Manager.cpp">
+      <Filter>02. Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Graphic_Device.cpp">
+      <Filter>01. Device\Graphic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

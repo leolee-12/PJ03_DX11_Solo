@@ -1,31 +1,36 @@
 ﻿// Client.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
-
 #include "framework.h"
 #include "Client.h"
+#include "MainApp.h"
+#include "GameInstance.h"
 
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
-HINSTANCE hInst;                                // 현재 인스턴스입니다.
-WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
-WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
+HINSTANCE	hInst;							// 현재 인스턴스입니다.
+WCHAR		szTitle[MAX_LOADSTRING];		// 제목 표시줄 텍스트입니다.
+WCHAR		szWindowClass[MAX_LOADSTRING];	// 기본 창 클래스 이름입니다.
+HWND		g_hWnd;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+ATOM				MyRegisterClass(HINSTANCE hInstance);
+BOOL				InitInstance(HINSTANCE, int);
+LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR    lpCmdLine,
-	_In_ int       nCmdShow)
+int APIENTRY wWinMain(	_In_		HINSTANCE	hInstance,
+						_In_opt_	HINSTANCE	hPrevInstance,
+						_In_		LPWSTR		lpCmdLine,
+						_In_		int			nCmdShow)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	// TODO: 여기에 코드를 입력합니다.
+	CMainApp* pMainApp = { nullptr };
 
 	// 전역 문자열을 초기화합니다.
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -42,6 +47,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
+	pMainApp = CMainApp::Create();
+
+	if (nullptr == pMainApp)
+		return FALSE;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_FPS60"))))
+		return E_FAIL;
+
+	_float fTimeAcc = {};
+	_float fFrameRate = 1.f / 60.f;
+
 	// 기본 메시지 루프입니다:
 	while (true)
 	{
@@ -55,11 +77,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
+		}
+		
+		fTimeAcc += pGameInstance->Compute_Timer(TEXT("Timer_Default"));
 
-			//MainApp->Update();
-			//MainApp->Render();
+		if (fTimeAcc >= fFrameRate)
+		{
+			_float fTimeDelta = { pGameInstance->Compute_Timer(TEXT("Timer_FPS60")) };
+
+			pMainApp->Update(fTimeDelta);
+			pMainApp->Render();
+
+			fTimeAcc = 0.f;
 		}
 	}
+
+	Safe_Release(pGameInstance);
+	Safe_Release(pMainApp);
 
 	return (int)msg.wParam;
 }
@@ -85,7 +119,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CLIENT);
+	wcex.lpszMenuName = NULL /*MAKEINTRESOURCEW(IDC_CLIENT)*/;
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -106,8 +140,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
+	RECT rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
+
+	AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
+
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+		CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
 	{
@@ -116,6 +154,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
+
+	g_hWnd = hWnd;
 
 	return TRUE;
 }

@@ -3,7 +3,12 @@
 
 namespace Engine
 {
-
+	typedef struct tagEngineDesc
+	{
+		HWND			hWnd;
+		WINMODE			eWinMode;
+		unsigned int	iViewportWidth, iViewportHeight;
+	}ENGINE_DESC;
 }
 
 #endif // Engine_Struct_h__
