@@ -43,9 +43,9 @@
 
 
 
-#define NO_COPY(CLASSNAME)								\
-		private:										\
-		CLASSNAME(const CLASSNAME&) = delete;			\
+#define NO_COPY(CLASSNAME)									\
+		private:											\
+		CLASSNAME(const CLASSNAME&) = delete;				\
 		CLASSNAME& operator = (const CLASSNAME&) = delete;		
 
 #define DECLARE_SINGLETON(CLASSNAME)						\
@@ -54,7 +54,7 @@
 		static CLASSNAME*	m_pInstance;					\
 		public:												\
 		static CLASSNAME*	GetInstance( void );			\
-		static void			DestroyInstance( void );				
+		static unsigned int	DestroyInstance( void );				
 
 #define IMPLEMENT_SINGLETON(CLASSNAME)						\
 		CLASSNAME*	CLASSNAME::m_pInstance = nullptr;		\

@@ -1,16 +1,46 @@
 #include "MainApp.h"
+#include "GameInstance.h"
 
 CMainApp::CMainApp()
+	: m_pGameInstance{ CGameInstance::GetInstance() }
 {
-}
-
-CMainApp::~CMainApp()
-{
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CMainApp::Initialize()
 {
-	return E_NOTIMPL;
+	ENGINE_DESC	EngineDesc{};
+	EngineDesc.hWnd = g_hWnd;
+	EngineDesc.eWinMode = WINMODE::WIN;
+	EngineDesc.iViewportWidth = g_iWinSizeX;
+	EngineDesc.iViewportHeight = g_iWinSizeY;
+
+	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
+	{
+		MSG_BOX("Failed to Initialize : Engine");
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CMainApp::Update(_float fTimeDelta)
+{
+	m_pGameInstance->Update_Engine(fTimeDelta);
+}
+
+HRESULT CMainApp::Render()
+{
+	if (FAILED(m_pGameInstance->Begin_Draw()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Draw()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_Draw()))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 CMainApp* CMainApp::Create()
@@ -19,7 +49,8 @@ CMainApp* CMainApp::Create()
 
 	if (FAILED(pInstance->Initialize()))
 	{
-
+		MSG_BOX("Failed to Create : CMainApp");
+		Safe_Release(pInstance);
 	}
 
 	return pInstance;
@@ -28,4 +59,8 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pDevice);
+	Safe_Release(m_pContext);
+	Safe_Release(m_pGameInstance);
 }
