@@ -22,6 +22,7 @@ public:
 	HRESULT	Begin_Draw();
 	HRESULT	Draw();
 	HRESULT	End_Draw();
+	void	Clear_Resources(_int iLevelIndex);
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -30,9 +31,14 @@ public:
 	float	Compute_Timer(const _wstring& strTimerTag);
 #pragma endregion
 
+#pragma region LEVEL_MANAGER
+	HRESULT	Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);
+#pragma endregion
+
 private:
-	class CGraphic_Device* m_pGraphic_Device = { nullptr };
-	class CTimer_Manager* m_pTimer_Manager = { nullptr };
+	class CGraphic_Device*	m_pGraphic_Device = { nullptr };
+	class CTimer_Manager*	m_pTimer_Manager = { nullptr };
+	class CLevel_Manager*	m_pLevel_Manager = { nullptr };
 
 public:
 	virtual void Free() override;
