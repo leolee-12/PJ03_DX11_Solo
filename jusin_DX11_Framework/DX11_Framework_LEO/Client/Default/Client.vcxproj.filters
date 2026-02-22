@@ -10,6 +10,18 @@
     <Filter Include="99. Defines">
       <UniqueIdentifier>{c2553736-c81f-47d7-9b5f-273d7b037302}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Levels">
+      <UniqueIdentifier>{71ab7d0d-da76-4047-b053-14220db46d75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\GamePlay">
+      <UniqueIdentifier>{ae649d05-f2eb-4eb6-9353-aa71e9da1660}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\Loading">
+      <UniqueIdentifier>{edb1e40b-f088-41f8-8f4d-b4d83f46fd7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\Logo">
+      <UniqueIdentifier>{58459578-8ac4-46a2-8e4a-7c372ca62b31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\MainApp.h">
@@ -30,6 +42,18 @@
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Logo.h">
+      <Filter>01. Levels\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01. Levels\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01. Levels\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01. Levels\Loading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -37,6 +61,18 @@
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Logo.cpp">
+      <Filter>01. Levels\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01. Levels\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Loading.cpp">
+      <Filter>01. Levels\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01. Levels\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

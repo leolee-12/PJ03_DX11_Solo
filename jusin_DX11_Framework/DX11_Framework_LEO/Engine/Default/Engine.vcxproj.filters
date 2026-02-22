@@ -22,6 +22,9 @@
     <Filter Include="01. Device\Input">
       <UniqueIdentifier>{7bad3a1a-fab6-4a60-9712-f0e6fdab5d5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Level">
+      <UniqueIdentifier>{6800354b-e769-48c5-858e-0db1059b07f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -57,6 +60,12 @@
     <ClInclude Include="..\Public\Graphic_Device.h">
       <Filter>01. Device\Graphic</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level.h">
+      <Filter>03. Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Manager.h">
+      <Filter>03. Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -73,6 +82,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Graphic_Device.cpp">
       <Filter>01. Device\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level.cpp">
+      <Filter>03. Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Manager.cpp">
+      <Filter>03. Level</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

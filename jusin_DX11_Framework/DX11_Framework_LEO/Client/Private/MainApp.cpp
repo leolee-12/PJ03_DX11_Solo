@@ -1,5 +1,6 @@
 #include "MainApp.h"
 #include "GameInstance.h"
+#include "Level_Loading.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -38,6 +39,19 @@ HRESULT CMainApp::Render()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->End_Draw()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Start_Level(LEVEL eStartLevelID)
+{
+	CLevel* pPreLevel = CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevelID);
+
+	if (nullptr == pPreLevel)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING), pPreLevel)))
 		return E_FAIL;
 
 	return S_OK;
