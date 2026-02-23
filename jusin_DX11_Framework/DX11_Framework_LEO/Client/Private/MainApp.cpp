@@ -22,6 +22,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 	}
 
+	if (FAILED(Start_Level(LEVEL::LOGO)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
