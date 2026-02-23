@@ -1,5 +1,8 @@
 #include "Level_Loading.h"
 #include "Loader.h"
+#include "GameInstance.h"
+#include "Level_Logo.h"
+#include "Level_GamePlay.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -19,10 +22,38 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
+    if (GetKeyState(VK_SPACE) & 0x8000 &&
+        true == m_pLoader->isFinished())
+    {
+        CLevel* pNextLevel = { nullptr };
+
+        switch (m_eNextLevelID)
+        {
+        case LEVEL::LOGO:
+            pNextLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
+            break;
+        case LEVEL::GAMEPLAY:
+            pNextLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+            break;
+        }
+
+        if (nullptr == pNextLevel)
+        {
+            MSG_BOX("Failed to Changed");
+            return;
+        }
+
+        if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(m_eNextLevelID), pNextLevel)))
+            return;
+    }
 }
 
 HRESULT CLevel_Loading::Render()
 {
+#ifdef _DEBUG
+    m_pLoader->Show();
+#endif
+
 	return S_OK;
 }
 
@@ -42,4 +73,6 @@ CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 void CLevel_Loading::Free()
 {
 	__super::Free();
+
+    Safe_Release(m_pLoader);
 }

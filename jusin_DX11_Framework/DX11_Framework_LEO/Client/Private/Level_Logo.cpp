@@ -1,4 +1,6 @@
 #include "Level_Logo.h"
+#include "Level_Loading.h"
+#include "GameInstance.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -12,10 +14,19 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
+	if (GetKeyState(VK_RETURN) & 0x8000)
+	{
+		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+			return;
+	}
 }
 
 HRESULT CLevel_Logo::Render()
 {
+#ifdef _DEBUG
+	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+#endif
+
 	return S_OK;
 }
 
