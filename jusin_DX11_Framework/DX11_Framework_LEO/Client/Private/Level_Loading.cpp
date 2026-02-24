@@ -1,8 +1,11 @@
 #include "Level_Loading.h"
-#include "Loader.h"
 #include "GameInstance.h"
+#include "Loader.h"
+
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
+
+static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOADING);
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }

@@ -32,7 +32,8 @@ private:
 public:
 	static CGraphic_Device*	Create(	_In_ HWND hWnd, WINMODE isWindowed, _uint iWinSizeX, _uint iWinSizeY,
 									_Out_ ID3D11Device** ppDevice, _Out_ ID3D11DeviceContext** ppContext);
-	virtual void			Free() override;
+protected:
+	virtual void	Free() override;
 };
 
 NS_END

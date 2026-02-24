@@ -30,7 +30,9 @@ private:
 
 public:
 	static CLevel_Manager* Create();
-	virtual void Free() override;
+
+protected:
+	virtual void	Free() override;
 };
 
 NS_END

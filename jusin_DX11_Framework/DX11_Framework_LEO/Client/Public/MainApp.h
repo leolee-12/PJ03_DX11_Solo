@@ -29,6 +29,8 @@ private:
 
 public:
 	static CMainApp*	Create();
+
+protected:
 	virtual void		Free() override;
 };
 

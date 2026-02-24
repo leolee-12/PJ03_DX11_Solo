@@ -2,6 +2,8 @@
 #include "Level_Loading.h"
 #include "GameInstance.h"
 
+static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOGO);
+
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
 {
@@ -9,6 +11,9 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -26,6 +31,14 @@ HRESULT CLevel_Logo::Render()
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 #endif
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject(CURRENT_LEVEL, TEXT("Prototype_GameObject_BackGround"), CURRENT_LEVEL, strLayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }

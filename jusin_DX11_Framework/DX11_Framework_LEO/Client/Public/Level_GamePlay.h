@@ -17,6 +17,8 @@ public:
 
 public:
 	static CLevel_GamePlay*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
+protected:
 	virtual void		Free() override;
 };
 
