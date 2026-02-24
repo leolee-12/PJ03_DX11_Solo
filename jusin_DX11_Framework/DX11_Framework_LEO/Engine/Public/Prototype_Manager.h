@@ -18,10 +18,10 @@ private:
 public:
 	HRESULT		Initialize(_uint iNumLevels);
 	HRESULT		Add_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype);
-	CBase*		Clone_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag);
+	CBase*		Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const _wstring& strPrototypeTag, void* pArg);
 
 private:
-	typedef map<const _wstring, class CBase*>	PROTOTYPES;
+	typedef map<_wstring, class CBase*>	PROTOTYPES;
 	PROTOTYPES*	m_pPrototypes = { nullptr };
 	_uint		m_iNumLevels = {};
 
@@ -30,7 +30,9 @@ private:
 
 public:
 	static CPrototype_Manager*	Create(_uint iNumLevels);
-	virtual void				Free() override;
+
+protected:
+	virtual void	Free() override;
 };
 
 NS_END

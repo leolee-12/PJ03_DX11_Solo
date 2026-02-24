@@ -25,7 +25,9 @@ protected:
 
 public:
 	static CBackGround*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CBackGround*	Clone(void* pArg);
+	virtual CBackGround*	Clone(void* pArg) override;
+
+protected:
 	virtual void			Free() override;
 };
 

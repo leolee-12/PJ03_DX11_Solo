@@ -23,7 +23,7 @@ public:
 protected:
 	_uint m_iRefCnt = { };
 
-public:
+protected:
 	virtual void Free();
 };
 

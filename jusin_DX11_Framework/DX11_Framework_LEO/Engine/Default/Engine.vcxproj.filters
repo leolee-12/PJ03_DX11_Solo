@@ -78,6 +78,12 @@
     <ClInclude Include="..\Public\Prototype_Manager.h">
       <Filter>04. Prototype</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h">
+      <Filter>05. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>05. GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -106,6 +112,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Prototype_Manager.cpp">
       <Filter>04. Prototype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp">
+      <Filter>05. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>05. GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

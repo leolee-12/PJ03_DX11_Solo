@@ -26,6 +26,8 @@ protected:
 public:
 	// Create
 	virtual CGameObject*	Clone(void* pArg) PURE;
+
+protected:
 	virtual void			Free() override;
 };
 

@@ -22,7 +22,9 @@ private:
 
 public:
 	static CTimer_Manager*	Create();
-	virtual void			Free();
+
+protected:
+	virtual void	Free() override;
 };
 
 NS_END

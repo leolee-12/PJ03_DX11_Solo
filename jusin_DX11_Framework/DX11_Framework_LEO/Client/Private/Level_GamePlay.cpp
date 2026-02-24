@@ -1,5 +1,7 @@
 #include "Level_GamePlay.h"
 
+static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
 {

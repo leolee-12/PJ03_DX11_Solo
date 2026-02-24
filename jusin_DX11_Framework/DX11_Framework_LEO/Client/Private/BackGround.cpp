@@ -22,17 +22,17 @@ HRESULT CBackGround::Initialize(void* pArg)
 
 void CBackGround::Priority_Update(_float fTimeDelta)
 {
-
+    int a = 10;
 }
 
 void CBackGround::Update(_float fTimeDelta)
 {
-
+    int a = 10;
 }
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
-
+    int a = 10;
 }
 
 HRESULT CBackGround::Render()
