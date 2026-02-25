@@ -15,7 +15,7 @@ public:
 
 
 private:
-	map<const _wstring, class CTimer*>	m_Timers;
+	map<_wstring, class CTimer*>	m_Timers;
 
 private:
 	class CTimer* Find_Timer(const _wstring& strTimerTag);
