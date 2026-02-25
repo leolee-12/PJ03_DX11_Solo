@@ -34,7 +34,7 @@ private:
 	CRITICAL_SECTION		m_CriticalSection = {};
 
 	_tchar					m_szLoadingText[MAX_PATH] = {};
-	_bool					m_isFinished = {};
+	std::atomic<_bool>		m_isFinished = {};
 
 private:
 	HRESULT Ready_Resources_For_Logo();

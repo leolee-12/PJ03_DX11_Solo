@@ -19,10 +19,6 @@ public:
 	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT	Render() override;
 
-protected:
-	ID3D11Device*			m_pDevice = { nullptr };
-	ID3D11DeviceContext*	m_pContext = { nullptr };
-
 public:
 	static CBackGround*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CBackGround*	Clone(void* pArg) override;

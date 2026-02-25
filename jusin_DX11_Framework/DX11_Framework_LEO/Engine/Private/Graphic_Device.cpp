@@ -223,10 +223,13 @@ void CGraphic_Device::Free()
 	Safe_Release(m_pSwapChain);
 	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferRTV);
+
+	m_pContext->ClearState();
+	m_pContext->Flush();
 	Safe_Release(m_pContext);
 
 #if defined(DEBUG) || defined(_DEBUG)
-	ID3D11Debug* d3dDebug;
+	ID3D11Debug* d3dDebug = nullptr;
 	HRESULT hr = m_pDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
 	if (SUCCEEDED(hr))
 	{
