@@ -1,4 +1,5 @@
 #include "BackGround.h"
+#include "GameInstance.h"
 
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
@@ -32,7 +33,7 @@ void CBackGround::Update(_float fTimeDelta)
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
-    int a = 10;
+    m_pGameInstance->Add_RenderGroup(RENDERID::PRIORITY, this);
 }
 
 HRESULT CBackGround::Render()
@@ -69,5 +70,4 @@ CBackGround* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
     __super::Free();
-
 }

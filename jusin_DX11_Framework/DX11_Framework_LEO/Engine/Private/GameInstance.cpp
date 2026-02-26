@@ -4,6 +4,7 @@
 #include "Level_Manager.h"
 #include "Prototype_Manager.h"
 #include "Object_Manager.h"
+#include "Renderer.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -39,6 +40,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pObject_Manager)
 		return E_FAIL;
 
+	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pRenderer)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -66,6 +71,9 @@ HRESULT CGameInstance::Begin_Draw()
 
 HRESULT CGameInstance::Draw()
 {
+	if (FAILED(m_pRenderer->Draw()))
+		return E_FAIL;
+
 	if (FAILED(m_pLevel_Manager->Render()))
 		return E_FAIL;
 
@@ -83,10 +91,13 @@ void CGameInstance::Clear_Resources(_int iLevelIndex)
 		return;
 
 	/* iLevelIndex용 자원을 정리 */
+	m_pObject_Manager->Clear(iLevelIndex);
+	m_pPrototype_Manager->Clear(iLevelIndex);
 }
 
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pRenderer);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pPrototype_Manager);
 	Safe_Release(m_pLevel_Manager);
@@ -137,6 +148,14 @@ CBase* CGameInstance::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const 
 HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg)
 {
 	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strPrototypeTag, iLayerLevelIndex, strLayerTag, pArg);
+}
+
+#pragma endregion
+
+#pragma region RENDERER
+void CGameInstance::Add_RenderGroup(RENDERID eGroupID, CGameObject* pGameObject)
+{
+	m_pRenderer->Add_RenderGroup(eGroupID, pGameObject);
 }
 
 #pragma endregion

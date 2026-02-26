@@ -19,6 +19,7 @@ public:
 	HRESULT		Initialize(_uint iNumLevels);
 	HRESULT		Add_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype);
 	CBase*		Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const _wstring& strPrototypeTag, void* pArg);
+	void		Clear(_uint iLevelIndex);
 
 private:
 	typedef map<_wstring, class CBase*>	PROTOTYPES;

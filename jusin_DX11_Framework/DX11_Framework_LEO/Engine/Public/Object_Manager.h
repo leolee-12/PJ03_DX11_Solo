@@ -23,6 +23,7 @@ public:
 	void	Priority_Update(_float fTimeDelta);
 	void	Update(_float fTimeDelta);
 	void	Late_Update(_float fTimeDelta);
+	void	Clear(_uint iLevelIndex);
 
 private:
 	typedef unordered_map<_wstring, class CLayer*>	LAYERS;
