@@ -1,5 +1,6 @@
 #include "Prototype_Manager.h"
 #include "GameObject.h"
+#include "Component.h"
 
 CPrototype_Manager::CPrototype_Manager()
 {
@@ -40,12 +41,20 @@ CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, c
 	if (PROTOTYPE::GAMEOBJECT == eType)
 		pInstance = dynamic_cast<CGameObject*>(pPrototype)->Clone(pArg);
 	else
-		/*pInstance = dynamic_cast<CComponent*>(pPrototype)->Clone(pArg)*/;
+		pInstance = dynamic_cast<CComponent*>(pPrototype)->Clone(pArg);
 
 	if (nullptr == pInstance)
 		return nullptr;
 
 	return pInstance;
+}
+
+void CPrototype_Manager::Clear(_uint iLevelIndex)
+{
+	for (auto& Pair : m_pPrototypes[iLevelIndex])
+		Safe_Release(Pair.second);
+
+	m_pPrototypes[iLevelIndex].clear();
 }
 
 CBase* CPrototype_Manager::Find_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag)
