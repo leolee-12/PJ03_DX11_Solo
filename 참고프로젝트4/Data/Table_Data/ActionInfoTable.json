@@ -1,0 +1,28 @@
+{
+	"ActionInfos": [
+		{
+			"Name": "Cloud_BurstSlash",
+			"MP": 3
+		},
+		{
+			"Name": "Cloud_BaramEi_Sangcheo",
+			"MP": 5
+		},
+		{
+			"Name": "Cloud_Infinity",
+			"MP": 7
+		},
+		{
+			"Name": "Aerith_Faiga",
+			"MP": 5
+		},
+		{
+			"Name": "Aerith_Ray",
+			"MP": 8
+		},
+		{
+			"Name": "Aerith_ThunderStorm",
+			"MP": 12
+		}
+	]
+}

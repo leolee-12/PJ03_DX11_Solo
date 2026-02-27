@@ -1,0 +1,303 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "EN3000_00_MonoDrive|B_Abnormal01_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_MonoDrive (bt221_01_006_md01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkGroundDrill01_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Magic01_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Magic01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_MonoDrive (bt221_01_003_md01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Magic01_1",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Magic01_2",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkDrill01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_MonoDrive (bt221_01_004_md01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 31.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Effect"
+                            ],
+                            "SoundNames": [
+                                "005_SE_MonoDrive (Drill_swish_ST).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkDrill01_1",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkDrill01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Effect"
+                            ],
+                            "SoundNames": [
+                                "004_SE_MonoDrive (Drill_swish_ED).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgF01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Effect",
+                                "FF7_MonoDrive_Effect"
+                            ],
+                            "SoundNames": [
+                                "017_SE_MonoDrive (rag_body).wav",
+                                "018_SE_MonoDrive (rag_body).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_MonoDrive_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_MonoDrive (bt221_01_005_md01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        }
+    ]
+}

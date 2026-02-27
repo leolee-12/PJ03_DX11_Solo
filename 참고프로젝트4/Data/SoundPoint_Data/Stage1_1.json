@@ -1,0 +1,547 @@
+{
+    "SoundPoints": [
+        {
+            "Name": "Train1",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "150_Mako1_Sp_Train.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 8.0,
+            "Position": [
+                0.20900464057922363,
+                0.0,
+                8.479344367980957
+            ]
+        },
+        {
+            "Name": "Train2",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "150_Mako1_Sp_Train.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 8.0,
+            "Position": [
+                -20.442367553710938,
+                0.0,
+                8.090275764465332
+            ]
+        },
+        {
+            "Name": "Train3",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "150_Mako1_Sp_Train.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                -37.95109176635742,
+                0.0,
+                8.53026008605957
+            ]
+        },
+        {
+            "Name": "Factory1",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "013_Mako1_BG_FactoryRdm.wav",
+                "014_Mako1_BG_FactoryRdm.wav",
+                "015_Mako1_BG_FactoryRdm.wav",
+                "016_Mako1_BG_FactoryRdm.wav",
+                "017_Mako1_BG_FactoryRdm.wav",
+                "018_Mako1_BG_FactoryRdm.wav",
+                "019_Mako1_BG_FactoryRdm.wav",
+                "020_Mako1_BG_FactoryRdm.wav",
+                "021_Mako1_BG_FactoryRdm.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                -43.11722183227539,
+                3.2177906036376953,
+                29.658035278320313
+            ]
+        },
+        {
+            "Name": "Factory2",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "013_Mako1_BG_FactoryRdm.wav",
+                "014_Mako1_BG_FactoryRdm.wav",
+                "015_Mako1_BG_FactoryRdm.wav",
+                "016_Mako1_BG_FactoryRdm.wav",
+                "017_Mako1_BG_FactoryRdm.wav",
+                "018_Mako1_BG_FactoryRdm.wav",
+                "019_Mako1_BG_FactoryRdm.wav",
+                "020_Mako1_BG_FactoryRdm.wav",
+                "021_Mako1_BG_FactoryRdm.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                -24.823007583618164,
+                3.2177906036376953,
+                29.658035278320313
+            ]
+        },
+        {
+            "Name": "Factory3",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "013_Mako1_BG_FactoryRdm.wav",
+                "014_Mako1_BG_FactoryRdm.wav",
+                "015_Mako1_BG_FactoryRdm.wav",
+                "016_Mako1_BG_FactoryRdm.wav",
+                "017_Mako1_BG_FactoryRdm.wav",
+                "018_Mako1_BG_FactoryRdm.wav",
+                "019_Mako1_BG_FactoryRdm.wav",
+                "020_Mako1_BG_FactoryRdm.wav",
+                "021_Mako1_BG_FactoryRdm.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                -61.08749008178711,
+                3.2177906036376953,
+                25.021821975708008
+            ]
+        },
+        {
+            "Name": "WaterTank1",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "063_Mako1_Ef_Dropsplash_01.wav",
+                "064_Mako1_Ef_Dropsplash_01.wav",
+                "065_Mako1_Ef_Dropsplash_01.wav",
+                "066_Mako1_Ef_Dropsplash_01.wav",
+                "067_Mako1_Ef_Dropsplash_01.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                -13.445752143859863,
+                1.779950737953186,
+                20.508161544799805
+            ]
+        },
+        {
+            "Name": "Engine1",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "131_Mako1_Sp_Machine01.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                19.526647567749023,
+                -0.8620880842208862,
+                17.46672248840332
+            ]
+        },
+        {
+            "Name": "Engine2",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "134_Mako1_Sp_Machine04.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                23.3851375579834,
+                8.6708984375,
+                34.236968994140625
+            ]
+        },
+        {
+            "Name": "Passage1",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "138_Mako1_Sp_Passage_L.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                48.13908004760742,
+                12.295171737670898,
+                21.7507266998291
+            ]
+        },
+        {
+            "Name": "Passage2",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "139_Mako1_Sp_Passage_R.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                79.85138702392578,
+                12.295171737670898,
+                21.7507266998291
+            ]
+        },
+        {
+            "Name": "Passage3",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "139_Mako1_Sp_Passage_R.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                66.25321197509766,
+                17.075632095336914,
+                -6.578990459442139
+            ]
+        },
+        {
+            "Name": "Pipe1",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "140_Mako1_Sp_Pipe01.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                43.17931365966797,
+                10.481621742248535,
+                43.07732391357422
+            ]
+        },
+        {
+            "Name": "Pipe2",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "140_Mako1_Sp_Pipe01.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                61.009239196777344,
+                10.481621742248535,
+                43.07732391357422
+            ]
+        },
+        {
+            "Name": "TStreetAround",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "053_Mako1_BG_TStreet.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 10.0,
+            "3DMax": 20.0,
+            "Position": [
+                85.00873565673828,
+                9.631766319274902,
+                89.32330322265625
+            ]
+        },
+        {
+            "Name": "TStreet1",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "054_Mako1_BG_TStreet.wav",
+                "055_Mako1_BG_TStreet.wav",
+                "056_Mako1_BG_TStreet.wav",
+                "057_Mako1_BG_TStreet.wav",
+                "058_Mako1_BG_TStreet.wav",
+                "059_Mako1_BG_TStreet.wav",
+                "060_Mako1_BG_TStreet.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                68.54703521728516,
+                9.631766319274902,
+                86.87869262695313
+            ]
+        },
+        {
+            "Name": "TStreet2",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "054_Mako1_BG_TStreet.wav",
+                "055_Mako1_BG_TStreet.wav",
+                "056_Mako1_BG_TStreet.wav",
+                "057_Mako1_BG_TStreet.wav",
+                "058_Mako1_BG_TStreet.wav",
+                "059_Mako1_BG_TStreet.wav",
+                "060_Mako1_BG_TStreet.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                101.47898864746094,
+                1.4947227239608765,
+                78.86019897460938
+            ]
+        },
+        {
+            "Name": "TStreet3",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "054_Mako1_BG_TStreet.wav",
+                "055_Mako1_BG_TStreet.wav",
+                "056_Mako1_BG_TStreet.wav",
+                "057_Mako1_BG_TStreet.wav",
+                "058_Mako1_BG_TStreet.wav",
+                "059_Mako1_BG_TStreet.wav",
+                "060_Mako1_BG_TStreet.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                101.47898864746094,
+                1.4947227239608765,
+                99.66822052001953
+            ]
+        },
+        {
+            "Name": "BigPipe1",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "110_Mako1_Sp_BigPipe01.wav",
+                "111_Mako1_Sp_BigPipe02.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                146.52853393554688,
+                5.6629557609558105,
+                77.29956817626953
+            ]
+        },
+        {
+            "Name": "BigPipe2",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "110_Mako1_Sp_BigPipe01.wav",
+                "111_Mako1_Sp_BigPipe02.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                163.39561462402344,
+                5.6629557609558105,
+                77.29956817626953
+            ]
+        },
+        {
+            "Name": "Engine3",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "134_Mako1_Sp_Machine04.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                78.67745971679688,
+                3.6891112327575684,
+                32.160282135009766
+            ]
+        },
+        {
+            "Name": "TSteam1",
+            "GroupNames": [
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1",
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "152_Mako1_Sp_TSteam01.wav",
+                "153_Mako1_Sp_TSteam01.wav",
+                "154_Mako1_Sp_TSteam01.wav",
+                "155_Mako1_Sp_TSteam01.wav",
+                "156_Mako1_Sp_TSteam01.wav",
+                "157_Mako1_Sp_TSteam01.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                10.503543853759766,
+                0.0,
+                8.479344367980957
+            ]
+        },
+        {
+            "Name": "Engine4",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "133_Mako1_Sp_Machine03.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                89.24711608886719,
+                7.138676166534424,
+                -8.619726181030273
+            ]
+        }
+    ]
+}

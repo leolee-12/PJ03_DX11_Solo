@@ -1,0 +1,441 @@
+{
+    "SoundPoints": [
+        {
+            "Name": "Back1",
+            "GroupNames": [
+                "FF7_Env_Slum7"
+            ],
+            "SoundNames": [
+                "001_Slum7_BG_01Allair_day.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 20.0,
+            "Position": [
+                -35.44230270385742,
+                13.695405960083008,
+                30.178346633911133
+            ]
+        },
+        {
+            "Name": "Back2",
+            "GroupNames": [
+                "FF7_Env_Slum7"
+            ],
+            "SoundNames": [
+                "001_Slum7_BG_01Allair_day.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 20.0,
+            "Position": [
+                15.090241432189941,
+                12.998273849487305,
+                17.039852142333984
+            ]
+        },
+        {
+            "Name": "Train1",
+            "GroupNames": [
+                "FF7_Env_Slum7"
+            ],
+            "SoundNames": [
+                "004_Slum7_BG_01Allair_day.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                55.166465759277344,
+                4.704507827758789,
+                25.557945251464844
+            ]
+        },
+        {
+            "Name": "Back3",
+            "GroupNames": [
+                "FF7_Env_Slum7"
+            ],
+            "SoundNames": [
+                "001_Slum7_BG_01Allair_day.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 20.0,
+            "Position": [
+                2.191380262374878,
+                6.556262016296387,
+                -29.00519561767578
+            ]
+        },
+        {
+            "Name": "Gym1",
+            "GroupNames": [
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader"
+            ],
+            "SoundNames": [
+                "001_VO_GymLeader (jnan_01).wav",
+                "002_VO_GymLeader (jnan_02).wav",
+                "003_VO_GymLeader (jnan_03).wav",
+                "004_VO_GymLeader (jnan_04).wav",
+                "005_VO_GymLeader (jnan_05).wav",
+                "006_VO_GymLeader (jnan_06).wav",
+                "007_VO_GymLeader (jnan_07).wav",
+                "008_VO_GymLeader (jnan_08).wav",
+                "009_VO_GymLeader (jnan_09).wav",
+                "011_VO_GymLeader (jnan_11).wav",
+                "012_VO_GymLeader (jnan_12).wav",
+                "013_VO_GymLeader (jnan_13).wav",
+                "014_VO_GymLeader (jnan_14).wav",
+                "015_VO_GymLeader (jnan_15).wav",
+                "016_VO_GymLeader (jnan_16).wav",
+                "017_VO_GymLeader (jnan_17).wav",
+                "018_VO_GymLeader (jnan_18).wav",
+                "019_VO_GymLeader (jnan_19).wav",
+                "020_VO_GymLeader (jnan_20).wav",
+                "021_VO_GymLeader (jnan_21).wav",
+                "022_VO_GymLeader (jnan_22).wav",
+                "023_VO_GymLeader (jnan_23).wav",
+                "024_VO_GymLeader (jnan_24).wav",
+                "025_VO_GymLeader (jnan_25).wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.2,
+            "3DMin": 1.5,
+            "3DMax": 5.0,
+            "Position": [
+                -8.580881118774414,
+                0.8729615211486816,
+                -35.98847579956055
+            ]
+        },
+        {
+            "Name": "Gym2",
+            "GroupNames": [
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember"
+            ],
+            "SoundNames": [
+                "002_VO_GymMenber1 (zenone_02).wav",
+                "003_VO_GymMenber1 (zenone_03).wav",
+                "004_VO_GymMenber1 (zenone_04).wav",
+                "005_VO_GymMenber1 (zenone_05).wav",
+                "006_VO_GymMenber1 (zenone_06).wav",
+                "007_VO_GymMenber1 (zenone_07).wav",
+                "008_VO_GymMenber1 (zenone_08).wav",
+                "009_VO_GymMenber1 (zenone_09).wav",
+                "001_VO_GymMenber1 (zenone_01).wav",
+                "010_VO_GymMenber1 (zenone_10).wav",
+                "011_VO_GymMenber1 (zenone_11).wav",
+                "012_VO_GymMenber1 (zenone_12).wav",
+                "013_VO_GymMenber1 (zenone_13).wav",
+                "014_VO_GymMenber1 (zenone_14).wav",
+                "015_VO_GymMenber1 (zenone_15).wav",
+                "016_VO_GymMenber1 (zenone_16).wav",
+                "017_VO_GymMenber1 (zenone_17).wav",
+                "018_VO_GymMenber1 (zenone_18).wav",
+                "019_VO_GymMenber1 (zenone_19).wav",
+                "020_VO_GymMenber1 (zenone_20).wav",
+                "021_VO_GymMenber1 (zenone_21).wav",
+                "022_VO_GymMenber1 (zenone_22).wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.2,
+            "3DMin": 1.5,
+            "3DMax": 5.0,
+            "Position": [
+                -7.1276655197143555,
+                2.158784866333008,
+                -38.5706901550293
+            ]
+        },
+        {
+            "Name": "Gym3",
+            "GroupNames": [
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember",
+                "FF7_NPC_GymMember"
+            ],
+            "SoundNames": [
+                "002_VO_GymMenber1 (zenone_02).wav",
+                "003_VO_GymMenber1 (zenone_03).wav",
+                "004_VO_GymMenber1 (zenone_04).wav",
+                "005_VO_GymMenber1 (zenone_05).wav",
+                "006_VO_GymMenber1 (zenone_06).wav",
+                "007_VO_GymMenber1 (zenone_07).wav",
+                "008_VO_GymMenber1 (zenone_08).wav",
+                "009_VO_GymMenber1 (zenone_09).wav",
+                "001_VO_GymMenber1 (zenone_01).wav",
+                "010_VO_GymMenber1 (zenone_10).wav",
+                "011_VO_GymMenber1 (zenone_11).wav",
+                "012_VO_GymMenber1 (zenone_12).wav",
+                "013_VO_GymMenber1 (zenone_13).wav",
+                "014_VO_GymMenber1 (zenone_14).wav",
+                "015_VO_GymMenber1 (zenone_15).wav",
+                "016_VO_GymMenber1 (zenone_16).wav",
+                "017_VO_GymMenber1 (zenone_17).wav",
+                "018_VO_GymMenber1 (zenone_18).wav",
+                "019_VO_GymMenber1 (zenone_19).wav",
+                "020_VO_GymMenber1 (zenone_20).wav",
+                "021_VO_GymMenber1 (zenone_21).wav",
+                "022_VO_GymMenber1 (zenone_22).wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.2,
+            "3DMin": 1.5,
+            "3DMax": 5.0,
+            "Position": [
+                -8.160048484802246,
+                1.0404722690582275,
+                -37.45389938354492
+            ]
+        },
+        {
+            "Name": "Gym4",
+            "GroupNames": [
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader",
+                "FF7_NPC_GymLeader"
+            ],
+            "SoundNames": [
+                "001_VO_GymLeader (jnan_01).wav",
+                "002_VO_GymLeader (jnan_02).wav",
+                "003_VO_GymLeader (jnan_03).wav",
+                "004_VO_GymLeader (jnan_04).wav",
+                "005_VO_GymLeader (jnan_05).wav",
+                "006_VO_GymLeader (jnan_06).wav",
+                "007_VO_GymLeader (jnan_07).wav",
+                "008_VO_GymLeader (jnan_08).wav",
+                "009_VO_GymLeader (jnan_09).wav",
+                "011_VO_GymLeader (jnan_11).wav",
+                "012_VO_GymLeader (jnan_12).wav",
+                "013_VO_GymLeader (jnan_13).wav",
+                "014_VO_GymLeader (jnan_14).wav",
+                "015_VO_GymLeader (jnan_15).wav",
+                "016_VO_GymLeader (jnan_16).wav",
+                "017_VO_GymLeader (jnan_17).wav",
+                "018_VO_GymLeader (jnan_18).wav",
+                "019_VO_GymLeader (jnan_19).wav",
+                "020_VO_GymLeader (jnan_20).wav",
+                "021_VO_GymLeader (jnan_21).wav",
+                "022_VO_GymLeader (jnan_22).wav",
+                "023_VO_GymLeader (jnan_23).wav",
+                "024_VO_GymLeader (jnan_24).wav",
+                "025_VO_GymLeader (jnan_25).wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.2,
+            "3DMin": 1.5,
+            "3DMax": 5.0,
+            "Position": [
+                -5.300185680389404,
+                0.8729615211486816,
+                -38.898101806640625
+            ]
+        },
+        {
+            "Name": "People1",
+            "GroupNames": [
+                "FF7_Env_Slu5b"
+            ],
+            "SoundNames": [
+                "007_Slu5b_BG_Voice2.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.2,
+            "3DMin": 1.5,
+            "3DMax": 10.0,
+            "Position": [
+                56.368011474609375,
+                3.2116148471832275,
+                20.61313819885254
+            ]
+        },
+        {
+            "Name": "BGM1",
+            "GroupNames": [
+                "FF7_BGM"
+            ],
+            "SoundNames": [
+                "bgm_crash_box_fanfare (Music-crashbox_result_demo).mp3"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.08,
+            "3DMin": 2.0,
+            "3DMax": 5.0,
+            "Position": [
+                5.052488327026367,
+                2.419005870819092,
+                4.776524066925049
+            ]
+        },
+        {
+            "Name": "BGM2",
+            "GroupNames": [
+                "FF7_BGM"
+            ],
+            "SoundNames": [
+                "bgm_prelude (Music-Section0).mp3"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.3,
+            "3DMin": 3.0,
+            "3DMax": 6.0,
+            "Position": [
+                23.815526962280273,
+                2.8560245037078857,
+                -42.0790901184082
+            ]
+        },
+        {
+            "Name": "Man1",
+            "GroupNames": [
+                "FF7_NPC_Man"
+            ],
+            "SoundNames": [
+                "069_VO_Man_07 (look_04).wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 1.5,
+            "3DMax": 2.0,
+            "Position": [
+                8.342700004577637,
+                1.5497597455978394,
+                27.31188201904297
+            ]
+        },
+        {
+            "Name": "Woman1",
+            "GroupNames": [
+                "FF7_NPC_Woman",
+                "FF7_Resident_UI",
+                "FF7_Resident_UI",
+                "FF7_Resident_UI",
+                "FF7_Resident_UI",
+                "FF7_Resident_UI",
+                "FF7_Resident_UI",
+                "FF7_Resident_UI"
+            ],
+            "SoundNames": [
+                "008_VO_Woman_01 (look_03).wav",
+                "010_SE_UI (UI004_NG).wav",
+                "010_SE_UI (UI004_NG).wav",
+                "010_SE_UI (UI004_NG).wav",
+                "010_SE_UI (UI004_NG).wav",
+                "010_SE_UI (UI004_NG).wav",
+                "010_SE_UI (UI004_NG).wav",
+                "010_SE_UI (UI004_NG).wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 1.5,
+            "3DMax": 2.0,
+            "Position": [
+                13.405778884887695,
+                1.215012788772583,
+                -5.569659233093262
+            ]
+        }
+    ]
+}

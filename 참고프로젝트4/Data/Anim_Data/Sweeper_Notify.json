@@ -1,0 +1,1819 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "Main|B_AtkChargeCutter01"
+        },
+        {
+            "AnimName": "Main|B_DmgB03_0"
+        },
+        {
+            "AnimName": "EN1001_00_Sweeper|B_Walk01_2r",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Turn01_R90",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 3.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "081_SE_Sweeper (Turn01_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.3470370769500732,
+                                1.8300169706344604,
+                                3.231046676635742
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunL01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.3406299352645874,
+                                1.8300169706344604,
+                                3.231046676635742
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "020_SE_Sweeper (Down).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkWMachinegun01_1",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 5.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.3470370769500732,
+                                1.697638988494873,
+                                2.688681125640869
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 8.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.0934696197509766,
+                                1.5055506229400635,
+                                2.9810972213745117
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 11.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.3470370769500732,
+                                1.697638988494873,
+                                2.688681125640869
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.0934696197509766,
+                                1.5055506229400635,
+                                2.9810972213745117
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 5.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 8.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                -1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 11.0,
+                            "NotifyName": "Effect3",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Effect4",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                -1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "017_SE_Sweeper (die01_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkJump01_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 8.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "Sweeper_Gas(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -0.4000000059604645,
+                                4.0,
+                                -1.559999942779541
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle03_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 41.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 42.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 45.0,
+                            "NotifyName": "Effect3",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 46.0,
+                            "NotifyName": "Effect4",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 49.0,
+                            "NotifyName": "Effect5",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 50.0,
+                            "NotifyName": "Effect6",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 53.0,
+                            "NotifyName": "Effect7",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 54.0,
+                            "NotifyName": "Effect8",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 57.0,
+                            "NotifyName": "Effect9",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 58.0,
+                            "NotifyName": "Effect10",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "059_SE_Sweeper (Par_Muzzle_01).wav",
+                                "060_SE_Sweeper (Par_Muzzle_01).wav",
+                                "061_SE_Sweeper (Par_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 41.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.0796008110046387,
+                                4.3449625968933105,
+                                0.8820189237594604
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 42.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.3244950771331787,
+                                4.237246036529541,
+                                0.5269771814346313
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 45.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.1071269512176514,
+                                4.381791114807129,
+                                0.8167576193809509
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 46.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.4336920976638794,
+                                4.28897762298584,
+                                0.4727837145328522
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 49.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.1297171115875244,
+                                4.387396335601807,
+                                0.905571699142456
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 50.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.458836317062378,
+                                4.200705528259277,
+                                0.5820783376693726
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 53.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.1359515190124512,
+                                4.320947170257568,
+                                0.8059206008911133
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 54.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.2891480922698975,
+                                4.213171005249023,
+                                0.5678086280822754
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 57.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.0723154544830322,
+                                4.424661636352539,
+                                0.8493450284004211
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 58.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SweeperBombing(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                1.1307463645935059,
+                                4.3515801429748535,
+                                0.5176204442977905
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunL02_0"
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_1"
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 10.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "050_SE_Sweeper (Idle01_0_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_Add"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 7.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav",
+                                "022_SE_Sweeper (Foot).wav",
+                                "023_SE_Sweeper (Foot).wav",
+                                "024_SE_Sweeper (Foot).wav",
+                                "025_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0250a"
+        },
+        {
+            "AnimName": "Main|B_Run01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunL01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 19.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav",
+                                "022_SE_Sweeper (Foot).wav",
+                                "023_SE_Sweeper (Foot).wav",
+                                "024_SE_Sweeper (Foot).wav",
+                                "025_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkGasShot01"
+        },
+        {
+            "AnimName": "Main|B_Idle02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkHackSlash01",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0330d"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0040a"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0340d"
+        },
+        {
+            "AnimName": "Main|B_AtkChainSaw01"
+        },
+        {
+            "AnimName": "Main|LV_MAKO5_0300_EN1003_00_C0010"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0280d"
+        },
+        {
+            "AnimName": "Main|EV_MAKO1_0440_EN1001_00_C0150"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0280c"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0280b"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0380b"
+        },
+        {
+            "AnimName": "Main|B_AtkAngerGas01"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0160c"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0090a"
+        },
+        {
+            "AnimName": "Main|EV_MAKO1_0440_EN1001_00_C0110"
+        },
+        {
+            "AnimName": "Main|EN1001_02_BattleStart_060"
+        },
+        {
+            "AnimName": "Main|EN1001_02_BattleReady_Sleep_060"
+        },
+        {
+            "AnimName": "Main|B_AtkGuardCounterL01"
+        },
+        {
+            "AnimName": "Main|B_Walk01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 7.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav",
+                                "022_SE_Sweeper (Foot).wav",
+                                "023_SE_Sweeper (Foot).wav",
+                                "024_SE_Sweeper (Foot).wav",
+                                "025_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 37.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav",
+                                "022_SE_Sweeper (Foot).wav",
+                                "023_SE_Sweeper (Foot).wav",
+                                "024_SE_Sweeper (Foot).wav",
+                                "025_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Walk01_2l"
+        },
+        {
+            "AnimName": "Main|B_Walk01_2r"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunL01_0"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_L180"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_L90"
+        },
+        {
+            "AnimName": "Main|B_AtkBladeDisk01_2"
+        },
+        {
+            "AnimName": "Main|B_Spawn01_0"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_R180"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_R90"
+        },
+        {
+            "AnimName": "Main|B_Turn01_R180",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 6.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "081_SE_Sweeper (Turn01_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Turn01_L90",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 5.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "081_SE_Sweeper (Turn01_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCharge01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "011_SE_Sweeper (Chargeattack_mot_end).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Turn01_L180",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "081_SE_Sweeper (Turn01_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkBerserkGas01"
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkBladeDisk01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkBladeDisk01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkCharge01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "011_SE_Sweeper (Chargeattack_mot_end).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 27.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "015_SE_Sweeper (Chargeattack_mot_steam).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 58.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "014_SE_Sweeper (Chargeattack_mot_run).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCharge01_1",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCounterSlash01"
+        },
+        {
+            "AnimName": "Main|B_AtkGuardBackStep01"
+        },
+        {
+            "AnimName": "Main|B_AtkRevolveSlash01"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 6.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav",
+                                "022_SE_Sweeper (Foot).wav",
+                                "023_SE_Sweeper (Foot).wav",
+                                "024_SE_Sweeper (Foot).wav",
+                                "025_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 21.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "047_SE_Sweeper (Idle_Gun).wav",
+                                "048_SE_Sweeper (Idle_Gun).wav",
+                                "049_SE_Sweeper (Idle_Gun).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkSilenceGas01"
+        },
+        {
+            "AnimName": "Main|B_AtkSmoke01",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 3.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "062_SE_Sweeper (Par_SmokeShot_Begin_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 13.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "062_SE_Sweeper (Par_SmokeShot_Begin_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 26.0,
+                            "NotifyName": "Effect3",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "063_SE_Sweeper (Par_SmokeShot_Bullet_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkWMachinegun01_0",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 20.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "047_SE_Sweeper (Idle_Gun).wav",
+                                "048_SE_Sweeper (Idle_Gun).wav",
+                                "049_SE_Sweeper (Idle_Gun).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkWMachinegun01_2",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "023_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkWMachinegun02_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgB01",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgB02",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgB02_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgB02_1",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgB02_2"
+        },
+        {
+            "AnimName": "Main|B_StepB01"
+        },
+        {
+            "AnimName": "Main|B_DmgDestroyArmL01"
+        },
+        {
+            "AnimName": "Main|B_DmgDestroyArmR01"
+        },
+        {
+            "AnimName": "Main|B_DmgF01"
+        },
+        {
+            "AnimName": "Main|B_DmgF02"
+        },
+        {
+            "AnimName": "Main|B_DmgF02_0"
+        },
+        {
+            "AnimName": "Main|B_DmgF02_1"
+        },
+        {
+            "AnimName": "Main|B_DmgF02_2"
+        },
+        {
+            "AnimName": "Main|B_DmgF03_0"
+        },
+        {
+            "AnimName": "Main|B_DmgF03_1"
+        },
+        {
+            "AnimName": "Main|B_DmgF03_2"
+        },
+        {
+            "AnimName": "Main|B_DmgL01"
+        },
+        {
+            "AnimName": "Main|B_DmgOverRide01"
+        },
+        {
+            "AnimName": "Main|B_DmgOverRide02"
+        },
+        {
+            "AnimName": "Main|B_DmgR01"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR01_2",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 20.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect",
+                                "FF7_Sweeper_Effect"
+                            ],
+                            "SoundNames": [
+                                "021_SE_Sweeper (Foot).wav",
+                                "022_SE_Sweeper (Foot).wav",
+                                "023_SE_Sweeper (Foot).wav",
+                                "024_SE_Sweeper (Foot).wav",
+                                "025_SE_Sweeper (Foot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkJump02_2"
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR01_Add",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1223 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "Main|B_AtkBeam01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 10.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "002_SE_AirBuster (B_AtkBeam01_Hand_Attack).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 12.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "148_SE_AirBuster (Par_FingerBeam_Charge_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 61.0,
+                            "NotifyName": "Effect3",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "147_SE_AirBuster (Par_FingerBeam_Beam_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkEnergy01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 15.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "033_SE_AirBuster (Beam01_recoil; AtkHover01_recoil; Energy01_1_recoil).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 39.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "033_SE_AirBuster (Beam01_recoil; AtkHover01_recoil; Energy01_1_recoil).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegun02_1",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkRocket01",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 51.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Rocket_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                1.832502841949463,
+                                4.270612716674805,
+                                0.9905373454093933
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 51.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Rocket_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.7565040588378906,
+                                4.270612716674805,
+                                1.224819302558899
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCannon01_2",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 36.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 3,
+                            "EffectName": "AirBursterTankBursterBeam1",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                3.102492332458496,
+                                1.0750867128372192
+                            ],
+                            "Rot": [
+                                0.000001286880092266074,
+                                -0.7071064114570618,
+                                0.000001286880092266074,
+                                0.7071071267127991
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 28.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "112_SE_AirBuster (Par_BusterCannon_Beam_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 127.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "113_SE_AirBuster (Par_BusterCannon_Beam_01_end).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkHover01",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 31.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "GRP_AirBursterEMField",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 22.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "154_SE_AirBuster (Par_HoverElectro_Charge_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 56.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "155_SE_AirBuster (Par_HoverElectro_Field_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01"
+        },
+        {
+            "AnimName": "Main|B_AtkHookR01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "038_SE_AirBuster (Blow01_rise; BlowLR01_0_rise).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 41.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "040_SE_AirBuster (BlowLR01_1_swish; B_AtkRocketR01_0_Punch).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegun01",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 17.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Run_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                2.8762261867523193,
+                                0.6778507828712463
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCannon02_2"
+        },
+        {
+            "AnimName": "Main|B_AtkHookL01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "034_SE_AirBuster (Beam01_return; Rocket02_3_return; DmgDown01_2_return).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 45.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "040_SE_AirBuster (BlowLR01_1_swish; B_AtkRocketR01_0_Punch).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkEnergy01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 12.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "012_SE_AirBuster (B_AtkMachinegun01_3).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCannon01_0",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 30.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "GRP_AirBursterTankBuster_Charging2",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 8.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "012_SE_AirBuster (B_AtkMachinegun01_3).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 30.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "114_SE_AirBuster (Par_BusterCannon_Charge_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 38.0,
+                            "NotifyName": "Effec3",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "117_SE_AirBuster (Par_BusterCannon_Charge_03).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 49.0,
+                            "NotifyName": "Effect4",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "117_SE_AirBuster (Par_BusterCannon_Charge_03).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 59.0,
+                            "NotifyName": "Effect5",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "117_SE_AirBuster (Par_BusterCannon_Charge_03).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkVernier01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "002_SE_AirBuster (B_AtkBeam01_Hand_Attack).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 30.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "179_SE_AirBuster (Par_Vernier_Beam_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkVulcan01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "011_SE_AirBuster (B_AtkMachinegun01_0).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkEnergy01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 10.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "011_SE_AirBuster (B_AtkMachinegun01_0).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkRocket02_1",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCannon01_1",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 0.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "GRP_AirBursterTankBuster_Charging2",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCannon03_2"
+        },
+        {
+            "AnimName": "Main|B_AtkBlowL01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "038_SE_AirBuster (Blow01_rise; BlowLR01_0_rise).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 37.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "036_SE_AirBuster (Blow01_kamae).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle01_1"
+        },
+        {
+            "AnimName": "Main|B_Idle01_1_EnemyBook"
+        },
+        {
+            "AnimName": "Main|B_AtkBlowR01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect2",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "038_SE_AirBuster (Blow01_rise; BlowLR01_0_rise).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 36.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_AirBurster_Effect"
+                            ],
+                            "SoundNames": [
+                                "036_SE_AirBuster (Blow01_kamae).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkBlowLR01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkBlowLR01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkBlowLR01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01_Add"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_1"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_2"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_3"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01_1"
+        },
+        {
+            "AnimName": "Main|B_Idle02_1",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 30.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_IDLE_Spark",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                3.0243430137634277,
+                                1.7422361373901367
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 40.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Always_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.0073422193527222,
+                                1.2657452821731567,
+                                -1.5717864036560059
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 40.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Always_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                0.9709779620170593,
+                                1.2657452821731567,
+                                -1.5717864036560059
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                2.166261672973633,
+                                3.5604076385498047,
+                                -0.14961126446723938
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 10.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                -0.5189473628997803,
+                                3.5604076385498047,
+                                -0.14961126446723938
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 21.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                -0.5189473628997803,
+                                2.1767866611480713,
+                                -0.14961126446723938
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 35.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                0.647362232208252,
+                                1.6618293523788452,
+                                -0.14961126446723938
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 43.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                0.647362232208252,
+                                4.0914716720581055,
+                                -0.14961126446723938
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 52.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                -0.221876859664917,
+                                3.9406399726867676,
+                                -1.9282536506652832
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 67.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                -2.0708439350128174,
+                                3.142782211303711,
+                                -0.4734944701194763
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 81.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Dead_Explosion",
+                            "SocketName": "",
+                            "Pos": [
+                                -0.8542251586914063,
+                                1.3450498580932617,
+                                -1.5717864036560059
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMine02_2",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkRocketL02_2",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 0.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Rocket_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                -1.7565040588378906,
+                                4.727776527404785,
+                                0.25475555658340454
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkRocketR02_2",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 0.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 0,
+                            "EffectName": "AirBurster_Rocket_Gas",
+                            "SocketName": "",
+                            "Pos": [
+                                1.7801132202148438,
+                                4.727776527404785,
+                                0.5583269596099854
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        }
+    ]
+}

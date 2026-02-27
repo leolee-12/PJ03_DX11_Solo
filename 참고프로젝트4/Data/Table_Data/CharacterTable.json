@@ -1,0 +1,182 @@
+{
+	"CharacterLists": [
+		{
+			"Name": "Cloud",
+			"LV": 15,
+			"HP": 15000,
+			"HP_Growth": 100,
+			"MP": 20,
+			"MP_Growth": 1,
+			
+			"Attack": 40,
+			"Attack_Growth": 2,
+			"Magic": 20,
+			"Magic_Growth": 2,
+			
+			"Defence": 22,
+			"Defence_Growth": 2,
+			"M_Defence": 12,
+			"M_Defence_Growth": 1,
+			
+			"Exp_Gauge": 100,
+			"Exp_Growth": 10
+		},
+		{
+			"Name": "Aerith",
+			"LV": 15,
+			"HP": 11500,
+			"HP_Growth": 80,
+			"MP": 40,
+			"MP_Growth": 3,
+			
+			"Attack": 15,
+			"Attack_Growth": 2,
+			"Magic": 38,
+			"Magic_Growth": 3,
+			
+			"Defence": 10,
+			"Defence_Growth": 1,
+			"M_Defence": 22,
+			"M_Defence_Growth": 2,
+			
+			"Exp_Gauge": 100,
+			"Exp_Growth": 10
+		}
+	],
+	"EnemyLists": [
+		{
+			"Name": "Soldier1",
+			"LV": 10,
+			"HP": 1000,
+			"MP": 16,
+			"Attack": 17,
+			"Magic": 8,
+			"Defence": 8,
+			"M_Defence": 8,
+			"Exp_Give": 90
+		},
+		{
+			"Name": "Hound1",
+			"LV": 15,
+			"HP": 1500,
+			"MP": 20,
+			"Attack": 20,
+			"Magic": 10,
+			"Defence": 10,
+			"M_Defence": 10,
+			"Exp_Give": 110
+		},
+		{
+			"Name": "Hound2",
+			"LV": 16,
+			"HP": 1600,
+			"MP": 21,
+			"Attack": 22,
+			"Magic": 12,
+			"Defence": 11,
+			"M_Defence": 11,
+			"Exp_Give": 115
+		},
+		{
+			"Name": "Hound3",
+			"LV": 17,
+			"HP": 1700,
+			"MP": 22,
+			"Attack": 24,
+			"Magic": 13,
+			"Defence": 12,
+			"M_Defence": 12,
+			"Exp_Give": 120
+		},
+		{
+			"Name": "SweeperTest",
+			"LV": 18,
+			"HP": 8000,
+			"MP": 30,
+			"Attack": 33,
+			"Magic": 12,
+			"Defence": 100,
+			"M_Defence": 10,
+			"Exp_Give": 1200
+		},
+		{
+			"Name": "MonoDriveTest",
+			"LV": 17,
+			"HP": 1500,
+			"MP": 30,
+			"Attack": 33,
+			"Magic": 12,
+			"Defence": 20,
+			"M_Defence": 30,
+			"Exp_Give": 300
+		},
+		{
+			"Name": "StrayTest",
+			"LV": 18,
+			"HP": 1500,
+			"MP": 30,
+			"Attack": 20,
+			"Magic": 33,
+			"Defence": 20,
+			"M_Defence": 20,
+			"Exp_Give": 350
+		},
+		{
+			"Name": "Map_Laser",
+			"LV": 18,
+			"HP": 3000,
+			"MP": 30,
+			"Attack": 20,
+			"Magic": 33,
+			"Defence": 20,
+			"M_Defence": 30,
+			"Exp_Give": 350
+		}
+	],
+	"BossLists": [
+		{
+			"Name": "AirBurrrrster",
+			"LV": 19,
+			"HP": 20000,
+			"MP": 20,
+			"Attack": 33,
+			"Magic": 33,
+			"Defence": 60,
+			"M_Defence": 40,
+			"Exp_Give": 1000
+		},
+		{
+			"Name": "AirBurrrrster_LeftArm",
+			"LV": 20,
+			"HP": 3000,
+			"MP": 20,
+			"Attack": 100,
+			"Magic": 10,
+			"Defence": 30,
+			"M_Defence": 30,
+			"Exp_Give": 1000
+		},
+		{
+			"Name": "AirBurrrrster_RightArm",
+			"LV": 20,
+			"HP": 3000,
+			"MP": 20,
+			"Attack": 10,
+			"Magic": 100,
+			"Defence": 30,
+			"M_Defence": 30,
+			"Exp_Give": 1000
+		},
+		{
+			"Name": "Bahamut",
+			"LV": 21,
+			"HP": 100000,
+			"MP": 20,
+			"Attack": 25,
+			"Magic": 25,
+			"Defence": 55,
+			"M_Defence": 55,
+			"Exp_Give": 3000
+		}
+	]
+}

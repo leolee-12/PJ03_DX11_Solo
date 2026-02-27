@@ -1,0 +1,718 @@
+{
+	"CharacterSkills": [
+		{
+			"Name": "Cloud_NormalAttack1",
+			"DamageType": 0,
+			"Damage": 400,
+			"Penetration": 0,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_NormalAttack2",
+			"DamageType": 0,
+			"Damage": 430,
+			"Penetration": 5,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_NormalAttack3",
+			"DamageType": 0,
+			"Damage": 460,
+			"Penetration": 10,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_NormalAttack4",
+			"DamageType": 0,
+			"Damage": 490,
+			"Penetration": 20,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_NormalAttack5",
+			"DamageType": 0,
+			"Damage": 520,
+			"Penetration": 40,
+			"Burst": 10,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_BraveAttack1",
+			"DamageType": 0,
+			"Damage": 560,
+			"Penetration": 5,
+			"Burst": 30,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_BraveAttack2",
+			"DamageType": 0,
+			"Damage": 590,
+			"Penetration": 10,
+			"Burst": 30,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_BraveAttack3",
+			"DamageType": 0,
+			"Damage": 620,
+			"Penetration": 15,
+			"Burst": 30,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_BraveAttack4",
+			"DamageType": 0,
+			"Damage": 670,
+			"Penetration": 25,
+			"Burst": 30,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_BraveAttack5",
+			"DamageType": 0,
+			"Damage": 720,
+			"Penetration": 45,
+			"Burst": 30,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Ability_Blade",
+			"DamageType": 0,
+			"Damage": 1000,
+			"Penetration": 30,
+			"Burst": 40,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Cloud_Ability_Slash",
+			"DamageType": 0,
+			"Damage": 1000,
+			"Penetration": 40,
+			"Burst": 60,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Cloud_Ability_Infinity",
+			"DamageType": 0,
+			"Damage": 2000,
+			"Penetration": 50,
+			"Burst": 60,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_1",
+			"DamageType": 0,
+			"Damage": 1100,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_2",
+			"DamageType": 0,
+			"Damage": 1200,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_3",
+			"DamageType": 0,
+			"Damage": 1300,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_4",
+			"DamageType": 0,
+			"Damage": 1500,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_5",
+			"DamageType": 0,
+			"Damage": 600,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_6",
+			"DamageType": 0,
+			"Damage": 1600,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_7",
+			"DamageType": 0,
+			"Damage": 1800,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 2
+		},
+		{
+			"Name": "Cloud_Limit_ClimHazzard_8",
+			"DamageType": 0,
+			"Damage": 2000,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 3
+		},
+		{
+			"Name": "Aerith_NormalAttack1",
+			"DamageType": 1,
+			"Damage": 80,
+			"Penetration": 5,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_NormalAttack2",
+			"DamageType": 1,
+			"Damage": 100,
+			"Penetration": 10,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_NormalAttack3",
+			"DamageType": 1,
+			"Damage": 120,
+			"Penetration": 15,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_NormalAttack4",
+			"DamageType": 1,
+			"Damage": 130,
+			"Penetration": 20,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_NormalAttack5",
+			"DamageType": 1,
+			"Damage": 150,
+			"Penetration": 30,
+			"Burst": 10,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_SpecialAttack",
+			"DamageType": 1,
+			"Damage": 200,
+			"Penetration": 0,
+			"Burst": 8,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Aerith_TempestHit",
+			"DamageType": 1,
+			"Damage": 200,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Aerith_TempestBlast",
+			"DamageType": 1,
+			"Damage": 600,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Aerith_Ability_FlameSpell_Hit",
+			"DamageType": 1,
+			"Damage": 350,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_Ability_FlameSpell_Blast",
+			"DamageType": 1,
+			"Damage": 200,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Aerith_Ability_RayOfJudge",
+			"DamageType": 1,
+			"Damage": 120,
+			"Penetration": 30,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Aerith_Ability_SorcerousStorm",
+			"DamageType": 1,
+			"Damage": 200,
+			"Penetration": 50,
+			"Burst": 80,
+			"HitPower": 15,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_Limit_NaturalDisaster",
+			"DamageType": 1,
+			"Damage": 1400,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 20,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Aerith_Limit_NaturalDisaster_Elec",
+			"DamageType": 1,
+			"Damage": 1000,
+			"Penetration": 80,
+			"Burst": 80,
+			"HitPower": 20,
+			"AddHitPower": 3
+		},
+		{
+			"Name": "Aerith_Limit_NaturalDisaster_Flame",
+			"DamageType": 1,
+			"Damage": 100,
+			"Penetration": 80,
+			"Burst": 1,
+			"HitPower": 20,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_Limit_NaturalDisaster_IceHit",
+			"DamageType": 1,
+			"Damage": 300,
+			"Penetration": 80,
+			"Burst": 1,
+			"HitPower": 20,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "Aerith_Limit_NaturalDisaster_IceBlast",
+			"DamageType": 1,
+			"Damage": 800,
+			"Penetration": 80,
+			"Burst": 1,
+			"HitPower": 20,
+			"AddHitPower": 1
+		}
+	],
+	"EnemySkills": [
+		{
+			"Name": "Hound_Bite",
+			"DamageType": 0,
+			"Damage": 300,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Hound_Claw",
+			"DamageType": 0,
+			"Damage": 340,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Hound_Whip",
+			"DamageType": 0,
+			"Damage": 400,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+
+
+		{
+			"Name": "Soldier_Gun",
+			"DamageType": 0,
+			"Damage": 150,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Soldier_Grenade",
+			"DamageType": 0,
+			"Damage": 400,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Soldier_Kick",
+			"DamageType": 0,
+			"Damage": 100,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Soldier_Combat",
+			"DamageType": 0,
+			"Damage": 130,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Soldier_Tonfa",
+			"DamageType": 0,
+			"Damage": 100,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+
+
+
+
+		{
+			"Name": "Sweeper_Bullet",
+			"DamageType": 0,
+			"Damage": 100,
+			"Penetration": 0,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Sweeper_BombHit",
+			"DamageType": 0,
+			"Damage": 400,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Sweeper_Bombing",
+			"DamageType": 0,
+			"Damage": 500,
+			"Penetration": 10,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Sweeper_Flame",
+			"DamageType": 0,
+			"Damage": 400,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Sweeper_JumpAttack",
+			"DamageType": 0,
+			"Damage": 230,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Sweeper_MachineGun",
+			"DamageType": 0,
+			"Damage": 120,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Sweeper_Rush",
+			"DamageType": 0,
+			"Damage": 500,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+
+
+
+		{
+			"Name": "MonoDrive_FireBall",
+			"DamageType": 0,
+			"Damage": 300,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "MonoDrive_Drill",
+			"DamageType": 0,
+			"Damage": 230,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+
+
+
+
+		{
+			"Name": "Stray_Laser",
+			"DamageType": 0,
+			"Damage": 230,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+
+
+
+
+		{
+			"Name": "AirBurster_ShoulderBeam",
+			"DamageType": 0,
+			"Damage": 12,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 1
+		},
+		{
+			"Name": "AirBurster_EMField",
+			"DamageType": 0,
+			"Damage": 20,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_FingerBeam_Physics",
+			"DamageType": 0,
+			"Damage": 2,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_FingerBeam_Magic",
+			"DamageType": 1,
+			"Damage": 3,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_Hook",
+			"DamageType": 0,
+			"Damage": 230,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_Burner",
+			"DamageType": 0,
+			"Damage": 30,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_TankBurster",
+			"DamageType": 0,
+			"Damage": 50,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_MachineGunFront",
+			"DamageType": 0,
+			"Damage": 20,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_MachineGunRear",
+			"DamageType": 0,
+			"Damage": 20,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 20,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "AirBurster_EnergyBall",
+			"DamageType": 0,
+			"Damage": 300,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+
+
+		{
+			"Name": "Bahamut_Clo",
+			"DamageType": 0,
+			"Damage": 50,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 5,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_Breath",
+			"DamageType": 0,
+			"Damage": 430,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_Body",
+			"DamageType": 0,
+			"Damage": 700,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_DarkClaw",
+			"DamageType": 0,
+			"Damage": 40,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_HeavyStrike",
+			"DamageType": 0,
+			"Damage": 300,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_Grab",
+			"DamageType": 0,
+			"Damage": 230,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_FireBall",
+			"DamageType": 0,
+			"Damage": 230,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 10,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_Aura",
+			"DamageType": 0,
+			"Damage": 30,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 0,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_Inferno",
+			"DamageType": 1,
+			"Damage": 30,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 0,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Bahamut_MegaFlare",
+			"DamageType": 1,
+			"Damage": 4000,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 20,
+			"AddHitPower": 0
+		},
+		{
+			"Name": "Map_Laser",
+			"DamageType": 1,
+			"Damage": 100,
+			"Penetration": 5,
+			"Burst": 20,
+			"HitPower": 15,
+			"AddHitPower": 0
+		}
+	]	
+}

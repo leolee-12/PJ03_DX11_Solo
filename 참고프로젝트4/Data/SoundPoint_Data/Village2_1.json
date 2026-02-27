@@ -1,0 +1,118 @@
+{
+    "SoundPoints": [
+        {
+            "Name": "Back1",
+            "GroupNames": [
+                "FF7_Env_Slu5b"
+            ],
+            "SoundNames": [
+                "017_Slu5b_BG_5TH_SLUM_AIR.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.1,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                27.832252502441406,
+                29.2691593170166,
+                0.27442222833633423
+            ]
+        },
+        {
+            "Name": "Back3",
+            "GroupNames": [
+                "FF7_Env_Slu5b"
+            ],
+            "SoundNames": [
+                "017_Slu5b_BG_5TH_SLUM_AIR.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.5,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                51.10195541381836,
+                22.13770294189453,
+                -21.354923248291016
+            ]
+        },
+        {
+            "Name": "Back2",
+            "GroupNames": [
+                "FF7_Env_Slu5b"
+            ],
+            "SoundNames": [
+                "017_Slu5b_BG_5TH_SLUM_AIR.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.5,
+            "3DMin": 0.5,
+            "3DMax": 10.0,
+            "Position": [
+                39.80000686645508,
+                25.12858772277832,
+                -55.40734100341797
+            ]
+        },
+        {
+            "Name": "People1",
+            "GroupNames": [
+                "FF7_Env_Slu5b"
+            ],
+            "SoundNames": [
+                "003_Slu5b_BG_Voice2.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.5,
+            "3DMin": 0.5,
+            "3DMax": 4.0,
+            "Position": [
+                29.274843215942383,
+                0.8534839749336243,
+                -6.201516151428223
+            ]
+        },
+        {
+            "Name": "People2",
+            "GroupNames": [
+                "FF7_Env_Slu5b"
+            ],
+            "SoundNames": [
+                "001_Slu5b_BG_Voice2.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.5,
+            "3DMin": 0.5,
+            "3DMax": 4.0,
+            "Position": [
+                32.67362594604492,
+                0.8441864848136902,
+                1.0443105697631836
+            ]
+        },
+        {
+            "Name": "Vending1",
+            "GroupNames": [
+                "FF7_Env_Mako1"
+            ],
+            "SoundNames": [
+                "164_Mako1_Sp_Vending_A.wav"
+            ],
+            "SoundGroup": 1,
+            "RollOffMode": 4194304,
+            "Volume": 0.5,
+            "3DMin": 0.5,
+            "3DMax": 2.0,
+            "Position": [
+                30.379018783569336,
+                0.8441864848136902,
+                7.524097919464111
+            ]
+        }
+    ]
+}

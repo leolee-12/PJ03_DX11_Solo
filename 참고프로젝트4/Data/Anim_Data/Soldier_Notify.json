@@ -1,0 +1,975 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "Main|G_Atk_Bomb_BLL0"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeS01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_01_025_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_026_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_027_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.6000000238418579,
+                            "SoundPlayPercent": 5.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 3.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "073_SE_SecuritySoldier (gun_shot_source_02).wav",
+                                "074_SE_SecuritySoldier (gun_shot_source_02).wav",
+                                "075_SE_SecuritySoldier (gun_shot_source_02).wav",
+                                "076_SE_SecuritySoldier (gun_shot_source_02; gun_shot_source_02).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.30000001192092896,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "SoldierGunShoot(Jiho)",
+                            "SocketName": "",
+                            "Pos": [
+                                0.10636450350284576,
+                                1.3114477396011353,
+                                0.8316243886947632
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01_1"
+        },
+        {
+            "AnimName": "EN0000_00_SecuritySoldier|B_Abnormal01_1"
+        },
+        {
+            "AnimName": "Main|G_Atk_Bomb_BLS0"
+        },
+        {
+            "AnimName": "Main|B_AtkHandGrenade01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 39.0,
+                            "NotifyName": "Voice",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_01_043_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_044_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_045_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_046_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.6000000238418579,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|PC0005_00_B_DmgCombat03_0"
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_01_095_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_096_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_097_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_098_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_099_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_100_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.6000000238418579,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkShotFT01_2"
+        },
+        {
+            "AnimName": "Main|G_Atk_Bomb_BLM0"
+        },
+        {
+            "AnimName": "Main|G_Atk_Bomb_BRS0"
+        },
+        {
+            "AnimName": "Main|G_Atk_Bomb_FL0_0"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_2"
+        },
+        {
+            "AnimName": "Main|G_Die01_0"
+        },
+        {
+            "AnimName": "Main|PC0000_00_B_AtkOverRide02"
+        },
+        {
+            "AnimName": "Main|PC0005_00_B_DmgCombat02_0"
+        },
+        {
+            "AnimName": "Main|G_DieB01_0"
+        },
+        {
+            "AnimName": "Main|G_DieB02_0"
+        },
+        {
+            "AnimName": "Main|PC0005_00_B_DmgCombat02_1"
+        },
+        {
+            "AnimName": "Main|G_DieF01_0"
+        },
+        {
+            "AnimName": "Main|N_Idle01"
+        },
+        {
+            "AnimName": "Main|G_DieF02_0"
+        },
+        {
+            "AnimName": "Main|G_DieL01_0"
+        },
+        {
+            "AnimName": "Main|S_AtkShot01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkShotFT03_1"
+        },
+        {
+            "AnimName": "Main|G_DmgB01"
+        },
+        {
+            "AnimName": "Main|G_DmgR02"
+        },
+        {
+            "AnimName": "Main|G_Jump01_0"
+        },
+        {
+            "AnimName": "Main|W_Idle03_0"
+        },
+        {
+            "AnimName": "Main|N_Idle01_1"
+        },
+        {
+            "AnimName": "Main|W_AtkShotL01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkShotFT02_0"
+        },
+        {
+            "AnimName": "Main|S_Turn01_R180"
+        },
+        {
+            "AnimName": "Main|PC0000_00_B_AtkOverRide01"
+        },
+        {
+            "AnimName": "Main|PC0006_00_B_DmgCombat02_1"
+        },
+        {
+            "AnimName": "Main|S_AtkShot01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeSP01_0"
+        },
+        {
+            "AnimName": "Main|B_Camouflage01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkShot01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 19.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_02_016_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.6000000238418579,
+                            "SoundPlayPercent": 49.689998626708984,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeSP01_1"
+        },
+        {
+            "AnimName": "Main|B_Camouflage01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeS01_1"
+        },
+        {
+            "AnimName": "Main|B_DmgB02_1"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeS01_2"
+        },
+        {
+            "AnimName": "Main|B_StepB01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "009_SE_SecuritySoldier (B_AtkCombat01_0_01).wav",
+                                "010_SE_SecuritySoldier (B_AtkCombat02_0_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "094_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "095_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "096_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "097_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "098_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "099_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "100_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "101_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "102_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "103_SE_SecuritySoldier (se_fs_con2_run_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.5,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 17.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "094_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "095_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "096_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "097_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "098_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "099_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "100_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "101_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "102_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "103_SE_SecuritySoldier (se_fs_con2_run_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.5,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeM01_0"
+        },
+        {
+            "AnimName": "Main|B_ItemCure01"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeL01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeL01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeM01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_0"
+        },
+        {
+            "AnimName": "Main|B_Order01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkCombat01_0",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 8.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "009_SE_SecuritySoldier (B_AtkCombat01_0_01).wav",
+                                "010_SE_SecuritySoldier (B_AtkCombat02_0_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 9.0,
+                            "NotifyName": "Voice",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_01_057_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_058_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_01_059_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.6000000238418579,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkRifle01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkStanrod01_1"
+        },
+        {
+            "AnimName": "Main|B_DmgBlowU02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkStanrod02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkStanrod01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkShot02_1"
+        },
+        {
+            "AnimName": "Main|B_AtkShotFT03"
+        },
+        {
+            "AnimName": "Main|B_AtkStanrod03"
+        },
+        {
+            "AnimName": "Main|B_AtkTonfa01"
+        },
+        {
+            "AnimName": "Main|B_AtkCombat02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkCombat02_1"
+        },
+        {
+            "AnimName": "Main|B_AtkShield02_2"
+        },
+        {
+            "AnimName": "Main|B_AtkCombat03_0"
+        },
+        {
+            "AnimName": "Main|B_AtkKick01",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 22.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_03_011_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_03_012_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.6000000238418579,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 24.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "080_SE_SecuritySoldier (kick01_swish).wav",
+                                "081_SE_SecuritySoldier (kick01_swish).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_1"
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeM01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkRifle03_0"
+        },
+        {
+            "AnimName": "Main|B_DmgB03_0"
+        },
+        {
+            "AnimName": "Main|B_Die01_1"
+        },
+        {
+            "AnimName": "Main|B_Dmg00"
+        },
+        {
+            "AnimName": "Main|B_DmgB01"
+        },
+        {
+            "AnimName": "Main|B_DmgB02"
+        },
+        {
+            "AnimName": "Main|B_DmgB03_1"
+        },
+        {
+            "AnimName": "Main|B_DmgBlowU02_1"
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_1"
+        },
+        {
+            "AnimName": "Main|B_DmgR01"
+        },
+        {
+            "AnimName": "Main|B_DmgStrikeB01_0"
+        },
+        {
+            "AnimName": "Main|B_DmgStrikeB01_1"
+        },
+        {
+            "AnimName": "Main|B_Idle01_0"
+        },
+        {
+            "AnimName": "Main|B_Idle01_1"
+        },
+        {
+            "AnimName": "Main|B_Help01"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenadeL01_2"
+        },
+        {
+            "AnimName": "Main|B_Idle03_0"
+        },
+        {
+            "AnimName": "Main|B_Idle05"
+        },
+        {
+            "AnimName": "Main|B_Idle05_0"
+        },
+        {
+            "AnimName": "Main|B_Idle11"
+        },
+        {
+            "AnimName": "Main|B_Order01"
+        },
+        {
+            "AnimName": "Main|B_Order05"
+        },
+        {
+            "AnimName": "Main|B_Reload01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 13.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "066_SE_SecuritySoldier (gun_set).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 23.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "067_SE_SecuritySoldier (gun_set).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 41.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "068_SE_SecuritySoldier (gun_set).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_0"
+        },
+        {
+            "AnimName": "Main|B_Run01_0_L180"
+        },
+        {
+            "AnimName": "Main|B_Run01_0_L90"
+        },
+        {
+            "AnimName": "Main|B_Run01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "094_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "095_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "096_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "097_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "098_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "099_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "100_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "101_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "102_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "103_SE_SecuritySoldier (se_fs_con2_run_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.5,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 12.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect",
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "094_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "095_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "096_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "097_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "098_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "099_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "100_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "101_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "102_SE_SecuritySoldier (se_fs_con2_run_01).wav",
+                                "103_SE_SecuritySoldier (se_fs_con2_run_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.5,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_2"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_L180"
+        },
+        {
+            "AnimName": "Main|B_WalkR01_2r"
+        },
+        {
+            "AnimName": "Main|F_Attack01"
+        },
+        {
+            "AnimName": "Main|F_Attack02"
+        },
+        {
+            "AnimName": "Main|F_Die01"
+        },
+        {
+            "AnimName": "Main|F_Dmg01"
+        },
+        {
+            "AnimName": "Main|F_Dmg02"
+        },
+        {
+            "AnimName": "Main|G_DieR02_0"
+        },
+        {
+            "AnimName": "Main|N_Walk01_1_L90"
+        },
+        {
+            "AnimName": "Main|N_Walk01_1_R180"
+        },
+        {
+            "AnimName": "Main|B_AtkGrenade02_1"
+        },
+        {
+            "AnimName": "Main|N_Idle02_0"
+        },
+        {
+            "AnimName": "Main|N_Idle03_0"
+        },
+        {
+            "AnimName": "Main|N_Idle04_0"
+        },
+        {
+            "AnimName": "Main|N_Idle07"
+        },
+        {
+            "AnimName": "Main|N_Idle08"
+        },
+        {
+            "AnimName": "Main|B_DmgF01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Voice",
+                                "FF7_SecuritySoldier_Voice"
+                            ],
+                            "SoundNames": [
+                                "VO_SecuritySoldier (bt201_03_011_kb01_0).wav",
+                                "VO_SecuritySoldier (bt201_03_011_kb01_0).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 0.4000000059604645,
+                            "SoundPlayPercent": 70.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkHandGrenade02",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 26.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "077_SE_SecuritySoldier (HandGrenade01_pinpull).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 42.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_SecuritySoldier_Effect"
+                            ],
+                            "SoundNames": [
+                                "078_SE_SecuritySoldier (HandGrenade01_throw).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        }
+    ]
+}

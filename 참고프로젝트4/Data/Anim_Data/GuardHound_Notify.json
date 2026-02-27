@@ -1,0 +1,927 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "Main|B_DmgB03_0"
+        },
+        {
+            "AnimName": "Main|B_AtkChargeCutter01"
+        },
+        {
+            "AnimName": "EN1001_00_Sweeper|B_Walk01_2r"
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "117_SE_GuardHound (vc_dead).wav",
+                                "118_SE_GuardHound (vc_dead).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunL02_0"
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_1"
+        },
+        {
+            "AnimName": "Main|B_DmgBurst01_Add"
+        },
+        {
+            "AnimName": "Main|B_Run01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0250a"
+        },
+        {
+            "AnimName": "Main|B_AtkGasShot01"
+        },
+        {
+            "AnimName": "Main|B_Idle01_2"
+        },
+        {
+            "AnimName": "Main|B_Run01_0_R90",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCombiD01"
+        },
+        {
+            "AnimName": "Main|B_AtkHackSlash01"
+        },
+        {
+            "AnimName": "Main|B_Idle02_0"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0330d"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0340d"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0040a"
+        },
+        {
+            "AnimName": "Main|B_AtkChainSaw01"
+        },
+        {
+            "AnimName": "Main|LV_MAKO5_0300_EN1003_00_C0010"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0280d"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0280c"
+        },
+        {
+            "AnimName": "Main|EV_MAKO1_0440_EN1001_00_C0150"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_8030_EN1001_00_C0280b"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0380b"
+        },
+        {
+            "AnimName": "Main|B_AtkAngerGas01"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0160c"
+        },
+        {
+            "AnimName": "Main|EV_TOWN7_2380_EN1001_00_C0090a"
+        },
+        {
+            "AnimName": "Main|EV_MAKO1_0440_EN1001_00_C0110"
+        },
+        {
+            "AnimName": "Main|EN1001_02_BattleStart_060"
+        },
+        {
+            "AnimName": "Main|B_AtkGuardCounterL01"
+        },
+        {
+            "AnimName": "Main|EN1001_02_BattleReady_Sleep_060"
+        },
+        {
+            "AnimName": "Main|B_Walk01_2l"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunL01_0"
+        },
+        {
+            "AnimName": "Main|B_Walk01_2r"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_L180"
+        },
+        {
+            "AnimName": "Main|B_AtkBladeDisk01_2"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_L90"
+        },
+        {
+            "AnimName": "Main|B_Spawn01_0"
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_R180"
+        },
+        {
+            "AnimName": "Main|B_AtkBite01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 8.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "019_SE_GuardHound (EB0017_DarkNation_B_AtkBite02).wav",
+                                "020_SE_GuardHound (EB0017_DarkNation_B_AtkBite02).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Walk01_0_R90"
+        },
+        {
+            "AnimName": "Main|B_Run01_1_L180"
+        },
+        {
+            "AnimName": "Main|B_AtkBerserkGas01"
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_0"
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkBladeDisk01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkBladeDisk01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkCharge01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkCounterSlash01"
+        },
+        {
+            "AnimName": "Main|B_AtkGuardBackStep01"
+        },
+        {
+            "AnimName": "Main|B_AtkRevolveSlash01"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR02_0"
+        },
+        {
+            "AnimName": "Main|B_AtkSilenceGas01"
+        },
+        {
+            "AnimName": "Main|B_AtkWMachinegun02_0"
+        },
+        {
+            "AnimName": "Main|B_DmgB01"
+        },
+        {
+            "AnimName": "Main|B_DmgB02"
+        },
+        {
+            "AnimName": "Main|B_DmgB02_0"
+        },
+        {
+            "AnimName": "Main|B_DmgB02_1"
+        },
+        {
+            "AnimName": "Main|B_StepB01"
+        },
+        {
+            "AnimName": "Main|B_DmgB02_2"
+        },
+        {
+            "AnimName": "Main|B_DmgDestroyArmL01"
+        },
+        {
+            "AnimName": "Main|B_DmgDestroyArmR01"
+        },
+        {
+            "AnimName": "Main|B_DmgF01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "119_SE_GuardHound (vc_dmgS).wav",
+                                "120_SE_GuardHound (vc_dmgS).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgF02"
+        },
+        {
+            "AnimName": "Main|B_DmgF02_0"
+        },
+        {
+            "AnimName": "Main|B_DmgF02_1"
+        },
+        {
+            "AnimName": "Main|B_DmgF02_2"
+        },
+        {
+            "AnimName": "Main|B_DmgF03_0"
+        },
+        {
+            "AnimName": "Main|B_DmgF03_1"
+        },
+        {
+            "AnimName": "Main|B_DmgF03_2"
+        },
+        {
+            "AnimName": "Main|B_DmgL01"
+        },
+        {
+            "AnimName": "Main|B_DmgOverRide01"
+        },
+        {
+            "AnimName": "Main|B_DmgOverRide02"
+        },
+        {
+            "AnimName": "Main|B_DmgR01"
+        },
+        {
+            "AnimName": "Main|B_AtkJump02_2"
+        },
+        {
+            "AnimName": "Main|B_AtkThunder01_1"
+        },
+        {
+            "AnimName": "Main|B_Abnormal01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkMachinegunR01_Add"
+        },
+        {
+            "AnimName": "EN2000_00_GuardHound|B_Abnormal01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkBite02",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 7.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "019_SE_GuardHound (EB0017_DarkNation_B_AtkBite02).wav",
+                                "020_SE_GuardHound (EB0017_DarkNation_B_AtkBite02).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkBlow01"
+        },
+        {
+            "AnimName": "Main|B_AtkBlow02"
+        },
+        {
+            "AnimName": "Main|B_AtkBodyBlow01"
+        },
+        {
+            "AnimName": "Main|B_AtkCatch01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkClaw01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 13.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "039_SE_GuardHound (FX_Claw_Slash_01).wav",
+                                "040_SE_GuardHound (FX_Claw_Slash_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 15.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "107_SE_GuardHound (vc_atkL).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCure01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkCombiC01"
+        },
+        {
+            "AnimName": "Main|B_AtkDWhip01",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "107_SE_GuardHound (vc_atkL).wav",
+                                "108_SE_GuardHound (vc_atkL).wav",
+                                "109_SE_GuardHound (vc_atkL).wav",
+                                "110_SE_GuardHound (vc_atkL).wav",
+                                "111_SE_GuardHound (vc_atkL).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 23.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "101_SE_GuardHound (GuardHound_whip01).wav",
+                                "102_SE_GuardHound (GuardHound_whip02).wav",
+                                "103_SE_GuardHound (GuardHound_whip03).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkFWhip01",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "107_SE_GuardHound (vc_atkL).wav",
+                                "108_SE_GuardHound (vc_atkL).wav",
+                                "109_SE_GuardHound (vc_atkL).wav",
+                                "110_SE_GuardHound (vc_atkL).wav",
+                                "111_SE_GuardHound (vc_atkL).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 41.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "101_SE_GuardHound (GuardHound_whip01).wav",
+                                "102_SE_GuardHound (GuardHound_whip02).wav",
+                                "103_SE_GuardHound (GuardHound_whip03).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkHead01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkThunder01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkThunder01_2"
+        },
+        {
+            "AnimName": "Main|B_Dmg00",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "119_SE_GuardHound (vc_dmgS).wav",
+                                "120_SE_GuardHound (vc_dmgS).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgDown01_0"
+        },
+        {
+            "AnimName": "Main|B_Run01_0_L180",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_0_L90",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_0_R180",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 3.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_1_R180",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Run03_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 14.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "026_SE_GuardHound (FS_land).wav",
+                                "027_SE_GuardHound (FS_land).wav",
+                                "028_SE_GuardHound (FS_land).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle01_0"
+        },
+        {
+            "AnimName": "Main|B_Idle01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 20.0,
+                            "NotifyName": "",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_GuardHound_Effect",
+                                "FF7_GuardHound_Effect"
+                            ],
+                            "SoundNames": [
+                                "125_SE_GuardHound (vc_idleS).wav",
+                                "126_SE_GuardHound (vc_idleS).wav"
+                            ],
+                            "SoundChannel": 3,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 50.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

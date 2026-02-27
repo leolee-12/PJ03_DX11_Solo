@@ -1,0 +1,64 @@
+{
+    "SoundPoints": [
+        {
+            "Name": "stsed",
+            "SoundGroup": 1073741824,
+            "Volume": 1.0,
+            "Position": [
+                -1.6500000953674316,
+                2.119999885559082,
+                -6.340000152587891
+            ]
+        },
+        {
+            "Name": "stsed2",
+            "SoundGroup": 0,
+            "Volume": 0.0,
+            "Position": [
+                0.0,
+                0.0,
+                2.5
+            ]
+        },
+        {
+            "Name": "stsed3",
+            "SoundGroup": 0,
+            "Volume": 0.0,
+            "Position": [
+                0.0,
+                0.0,
+                2.5
+            ]
+        },
+        {
+            "Name": "stsed5",
+            "SoundGroup": 0,
+            "Volume": 0.0,
+            "Position": [
+                0.0,
+                0.0,
+                2.5
+            ]
+        },
+        {
+            "Name": "stsed53",
+            "SoundGroup": 0,
+            "Volume": 0.0,
+            "Position": [
+                0.0,
+                0.0,
+                2.5
+            ]
+        },
+        {
+            "Name": "stsed54",
+            "SoundGroup": 0,
+            "Volume": 1.0,
+            "Position": [
+                0.0,
+                0.0,
+                2.5
+            ]
+        }
+    ]
+}

@@ -1,0 +1,350 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "EN1000_00_1stray|B_Atk01"
+        },
+        {
+            "AnimName": "Main|B_Atk01"
+        },
+        {
+            "AnimName": "Main|B_AtkLaser01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "042_SE_Stray (Par_Laser_Charge_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkLaser01_1"
+        },
+        {
+            "AnimName": "Main|B_AtkLaser01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "003_SE_Stray (B_AtkLaser01_2_shot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "018_SE_Stray (die_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle01_0",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 15.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "007_SE_Stray (B_Idle01_0_1).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.3,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle01_1",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "008_SE_Stray (B_Idle01_0_2).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.3,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 41.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "009_SE_Stray (B_Idle01_2_1).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.3,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 62.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "009_SE_Stray (B_Idle01_2_1).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.3,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Idle01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 6.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "009_SE_Stray (B_Idle01_2_1).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.3,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 43.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "009_SE_Stray (B_Idle01_2_1).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 0.3,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgF01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect",
+                                "FF7_Stray_Effect",
+                                "FF7_Stray_Effect",
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "019_SE_Stray (dmg_mot).wav",
+                                "020_SE_Stray (dmg_mot).wav",
+                                "021_SE_Stray (dmg_mot).wav",
+                                "022_SE_Stray (dmg_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_DmgL01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 1.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Stray_Effect",
+                                "FF7_Stray_Effect",
+                                "FF7_Stray_Effect",
+                                "FF7_Stray_Effect"
+                            ],
+                            "SoundNames": [
+                                "019_SE_Stray (dmg_mot).wav",
+                                "020_SE_Stray (dmg_mot).wav",
+                                "021_SE_Stray (dmg_mot).wav",
+                                "022_SE_Stray (dmg_mot).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1035 @@
+{
+    "AnimLists": [
+        {
+            "AnimName": "Fan1|N_Rotation_1"
+        },
+        {
+            "AnimName": "Lift|N_Up_1"
+        },
+        {
+            "AnimName": "Main|N_Down_1"
+        },
+        {
+            "AnimName": "TreasureBox|N_Treasure01"
+        },
+        {
+            "AnimName": "SU0005_Bahamut|B_AtkCountDown01_1"
+        },
+        {
+            "AnimName": "Main|B_StepB01"
+        },
+        {
+            "AnimName": "Main|B_Idle01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 31.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "112_SE_Bahamut (WING).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 106.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "112_SE_Bahamut (WING).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMetorDive01_0"
+        },
+        {
+            "AnimName": "Main|B_AtkMetorDive01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 34.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect",
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "025_SE_Bahamut (B_AtkMetorDive01_0_voice001).wav",
+                                "026_SE_Bahamut (B_AtkMetorDive01_0_voice002).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkMetorDive01_2"
+        },
+        {
+            "AnimName": "Main|B_AtkMetorDive01_3"
+        },
+        {
+            "AnimName": "Main|B_AtkMegaFlare01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 9.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "111_SE_Bahamut (WING).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 11.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "022_SE_Bahamut (B_AtkMegaFlare01_voice001).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 43.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "115_SE_Bahamut (WING).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 48.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "023_SE_Bahamut (B_AtkMegaFlare01_voice002).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 100.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "098_SE_Bahamut (FX_MegaFlare_Charge_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 160.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "102_SE_Bahamut (FX_MegaFlare_Muzzle_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect",
+					"Notifies": [
+                        {
+                            "TrackPos": 45.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "Bahamut_MegaFlare_Aura",
+                            "SocketName": "",
+                            "Pos": [
+                                0.0,
+                                10.927189826965332,
+                                0.0
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 170.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "Bahamut_MegaFlare_Ball_Attack_Group",
+                            "SocketName": "",
+                            "Pos": [
+                                0.520092785358429,
+                                7.579448699951172,
+                                5.841145992279053
+                            ],
+                            "Rot": [
+                                0.6427874565124512,
+                                0.0,
+                                -0.0,
+                                0.7660446166992188
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkKama01",
+			"Collections": [
+                {
+                    "Name": "Effect",
+                    "Notifies": [
+                        {
+                            "TrackPos": 35.0,
+                            "NotifyName": "",
+                            "NotifyID": 0,
+                            "EffectType": 4,
+                            "EffectName": "Bahamut_DarkClaw_Ready",
+                            "SocketName": "",
+                            "Pos": [
+                                0.959460973739624,
+                                0.0,
+                                -1.39042329788208
+                            ],
+                            "Rot": [
+                                -0.0,
+                                0.0,
+                                -0.0,
+                                1.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkCountDown01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 26.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "005_SE_Bahamut (B_AtkCountDown01_2_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkSpinAttack01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "054_SE_Bahamut (B_AtkSpinAttack01_whoosh).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 32.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "052_SE_Bahamut (B_AtkSpinAttack01_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkScartch01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "049_SE_Bahamut (B_AtkScratch02_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 37.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "038_SE_Bahamut (B_AtkScratch02_hand001).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 49.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "039_SE_Bahamut (B_AtkScratch02_hand002).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkScratch02",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 7.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "049_SE_Bahamut (B_AtkScratch02_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 109.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "038_SE_Bahamut (B_AtkScratch02_hand001).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 120.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "039_SE_Bahamut (B_AtkScratch02_hand002).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 135.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "040_SE_Bahamut (B_AtkScratch02_hand003).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 148.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "041_SE_Bahamut (B_AtkScratch02_hand004).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 160.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "042_SE_Bahamut (B_AtkScratch02_hand005).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 176.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "044_SE_Bahamut (B_AtkScratch02_hand006).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 191.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "046_SE_Bahamut (B_AtkScratch02_hand007).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 208.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "048_SE_Bahamut (B_AtkScratch02_hand008).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Die01_0",
+            "Collections": [
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 2.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "055_SE_Bahamut (B_Die01_0_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkImpulse01",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkImpulseZero01_0",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 4.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "016_SE_Bahamut (B_AtkImpulseZero01_0_voise).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 6.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "017_SE_Bahamut (B_AtkImpulseZero01_0_whoosh).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 48.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "018_SE_Bahamut (B_AtkImpulseZero01_1_grab).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkImpulseZero01_1",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 39.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "113_SE_Bahamut (WING).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkImpulseZero01_2",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 25.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "113_SE_Bahamut (WING).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkImpulseZero01_3",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 3.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "014_SE_Bahamut (B_AtkImpulse01_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 19.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "093_SE_Bahamut (FX_ImpuluseZero_Exp_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkDarkBreath01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 15.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "073_SE_Bahamut (FX_DarkBreath_Breath_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_AtkHomingLaser01",
+            "Collections": [
+                {
+                    "Name": "Sound",
+                    "Notifies": [
+                        {
+                            "TrackPos": 10.0,
+                            "NotifyName": "Voice1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "008_SE_Bahamut (B_AtkHomingLaser01_voice).wav"
+                            ],
+                            "SoundChannel": 4,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 44.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "086_SE_Bahamut (FX_HomingLaser_Shot_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 66.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "087_SE_Bahamut (FX_HomingLaser_Shot_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        {
+                            "TrackPos": 85.0,
+                            "NotifyName": "Effect1",
+                            "NotifyID": 1,
+                            "SoundGroups": [
+                                "FF7_Bahamut_Effect"
+                            ],
+                            "SoundNames": [
+                                "088_SE_Bahamut (FX_HomingLaser_Shot_01).wav"
+                            ],
+                            "SoundChannel": 5,
+                            "SoundVolume": 1.0,
+                            "SoundPlayPercent": 100.0,
+                            "OffsetPos": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Warp01_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        },
+        {
+            "AnimName": "Main|B_Warp02_0",
+            "Collections": [
+                {
+                    "Name": "Sound"
+                },
+                {
+                    "Name": "Effect"
+                },
+                {
+                    "Name": "Event"
+                }
+            ]
+        }
+    ]
+}

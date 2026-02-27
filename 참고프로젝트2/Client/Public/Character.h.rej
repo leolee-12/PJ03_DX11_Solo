@@ -1,0 +1,12 @@
+diff a/Client/Public/Character.h b/Client/Public/Character.h	(rejected hunks)
+@@ -301,6 +301,10 @@
+ 	_float m_fImpuse = { 0.f };
+ 
+ 
++	_bool m_bDoubleJumpEnable = { true };
++	
++
++
+ private:
+ 	HRESULT Ready_Components();
+ 	HRESULT Bind_ShaderResources();
