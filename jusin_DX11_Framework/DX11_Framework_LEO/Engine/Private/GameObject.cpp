@@ -28,6 +28,21 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	if (nullptr != pArg)
+	{
+		auto	pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);
+		m_iFlag = pDesc->iFlag;	// 연습용 변수(의미X)
+	}
+
+	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
+	
+	if (nullptr == m_pTransformCom)
+		return E_FAIL;
+
+	
+	if (FAILED(m_pTransformCom->Initialize(pArg)))
+		return E_FAIL;
+	
 	return S_OK;
 }
 

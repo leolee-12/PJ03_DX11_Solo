@@ -34,6 +34,12 @@
     <Filter Include="06. Renderer">
       <UniqueIdentifier>{6f8190c4-27a5-4e39-80c2-33c14a2047ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component">
+      <UniqueIdentifier>{a5419727-5835-4f12-8478-49eb208d048e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\Transform">
+      <UniqueIdentifier>{de209e97-8631-4306-be40-67fccdcecb7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -90,6 +96,12 @@
     <ClInclude Include="..\Public\Renderer.h">
       <Filter>06. Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Component.h">
+      <Filter>07. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transform.h">
+      <Filter>07. Component\Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -127,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Renderer.cpp">
       <Filter>06. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component.cpp">
+      <Filter>07. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transform.cpp">
+      <Filter>07. Component\Transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
