@@ -10,9 +10,6 @@
     <Filter Include="02. ComponentEx">
       <UniqueIdentifier>{0b7be7ea-5ece-4b74-8a36-195d36bbf317}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. ComponentEx\VIBuffer">
-      <UniqueIdentifier>{4afdc614-bb4a-45ea-8734-e79025d1ebde}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. ComponentEx\Transform">
       <UniqueIdentifier>{0ca10d6b-9118-4fd6-8ad1-eeea06b1eb8e}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,9 @@
     </Filter>
     <Filter Include="00. Manager\07. Light">
       <UniqueIdentifier>{ed8759c0-b941-452d-943f-3e427386ccf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ComponentEx\VIBuffer">
+      <UniqueIdentifier>{4afdc614-bb4a-45ea-8734-e79025d1ebde}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +134,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLightMgr.cpp">
       <Filter>00. Manager\07. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGridCol.cpp">
+      <Filter>02. ComponentEx\VIBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLight.h">
       <Filter>00. Manager\07. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGridCol.h">
+      <Filter>02. ComponentEx\VIBuffer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
