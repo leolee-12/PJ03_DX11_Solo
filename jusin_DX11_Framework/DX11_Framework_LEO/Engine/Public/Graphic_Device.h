@@ -16,6 +16,7 @@ public:
 	HRESULT Clear_BackBuffer_View(const _float4* pClearColor);	// 백버퍼 지우기
 	HRESULT Clear_DepthStencil_View();							// 깊이버퍼 + 스텐실버퍼 지우기
 	HRESULT Present();											// 백버퍼를 프론트버퍼로 교체 (백버퍼를 화면에 보여준다)
+	ID3D11RenderTargetView** Get_BackBufferRTV() { return &m_pBackBufferRTV; }
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };			// COM객체 생성 관련

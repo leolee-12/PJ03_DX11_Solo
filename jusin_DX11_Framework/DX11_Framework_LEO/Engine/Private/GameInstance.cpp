@@ -107,6 +107,11 @@ void CGameInstance::Release_Engine()
 	DestroyInstance();
 }
 
+ID3D11RenderTargetView** CGameInstance::Get_BackBufferRTV() const
+{
+	return m_pGraphic_Device->Get_BackBufferRTV();
+}
+
 #pragma endregion
 
 #pragma region TIMER_MANAGER
