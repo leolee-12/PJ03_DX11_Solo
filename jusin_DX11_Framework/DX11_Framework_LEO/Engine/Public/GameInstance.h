@@ -24,6 +24,7 @@ public:
 	HRESULT	End_Draw();
 	void	Clear_Resources(_int iLevelIndex);
 	void	Release_Engine();
+	ID3D11RenderTargetView** Get_BackBufferRTV() const;
 
 #pragma endregion
 

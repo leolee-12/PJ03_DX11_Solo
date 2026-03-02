@@ -60,9 +60,6 @@
     <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h">
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ImGui_Manager.h">
-      <Filter>01. ImGui_Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_EditPlay.h">
       <Filter>02. Levels</Filter>
     </ClInclude>
@@ -74,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\EditLoader.h">
       <Filter>02. Levels\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui_Manager.h">
+      <Filter>01. ImGui_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
