@@ -1,23 +1,24 @@
-﻿// Client.cpp : 애플리케이션에 대한 진입점을 정의합니다.
+﻿// Tool.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
+
 #include "framework.h"
-#include "Client.h"
-#include "MainApp.h"
+#include "Tool.h"
+#include "ToolApp.h"
 #include "GameInstance.h"
 
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
-HINSTANCE	hInst;							// 현재 인스턴스입니다.
-WCHAR		szTitle[MAX_LOADSTRING];		// 제목 표시줄 텍스트입니다.
-WCHAR		szWindowClass[MAX_LOADSTRING];	// 기본 창 클래스 이름입니다.
+HINSTANCE	hInst;                                // 현재 인스턴스입니다.
+WCHAR		szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
+WCHAR		szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND		g_hWnd;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
-ATOM				MyRegisterClass(HINSTANCE hInstance);
-BOOL				InitInstance(HINSTANCE, int);
-LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(	_In_		HINSTANCE	hInstance,
 						_In_opt_	HINSTANCE	hPrevInstance,
@@ -32,11 +33,11 @@ int APIENTRY wWinMain(	_In_		HINSTANCE	hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	// TODO: 여기에 코드를 입력합니다.
-	CMainApp* pMainApp = { nullptr };
+	CToolApp* pToolApp = { nullptr };
 
 	// 전역 문자열을 초기화합니다.
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_TOOL, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
 	// 애플리케이션 초기화를 수행합니다:
@@ -45,18 +46,18 @@ int APIENTRY wWinMain(	_In_		HINSTANCE	hInstance,
 		return FALSE;
 	}
 
-	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TOOL));
 
 	MSG msg;
 
-	pMainApp = CMainApp::Create();
+	pToolApp = CToolApp::Create();
 
-	if (nullptr == pMainApp)
+	if (nullptr == pToolApp)
 		return FALSE;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-	
+
 	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
 		return E_FAIL;
 
@@ -80,22 +81,22 @@ int APIENTRY wWinMain(	_In_		HINSTANCE	hInstance,
 				DispatchMessage(&msg);
 			}
 		}
-		
+
 		fTimeAcc += pGameInstance->Compute_Timer(TEXT("Timer_Default"));
 
 		if (fTimeAcc >= fFrameRate)
 		{
 			_float fTimeDelta = { pGameInstance->Compute_Timer(TEXT("Timer_FPS60")) };
 
-			pMainApp->Update(fTimeDelta);
-			pMainApp->Render();
+			pToolApp->Update(fTimeDelta);
+			pToolApp->Render();
 
 			fTimeAcc -= fFrameRate;
 		}
 	}
 
 	Safe_Release(pGameInstance);
-	Safe_Release(pMainApp);
+	Safe_Release(pToolApp);
 
 	return (int)msg.wParam;
 }
@@ -118,10 +119,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_TOOL));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = NULL /*MAKEINTRESOURCEW(IDC_CLIENT)*/;
+	wcex.lpszMenuName = NULL /*MAKEINTRESOURCEW(IDC_TOOL)*/;
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -174,6 +175,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// ImGui가 먼저 메시지 처리
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+
 	switch (message)
 	{
 	case WM_COMMAND:
