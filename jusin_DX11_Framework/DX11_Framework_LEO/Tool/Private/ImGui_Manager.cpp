@@ -1,12 +1,15 @@
 #include "ImGui_Manager.h"
+#include "Panel_Base.h"
+#include "Panel_MapTool.h"
 
 IMPLEMENT_SINGLETON(CImGui_Manager)
 
 CImGui_Manager::CImGui_Manager()
+	: m_vecPanels{ static_cast<size_t>(EDITOR_MODE::END), nullptr }
 {
 }
 
-HRESULT CImGui_Manager::Ready_ImGui(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, ID3D11RenderTargetView** ppBackBufferRTV)
+HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, ID3D11RenderTargetView** ppBackBufferRTV)
 {
 	// Make process DPI aware and obtain main monitor scale
 	ImGui_ImplWin32_EnableDpiAwareness();
@@ -56,64 +59,39 @@ HRESULT CImGui_Manager::Ready_ImGui(HWND hWnd, _Inout_ ID3D11Device** ppDevice, 
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
-	m_vClear_color = { 0.45f, 0.55f, 0.60f, 1.00f };
+	if(FAILED(Add_Panels()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
-void CImGui_Manager::Priority_Update(_float fTimeDelta)
+void CImGui_Manager::Update(_float fTimeDelta)
+{
+	for (auto& pPanel : m_vecPanels)
+	{
+		if(pPanel && pPanel->Is_Opened())
+			pPanel->Update(fTimeDelta);
+	}
+}
+
+void CImGui_Manager::Render()
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport();
-}
 
-void CImGui_Manager::Update(_float fTimeDelta)
-{
-	switch (m_eCurMode)
+	for (auto& pPanel : m_vecPanels)
 	{
-		case EDITOR_MODE::DEMO:
-			Update_Example(fTimeDelta);
-			break;
-
-		case EDITOR_MODE::MAP:
-			Update_MapTool(fTimeDelta);
-			break;
-
-		case EDITOR_MODE::OBJECT:
-			Update_ObjectTool(fTimeDelta);
-			break;
-
-		case EDITOR_MODE::UI:
-			Update_UITool(fTimeDelta);
-			break;
-
-		case EDITOR_MODE::EFFECT:
-			Update_EffectTool(fTimeDelta);
-			break;
-
-		default:
-			break;
+		if (pPanel && pPanel->Is_Opened())
+			pPanel->Render();
 	}
-
-}
-
-void CImGui_Manager::Late_Update(_float fTimeDelta)
-{
-	ImGui::End();
-}
-
-void CImGui_Manager::Render()
-{
-	ImGuiIO& io = ImGui::GetIO();
-
+	
 	ImGui::Render();
-	const _float clear_color_with_alpha[4] = { m_vClear_color.x * m_vClear_color.w, m_vClear_color.y * m_vClear_color.w, m_vClear_color.z * m_vClear_color.w, m_vClear_color.w };
 	m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, nullptr);
-	m_pContext->ClearRenderTargetView(m_pBackBufferRTV, clear_color_with_alpha);
-
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	ImGuiIO& io = ImGui::GetIO();
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
@@ -122,71 +100,48 @@ void CImGui_Manager::Render()
 	}
 }
 
-void CImGui_Manager::Update_Example(_float fTimeDelta)
+HRESULT CImGui_Manager::Add_Panels()
 {
-	ImGuiIO& io = ImGui::GetIO();
+	CPanel_Base* pInstance = nullptr;
 
-	ImGui::ShowDemoWindow();
+	pInstance = CPanel_MapTool::Create();
 
-	// 창 만들기 : Begin/End 함수 쌍을 이용하여 이름이 지정된 창을 생성
-	ImGui::Begin("Hello, 159");					// "Hello, 159" 라는 창을 생성
+	if (nullptr == pInstance)
+		return E_FAIL;
 
-	ImGui::Text("I M G U I");					// 텍스트 표시
-	ImGui::Checkbox("Another Window", &m_bAnother_Window);
+	m_vecPanels[ETOUI(EDITOR_MODE::MAP)] = pInstance;
 
-	static float fNum = 0.f;
-	ImGui::SliderFloat("float", &fNum, 0.0f, 1.0f);			// 0.f에서 1.f까지 조절 가능한 슬라이더 생성
+	//pInstance = CPanel_ObjectTool::Create();
+	//
+	//if (nullptr == pInstance)
+	//	return E_FAIL;
+	//
+	//m_vecPanels[ETOUI(EDITOR_MODE::OBJECT)] = pInstance;
+	//
+	//pInstance = CPanel_UITool::Create();
+	//
+	//if (nullptr == pInstance)
+	//	return E_FAIL;
+	//
+	//m_vecPanels[ETOUI(EDITOR_MODE::UI)] = pInstance;
+	//
+	//pInstance = CPanel_EffectTool::Create();
+	//
+	//if (nullptr == pInstance)
+	//	return E_FAIL;
+	//
+	//m_vecPanels[ETOUI(EDITOR_MODE::EFFECT)] = pInstance;
 
-
-	ImGui::ColorEdit3("clear color", (float*)&m_vClear_color);		// 3개의 float 값을 편집하여 색상을 조절
-
-	static int iCnt = 0;
-	if (ImGui::Button("Button")) iCnt++;		// 버튼을 클릭하면 true 반환 (대부분의 위젯은 편집되거나 활성화될 때 true 반환)
-
-	ImGui::SameLine();							// 같은 줄에 다음 위젯 배치
-	ImGui::Text("counter = %d", iCnt);
-
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-
-	if (m_bAnother_Window)
-	{
-		ImGui::Begin("Another Window", &m_bAnother_Window);
-		
-		ImGui::Text("Hello from another window!");
-		
-		if (ImGui::Button("Close Me"))
-			m_bAnother_Window = false;
-		
-		ImGui::End();
-	}
-}
-
-void CImGui_Manager::Update_Main(_float fTimeDelta)
-{
-}
-
-void CImGui_Manager::Update_MapTool(_float fTimeDelta)
-{
-}
-
-void CImGui_Manager::Update_ObjectTool(_float fTimeDelta)
-{
-}
-
-void CImGui_Manager::Update_UITool(_float fTimeDelta)
-{
-}
-
-void CImGui_Manager::Update_EffectTool(_float fTimeDelta)
-{
-}
-
-void CImGui_Manager::Update_Gizmo(_float fTimeDelta)
-{
+	return S_OK;
 }
 
 void CImGui_Manager::Free()
 {
+	__super::Free();
+
+	for(auto& pPanel : m_vecPanels)
+		Safe_Release(pPanel);
+
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
