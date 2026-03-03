@@ -5,7 +5,6 @@
 IMPLEMENT_SINGLETON(CImGui_Manager)
 
 CImGui_Manager::CImGui_Manager()
-	: m_vecPanels{ static_cast<size_t>(EDITOR_MODE::END), nullptr }
 {
 }
 
@@ -67,7 +66,7 @@ HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _
 
 void CImGui_Manager::Update(_float fTimeDelta)
 {
-	for (auto& pPanel : m_vecPanels)
+	for (auto& pPanel : m_Panels)
 	{
 		if(pPanel && pPanel->Is_Opened())
 			pPanel->Update(fTimeDelta);
@@ -81,7 +80,7 @@ void CImGui_Manager::Render()
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport();
 
-	for (auto& pPanel : m_vecPanels)
+	for (auto& pPanel : m_Panels)
 	{
 		if (pPanel && pPanel->Is_Opened())
 			pPanel->Render();
@@ -109,7 +108,7 @@ HRESULT CImGui_Manager::Add_Panels()
 	if (nullptr == pInstance)
 		return E_FAIL;
 
-	m_vecPanels[ETOUI(EDITOR_MODE::MAP)] = pInstance;
+	m_Panels[ETOUI(EDITOR_MODE::MAP)] = pInstance;
 
 	//pInstance = CPanel_ObjectTool::Create();
 	//
@@ -139,7 +138,7 @@ void CImGui_Manager::Free()
 {
 	__super::Free();
 
-	for(auto& pPanel : m_vecPanels)
+	for(auto& pPanel : m_Panels)
 		Safe_Release(pPanel);
 
 	Safe_Release(m_pBackBufferRTV);

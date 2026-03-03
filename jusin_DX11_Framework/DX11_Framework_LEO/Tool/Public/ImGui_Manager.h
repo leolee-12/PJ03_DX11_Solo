@@ -22,7 +22,7 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
 
-	vector<class CPanel_Base*>	m_vecPanels;
+	array<class CPanel_Base*, EDITOR_MODE_COUNT> m_Panels{};
 
 private:
 	HRESULT		Add_Panels();
