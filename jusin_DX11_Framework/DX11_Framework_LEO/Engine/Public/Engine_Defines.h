@@ -6,6 +6,7 @@
 
 using namespace DirectX;
 
+#include <array>
 #include <vector>
 #include <list>
 #include <map>
