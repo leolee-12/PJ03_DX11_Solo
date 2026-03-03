@@ -10,6 +10,7 @@ namespace Engine
 	typedef		char						_char;
 
 	typedef		wchar_t						_tchar;
+	typedef		string						_string;
 	typedef		wstring						_wstring;
 	
 	typedef		signed short				_short;

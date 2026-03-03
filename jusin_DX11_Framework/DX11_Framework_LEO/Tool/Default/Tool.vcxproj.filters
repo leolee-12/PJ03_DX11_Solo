@@ -28,6 +28,9 @@
     <Filter Include="02. Levels\Loader">
       <UniqueIdentifier>{4c336e61-0417-47b7-8b6f-3dab5d7d54e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. ImGui_Manager\Panels">
+      <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -74,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Manager.h">
       <Filter>01. ImGui_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_Base.h">
+      <Filter>01. ImGui_Manager\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_MapTool.h">
+      <Filter>01. ImGui_Manager\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +143,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\EditLoader.cpp">
       <Filter>02. Levels\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_Base.cpp">
+      <Filter>01. ImGui_Manager\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_MapTool.cpp">
+      <Filter>01. ImGui_Manager\Panels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -24,9 +24,7 @@ HRESULT CToolApp::Initialize()
 		return E_FAIL;
 	}
 
-
-
-	if (FAILED(CImGui_Manager::GetInstance()->Ready_ImGui(g_hWnd, &m_pDevice, &m_pContext, m_pGameInstance->Get_BackBufferRTV())))
+	if (FAILED(CImGui_Manager::GetInstance()->Initialize(g_hWnd, &m_pDevice, &m_pContext, m_pGameInstance->Get_BackBufferRTV())))
 	{
 		MSG_BOX("ImGui Ready Failed");
 		return E_FAIL;
@@ -41,9 +39,8 @@ HRESULT CToolApp::Initialize()
 void CToolApp::Update(_float fTimeDelta)
 {
 	m_pGameInstance->Update_Engine(fTimeDelta);
-	CImGui_Manager::GetInstance()->Priority_Update(fTimeDelta);
+
 	CImGui_Manager::GetInstance()->Update(fTimeDelta);
-	CImGui_Manager::GetInstance()->Late_Update(fTimeDelta);
 }
 
 HRESULT CToolApp::Render()

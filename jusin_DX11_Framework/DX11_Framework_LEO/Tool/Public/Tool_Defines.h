@@ -12,7 +12,7 @@ namespace Tool
 	static constexpr unsigned int	g_iWinSizeY = { 720 };
 
 	enum class LEVEL { STATIC, LOADING, EDITLOGO, EDITPLAY, END };
-	enum class EDITOR_MODE { DEMO, MAP, OBJECT, UI, EFFECT, END };
+	enum class EDITOR_MODE { MAP, OBJECT, UI, EFFECT, END };
 }
 
 extern HWND g_hWnd;

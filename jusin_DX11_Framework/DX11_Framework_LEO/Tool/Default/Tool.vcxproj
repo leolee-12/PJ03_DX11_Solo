@@ -142,6 +142,8 @@
     <ClInclude Include="..\Public\Level_EditPlay.h" />
     <ClInclude Include="..\Public\Level_EditLoading.h" />
     <ClInclude Include="..\Public\Level_EditLogo.h" />
+    <ClInclude Include="..\Public\Panel_Base.h" />
+    <ClInclude Include="..\Public\Panel_MapTool.h" />
     <ClInclude Include="..\Public\ToolApp.h" />
     <ClInclude Include="..\Public\Tool_Defines.h" />
     <ClInclude Include="framework.h" />
@@ -163,6 +165,8 @@
     <ClCompile Include="..\Private\Level_EditPlay.cpp" />
     <ClCompile Include="..\Private\Level_EditLoading.cpp" />
     <ClCompile Include="..\Private\Level_EditLogo.cpp" />
+    <ClCompile Include="..\Private\Panel_Base.cpp" />
+    <ClCompile Include="..\Private\Panel_MapTool.cpp" />
     <ClCompile Include="..\Private\ToolApp.cpp" />
     <ClCompile Include="Tool.cpp" />
   </ItemGroup>
