@@ -38,4 +38,5 @@ CPanel_MapTool* CPanel_MapTool::Create(void* pArg)
 
 void CPanel_MapTool::Free()
 {
+	__super::Free();
 }
