@@ -17,11 +17,16 @@ void CPanel_Base::Update(_float fTimeDelta)
 
 void CPanel_Base::Render()
 {
-	ImGuiIO& io = ImGui::GetIO();
-
+	// 공식 예시 패널
 	ImGui::ShowDemoWindow();
 
-	Begin_Panel();
+	if (!Begin_Panel())
+	{
+		End_Panel();	// 접혀있어도 Begin은 호출된 것 : End를 반드시 호출
+		return;
+	}
+
+	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Text("I M G U I");					// 텍스트 표시
 
@@ -47,8 +52,9 @@ void CPanel_Base::Render()
 
 _bool CPanel_Base::Begin_Panel()
 {
-    if(m_bOpen)	return ImGui::Begin(m_strTitle.c_str(), &m_bOpen, m_iWindowFlags);
-	else		return false;
+	// ImGui_Manager에서 Is_Opened() 체크 후 호출 : m_bOpen은 항상 true
+    return ImGui::Begin(m_strTitle.c_str(), &m_bOpen, m_iWindowFlags);
+	// 패널이 접혀있으면 false 반환
 }
 
 void CPanel_Base::End_Panel()
