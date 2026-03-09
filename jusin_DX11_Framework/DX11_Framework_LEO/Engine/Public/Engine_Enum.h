@@ -8,11 +8,11 @@ namespace Engine
 	enum class PROTOTYPE { GAMEOBJECT, COMPONENT };
 
 	enum class RENDERID { PRIORITY, NONBLEND, BLEND, UI, END };
+	
+	enum class STATE {	RIGHT, UP, LOOK, POSITION, END };
 
 	//// Dynamic 컴포넌트 경우 매 프레임마다 갱신해야하는 컴포넌트 집단
 	//enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
-	//
-	//enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
 	//
 	//enum ROTATION { ROT_X, ROT_Y, ROT_Z, ROT_END };
 	//
