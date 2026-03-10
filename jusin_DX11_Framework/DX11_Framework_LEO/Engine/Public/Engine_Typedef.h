@@ -35,9 +35,9 @@ namespace Engine
 	typedef		HXMVECTOR					_hvector;
 	typedef		CXMVECTOR					_cvector;
 
-	typedef		XMVECTOR					_matrix;
-	typedef		FXMVECTOR					_fmatrix;
-	typedef		CXMVECTOR					_cmatrix;
+	typedef		XMMATRIX					_matrix;
+	typedef		FXMMATRIX					_fmatrix;
+	typedef		CXMMATRIX					_cmatrix;
 }
 
 #endif // Engine_Typedef_h__
