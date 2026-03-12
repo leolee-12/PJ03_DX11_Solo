@@ -10,6 +10,12 @@ namespace Engine
 		unsigned int	iViewportWidth, iViewportHeight;
 		unsigned int	iNumLevels;
 	}ENGINE_DESC;
+
+	typedef struct tagVertexPositionTexcoord
+	{
+		XMFLOAT3	vPosition;
+		XMFLOAT2	vTexcoord;
+	}VTXTEX;
 }
 
 #endif // Engine_Struct_h__

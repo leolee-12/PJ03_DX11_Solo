@@ -40,6 +40,21 @@
     <Filter Include="07. Component\Transform">
       <UniqueIdentifier>{de209e97-8631-4306-be40-67fccdcecb7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\VIBuffer">
+      <UniqueIdentifier>{36983db3-4e52-47e8-b7ba-4d9ea71e0314}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Rect">
+      <UniqueIdentifier>{115d6a9b-8587-411f-b693-158d6c032fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Terrain">
+      <UniqueIdentifier>{12c761f9-0fd6-4389-8e6b-a6a8a6637878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Cube">
+      <UniqueIdentifier>{71a99488-e5f9-448f-873b-f8c49a3e158c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Model">
+      <UniqueIdentifier>{342dae11-30e7-4b61-825d-49336956ae1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -102,6 +117,12 @@
     <ClInclude Include="..\Public\Transform.h">
       <Filter>07. Component\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer.h">
+      <Filter>07. Component\VIBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect.h">
+      <Filter>07. Component\VIBuffer\Rect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -145,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Transform.cpp">
       <Filter>07. Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer.cpp">
+      <Filter>07. Component\VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
+      <Filter>07. Component\VIBuffer\Rect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
