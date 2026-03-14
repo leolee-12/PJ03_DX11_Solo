@@ -8,8 +8,8 @@
 
 ```
 프로젝트루트/
-├── UE4-4.27/Engine/       ← 정리된 UE4 소스
-├── analysis/              ← 분석 결과 저장
+├── 참고프로젝트_UE4/Source/ ← 정리된 UE4 소스
+├── docs/Ref_UE4/           ← 분석 결과 저장
 │   ├── 01_Core/
 │   ├── 02_CoreUObject/
 │   ├── 03_Engine/
