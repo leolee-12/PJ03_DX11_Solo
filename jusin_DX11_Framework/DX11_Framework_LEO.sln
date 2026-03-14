@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Default\Cl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Default\Engine.vcxproj", "{61F1E11A-5800-4C44-A981-D9378A8B9767}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tool", "Tool\Default\Tool.vcxproj", "{D0EC40A2-2BE8-4678-8CC2-FCE757CA780A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Default\Editor.vcxproj", "{D0EC40A2-2BE8-4678-8CC2-FCE757CA780A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{61F1E11A-5800-4C44-A981-D9378A8B9767} = {61F1E11A-5800-4C44-A981-D9378A8B9767}
 	EndProjectSection
