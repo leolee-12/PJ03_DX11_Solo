@@ -39,8 +39,8 @@
 
 #### [1-1] Core — 구조 파악
 
-- 대상: `Engine/Source/Runtime/Core/Public/` 의 .h 파일
-- 저장: `analysis/01_Core/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Core/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/01_Core/01_구조파악.md`
 
 분석 항목:
 1. 클래스/구조체 계층 구조를 트리 다이어그램으로
@@ -61,8 +61,8 @@
 #### [1-2] Core — 메모리 관리 심화
 
 - 선행: [1-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Core/` 메모리 관련 코드 (.h + .cpp)
-- 저장: `analysis/01_Core/02_메모리관리.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Core/` 메모리 관련 코드 (.h + .cpp)
+- 저장: `docs/Ref_UE4/01_Core/02_메모리관리.md`
 
 분석 항목:
 1. FMalloc 계열 할당자의 상속 구조와 각 할당자의 특성
@@ -75,8 +75,8 @@
 #### [1-3] Core — 델리게이트 심화
 
 - 선행: [1-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Core/` 델리게이트 관련 코드
-- 저장: `analysis/01_Core/03_델리게이트.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Core/` 델리게이트 관련 코드
+- 저장: `docs/Ref_UE4/01_Core/03_델리게이트.md`
 
 분석 항목:
 1. DECLARE_DELEGATE 매크로가 실제로 어떤 코드를 생성하는지 전개 과정
@@ -89,8 +89,8 @@
 #### [1-4] Core — 컨테이너 심화
 
 - 선행: [1-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Core/` 컨테이너 관련 코드
-- 저장: `analysis/01_Core/04_컨테이너.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Core/` 컨테이너 관련 코드
+- 저장: `docs/Ref_UE4/01_Core/04_컨테이너.md`
 
 분석 항목:
 1. TArray의 메모리 할당 전략 (초기 크기, 증가 정책, Slack)
@@ -104,8 +104,8 @@
 #### [1-5] Core — 수학 라이브러리 심화
 
 - 선행: [1-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Core/` 수학 관련 코드
-- 저장: `analysis/01_Core/05_수학라이브러리.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Core/` 수학 관련 코드
+- 저장: `docs/Ref_UE4/01_Core/05_수학라이브러리.md`
 
 분석 항목:
 1. UE4의 좌표계 컨벤션 (왼손/오른손, 축 방향)과 DirectX 좌표계와의 관계
@@ -122,8 +122,8 @@ DX11에서 직접 투영 행렬과 뷰 행렬을 만들 때 주의해야 할 점
 #### [1-6] Core — 문자열 시스템 심화
 
 - 선행: [1-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Core/` 문자열 관련 코드
-- 저장: `analysis/01_Core/06_문자열시스템.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Core/` 문자열 관련 코드
+- 저장: `docs/Ref_UE4/01_Core/06_문자열시스템.md`
 
 분석 항목:
 1. FName의 전역 해시 테이블 구조 — 엔트리 저장 방식, 해시 함수, 슬롯 탐색, 동시성 처리
@@ -140,7 +140,7 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [1-7] Core — 프레임워크 적용
 
 - 선행: [1-1] ~ [1-6] 결과 파일을 모두 읽을 것
-- 저장: `analysis/01_Core/07_프레임워크_적용.md`
+- 저장: `docs/Ref_UE4/01_Core/07_프레임워크_적용.md`
 
 분석 항목:
 1. UE4 Core의 메모리 관리 패턴 중 DX11 학습용 소규모 엔진에 적용할 만한 것
@@ -154,8 +154,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 
 #### [2-1] CoreUObject — 구조 파악
 
-- 대상: `Engine/Source/Runtime/CoreUObject/Public/` 의 .h 파일
-- 저장: `analysis/02_CoreUObject/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/CoreUObject/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/02_CoreUObject/01_구조파악.md`
 
 분석 항목:
 1. UObject 클래스의 상속 계층 (UObjectBase → UObjectBaseUtility → UObject)
@@ -169,8 +169,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [2-2] CoreUObject — UObject 생명주기
 
 - 선행: [2-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/CoreUObject/` (.h + .cpp)
-- 저장: `analysis/02_CoreUObject/02_UObject_생명주기.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/CoreUObject/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/02_CoreUObject/02_UObject_생명주기.md`
 
 분석 항목:
 1. NewObject<T>() 호출부터 메모리 할당, 생성자 호출까지의 전체 흐름
@@ -184,8 +184,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [2-3] CoreUObject — 리플렉션 시스템
 
 - 선행: [2-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/CoreUObject/` 리플렉션 관련 코드
-- 저장: `analysis/02_CoreUObject/03_리플렉션.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/CoreUObject/` 리플렉션 관련 코드
+- 저장: `docs/Ref_UE4/02_CoreUObject/03_리플렉션.md`
 
 분석 항목:
 1. UCLASS(), UPROPERTY(), UFUNCTION() 매크로가 생성하는 코드
@@ -197,8 +197,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 
 #### [3-1] Engine — 구조 파악
 
-- 대상: `Engine/Source/Runtime/Engine/Classes/` 의 .h 파일
-- 저장: `analysis/03_Engine/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Engine/Classes/` 의 .h 파일
+- 저장: `docs/Ref_UE4/03_Engine/01_구조파악.md`
 
 분석 항목:
 1. AActor의 상속 계층과 주요 파생 클래스
@@ -212,8 +212,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [3-2] Engine — Actor-Component 생명주기
 
 - 선행: [3-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Engine/` (.h + .cpp)
-- 저장: `analysis/03_Engine/02_Actor_Component_생명주기.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Engine/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/03_Engine/02_Actor_Component_생명주기.md`
 
 분석 항목:
 1. SpawnActor 호출 시 일어나는 일 (메모리 할당 → 컴포넌트 등록 → BeginPlay)
@@ -227,8 +227,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [3-3] Engine — 게임 루프
 
 - 선행: [3-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Engine/` + `Engine/Source/Runtime/Launch/`
-- 저장: `analysis/03_Engine/03_게임루프.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Engine/` + `참고프로젝트_UE4/Source/Runtime/Launch/`
+- 저장: `docs/Ref_UE4/03_Engine/03_게임루프.md`
 
 분석 항목:
 1. WinMain → FEngineLoop::PreInit → Init → Tick 전체 시퀀스
@@ -244,8 +244,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 
 #### [4-1] RHI — 구조 파악
 
-- 대상: `Engine/Source/Runtime/RHI/Public/` 의 .h 파일
-- 저장: `analysis/04_RHI/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/RHI/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/04_RHI/01_구조파악.md`
 
 분석 항목:
 1. FDynamicRHI 인터페이스의 주요 가상 함수 목록을 카테고리별로 (리소스 생성, 렌더 상태, Draw Call, 컴퓨트 등)
@@ -258,8 +258,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [4-2] RHI — 추상화 설계 분석
 
 - 선행: [4-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/RHI/` + `Engine/Source/Runtime/Windows/D3D11RHI/`
-- 저장: `analysis/04_RHI/02_추상화_설계.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/RHI/` + `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/`
+- 저장: `docs/Ref_UE4/04_RHI/02_추상화_설계.md`
 
 분석 항목:
 1. FDynamicRHI 인터페이스를 D3D11RHI가 어떻게 구현하는지 (RHI 추상 함수 → D3D11 구현 매핑 예시 3개 이상)
@@ -271,8 +271,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 
 #### [5-1] D3D11RHI — 구조 파악
 
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` 의 모든 .h 파일
-- 저장: `analysis/05_D3D11RHI/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` 의 모든 .h 파일
+- 저장: `docs/Ref_UE4/05_D3D11RHI/01_구조파악.md`
 
 분석 항목:
 1. FD3D11DynamicRHI 클래스의 멤버 변수와 주요 함수 목록
@@ -285,8 +285,8 @@ string 기반 식별자를 사용하는 시스템(AI 상태 이름 등)에서 FN
 #### [5-2] D3D11RHI — 디바이스 초기화 흐름
 
 - 선행: [5-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
-- 저장: `analysis/05_D3D11RHI/02_디바이스_초기화.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/05_D3D11RHI/02_디바이스_초기화.md`
 
 분석 항목:
 IDXGIFactory → D3D11CreateDevice → SwapChain 생성까지의 전체 흐름.
@@ -298,8 +298,8 @@ IDXGIFactory → D3D11CreateDevice → SwapChain 생성까지의 전체 흐름.
 #### [5-3] D3D11RHI — 버텍스버퍼 생성 흐름
 
 - 선행: [5-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
-- 저장: `analysis/05_D3D11RHI/03_버텍스버퍼_생성.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/05_D3D11RHI/03_버텍스버퍼_생성.md`
 
 분석 항목:
 CreateBuffer → IASetVertexBuffers까지의 전체 흐름.
@@ -310,8 +310,8 @@ CreateBuffer → IASetVertexBuffers까지의 전체 흐름.
 #### [5-4] D3D11RHI — 텍스처 생성 흐름
 
 - 선행: [5-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
-- 저장: `analysis/05_D3D11RHI/04_텍스처_생성.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/05_D3D11RHI/04_텍스처_생성.md`
 
 분석 항목:
 CreateTexture2D → SRV 생성까지의 전체 흐름.
@@ -322,8 +322,8 @@ CreateTexture2D → SRV 생성까지의 전체 흐름.
 #### [5-5] D3D11RHI — 셰이더 바인딩 흐름
 
 - 선행: [5-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
-- 저장: `analysis/05_D3D11RHI/05_셰이더_바인딩.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/05_D3D11RHI/05_셰이더_바인딩.md`
 
 분석 항목:
 VS/PS 컴파일 → 바인딩 → 상수버퍼 설정까지의 전체 흐름.
@@ -334,8 +334,8 @@ VS/PS 컴파일 → 바인딩 → 상수버퍼 설정까지의 전체 흐름.
 #### [5-6] D3D11RHI — 렌더타겟 및 DrawCall 흐름
 
 - 선행: [5-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
-- 저장: `analysis/05_D3D11RHI/06_렌더타겟_DrawCall.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/05_D3D11RHI/06_렌더타겟_DrawCall.md`
 
 분석 항목:
 1. RTV 생성 → OMSetRenderTargets까지의 렌더타겟 설정 흐름
@@ -347,8 +347,8 @@ VS/PS 컴파일 → 바인딩 → 상수버퍼 설정까지의 전체 흐름.
 #### [5-7] D3D11RHI vs D3D12RHI 비교
 
 - 선행: [5-2] ~ [5-6] 결과 파일을 모두 읽을 것
-- 대상: `Engine/Source/Runtime/Windows/D3D11RHI/` + `Engine/Source/Runtime/D3D12RHI/`
-- 저장: `analysis/05_D3D11RHI/07_D3D11_vs_D3D12.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Windows/D3D11RHI/` + `참고프로젝트_UE4/Source/Runtime/D3D12RHI/`
+- 저장: `docs/Ref_UE4/05_D3D11RHI/07_D3D11_vs_D3D12.md`
 
 비교 대상:
 1. 디바이스 초기화
@@ -364,8 +364,8 @@ VS/PS 컴파일 → 바인딩 → 상수버퍼 설정까지의 전체 흐름.
 
 #### [6-1] RenderCore — 구조 파악
 
-- 대상: `Engine/Source/Runtime/RenderCore/Public/` 의 .h 파일
-- 저장: `analysis/06_RenderCore/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/RenderCore/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/06_RenderCore/01_구조파악.md`
 
 분석 항목:
 1. 렌더 커맨드(FRenderCommand) 시스템 구조
@@ -377,8 +377,8 @@ VS/PS 컴파일 → 바인딩 → 상수버퍼 설정까지의 전체 흐름.
 
 #### [7-1] Renderer — 구조 파악
 
-- 대상: `Engine/Source/Runtime/Renderer/Private/` 의 .h 파일 (Renderer는 대부분 Private)
-- 저장: `analysis/07_Renderer/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Renderer/Private/` 의 .h 파일 (Renderer는 대부분 Private)
+- 저장: `docs/Ref_UE4/07_Renderer/01_구조파악.md`
 
 분석 항목:
 1. FSceneRenderer 상속 계층 (FDeferredShadingSceneRenderer 등)
@@ -391,8 +391,8 @@ VS/PS 컴파일 → 바인딩 → 상수버퍼 설정까지의 전체 흐름.
 #### [7-2] Renderer — 디퍼드 렌더링 파이프라인
 
 - 선행: [7-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Source/Runtime/Renderer/Private/` (.h + .cpp)
-- 저장: `analysis/07_Renderer/02_디퍼드렌더링.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Renderer/Private/` (.h + .cpp)
+- 저장: `docs/Ref_UE4/07_Renderer/02_디퍼드렌더링.md`
 
 분석 항목:
 FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
@@ -413,8 +413,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [8-1] PhysicsCore — 구조 파악
 
-- 대상: `Engine/Source/Runtime/PhysicsCore/` 의 .h 파일
-- 저장: `analysis/08_PhysicsCore/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/PhysicsCore/` 의 .h 파일
+- 저장: `docs/Ref_UE4/08_PhysicsCore/01_구조파악.md`
 
 분석 항목:
 1. 물리 인터페이스 추상화 구조 (PhysX 래핑 방식)
@@ -426,8 +426,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [9-1] AnimationCore — 구조 파악
 
-- 대상: `Engine/Source/Runtime/AnimationCore/` 의 .h 파일
-- 저장: `analysis/09_AnimationCore/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/AnimationCore/` 의 .h 파일
+- 저장: `docs/Ref_UE4/09_AnimationCore/01_구조파악.md`
 
 분석 항목:
 1. 애니메이션 관련 핵심 타입 (FBoneReference, FTransform 등)
@@ -439,8 +439,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [10-1] AIModule — 구조 파악
 
-- 대상: `Engine/Source/Runtime/AIModule/Public/` 의 .h 파일
-- 저장: `analysis/10_AIModule/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/AIModule/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/10_AIModule/01_구조파악.md`
 
 분석 항목:
 1. AAIController의 역할과 APawn과의 관계
@@ -453,8 +453,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [11-1] NavigationSystem — 구조 파악
 
-- 대상: `Engine/Source/Runtime/NavigationSystem/` 의 .h 파일
-- 저장: `analysis/11_Navigation/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/NavigationSystem/` 의 .h 파일
+- 저장: `docs/Ref_UE4/11_Navigation/01_구조파악.md`
 
 분석 항목:
 1. UNavigationSystemV1의 역할
@@ -470,8 +470,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [12-1] Slate — 구조 파악
 
-- 대상: `Engine/Source/Runtime/SlateCore/Public/` + `Engine/Source/Runtime/Slate/Public/` 의 .h 파일
-- 저장: `analysis/12_Slate/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/SlateCore/Public/` + `참고프로젝트_UE4/Source/Runtime/Slate/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/12_Slate/01_구조파악.md`
 
 분석 항목:
 1. SWidget 상속 계층과 주요 위젯 타입 (SButton, STextBlock 등)
@@ -485,8 +485,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [13-1] UMG — 구조 파악
 
-- 대상: `Engine/Source/Runtime/UMG/Public/` 의 .h 파일
-- 저장: `analysis/13_UMG/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/UMG/Public/` 의 .h 파일
+- 저장: `docs/Ref_UE4/13_UMG/01_구조파악.md`
 
 분석 항목:
 1. UWidget → UUserWidget 계층 구조
@@ -498,8 +498,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [14-1] Editor — 구조 파악
 
-- 대상: `Engine/Source/Editor/` 에서 UnrealEd, MainFrame, LevelEditor, ContentBrowser, PropertyEditor, DetailCustomizations 모듈의 .h 파일
-- 저장: `analysis/14_Editor/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Editor/` 에서 UnrealEd, MainFrame, LevelEditor, ContentBrowser, PropertyEditor, DetailCustomizations 모듈의 .h 파일
+- 저장: `docs/Ref_UE4/14_Editor/01_구조파악.md`
 
 분석 항목:
 1. 에디터 메인 프레임의 탭/패널 구조
@@ -513,8 +513,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [14-2] Editor — 에디터 기능 요구사항 정리
 
 - 선행: [14-1] 결과 파일을 먼저 읽을 것
-- 대상: Engine/Source/Editor/ 전체 모듈 목록 + Engine/Source/Developer/ 전체 모듈 목록
-- 저장: analysis/14_Editor/02_에디터_기능_요구사항.md
+- 대상: 참고프로젝트_UE4/Source/Editor/ 전체 모듈 목록 + 참고프로젝트_UE4/Source/Developer/ 전체 모듈 목록
+- 저장: docs/Ref_UE4/14_Editor/02_에디터_기능_요구사항.md
 
 분석 항목:
 1. Source/Editor/와 Source/Developer/의 전체 모듈을 기능 카테고리별로 분류 (뷰포트, 에셋 편집, 노드 그래프, 타임라인, 브러시 도구, 프로파일링, 디버깅 등)
@@ -528,8 +528,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [14-3] Editor — 노드 그래프 에디터 구조
 
 - 선행: [14-1] 결과 파일을 먼저 읽을 것
-- 대상: Engine/Source/Editor/ 에서 GraphEditor, MaterialEditor, BlueprintGraph, Kismet 모듈의 .h 파일
-- 저장: analysis/14_Editor/03_노드그래프.md
+- 대상: 참고프로젝트_UE4/Source/Editor/ 에서 GraphEditor, MaterialEditor, BlueprintGraph, Kismet 모듈의 .h 파일
+- 저장: docs/Ref_UE4/14_Editor/03_노드그래프.md
 
 분석 항목:
 1. SGraphEditor의 핵심 구조 (노드, 핀, 연결)
@@ -543,8 +543,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [14-4] Editor — 타임라인/시퀀서 구조
 
 - 선행: [14-1] 결과 파일을 먼저 읽을 것
-- 대상: Engine/Source/Editor/ 에서 Sequencer, SequencerWidgets, CurveEditor 모듈의 .h 파일
-- 저장: analysis/14_Editor/04_타임라인_시퀀서.md
+- 대상: 참고프로젝트_UE4/Source/Editor/ 에서 Sequencer, SequencerWidgets, CurveEditor 모듈의 .h 파일
+- 저장: docs/Ref_UE4/14_Editor/04_타임라인_시퀀서.md
 
 분석 항목:
 1. 시퀀서의 트랙/섹션/키프레임 데이터 모델
@@ -557,8 +557,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [14-5] Editor — 에셋 에디터 패턴
 
 - 선행: [14-1] 결과 파일을 먼저 읽을 것
-- 대상: Engine/Source/Editor/ 에서 StaticMeshEditor, SkeletalMeshEditor, TextureEditor 모듈 + Engine/Source/Developer/AssetTools/ 의 .h 파일
-- 저장: analysis/14_Editor/05_에셋에디터.md
+- 대상: 참고프로젝트_UE4/Source/Editor/ 에서 StaticMeshEditor, SkeletalMeshEditor, TextureEditor 모듈 + 참고프로젝트_UE4/Source/Developer/AssetTools/ 의 .h 파일
+- 저장: docs/Ref_UE4/14_Editor/05_에셋에디터.md
 
 분석 항목:
 1. FAssetEditorToolkit을 상속하는 에셋 에디터의 공통 패턴
@@ -574,8 +574,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [15-1] Network — 구조 파악
 
-- 대상: `Engine/Source/Runtime/Net/` + `Engine/Source/Runtime/Sockets/` 의 .h 파일
-- 저장: `analysis/15_Network/01_구조파악.md`
+- 대상: `참고프로젝트_UE4/Source/Runtime/Net/` + `참고프로젝트_UE4/Source/Runtime/Sockets/` 의 .h 파일
+- 저장: `docs/Ref_UE4/15_Network/01_구조파악.md`
 
 분석 항목:
 1. FSocket 추상화와 플랫폼별 구현 구조
@@ -592,8 +592,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 
 #### [S-1] 셰이더 — 공통 기반
 
-- 대상: `Engine/Shaders/Private/` 의 Common.ush, Definitions.usf, BRDF.ush
-- 저장: `analysis/Shaders/01_공통셰이더.md`
+- 대상: `참고프로젝트_UE4/Shaders/Private/` 의 Common.ush, Definitions.usf, BRDF.ush
+- 저장: `docs/Ref_UE4/Shaders/01_공통셰이더.md`
 
 분석 항목:
 1. 전역으로 정의되는 구조체 (FVertexFactoryInput, FMaterialAttributes 등)
@@ -606,8 +606,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [S-2] 셰이더 — Base Pass
 
 - 선행: [S-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Shaders/Private/` 의 BasePassPixelShader.usf, BasePassVertexShader.usf, BasePassVertexCommon.ush, BasePassCommon.ush
-- 저장: `analysis/Shaders/02_BasePass.md`
+- 대상: `참고프로젝트_UE4/Shaders/Private/` 의 BasePassPixelShader.usf, BasePassVertexShader.usf, BasePassVertexCommon.ush, BasePassCommon.ush
+- 저장: `docs/Ref_UE4/Shaders/02_BasePass.md`
 
 분석 항목:
 1. 버텍스 셰이더 입력 → 출력 구조
@@ -620,8 +620,8 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [S-3] 셰이더 — Deferred Lighting
 
 - 선행: [S-1] 결과 파일을 먼저 읽을 것
-- 대상: `Engine/Shaders/Private/` 의 DeferredLightingCommon.ush, DeferredShadingCommon.ush
-- 저장: `analysis/Shaders/03_DeferredLighting.md`
+- 대상: `참고프로젝트_UE4/Shaders/Private/` 의 DeferredLightingCommon.ush, DeferredShadingCommon.ush
+- 저장: `docs/Ref_UE4/Shaders/03_DeferredLighting.md`
 
 분석 항목:
 1. GBuffer 읽기/디코딩 함수들
@@ -638,7 +638,7 @@ FDeferredShadingSceneRenderer::Render() 함수의 실행 흐름을 추적.
 #### [F-1] 종합 아키텍처 정리
 
 - 선행: 모든 모듈의 1단계 결과 파일을 읽을 것
-- 저장: `analysis/00_종합_아키텍처.md`
+- 저장: `docs/Ref_UE4/00_종합_아키텍처.md`
 
 분석 항목:
 1. 모듈 간 의존 관계 (어떤 모듈이 어떤 모듈에 의존하는지)
