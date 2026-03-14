@@ -1,0 +1,151 @@
+#include "ImGui_Manager.h"
+#include "Panel_Base.h"
+#include "Panel_MapTool.h"
+
+IMPLEMENT_SINGLETON(CImGui_Manager)
+
+CImGui_Manager::CImGui_Manager()
+{
+}
+
+HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, ID3D11RenderTargetView** ppBackBufferRTV)
+{
+	// Make process DPI aware and obtain main monitor scale
+	ImGui_ImplWin32_EnableDpiAwareness();
+	_float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
+
+	// 장치 전달
+	m_pDevice = *ppDevice;
+	m_pContext = *ppContext;
+	m_pBackBufferRTV = *ppBackBufferRTV;
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pBackBufferRTV);
+
+	// ImGui 컨텍스트 생성
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// IF using Docking Branch - Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// IF using Docking Branch - Multi-Viewport
+	//io.ConfigViewportsNoAutoMerge = true;
+	//io.ConfigViewportsNoTaskBarIcon = true;
+	//io.ConfigDockingAlwaysTabBar = true;
+	//io.ConfigDockingTransparentPayload = true;
+
+	// 플랫폼/렌더러 백엔드 초기화
+	ImGui_ImplWin32_Init(g_hWnd);
+	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
+
+	// 스타일 설정
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
+
+	// Setup scaling
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
+	style.FontScaleDpi = main_scale;        // Set initial font scale. (in docking branch: using io.ConfigDpiScaleFonts=true automatically overrides this for every window depending on the current monitor)
+	io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
+	io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
+
+	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	if(FAILED(Add_Panels()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CImGui_Manager::Update(_float fTimeDelta)
+{
+	for (auto& pPanel : m_Panels)
+	{
+		if(pPanel && pPanel->Is_Opened())
+			pPanel->Update(fTimeDelta);
+	}
+}
+
+void CImGui_Manager::Render()
+{
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::DockSpaceOverViewport();
+
+	for (auto& pPanel : m_Panels)
+	{
+		if (pPanel && pPanel->Is_Opened())
+			pPanel->Render();
+	}
+	
+	ImGui::Render();
+	m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, nullptr);
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
+}
+
+HRESULT CImGui_Manager::Add_Panels()
+{
+	CPanel_Base* pInstance = nullptr;
+
+	pInstance = CPanel_MapTool::Create();
+
+	if (nullptr == pInstance)
+		return E_FAIL;
+
+	m_Panels[ETOUI(EDITOR_MODE::MAP)] = pInstance;
+
+	//pInstance = CPanel_ObjectTool::Create();
+	//
+	//if (nullptr == pInstance)
+	//	return E_FAIL;
+	//
+	//m_vecPanels[ETOUI(EDITOR_MODE::OBJECT)] = pInstance;
+	//
+	//pInstance = CPanel_UITool::Create();
+	//
+	//if (nullptr == pInstance)
+	//	return E_FAIL;
+	//
+	//m_vecPanels[ETOUI(EDITOR_MODE::UI)] = pInstance;
+	//
+	//pInstance = CPanel_EffectTool::Create();
+	//
+	//if (nullptr == pInstance)
+	//	return E_FAIL;
+	//
+	//m_vecPanels[ETOUI(EDITOR_MODE::EFFECT)] = pInstance;
+
+	return S_OK;
+}
+
+void CImGui_Manager::Free()
+{
+	__super::Free();
+
+	for(auto& pPanel : m_Panels)
+		Safe_Release(pPanel);
+
+	Safe_Release(m_pBackBufferRTV);
+	Safe_Release(m_pContext);
+	Safe_Release(m_pDevice);
+
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+}
