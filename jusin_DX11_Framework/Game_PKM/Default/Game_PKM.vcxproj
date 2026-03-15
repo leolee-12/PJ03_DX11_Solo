@@ -18,36 +18,44 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\Game_PKM_Defines.h" />
+    <ClInclude Include="..\Public\Player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\Player.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{d0ec40a2-2be8-4678-8cc2-fce757ca780a}</ProjectGuid>
-    <RootNamespace>Editor</RootNamespace>
+    <ProjectGuid>{93e8ea9c-9f0e-4fbc-a177-e1c9ccad323b}</ProjectGuid>
+    <RootNamespace>GamePKM</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Editor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -60,19 +68,15 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\ThirdParty\Imgui\imgui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\ThirdParty\Imgui\imgui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\ThirdParty\Imgui\imgui.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\ThirdParty\Imgui\imgui.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -82,11 +86,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -96,11 +101,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -108,16 +114,19 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Public\;../../EngineSDK/Inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public\;../../EngineSDK/inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
       <AdditionalLibraryDirectories>../../EngineSDK/lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -125,59 +134,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="..\..\ThirdParty\imgui\imgui.h" />
-    <ClInclude Include="..\..\ThirdParty\Imgui\ImGuizmo.h" />
-    <ClInclude Include="..\Public\EditLoader.h" />
-    <ClInclude Include="..\Public\ImGui_Manager.h" />
-    <ClInclude Include="..\Public\Level_EditPlay.h" />
-    <ClInclude Include="..\Public\Level_EditLoading.h" />
-    <ClInclude Include="..\Public\Level_EditLogo.h" />
-    <ClInclude Include="..\Public\Panel_Base.h" />
-    <ClInclude Include="..\Public\Panel_MapTool.h" />
-    <ClInclude Include="..\Public\EditorApp.h" />
-    <ClInclude Include="..\Public\Editor_Defines.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Editor.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\imgui.cpp" />
-    <ClCompile Include="..\..\ThirdParty\Imgui\ImGuizmo.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\..\ThirdParty\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="..\Private\EditLoader.cpp" />
-    <ClCompile Include="..\Private\ImGui_Manager.cpp" />
-    <ClCompile Include="..\Private\Level_EditPlay.cpp" />
-    <ClCompile Include="..\Private\Level_EditLoading.cpp" />
-    <ClCompile Include="..\Private\Level_EditLogo.cpp" />
-    <ClCompile Include="..\Private\Panel_Base.cpp" />
-    <ClCompile Include="..\Private\Panel_MapTool.cpp" />
-    <ClCompile Include="..\Private\EditorApp.cpp" />
-    <ClCompile Include="Editor.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Editor.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico" />
-    <Image Include="Editor.ico" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
