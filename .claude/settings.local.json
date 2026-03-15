@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find /c/Users/LEO/Documents/GitHub/Framework-WY/jusin_DX11_Framework/ThirdParty/imgui -type f -exec basename {} \\\\; | sort)"
-    ]
-  }
-}
