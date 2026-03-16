@@ -1,5 +1,6 @@
 #pragma once
-#include "Base.h"
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
 
 /* -------------------------------------------------- */
 // 프로토타입 매니저

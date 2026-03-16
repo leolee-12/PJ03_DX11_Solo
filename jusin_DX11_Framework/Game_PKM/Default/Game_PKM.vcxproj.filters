@@ -13,6 +13,9 @@
     <Filter Include="01. Environment\BackGround">
       <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. ShaderFiles">
+      <UniqueIdentifier>{cb6d5137-4fc5-4e40-9c5e-2a8eae55d5ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -32,5 +35,10 @@
     <ClCompile Include="..\Private\BackGround.cpp">
       <Filter>01. Environment\BackGround</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

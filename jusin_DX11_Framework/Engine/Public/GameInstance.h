@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.h"
+#include "Prototype_Manager.h"
 
 /* ------------------------------------------------------------ */
 // CGameInstance : 클라이언트에게 엔진 기능을 위한 메서드 제공
