@@ -71,7 +71,7 @@ HRESULT CMainApp::Ready_Prototype_For_Static()
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	pComponent = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), Elements, 2);
+	pComponent = CShader::Create(m_pDevice, m_pContext, TEXT("../ShaderFiles/Shader_VtxTex.hlsl"), Elements, 2);
 
 	if (nullptr == pComponent)
 		return E_FAIL;
