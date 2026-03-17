@@ -1,7 +1,14 @@
 # O15. Game_PKM 정적 라이브러리 — 구체적 실현 방안
 
 > O13(GameDLL 리팩토링 타당성), O14(상속 구조 설계) 후속
-> 핵심 질문: LIB-EXE 경계에서 코드가 넘나들 때 기술적 문제가 있는가? + 구체적 이동 범위
+> 핵심 질문: Client의 Logo/Loading(Loader)/GamePlay를 lib(또는 dll)로 옮겨 Editor와 공유할 수 있는가?
+
+### 배경
+
+현재 Client에 구현된 Logo, Loading(Loader), GamePlay를 Editor에서도 사용하고 싶다.
+이를 위해 Game_PKM 프로젝트(정적 라이브러리)로 옮기는 것을 고려 중.
+**Editor에 현재 존재하는 EditLogo/EditLoading/EditPlay 등의 클래스와는 무관한 논의**이며,
+순수하게 "LIB-EXE 경계를 넘나드는 것이 기술적으로 가능한가?"가 핵심 질문이다.
 
 ### 현재 상태 (코드 검증 기준)
 
@@ -9,7 +16,7 @@ Game_PKM 프로젝트는 **이미 부분적으로 존재**:
 - `Game_PKM_Defines.h` — `namespace Game_PKM`, LEVEL enum, `extern g_hWnd/g_hInstance` 정의 완료
 - `CBackGround` — Game_PKM 네임스페이스로 구현 완료 (현재 Client의 CLoader에서 프로토타입 등록)
 - `CPlayer` — Game_PKM 네임스페이스로 스켈레톤 존재
-- CLevel_GamePlay, CLevel_EditPlay — **빈 스켈레톤** 상태
+- CLevel_GamePlay — **빈 스켈레톤** 상태
 - CLoader::Ready_Resources_For_GamePlay() — **빈 구현**
 
 > 아래 분석의 코드 예시 중 Ready_Layer_* 등의 패턴은
@@ -30,10 +37,12 @@ Game_PKM 프로젝트는 **이미 부분적으로 존재**:
 | **메모리 할당/해제** | DLL에서 new, EXE에서 delete → 크래시 가능 | **동일 CRT** → 문제 없음 |
 | **Export 매크로** | `__declspec(dllexport/dllimport)` 필수 | **불필요** |
 | **초기화 순서** | DllMain 타이밍 이슈 | DllMain 없음 → **해당 없음** |
+| **스레드 생성** | DLL에서 `_beginthreadex` 시 CRT 초기화 주의 | .lib는 EXE의 CRT에 바인딩 → **문제 없음** |
+| **Win32 API 호출** | 어디서든 가능 | 어디서든 가능 → **문제 없음** |
+
+**결론**: Static Library는 링크 시 EXE 바이너리에 코드가 직접 포함되므로, "경계"라는 개념 자체가 성립하지 않는다. `_beginthreadex`, `SetWindowText`, `g_hWnd` 접근 등 모든 것이 EXE에서 직접 실행하는 것과 완전히 동일하게 동작한다.
 
 ### 1.2 현재 프로젝트에서의 검증
-
-Game_PKM.lib의 코드가 EXE(Client/Editor)에서 호출될 때의 흐름:
 
 ```
 [Client.exe 링크 시]
@@ -62,7 +71,7 @@ m_pPrototypes[iLevelIndex].emplace(strPrototypeTag, pPrototype);
 |----------|------|
 | Prototype_Manager가 등록 소스를 구분하는가? | **아니오** — 태그 쌍만 관리 |
 | Static Library가 같은 싱글톤을 공유하는가? | **예** — 동일 프로세스, 동일 Engine.dll import |
-| dynamic_cast가 LIB-EXE 경계에서 동작하는가? | **예** — 단일 바이너리이므로 경계 자체가 없음 |
+| dynamic_cast가 LIB 코드에서 동작하는가? | **예** — 단일 바이너리이므로 경계 자체가 없음 |
 | 태그명 충돌 가능성? | **사용자 주의** — 동일 레벨/동일 태그 중복 시 `E_FAIL` |
 
 ### 1.4 실행 흐름 예시
@@ -73,12 +82,12 @@ m_pPrototypes[iLevelIndex].emplace(strPrototypeTag, pPrototype);
     → Add_Prototype(STATIC, "Proto_Comp_VIBuffer_Rect", CVIBuffer_Rect::Create(...))
     ← 엔진 컴포넌트가 STATIC 슬롯에 등록
 
-[CLoader::Loading() — 워커 스레드]
-  → Game_PKM의 리소스 등록 함수 호출
+[CLoader::Loading() — 워커 스레드, Game_PKM.lib 코드]
+  → Ready_Resources_For_GamePlay()
     → Add_Prototype(GAMEPLAY, "Proto_GO_Player", CPlayer::Create(...))
     ← Game_PKM 클래스의 프로토타입이 같은 Prototype_Manager에 등록
 
-[CLevel_GamePlay::Initialize()] — Game_PKM 소속
+[CLevel_GamePlay::Initialize() — Game_PKM.lib 코드]
   → Ready_Layer_Player()
     → Add_GameObject → Clone_Prototype → CPlayer::Clone()
       → CPlayer::Initialize() → Clone_Prototype(COMPONENT, STATIC, "Proto_Comp_VIBuffer_Rect")
@@ -87,147 +96,122 @@ m_pPrototypes[iLevelIndex].emplace(strPrototypeTag, pPrototype);
 
 ---
 
-## 질문 2: CLevel 하위 클래스 — 어디까지 Game_PKM으로 옮기는가?
+## 질문 2: Client의 Level 클래스들을 통째로 lib에 넣을 수 있는가?
 
-### 결론: **공유 로직이 있는 레벨은 lib로, LEVEL enum도 함께 이동이 원칙**
+### 결론: **기술적으로 전부 가능. LEVEL enum도 당연히 함께 이동**
 
-### 2.1 판단 기준: "독립적인 레벨"인가, "로직이 겹치는 레벨"인가?
+질문 1에서 확인한 대로, Static Library에서는 경계 문제가 없으므로 Logo, Loading, GamePlay **모두** lib로 이동이 기술적으로 가능하다. 아래는 각 레벨별 이동 시 검토사항.
 
-| 판단 | lib로 이동 | 각 EXE에 남김 |
-|------|-----------|-------------|
-| 기준 | Client/Editor 양쪽에서 **동일한 로직**이 필요 | EXE별로 **완전히 다른 흐름** (고유 UI, 고유 전환) |
-| 예시 | GamePlay (게임 오브젝트 배치/업데이트) | Client 전용 Logo, Editor 전용 EditLogo |
+### 2.1 CLevel_GamePlay — 이동에 아무 문제 없음
 
-### 2.2 현재 코드 기반 분석
-
-**CLevel_GamePlay** — 게임 로직의 핵심. Client/Editor 양쪽에서 공유해야 함:
 ```cpp
 // 현재: Client_Defines.h 포함, NS_BEGIN(Client)
-// Game_PKM으로 이동 시: Game_PKM_Defines.h 포함, NS_BEGIN(Game_PKM)
-// 의존성: g_hWnd(디버그용), CGameInstance — 모두 Game_PKM_Defines.h에서 해결 가능
+// 의존성: g_hWnd(디버그용), CGameInstance, 게임 오브젝트들
+// → 모두 Game_PKM_Defines.h 또는 Engine에서 해결 가능
 ```
 
-**CLevel_Logo vs CLevel_EditLogo** — 각 EXE의 독자적인 진입 흐름:
-- Client: `CLevel_Logo` → BackGround 배치, ENTER 키 → `CLevel_Loading::Create(LEVEL::GAMEPLAY)`
-- Editor: `CLevel_EditLogo` → (별도 UI), → `CLevel_EditLoading::Create(LEVEL::EDITPLAY)`
-- **서로 다른 전환 대상, 다른 UI** → 각 EXE에 남기는 것이 적합
+게임 오브젝트(Player, Monster 등)와 같은 lib에 들어가므로 의존성 문제 없음.
 
-**CLevel_Loading / CLevel_EditLoading** — 스레드 관리 + 레벨 전환 switch가 EXE별로 다름:
+### 2.2 CLevel_Logo — 이동 가능
+
+현재 의존성:
 ```cpp
-// Level_Loading.cpp — Client 전용 switch
-case LEVEL::LOGO:    pNextLevel = CLevel_Logo::Create(...);     break;
-case LEVEL::GAMEPLAY: pNextLevel = CLevel_GamePlay::Create(...); break;
+// Level_Logo.cpp 실제 코드
+#include "Level_Logo.h"       // Client_Defines.h → Game_PKM_Defines.h로 변경
+#include "Level_Loading.h"    // CLevel_Loading이 같은 lib에 있으면 문제 없음
+#include "GameInstance.h"     // Engine — 문제 없음
 ```
-- 전환 대상 레벨 클래스를 **직접 Create** → EXE별 구체 레벨에 하드 의존
-- Loading 자체의 **전환 흐름**은 EXE에 남기되, **리소스 등록 로직**은 lib로 분리 (질문 3에서 상세)
 
-### 2.3 LEVEL enum class — 서순 문제 정정
+- `g_hWnd`: Game_PKM_Defines.h에 이미 `extern HWND g_hWnd;` 선언 → 문제 없음
+- `CLevel_Loading::Create()` 호출: Loading도 함께 lib로 가면 → 문제 없음
+- `Ready_Layer_BackGround()`: CBackGround가 이미 Game_PKM에 있으므로 → 문제 없음
 
-기존 분석에서는 "Client의 LEVEL enum을 쓰니까 이동이 부적합하다"고 했으나, **이것은 서순이 잘못됨**.
+**단, Logo가 Client/Editor에서 완전히 다른 경우** (예: 클라이언트와 에디터가 서로 구별되는 로고를 사용, 전환 흐름이 다른 등) — 이런 경우에 한해서만 각 EXE에 별도 구현을 두는 것이 합당. 이것은 기술적 제약이 아니라 **설계 선택**의 문제.
+
+### 2.3 CLevel_Loading + CLoader — 이동 가능
+
+CLoader의 모든 기능이 lib에서 정상 동작:
+| 기능 | lib에서 동작? | 이유 |
+|------|-------------|------|
+| `_beginthreadex` | **정상** | .lib는 EXE의 CRT에 바인딩, 스레드 생성에 제약 없음 |
+| `CRITICAL_SECTION` | **정상** | Win32 커널 객체, 호출 위치 무관 |
+| `SetWindowText(g_hWnd, ...)` | **정상** | Win32 API + extern 전역변수, lib에서도 동일 |
+| `m_isFinished` (atomic) | **정상** | 표준 C++ atomic, 위치 무관 |
+| `LEVEL enum switch` | **정상** | enum이 같은 lib에 있으면 문제 없음 |
+| `CLevel_Logo::Create()`, `CLevel_GamePlay::Create()` 호출 | **정상** | 같은 lib 내 클래스 참조 |
+
+**기존 분석 오류 정정**: 이전에 "Loading은 Client 전용 LEVEL enum에 의존하므로 이동 부적합"이라고 했으나, 이것은 서순이 잘못됨. 코드가 lib로 가면 LEVEL enum도 당연히 함께 가므로 의존성 문제가 되지 않는다.
+
+### 2.4 LEVEL enum class — 서순 정정
 
 올바른 논리:
-1. 공유 로직(GamePlay 등)을 Game_PKM으로 옮기기로 결정
+1. 공유 로직(Logo, Loading, GamePlay 등)을 Game_PKM으로 옮기기로 결정
 2. → 그 로직이 사용하는 LEVEL enum도 당연히 Game_PKM에 정의
 3. → 각 EXE의 Defines.h가 Game_PKM_Defines.h를 include하여 enum 사용
 
-현재 LEVEL enum 현황:
+현재 상태 — Game_PKM_Defines.h에 이미 LEVEL enum이 정의되어 있으므로 **구조적으로 준비 완료**:
 ```cpp
-// Client:   enum class LEVEL { STATIC, LOADING, LOGO,     GAMEPLAY, END };
-// Editor:   enum class LEVEL { STATIC, LOADING, EDITLOGO, EDITPLAY, END };
-// Game_PKM: enum class LEVEL { STATIC, LOADING, LOGO,     GAMEPLAY, END };
-```
-
-**설계 방향**: Game_PKM에 공통 레벨(STATIC, LOADING, GAMEPLAY)을 정의하고, 각 EXE는 자신만의 레벨을 추가.
-
-```cpp
-// Game_PKM_Defines.h — 공통 LEVEL 정의
+// Game_PKM_Defines.h (현재)
 enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, END };
-// ※ LOGO는 Client/Editor 모두 "로고 → 로딩" 흐름이 있으므로 공통으로 둘 수 있음
-// ※ Editor가 EDITLOGO 대신 LOGO를 쓰되, 구체적인 CLevel 구현만 달리하는 방식도 가능
+// Client_Defines.h에도 동일 enum이 있지만, lib 이동 후에는 Game_PKM 것을 사용
 ```
 
-또는 Editor가 정말 다른 레벨 슬롯이 필요하면:
-```cpp
-// Game_PKM_Defines.h
-enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, EDITPLAY, END };
-// 확장된 통합 enum — Client는 EDITPLAY를 안 쓰고, Editor는 GAMEPLAY를 그대로 쓸 수 있음
-```
+Client_Defines.h가 Game_PKM_Defines.h를 include하면, Client 자체의 LEVEL enum 정의는 제거하고 Game_PKM의 것을 사용하면 된다.
 
-어떤 방식이든, **enum이 lib에 있고 EXE가 이를 참조**하는 것이 올바른 방향. 현재 `Game_PKM_Defines.h`에 이미 LEVEL enum이 정의되어 있으므로 구조적으로 준비 완료.
+### 2.5 이동 시 필요한 공통 변경
 
-### 2.4 이동 시 필요한 변경 (CLevel_GamePlay 기준)
-
-현재 CLevel_GamePlay는 빈 스켈레톤이므로 변경이 매우 간단:
-
+각 클래스 이동 시 공통적으로:
 1. **`#include "Client_Defines.h"` → `#include "Game_PKM_Defines.h"`**
 2. **`NS_BEGIN(Client)` → `NS_BEGIN(Game_PKM)`**
 3. **`g_hWnd`**: Game_PKM_Defines.h에 이미 `extern HWND g_hWnd;` 선언 → 변경 불필요
-4. **레벨 전환 의존 제거**: Game_PKM의 레벨 클래스는 다른 레벨을 직접 Create하지 않음 (현재도 안 함)
 
-Client의 CLevel_Loading에서 Game_PKM의 CLevel_GamePlay를 사용할 때:
-```cpp
-#include "Level_GamePlay.h"  // Game_PKM의 Public 디렉터리에서 include
-// Game_PKM_Defines.h의 using namespace Game_PKM;에 의해 CLevel_GamePlay 접근 가능
-```
-
-### 2.5 권장 구조
-
-```
-Game_PKM.lib:
-  CLevel_GamePlay    ← Client/Editor 양쪽에서 사용하는 게임 레벨
-  CPlayer, CBackGround, ...  ← 게임 오브젝트
-  LEVEL enum class   ← Game_PKM_Defines.h에 정의 (이미 존재)
-
-Client.exe:
-  CLevel_Logo        ← Client 고유 진입 흐름
-  CLevel_Loading     ← Client 고유 전환 흐름 (리소스 등록은 Game_PKM에 위임)
-
-Editor.exe:
-  CLevel_EditLogo    ← Editor 고유 진입 흐름
-  CLevel_EditLoading ← Editor 고유 전환 흐름
-  CLevel_EditPlay    ← Editor 전용 편집 모드 (Game_PKM 오브젝트 사용, ImGui 연동)
-```
+CLevel_Loading의 경우 추가로:
+- `#include "Level_Logo.h"`, `#include "Level_GamePlay.h"` — 같은 lib에 있으므로 경로만 조정
 
 ---
 
-## 질문 3: CLoader의 리소스 등록 로직을 Game_PKM으로 분리하는 방안
+## 질문 3: 설계 선택 — 전부 lib에 넣을 것인가, 일부만 넣을 것인가?
 
-### 결론: **프로토타입 등록 로직을 Game_PKM으로, 스레드 관리는 각 EXE에 남김**
+### 전제: 기술적으로는 전부 가능 (질문 1~2에서 확인)
 
-### 3.1 CLoader의 두 가지 역할
+여기서부터는 기술적 제약이 아닌 **설계 선택**의 문제. 두 가지 방향이 있다.
 
-현재 CLoader는 한 클래스에 두 역할을 담고 있음:
-
-| 역할 | 내용 | 위치 |
-|------|------|------|
-| **스레드 관리** | `_beginthreadex`, `CRITICAL_SECTION`, `m_isFinished` | EXE 종속 (로딩 UI, 전환 흐름) |
-| **리소스/프로토타입 등록** | `Ready_Resources_For_Logo()`, `Ready_Resources_For_GamePlay()` | 게임 콘텐츠 종속 → **lib로 이동 대상** |
-
-Client CLoader와 Editor CEditLoader의 구조가 거의 동일 (스레드 생성, CS, Loading() switch문) — **리소스 등록 부분만 다름**.
-
-### 3.2 분리 설계
+### 3.1 방안 A: Logo/Loading/Loader/GamePlay 전부 lib로
 
 ```
-[Game_PKM.lib]
-CGameLoader (신규)
-  ├─ Ready_Resources_For_Logo(_uint iLevelIndex)
-  ├─ Ready_Resources_For_GamePlay(_uint iLevelIndex)
-  └─ (공통 프로토타입 등록 전담)
+Game_PKM.lib:
+  CLevel_Logo, CLevel_Loading, CLevel_GamePlay  ← 전부 이동
+  CLoader                                        ← 스레드 관리 포함 전부 이동
+  CPlayer, CBackGround, ...                      ← 게임 오브젝트
 
-[Client.exe]
-CLoader (스레드 관리 유지)
-  ├─ m_hThread, m_CriticalSection, m_isFinished
-  ├─ Loading() → CGameLoader::Ready_Resources_For_*() 호출
-  └─ Show() → SetWindowText(g_hWnd, ...)
-
-[Editor.exe]
-CEditLoader (스레드 관리 유지)
-  ├─ m_hThread, m_CriticalSection, m_isFinished
-  ├─ Loading() → CGameLoader::Ready_Resources_For_*() 호출
-  └─ Show() → SetWindowText(g_hWnd, ...)
+Client.exe:
+  CMainApp                                       ← 엔진 초기화 + 루프만
+  Client_Defines.h                               ← Game_PKM_Defines.h include
+  Client.cpp                                     ← WinMain, g_hWnd 정의
 ```
 
-### 3.3 CGameLoader 설계 예시
+**장점**: Client가 극도로 경량화. Editor에서 동일한 Logo/Loading/GamePlay를 그대로 재사용 가능.
+**고려사항**: 향후 Editor가 고유한 로고나 로딩 흐름이 필요해지면, 그때 lib의 클래스를 상속하거나 별도 클래스를 EXE에 작성.
+
+### 3.2 방안 B: 리소스 등록만 lib로 분리, 스레드 관리는 EXE
+
+Logo/Loading의 **전환 흐름**은 각 EXE가 담당하고, **프로토타입 등록**만 Game_PKM에 위임:
+
+```
+Game_PKM.lib:
+  CGameLoader (신규)      ← 프로토타입 등록 전용
+  CLevel_GamePlay          ← 게임 레벨
+  CPlayer, CBackGround     ← 게임 오브젝트
+
+Client.exe:
+  CLevel_Logo, CLevel_Loading  ← 전환 흐름 유지
+  CLoader                       ← 스레드 관리 + CGameLoader 호출
+```
+
+**장점**: 각 EXE가 고유한 로딩 흐름을 자유롭게 커스터마이즈 가능.
+**단점**: CLoader/CEditLoader에 동일한 스레드 관리 코드가 중복.
+
+### 3.3 방안 B 상세 — CGameLoader 설계
 
 ```cpp
 // Game_PKM/Public/GameLoader.h
@@ -242,10 +226,7 @@ public:
 };
 ```
 
-iLevelIndex를 인자로 받으므로 **enum 값을 호출자가 결정** — Client/Editor 어느 쪽에서든 자신의 레벨 인덱스로 호출 가능.
-
-### 3.4 Client CLoader 변경 후
-
+Client CLoader 변경 후:
 ```cpp
 HRESULT CLoader::Loading()
 {
@@ -268,78 +249,36 @@ HRESULT CLoader::Loading()
 }
 ```
 
-**차이점**: `m_isFinished = true`가 각 `Ready_Resources_For_*()` 내부가 아니라 `Loading()` 끝에서 설정. 로딩 메시지도 CLoader가 관리.
-
-### 3.5 스레드 안전성
+### 3.4 스레드 안전성 (양쪽 방안 공통)
 
 | 항목 | 상태 |
 |------|------|
-| CGameLoader에서 CGameInstance 호출 | **안전** — 현재도 워커 스레드에서 동일하게 호출 |
+| lib 코드에서 CGameInstance 호출 | **안전** — 현재도 워커 스레드에서 동일하게 호출 |
 | Add_Prototype() 동시 접근 | **안전** — 메인 스레드는 로딩 중 Prototype_Manager 미접근 |
-| CRITICAL_SECTION | **각 EXE Loader가 관리** — CGameLoader는 스레드를 모름 |
-
-### 3.6 Free() 패턴 보존
-
-스레드 정리 로직은 각 EXE의 Loader에 그대로 유지:
-```cpp
-void CLoader::Free() {
-    WaitForSingleObject(m_hThread, INFINITE);
-    DeleteCriticalSection(&m_CriticalSection);
-    CloseHandle(m_hThread);
-    // ... Safe_Release
-}
-```
+| lib에서 `_beginthreadex` | **정상** — EXE의 CRT에 바인딩 |
 
 ---
 
 ## 종합 정리
 
-### 질문별 답변
+### 핵심 답변
 
-| 질문 | 답변 | 핵심 근거 |
-|------|------|----------|
-| LIB-EXE 경계 기술적 문제? | **없음** | .lib는 EXE에 링크 → 단일 바이너리, 싱글톤 공유, RTTI 정상 |
-| LEVEL enum을 lib로? | **당연히 이동** | 공유 로직이 lib로 가면 enum도 따라감 (서순: 코드 → enum) |
-| Level 클래스 이동 범위? | **GamePlay → lib, Logo/Loading → EXE** | 공유 로직은 lib, EXE 고유 흐름은 EXE |
-| Loader 분리? | **리소스 등록만 lib로** | 스레드 관리는 EXE, 프로토타입 등록은 Game_PKM |
+| 질문 | 답변 |
+|------|------|
+| LIB-EXE 경계 기술적 문제? | **없음** — .lib는 EXE에 링크되어 단일 바이너리. 싱글톤, RTTI, 스레드, Win32 API 모두 정상 |
+| LEVEL enum을 lib로? | **당연히 이동** — 코드가 lib로 가면 enum도 따라감 (이미 Game_PKM_Defines.h에 존재) |
+| Logo/Loading 포함 전부 lib로 가능? | **가능** — 기술적 장벽 없음. "전부 옮기기(A)" vs "리소스 등록만 분리(B)"는 설계 선택 |
 
-### 최종 파일 배치
+### LEVEL enum 서순 정정 (기존 분석 오류)
 
-```
-Game_PKM.lib:
-  Public/
-    Game_PKM_Defines.h    ← LEVEL enum 정의 (이미 존재, 권위적 소스)
-    GameLoader.h          ← 신규: 프로토타입 등록 전용
-    Level_GamePlay.h      ← Client에서 이동
-    BackGround.h          ← 이미 존재
-    Player.h              ← 이미 존재
-  Private/
-    GameLoader.cpp
-    Level_GamePlay.cpp
-    BackGround.cpp, Player.cpp  ← 이미 존재
+- **기존**: "Client의 LEVEL enum을 쓰니까 Logo/Loading 이동은 부적합"
+- **정정**: 코드를 옮기면 enum도 함께 가는 것이 당연. enum 때문에 이동이 막히는 것이 아니라, **이동하기로 했으면 enum도 같이 가져가면 됨**
 
-Client.exe:
-  Public/
-    Client_Defines.h      ← Game_PKM_Defines.h include + Client 전용 설정
-    Loader.h              ← 스레드 관리, CGameLoader 호출
-    Level_Logo.h          ← Client 고유
-    Level_Loading.h       ← Client 고유
-  Private/
-    Client.cpp            ← WinMain, g_hWnd/g_hInstance 정의
+### 독립적 레벨의 의미 (예시)
 
-Editor.exe:
-  Public/
-    Editor_Defines.h      ← Game_PKM_Defines.h include + Editor 전용 설정
-    EditLoader.h          ← 스레드 관리, CGameLoader 호출
-    Level_EditLogo.h      ← Editor 고유
-    Level_EditLoading.h   ← Editor 고유
-    Level_EditPlay.h      ← Editor 전용 (Game_PKM 오브젝트 + ImGui)
-  Private/
-    Editor.cpp            ← WinMain, g_hWnd/g_hInstance 정의
-```
+기술적 문제가 아닌 **설계 선택**으로 EXE에 남길 수 있는 경우:
+- 클라이언트와 에디터가 서로 구별되는 로고를 사용하는 경우
+- 에디터만의 독자적인 레벨이 필요한 경우 (예: 맵 에디터 전용 레벨)
+- 로딩 흐름이 근본적으로 달라야 하는 경우
 
-### 네임스페이스 전환
-
-- Game_PKM_Defines.h: `using namespace Game_PKM;`
-- Client_Defines.h가 Game_PKM_Defines.h를 include하면 Game_PKM 네임스페이스 자동 사용 가능
-- Client 전용 설정(윈도우 크기 등)만 `namespace Client`에 추가 정의
+이런 경우에도 lib의 공유 클래스를 **상속하여 확장**하거나, **컴포지션**으로 활용할 수 있다.
