@@ -16,7 +16,7 @@ NewObject<T>(Outer, Class, Name, Flags, Template)
        └─ StaticConstructObject_Internal(Params)
             ├─ StaticAllocateObject(Class, Outer, Name, Flags, ...)
             │    ├─ 기존 오브젝트 존재 시 → ConditionalBeginDestroy → FinishDestroy → ~UObject()
-            │    ├─ 새 할당 시 → GUObjectAllocator.AllocateUObject(TotalSize, Alignment)
+            │    ├─ 새 할당 시 → GUObjectAllocator.AllocateUObject(TotalSize, Alignment, GIsInitialLoad)
             │    ├─ Memzero 후 placement new UObjectBase(Class, Flags, Outer, Name)
             │    │    └─ UObjectBase::AddObject() → GUObjectArray 등록 + 이름 해시
             │    └─ 결과: 메모리 할당 + UObjectBase 초기화 완료 (아직 C++ 생성자 미호출)
@@ -32,7 +32,8 @@ NewObject<T>(Outer, Class, Name, Flags, Template)
                       ├─ InitSubobjectProperties() — 서브오브젝트 프로퍼티 초기화
                       ├─ CDO인 경우 Config 로드
                       ├─ InstanceSubobjects() — 서브오브젝트 인스턴싱
-                      └─ PostInitProperties() 호출
+                      ├─ PostInitProperties() 호출
+                      └─ Class->PostInitInstance(Obj) — 클래스 레벨 후처리
 ```
 
 ### 1.2 StaticAllocateObject 핵심 동작
@@ -76,6 +77,7 @@ FObjectInitializer는 **RAII 패턴**으로 C++ 생성자 전후를 감싼다:
 4. CDO면 `LoadConfig()` 호출
 5. `InstanceSubobjects()` — 참조 인스턴싱
 6. `PostInitProperties()` — 사용자 오버라이드 가능한 초기화 콜백
+7. `Class->PostInitInstance(Obj)` — 클래스 레벨 후처리
 
 ---
 
@@ -136,8 +138,9 @@ CollectGarbage(KeepFlags, bPerformFullPurge)
        │    ├─ MarkObjectsAsUnreachable()  ← 모든 오브젝트를 Unreachable로 마킹
        │    └─ PerformReachabilityAnalysisOnObjects()  ← Root에서 참조 추적
        ├─ [3] GatherUnreachableObjects()  ← Unreachable 오브젝트 수집
-       ├─ [4] UnhashUnreachableObjects()  ← BeginDestroy 호출 (Sweep 시작)
-       └─ [5] IncrementalPurgeGarbage()   ← FinishDestroy + 실제 메모리 해제
+       ├─ [4] UnhashUnreachableObjects()  ← BeginDestroy 호출 (Full Purge 시)
+       └─ [5] IncrementalPurgeGarbage()   ← 미처리분 Unhash + FinishDestroy + 메모리 해제
+            └─ (Incremental 모드에서는 [4]를 여기서 점진 처리)
 ```
 
 ### 3.2 Mark 단계 — MarkObjectsAsUnreachable (`GarbageCollection.cpp:1135`)
@@ -239,7 +242,7 @@ GC가 Unreachable 판정
   └─ ConditionalBeginDestroy()           ← UnhashUnreachableObjects에서 호출
        ├─ RF_BeginDestroyed 플래그 설정
        └─ BeginDestroy() 호출 (가상 함수)
-            ├─ 링커 분리 (SetLinker(NULL))
+            ├─ 링커 분리 (SetLinker(NULL, INDEX_NONE))
             ├─ 이름 제거 (LowLevelRename(NAME_None))
             └─ 외부 패키지 해제
 

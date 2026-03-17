@@ -33,7 +33,7 @@ UWorld::SpawnActor()                     [LevelActor.cpp:308]
               ├─ bHasFinishedSpawning = true
               ├─ ExecuteConstruction() — 블루프린트 Construction Script 실행
               │
-              └─ PostActorConstruction()   [Actor.cpp:3260]
+              └─ PostActorConstruction()   [Actor.cpp:3253]
                     ├─ PreInitializeComponents()   — 입력 자동 수신 설정
                     ├─ InitializeComponents()      — 각 컴포넌트의 InitializeComponent() 호출
                     ├─ 충돌 핸들링 (위치 조정 or Destroy)
@@ -121,7 +121,7 @@ enum ETickingGroup
 ### 3.2 UWorld::Tick() 내 TickGroup 실행 순서
 
 ```
-UWorld::Tick(DeltaSeconds)                           [LevelTick.cpp:1485~]
+UWorld::Tick(DeltaSeconds)                           [LevelTick.cpp:1273]
   │
   ├─ FTickTaskManagerInterface::Get().StartFrame()    ← 프레임 시작
   │
@@ -193,15 +193,16 @@ AActor::Destroy(bNetForce, bShouldModifyLevel)       [Actor.cpp:4050]
         │
         ├─ 12. ThisActor->UnregisterAllComponents()  ← 컴포넌트 월드 등록 해제
         ├─ 13. ThisActor->MarkPendingKill()           ← GC 대상 마킹
-        ├─ 14. ThisActor->MarkComponentsAsPendingKill() ← 컴포넌트도 PendingKill
-        └─ 15. RegisterAllActorTickFunctions(false)   ← Tick 해제
+        ├─ 14. ThisActor->MarkPackageDirty()          ← 패키지 더티 마킹
+        ├─ 15. ThisActor->MarkComponentsAsPendingKill() ← 컴포넌트도 PendingKill
+        └─ 16. RegisterAllActorTickFunctions(false)   ← Tick 해제
 ```
 
 ### 4.2 컴포넌트 해제 순서 요약
 
 | 순서 | 동작 | 설명 |
 |------|------|------|
-| 1 | `Component->EndPlay()` | 각 컴포넌트의 EndPlay (Destroyed()→RouteEndPlay 내부) |
+| 1 | `Component->EndPlay()` | 각 컴포넌트의 EndPlay (Destroyed→RouteEndPlay 내부) |
 | 2 | `UninitializeComponents()` | 컴포넌트 초기화 해제 |
 | 3 | `UnregisterAllComponents()` | 렌더링/물리 프록시 제거, 월드에서 등록 해제 |
 | 4 | `MarkComponentsAsPendingKill()` | GC 대상 마킹 |
@@ -215,14 +216,15 @@ AActor::Destroy(bNetForce, bShouldModifyLevel)       [Actor.cpp:4050]
 `FActorSpawnParameters::bDeferConstruction` 값에 따라 `PostSpawnInitialize()` 내부에서 분기:
 
 ```cpp
-// Actor.cpp:3187~
+// Actor.cpp:3185
 if (!bDeferConstruction)
 {
     FinishSpawning(UserSpawnTransform, true);   // ← 즉시: Construction + Init + BeginPlay
 }
-else
+else if (SceneRootComponent != nullptr)
 {
-    // 지연: Transform을 캐시하고 나중에 수동 FinishSpawning 호출 대기
+    // 지연: 네이티브 RootComponent가 있을 때만 Transform을 캐시
+    // 나중에 수동 FinishSpawning 호출 대기
     GSpawnActorDeferredTransformCache.Emplace(this, UserSpawnTransform);
 }
 ```
