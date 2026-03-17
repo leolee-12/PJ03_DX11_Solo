@@ -49,6 +49,9 @@ public:
 	virtual HRESULT	Initialize(void* pArg);
 
 public:
+	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
+
+public:
 	void ScaleTo(_float fScaleX = 1.f, _float fScaleY = 1.f, _float fScaleZ = 1.f);
 	void Scaling(_float fScaleX = 1.f, _float fScaleY = 1.f, _float fScaleZ = 1.f);
 
@@ -62,9 +65,9 @@ public:
 	void Go_Right(_float fTimeDelta);
 
 private:
-	_float4x4	m_WorldMatrix = {};
-	_float		m_fSpeedPerSec = {};
-	_float		m_fRotationPerSec = {};
+	_float4x4 m_WorldMatrix = {};
+	_float m_fSpeedPerSec = {};
+	_float m_fRotationPerSec = {};
 
 
 public:

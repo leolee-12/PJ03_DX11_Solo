@@ -1,5 +1,6 @@
 #pragma once
 #include "Shader.h"
+#include "Texture.h"
 #include "VIBuffer_Rect.h"
 
 /* -------------------------------------------------- */

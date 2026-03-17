@@ -41,6 +41,8 @@ HRESULT CLoader::Loading()
 {
 	EnterCriticalSection(&m_CriticalSection);
 
+	HRESULT initSuccessed = CoInitializeEx(nullptr, 0);
+
 	HRESULT	hr = {};
 
 	switch (m_eNextLevelID)
@@ -52,6 +54,9 @@ HRESULT CLoader::Loading()
 		hr = Ready_Resources_For_GamePlay();
 		break;
 	}
+
+	if (SUCCEEDED(initSuccessed))
+		CoUninitialize();
 
 	LeaveCriticalSection(&m_CriticalSection);
 
@@ -74,7 +79,10 @@ void CLoader::Show()
 HRESULT CLoader::Ready_Resources_For_Logo()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
-
+	/* Prototype_Component_Texture_BackGround */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중"));
 
@@ -83,7 +91,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 
 
 	lstrcpy(m_szLoadingText, TEXT("객체원본 로딩 중"));
-
+	/* Prototype_GameObject_BackGround */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
