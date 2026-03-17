@@ -7,6 +7,8 @@
 #include <d3dcompiler.h>
 
 #include <fx11/d3dx11effect.h>
+#include <DirectTK/DDSTextureLoader.h>
+#include <DirectTK/WICTextureLoader.h>
 
 using namespace DirectX;
 

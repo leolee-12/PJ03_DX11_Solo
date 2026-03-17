@@ -17,6 +17,10 @@ public:
 public:
 	HRESULT Begin(_uint iPassIndex);
 
+public:
+	HRESULT Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix);
+	HRESULT Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV);
+
 private:
 	_uint m_iNumPasses = {};
 	ID3DX11Effect* m_pEffect = { nullptr };

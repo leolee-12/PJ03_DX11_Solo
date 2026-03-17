@@ -1,5 +1,13 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+texture2D g_Texture;
+
+sampler DefaultSampler = sampler_state
+{	// D3D11_SAMPLER_DESC 참고
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
 
 struct VS_IN
 {
@@ -17,12 +25,11 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT Out;
 
-	//float4 vPos = mul(float4(In.vPos, 1.0f), g_WorldMatrix);
-	//vPos = mul(vPos, g_ViewMatrix);
-	//vPos = mul(vPos, g_ProjMatrix);
+	float4 vPos = mul(float4(In.vPos, 1.0f), g_WorldMatrix);
+	vPos = mul(vPos, g_ViewMatrix);
+	vPos = mul(vPos, g_ProjMatrix);
 	
-	//Out.Pos = vPos;
-	Out.vPos = float4(In.vPos, 1.f);
+	Out.vPos = vPos;
 	Out.vTex = In.vTex;
 	return Out;
 }
@@ -41,7 +48,13 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
-	Out.vCol = In.vTex.y;
+	Out.vCol = g_Texture.Sample(DefaultSampler, In.vTex);
+
+	if (Out.vCol.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
+		discard;
+
+	Out.vCol.gb = Out.vCol.r;	// gb를 r값으로 통일 (r값 기준 그레이스케일)
+
 	return Out;
 }
 
