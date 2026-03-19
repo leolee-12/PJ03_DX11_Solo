@@ -23,11 +23,6 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	auto pDesc = static_cast<UIOBJECT_DESC*>(pArg);
 
-	m_fCenterX = pDesc->fCenterX;
-	m_fCenterY = pDesc->fCenterY;
-	m_fSizeX = pDesc->fSizeX;
-	m_fSizeY = pDesc->fSizeY;
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -38,7 +33,9 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fViewHeight = ViewportDesc.Height;
 
 	/* 직교 투영으로 그려주기위한 월드행렬 셋 */
-	Update_UIState();
+	m_pTransformCom->ScaleTo(pDesc->fSizeX, pDesc->fSizeY, 0.f);
+	m_pTransformCom->Set_State(STATE::POSITION,
+		XMVectorSet(pDesc->fCenterX - m_fViewWidth * 0.5f, -pDesc->fCenterY + m_fViewHeight * 0.5f, 0.f, 1.f));
 
 	/* 직교 투영으로 그려주기위한 뷰행렬 셋 */
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::VIEW)], XMMatrixIdentity());
@@ -65,13 +62,6 @@ void CUIObject::Late_Update(_float fTimeDelta)
 HRESULT CUIObject::Render()
 {
 	return S_OK;
-}
-
-void CUIObject::Update_UIState()
-{
-	m_pTransformCom->ScaleTo(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_State(STATE::POSITION,
-		XMVectorSet(m_fCenterX - m_fViewWidth * 0.5f, -m_fCenterY + m_fViewHeight * 0.5f, 0.f, 1.f));
 }
 
 HRESULT CUIObject::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, D3DTS eType)

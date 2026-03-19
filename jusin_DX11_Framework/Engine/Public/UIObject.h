@@ -26,12 +26,10 @@ public:
 	virtual HRESULT Render();
 
 protected:
-	_float m_fCenterX{}, m_fCenterY{}, m_fSizeX{}, m_fSizeY{};
 	_float m_fViewWidth{}, m_fViewHeight{};
 	_float4x4 m_TransformMatrices[ETOUI(D3DTS::END)] = {};
 
 protected:
-	void Update_UIState();
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, D3DTS eType);
 
 public:

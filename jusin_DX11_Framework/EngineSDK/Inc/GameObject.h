@@ -29,7 +29,7 @@ protected:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
 
-	map<const _wstring, class CComponent*> m_Components;
+	unordered_map<_wstring, class CComponent*> m_Components;
 	class CTransform* m_pTransformCom = { nullptr };
 	_uint m_iFlag = {};
 

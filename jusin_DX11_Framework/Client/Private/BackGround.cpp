@@ -20,7 +20,7 @@ HRESULT CBackGround::Initialize(void* pArg)
 {
 	BACKGROUND_DESC Desc{};
 
-	Desc.fSpeedPerSec = 10.f;
+	Desc.fSpeedPerSec = 30.f;
 	Desc.fCenterX = g_iWinSizeX * 0.5f;
 	Desc.fCenterY = g_iWinSizeY * 0.5f;
 	Desc.fSizeX = g_iWinSizeX;
@@ -42,9 +42,7 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 
 void CBackGround::Update(_float fTimeDelta)
 {
-	m_fCenterX += 10.f * fTimeDelta;
-
-	__super::Update_UIState();
+	m_pTransformCom->Go_Right(fTimeDelta);
 }
 
 void CBackGround::Late_Update(_float fTimeDelta)
