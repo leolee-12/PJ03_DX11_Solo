@@ -35,14 +35,16 @@ HRESULT CGameObject::Initialize(void* pArg)
 	}
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
-	
+
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
-	
 	if (FAILED(m_pTransformCom->Initialize(pArg)))
 		return E_FAIL;
-	
+
+	m_Components.emplace(g_strTransformTag, m_pTransformCom);
+	Safe_AddRef(m_pTransformCom);
+
 	return S_OK;
 }
 
@@ -66,10 +68,41 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+HRESULT CGameObject::Add_Component(_uint iLevel, const _wstring& strProtoTag, const _wstring& strComTag, CComponent** ppOut, void* pArg)
+{
+	if (nullptr != Find_Component(strComTag))
+		return E_FAIL;
+
+	CComponent* pComponent = dynamic_cast<CComponent*>(
+		m_pGameInstance->Clone_Prototype(PROTOTYPE::COMPONENT, iLevel, strProtoTag, pArg));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_Components.emplace(strComTag, pComponent);
+	*ppOut = pComponent;
+	Safe_AddRef(pComponent);
+
+	return S_OK;
+}
+
+CComponent* CGameObject::Find_Component(const _wstring& strComTag)
+{
+	auto iter = m_Components.find(strComTag);
+	
+	if (iter == m_Components.end())
+		return nullptr;
+
+	return iter->second;
+}
 
 void CGameObject::Free()
 {
 	__super::Free();
+
+	for (auto& Pair : m_Components)
+		Safe_Release(Pair.second);
+	m_Components.clear();
 
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pGameInstance);

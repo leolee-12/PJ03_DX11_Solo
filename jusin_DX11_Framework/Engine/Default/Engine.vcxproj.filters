@@ -31,6 +31,9 @@
     <Filter Include="06. Renderer">
       <UniqueIdentifier>{6f8190c4-27a5-4e39-80c2-33c14a2047ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. SuperClass">
+      <UniqueIdentifier>{6767f122-6c3b-49f8-be80-25e3a0736316}</UniqueIdentifier>
+    </Filter>
     <Filter Include="07. Component">
       <UniqueIdentifier>{a5419727-5835-4f12-8478-49eb208d048e}</UniqueIdentifier>
     </Filter>
@@ -54,9 +57,6 @@
     </Filter>
     <Filter Include="07. Component\Shader">
       <UniqueIdentifier>{47b1699d-ae02-4687-a990-e2c998d6f236}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. SuperClass">
-      <UniqueIdentifier>{6767f122-6c3b-49f8-be80-25e3a0736316}</UniqueIdentifier>
     </Filter>
     <Filter Include="07. Component\Texture">
       <UniqueIdentifier>{87ea0cd0-37c5-4343-9a04-36ab6b07f006}</UniqueIdentifier>
@@ -135,6 +135,9 @@
     <ClInclude Include="..\Public\Texture.h">
       <Filter>07. Component\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIObject.h">
+      <Filter>05. GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -190,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Texture.cpp">
       <Filter>07. Component\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIObject.cpp">
+      <Filter>05. GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

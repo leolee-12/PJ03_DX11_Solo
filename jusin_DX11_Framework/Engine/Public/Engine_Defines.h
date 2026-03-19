@@ -31,6 +31,11 @@ using namespace std;
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
 
+namespace Engine
+{
+	static const _wstring g_strTransformTag = TEXT("Com_Transform");
+}
+
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
 
