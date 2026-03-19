@@ -39,9 +39,9 @@ HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstant
 
 void CTransform::ScaleTo(_float fScaleX, _float fScaleY, _float fScaleZ)
 {
-	Set_State(STATE::RIGHT, XMVector3Normalize(Get_State(STATE::RIGHT) * fScaleX));
-	Set_State(STATE::UP, XMVector3Normalize(Get_State(STATE::UP) * fScaleY));
-	Set_State(STATE::LOOK, XMVector3Normalize(Get_State(STATE::LOOK) * fScaleZ));
+	Set_State(STATE::RIGHT, XMVector3Normalize(Get_State(STATE::RIGHT)) * fScaleX);
+	Set_State(STATE::UP, XMVector3Normalize(Get_State(STATE::UP)) * fScaleY);
+	Set_State(STATE::LOOK, XMVector3Normalize(Get_State(STATE::LOOK)) * fScaleZ);
 }
 
 void CTransform::Scaling(_float fScaleX, _float fScaleY, _float fScaleZ)
