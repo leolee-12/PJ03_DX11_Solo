@@ -28,6 +28,7 @@
     <ClCompile Include="..\Private\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </FxCompile>

@@ -138,6 +138,9 @@
     <ClInclude Include="..\Public\UIObject.h">
       <Filter>05. GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h">
+      <Filter>07. Component\VIBuffer\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIObject.cpp">
       <Filter>05. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
+      <Filter>07. Component\VIBuffer\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

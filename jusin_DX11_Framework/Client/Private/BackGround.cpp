@@ -21,6 +21,7 @@ HRESULT CBackGround::Initialize(void* pArg)
 	BACKGROUND_DESC Desc{};
 
 	Desc.fSpeedPerSec = 30.f;
+	Desc.fRotationPerSec = 1.f;
 	Desc.fCenterX = g_iWinSizeX * 0.5f;
 	Desc.fCenterY = g_iWinSizeY * 0.5f;
 	Desc.fSizeX = g_iWinSizeX;
@@ -42,6 +43,9 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 
 void CBackGround::Update(_float fTimeDelta)
 {
+	XMVECTOR vUp = { 0.f, 1.f, 0.f };
+
+	m_pTransformCom->Turn(vUp, fTimeDelta);
 	m_pTransformCom->Go_Right(fTimeDelta);
 }
 

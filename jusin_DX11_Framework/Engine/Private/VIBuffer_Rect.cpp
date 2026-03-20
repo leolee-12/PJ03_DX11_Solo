@@ -14,6 +14,7 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& Prototype)
 
 HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
+	// 1. 고유 데이터 초기화
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 4;
 	m_iVertexStride = sizeof(VTXTEX);
@@ -26,8 +27,8 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 
 
-	/* 네모를 표현해주기 위한 정점, 인덱스를 생성한다. */
-	D3D11_BUFFER_DESC           VertexBufferDesc{};
+	// 2. VB 생성
+	D3D11_BUFFER_DESC VertexBufferDesc{};
 	VertexBufferDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -54,13 +55,17 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	VertexInitialData.pSysMem = pVertices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&VertexBufferDesc, &VertexInitialData, &m_pVB)))
+	{
+		Safe_Delete_Array(pVertices);
 		return E_FAIL;
+	}
 
 	Safe_Delete_Array(pVertices);
 
 
 
-	D3D11_BUFFER_DESC           IndexBufferDesc{};
+	// 3. IB 생성
+	D3D11_BUFFER_DESC IndexBufferDesc{};
 	IndexBufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
 	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -78,14 +83,16 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	pIndices[4] = 2;
 	pIndices[5] = 3;
 
-	D3D11_SUBRESOURCE_DATA      IndexInitialData{};
+	D3D11_SUBRESOURCE_DATA IndexInitialData{};
 	IndexInitialData.pSysMem = pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IndexBufferDesc, &IndexInitialData, &m_pIB)))
+	{
+		Safe_Delete_Array(pIndices);
 		return E_FAIL;
+	}
 
 	Safe_Delete_Array(pIndices);
-
 	return S_OK;
 }
 

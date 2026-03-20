@@ -40,5 +40,8 @@
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

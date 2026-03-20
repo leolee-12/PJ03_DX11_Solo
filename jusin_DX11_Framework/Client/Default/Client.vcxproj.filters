@@ -28,6 +28,9 @@
     <Filter Include="02. GameObject\BackGround">
       <UniqueIdentifier>{5a46062c-11df-4b25-b7ed-0acdd97c676d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\Terrain">
+      <UniqueIdentifier>{1bdc6733-73fd-4e2f-a89e-4b673f8a512c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\MainApp.h">
