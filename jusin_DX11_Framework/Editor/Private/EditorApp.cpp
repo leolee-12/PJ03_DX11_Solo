@@ -1,7 +1,7 @@
 #include "EditorApp.h"
 #include "GameInstance.h"
 #include "ImGui_Manager.h"
-#include "Level_EditLoading.h"
+#include "Level_Loading.h"
 
 CEditorApp::CEditorApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -24,13 +24,16 @@ HRESULT CEditorApp::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(CImGui_Manager::GetInstance()->Initialize(g_hWnd, &m_pDevice, &m_pContext, m_pGameInstance->Get_BackBufferRTV())))
+	if (FAILED(CImGui_Manager::GetInstance()->Initialize(g_hWnd, &m_pDevice, &m_pContext)))
 	{
 		MSG_BOX("ImGui Ready Failed");
 		return E_FAIL;
 	}
 
-	if (FAILED(Start_Level(LEVEL::EDITLOGO)))
+	if (FAILED(Ready_Prototype_For_Static()))
+		return E_FAIL;
+
+	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
 
 	return S_OK;
@@ -59,9 +62,24 @@ HRESULT CEditorApp::Render()
 	return S_OK;
 }
 
+HRESULT CEditorApp::Ready_Prototype_For_Static()
+{
+	/* Prototype_Component_VIBuffer_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_VtxTex */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxTex.hlsl"), VTXTEX::Elements, 2))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CEditorApp::Start_Level(LEVEL eStartLevelID)
 {
-	CLevel* pPreLevel = CLevel_EditLoading::Create(m_pDevice, m_pContext, eStartLevelID);
+	CLevel* pPreLevel = CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevelID);
 	
 	if (nullptr == pPreLevel)
 		return E_FAIL;

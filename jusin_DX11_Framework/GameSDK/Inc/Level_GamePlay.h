@@ -1,8 +1,8 @@
 #pragma once
-#include "Client_Defines.h"
+#include "Game_PKM_Defines.h"
 #include "Level.h"
 
-NS_BEGIN(Client)
+NS_BEGIN(Game_PKM)
 
 class CLevel_GamePlay : public CLevel
 {

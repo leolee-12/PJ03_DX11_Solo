@@ -92,7 +92,7 @@ HRESULT CTerrain::Bind_ShaderResources()
 		XMMatrixLookAtLH(XMVectorSet(0.f, 20.f, -15.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	XMStoreFloat4x4(&ProjMatrix,
-		XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), static_cast<_float>(g_iWinSizeX) / g_iWinSizeY, 0.1f, 1000.f));
+		XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), 1280.f/720.f, 0.1f, 1000.f));
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
 		return E_FAIL;

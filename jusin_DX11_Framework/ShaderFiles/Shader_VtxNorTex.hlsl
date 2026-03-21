@@ -12,6 +12,7 @@ sampler DefaultSampler = sampler_state
 struct VS_IN
 {
 	float3 vPos : POSITION;
+	float3 vNorm : NORMAL;
 	float2 vTex : TEXCOORD0;
 };
 
@@ -52,8 +53,6 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	if (Out.vCol.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
 		discard;
-
-	Out.vCol.gb = Out.vCol.r;	// gb를 r값으로 통일 (r값 기준 그레이스케일)
 
 	return Out;
 }

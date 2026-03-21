@@ -19,13 +19,15 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSiz
 	// -> DX11을 지원하지 않는 그래픽카드는 거의 없으므로 활용되지 않는 변수
 
 	/* 그래픽 장치 초기화 */
-	if (FAILED(D3D11CreateDevice(	nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr, 0,
-									D3D11_SDK_VERSION, &m_pDevice, &FeatureLV, &m_pContext)))
+	if (FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr,
+		0, D3D11_SDK_VERSION, &m_pDevice, &FeatureLV, &m_pContext)))
 		return E_FAIL;
 
 	/* 스왑체인 객체 생성 */
 	if (FAILED(Ready_SwapChain(hWnd, isWindowed, iWinSizeX, iWinSizeY)))
 		return E_FAIL;
+
+	m_hWnd = hWnd;	// Game.lib 전달용으로 보관
 
 	/* 백버퍼 렌더타겟뷰 생성*/
 	if (FAILED(Ready_BackBufferRenderTargetView()))

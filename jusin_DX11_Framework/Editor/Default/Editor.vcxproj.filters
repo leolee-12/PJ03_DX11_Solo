@@ -19,12 +19,6 @@
     <Filter Include="01. ImGui_Manager">
       <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Levels">
-      <UniqueIdentifier>{cf4071d6-3de6-4f7b-8363-3ad40309fa43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. Levels\Loader">
-      <UniqueIdentifier>{4c336e61-0417-47b7-8b6f-3dab5d7d54e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. ImGui_Manager\Panels">
       <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
     </Filter>
@@ -59,18 +53,6 @@
     </ClInclude>
     <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h">
       <Filter>97. ThirdParty\00. imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_EditPlay.h">
-      <Filter>02. Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_EditLoading.h">
-      <Filter>02. Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_EditLogo.h">
-      <Filter>02. Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\EditLoader.h">
-      <Filter>02. Levels\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Manager.h">
       <Filter>01. ImGui_Manager</Filter>
@@ -123,18 +105,6 @@
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_demo.cpp">
       <Filter>97. ThirdParty\00. imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_EditPlay.cpp">
-      <Filter>02. Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_EditLoading.cpp">
-      <Filter>02. Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_EditLogo.cpp">
-      <Filter>02. Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\EditLoader.cpp">
-      <Filter>02. Levels\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Panel_Base.cpp">
       <Filter>01. ImGui_Manager\Panels</Filter>

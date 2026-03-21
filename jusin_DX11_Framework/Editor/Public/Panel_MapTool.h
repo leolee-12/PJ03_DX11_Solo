@@ -11,14 +11,14 @@ protected:
 
 public:
 	HRESULT Initialize(void* pArg) override;
-	void	Update(_float fTimeDelta) override;
-	void	Render() override;
+	void Update(_float fTimeDelta) override;
+	void Render() override;
 
 public:
-	static CPanel_MapTool*	Create(void* pArg = nullptr);
+	static CPanel_MapTool* Create(void* pArg = nullptr);
 	
 protected:
-	virtual void			Free() override;
+	virtual void Free() override;
 };
 
 NS_END

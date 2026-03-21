@@ -2,14 +2,15 @@
 #include <Windows.h>
 #include <process.h>
 
+#include "Game_PKM_Defines.h"
+
 namespace Client
 {
-	constexpr unsigned int		g_iWinSizeX = { 1280 };
-	constexpr unsigned int		g_iWinSizeY = { 720 };
-
-	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, END };
+	constexpr unsigned int g_iWinSizeX = { 1280 };
+	constexpr unsigned int g_iWinSizeY = { 720 };
 }
 
+extern HINSTANCE g_hInstance;
 extern HWND g_hWnd;
 
 using namespace Client;

@@ -9,8 +9,9 @@ xcopy		/y /i /s	.\Engine\Bin\*.dll				.\Client\Bin\
 xcopy		/y /i /s	.\Engine\Bin\*.dll				.\Editor\Bin\
 xcopy		/y /i /s	.\Game_PKM\Public\*.h			.\GameSDK\Inc\
 xcopy		/y /i /s	.\Game_PKM\Bin\*.lib			.\GameSDK\lib\
-xcopy		/y /i /s	.\Game_PKM\ShaderFiles\*.* 		.\Client\ShaderFiles\
-xcopy		/y /i /s	.\Game_PKM\ShaderFiles\*.* 		.\Editor\ShaderFiles\
+xcopy		/y /i /s	.\Game_PKM\Bin\*.pdb			.\GameSDK\lib\
+xcopy		/y /i /s	.\Game_PKM\ShaderFiles\*.* 		.\ShaderFiles\
+xcopy		/y /i /s	.\Game_PKM\ShaderFiles\*.* 		.\ShaderFiles\
 
 // ThirdParties
 xcopy		/y /i /s	.\ThirdParty\inc\*				.\EngineSDK\Inc\

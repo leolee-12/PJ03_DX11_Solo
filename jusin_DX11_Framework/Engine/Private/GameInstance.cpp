@@ -106,9 +106,9 @@ void CGameInstance::Release_Engine()
 	DestroyInstance();
 }
 
-ID3D11RenderTargetView** CGameInstance::Get_BackBufferRTV() const
+const HWND CGameInstance::Get_HWND() const
 {
-	return m_pGraphic_Device->Get_BackBufferRTV();
+	return m_pGraphic_Device->Get_HWND();
 }
 
 #pragma endregion

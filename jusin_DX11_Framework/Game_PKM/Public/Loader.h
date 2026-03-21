@@ -1,12 +1,12 @@
 #pragma once
-#include "Client_Defines.h"
+#include "Game_PKM_Defines.h"
 #include "Base.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;
 NS_END
 
-NS_BEGIN(Client)
+NS_BEGIN(Game_PKM)
 
 class CLoader final : public CBase
 {

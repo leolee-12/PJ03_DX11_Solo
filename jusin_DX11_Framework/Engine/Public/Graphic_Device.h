@@ -10,6 +10,9 @@ private:
 	virtual ~CGraphic_Device() = default;
 
 public:
+	const HWND Get_HWND() const { return m_hWnd; }
+
+public:
 	HRESULT Initialize(	HWND hWnd, WINMODE isWindowed, _uint iWinSizeX, _uint iWinSizeY,
 						_Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 
@@ -19,11 +22,13 @@ public:
 	ID3D11RenderTargetView** Get_BackBufferRTV() { return &m_pBackBufferRTV; }
 
 private:
-	ID3D11Device*			m_pDevice = { nullptr };			// COM객체 생성 관련
-	ID3D11DeviceContext*	m_pContext = { nullptr };			// COM객체 기능 관련
-	IDXGISwapChain*			m_pSwapChain = { nullptr };			// 더블버퍼링용 SwapChain객체
-	ID3D11RenderTargetView*	m_pBackBufferRTV = { nullptr };
-	ID3D11DepthStencilView*	m_pDepthStencilView = { nullptr };
+	ID3D11Device* m_pDevice = { nullptr };			// COM객체 생성 관련
+	ID3D11DeviceContext* m_pContext = { nullptr };	// COM객체 기능 관련
+	IDXGISwapChain* m_pSwapChain = { nullptr };		// 더블버퍼링용 SwapChain객체
+	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
+	ID3D11DepthStencilView* m_pDepthStencilView = { nullptr };
+
+	HWND m_hWnd = { nullptr };
 
 private:
 	HRESULT Ready_SwapChain(HWND hWnd, WINMODE isWindowed, _uint iWinCX, _uint iWinCY);
@@ -31,10 +36,10 @@ private:
 	HRESULT Ready_DepthStencilView(_uint iWinCX, _uint iWinCY);
 
 public:
-	static CGraphic_Device*	Create(	_In_ HWND hWnd, WINMODE isWindowed, _uint iWinSizeX, _uint iWinSizeY,
+	static CGraphic_Device* Create(	_In_ HWND hWnd, WINMODE isWindowed, _uint iWinSizeX, _uint iWinSizeY,
 									_Out_ ID3D11Device** ppDevice, _Out_ ID3D11DeviceContext** ppContext);
 protected:
-	virtual void	Free() override;
+	virtual void Free() override;
 };
 
 NS_END

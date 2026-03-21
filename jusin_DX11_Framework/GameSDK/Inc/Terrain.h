@@ -1,5 +1,5 @@
 #pragma once
-#include "Client_Defines.h"
+#include "Game_PKM_Defines.h"
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
@@ -8,7 +8,7 @@ class CTexture;
 class CVIBuffer_Terrain;
 NS_END
 
-NS_BEGIN(Client)
+NS_BEGIN(Game_PKM)
 
 class CTerrain final : public CGameObject
 {

@@ -2,7 +2,9 @@
 #include "Level_Loading.h"
 #include "GameInstance.h"
 
+NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOGO);
+NS_END
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -29,7 +31,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 HRESULT CLevel_Logo::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("로고레벨입니다."));
 #endif
 
 	return S_OK;

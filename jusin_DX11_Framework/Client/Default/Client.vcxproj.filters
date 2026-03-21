@@ -10,27 +10,6 @@
     <Filter Include="99. Defines">
       <UniqueIdentifier>{c2553736-c81f-47d7-9b5f-273d7b037302}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels">
-      <UniqueIdentifier>{71ab7d0d-da76-4047-b053-14220db46d75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\GamePlay">
-      <UniqueIdentifier>{ae649d05-f2eb-4eb6-9353-aa71e9da1660}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\Loading">
-      <UniqueIdentifier>{edb1e40b-f088-41f8-8f4d-b4d83f46fd7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\Logo">
-      <UniqueIdentifier>{58459578-8ac4-46a2-8e4a-7c372ca62b31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject">
-      <UniqueIdentifier>{ad6dc742-0f8d-4e3d-bfd1-d20ad4f60954}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\BackGround">
-      <UniqueIdentifier>{5a46062c-11df-4b25-b7ed-0acdd97c676d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\Terrain">
-      <UniqueIdentifier>{1bdc6733-73fd-4e2f-a89e-4b673f8a512c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\MainApp.h">
@@ -51,24 +30,6 @@
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_Logo.h">
-      <Filter>01. Levels\Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01. Levels\GamePlay</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_Loading.h">
-      <Filter>01. Levels\Loading</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Loader.h">
-      <Filter>01. Levels\Loading</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BackGround.h">
-      <Filter>02. GameObject\BackGround</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02. GameObject\Terrain</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\MainApp.cpp">
@@ -76,24 +37,6 @@
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>98. Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_Logo.cpp">
-      <Filter>01. Levels\Logo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01. Levels\GamePlay</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Level_Loading.cpp">
-      <Filter>01. Levels\Loading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>01. Levels\Loading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>02. GameObject\BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Terrain.cpp">
-      <Filter>02. GameObject\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

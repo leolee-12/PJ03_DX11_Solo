@@ -1,18 +1,18 @@
 #pragma once
-#include "Editor_Defines.h"
+#include "Game_PKM_Defines.h"
 #include "Base.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Game_PKM)
 
-class CEditLoader final : public CBase
+class CLoader final : public CBase
 {
 private:
-	CEditLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CEditLoader() = default;
+	CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLoader() = default;
 
 public:
 	HRESULT	Initialize(LEVEL eNextLevelID);
@@ -37,11 +37,11 @@ private:
 	std::atomic<_bool>		m_isFinished = {};
 
 private:
-	HRESULT Ready_Resources_For_EditLogo();
-	HRESULT Ready_Resources_For_EditPlay();
+	HRESULT Ready_Resources_For_Logo();
+	HRESULT Ready_Resources_For_GamePlay();
 
 public:
-	static CEditLoader*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
+	static CLoader*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
 
 protected:
 	virtual void	Free() override;

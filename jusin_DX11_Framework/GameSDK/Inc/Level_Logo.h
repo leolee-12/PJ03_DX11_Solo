@@ -1,8 +1,8 @@
 #pragma once
-#include "Client_Defines.h"
+#include "Game_PKM_Defines.h"
 #include "Level.h"
 
-NS_BEGIN(Client)
+NS_BEGIN(Game_PKM)
 
 class CLevel_Logo : public CLevel
 {
@@ -18,10 +18,10 @@ public:
 	HRESULT			Ready_Layer_BackGround(const _wstring& strLayerTag);
 
 public:
-	static CLevel_Logo*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 protected:
-	virtual void		Free() override;
+	virtual void Free() override;
 };
 
 NS_END

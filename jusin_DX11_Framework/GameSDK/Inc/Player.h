@@ -7,10 +7,10 @@ NS_BEGIN(Game_PKM)
 class CPlayer final : public CGameObject
 {
 public:
-	typedef struct tagPlayerDesc : public CGameObject::GAMEOBJECT_DESC
+	struct PLAYER_DESC : public CGameObject::GAMEOBJECT_DESC
 	{
 
-	}PLAYER_DESC;
+	};
 
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

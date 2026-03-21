@@ -1,5 +1,5 @@
 #pragma once
-#include "Editor_Defines.h"
+#include "Game_PKM_Defines.h"
 #include "Level.h"
 
 /* -------------------------------------------------- */
@@ -9,13 +9,13 @@
 // - 다음 레벨을 위한 자원 준비
 /* -------------------------------------------------- */
 
-NS_BEGIN(Editor)
+NS_BEGIN(Game_PKM)
 
-class CLevel_EditLoading : public CLevel
+class CLevel_Loading : public CLevel
 {
 private:
-	CLevel_EditLoading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CLevel_EditLoading() = default;
+	CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CLevel_Loading() = default;
 
 public:
 	virtual HRESULT	Initialize(LEVEL eNextLevelID);
@@ -24,13 +24,13 @@ public:
 
 private:
 	LEVEL			m_eNextLevelID = { LEVEL::END };
-	class CEditLoader*	m_pLoader = { nullptr };
+	class CLoader*	m_pLoader = { nullptr };
 
 public:
-	static CLevel_EditLoading*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
+	static CLevel_Loading*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
 
 protected:
-	virtual void			Free() override;
+	virtual void Free() override;
 };
 
 NS_END

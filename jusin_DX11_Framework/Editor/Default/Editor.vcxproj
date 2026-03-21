@@ -138,11 +138,7 @@
     <ClInclude Include="..\..\ThirdParty\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="..\..\ThirdParty\imgui\imgui.h" />
     <ClInclude Include="..\..\ThirdParty\Imgui\ImGuizmo.h" />
-    <ClInclude Include="..\Public\EditLoader.h" />
     <ClInclude Include="..\Public\ImGui_Manager.h" />
-    <ClInclude Include="..\Public\Level_EditPlay.h" />
-    <ClInclude Include="..\Public\Level_EditLoading.h" />
-    <ClInclude Include="..\Public\Level_EditLogo.h" />
     <ClInclude Include="..\Public\Panel_Base.h" />
     <ClInclude Include="..\Public\Panel_MapTool.h" />
     <ClInclude Include="..\Public\EditorApp.h" />
@@ -161,11 +157,7 @@
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="..\Private\EditLoader.cpp" />
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
-    <ClCompile Include="..\Private\Level_EditPlay.cpp" />
-    <ClCompile Include="..\Private\Level_EditLoading.cpp" />
-    <ClCompile Include="..\Private\Level_EditLogo.cpp" />
     <ClCompile Include="..\Private\Panel_Base.cpp" />
     <ClCompile Include="..\Private\Panel_MapTool.cpp" />
     <ClCompile Include="..\Private\EditorApp.cpp" />

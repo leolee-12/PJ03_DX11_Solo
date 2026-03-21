@@ -8,7 +8,7 @@ CImGui_Manager::CImGui_Manager()
 {
 }
 
-HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, ID3D11RenderTargetView** ppBackBufferRTV)
+HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
 	// Make process DPI aware and obtain main monitor scale
 	ImGui_ImplWin32_EnableDpiAwareness();
@@ -17,10 +17,9 @@ HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _
 	// 장치 전달
 	m_pDevice = *ppDevice;
 	m_pContext = *ppContext;
-	m_pBackBufferRTV = *ppBackBufferRTV;
+	m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDepthStencilView);
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
-	Safe_AddRef(m_pBackBufferRTV);
 
 	// ImGui 컨텍스트 생성
 	IMGUI_CHECKVERSION();
@@ -78,7 +77,7 @@ void CImGui_Manager::Render()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::DockSpaceOverViewport();
+	ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
 	for (auto& pPanel : m_Panels)
 	{
@@ -96,6 +95,8 @@ void CImGui_Manager::Render()
 	{
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
+
+		m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
 	}
 }
 
@@ -141,6 +142,7 @@ void CImGui_Manager::Free()
 	for(auto& pPanel : m_Panels)
 		Safe_Release(pPanel);
 
+	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);

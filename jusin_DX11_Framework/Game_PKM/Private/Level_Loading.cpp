@@ -5,7 +5,9 @@
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
 
+NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOADING);
+NS_END
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }

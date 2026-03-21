@@ -1,27 +1,26 @@
 #pragma once
-#include "Client_Defines.h"
-#include "UIObject.h"
+#include "Game_PKM_Defines.h"
+#include "GameObject.h"
 
 NS_BEGIN(Engine)
 class CShader;
 class CTexture;
-class CVIBuffer_Rect;
+class CVIBuffer_Terrain;
 NS_END
 
-NS_BEGIN(Client)
+NS_BEGIN(Game_PKM)
 
-class CBackGround final : public CUIObject
+class CTerrain final : public CGameObject
 {
-public:
-	typedef struct tagBackGroundDesc : public CUIObject::UIOBJECT_DESC
+	struct TERRAIN_DESC : public CGameObject::GAMEOBJECT_DESC
 	{
 
-	}BACKGROUND_DESC;
+	};
 
 protected:
-	CBackGround(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
-	CBackGround(const CBackGround& Prototype);
-	virtual ~CBackGround() = default;
+	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CTerrain(const CTerrain& Prototype);
+	virtual ~CTerrain() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -31,18 +30,20 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CVIBuffer_Terrain* m_pVIBufferCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+
 public:
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CBackGround* Clone(void* pArg) override;
+	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
 
 protected:
 	virtual void Free() override;

@@ -13,22 +13,23 @@ private:
 	virtual ~CImGui_Manager() = default;
 
 public:
-	HRESULT		Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, ID3D11RenderTargetView** ppBackBufferRTV);
-	void		Update(_float fTimeDelta);
-	void		Render();
+	HRESULT Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	void Update(_float fTimeDelta);
+	void Render();
 
 private:
-	ID3D11Device*			m_pDevice = { nullptr };
-	ID3D11DeviceContext*	m_pContext = { nullptr };
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
 	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
+	ID3D11DepthStencilView* m_pDepthStencilView = { nullptr };
 
 	array<class CPanel_Base*, EDITOR_MODE_COUNT> m_Panels{};
 
 private:
-	HRESULT		Add_Panels();
+	HRESULT Add_Panels();
 
 protected:
-	virtual void	Free() override;
+	virtual void Free() override;
 };
 
 NS_END

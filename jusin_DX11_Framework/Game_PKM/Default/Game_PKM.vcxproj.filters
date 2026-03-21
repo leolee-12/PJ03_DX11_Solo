@@ -4,17 +4,35 @@
     <Filter Include="99. Defines">
       <UniqueIdentifier>{0d31ee09-db18-4d58-9886-4b6e6813eaa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Player">
-      <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
+    <Filter Include="98. ShaderFiles">
+      <UniqueIdentifier>{cb6d5137-4fc5-4e40-9c5e-2a8eae55d5ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Levels">
+      <UniqueIdentifier>{798bdda6-d648-4492-b951-776b592ccff7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Environment">
       <UniqueIdentifier>{2ff14eb7-25dd-4762-b3cb-6d4ce4df7f87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Environment\BackGround">
+    <Filter Include="01. Environment\00. BackGround">
       <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. ShaderFiles">
-      <UniqueIdentifier>{cb6d5137-4fc5-4e40-9c5e-2a8eae55d5ea}</UniqueIdentifier>
+    <Filter Include="01. Environment\01. Terrain">
+      <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameActor">
+      <UniqueIdentifier>{d772649f-03b1-4208-a21e-800813a55c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameActor\00. Player">
+      <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Levels\00. Loading">
+      <UniqueIdentifier>{205b1acc-cebf-4559-8130-4f9e02979b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Levels\01. Logo">
+      <UniqueIdentifier>{fd463d1a-a634-4065-ba6b-42fa67af8b38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Levels\02. GamePlay">
+      <UniqueIdentifier>{86f8bf21-e9a4-41c4-9202-a4ca4450888d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,18 +40,48 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
-      <Filter>00. Player</Filter>
+      <Filter>02. GameActor\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>01. Environment\BackGround</Filter>
+      <Filter>01. Environment\00. BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>01. Environment\01. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>00. Levels\02. GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>00. Levels\00. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>00. Levels\00. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Logo.h">
+      <Filter>00. Levels\01. Logo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
-      <Filter>00. Player</Filter>
+      <Filter>02. GameActor\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>01. Environment\BackGround</Filter>
+      <Filter>01. Environment\00. BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>01. Environment\01. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>00. Levels\02. GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Loading.cpp">
+      <Filter>00. Levels\00. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>00. Levels\00. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Logo.cpp">
+      <Filter>00. Levels\01. Logo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

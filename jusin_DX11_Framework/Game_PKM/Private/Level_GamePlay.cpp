@@ -1,7 +1,9 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
 
+NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
+NS_END
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -23,7 +25,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 HRESULT CLevel_GamePlay::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("게임플레이레벨입니다."));
 #endif
 
 	return S_OK;

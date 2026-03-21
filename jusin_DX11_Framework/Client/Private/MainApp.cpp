@@ -53,30 +53,14 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Ready_Prototype_For_Static()
 {
-	CComponent* pComponent = { nullptr };
-
 	/* Prototype_Component_VIBuffer_Rect */
-
-	pComponent = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
-
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"), pComponent)))
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_VtxTex */
-	D3D11_INPUT_ELEMENT_DESC        Elements[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-
-	pComponent = CShader::Create(m_pDevice, m_pContext, TEXT("../ShaderFiles/Shader_VtxTex.hlsl"), Elements, 2);
-
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxTex"), pComponent)))
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxTex.hlsl"), VTXTEX::Elements, 2))))
 		return E_FAIL;
 
 	return S_OK;
