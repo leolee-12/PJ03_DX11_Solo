@@ -43,7 +43,7 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 
 void CBackGround::Update(_float fTimeDelta)
 {
-	XMVECTOR vUp = { 0.f, 1.f, 0.f };
+	XMVECTOR vUp = { 0.f, 0.f, 1.f };
 
 	m_pTransformCom->Turn(vUp, fTimeDelta);
 	m_pTransformCom->Go_Right(fTimeDelta);

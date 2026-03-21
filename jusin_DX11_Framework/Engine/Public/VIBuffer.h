@@ -29,7 +29,7 @@ protected:
 	_uint		m_iIndexStride = {};
 	DXGI_FORMAT	m_eIndexFormat = {};
 
-	D3D11_PRIMITIVE_TOPOLOGY	m_ePrimitiveType = {};
+	D3D11_PRIMITIVE_TOPOLOGY m_ePrimitiveType = {};
 
 public:
 	virtual CComponent* Clone(void* pArg) = 0;

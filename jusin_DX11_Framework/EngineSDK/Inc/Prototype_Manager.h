@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Terrain.h"
 
 /* -------------------------------------------------- */
 // 프로토타입 매니저

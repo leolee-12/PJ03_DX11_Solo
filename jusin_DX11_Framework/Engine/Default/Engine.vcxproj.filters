@@ -61,6 +61,15 @@
     <Filter Include="07. Component\Texture">
       <UniqueIdentifier>{87ea0cd0-37c5-4343-9a04-36ab6b07f006}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. GameObject\Manager">
+      <UniqueIdentifier>{19d2eb37-dc5c-47c7-b133-30dc0e5bfea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject">
+      <UniqueIdentifier>{1330a16f-9bae-4e9b-8634-ebddb3437cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\Camera">
+      <UniqueIdentifier>{21b6e2af-0c4a-4d01-aee3-966515b87f8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -108,12 +117,6 @@
     <ClInclude Include="..\Public\Prototype_Manager.h">
       <Filter>04. Prototype</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Object_Manager.h">
-      <Filter>05. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Layer.h">
-      <Filter>05. GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Renderer.h">
       <Filter>06. Renderer</Filter>
     </ClInclude>
@@ -135,11 +138,20 @@
     <ClInclude Include="..\Public\Texture.h">
       <Filter>07. Component\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UIObject.h">
-      <Filter>05. GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Terrain.h">
       <Filter>07. Component\VIBuffer\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIObject.h">
+      <Filter>05. GameObject\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h">
+      <Filter>05. GameObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>05. GameObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera.h">
+      <Filter>05. GameObject\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,12 +182,6 @@
     <ClCompile Include="..\Private\Prototype_Manager.cpp">
       <Filter>04. Prototype</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Object_Manager.cpp">
-      <Filter>05. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Layer.cpp">
-      <Filter>05. GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Renderer.cpp">
       <Filter>06. Renderer</Filter>
     </ClCompile>
@@ -197,11 +203,20 @@
     <ClCompile Include="..\Private\Texture.cpp">
       <Filter>07. Component\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UIObject.cpp">
-      <Filter>05. GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
       <Filter>07. Component\VIBuffer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIObject.cpp">
+      <Filter>05. GameObject\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>05. GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp">
+      <Filter>05. GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera.cpp">
+      <Filter>05. GameObject\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

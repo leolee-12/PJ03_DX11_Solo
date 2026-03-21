@@ -15,7 +15,7 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& Prototype)
 HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath)
 {
 	// 1. 높이맵 파일 로드
-	_ulong dwByte = { };
+	_ulong dwByte = {};
 	HANDLE hFile = CreateFile(pHeightMapFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	
 	if (INVALID_HANDLE_VALUE == hFile)

@@ -16,10 +16,13 @@ public:
 	virtual HRESULT	Render() override;
 
 public:
-	static CLevel_GamePlay*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
+
+public:
+	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 protected:
-	virtual void		Free() override;
+	virtual void Free() override;
 };
 
 NS_END
