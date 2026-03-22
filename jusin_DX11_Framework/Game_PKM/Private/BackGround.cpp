@@ -43,14 +43,13 @@ HRESULT CBackGround::Initialize(void* pArg)
 
 void CBackGround::Priority_Update(_float fTimeDelta)
 {
-	int a = 10;
 }
 
 void CBackGround::Update(_float fTimeDelta)
 {
-	XMVECTOR vUp = { 0.f, 0.f, 1.f };
-
-	m_pTransformCom->Turn(vUp, fTimeDelta);
+	// Test
+	XMVECTOR vLook = { 0.f, 0.f, 1.f };
+	m_pTransformCom->Turn(vLook, fTimeDelta);
 	m_pTransformCom->Go_Right(fTimeDelta);
 }
 
@@ -126,7 +125,7 @@ CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	return pInstance;
 }
 
-CBackGround* CBackGround::Clone(void* pArg)
+CGameObject* CBackGround::Clone(void* pArg)
 {
 	CBackGround* pInstance = new CBackGround(*this);
 

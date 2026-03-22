@@ -24,10 +24,6 @@ private:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	CGameInstance* m_pGameInstance = { nullptr };
 
-private:
-	HRESULT Ready_Prototype_For_Static();
-	HRESULT Start_Level(LEVEL eStartLevelID);
-
 public:
 	static CEditorApp* Create();
 

@@ -11,9 +11,9 @@ private:
 	virtual ~CLevel_GamePlay() = default;
 
 public:
-	virtual			HRESULT Initialize() override;
-	virtual void	Update(_float fTimeDelta) override;
-	virtual HRESULT	Render() override;
+	virtual HRESULT Initialize() override;
+	virtual void Update(_float fTimeDelta) override;
+	virtual HRESULT Render() override;
 
 public:
 	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);

@@ -1,6 +1,6 @@
 #include "MainApp.h"
 #include "GameInstance.h"
-#include "Level_Loading.h"
+#include "Game_API.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -23,10 +23,10 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Prototype_For_Static()))
+	if (FAILED(Ready_Prototype_For_Static(m_pDevice, m_pContext)))
 		return E_FAIL;
 
-	if (FAILED(Start_Level(LEVEL::LOGO)))
+	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
 		return E_FAIL;
 
 	return S_OK;
@@ -46,34 +46,6 @@ HRESULT CMainApp::Render()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->End_Draw()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CMainApp::Ready_Prototype_For_Static()
-{
-	/* Prototype_Component_VIBuffer_Rect */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
-		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* Prototype_Component_Shader_VtxTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxTex.hlsl"), VTXTEX::Elements, 2))))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CMainApp::Start_Level(LEVEL eStartLevelID)
-{
-	CLevel* pPreLevel = CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevelID);
-
-	if (nullptr == pPreLevel)
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING), pPreLevel)))
 		return E_FAIL;
 
 	return S_OK;

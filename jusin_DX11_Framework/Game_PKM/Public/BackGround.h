@@ -42,7 +42,7 @@ private:
 
 public:
 	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CBackGround* Clone(void* pArg) override;
+	virtual CGameObject* Clone(void* pArg) override;
 
 protected:
 	virtual void Free() override;

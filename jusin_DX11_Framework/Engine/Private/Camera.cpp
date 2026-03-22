@@ -56,4 +56,7 @@ CGameObject* CCamera::Clone(void* pArg)
 
 void CCamera::Free()
 {
+	__super::Free();
+
+	//Safe_Release(m_pPipeLine);
 }

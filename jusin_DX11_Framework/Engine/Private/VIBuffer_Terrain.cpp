@@ -1,22 +1,24 @@
 #include "VIBuffer_Terrain.h"
 
-CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath)
 	: CVIBuffer{ pDevice, pContext }
+	, m_strHeightMapFilePath{ pHeightMapFilePath }
 {
 
 }
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& Prototype)
 	: CVIBuffer{ Prototype }
+	, m_strHeightMapFilePath{ Prototype.m_strHeightMapFilePath }
 {
 
 }
 
-HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath)
+HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 {
 	// 1. 높이맵 파일 로드
 	_ulong dwByte = {};
-	HANDLE hFile = CreateFile(pHeightMapFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	HANDLE hFile = CreateFile(m_strHeightMapFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
@@ -63,9 +65,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			size_t iIndex = i * m_iNumVerticesX + j;
 
-			pVertices[iIndex].vPosition = _float3(j, (pPixels[iIndex] & 0x000000ff) * 0.1f, i);
+			pVertices[iIndex].vPosition = _float3(_float(j), _float(pPixels[iIndex] & 0x000000ff) * 0.1f, _float(i));
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+			pVertices[iIndex].vTexcoord = _float2(_float(j) / (m_iNumVerticesX - 1.f), _float(i) / (m_iNumVerticesZ - 1.f));
 		}
 	}
 
@@ -103,12 +105,12 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			size_t iIndex = i * m_iNumVerticesX + j;
 
-			_uint       iIndices[4] =
+			_uint iIndices[4] =
 			{
-				iIndex + m_iNumVerticesX,
-				iIndex + m_iNumVerticesX + 1,
-				iIndex + 1,
-				iIndex
+				_uint(iIndex + m_iNumVerticesX),
+				_uint(iIndex + m_iNumVerticesX + 1),
+				_uint(iIndex + 1),
+				_uint(iIndex)
 			};
 
 			pIndices[iNumIndices++] = iIndices[0];
@@ -143,9 +145,9 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath)
 {
-	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext);
+	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext, pHeightMapFilePath);
 
-	if (FAILED(pInstance->Initialize_Prototype(pHeightMapFilePath)))
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CVIBuffer_Terrain");
 		Safe_Release(pInstance);

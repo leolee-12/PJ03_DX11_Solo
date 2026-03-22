@@ -122,6 +122,10 @@
       <Command>cd /d $(SolutionDir)
 call UpdateLib.bat</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd /d $(SolutionDir)
+call CleanBuild.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -11,7 +11,7 @@
 
 NS_BEGIN(Engine)
 
-class CLevel_Manager : public CBase
+class CLevel_Manager final : public CBase
 {
 private:
 	CLevel_Manager();

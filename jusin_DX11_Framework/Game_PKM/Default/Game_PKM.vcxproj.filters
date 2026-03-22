@@ -34,6 +34,9 @@
     <Filter Include="00. Levels\02. GamePlay">
       <UniqueIdentifier>{86f8bf21-e9a4-41c4-9202-a4ca4450888d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. Game_API">
+      <UniqueIdentifier>{564c7465-cb9d-4b18-9180-4375805faed6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -60,6 +63,9 @@
     <ClInclude Include="..\Public\Level_Logo.h">
       <Filter>00. Levels\01. Logo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Game_API.h">
+      <Filter>97. Game_API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -82,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Logo.cpp">
       <Filter>00. Levels\01. Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Game_API.cpp">
+      <Filter>97. Game_API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <process.h>
 
+#include "Engine_Defines.h"
+
 namespace Game_PKM
 {
 	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, END };

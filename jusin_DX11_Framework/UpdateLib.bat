@@ -4,9 +4,9 @@
 xcopy		/y /i /s	.\Engine\Public\*.h				.\EngineSDK\Inc\
 xcopy		/y /i /s	.\Engine\Bin\Engine.lib			.\EngineSDK\lib\
 xcopy		/y /i /s	.\Engine\Bin\*.dll				.\Client\Bin\
+xcopy		/y /i /s	.\Engine\Bin\*.dll				.\Editor\Bin\
 
 // Game
-xcopy		/y /i /s	.\Engine\Bin\*.dll				.\Editor\Bin\
 xcopy		/y /i /s	.\Game_PKM\Public\*.h			.\GameSDK\Inc\
 xcopy		/y /i /s	.\Game_PKM\Bin\*.lib			.\GameSDK\lib\
 xcopy		/y /i /s	.\Game_PKM\Bin\*.pdb			.\GameSDK\lib\

@@ -68,8 +68,6 @@ void XM_CALLCONV CTransform::Rotation(_fvector vAxis, _float fRadian)
 
 void XM_CALLCONV CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {
-	_float3 vScaled = Get_Scaled();
-
 	_vector vRight	= Get_State(STATE::RIGHT);
 	_vector vUp		= Get_State(STATE::UP);
 	_vector vLook	= Get_State(STATE::LOOK);
