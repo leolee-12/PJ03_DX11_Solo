@@ -6,11 +6,15 @@
 #include <DirectXCollision.h>
 #include <d3dcompiler.h>
 
+#pragma warning(push, 0)
 #include <fx11/d3dx11effect.h>
 #include <DirectTK/DDSTextureLoader.h>
 #include <DirectTK/WICTextureLoader.h>
+#pragma warning(pop)
 
 using namespace DirectX;
+
+#include <PhysX/PxPhysicsAPI.h>
 
 #include <array>
 #include <vector>

@@ -14,5 +14,9 @@ xcopy		/y /i /s	.\Game_PKM\ShaderFiles\*.* 		.\ShaderFiles\
 xcopy		/y /i /s	.\Game_PKM\ShaderFiles\*.* 		.\ShaderFiles\
 
 // ThirdParties
-xcopy		/y /i /s	.\ThirdParty\inc\*				.\EngineSDK\Inc\
-xcopy		/y /i /s	.\ThirdParty\lib\*.lib				.\EngineSDK\Lib\
+xcopy		/y /D /i /s	.\ThirdParty\inc\*				.\EngineSDK\Inc\
+xcopy		/y /D /i /s	.\ThirdParty\lib\*.lib				.\EngineSDK\Lib\
+xcopy		/y /D /i /s	.\ThirdParty\lib\*.dll				.\Client\Bin\
+xcopy		/y /D /i /s	.\ThirdParty\lib\*.dll				.\Editor\Bin\
+xcopy		/y /D /i /s	.\ThirdParty\lib\*.pdb				.\Client\Bin\
+xcopy		/y /D /i /s	.\ThirdParty\lib\*.pdb				.\Editor\Bin\

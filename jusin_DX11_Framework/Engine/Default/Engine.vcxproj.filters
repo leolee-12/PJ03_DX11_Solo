@@ -70,6 +70,9 @@
     <Filter Include="05. GameObject\Camera">
       <UniqueIdentifier>{21b6e2af-0c4a-4d01-aee3-966515b87f8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="80. PhysX">
+      <UniqueIdentifier>{e8a675eb-ba38-4b54-907d-f785a5720c5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="..\Public\Camera.h">
       <Filter>05. GameObject\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PhysX_Manager.h">
+      <Filter>80. PhysX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -217,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera.cpp">
       <Filter>05. GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysX_Manager.cpp">
+      <Filter>80. PhysX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
