@@ -19,10 +19,9 @@ namespace Engine
 	//enum ROTATION { ROT_X, ROT_Y, ROT_Z, ROT_END };
 	//
 	//enum TEXTUREID { TEX_NORMAL, TEX_CUBE, TEX_END };
-	//
-	//enum MOUSEKEYSTATE { DIM_LB, DIM_RB, DIM_MB, DIM_END };
-	//
-	//enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
+	enum class DIMB { LBUTTON, RBUTTON, WHEEL, END };
+
+	enum class DIMM { X, Y, WHEEL, END };
 }
 #endif // Engine_Enum_h__

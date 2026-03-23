@@ -2,9 +2,9 @@
 
 :: 1. 루트 폴더 삭제 (에러 메시지 숨김)
 rd /s /q ".vs" 2>nul
+rd /s /q "ShaderFiles" 2>nul
 rd /s /q "EngineSDK" 2>nul
 rd /s /q "GameSDK" 2>nul
-rd /s /q "ShaderFiles" 2>nul
 
 :: 2. Bin 폴더 안의 파일들만 삭제
 del /f /q "Client\Bin\*.*" 2>nul

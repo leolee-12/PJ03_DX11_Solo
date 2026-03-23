@@ -73,6 +73,9 @@
     <Filter Include="80. PhysX">
       <UniqueIdentifier>{e8a675eb-ba38-4b54-907d-f785a5720c5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. PipeLine">
+      <UniqueIdentifier>{1fda01cf-534e-46dc-a1aa-e9ad6751a10f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -159,6 +162,12 @@
     <ClInclude Include="..\Public\PhysX_Manager.h">
       <Filter>80. PhysX</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PipeLine.h">
+      <Filter>08. PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Input_Device.h">
+      <Filter>01. Device\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -226,6 +235,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PhysX_Manager.cpp">
       <Filter>80. PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PipeLine.cpp">
+      <Filter>08. PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Input_Device.cpp">
+      <Filter>01. Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

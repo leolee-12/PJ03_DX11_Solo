@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "GameInstance.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
@@ -19,7 +20,12 @@ HRESULT CCamera::Initialize(void* pArg)
 {
 	auto pDesc = static_cast<CAMERA_DESC*>(pArg);
 
-	m_fNear = pDesc->fNear;
+	D3D11_VIEWPORT ViewPortDesc{};
+	_uint iNumViewports = { 1 };
+	m_pContext->RSGetViewports(&iNumViewports, &ViewPortDesc);
+	m_fAspect = static_cast<_float>(ViewPortDesc.Width) / ViewPortDesc.Height;
+
+	m_fNear = pDesc->fNear;	
 	m_fFar = pDesc->fFar;
 	m_fFovy = pDesc->fFovy;
 
@@ -28,6 +34,10 @@ HRESULT CCamera::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vEye), 1.f));
 	m_pTransformCom->LookAt(XMVectorSetW(XMLoadFloat3(&pDesc->vAt), 1.f));
+
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	m_bProjDirty = true;
+	Update_PipeLine();
 
 	return S_OK;
 }
@@ -38,6 +48,7 @@ void CCamera::Priority_Update(_float fTimeDelta)
 
 void CCamera::Update(_float fTimeDelta)
 {
+	Update_PipeLine();
 }
 
 void CCamera::Late_Update(_float fTimeDelta)
@@ -46,7 +57,18 @@ void CCamera::Late_Update(_float fTimeDelta)
 
 HRESULT CCamera::Render()
 {
-	return E_NOTIMPL;
+	return S_OK;
+}
+
+void CCamera::Update_PipeLine()
+{
+	m_pGameInstance->Set_CameraWorld(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+
+	if (m_bProjDirty)
+	{
+		m_pGameInstance->Set_Projection(XMLoadFloat4x4(&m_ProjMatrix));
+		m_bProjDirty = false;
+	}
 }
 
 CGameObject* CCamera::Clone(void* pArg)

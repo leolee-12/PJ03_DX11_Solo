@@ -43,6 +43,8 @@ public:
 						XMVectorGetX(XMVector3Length(Get_State(STATE::LOOK))));
 	}
 
+	const _float4x4* Get_WorldMatrixPtr() const { return &m_WorldMatrix; }
+
 public:
 	virtual HRESULT	Initialize_Prototype();
 	virtual HRESULT	Initialize(void* pArg);

@@ -26,8 +26,13 @@ public:
 	virtual HRESULT Render();
 
 private:
-	_float m_fFovy, m_fNear, m_fFar;
+	_float m_fFovy, m_fAspect, m_fNear, m_fFar;
+	_float4x4 m_ProjMatrix = {};
+	_bool m_bProjDirty = {};
 	class CPipeLine* m_pPipeLine = { nullptr };
+
+private:
+	void Update_PipeLine();
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

@@ -1,4 +1,6 @@
 #include "Level_GamePlay.h"
+#include "Camera_Free.h"
+
 #include "GameInstance.h"
 
 NS_BEGIN(Game_PKM)
@@ -27,6 +29,26 @@ HRESULT CLevel_GamePlay::Render()
 #ifdef _DEBUG
 	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("게임플레이레벨입니다."));
 #endif
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring& strLayerTag)
+{
+	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
+
+	CameraDesc.vEye = _float3(0.f, 10.f, -7.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.fFovy = XMConvertToRadians(60.f);
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 500.f;
+	CameraDesc.fSpeedPerSec = 20.f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	CameraDesc.fMouseSensor = 0.05f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &CameraDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

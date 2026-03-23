@@ -6,15 +6,18 @@
 #include <DirectXCollision.h>
 #include <d3dcompiler.h>
 
-#pragma warning(push, 0)
+#define DIRECTINPUT_VERSION	0x0800
+#include <dinput.h>
+
 #include <fx11/d3dx11effect.h>
 #include <DirectTK/DDSTextureLoader.h>
 #include <DirectTK/WICTextureLoader.h>
-#pragma warning(pop)
 
 using namespace DirectX;
 
+#pragma warning(push, 0)
 #include <PhysX/PxPhysicsAPI.h>
+#pragma warning(pop)
 
 #include <array>
 #include <vector>
@@ -39,9 +42,6 @@ namespace Engine
 {
 	static const _wstring g_strTransformTag = TEXT("Com_Transform");
 }
-
-#define DIRECTINPUT_VERSION	0x0800
-#include <dinput.h>
 
 #pragma warning(disable : 4251)
 

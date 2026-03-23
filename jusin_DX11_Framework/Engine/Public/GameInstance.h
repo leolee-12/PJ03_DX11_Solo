@@ -15,8 +15,8 @@ private:
 	CGameInstance();
 	virtual ~CGameInstance() = default;
 
-#pragma region ENGINE
 public:
+#pragma region ENGINE
 	HRESULT Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext);
 	void Update_Engine(_float fTimeDelta);
 	HRESULT Begin_Draw();
@@ -25,11 +25,9 @@ public:
 	void Clear_Resources(_int iLevelIndex);
 	void Release_Engine();
 	const HWND Get_HWND() const;
-
 #pragma endregion
 
 #pragma region TIMER_MANAGER
-public:
 	HRESULT Add_Timer(const _wstring& strTimerTag);
 	float Compute_Timer(const _wstring& strTimerTag);
 #pragma endregion
@@ -51,6 +49,20 @@ public:
 	void Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
 #pragma endregion
 
+#pragma region PIPELINE
+	const _float4x4* Get_Transform(D3DTS eState) const;
+	const _float4x4* Get_Transform_Inverse(D3DTS eState) const;
+	const _float4* Get_CamPosition() const;
+	void Set_CameraWorld(_fmatrix StateMatrix);
+	void Set_Projection(_fmatrix StateMatrix);
+#pragma endregion
+
+#pragma region INPUT_DEVICE
+	_byte Get_DIKeyState(_ubyte byKeyID);
+	_byte Get_DIMouseState(DIMB eMouse);
+	_long Get_DIMouseMove(DIMM eMouseState);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -58,8 +70,10 @@ private:
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
 	class CObject_Manager*		m_pObject_Manager = { nullptr };
 	class CRenderer*			m_pRenderer = { nullptr };
+	class CPipeLine*			m_pPipeLine = { nullptr };
+	class CInput_Device*		m_pInput_Device = { nullptr };
 
-protected:
+private:
 	virtual void	Free() override;
 };
 

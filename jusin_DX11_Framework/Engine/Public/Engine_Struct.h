@@ -5,6 +5,7 @@ namespace Engine
 {
 	struct ENGINE_DESC
 	{
+		HINSTANCE hInstance;
 		HWND hWnd;
 		WINMODE eWinMode;
 		unsigned int iViewportWidth, iViewportHeight;

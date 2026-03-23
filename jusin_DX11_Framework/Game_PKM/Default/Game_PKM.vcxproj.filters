@@ -37,6 +37,12 @@
     <Filter Include="97. Game_API">
       <UniqueIdentifier>{564c7465-cb9d-4b18-9180-4375805faed6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Environment\02. Camera">
+      <UniqueIdentifier>{2019e1f5-e2bf-4370-93e1-99488c316b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\02. Camera\Free">
+      <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -66,6 +72,9 @@
     <ClInclude Include="..\Public\Game_API.h">
       <Filter>97. Game_API</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_Free.h">
+      <Filter>01. Environment\02. Camera\Free</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -91,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Game_API.cpp">
       <Filter>97. Game_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Free.cpp">
+      <Filter>01. Environment\02. Camera\Free</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

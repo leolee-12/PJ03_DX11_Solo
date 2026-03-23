@@ -4,6 +4,8 @@
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "Renderer.h"
+#include "PipeLine.h"
+#include "Input_Device.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -41,6 +43,14 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pRenderer)
+		return E_FAIL;
+
+	m_pPipeLine = CPipeLine::Create();
+	if (nullptr == m_pRenderer)
+		return E_FAIL;
+
+	m_pInput_Device = CInput_Device::Create(EngineDesc.hInstance, EngineDesc.hWnd);
+	if (nullptr == m_pInput_Device)
 		return E_FAIL;
 
 	return S_OK;
@@ -96,6 +106,8 @@ void CGameInstance::Clear_Resources(_int iLevelIndex)
 
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pInput_Device);
+	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pPrototype_Manager);
@@ -161,8 +173,52 @@ void CGameInstance::Add_RenderGroup(RENDERID eGroupID, CGameObject* pGameObject)
 {
 	m_pRenderer->Add_RenderGroup(eGroupID, pGameObject);
 }
-
 #pragma endregion
+
+#pragma region PIPELINE
+const _float4x4* CGameInstance::Get_Transform(D3DTS eState) const
+{
+	return m_pPipeLine->Get_Transform(eState);
+}
+
+const _float4x4* CGameInstance::Get_Transform_Inverse(D3DTS eState) const
+{
+	return m_pPipeLine->Get_Transform_Inverse(eState);
+}
+
+const _float4* CGameInstance::Get_CamPosition() const
+{
+	return m_pPipeLine->Get_CamPosition();
+}
+
+void CGameInstance::Set_CameraWorld(_fmatrix StateMatrix)
+{
+	m_pPipeLine->Set_CameraWorld(StateMatrix);
+}
+
+void CGameInstance::Set_Projection(_fmatrix StateMatrix)
+{
+	m_pPipeLine->Set_Projection(StateMatrix);
+}
+#pragma endregion
+
+#pragma region INPUT_DEVICE
+_byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
+{
+	return m_pInput_Device->Get_DIKeyState(byKeyID);
+}
+
+_byte CGameInstance::Get_DIMouseState(DIMB eMouse)
+{
+	return m_pInput_Device->Get_DIMouseState(eMouse);
+}
+
+_long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
+{
+	return m_pInput_Device->Get_DIMouseMove(eMouseState);
+}
+#pragma endregion
+
 
 void CGameInstance::Free()
 {
