@@ -63,7 +63,7 @@ struct PS_OUT
 	float4 vCol : SV_TARGET0;
 };
 
-PS_OUT PS_MAIN(PS_IN In)
+PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 {
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
@@ -74,19 +74,51 @@ PS_OUT PS_MAIN(PS_IN In)
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);
 
-	vector vLook = In.vWorldPos - g_vCamPos;
+	vector vView = normalize(g_vCamPos - In.vWorldPos);
 	vector vReflect = reflect(Light, Normal);
-	float fSpec = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 50.f);
+	float fSpec = pow(max(dot(vView, normalize(vReflect)), 0.f), 50.f);
 
 	// ---------- Phong 모델 ----------
 	float fShade = max(dot(Light * -1.f, Normal), 0.f);
 	vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
-	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff; // 실무적 보정 (Ambient에 텍스처 반영)
+	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff;
+	vector Spec = (g_vLightSpec * g_vMtrlSpec) * fSpec;
+	Out.vCol = saturate(Diff + Ambt + Spec);
+	// 정확한 Phong 모델은 Diff + Ambt + Spec이지만, Ambt에 vMtrlDiff를 곱해주면 좀 더 자연스러운 결과가 나옴 (Ambt도 텍스처 색상값에 비례하도록)
+	// --------------------------------
+
+	// ---------- 학원 모델 -----------
+	//vector vShade = max(dot(Light * -1.f, Normal), 0.f) + (g_vLightAmbt * g_vMtrlAmbt);
+	//Out.vCol = g_vLightDiff * vMtrlDiff * saturate(vShade) + (g_vLightSpec * g_vMtrlSpec) * fSpec;
+	// --------------------------------
+
+	return Out;
+}
+
+PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
+{
+	PS_OUT Out;
+	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
+
+	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
+		discard;
+
+	vector Normal = normalize(In.vNorm);
+	vector Light = normalize(g_vLightDir);
+	
+	vector vView = normalize(g_vCamPos - In.vWorldPos);
+	vector vHalf = normalize((-Light) + vView);
+	float fSpec = pow(max(dot(Normal, vHalf), 0.f), 150.f);
+
+	// ---------- Blinn-Phong 모델 ----------
+	float fShade = max(dot(Light * -1.f, Normal), 0.f);
+	vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
+	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff; // Ambt*TexDiff 보정
 	vector Spec = (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	Out.vCol = saturate(Diff + Ambt + Spec);
 	// --------------------------------
 
-	// ---------- 학원 모델 ----------
+	// ---------- 학원 모델 -----------
 	//vector vShade = max(dot(Light * -1.f, Normal), 0.f) + (g_vLightAmbt * g_vMtrlAmbt);
 	//Out.vCol = g_vLightDiff * vMtrlDiff * saturate(vShade) + (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	// --------------------------------
@@ -96,9 +128,14 @@ PS_OUT PS_MAIN(PS_IN In)
 
 technique11 DefaultTechnique
 {
-	pass DefaultPass
+	pass DefaultPass	// 0. Phong Model
 	{
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+	pass BlinnPhongPass	// 1. Blinn-Phong Model
+	{
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_BLINNPHONG();
 	}
 };
