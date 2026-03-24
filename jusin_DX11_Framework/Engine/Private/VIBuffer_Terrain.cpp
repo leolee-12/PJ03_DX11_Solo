@@ -40,7 +40,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 
 
 
-	// 2. VB 생성
+	// 2. VB 정보 세팅
 	m_iNumVertexBuffers = 1;
 	m_iVertexStride = sizeof(VTXNORTEX);
 	m_iNumIndices = (m_iNumVerticesX - 1) * (m_iNumVerticesZ - 1) * 2 * 3;
@@ -71,21 +71,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 		}
 	}
 
-	D3D11_SUBRESOURCE_DATA VertexInitialData{};
-	VertexInitialData.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VertexBufferDesc, &VertexInitialData, &m_pVB)))
-	{
-		Safe_Delete_Array(pVertices);
-		Safe_Delete_Array(pPixels);
-		return E_FAIL;
-	}
-
-	Safe_Delete_Array(pVertices);
 
 
-
-	// 3. IB 생성
+	// 3. IB 정보 세팅 및 버텍스 법선 세팅
 	D3D11_BUFFER_DESC IndexBufferDesc{};
 	IndexBufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
 	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -98,6 +86,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
 	_uint iNumIndices = {};
+	_vector vSour, vDest, vTriNorm;
 
 	for (size_t i = 0; i < m_iNumVerticesZ - 1; i++)
 	{
@@ -117,10 +106,48 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 			pIndices[iNumIndices++] = iIndices[1];
 			pIndices[iNumIndices++] = iIndices[2];
 
+			vSour = XMLoadFloat3(&pVertices[iIndices[1]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
+			vDest = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[1]].vPosition);
+			//vTriNorm = XMVector3Normalize(XMVector3Cross(vSour, vDest));	// 정규화할 경우, 삼각형 면적 별 가중치가 반영되지 않음 : 균등 평균 방식
+			vTriNorm = XMVector3Cross(vSour, vDest);	// 정규화하지 않으면 삼각형 면적에 비례하는 외적 벡터의 크기가 그대로 반영 : 면적 가중 방식
+
+			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vTriNorm);
+			XMStoreFloat3(&pVertices[iIndices[1]].vNormal, XMLoadFloat3(&pVertices[iIndices[1]].vNormal) + vTriNorm);
+			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[iIndices[2]].vNormal) + vTriNorm);
+
 			pIndices[iNumIndices++] = iIndices[0];
 			pIndices[iNumIndices++] = iIndices[2];
 			pIndices[iNumIndices++] = iIndices[3];
+
+			vSour = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
+			vDest = XMLoadFloat3(&pVertices[iIndices[3]].vPosition) - XMLoadFloat3(&pVertices[iIndices[2]].vPosition);
+			//vTriNorm = XMVector3Normalize(XMVector3Cross(vSour, vDest));
+			vTriNorm = XMVector3Cross(vSour, vDest);
+
+			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vTriNorm);
+			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[iIndices[2]].vNormal) + vTriNorm);
+			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMLoadFloat3(&pVertices[iIndices[3]].vNormal) + vTriNorm);
 		}
+	}
+
+
+
+	// 4. 법선벡터 정규화
+	for (size_t i = 0; i < m_iNumVertices; i++)
+		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
+
+
+
+	// 5. VB, IB 생성
+	D3D11_SUBRESOURCE_DATA VertexInitialData{};
+	VertexInitialData.pSysMem = pVertices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&VertexBufferDesc, &VertexInitialData, &m_pVB)))
+	{
+		Safe_Delete_Array(pVertices);
+		Safe_Delete_Array(pIndices);
+		Safe_Delete_Array(pPixels);
+		return E_FAIL;
 	}
 
 	D3D11_SUBRESOURCE_DATA IndexInitialData{};
@@ -128,11 +155,13 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 
 	if (FAILED(m_pDevice->CreateBuffer(&IndexBufferDesc, &IndexInitialData, &m_pIB)))
 	{
+		Safe_Delete_Array(pVertices);
 		Safe_Delete_Array(pIndices);
 		Safe_Delete_Array(pPixels);
 		return E_FAIL;
 	}
 
+	Safe_Delete_Array(pVertices);
 	Safe_Delete_Array(pIndices);
 	Safe_Delete_Array(pPixels);
 	return S_OK;
