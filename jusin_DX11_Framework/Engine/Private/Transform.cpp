@@ -37,6 +37,13 @@ HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstant
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
+HRESULT CTransform::Bind_ShaderResourceWIT(CShader* pShader, const _char* pConstantName)
+{
+	_float4x4 WITMatrix;
+	XMMatrixTranspose(XMMatrixInverse(nullptr, XMLoadFloat4x4(&WITMatrix)));
+	return pShader->Bind_Matrix(pConstantName, &WITMatrix);
+}
+
 void CTransform::ScaleTo(_float fScaleX, _float fScaleY, _float fScaleZ)
 {
 	Set_State(STATE::RIGHT, XMVector3Normalize(Get_State(STATE::RIGHT)) * fScaleX);

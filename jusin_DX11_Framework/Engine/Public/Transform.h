@@ -51,6 +51,7 @@ public:
 
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
+	HRESULT Bind_ShaderResourceWIT(class CShader* pShader, const _char* pConstantName);
 
 public:
 	void ScaleTo(_float fScaleX = 1.f, _float fScaleY = 1.f, _float fScaleZ = 1.f);
