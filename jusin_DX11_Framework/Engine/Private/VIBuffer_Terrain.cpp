@@ -18,7 +18,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 {
 	// 1. 높이맵 파일 로드
 	_ulong dwByte = {};
-	HANDLE hFile = CreateFile(m_strHeightMapFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	HANDLE hFile = CreateFile(m_strHeightMapFilePath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;

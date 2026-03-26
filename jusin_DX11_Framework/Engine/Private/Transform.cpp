@@ -40,7 +40,7 @@ HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstant
 HRESULT CTransform::Bind_ShaderResourceWIT(CShader* pShader, const _char* pConstantName)
 {
 	_float4x4 WITMatrix;
-	XMMatrixTranspose(XMMatrixInverse(nullptr, XMLoadFloat4x4(&WITMatrix)));
+	XMStoreFloat4x4(&WITMatrix, XMMatrixTranspose(XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix))));
 	return pShader->Bind_Matrix(pConstantName, &WITMatrix);
 }
 

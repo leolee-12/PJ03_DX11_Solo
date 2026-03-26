@@ -1,12 +1,12 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
+float4x4 g_WITMatrix;
 vector g_vCamPos;
 
 // 임시 광원
-vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_vLightDiff = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightAmbt = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightSpec = vector(1.f, 1.f, 1.f, 1.f);
+vector g_vLightDir;
+vector g_vLightDiff;
+vector g_vLightAmbt;
+vector g_vLightSpec;
 
 // 임시 재질
 texture2D g_TexDiff;
@@ -44,7 +44,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	vPos = mul(vPos, g_ProjMatrix);
 	
 	Out.vPos = vPos;
-	Out.vNorm = normalize(mul(float4(In.vNorm, 0.f), g_WorldMatrix));
+	Out.vNorm = normalize(mul(float4(In.vNorm, 0.f), g_WITMatrix));
 	Out.vTex = In.vTex;
 	Out.vWorldPos = mul(float4(In.vPos, 1.f), g_WorldMatrix);
 	return Out;

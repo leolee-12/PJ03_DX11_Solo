@@ -63,6 +63,11 @@ public:
 	_long Get_DIMouseMove(DIMM eMouseState);
 #pragma endregion
 
+#pragma region LIGHT_MANAGER
+	const LIGHT_DESC* Get_LightDesc(_uint iIndex);
+	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -72,6 +77,7 @@ private:
 	class CRenderer*			m_pRenderer = { nullptr };
 	class CPipeLine*			m_pPipeLine = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
+	class CLight_Manager*		m_pLight_Manager = { nullptr };
 
 private:
 	virtual void	Free() override;

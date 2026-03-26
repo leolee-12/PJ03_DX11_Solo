@@ -10,8 +10,6 @@ CImGui_Manager::CImGui_Manager()
 
 HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
-	// Make process DPI aware and obtain main monitor scale
-	ImGui_ImplWin32_EnableDpiAwareness();
 	_float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
 
 	// 장치 전달

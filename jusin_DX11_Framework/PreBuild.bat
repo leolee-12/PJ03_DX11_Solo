@@ -9,4 +9,4 @@ rd /s /q "GameSDK" 2>nul
 rd /s /q "ShaderFiles" 2>nul
 
 :: 작업 완료 후 바로 종료
-exit
+exit /b 0

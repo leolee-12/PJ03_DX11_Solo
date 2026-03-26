@@ -22,4 +22,4 @@ xcopy		/y /D /i /s		.\ThirdParty\lib\*.pdb				.\Client\Bin\
 xcopy		/y /D /i /s		.\ThirdParty\lib\*.pdb				.\Editor\Bin\
 
 :: 작업 완료 후 바로 종료
-exit
+exit /b 0

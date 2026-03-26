@@ -16,7 +16,7 @@ public:
 
 private:
 	_uint m_iNumVerticesX{}, m_iNumVerticesZ{};
-	const _tchar* m_strHeightMapFilePath = { nullptr };
+	const _wstring m_strHeightMapFilePath = {};
 
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);

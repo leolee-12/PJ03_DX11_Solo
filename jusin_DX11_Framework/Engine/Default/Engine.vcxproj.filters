@@ -76,6 +76,12 @@
     <Filter Include="08. PipeLine">
       <UniqueIdentifier>{1fda01cf-534e-46dc-a1aa-e9ad6751a10f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. Light">
+      <UniqueIdentifier>{35554806-2e45-476b-a94e-febb3fb0ce26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\Model">
+      <UniqueIdentifier>{fe267372-dc6f-42a5-a9c2-190216338a3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -168,6 +174,15 @@
     <ClInclude Include="..\Public\Input_Device.h">
       <Filter>01. Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>09. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>09. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>07. Component\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -241,6 +256,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Input_Device.cpp">
       <Filter>01. Device\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>09. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>09. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>07. Component\Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

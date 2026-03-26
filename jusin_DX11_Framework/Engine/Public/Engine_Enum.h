@@ -13,6 +13,8 @@ namespace Engine
 
 	enum class D3DTS { VIEW, PROJ, END };
 
+	enum class LIGHT { DIRECTIONAL, POINT,/* SPOT,*/ END };
+
 	//// Dynamic 컴포넌트 경우 매 프레임마다 갱신해야하는 컴포넌트 집단
 	//enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 	//
