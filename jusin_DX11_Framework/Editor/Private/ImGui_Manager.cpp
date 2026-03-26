@@ -8,14 +8,13 @@ CImGui_Manager::CImGui_Manager()
 {
 }
 
-HRESULT CImGui_Manager::Initialize(HWND hWnd, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CImGui_Manager::Initialize(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	_float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
 
-	// 장치 전달
-	m_pDevice = *ppDevice;
-	m_pContext = *ppContext;
-	m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pDepthStencilView);
+	// 장치 보관
+	m_pDevice = pDevice;
+	m_pContext = pContext;
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 
@@ -82,9 +81,13 @@ void CImGui_Manager::Render()
 		if (pPanel && pPanel->Is_Opened())
 			pPanel->Render();
 	}
-	
+
+	ID3D11RenderTargetView* pBackBufferRTV = { nullptr };
+	ID3D11DepthStencilView* pDepthStencilView = { nullptr };
+	m_pContext->OMGetRenderTargets(1, &pBackBufferRTV, &pDepthStencilView);
+
 	ImGui::Render();
-	m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, nullptr);
+	m_pContext->OMSetRenderTargets(1, &pBackBufferRTV, nullptr);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -93,9 +96,12 @@ void CImGui_Manager::Render()
 	{
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
-
-		m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
 	}
+
+	m_pContext->OMSetRenderTargets(1, &pBackBufferRTV, pDepthStencilView);
+	// OMGetRenderTargets가 AddRef하므로 Release필요
+	Safe_Release(pBackBufferRTV);
+	Safe_Release(pDepthStencilView);
 }
 
 HRESULT CImGui_Manager::Add_Panels()
@@ -140,12 +146,10 @@ void CImGui_Manager::Free()
 	for(auto& pPanel : m_Panels)
 		Safe_Release(pPanel);
 
-	Safe_Release(m_pDepthStencilView);
-	Safe_Release(m_pBackBufferRTV);
-	Safe_Release(m_pContext);
-	Safe_Release(m_pDevice);
-
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
+	Safe_Release(m_pContext);
+	Safe_Release(m_pDevice);
 }

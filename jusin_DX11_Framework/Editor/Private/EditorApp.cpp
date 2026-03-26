@@ -5,8 +5,10 @@
 
 CEditorApp::CEditorApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
+	, m_pImGui_Manager{ CImGui_Manager::GetInstance() }
 {
 	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pImGui_Manager);
 }
 
 HRESULT CEditorApp::Initialize()
@@ -25,7 +27,7 @@ HRESULT CEditorApp::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(CImGui_Manager::GetInstance()->Initialize(g_hWnd, &m_pDevice, &m_pContext)))
+	if (FAILED(m_pImGui_Manager->Initialize(g_hWnd, m_pDevice, m_pContext)))
 	{
 		MSG_BOX("ImGui Ready Failed");
 		return E_FAIL;
@@ -80,8 +82,9 @@ void CEditorApp::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pImGui_Manager);
 	CImGui_Manager::DestroyInstance();
-
+	
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 

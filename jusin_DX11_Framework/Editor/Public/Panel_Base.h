@@ -21,7 +21,7 @@ public:
 protected:
 	_bool m_bOpen = { true };
 	_string m_strTitle = { };
-	ImGuiWindowFlags_ m_iWindowFlags = { };
+	ImGuiWindowFlags m_iWindowFlags = { };
 	ImVec4 m_vClear_color = { };
 
 protected:
