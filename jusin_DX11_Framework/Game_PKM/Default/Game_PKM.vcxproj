@@ -27,6 +27,7 @@
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Terrain.h" />
   </ItemGroup>
@@ -38,10 +39,12 @@
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

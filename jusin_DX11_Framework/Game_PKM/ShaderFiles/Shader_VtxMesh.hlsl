@@ -25,6 +25,9 @@ struct VS_IN
 	float3 vPos : POSITION;
 	float3 vNorm : NORMAL;
 	float2 vTex : TEXCOORD0;
+
+	float3 vTangent : TANGENT;
+	float3 vBinormal : BINORMAL;
 };
 
 struct VS_OUT
@@ -66,7 +69,7 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 {
 	PS_OUT Out;
-	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
+	vector vMtrlDiff = /*g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord)*/ 1.f;
 
 	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
 		discard;

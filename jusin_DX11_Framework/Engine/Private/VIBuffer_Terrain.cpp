@@ -54,7 +54,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 	VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	VertexBufferDesc.CPUAccessFlags = 0;
 	VertexBufferDesc.MiscFlags = 0;
-	VertexBufferDesc.StructureByteStride = m_iVertexStride;
+	VertexBufferDesc.StructureByteStride = 0;
 
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
@@ -80,7 +80,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	IndexBufferDesc.CPUAccessFlags = 0;
 	IndexBufferDesc.MiscFlags = 0;
-	IndexBufferDesc.StructureByteStride = m_iIndexStride;
+	IndexBufferDesc.StructureByteStride = 0;
 
 	_uint* pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);

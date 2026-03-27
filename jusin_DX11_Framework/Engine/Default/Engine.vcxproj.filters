@@ -183,6 +183,9 @@
     <ClInclude Include="..\Public\Model.h">
       <Filter>07. Component\Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Mesh.h">
+      <Filter>07. Component\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -264,6 +267,9 @@
       <Filter>09. Light</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Model.cpp">
+      <Filter>07. Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>07. Component\Model</Filter>
     </ClCompile>
   </ItemGroup>

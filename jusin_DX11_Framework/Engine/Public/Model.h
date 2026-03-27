@@ -14,10 +14,18 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
+	HRESULT Render();
+
 private:
 	const _string m_strModelFilePath = {};
 	const aiScene* m_pAIScene = { nullptr };
 	Importer m_Importer = {};
+
+	size_t m_iNumMeshes = {};
+	vector<class CMesh*> m_Meshes;
+
+private:
+	HRESULT Ready_Meshes();
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath);

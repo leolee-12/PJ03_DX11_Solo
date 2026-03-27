@@ -25,6 +25,9 @@ using namespace Assimp;
 #include <PhysX/PxPhysicsAPI.h>
 #pragma warning(pop)
 
+#include <json/json.hpp>
+using json = nlohmann::json;
+
 #include <array>
 #include <vector>
 #include <list>
