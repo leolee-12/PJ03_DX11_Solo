@@ -18,29 +18,28 @@ private:
 
 public:
 	HRESULT Initialize(_uint iNumLevels);
-	HRESULT Add_GameObject(	_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag,
-							_uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg);
+	HRESULT Add_GameObject(	_uint iPrototypeLevelIndex, WNameID strProtoTag,
+							_uint iLayerLevelIndex, WNameID strLayerTag, void* pArg);
 	void	Priority_Update(_float fTimeDelta);
 	void	Update(_float fTimeDelta);
 	void	Late_Update(_float fTimeDelta);
 	void	Clear(_uint iLevelIndex);
 
 private:
-	typedef unordered_map<_wstring, class CLayer*>	LAYERS;
+	typedef WNameMap<class CLayer*, ALWAYS_HASHMAP>	LAYERS;
 	LAYERS*	m_pLayers = { nullptr };
 	size_t	m_iNumLevels = {};
 
 	class CGameInstance* m_pGameInstance = { nullptr };
 
 private:
-	class CLayer* Find_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
-
+	class CLayer* Find_Layer(_uint iLayerLevelIndex, WNameID strLayerTag);
 
 public:
 	static CObject_Manager*	Create(_uint iNumLevels);
 
 protected:
-	virtual void	Free() override;
+	virtual void Free() override;
 
 };
 

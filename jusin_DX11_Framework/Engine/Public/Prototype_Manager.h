@@ -21,17 +21,17 @@ private:
 
 public:
 	HRESULT		Initialize(_uint iNumLevels);
-	HRESULT		Add_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype);
-	CBase*		Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const _wstring& strPrototypeTag, void* pArg);
+	HRESULT		Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype);
+	CBase*		Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg);
 	void		Clear(_uint iLevelIndex);
 
 private:
-	typedef map<_wstring, class CBase*>	PROTOTYPES;
+	typedef WNameMap<class CBase*, ALWAYS_HASHMAP>	PROTOTYPES;
 	PROTOTYPES*	m_pPrototypes = { nullptr };
 	_uint		m_iNumLevels = {};
 
 private:
-	CBase*	Find_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag);
+	CBase*	Find_Prototype(_uint iLevelIndex, WNameID strPrototypeTag);
 
 public:
 	static CPrototype_Manager*	Create(_uint iNumLevels);

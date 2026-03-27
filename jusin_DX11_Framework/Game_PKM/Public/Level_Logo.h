@@ -15,7 +15,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

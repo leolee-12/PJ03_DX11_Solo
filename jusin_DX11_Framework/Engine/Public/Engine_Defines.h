@@ -41,6 +41,7 @@ using json = nlohmann::json;
 
 using namespace std;
 
+#include "Engine_WName.h"
 #include "Engine_Enum.h"
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
@@ -50,6 +51,7 @@ using namespace std;
 namespace Engine
 {
 	static const _wstring g_strTransformTag = TEXT("Com_Transform");
+	static constexpr WNameID TAG_COM_TRANSFORM = WName(L"Com_Transform");
 }
 
 #pragma warning(disable : 4251)

@@ -28,8 +28,8 @@ public:
 #pragma endregion
 
 #pragma region TIMER_MANAGER
-	HRESULT Add_Timer(const _wstring& strTimerTag);
-	float Compute_Timer(const _wstring& strTimerTag);
+	HRESULT Add_Timer(WNameID strTimerTag);
+	float Compute_Timer(WNameID strTimerTag);
 #pragma endregion
 
 #pragma region LEVEL_MANAGER
@@ -37,12 +37,12 @@ public:
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER
-	HRESULT Add_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype);
-	CBase* Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const _wstring& strPrototypeTag, void* pArg = nullptr);
+	HRESULT Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype);
+	CBase* Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg = nullptr);
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
-	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr);
+	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, WNameID strProtoTag, _uint iLayerLevelIndex, WNameID strLayerTag, void* pArg = nullptr);
 #pragma endregion
 
 #pragma region RENDERER

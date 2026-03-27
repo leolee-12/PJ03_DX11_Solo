@@ -17,13 +17,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(WName(L"Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+	if (FAILED(Ready_Layer_BackGround(WName(L"Layer_BackGround"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_Monster(WName(L"Layer_Monster"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -58,7 +58,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
 
@@ -71,24 +71,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	CameraDesc.fMouseSensor = 0.05f;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Camera_Free"),
 		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"), ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Terrain"), ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster"), ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Monster"), ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;

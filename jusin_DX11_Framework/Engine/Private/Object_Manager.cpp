@@ -22,13 +22,13 @@ HRESULT CObject_Manager::Initialize(_uint iNumLevels)
 }
 
 
-HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg)
+HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, WNameID strProtoTag, _uint iLayerLevelIndex, WNameID strLayerTag, void* pArg)
 {
 	if (iLayerLevelIndex >= m_iNumLevels ||
 		nullptr == m_pLayers)
 		return E_FAIL;
 
-	CGameObject* pGameObject = dynamic_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iPrototypeLevelIndex, strPrototypeTag, pArg));
+	CGameObject* pGameObject = dynamic_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iPrototypeLevelIndex, strProtoTag, pArg));
 	
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -50,47 +50,32 @@ HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, const _wstri
 void CObject_Manager::Priority_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
-	{
-		for (auto& Pair : m_pLayers[i])
-			Pair.second->Priority_Update(fTimeDelta);
-	}
-
+		m_pLayers[i].for_each([fTimeDelta](auto& pair) { pair.second->Priority_Update(fTimeDelta); });
 }
 
 void CObject_Manager::Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
-	{
-		for (auto& Pair : m_pLayers[i])
-			Pair.second->Update(fTimeDelta);
-	}
+		m_pLayers[i].for_each([fTimeDelta](auto& pair) { pair.second->Update(fTimeDelta); });
 }
 
 void CObject_Manager::Late_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
-	{
-		for (auto& Pair : m_pLayers[i])
-			Pair.second->Late_Update(fTimeDelta);
-	}
+		m_pLayers[i].for_each([fTimeDelta](auto& pair) { pair.second->Late_Update(fTimeDelta); });
 }
 
 void CObject_Manager::Clear(_uint iLevelIndex)
 {
-	for (auto& Pair : m_pLayers[iLevelIndex])
-		Safe_Release(Pair.second);
-
+	m_pLayers[iLevelIndex].for_each([](auto& pair) { Safe_Release(pair.second); });
 	m_pLayers[iLevelIndex].clear();
 }
 
-CLayer* CObject_Manager::Find_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag)
+CLayer* CObject_Manager::Find_Layer(_uint iLayerLevelIndex, WNameID strLayerTag)
 {
-	auto iter = m_pLayers[iLayerLevelIndex].find(strLayerTag);
-	
-	if (iter == m_pLayers[iLayerLevelIndex].end())
-		return nullptr;
+	auto pp = m_pLayers[iLayerLevelIndex].find(strLayerTag);
 
-	return iter->second;
+	return pp ? *pp : nullptr;
 }
 
 CObject_Manager* CObject_Manager::Create(_uint iNumLevels)
@@ -112,11 +97,10 @@ void CObject_Manager::Free()
 
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pLayers[i])
-			Safe_Release(Pair.second);
-
+		m_pLayers[i].for_each([](auto& pair) { Safe_Release(pair.second); });
 		m_pLayers[i].clear();
 	}
+
 	Safe_Release(m_pGameInstance);
 	Safe_Delete_Array(m_pLayers);
 }

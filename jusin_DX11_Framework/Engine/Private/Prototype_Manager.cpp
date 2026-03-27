@@ -18,21 +18,21 @@ HRESULT CPrototype_Manager::Initialize(_uint iNumLevels)
 	return S_OK;
 }
 
-HRESULT CPrototype_Manager::Add_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype)
+HRESULT CPrototype_Manager::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype)
 {
 	if (nullptr == m_pPrototypes ||
 		iLevelIndex >= m_iNumLevels ||
-		nullptr != Find_Prototype(iLevelIndex, strPrototypeTag))
+		nullptr != Find_Prototype(iLevelIndex, strProtoTag))
 		return E_FAIL;
 
-	m_pPrototypes[iLevelIndex].emplace(strPrototypeTag, pPrototype);
+	m_pPrototypes[iLevelIndex].emplace(strProtoTag, pPrototype);
 
 	return S_OK;
 }
 
-CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const _wstring& strPrototypeTag, void* pArg)
+CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg)
 {
-	CBase* pPrototype = Find_Prototype(iLevelIndex, strPrototypeTag);
+	CBase* pPrototype = Find_Prototype(iLevelIndex, strProtoTag);
 	if (nullptr == pPrototype)
 		return nullptr;
 
@@ -51,20 +51,15 @@ CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, c
 
 void CPrototype_Manager::Clear(_uint iLevelIndex)
 {
-	for (auto& Pair : m_pPrototypes[iLevelIndex])
-		Safe_Release(Pair.second);
-
+	m_pPrototypes[iLevelIndex].for_each([](auto& pair) { Safe_Release(pair.second); });
 	m_pPrototypes[iLevelIndex].clear();
 }
 
-CBase* CPrototype_Manager::Find_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag)
+CBase* CPrototype_Manager::Find_Prototype(_uint iLevelIndex, WNameID strProtoTag)
 {
-	auto iter = m_pPrototypes[iLevelIndex].find(strPrototypeTag);
-	
-	if (iter == m_pPrototypes[iLevelIndex].end())
-		return nullptr;
+	auto pp = m_pPrototypes[iLevelIndex].find(strProtoTag);
 
-	return iter->second;
+	return pp ? *pp : nullptr;
 }
 
 CPrototype_Manager* CPrototype_Manager::Create(_uint iNumLevels)
@@ -86,9 +81,7 @@ void CPrototype_Manager::Free()
 
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pPrototypes[i])
-			Safe_Release(Pair.second);
-
+		m_pPrototypes[i].for_each([](auto& pair) { Safe_Release(pair.second); });
 		m_pPrototypes[i].clear();
 	}
 

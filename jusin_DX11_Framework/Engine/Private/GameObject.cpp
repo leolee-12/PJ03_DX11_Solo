@@ -42,7 +42,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (FAILED(m_pTransformCom->Initialize(pArg)))
 		return E_FAIL;
 
-	m_Components.emplace(g_strTransformTag, m_pTransformCom);
+	m_Components.emplace(TAG_COM_TRANSFORM, m_pTransformCom);
 	Safe_AddRef(m_pTransformCom);
 
 	return S_OK;
@@ -68,7 +68,7 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-HRESULT CGameObject::Add_Component(_uint iLevel, const _wstring& strProtoTag, const _wstring& strComTag, CComponent** ppOut, void* pArg)
+HRESULT CGameObject::Add_Component(_uint iLevel, WNameID strProtoTag, WNameID strComTag, CComponent** ppOut, void* pArg)
 {
 	if (nullptr != Find_Component(strComTag))
 		return E_FAIL;
@@ -86,22 +86,18 @@ HRESULT CGameObject::Add_Component(_uint iLevel, const _wstring& strProtoTag, co
 	return S_OK;
 }
 
-CComponent* CGameObject::Find_Component(const _wstring& strComTag)
+CComponent* CGameObject::Find_Component(WNameID strComTag)
 {
-	auto iter = m_Components.find(strComTag);
-	
-	if (iter == m_Components.end())
-		return nullptr;
+	auto pp = m_Components.find(strComTag);
 
-	return iter->second;
+	return pp ? *pp : nullptr;
 }
 
 void CGameObject::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_Components)
-		Safe_Release(Pair.second);
+	m_Components.for_each([](auto& pair) { Safe_Release(pair.second); });
 	m_Components.clear();
 
 	Safe_Release(m_pTransformCom);

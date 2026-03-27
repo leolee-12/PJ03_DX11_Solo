@@ -9,12 +9,12 @@ HRESULT Ready_Prototype_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
 
 	/* Prototype_Component_VIBuffer_Rect */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), WName(L"Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(pDevice, pContext))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_VtxTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxTex"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), WName(L"Prototype_Component_Shader_VtxTex"),
 		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_VtxTex.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements))))
 		return E_FAIL;
 

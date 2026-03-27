@@ -29,13 +29,13 @@ protected:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	class CGameInstance* m_pGameInstance = { nullptr };
 
-	unordered_map<_wstring, class CComponent*> m_Components;
+	WNameMap<class CComponent*> m_Components;
 	class CTransform* m_pTransformCom = { nullptr };
 	_uint m_iFlag = {};
 
 protected:
-	HRESULT Add_Component(_uint iLevel, const _wstring& strProtoTag, const _wstring& strComTag, CComponent** ppOut, void* pArg = nullptr);
-	class CComponent* Find_Component(const _wstring& strComTag);
+	HRESULT Add_Component(_uint iLevel, WNameID strProtoTag, WNameID strComTag, CComponent** ppOut, void* pArg = nullptr);
+	class CComponent* Find_Component(WNameID strComTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

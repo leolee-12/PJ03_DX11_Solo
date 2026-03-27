@@ -186,6 +186,9 @@
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>07. Component\Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_WName.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

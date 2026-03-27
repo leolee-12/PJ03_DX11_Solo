@@ -10,21 +10,21 @@ private:
 	virtual ~CTimer_Manager() = default;
 
 public:
-	HRESULT		Add_Timer(const _wstring& strTimerTag);
-	_float		Compute_Timer(const _wstring& strTimerTag);
+	HRESULT Add_Timer(WNameID strTimerTag);
+	_float Compute_Timer(WNameID strTimerTag);
 
 
 private:
-	map<_wstring, class CTimer*>	m_Timers;
+	WNameMap<class CTimer*>	m_Timers;
 
 private:
-	class CTimer* Find_Timer(const _wstring& strTimerTag);
+	class CTimer* Find_Timer(WNameID strTimerTag);
 
 public:
 	static CTimer_Manager*	Create();
 
 protected:
-	virtual void	Free() override;
+	virtual void Free() override;
 };
 
 NS_END

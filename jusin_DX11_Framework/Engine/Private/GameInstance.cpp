@@ -135,12 +135,12 @@ const HWND CGameInstance::Get_HWND() const
 
 #pragma region TIMER_MANAGER
 
-HRESULT CGameInstance::Add_Timer(const _wstring& strTimerTag)
+HRESULT CGameInstance::Add_Timer(WNameID strTimerTag)
 {
 	return m_pTimer_Manager->Add_Timer(strTimerTag);
 }
 
-float CGameInstance::Compute_Timer(const _wstring& strTimerTag)
+float CGameInstance::Compute_Timer(WNameID strTimerTag)
 {
 	return m_pTimer_Manager->Compute_Timer(strTimerTag);
 }
@@ -157,21 +157,21 @@ HRESULT CGameInstance::Change_Level(_int iNewLevelIndex, CLevel* pNewLevel)
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER
-HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype)
+HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype)
 {
-	return m_pPrototype_Manager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
+	return m_pPrototype_Manager->Add_Prototype(iLevelIndex, strProtoTag, pPrototype);
 }
 
-CBase* CGameInstance::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, const _wstring& strPrototypeTag, void* pArg)
+CBase* CGameInstance::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg)
 {
-	return m_pPrototype_Manager->Clone_Prototype(eType, iLevelIndex, strPrototypeTag, pArg);
+	return m_pPrototype_Manager->Clone_Prototype(eType, iLevelIndex, strProtoTag, pArg);
 }
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
-HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg)
+HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, WNameID strProtoTag, _uint iLayerLevelIndex, WNameID strLayerTag, void* pArg)
 {
-	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strPrototypeTag, iLayerLevelIndex, strLayerTag, pArg);
+	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strProtoTag, iLayerLevelIndex, strLayerTag, pArg);
 }
 
 #pragma endregion

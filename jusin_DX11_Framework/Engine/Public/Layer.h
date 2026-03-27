@@ -10,19 +10,19 @@ private:
 	virtual ~CLayer() = default;
 
 public:
-	HRESULT	Add_GameObject(class CGameObject* pGameObject);
-	void	Priority_Update(_float fTimeDelta);
-	void	Update(_float fTimeDelta);
-	void	Late_Update(_float fTimeDelta);
+	HRESULT Add_GameObject(class CGameObject* pGameObject);
+	void Priority_Update(_float fTimeDelta);
+	void Update(_float fTimeDelta);
+	void Late_Update(_float fTimeDelta);
 
 private:
-	list<class CGameObject*>	m_GameObjects;
+	list<class CGameObject*> m_GameObjects;
 
 public:
-	static CLayer*	Create();
+	static CLayer* Create();
 
 protected:
-	virtual void	Free() override;
+	virtual void Free() override;
 };
 
 NS_END

@@ -5,7 +5,7 @@ CTimer_Manager::CTimer_Manager()
 {
 }
 
-HRESULT CTimer_Manager::Add_Timer(const _wstring& strTimerTag)
+HRESULT CTimer_Manager::Add_Timer(WNameID strTimerTag)
 {
 	if (nullptr != Find_Timer(strTimerTag))
 		return E_FAIL;
@@ -20,7 +20,7 @@ HRESULT CTimer_Manager::Add_Timer(const _wstring& strTimerTag)
 	return S_OK;
 }
 
-_float CTimer_Manager::Compute_Timer(const _wstring& strTimerTag)
+_float CTimer_Manager::Compute_Timer(WNameID strTimerTag)
 {
 	CTimer* pTimer = Find_Timer(strTimerTag);
 
@@ -32,14 +32,11 @@ _float CTimer_Manager::Compute_Timer(const _wstring& strTimerTag)
 	return pTimer->Get_TimeDelta();
 }
 
-CTimer* CTimer_Manager::Find_Timer(const _wstring& strTimerTag)
+CTimer* CTimer_Manager::Find_Timer(WNameID strTimerTag)
 {
-	auto	iter = m_Timers.find(strTimerTag);
+	auto pp = m_Timers.find(strTimerTag);
 
-	if (iter == m_Timers.end())
-		return nullptr;
-
-	return iter->second;
+	return pp ? *pp : nullptr;
 }
 
 CTimer_Manager* CTimer_Manager::Create()
@@ -51,8 +48,6 @@ void CTimer_Manager::Free()
 {
 	__super::Free();
 
-	for (auto& Pair : m_Timers)
-		Safe_Release(Pair.second);
-
+	m_Timers.for_each([](auto& pair) { Safe_Release(pair.second); });
 	m_Timers.clear();
 }
