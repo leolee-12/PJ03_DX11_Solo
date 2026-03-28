@@ -196,6 +196,25 @@ namespace Engine
 	inline constexpr WNameID name = WName(wStr);
 
 #endif	// _DEBUG
+
+	// 4. 문자열 관련 비멤버 함수
+	inline string WtoS(const wstring& wStr)
+	{
+		if (wStr.empty()) return {};
+		int size = WideCharToMultiByte(CP_UTF8, 0, wStr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+		string result(size - 1, '\0');
+		WideCharToMultiByte(CP_UTF8, 0, wStr.c_str(), -1, result.data(), size, nullptr, nullptr);
+		return result;
+	}
+
+	inline wstring StoW(const string& str)
+	{
+		if (str.empty()) return {};
+		int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
+		wstring result(size - 1, L'\0');
+		MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, result.data(), size);
+		return result;
+	}
 }
 
 #endif // Engine_WName_h__

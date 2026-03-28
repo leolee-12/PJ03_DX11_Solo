@@ -3,10 +3,12 @@
 #include "Editor_Defines.h"
 
 NS_BEGIN(Engine)
+class CGameInstance;
 class CGameObject;
 NS_END
 
 NS_BEGIN(Editor)
+class CEditInstance;
 
 class CPanel_Base abstract : public CBase
 {
@@ -27,6 +29,9 @@ protected:
 	_string m_strTitle = { "Default" };
 	ImGuiWindowFlags m_iWindowFlags = { };
 	ImVec4 m_vClear_color = { };
+
+	CGameInstance* m_pGameInstance = { nullptr };
+	CEditInstance* m_pEditInstance = { nullptr };
 	CGameObject* m_pSelected = { nullptr };
 
 protected:

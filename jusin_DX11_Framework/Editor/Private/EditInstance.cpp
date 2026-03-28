@@ -114,6 +114,11 @@ void CEditInstance::Unregister_Object(CGameObject* pObj)
 {
 	return m_pObject_Registry->Unregister_Object(pObj);
 }
+
+void CEditInstance::Clone_Object(CGameObject* pObj)
+{
+	return m_pObject_Registry->Clone_Object(pObj);
+}
 #pragma endregion
 
 #pragma region 4

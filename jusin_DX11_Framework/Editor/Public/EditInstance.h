@@ -45,6 +45,7 @@ public:
 	const vector<CGameObject*>& Get_EditorObjects() const;
 	void Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);
 	void Unregister_Object(CGameObject* pObj);
+	void Clone_Object(CGameObject* pObj);
 #pragma endregion
 
 #pragma region 4

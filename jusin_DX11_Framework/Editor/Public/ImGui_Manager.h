@@ -19,8 +19,7 @@ private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 
-	array<class CPanel_Base*, EDITOR_MODE_COUNT> m_Panels{};
-	vector<CGameObject*> m_EditorObjects{};
+	array<class CPanel_Base*, PANEL_COUNT> m_Panels{};
 
 private:
 	HRESULT Add_Panels();

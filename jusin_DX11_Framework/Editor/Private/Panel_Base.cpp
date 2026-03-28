@@ -1,13 +1,18 @@
 #include "Panel_Base.h"
+#include "GameInstance.h"
 #include "EditInstance.h"
 
 CPanel_Base::CPanel_Base()
+	: m_pGameInstance(CGameInstance::GetInstance())
+	, m_pEditInstance(CEditInstance::GetInstance())
 {
+	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pEditInstance);
 }
 
 HRESULT CPanel_Base::Initialize(void* pArg)
 {
-	CEditInstance::GetInstance()->Register_Callback(m_strTitle,
+	m_pEditInstance->Register_Callback(m_strTitle,
 		[this](const vector<CGameObject*>& sel)
 		{
 			m_pSelected = sel.empty() ? nullptr : sel[0];
@@ -73,5 +78,7 @@ void CPanel_Base::Free()
 {
 	__super::Free();
 
-	CEditInstance::GetInstance()->Unregister_Callback(m_strTitle);
+	m_pEditInstance->Unregister_Callback(m_strTitle);
+	Safe_Release(m_pEditInstance);
+	Safe_Release(m_pGameInstance);
 }

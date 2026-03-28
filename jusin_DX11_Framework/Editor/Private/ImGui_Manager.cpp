@@ -1,4 +1,5 @@
 #include "ImGui_Manager.h"
+#include "Panel_OutLiner.h"
 #include "Panel_MapTool.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -105,33 +106,38 @@ HRESULT CImGui_Manager::Add_Panels()
 {
 	CPanel_Base* pInstance = nullptr;
 
-	pInstance = CPanel_MapTool::Create();
-
+	pInstance = CPanel_OutLiner::Create();
 	if (nullptr == pInstance)
 		return E_FAIL;
 
-	m_Panels[ETOUI(EDITOR_MODE::MAP)] = pInstance;
+	m_Panels[ETOUI(PANEL::OUTLINER)] = pInstance;
+
+	pInstance = CPanel_MapTool::Create();
+	if (nullptr == pInstance)
+		return E_FAIL;
+
+	m_Panels[ETOUI(PANEL::MAP)] = pInstance;
 
 	//pInstance = CPanel_ObjectTool::Create();
 	//
 	//if (nullptr == pInstance)
 	//	return E_FAIL;
 	//
-	//m_vecPanels[ETOUI(EDITOR_MODE::OBJECT)] = pInstance;
+	//m_vecPanels[ETOUI(PANEL::OBJECT)] = pInstance;
 	//
 	//pInstance = CPanel_UITool::Create();
 	//
 	//if (nullptr == pInstance)
 	//	return E_FAIL;
 	//
-	//m_vecPanels[ETOUI(EDITOR_MODE::UI)] = pInstance;
+	//m_vecPanels[ETOUI(PANEL::UI)] = pInstance;
 	//
 	//pInstance = CPanel_EffectTool::Create();
 	//
 	//if (nullptr == pInstance)
 	//	return E_FAIL;
 	//
-	//m_vecPanels[ETOUI(EDITOR_MODE::EFFECT)] = pInstance;
+	//m_vecPanels[ETOUI(PANEL::EFFECT)] = pInstance;
 
 	return S_OK;
 }

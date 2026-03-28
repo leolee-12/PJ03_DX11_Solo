@@ -17,7 +17,7 @@ public:
 public:
 	static CPanel_MapTool* Create(void* pArg = nullptr);
 	
-protected:
+private:
 	virtual void Free() override;
 };
 
