@@ -1,4 +1,5 @@
 #include "Panel_Base.h"
+#include "EditInstance.h"
 
 CPanel_Base::CPanel_Base()
 {
@@ -6,7 +7,11 @@ CPanel_Base::CPanel_Base()
 
 HRESULT CPanel_Base::Initialize(void* pArg)
 {
-	m_strTitle = "Hello, 159";
+	CEditInstance::GetInstance()->Register_Callback(m_strTitle,
+		[this](const vector<CGameObject*>& sel)
+		{
+			m_pSelected = sel.empty() ? nullptr : sel[0];
+		});
 
 	return S_OK;
 }
@@ -15,7 +20,7 @@ void CPanel_Base::Update(_float fTimeDelta)
 {
 }
 
-void CPanel_Base::Render()
+HRESULT CPanel_Base::Render()
 {
 	// 공식 예시 패널
 	ImGui::ShowDemoWindow();
@@ -23,7 +28,7 @@ void CPanel_Base::Render()
 	if (!Begin_Panel())
 	{
 		End_Panel();	// 접혀있어도 Begin은 호출된 것 : End를 반드시 호출
-		return;
+		return S_OK;
 	}
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -48,6 +53,8 @@ void CPanel_Base::Render()
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 
 	End_Panel();
+
+	return S_OK;
 }
 
 _bool CPanel_Base::Begin_Panel()
@@ -65,4 +72,6 @@ void CPanel_Base::End_Panel()
 void CPanel_Base::Free()
 {
 	__super::Free();
+
+	CEditInstance::GetInstance()->Unregister_Callback(m_strTitle);
 }

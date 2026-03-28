@@ -8,17 +8,24 @@
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
 
-namespace Editor
-{
-	constexpr unsigned int	g_iWinSizeX = { 1280 };
-	constexpr unsigned int	g_iWinSizeY = { 720 };
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
 
-	WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
-	WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
+NS_BEGIN(Editor)
 
-	enum class EDITOR_MODE { MAP, OBJECT, UI, EFFECT, END };
-	constexpr size_t EDITOR_MODE_COUNT = static_cast<size_t>(EDITOR_MODE::END);
-}
+constexpr unsigned int	g_iWinSizeX = { 1280 };
+constexpr unsigned int	g_iWinSizeY = { 720 };
+
+WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
+WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
+
+enum class EDITOR_MODE { MAP, OBJECT, UI, EFFECT, END };
+constexpr size_t EDITOR_MODE_COUNT = static_cast<size_t>(EDITOR_MODE::END);
+
+using SelectionChangedCB = function<void(const vector<Engine::CGameObject*>&)>;
+
+NS_END
 
 extern HINSTANCE g_hInstance;
 extern HWND g_hWnd;

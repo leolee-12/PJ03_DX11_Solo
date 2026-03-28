@@ -1,22 +1,17 @@
 #include "ImGui_Manager.h"
-#include "Panel_Base.h"
 #include "Panel_MapTool.h"
 
-IMPLEMENT_SINGLETON(CImGui_Manager)
-
-CImGui_Manager::CImGui_Manager()
+CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: m_pDevice{ pDevice }
+	, m_pContext{ pContext }
 {
-}
-
-HRESULT CImGui_Manager::Initialize(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	_float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
-
-	// 장치 보관
-	m_pDevice = pDevice;
-	m_pContext = pContext;
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+}
+
+HRESULT CImGui_Manager::Initialize(HWND hWnd)
+{
+	_float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
 
 	// ImGui 컨텍스트 생성
 	IMGUI_CHECKVERSION();
@@ -69,7 +64,7 @@ void CImGui_Manager::Update(_float fTimeDelta)
 	}
 }
 
-void CImGui_Manager::Render()
+HRESULT CImGui_Manager::Render()
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -78,8 +73,8 @@ void CImGui_Manager::Render()
 
 	for (auto& pPanel : m_Panels)
 	{
-		if (pPanel && pPanel->Is_Opened())
-			pPanel->Render();
+		if (pPanel && pPanel->Is_Opened() && FAILED(pPanel->Render()))
+			return E_FAIL;
 	}
 
 	ID3D11RenderTargetView* pBackBufferRTV = { nullptr };
@@ -102,6 +97,8 @@ void CImGui_Manager::Render()
 	// OMGetRenderTargets가 AddRef하므로 Release필요
 	Safe_Release(pBackBufferRTV);
 	Safe_Release(pDepthStencilView);
+
+	return S_OK;
 }
 
 HRESULT CImGui_Manager::Add_Panels()
@@ -137,6 +134,19 @@ HRESULT CImGui_Manager::Add_Panels()
 	//m_vecPanels[ETOUI(EDITOR_MODE::EFFECT)] = pInstance;
 
 	return S_OK;
+}
+
+CImGui_Manager* CImGui_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd)
+{
+	CImGui_Manager* pInstance = new CImGui_Manager(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(hWnd)))
+	{
+		MSG_BOX("Failed to Created : CImGui_Manager");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CImGui_Manager::Free()

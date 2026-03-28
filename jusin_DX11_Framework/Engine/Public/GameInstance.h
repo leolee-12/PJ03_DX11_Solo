@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObject.h"
 #include "Prototype_Manager.h"
 
 /* ------------------------------------------------------------ */
@@ -43,6 +44,8 @@ public:
 
 #pragma region OBJECT_MANAGER
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, WNameID strProtoTag, _uint iLayerLevelIndex, WNameID strLayerTag, void* pArg = nullptr);
+	HRESULT Add_GameObject_Ex(_uint iLayerLevel, WNameID strLayerTag, CGameObject* pObj);
+	const list<class CGameObject*>* Get_ObjectList(_uint iLevel, WNameID strLayerTag);
 #pragma endregion
 
 #pragma region RENDERER

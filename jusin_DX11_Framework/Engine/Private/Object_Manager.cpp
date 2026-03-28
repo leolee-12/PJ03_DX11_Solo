@@ -54,6 +54,26 @@ HRESULT CObject_Manager::Add_GameObject(_uint iPrototypeLevelIndex, WNameID strP
 	return S_OK;
 }
 
+HRESULT CObject_Manager::Add_GameObject_Ex(_uint iLayerLevel, WNameID strLayerTag, CGameObject* pObj)
+{
+	if (iLayerLevel >= m_iNumLevels ||
+		nullptr == pObj)
+		return E_FAIL;
+
+	CLayer* pLayer = Find_Layer(iLayerLevel, strLayerTag);
+
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create();
+		pLayer->Add_GameObject(pObj);
+		m_pLayers[iLayerLevel].emplace(strLayerTag, pLayer);
+	}
+	else
+		pLayer->Add_GameObject(pObj);
+
+	return S_OK;
+}
+
 void CObject_Manager::Priority_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)

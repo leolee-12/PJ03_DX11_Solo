@@ -2,6 +2,10 @@
 #include "Base.h"
 #include "Editor_Defines.h"
 
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
+
 NS_BEGIN(Editor)
 
 class CPanel_Base abstract : public CBase
@@ -16,13 +20,14 @@ public:
 
 	virtual HRESULT Initialize(void* pArg = nullptr) PURE;
 	virtual void Update(_float fTimeDelta) PURE;
-	virtual void Render() PURE;
+	virtual HRESULT Render() PURE;
 
 protected:
 	_bool m_bOpen = { true };
-	_string m_strTitle = { };
+	_string m_strTitle = { "Default" };
 	ImGuiWindowFlags m_iWindowFlags = { };
 	ImVec4 m_vClear_color = { };
+	CGameObject* m_pSelected = { nullptr };
 
 protected:
 	_bool Begin_Panel();

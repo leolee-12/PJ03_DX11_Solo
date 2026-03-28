@@ -53,6 +53,21 @@ namespace Engine
 	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
 }
 
+namespace ObjFlag
+{
+	enum : unsigned int
+	{
+		DEAD = 1u << 0,
+		ACTIVE = 1u << 1,
+		FLAG_3 = 1u << 2,
+		FLAG_4 = 1u << 3,
+		FLAG_5 = 1u << 4,
+		FLAG_6 = 1u << 5,
+		FLAG_7 = 1u << 6,
+		FLAG_8 = 1u << 7,
+	};
+}
+
 #pragma warning(disable : 4251)
 
 #ifdef _DEBUG

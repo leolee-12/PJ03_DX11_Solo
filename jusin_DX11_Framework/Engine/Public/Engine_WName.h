@@ -1,9 +1,6 @@
 #ifndef Engine_WName_h__
 #define Engine_WName_h__
 
-#include <unordered_map>
-#include  <vector>
-
 namespace Engine
 {
 	// 1. 문자열 ID 변환

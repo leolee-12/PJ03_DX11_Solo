@@ -12,7 +12,7 @@ protected:
 public:
 	HRESULT Initialize(void* pArg) override;
 	void Update(_float fTimeDelta) override;
-	void Render() override;
+	HRESULT Render() override;
 
 public:
 	static CPanel_MapTool* Create(void* pArg = nullptr);

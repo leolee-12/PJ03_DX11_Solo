@@ -3,11 +3,12 @@
 CPanel_MapTool::CPanel_MapTool()
 	: CPanel_Base()
 {
+	m_strTitle = "Map";
 }
 
 HRESULT CPanel_MapTool::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize()))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -18,9 +19,9 @@ void CPanel_MapTool::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CPanel_MapTool::Render()
+HRESULT CPanel_MapTool::Render()
 {
-	__super::Render();
+	return __super::Render();
 }
 
 CPanel_MapTool* CPanel_MapTool::Create(void* pArg)

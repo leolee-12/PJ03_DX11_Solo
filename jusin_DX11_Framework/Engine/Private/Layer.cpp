@@ -40,6 +40,16 @@ void CLayer::Late_Update(_float fTimeDelta)
 		if (nullptr != pGameObject)
 			pGameObject->Late_Update(fTimeDelta);
 	}
+
+	auto iter = remove_if(m_GameObjects.begin(), m_GameObjects.end(),
+		[](CGameObject* pObj)
+		{
+			if (!pObj || pObj->Is_Dead()) { Safe_Release(pObj); return true; }
+
+			return false;
+		});
+
+	m_GameObjects.erase(iter, m_GameObjects.end());
 }
 
 CLayer* CLayer::Create()

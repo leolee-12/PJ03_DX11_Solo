@@ -1,0 +1,142 @@
+#include "EditInstance.h"
+
+#include "ImGui_Manager.h"
+#include "Select_Manager.h"
+#include "Object_Registry.h"
+
+IMPLEMENT_SINGLETON(CEditInstance)
+
+CEditInstance::CEditInstance()
+{
+}
+
+#pragma region ENGINE
+
+HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)
+{
+	m_pSelect_Manager = CSelect_Manager::Create();
+	if (nullptr == m_pSelect_Manager)
+		return E_FAIL;
+
+	m_pImGui_Manager = CImGui_Manager::Create(*ppDevice, *ppContext, EngineDesc.hWnd);
+	if (nullptr == m_pImGui_Manager)
+		return E_FAIL;
+
+	m_pObject_Registry = CObject_Registry::Create();
+	if (nullptr == m_pObject_Registry)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CEditInstance::Update_Editor(_float fTimeDelta)
+{
+	m_pImGui_Manager->Update(fTimeDelta);
+}
+
+HRESULT CEditInstance::Draw()
+{
+	if (FAILED(m_pImGui_Manager->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CEditInstance::Release_Editor()
+{
+	Safe_Release(m_pObject_Registry);
+	Safe_Release(m_pImGui_Manager);
+	Safe_Release(m_pSelect_Manager);
+
+	DestroyInstance();
+}
+
+#pragma endregion
+
+#pragma region IMGUI_MANAGER
+
+#pragma endregion
+
+#pragma region SELECT_MANAGER
+void CEditInstance::Select(CGameObject* pObj, bool bMultiSelect)
+{
+	m_pSelect_Manager->Select(pObj, bMultiSelect);
+}
+
+void CEditInstance::Deselect(CGameObject* pObj)
+{
+	m_pSelect_Manager->Deselect(pObj);
+}
+
+void CEditInstance::Clear()
+{
+	m_pSelect_Manager->Clear();
+}
+
+const vector<CGameObject*>& CEditInstance::Get_Selected() const
+{
+	return m_pSelect_Manager->Get_Selected();
+}
+
+CGameObject* CEditInstance::Get_Primary() const
+{
+	return m_pSelect_Manager->Get_Primary();
+}
+
+bool CEditInstance::Is_Selected(CGameObject* pObj) const
+{
+	return m_pSelect_Manager->Is_Selected(pObj);
+}
+
+void CEditInstance::Register_Callback(const _string& strKey, SelectionChangedCB cb)
+{
+	m_pSelect_Manager->Register_Callback(strKey, move(cb));
+}
+
+void CEditInstance::Unregister_Callback(const _string& strKey)
+{
+	m_pSelect_Manager->Unregister_Callback(strKey);
+}
+#pragma endregion
+
+#pragma region OBJECT_REGISTRY
+const vector<CGameObject*>& CEditInstance::Get_EditorObjects() const
+{
+	return m_pObject_Registry->Get_EditorObjects();
+}
+
+void CEditInstance::Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg)
+{
+	return m_pObject_Registry->Register_Object(iProtoLevel, strProtoTag, iLayerLevel, strLayerTag, pArg);
+}
+
+void CEditInstance::Unregister_Object(CGameObject* pObj)
+{
+	return m_pObject_Registry->Unregister_Object(pObj);
+}
+#pragma endregion
+
+#pragma region 4
+
+#pragma endregion
+
+#pragma region 5
+
+#pragma endregion
+
+#pragma region 6
+
+#pragma endregion
+
+#pragma region 7
+
+#pragma endregion
+
+#pragma region 8
+
+#pragma endregion
+
+void CEditInstance::Free()
+{
+	__super::Free();
+}

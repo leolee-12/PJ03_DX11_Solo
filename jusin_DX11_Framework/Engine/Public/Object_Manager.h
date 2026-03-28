@@ -21,6 +21,7 @@ public:
 
 	HRESULT Initialize(_uint iNumLevels);
 	HRESULT Add_GameObject(	_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);
+	HRESULT Add_GameObject_Ex(_uint iLayerLevel, WNameID strLayerTag, CGameObject* pObj);
 	void	Priority_Update(_float fTimeDelta);
 	void	Update(_float fTimeDelta);
 	void	Late_Update(_float fTimeDelta);

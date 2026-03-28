@@ -174,6 +174,16 @@ HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, WNameID strPro
 	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strProtoTag, iLayerLevelIndex, strLayerTag, pArg);
 }
 
+HRESULT CGameInstance::Add_GameObject_Ex(_uint iLayerLevel, WNameID strLayerTag, CGameObject* pObj)
+{
+	return m_pObject_Manager->Add_GameObject_Ex(iLayerLevel, strLayerTag, pObj);
+}
+
+const list<class CGameObject*>* CGameInstance::Get_ObjectList(_uint iLevel, WNameID strLayerTag)
+{
+	return m_pObject_Manager->Get_ObjectList(iLevel, strLayerTag);
+}
+
 #pragma endregion
 
 #pragma region RENDERER

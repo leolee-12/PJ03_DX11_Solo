@@ -1,14 +1,14 @@
 #include "EditorApp.h"
 #include "GameInstance.h"
+#include "EditInstance.h"
 #include "Game_API.h"
-#include "ImGui_Manager.h"
 
 CEditorApp::CEditorApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
-	, m_pImGui_Manager{ CImGui_Manager::GetInstance() }
+	, m_pEditInstance{ CEditInstance::GetInstance() }
 {
 	Safe_AddRef(m_pGameInstance);
-	Safe_AddRef(m_pImGui_Manager);
+	Safe_AddRef(m_pEditInstance);
 }
 
 HRESULT CEditorApp::Initialize()
@@ -27,9 +27,9 @@ HRESULT CEditorApp::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pImGui_Manager->Initialize(g_hWnd, m_pDevice, m_pContext)))
+	if (FAILED(m_pEditInstance->Initialize_Editor(EngineDesc, &m_pDevice, &m_pContext)))
 	{
-		MSG_BOX("ImGui Ready Failed");
+		MSG_BOX("Failed to Initialize : Editor");
 		return E_FAIL;
 	}
 
@@ -45,8 +45,7 @@ HRESULT CEditorApp::Initialize()
 void CEditorApp::Update(_float fTimeDelta)
 {
 	m_pGameInstance->Update_Engine(fTimeDelta);
-
-	CImGui_Manager::GetInstance()->Update(fTimeDelta);
+	m_pEditInstance->Update_Editor(fTimeDelta);
 }
 
 HRESULT CEditorApp::Render()
@@ -57,7 +56,8 @@ HRESULT CEditorApp::Render()
 	if (FAILED(m_pGameInstance->Draw()))
 		return E_FAIL;
 
-	CImGui_Manager::GetInstance()->Render();
+	if (FAILED(m_pEditInstance->Draw()))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->End_Draw()))
 		return E_FAIL;
@@ -82,8 +82,8 @@ void CEditorApp::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pImGui_Manager);
-	CImGui_Manager::DestroyInstance();
+	m_pEditInstance->Release_Editor();
+	Safe_Release(m_pEditInstance);
 	
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);

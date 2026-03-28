@@ -7,7 +7,7 @@ class CGameInstance;
 NS_END
 
 NS_BEGIN(Editor)
-class CImGui_Manager;
+class CEditInstance;
 
 class CEditorApp final : public CBase
 {
@@ -24,7 +24,7 @@ private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	CGameInstance* m_pGameInstance = { nullptr };
-	CImGui_Manager* m_pImGui_Manager = { nullptr };
+	CEditInstance* m_pEditInstance = { nullptr };
 
 public:
 	static CEditorApp* Create();

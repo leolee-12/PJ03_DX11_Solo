@@ -16,14 +16,23 @@
     <Filter Include="97. ThirdParty\01. ImGuizmo">
       <UniqueIdentifier>{c57cb905-8de4-4315-9707-4b1a9f0ddba0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImGui_Manager">
-      <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. ImGui_Manager\Panels">
-      <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. EditorApp">
       <UniqueIdentifier>{4a6daa90-9755-4eab-94c4-4902dff3e8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. EditInstance">
+      <UniqueIdentifier>{5e2a3e60-ff9c-4000-b2e7-5db60fff16a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. ImGui_Manager">
+      <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Panels">
+      <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Select_Manager">
+      <UniqueIdentifier>{27e72977-2063-4785-96d9-13ad06e60bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Object_Registry">
+      <UniqueIdentifier>{b6a75dbe-54a4-4d51-84a9-65c1e5555523}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,16 +64,25 @@
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Manager.h">
-      <Filter>01. ImGui_Manager</Filter>
+      <Filter>03. ImGui_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Base.h">
-      <Filter>01. ImGui_Manager\Panels</Filter>
+      <Filter>04. Panels</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Panel_MapTool.h">
-      <Filter>01. ImGui_Manager\Panels</Filter>
+      <Filter>04. Panels</Filter>
     </ClInclude>
     <ClInclude Include="Editor.h">
       <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Select_Manager.h">
+      <Filter>02. Select_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EditInstance.h">
+      <Filter>01. EditInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Registry.h">
+      <Filter>05. Object_Registry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,19 +119,28 @@
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Manager.cpp">
-      <Filter>01. ImGui_Manager</Filter>
+      <Filter>03. ImGui_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_demo.cpp">
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Panel_Base.cpp">
-      <Filter>01. ImGui_Manager\Panels</Filter>
+      <Filter>04. Panels</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Panel_MapTool.cpp">
-      <Filter>01. ImGui_Manager\Panels</Filter>
+      <Filter>04. Panels</Filter>
     </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Select_Manager.cpp">
+      <Filter>02. Select_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EditInstance.cpp">
+      <Filter>01. EditInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Registry.cpp">
+      <Filter>05. Object_Registry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
