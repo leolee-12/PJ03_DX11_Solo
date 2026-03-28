@@ -9,6 +9,13 @@ CObject_Manager::CObject_Manager()
 	Safe_AddRef(m_pGameInstance);
 }
 
+const list<CGameObject*>* CObject_Manager::Get_ObjectList(_uint iLevel, WNameID strLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevel, strLayerTag);
+	if (!pLayer) return nullptr;
+	return &pLayer->Get_ObjectList();
+}
+
 HRESULT CObject_Manager::Initialize(_uint iNumLevels)
 {
 	if (nullptr != m_pLayers)

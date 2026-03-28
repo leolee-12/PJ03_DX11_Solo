@@ -154,6 +154,14 @@ namespace Engine
 		}
 	};
 
+	struct WNameAutoReg
+	{
+		WNameAutoReg(WNameID id, const wchar_t* wStr)
+		{
+			WNameRegistry::Register(id, wStr);
+		}
+	};
+
 	// 런타임 문자열로 ID 생성 시 자동 등록
 	inline WNameID WNameRT(const wstring& wStr)
 	{
@@ -175,10 +183,21 @@ namespace Engine
 		return id;
 	}
 
+	// 런타임 사용 용도 ~ Editor 등
 #define WNAME(wStr) ::Engine::WNameRT(wStr)
+
+	// 컴파일 타임 사용 용도 ~ Tags.h
+#define WNAME_TAG(name, wStr)							\
+	inline constexpr WNameID name = WName(wStr);		\
+	inline const WNameAutoReg name##_reg_(name, wStr);
 #else
 	inline WNameID WNameRT(const wstring& wStr) noexcept { return WName(wStr.c_str(), wStr.size()); }
+
 #define WNAME(wStr) ::Engine::WName(wStr)
+
+#define WNAME_TAG(name, wStr)							\
+	inline constexpr WNameID name = WName(wStr);
+
 #endif	// _DEBUG
 }
 

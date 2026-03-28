@@ -4,7 +4,7 @@
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
-
+	m_strName = { L"Terrain_Default" };
 }
 
 CTerrain::CTerrain(const CTerrain& Prototype)

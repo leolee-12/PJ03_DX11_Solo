@@ -17,9 +17,10 @@ private:
 	virtual ~CObject_Manager() = default;
 
 public:
+	const list<class CGameObject*>* Get_ObjectList(_uint iLevel, WNameID strLayerTag);
+
 	HRESULT Initialize(_uint iNumLevels);
-	HRESULT Add_GameObject(	_uint iPrototypeLevelIndex, WNameID strProtoTag,
-							_uint iLayerLevelIndex, WNameID strLayerTag, void* pArg);
+	HRESULT Add_GameObject(	_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);
 	void	Priority_Update(_float fTimeDelta);
 	void	Update(_float fTimeDelta);
 	void	Late_Update(_float fTimeDelta);

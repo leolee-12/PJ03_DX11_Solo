@@ -4,6 +4,7 @@
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
 {
+	m_strName = { L"BackGround_Default" };
 }
 
 CBackGround::CBackGround(const CBackGround& Prototype)

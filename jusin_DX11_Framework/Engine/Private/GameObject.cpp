@@ -15,6 +15,7 @@ CGameObject::CGameObject(const CGameObject& Prototype)
 	: m_pDevice{ Prototype.m_pDevice }
 	, m_pContext{ Prototype.m_pContext }
 	, m_pGameInstance{ CGameInstance::GetInstance() }
+	, m_strName { Prototype.m_strName }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);

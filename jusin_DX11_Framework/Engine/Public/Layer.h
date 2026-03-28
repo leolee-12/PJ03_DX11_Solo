@@ -10,6 +10,8 @@ private:
 	virtual ~CLayer() = default;
 
 public:
+	const list<class CGameObject*>& Get_ObjectList() const { return m_GameObjects; }
+
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
 	void Priority_Update(_float fTimeDelta);
 	void Update(_float fTimeDelta);

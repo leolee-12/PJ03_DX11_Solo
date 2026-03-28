@@ -17,6 +17,10 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
+	const _wstring& Get_Name() const { return m_strName; }
+	void Set_Name(const _wstring& wStr) { m_strName = wStr; }
+	CTransform* Get_Transform() const { return m_pTransformCom; }
+
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,6 +35,7 @@ protected:
 
 	WNameMap<class CComponent*> m_Components;
 	class CTransform* m_pTransformCom = { nullptr };
+	_wstring m_strName = {};
 	_uint m_iFlag = {};
 
 protected:

@@ -13,8 +13,8 @@ namespace Editor
 	constexpr unsigned int	g_iWinSizeX = { 1280 };
 	constexpr unsigned int	g_iWinSizeY = { 720 };
 
-	static Engine::WNameID TIMER_DEFAULT = WNAME(L"Timer_Default");
-	static Engine::WNameID TIMER_FPS60 = WNAME(L"Timer_FPS60");
+	WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
+	WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
 
 	enum class EDITOR_MODE { MAP, OBJECT, UI, EFFECT, END };
 	constexpr size_t EDITOR_MODE_COUNT = static_cast<size_t>(EDITOR_MODE::END);

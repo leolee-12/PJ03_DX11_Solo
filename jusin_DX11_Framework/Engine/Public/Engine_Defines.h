@@ -50,7 +50,7 @@ using namespace std;
 
 namespace Engine
 {
-	static WNameID COM_TRANSFORM = WNAME(L"Com_Transform");
+	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
 }
 
 #pragma warning(disable : 4251)
