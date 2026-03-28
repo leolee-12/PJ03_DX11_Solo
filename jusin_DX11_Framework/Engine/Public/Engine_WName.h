@@ -147,7 +147,7 @@ namespace Engine
 			return id;
 		}
 
-		static const wchar_t* Lookup(WNameID id)
+		static const wchar_t* Lookup(WNameID id)	// 원본 문자열 확인
 		{
 			auto it = Get().find(id);
 			return it != Get().end() ? it->second.c_str() : L"<unknown>";
@@ -158,11 +158,27 @@ namespace Engine
 	inline WNameID WNameRT(const wstring& wStr)
 	{
 		WNameID id = WName(wStr.c_str(), wStr.size());
-		WNameRegistry::Register(id, wStr);
+		auto& reg = WNameRegistry::Get();
+		auto it = reg.find(id);
+		if (it != reg.end())
+		{
+			if (it->second != wStr)
+			{
+				// 같은 ID에 다른 문자열이 등록되어 있으면 해시 충돌
+				assert(it->second == wStr && "WName hash collision detected!");
+			}
+		}
+		else
+		{
+			reg.emplace(id, wStr);
+		}
 		return id;
 	}
+
+#define WNAME(wStr) ::Engine::WNameRT(wStr)
 #else
 	inline WNameID WNameRT(const wstring& wStr) noexcept { return WName(wStr.c_str(), wStr.size()); }
+#define WNAME(wStr) ::Engine::WName(wStr)
 #endif	// _DEBUG
 }
 

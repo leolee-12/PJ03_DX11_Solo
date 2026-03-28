@@ -81,6 +81,9 @@
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02. GameActor\01. Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Game_PKM_Tags.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">

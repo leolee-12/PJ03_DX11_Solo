@@ -83,7 +83,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
 	/* Prototype_Component_Texture_BackGround */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), WName(L"Prototype_Component_Texture_BackGround"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2))))
 		return E_FAIL;
 
@@ -95,7 +95,8 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 
 	lstrcpy(m_szLoadingText, TEXT("객체원본 로딩 중"));
 	/* Prototype_GameObject_BackGround */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), WName(L"Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_BACKGROUND,
+		CBackGround::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -109,50 +110,50 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
 	/* Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Texture_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Tile0.jpg"), 1))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중"));
 	/* Prototype_Component_Shader_VtxNorTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Shader_VtxNorTex"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXNORTEX,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_VtxMesh */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("정점, 인덱스 버퍼 로딩 중"));
 	/* Prototype_Component_VIBuffer_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_VIBuffer_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_TERRAIN,
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_Fiona */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Model_Fiona"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.fbx"))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_ForkLift */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Model_ForkLift"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.fbx"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
 	/* Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN,
 		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_GameObject_Camera_Free */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Camera_Free"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
 		CCamera_Free::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_GameObject_Monster */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Monster"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
 		CMonster::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 

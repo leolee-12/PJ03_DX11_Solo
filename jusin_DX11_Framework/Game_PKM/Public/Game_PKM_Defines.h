@@ -5,6 +5,7 @@
 #include <process.h>
 
 #include "Engine_Defines.h"
+#include "Game_PKM_Tags.h"
 
 namespace Game_PKM
 {

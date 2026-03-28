@@ -17,13 +17,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(WName(L"Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(WName(L"Layer_BackGround"))))
+	if (FAILED(Ready_Layer_BackGround(LAYER_BACKGROUND)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(WName(L"Layer_Monster"))))
+	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
 
 	return S_OK;
@@ -71,7 +71,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	CameraDesc.fMouseSensor = 0.05f;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Camera_Free"),
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
 		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &CameraDesc)))
 		return E_FAIL;
 
@@ -80,7 +80,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Terrain"), ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
@@ -88,7 +88,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_GameObject_Monster"), ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;

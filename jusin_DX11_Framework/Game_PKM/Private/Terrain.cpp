@@ -63,17 +63,17 @@ HRESULT CTerrain::Render()
 HRESULT CTerrain::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Shader_VtxNorTex"),
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXNORTEX,
 		WName(L"Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_VIBuffer_Terrain"),
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_TERRAIN,
 		WName(L"Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	/* For.Com_Texture*/
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Texture_Terrain"),
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN,
 		WName(L"Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 

@@ -62,12 +62,12 @@ HRESULT CMonster::Render()
 HRESULT CMonster::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
 		WName(L"Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), WName(L"Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
 		WName(L"Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 

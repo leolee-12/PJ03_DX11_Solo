@@ -61,10 +61,10 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
+	if (FAILED(pGameInstance->Add_Timer(TIMER_DEFAULT)))
 		return E_FAIL;
 
-	if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_FPS60"))))
+	if (FAILED(pGameInstance->Add_Timer(TIMER_FPS60)))
 		return E_FAIL;
 
 	_float fTimeAcc = {};
@@ -85,11 +85,11 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 			}
 		}
 
-		fTimeAcc += pGameInstance->Compute_Timer(TEXT("Timer_Default"));
+		fTimeAcc += pGameInstance->Compute_Timer(TIMER_DEFAULT);
 
 		if (fTimeAcc >= fFrameRate)
 		{
-			_float fTimeDelta = { pGameInstance->Compute_Timer(TEXT("Timer_FPS60")) };
+			_float fTimeDelta = { pGameInstance->Compute_Timer(TIMER_FPS60) };
 
 			pEditorApp->Update(fTimeDelta);
 			pEditorApp->Render();

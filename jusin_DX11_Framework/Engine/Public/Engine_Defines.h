@@ -50,8 +50,7 @@ using namespace std;
 
 namespace Engine
 {
-	static const _wstring g_strTransformTag = TEXT("Com_Transform");
-	static constexpr WNameID TAG_COM_TRANSFORM = WName(L"Com_Transform");
+	static WNameID COM_TRANSFORM = WNAME(L"Com_Transform");
 }
 
 #pragma warning(disable : 4251)

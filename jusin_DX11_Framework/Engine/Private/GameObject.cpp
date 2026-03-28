@@ -42,7 +42,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (FAILED(m_pTransformCom->Initialize(pArg)))
 		return E_FAIL;
 
-	m_Components.emplace(TAG_COM_TRANSFORM, m_pTransformCom);
+	m_Components.emplace(COM_TRANSFORM, m_pTransformCom);
 	Safe_AddRef(m_pTransformCom);
 
 	return S_OK;
