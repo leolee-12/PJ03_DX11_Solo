@@ -18,6 +18,8 @@ private:
 	virtual ~CLevel_Manager() = default;
 
 public:
+	_int Get_CurrentLevel() const { return m_iCurrentLevelIndex; }
+
 	HRESULT	Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);
 	void	Update(_float fTimeDelta);
 	HRESULT	Render();

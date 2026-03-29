@@ -22,7 +22,7 @@ void CObject_Registry::Register_Object(_uint iProtoLevel, WNameID strProtoTag, _
 	if (!pObj) return;
 
 	m_pGameInstance->Add_GameObject_Ex(iLayerLevel, strLayerTag, pObj);	// 레이어에 등록
-	m_Records.push_back({ pObj, iLayerLevel, strLayerTag });
+	m_Records.push_back({ pObj, iProtoLevel, strProtoTag, iLayerLevel, strLayerTag });
 	m_EditorObjects.push_back(pObj);	// 에디터 트래킹
 	Safe_AddRef(pObj); // Editor 참조
 }

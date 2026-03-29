@@ -1,5 +1,6 @@
 #include "ImGui_Manager.h"
 #include "Panel_OutLiner.h"
+#include "Panel_Property.h"
 #include "Panel_MapTool.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -19,6 +20,19 @@ HRESULT CImGui_Manager::Initialize(HWND hWnd)
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
+
+	// ÇÑ±Û Áö¿ø ÆùÆ® ·Îµå
+	io.Fonts->AddFontFromFileTTF(
+		"../../Resources/Fonts/NanumBarunGothic.ttf",
+		16.0f,
+		nullptr,
+		io.Fonts->GetGlyphRangesKorean()
+	);
+
+	// 		"../../Resources/Fonts/malgun.ttf",				// ¸¼Àº °íµñ
+	//		"../../Resources/Fonts/NotoSansKR-VF.ttf",		// Noto Sans KR
+	//		"../../Resources/Fonts/NanumBarunGothic.ttf",	// ³ª´® ¹Ù¸¥ °íµñ
+
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// IF using Docking Branch - Docking
@@ -117,6 +131,12 @@ HRESULT CImGui_Manager::Add_Panels()
 		return E_FAIL;
 
 	m_Panels[ETOUI(PANEL::MAP)] = pInstance;
+
+	pInstance = CPanel_Property::Create();
+	if (nullptr == pInstance)
+		return E_FAIL;
+
+	m_Panels[ETOUI(PANEL::PROPERTY)] = pInstance;
 
 	//pInstance = CPanel_ObjectTool::Create();
 	//

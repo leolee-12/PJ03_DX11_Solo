@@ -148,6 +148,7 @@
     <ClInclude Include="..\Public\EditorApp.h" />
     <ClInclude Include="..\Public\Editor_Defines.h" />
     <ClInclude Include="..\Public\Panel_OutLiner.h" />
+    <ClInclude Include="..\Public\Panel_Property.h" />
     <ClInclude Include="..\Public\Select_Manager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="..\Private\Panel_MapTool.cpp" />
     <ClCompile Include="..\Private\EditorApp.cpp" />
     <ClCompile Include="..\Private\Panel_OutLiner.cpp" />
+    <ClCompile Include="..\Private\Panel_Property.cpp" />
     <ClCompile Include="..\Private\Select_Manager.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>

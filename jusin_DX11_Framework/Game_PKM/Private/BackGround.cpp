@@ -49,9 +49,9 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 void CBackGround::Update(_float fTimeDelta)
 {
 	// Test
-	XMVECTOR vLook = { 0.f, 0.f, 1.f };
-	m_pTransformCom->Turn(vLook, fTimeDelta);
-	m_pTransformCom->Go_Right(fTimeDelta);
+	//XMVECTOR vLook = { 0.f, 0.f, 1.f };
+	//m_pTransformCom->Turn(vLook, fTimeDelta);
+	//m_pTransformCom->Go_Right(fTimeDelta);
 }
 
 void CBackGround::Late_Update(_float fTimeDelta)

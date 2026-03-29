@@ -18,6 +18,7 @@ protected:
 	virtual ~CCamera() = default;
 
 public:
+	virtual _string Get_TypeName() const { return "Camera"; }
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);

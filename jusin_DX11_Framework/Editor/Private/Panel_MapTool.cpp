@@ -3,12 +3,13 @@
 CPanel_MapTool::CPanel_MapTool()
 	: CPanel_Base()
 {
-	m_strTitle = "Map";
 }
 
-HRESULT CPanel_MapTool::Initialize(void* pArg)
+HRESULT CPanel_MapTool::Initialize()
 {
-	if (FAILED(__super::Initialize(pArg)))
+	m_strTitle = "Map";
+
+	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
 	return S_OK;
@@ -24,11 +25,11 @@ HRESULT CPanel_MapTool::Render()
 	return __super::Render();
 }
 
-CPanel_MapTool* CPanel_MapTool::Create(void* pArg)
+CPanel_MapTool* CPanel_MapTool::Create()
 {
 	CPanel_MapTool* pInstance = new CPanel_MapTool();
 
-	if (FAILED(pInstance->Initialize(pArg)))
+	if (FAILED(pInstance->Initialize()))
 	{
 		MSG_BOX("Failed to Create : CPanel_MapTool");
 		Safe_Release(pInstance);

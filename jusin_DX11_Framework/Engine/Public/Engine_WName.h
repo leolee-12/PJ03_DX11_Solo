@@ -215,6 +215,8 @@ namespace Engine
 		MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, result.data(), size);
 		return result;
 	}
+
+#define KOR(str) (const char*)u8##str
 }
 
 #endif // Engine_WName_h__

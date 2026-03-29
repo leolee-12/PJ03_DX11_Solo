@@ -24,6 +24,7 @@ protected:
 	virtual ~CBackGround() = default;
 
 public:
+	virtual _string Get_TypeName() const { return "BackGround"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;

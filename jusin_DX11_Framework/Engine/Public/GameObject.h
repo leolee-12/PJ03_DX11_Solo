@@ -17,6 +17,8 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
+	virtual _bool Is_UI() { return false; }
+	virtual _string Get_TypeName() const { return "GameObject"; }
 	const _wstring& Get_Name() const { return m_strName; }
 	void Set_Name(const _wstring& wStr) { m_strName = wStr; }
 	CTransform* Get_Transform() const { return m_pTransformCom; }

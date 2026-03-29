@@ -1,12 +1,13 @@
 #include "EditInstance.h"
 
+#include "GameInstance.h"
 #include "ImGui_Manager.h"
 #include "Select_Manager.h"
-#include "Object_Registry.h"
 
 IMPLEMENT_SINGLETON(CEditInstance)
 
 CEditInstance::CEditInstance()
+	: m_pGameInstance(CGameInstance::GetInstance())
 {
 }
 
@@ -31,6 +32,14 @@ HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11De
 
 void CEditInstance::Update_Editor(_float fTimeDelta)
 {
+	_int iCurrLevel = m_pGameInstance->Get_CurrentLevel();
+
+	if (m_iPrevLevel != iCurrLevel)
+	{
+		Clear();
+		m_iPrevLevel = iCurrLevel;
+	}
+
 	m_pImGui_Manager->Update(fTimeDelta);
 }
 
@@ -100,6 +109,11 @@ void CEditInstance::Unregister_Callback(const _string& strKey)
 #pragma endregion
 
 #pragma region OBJECT_REGISTRY
+const vector<CObject_Registry::OBJ_RECORD>& CEditInstance::Get_Records() const
+{
+	return m_pObject_Registry->Get_Records();
+}
+
 const vector<CGameObject*>& CEditInstance::Get_EditorObjects() const
 {
 	return m_pObject_Registry->Get_EditorObjects();

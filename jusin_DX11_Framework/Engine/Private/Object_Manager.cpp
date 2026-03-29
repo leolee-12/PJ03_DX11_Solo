@@ -16,6 +16,24 @@ const list<CGameObject*>* CObject_Manager::Get_ObjectList(_uint iLevel, WNameID 
 	return &pLayer->Get_ObjectList();
 }
 
+vector<CGameObject*> CObject_Manager::Get_LevelObjects(_uint iLevel) const
+{
+	vector<CGameObject*> result;
+	if (iLevel >= m_iNumLevels)
+		return result;
+
+	m_pLayers[iLevel].for_each(
+		[&result](auto& pair)
+		{
+			const list<CGameObject*>& objects = pair.second->Get_ObjectList();
+
+			for (auto pObj : objects)
+				result.push_back(pObj);
+		});
+
+	return result;
+}
+
 HRESULT CObject_Manager::Initialize(_uint iNumLevels)
 {
 	if (nullptr != m_pLayers)

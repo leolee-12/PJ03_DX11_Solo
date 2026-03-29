@@ -40,6 +40,9 @@
     <Filter Include="04. Panels\01. Map">
       <UniqueIdentifier>{f47304f2-d1a1-4e46-9a41-792c8343a34f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Panels\02. Property">
+      <UniqueIdentifier>{076c556a-c1e4-484d-9849-22cab20544d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -92,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Panel_MapTool.h">
       <Filter>04. Panels\01. Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_Property.h">
+      <Filter>04. Panels\02. Property</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +159,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Panel_OutLiner.cpp">
       <Filter>04. Panels\00. OutLiner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_Property.cpp">
+      <Filter>04. Panels\02. Property</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

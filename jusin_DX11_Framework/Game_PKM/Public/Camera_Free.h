@@ -18,6 +18,7 @@ private:
 	virtual ~CCamera_Free() = default;
 
 public:
+	virtual _string Get_TypeName() const { return "Camera_Free"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;

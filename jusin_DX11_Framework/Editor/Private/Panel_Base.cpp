@@ -10,7 +10,7 @@ CPanel_Base::CPanel_Base()
 	Safe_AddRef(m_pEditInstance);
 }
 
-HRESULT CPanel_Base::Initialize(void* pArg)
+HRESULT CPanel_Base::Initialize()
 {
 	m_pEditInstance->Register_Callback(m_strTitle,
 		[this](const vector<CGameObject*>& sel)

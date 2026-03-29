@@ -20,7 +20,7 @@ public:
 	const _bool Is_Opened() const { return m_bOpen; }
 	void Switch() { m_bOpen = !m_bOpen; }
 
-	virtual HRESULT Initialize(void* pArg = nullptr) PURE;
+	virtual HRESULT Initialize() PURE;
 	virtual void Update(_float fTimeDelta) PURE;
 	virtual HRESULT Render() PURE;
 

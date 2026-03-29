@@ -31,12 +31,6 @@
     <Filter Include="97. Game_API">
       <UniqueIdentifier>{564c7465-cb9d-4b18-9180-4375805faed6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Environment\02. Camera">
-      <UniqueIdentifier>{2019e1f5-e2bf-4370-93e1-99488c316b3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Environment\02. Camera\Free">
-      <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="80. Study">
       <UniqueIdentifier>{2167fda7-f196-44e9-b60b-39aea4afdf71}</UniqueIdentifier>
     </Filter>
@@ -60,6 +54,12 @@
     </Filter>
     <Filter Include="03. GameLogic\01. Ability">
       <UniqueIdentifier>{30c1c900-668d-4e89-a118-52c27fd12500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\00. Camera">
+      <UniqueIdentifier>{2019e1f5-e2bf-4370-93e1-99488c316b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\00. Camera\Free">
+      <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,7 +91,7 @@
       <Filter>97. Game_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Free.h">
-      <Filter>01. Environment\02. Camera\Free</Filter>
+      <Filter>01. Environment\00. Camera\Free</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>80. Study\02. Monster</Filter>
@@ -138,7 +138,7 @@
       <Filter>97. Game_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Free.cpp">
-      <Filter>01. Environment\02. Camera\Free</Filter>
+      <Filter>01. Environment\00. Camera\Free</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>80. Study\02. Monster</Filter>

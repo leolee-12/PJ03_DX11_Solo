@@ -1,6 +1,6 @@
 #pragma once
-#include "GameObject.h"
 #include "Editor_Defines.h"
+#include "Object_Registry.h"
 
 /* ------------------------------------------------------------ */
 // CEditInstance : 에디터 기능 간 오케스트레이션 및 총괄 관리
@@ -42,6 +42,7 @@ public:
 #pragma endregion
 
 #pragma region OBJECT_REGISTRY
+	const vector<CObject_Registry::OBJ_RECORD>& Get_Records() const;
 	const vector<CGameObject*>& Get_EditorObjects() const;
 	void Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);
 	void Unregister_Object(CGameObject* pObj);
@@ -69,6 +70,9 @@ public:
 #pragma endregion
 
 private:
+	_int m_iPrevLevel = { -1 };
+
+	class CGameInstance* m_pGameInstance = { nullptr };
 	class CImGui_Manager* m_pImGui_Manager = { nullptr };
 	class CSelect_Manager* m_pSelect_Manager = { nullptr };
 	class CObject_Registry* m_pObject_Registry = { nullptr };

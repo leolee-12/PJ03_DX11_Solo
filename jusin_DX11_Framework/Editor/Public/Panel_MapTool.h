@@ -10,12 +10,12 @@ protected:
 	virtual ~CPanel_MapTool() = default;
 
 public:
-	HRESULT Initialize(void* pArg) override;
+	HRESULT Initialize() override;
 	void Update(_float fTimeDelta) override;
 	HRESULT Render() override;
 
 public:
-	static CPanel_MapTool* Create(void* pArg = nullptr);
+	static CPanel_MapTool* Create();
 	
 private:
 	virtual void Free() override;

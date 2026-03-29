@@ -1,15 +1,17 @@
 #include "Panel_OutLiner.h"
+#include "GameInstance.h"
 #include "EditInstance.h"
 
 CPanel_OutLiner::CPanel_OutLiner()
 	: CPanel_Base()
 {
-	m_strTitle = "OutLiner";
 }
 
-HRESULT CPanel_OutLiner::Initialize(void* pArg)
+HRESULT CPanel_OutLiner::Initialize()
 {
-	if (FAILED(__super::Initialize(pArg)))
+	m_strTitle = "OutLiner";
+
+	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
 	return S_OK;
@@ -24,11 +26,9 @@ HRESULT CPanel_OutLiner::Render()
 {
 	if (!Begin_Panel())
 	{
-		End_Panel();	// 접혀있어도 Begin은 호출된 것 : End를 반드시 호출
+		End_Panel();
 		return S_OK;
 	}
-
-	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::InputText("##search", m_szSearchBuffer, 128);
 
@@ -37,9 +37,9 @@ HRESULT CPanel_OutLiner::Render()
 
 	ImGui::Separator();
 	
-	auto& vecObjects = m_pEditInstance->Get_EditorObjects();
-
-	for(auto pObj : vecObjects)
+	_uint iLevel = static_cast<_uint>(m_pGameInstance->Get_CurrentLevel());
+	auto vecObjects = m_pGameInstance->Get_LevelObjects(iLevel);
+	for (auto pObj : vecObjects)
 		Draw_ObjectNode(pObj);
 
 	if (m_bOpenRenamePopup)
@@ -48,14 +48,14 @@ HRESULT CPanel_OutLiner::Render()
 		m_bOpenRenamePopup = false;
 	}
 
-	if (ImGui::BeginPopup("##rename_popup") && m_pSelected)
+	if (ImGui::BeginPopup("##rename_popup") && m_pRenameTarget)
 	{
 		ImGui::Text("새 이름:");
 		if (ImGui::InputText("##rename", m_szRenameBuffer, 128,
 			ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			m_pSelected->Set_Name(StoW(m_szRenameBuffer));
-			m_pSelected = nullptr;
+			m_pRenameTarget->Set_Name(StoW(m_szRenameBuffer));
+			m_pRenameTarget = nullptr;
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -71,16 +71,9 @@ void CPanel_OutLiner::Draw_ObjectNode(CGameObject* pObj)
 	const _bool bSelected = m_pEditInstance->Is_Selected(pObj);
 	string strName = WtoS(pObj->Get_Name());
 
+	// 검색 : 검색어 있으면 이름에 포함되지 않는 오브젝트 스킵
 	if (!Passes_Filter(strName)) // ← 인라인 중복 로직 제거, 함수 사용
 		return;
-
-	// 검색 : 검색어 있으면 이름에 포함되지 않는 오브젝트 스킵
-	if (m_szSearchBuffer[0] != '\0')
-	{
-		string strSearch = m_szSearchBuffer;
-		if (strName.find(strSearch) == string::npos)
-			return;
-	}
 
 	ImGuiTreeNodeFlags iNodeFlags =
 		ImGuiTreeNodeFlags_Leaf
@@ -116,7 +109,7 @@ void CPanel_OutLiner::Draw_ContextMenu(CGameObject* pObj)
 	// 이름 변경
 	if (ImGui::MenuItem("이름 변경"))
 	{
-		m_pSelected = pObj;
+		m_pRenameTarget = pObj;
 		// 현재 이름을 버퍼에 복사해서 팝업 InputText에 표시
 		strncpy_s(m_szRenameBuffer, WtoS(pObj->Get_Name()).c_str(), 127);
 		m_bOpenRenamePopup = true;
@@ -150,11 +143,11 @@ _bool CPanel_OutLiner::Passes_Filter(const _string& strName)
 	return lower_name.find(lower_buf) != _string::npos;
 }
 
-CPanel_OutLiner* CPanel_OutLiner::Create(void* pArg)
+CPanel_OutLiner* CPanel_OutLiner::Create()
 {
 	CPanel_OutLiner* pInstance = new CPanel_OutLiner();
 
-	if (FAILED(pInstance->Initialize(pArg)))
+	if (FAILED(pInstance->Initialize()))
 	{
 		MSG_BOX("Failed to Create : CPanel_OutLiner");
 		Safe_Release(pInstance);

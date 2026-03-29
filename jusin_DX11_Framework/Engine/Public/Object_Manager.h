@@ -18,6 +18,7 @@ private:
 
 public:
 	const list<class CGameObject*>* Get_ObjectList(_uint iLevel, WNameID strLayerTag);
+	vector<CGameObject*> Get_LevelObjects(_uint iLevel) const;
 
 	HRESULT Initialize(_uint iNumLevels);
 	HRESULT Add_GameObject(	_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);

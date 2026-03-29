@@ -154,6 +154,10 @@ HRESULT CGameInstance::Change_Level(_int iNewLevelIndex, CLevel* pNewLevel)
 	return m_pLevel_Manager->Change_Level(iNewLevelIndex, pNewLevel);
 }
 
+_int CGameInstance::Get_CurrentLevel() const
+{
+	return m_pLevel_Manager->Get_CurrentLevel();
+}
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER
@@ -184,6 +188,10 @@ const list<class CGameObject*>* CGameInstance::Get_ObjectList(_uint iLevel, WNam
 	return m_pObject_Manager->Get_ObjectList(iLevel, strLayerTag);
 }
 
+vector<CGameObject*> CGameInstance::Get_LevelObjects(_uint iLevel) const
+{
+	return m_pObject_Manager->Get_LevelObjects(iLevel);
+}
 #pragma endregion
 
 #pragma region RENDERER

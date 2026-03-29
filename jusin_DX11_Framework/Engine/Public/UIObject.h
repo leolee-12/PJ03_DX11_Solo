@@ -18,6 +18,8 @@ protected:
 	virtual ~CUIObject() = default;
 
 public:
+	virtual _bool Is_UI() { return true; }
+	virtual _string Get_TypeName() const { return "UIObject"; }
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
