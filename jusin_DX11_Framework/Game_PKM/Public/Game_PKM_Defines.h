@@ -6,10 +6,13 @@
 
 #include "Engine_Defines.h"
 #include "Game_PKM_Tags.h"
+#include "Game_PKM_Types.h"
 
 NS_BEGIN(Game_PKM)
 
-enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, END };
+enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, BATTLE, END };
+
+inline constexpr _uint MAX_LEARNSET = 128;
 
 NS_END
 

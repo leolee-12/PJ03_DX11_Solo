@@ -13,12 +13,6 @@
     <Filter Include="01. Environment">
       <UniqueIdentifier>{2ff14eb7-25dd-4762-b3cb-6d4ce4df7f87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Environment\00. BackGround">
-      <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Environment\01. Terrain">
-      <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameActor">
       <UniqueIdentifier>{d772649f-03b1-4208-a21e-800813a55c9b}</UniqueIdentifier>
     </Filter>
@@ -37,14 +31,35 @@
     <Filter Include="97. Game_API">
       <UniqueIdentifier>{564c7465-cb9d-4b18-9180-4375805faed6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameActor\01. Monster">
-      <UniqueIdentifier>{b50c0748-6208-4528-99ee-2a9933a6e431}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Environment\02. Camera">
       <UniqueIdentifier>{2019e1f5-e2bf-4370-93e1-99488c316b3a}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Environment\02. Camera\Free">
       <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study">
+      <UniqueIdentifier>{2167fda7-f196-44e9-b60b-39aea4afdf71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study\00. BackGround">
+      <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study\02. Monster">
+      <UniqueIdentifier>{b50c0748-6208-4528-99ee-2a9933a6e431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study\01. Terrain">
+      <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameActor\01. Pokemon">
+      <UniqueIdentifier>{ec2004a2-41ec-4d18-9d9d-95af020f02d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. GameLogic">
+      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. GameLogic\00. Move">
+      <UniqueIdentifier>{8c408519-5991-41e3-9ac4-7472a2857829}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. GameLogic\01. Ability">
+      <UniqueIdentifier>{30c1c900-668d-4e89-a118-52c27fd12500}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,10 +70,10 @@
       <Filter>02. GameActor\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>01. Environment\00. BackGround</Filter>
+      <Filter>80. Study\00. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
-      <Filter>01. Environment\01. Terrain</Filter>
+      <Filter>80. Study\01. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>00. Levels\02. GamePlay</Filter>
@@ -79,9 +94,21 @@
       <Filter>01. Environment\02. Camera\Free</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
-      <Filter>02. GameActor\01. Monster</Filter>
+      <Filter>80. Study\02. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Tags.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Pokemon.h">
+      <Filter>02. GameActor\01. Pokemon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Move.h">
+      <Filter>03. GameLogic\00. Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ability.h">
+      <Filter>03. GameLogic\01. Ability</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Game_PKM_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
   </ItemGroup>
@@ -90,10 +117,10 @@
       <Filter>02. GameActor\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>01. Environment\00. BackGround</Filter>
+      <Filter>80. Study\00. BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
-      <Filter>01. Environment\01. Terrain</Filter>
+      <Filter>80. Study\01. Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>00. Levels\02. GamePlay</Filter>
@@ -114,7 +141,16 @@
       <Filter>01. Environment\02. Camera\Free</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02. GameActor\01. Monster</Filter>
+      <Filter>80. Study\02. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Pokemon.cpp">
+      <Filter>02. GameActor\01. Pokemon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Move.cpp">
+      <Filter>03. GameLogic\00. Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ability.cpp">
+      <Filter>03. GameLogic\01. Ability</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
