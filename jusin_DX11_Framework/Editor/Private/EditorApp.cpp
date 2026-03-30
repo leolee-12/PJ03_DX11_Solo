@@ -44,8 +44,8 @@ HRESULT CEditorApp::Initialize()
 
 void CEditorApp::Update(_float fTimeDelta)
 {
-	m_pGameInstance->Update_Engine(fTimeDelta);
 	m_pEditInstance->Update_Editor(fTimeDelta);
+	m_pGameInstance->Update_Engine(fTimeDelta);
 }
 
 HRESULT CEditorApp::Render()

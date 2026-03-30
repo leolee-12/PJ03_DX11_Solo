@@ -27,5 +27,30 @@ namespace Engine
 	enum class DIMB { LBUTTON, RBUTTON, WHEEL, END };
 
 	enum class DIMM { X, Y, WHEEL, END };
+
+	enum class INPUT_STATE { GAMEPLAY, OBSERVE, MENU, NAVIGATE, LOCKED, END };
+
+	namespace KeyGroup
+	{
+		enum  : unsigned int
+		{
+			MOVEMENT	= 1u << 0,	// WASD, 화살표 등 이동 관련 키
+			CAMERA		= 1u << 1,	// 마우스 이동, 마우스 버튼
+			ACTION		= 1u << 2,	// 공격, 스킬 등 게임 액션 키
+			UI_NAVIGATE = 1u << 3,	// Enter, 방향키, Tab 등 UI 탐색 키
+			SYSTEM		= 1u << 4,	// Esc, F1-F12 등 시스템 제어 키
+			TOOL		= 1u << 5,	// 개발 관련으로 사용하는 키
+			ALL			= 0xFFFFFFFF
+		};
+
+		inline constexpr unsigned int s_AllowedGroups[static_cast<unsigned int>(INPUT_STATE::END)] =
+		{
+			/* GAMEPLAY */ ALL,
+			/* OBSERVE	*/ SYSTEM,
+			/* MENU		*/ UI_NAVIGATE | SYSTEM,
+			/* NAVIGATE	*/ CAMERA | SYSTEM | TOOL,
+			/* LOCKED	*/ SYSTEM | TOOL
+		};
+	}
 }
 #endif // Engine_Enum_h__

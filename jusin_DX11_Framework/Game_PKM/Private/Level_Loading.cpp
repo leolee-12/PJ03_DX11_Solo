@@ -26,7 +26,7 @@ HRESULT CLevel_Loading::Initialize()
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
-    if (GetKeyState(VK_SPACE) & 0x8000 &&
+    if (m_pGameInstance->Key_Down(DIK_SPACE) &&
         true == m_pLoader->isFinished())
     {
         CLevel* pNextLevel = { nullptr };

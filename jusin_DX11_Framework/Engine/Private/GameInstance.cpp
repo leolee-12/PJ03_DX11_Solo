@@ -233,19 +233,49 @@ void CGameInstance::Set_Projection(_fmatrix StateMatrix)
 #pragma endregion
 
 #pragma region INPUT_DEVICE
-_byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
+void CGameInstance::Set_InputState(INPUT_STATE eState)
 {
-	return m_pInput_Device->Get_DIKeyState(byKeyID);
+	m_pInput_Device->Set_InputState(eState);
 }
 
-_byte CGameInstance::Get_DIMouseState(DIMB eMouse)
+INPUT_STATE CGameInstance::Get_InputState() const
 {
-	return m_pInput_Device->Get_DIMouseState(eMouse);
+	return m_pInput_Device->Get_InputState();
 }
 
-_long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
+_bool CGameInstance::Key_Down(_ubyte byKeyID)
 {
-	return m_pInput_Device->Get_DIMouseMove(eMouseState);
+	return m_pInput_Device->Key_Down(byKeyID);
+}
+
+_bool CGameInstance::Key_Up(_ubyte byKeyID)
+{
+	return m_pInput_Device->Key_Up(byKeyID);
+}
+
+_bool CGameInstance::Key_Pressing(_ubyte byKeyID)
+{
+	return m_pInput_Device->Key_Pressing(byKeyID);
+}
+
+_bool CGameInstance::Mouse_Down(DIMB eMouse)
+{
+	return m_pInput_Device->Mouse_Down(eMouse);
+}
+
+_bool CGameInstance::Mouse_Up(DIMB eMouse)
+{
+	return m_pInput_Device->Mouse_Up(eMouse);
+}
+
+_bool CGameInstance::Mouse_Pressing(DIMB eMouse)
+{
+	return m_pInput_Device->Mouse_Pressing(eMouse);
+}
+
+_long CGameInstance::Mouse_Move(DIMM eMouseState)
+{
+	return m_pInput_Device->Mouse_Move(eMouseState);
 }
 #pragma endregion
 

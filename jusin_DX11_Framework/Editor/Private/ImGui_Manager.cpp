@@ -72,6 +72,11 @@ HRESULT CImGui_Manager::Initialize(HWND hWnd)
 
 void CImGui_Manager::Update(_float fTimeDelta)
 {
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+
 	for (auto& pPanel : m_Panels)
 	{
 		if(pPanel && pPanel->Is_Opened())
@@ -81,11 +86,6 @@ void CImGui_Manager::Update(_float fTimeDelta)
 
 HRESULT CImGui_Manager::Render()
 {
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
-
 	for (auto& pPanel : m_Panels)
 	{
 		if (pPanel && pPanel->Is_Opened() && FAILED(pPanel->Render()))

@@ -41,6 +41,15 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	}
 
 	m_pImGui_Manager->Update(fTimeDelta);
+
+	// ImGui 포커스 여부에 따라 입력 상태 전환
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureMouse || io.WantCaptureKeyboard)
+		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);  // 패널 위 → 카메라 포함 차단
+	else if (io.WantTextInput)
+		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);     // 텍스트 입력 중 → WASD만 차단
+	else
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
 }
 
 HRESULT CEditInstance::Draw()
