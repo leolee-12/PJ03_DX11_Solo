@@ -69,7 +69,7 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 {
 	PS_OUT Out;
-	vector vMtrlDiff = /*g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord)*/ 1.f;
+	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
 
 	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
 		discard;

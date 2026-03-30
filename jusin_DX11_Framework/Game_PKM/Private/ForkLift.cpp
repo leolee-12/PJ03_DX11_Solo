@@ -1,24 +1,24 @@
-#include "Pokemon.h"
+#include "ForkLift.h"
 #include "GameInstance.h"
 
-CPokemon::CPokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CForkLift::CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
-	m_strName = { L"Pokemon_Default" };
+
 }
 
-CPokemon::CPokemon(const CPokemon& Prototype)
+CForkLift::CForkLift(const CForkLift& Prototype)
 	: CGameObject{ Prototype }
 {
 
 }
 
-HRESULT CPokemon::Initialize_Prototype()
+HRESULT CForkLift::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPokemon::Initialize(void* pArg)
+HRESULT CForkLift::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -26,31 +26,39 @@ HRESULT CPokemon::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_State(STATE::POSITION,
+		XMVectorSet(
+			m_pGameInstance->Random(0.f, 30.f),
+			1.f,
+			m_pGameInstance->Random(0.f, 30.f),
+			1.f
+		));
+
 	return S_OK;
 }
 
-void CPokemon::Priority_Update(_float fTimeDelta)
+void CForkLift::Priority_Update(_float fTimeDelta)
 {
 
 }
 
-void CPokemon::Update(_float fTimeDelta)
+void CForkLift::Update(_float fTimeDelta)
 {
 
 }
 
-void CPokemon::Late_Update(_float fTimeDelta)
+void CForkLift::Late_Update(_float fTimeDelta)
 {
 
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 }
 
-HRESULT CPokemon::Render()
+HRESULT CForkLift::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
+	size_t      iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -64,35 +72,41 @@ HRESULT CPokemon::Render()
 			return E_FAIL;
 	}
 
+
 	return S_OK;
+
 }
 
-HRESULT CPokemon::Ready_Components()
+HRESULT CForkLift::Ready_Components()
 {
+
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
-		WName(L"Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		WNAME(L"Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
-		WName(L"Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		WNAME(L"Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
+
+
+
 
 	return S_OK;
 }
 
-HRESULT CPokemon::Bind_ShaderResources()
+HRESULT CForkLift::Bind_ShaderResources()
 {
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pTransformCom->Bind_ShaderResourceWIT(m_pShaderCom, "g_WITMatrix")))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
 		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
@@ -113,36 +127,38 @@ HRESULT CPokemon::Bind_ShaderResources()
 }
 
 
-CPokemon* CPokemon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CForkLift* CForkLift::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPokemon* pInstance = new CPokemon(pDevice, pContext);
+	CForkLift* pInstance = new CForkLift(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CPokemon");
+		MSG_BOX("Failed to Created : CForkLift");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CPokemon::Clone(void* pArg)
+CGameObject* CForkLift::Clone(void* pArg)
 {
-	CPokemon* pInstance = new CPokemon(*this);
+	CForkLift* pInstance = new CForkLift(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CPokemon");
+		MSG_BOX("Failed to Cloned : CForkLift");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPokemon::Free()
+void CForkLift::Free()
 {
 	__super::Free();
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+
+
 }

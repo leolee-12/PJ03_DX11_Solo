@@ -23,6 +23,7 @@ WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
 WNAME_TAG(PROTO_OBJ_TERRAIN, L"Prototype_GameObject_Terrain");
 WNAME_TAG(PROTO_OBJ_CAMERA_FREE, L"Prototype_GameObject_Camera_Free");
 WNAME_TAG(PROTO_OBJ_MONSTER, L"Prototype_GameObject_Monster");
+WNAME_TAG(PROTO_OBJ_FORKLIFT, L"Prototype_GameObject_ForkLift");
 
 // Layer
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");

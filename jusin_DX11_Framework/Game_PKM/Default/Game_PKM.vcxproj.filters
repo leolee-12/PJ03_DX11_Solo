@@ -111,6 +111,9 @@
     <ClInclude Include="..\Public\Game_PKM_Types.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ForkLift.h">
+      <Filter>80. Study\02. Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Ability.cpp">
       <Filter>03. GameLogic\01. Ability</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ForkLift.cpp">
+      <Filter>80. Study\02. Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,10 @@
 #include "Mesh.h"
 
-CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh)
+CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
 	: CVIBuffer{ pDevice, pContext }
 	, m_pAIMesh{ pAIMesh }
 {
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 }
 
 CMesh::CMesh(const CMesh& Prototype)
@@ -14,6 +15,8 @@ CMesh::CMesh(const CMesh& Prototype)
 
 HRESULT CMesh::Initialize_Prototype()
 {
+	m_iMaterialIndex = m_pAIMesh->mMaterialIndex;
+
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = m_pAIMesh->mNumVertices;
 	m_iVertexStride = sizeof(VTXMESH);
@@ -41,10 +44,14 @@ HRESULT CMesh::Initialize_Prototype()
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
 		memcpy(&pVertices[i].vPosition, &m_pAIMesh->mVertices[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), XMLoadFloat4x4(&m_PreTransformMatrix)));
 		memcpy(&pVertices[i].vNormal, &m_pAIMesh->mNormals[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), XMLoadFloat4x4(&m_PreTransformMatrix)));
 		memcpy(&pVertices[i].vTexcoord, &m_pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 		memcpy(&pVertices[i].vTangent, &m_pAIMesh->mTangents[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), XMLoadFloat4x4(&m_PreTransformMatrix)));
 		memcpy(&pVertices[i].vBinormal, &m_pAIMesh->mBitangents[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vBinormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), XMLoadFloat4x4(&m_PreTransformMatrix)));
 	}
 
 
@@ -100,9 +107,9 @@ HRESULT CMesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh)
+CMesh* XM_CALLCONV CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
 {
-	CMesh* pInstance = new CMesh(pDevice, pContext, pAIMesh);
+	CMesh* pInstance = new CMesh(pDevice, pContext, pAIMesh, PreTransformMatrix);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

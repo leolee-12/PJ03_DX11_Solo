@@ -22,6 +22,7 @@
     <ClInclude Include="..\Public\Ability.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Game_API.h" />
     <ClInclude Include="..\Public\Game_PKM_Defines.h" />
     <ClInclude Include="..\Public\Game_PKM_Tags.h" />
@@ -40,6 +41,7 @@
     <ClCompile Include="..\Private\Ability.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Game_API.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />

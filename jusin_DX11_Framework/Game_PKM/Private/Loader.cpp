@@ -3,6 +3,7 @@
 #include "Terrain.h"
 #include "Camera_Free.h"
 #include "Monster.h"
+#include "ForkLift.h"
 
 #include "GameInstance.h"
 
@@ -131,14 +132,18 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
 
+	_matrix PreTransformMatrix = {};
+
 	/* Prototype_Component_Model_Fiona */
+	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../../Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_ForkLift */
+	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../../Resources/Models/ForkLift/ForkLift.fbx", PreTransformMatrix))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
@@ -155,6 +160,11 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_GameObject_Monster */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
 		CMonster::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Prototype_GameObject_ForkLift */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
+		CForkLift::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

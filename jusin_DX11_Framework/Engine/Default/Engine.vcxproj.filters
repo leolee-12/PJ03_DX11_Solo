@@ -189,6 +189,9 @@
     <ClInclude Include="..\Public\Engine_WName.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Material.h">
+      <Filter>07. Component\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -273,6 +276,9 @@
       <Filter>07. Component\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
+      <Filter>07. Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Material.cpp">
       <Filter>07. Component\Model</Filter>
     </ClCompile>
   </ItemGroup>

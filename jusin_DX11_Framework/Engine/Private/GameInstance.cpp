@@ -131,6 +131,10 @@ const HWND CGameInstance::Get_HWND() const
 	return m_pGraphic_Device->Get_HWND();
 }
 
+_float CGameInstance::Random(_float fMin, _float fMax)
+{
+	return fMin + static_cast<_float>(rand()) / RAND_MAX * (fMax - fMin);
+}
 #pragma endregion
 
 #pragma region TIMER_MANAGER
