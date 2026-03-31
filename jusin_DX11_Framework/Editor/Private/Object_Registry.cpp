@@ -21,8 +21,9 @@ void CObject_Registry::Register_Object(_uint iProtoLevel, WNameID strProtoTag, _
 		m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iProtoLevel, strProtoTag, pArg));
 	if (!pObj) return;
 
+	pObj->Set_Name(Make_UniqueName(StoW(pObj->Get_TypeName())));
 	m_pGameInstance->Add_GameObject_Ex(iLayerLevel, strLayerTag, pObj);	// 레이어에 등록
-	m_Records.push_back({ pObj, iProtoLevel, strProtoTag, iLayerLevel, strLayerTag });
+	m_Records.push_back({ iProtoLevel, strProtoTag, iLayerLevel, strLayerTag, pObj });
 	m_EditorObjects.push_back(pObj);	// 에디터 트래킹
 	Safe_AddRef(pObj); // Editor 참조
 }
@@ -39,9 +40,8 @@ void CObject_Registry::Unregister_Object(CGameObject* pObj)
 	if (iter != m_EditorObjects.end())
 		m_EditorObjects.erase(iter);
 
-	Safe_Release(pObj);	// Editor 참조 해제
-	m_pEditInstance->Deselect(pObj); // 선택 해제
 	pObj->Set_Dead(); // DEAD -> Layer에서 제거
+	m_pEditInstance->Deselect(pObj); // 선택 해제
 }
 
 void CObject_Registry::Clone_Object(CGameObject* pObj)
@@ -51,13 +51,13 @@ void CObject_Registry::Clone_Object(CGameObject* pObj)
 	if (iter == m_Records.end()) return;
 
 	CGameObject* pClone = dynamic_cast<CGameObject*>(
-		m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iter->iLayerLevel, iter->strProtoTag, nullptr));
+		m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iter->iProtoLevel, iter->strProtoTag, nullptr));
 	if (!pClone) return;
 
 	pClone->Set_Name(Make_UniqueName(pObj->Get_Name()));
 
 	m_pGameInstance->Add_GameObject_Ex(iter->iLayerLevel, iter->strLayerTag, pClone);
-	m_Records.push_back({ pClone, iter->iLayerLevel, iter->strLayerTag });
+	m_Records.push_back({ iter->iProtoLevel, iter->strProtoTag, iter->iLayerLevel, iter->strLayerTag, pClone });
 	m_EditorObjects.push_back(pClone);
 	Safe_AddRef(pClone);
 }

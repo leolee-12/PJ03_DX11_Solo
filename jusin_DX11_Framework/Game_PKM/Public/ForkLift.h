@@ -22,6 +22,7 @@ protected:
 	virtual ~CForkLift() = default;
 
 public:
+	virtual _string Get_TypeName() const { return "ForkLift"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;

@@ -14,10 +14,6 @@ HRESULT CPanel_PlaceBrowser::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	m_iProtoLevel = ETOUI(LEVEL::STATIC);
-	m_iLayerLevel = ETOUI(LEVEL::GAMEPLAY);
-	m_LayerTag = WNAME(L"Layer_Object");
-
 	Register_Items();
 	return S_OK;
 }
@@ -33,10 +29,10 @@ HRESULT CPanel_PlaceBrowser::Render()
 
 	ImGui::InputText("##filter", m_szFilter, 128);
 	ImGui::SameLine();
-	if (ImGui::Button("초기화")) m_szFilter[0] = '\0';
+	if (ImGui::Button(KOR("초기화"))) m_szFilter[0] = '\0';
 	ImGui::Separator();
 
-	static const _char* ppCategories[] = { "맵","NPC","포켓몬","아이템","몬스터"};
+	static const _char* ppCategories[] = { KOR("UI"), KOR("맵"),KOR("맵OBJ"), KOR("NPC"), KOR("몬스터"), KOR("아이템")};
 
 	if (ImGui::BeginTabBar("##cat"))
 	{
@@ -60,14 +56,10 @@ void CPanel_PlaceBrowser::Register_Items()
 {
 	m_AllItems =
 	{
-	{ WNAME(L"Prototype_Terrain"),		KOR("지형"),			KOR("맵") },
-	{ WNAME(L"Prototype_Tree"),			KOR("나무"),			KOR("맵") },
-	{ WNAME(L"Prototype_NPC_Shop"),		KOR("상점 NPC"),		KOR("NPC") },
-	{ WNAME(L"Prototype_NPC_Guide"),	KOR("안내 NPC"),		KOR("NPC") },
-	{ WNAME(L"Prototype_EncPoint"),		KOR("출현 포인트"),		KOR("포켓몬") },
-	{ WNAME(L"Prototype_Item_Ball"),	KOR("포켓볼"),			KOR("아이템") },
-	{ PROTO_OBJ_FORKLIFT,				KOR("포크리프트"),		KOR("몬스터") },
-	{ PROTO_OBJ_MONSTER,				KOR("피오나"),			KOR("몬스터") },
+	{ ETOUI(LEVEL::LOGO),		PROTO_OBJ_BACKGROUND,	ETOUI(LEVEL::LOGO),		LAYER_BACKGROUND,	KOR("UI_Default"),		KOR("UI")},
+	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_TERRAIN,		ETOUI(LEVEL::GAMEPLAY),	LAYER_BACKGROUND,	KOR("맵_Default"),		KOR("맵") },
+	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_FORKLIFT,		ETOUI(LEVEL::GAMEPLAY),	LAYER_BACKGROUND,	KOR("포크리프트"),		KOR("몬스터") },
+	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_MONSTER,		ETOUI(LEVEL::GAMEPLAY),	LAYER_MONSTER,		KOR("피오나"),			KOR("몬스터") },
 	};
 
 	for (auto& item : m_AllItems)
@@ -96,7 +88,7 @@ void CPanel_PlaceBrowser::Draw_Category(const _string& strCat)
 		if (ImGui::BeginDragDropSource())
 		{
 			ImGui::SetDragDropPayload("PLACE_ITEM", &pItem, sizeof(CATALOG_ITEM*));
-			ImGui::Text("배치: %s", pItem->strDisplayName.c_str());
+			ImGui::Text(KOR("배치: %s"), pItem->strDisplayName.c_str());
 			ImGui::EndDragDropSource();
 		}
 	}
@@ -106,8 +98,8 @@ void CPanel_PlaceBrowser::Place_Object(const CATALOG_ITEM tItem)
 {
 	// EditInstance → Object_Registry -> Clone + Add_Obj_Ex + 추적
 	m_pEditInstance->Register_Object(
-		m_iProtoLevel, tItem.protoTag,
-		m_iLayerLevel, m_LayerTag, nullptr);
+		tItem.iProtoLevel, tItem.strProtoTag,
+		tItem.iLayerLevel, tItem.strLayerTag, nullptr);
 
 	// 선택 상태로 전환 (프로퍼티 편집기 즉시 표시)
 	auto& objs = m_pEditInstance->Get_EditorObjects();

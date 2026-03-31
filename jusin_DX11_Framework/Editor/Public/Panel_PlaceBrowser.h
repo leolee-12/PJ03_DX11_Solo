@@ -5,15 +5,7 @@ NS_BEGIN(Editor)
 
 class CPanel_PlaceBrowser final : public CPanel_Base
 {
-public:
-	struct CATALOG_ITEM
-	{
-		WNameID protoTag;
-		_string strDisplayName;
-		_string strCategory;
-	};
-
-protected:
+private:
 	CPanel_PlaceBrowser();
 	virtual ~CPanel_PlaceBrowser() = default;
 
@@ -26,9 +18,6 @@ private:
 	vector<CATALOG_ITEM> m_AllItems;
 	unordered_map<_string, vector<CATALOG_ITEM*>> m_ByCategory;
 	_char m_szFilter[128] = {};
-	_uint m_iProtoLevel = {};
-	_uint m_iLayerLevel = {};
-	WNameID m_LayerTag = {};
 
 private:
 	void Register_Items();

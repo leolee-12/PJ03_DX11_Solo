@@ -32,6 +32,7 @@ HRESULT CBackGround::Initialize(void* pArg)
 	Desc.fCenterY = fViewHeight * 0.5f;
 	Desc.fSizeX = fViewWidth;
 	Desc.fSizeY = fViewHeight;
+	Desc.iZOrder = 0;
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;

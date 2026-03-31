@@ -49,6 +49,9 @@
     <Filter Include="04. Panels\03. PlaceBrowser">
       <UniqueIdentifier>{a40d7bf5-2769-4d7b-96ad-77c077c1325d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Panels\04. UITool">
+      <UniqueIdentifier>{ec1b3062-7bf7-401b-bee6-9a75cffb6db5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -110,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Panel_PlaceBrowser.h">
       <Filter>04. Panels\03. PlaceBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Struct.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_UITool.h">
+      <Filter>04. Panels\04. UITool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +189,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Panel_PlaceBrowser.cpp">
       <Filter>04. Panels\03. PlaceBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_UITool.cpp">
+      <Filter>04. Panels\04. UITool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

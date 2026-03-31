@@ -50,7 +50,7 @@ HRESULT CPanel_OutLiner::Render()
 
 	if (ImGui::BeginPopup("##rename_popup") && m_pRenameTarget)
 	{
-		ImGui::Text("새 이름:");
+		ImGui::Text(KOR("새 이름:"));
 		if (ImGui::InputText("##rename", m_szRenameBuffer, 128,
 			ImGuiInputTextFlags_EnterReturnsTrue))
 		{
@@ -107,7 +107,7 @@ void CPanel_OutLiner::Draw_ObjectNode(CGameObject* pObj)
 void CPanel_OutLiner::Draw_ContextMenu(CGameObject* pObj)
 {
 	// 이름 변경
-	if (ImGui::MenuItem("이름 변경"))
+	if (ImGui::MenuItem(KOR("이름 변경")))
 	{
 		m_pRenameTarget = pObj;
 		// 현재 이름을 버퍼에 복사해서 팝업 InputText에 표시
@@ -116,13 +116,13 @@ void CPanel_OutLiner::Draw_ContextMenu(CGameObject* pObj)
 	}
 
 	// 복제: 동일 타입 Clone 후 에디터 레지스트리에 등록
-	if (ImGui::MenuItem("복제"))
+	if (ImGui::MenuItem(KOR("복제")))
 	{
 		m_pEditInstance->Clone_Object(pObj);
 	}
 
 	// 삭제
-	if (ImGui::MenuItem("삭제"))
+	if (ImGui::MenuItem(KOR("삭제")))
 	{
 		m_pEditInstance->Deselect(pObj);
 		m_pEditInstance->Unregister_Object(pObj);

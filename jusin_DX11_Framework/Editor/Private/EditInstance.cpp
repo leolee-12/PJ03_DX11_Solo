@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "ImGui_Manager.h"
 #include "Select_Manager.h"
+#include "Editor_Serializer.h"
 
 IMPLEMENT_SINGLETON(CEditInstance)
 
@@ -118,7 +119,7 @@ void CEditInstance::Unregister_Callback(const _string& strKey)
 #pragma endregion
 
 #pragma region OBJECT_REGISTRY
-const vector<CObject_Registry::OBJ_RECORD>& CEditInstance::Get_Records() const
+const vector<OBJ_RECORD>& CEditInstance::Get_Records() const
 {
 	return m_pObject_Registry->Get_Records();
 }
@@ -144,8 +145,36 @@ void CEditInstance::Clone_Object(CGameObject* pObj)
 }
 #pragma endregion
 
-#pragma region 4
+#pragma region EDITOR_SERIALIZER
+HRESULT CEditInstance::Save_Map(const _string& strPath)
+{
+	return CEditor_Serializer::Save_Map(strPath, this);
+}
 
+HRESULT CEditInstance::Load_Map(const _string& strPath)
+{
+	return CEditor_Serializer::Load_Map(strPath, this);
+}
+
+HRESULT CEditInstance::Save_UILayout(const _string& strPath, const vector<struct UI_ELEMENT>& Elements)
+{
+	return CEditor_Serializer::Save_UILayout(strPath, Elements);
+}
+
+HRESULT CEditInstance::Load_UILayout(const _string& strPath, vector<struct UI_ELEMENT>& Elements)
+{
+	return CEditor_Serializer::Load_UILayout(strPath, Elements);
+}
+
+HRESULT CEditInstance::Save_EffectPreset(const _string& strPath, const vector<struct EFFECT_PRESET>& Presets)
+{
+	return CEditor_Serializer::Save_EffectPreset(strPath, Presets);
+}
+
+HRESULT CEditInstance::Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets)
+{
+	return CEditor_Serializer::Load_EffectPreset(strPath, Presets);
+}
 #pragma endregion
 
 #pragma region 5

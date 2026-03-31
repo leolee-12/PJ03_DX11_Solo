@@ -42,15 +42,22 @@ public:
 #pragma endregion
 
 #pragma region OBJECT_REGISTRY
-	const vector<CObject_Registry::OBJ_RECORD>& Get_Records() const;
+	const vector<OBJ_RECORD>& Get_Records() const;
 	const vector<CGameObject*>& Get_EditorObjects() const;
 	void Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);
 	void Unregister_Object(CGameObject* pObj);
 	void Clone_Object(CGameObject* pObj);
 #pragma endregion
 
-#pragma region 4
+#pragma region EDITOR_SERIALIZER
+	HRESULT Save_Map(const _string& strPath);
+	HRESULT Load_Map(const _string& strPath);
 
+	HRESULT Save_UILayout(const _string& strPath, const vector<struct UI_ELEMENT>& Elements);
+	HRESULT Load_UILayout(const _string& strPath, vector<struct UI_ELEMENT>& Elements);
+
+	HRESULT Save_EffectPreset(const _string& strPath, const vector<struct EFFECT_PRESET>& Presets);
+	HRESULT Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets);
 #pragma endregion
 
 #pragma region 5

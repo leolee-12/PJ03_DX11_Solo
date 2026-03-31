@@ -3,6 +3,7 @@
 #include "Panel_Property.h"
 #include "Panel_MapTool.h"
 #include "Panel_PlaceBrowser.h"
+#include "Panel_UITool.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -144,6 +145,12 @@ HRESULT CImGui_Manager::Add_Panels()
 		return E_FAIL;
 
 	m_Panels[ETOUI(PANEL::PLACEBROWSER)] = pInstance;
+
+	pInstance = CPanel_UITool::Create();
+	if (nullptr == pInstance)
+		return E_FAIL;
+
+	m_Panels[ETOUI(PANEL::UITOOL)] = pInstance;
 
 	return S_OK;
 }

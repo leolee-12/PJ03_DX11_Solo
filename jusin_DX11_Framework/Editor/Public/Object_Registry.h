@@ -11,16 +11,6 @@ class CEditInstance;
 
 class CObject_Registry final : public CBase
 {
-public:
-	struct OBJ_RECORD
-	{
-		CGameObject* pObj = { nullptr };
-		_uint iProtoLevel = { };
-		WNameID strProtoTag = { };
-		_uint iLayerLevel = { };
-		WNameID strLayerTag = { };
-	};
-
 private:
 	CObject_Registry();
 	virtual ~CObject_Registry() = default;

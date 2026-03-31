@@ -2,12 +2,12 @@
 #include "EditInstance.h"
 #include <fstream>
 
-HRESULT CEditor_Serializer::Save_Map(const _string& strPath, const vector<CGameObject*>& Objects, CEditInstance* pEditInstance)
+HRESULT CEditor_Serializer::Save_Map(const _string& strPath, CEditInstance* pEditInstance)
 {
 	json root;
 	root["metadata"] = { {"mapName", "Map"}, {"version", 1} };
 
-	vector<CObject_Registry::OBJ_RECORD> Records = pEditInstance->Get_Records();
+	vector<OBJ_RECORD> Records = pEditInstance->Get_Records();
 
 	for (auto& record : Records)
 	{
@@ -35,16 +35,23 @@ HRESULT CEditor_Serializer::Load_Map(const _string& strPath, CEditInstance* pEdi
 	json root = json::parse(ifs, nullptr, false);
 	if (root.is_discarded()) return E_FAIL;
 
-	for (auto& entry : root["objects"]) {
+	vector<CGameObject*> vEditorObjects = pEditInstance->Get_EditorObjects();
+
+	for (auto& entry : root["objects"])
+	{
 		_uint protoLevel = entry["protoLevel"];
 		_uint layerLevel = entry["layerLevel"];
 		WNameID protoTag = entry["protoTag"];
 		WNameID layerTag = entry["layerTag"];
 
+		size_t iNumObjects = vEditorObjects.size();
 		pEditInstance->Register_Object(protoLevel, protoTag, layerLevel, layerTag, nullptr);
 
 		// 마지막 등록된 오브젝트의 이름·Transform 복원
 		auto& objs = pEditInstance->Get_EditorObjects();
+		if(objs.size() <= iNumObjects)	// 등록 실패
+			continue;
+
 		CGameObject* pObj = objs.back();
 		pObj->Set_Name(StoW(entry["name"].get<_string>()));
 		Deserialize_Transform(pObj->Get_Transform(), entry["transform"]);
@@ -53,22 +60,22 @@ HRESULT CEditor_Serializer::Load_Map(const _string& strPath, CEditInstance* pEdi
 	return S_OK;
 }
 
-HRESULT CEditor_Serializer::Save_UILayout(const _string& strPath, const vector<struct UIElement>& Elements)
+HRESULT CEditor_Serializer::Save_UILayout(const _string& strPath, const vector<struct UI_ELEMENT>& Elements)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT CEditor_Serializer::Load_UILayout(const _string& strPath, const vector<struct UIElement>& Elements)
+HRESULT CEditor_Serializer::Load_UILayout(const _string& strPath, vector<struct UI_ELEMENT>& Elements)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT CEditor_Serializer::Save_EffectPreset(const _string& strPath, const vector<struct EffectPreset>& Presets)
+HRESULT CEditor_Serializer::Save_EffectPreset(const _string& strPath, const vector<struct EFFECT_PRESET>& Presets)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT CEditor_Serializer::Load_EffectPreset(const _string& strPath, const vector<struct EffectPreset>& Presets)
+HRESULT CEditor_Serializer::Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets)
 {
 	return E_NOTIMPL;
 }

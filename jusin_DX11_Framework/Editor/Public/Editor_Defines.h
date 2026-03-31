@@ -3,6 +3,7 @@
 #include <process.h>
 
 #include "Game_PKM_Defines.h"
+#include "Editor_Struct.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_win32.h"
@@ -21,7 +22,7 @@ constexpr unsigned int	g_iWinSizeY = { 720 };
 WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
 WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
 
-enum class PANEL { OUTLINER, PROPERTY, PLACEBROWSER, VIEWPORT, MAP, OBJECT, UI, EFFECT, END };
+enum class PANEL { OUTLINER, PROPERTY, PLACEBROWSER, VIEWPORT, UITOOL, MAP, OBJECT, EFFECT, END };
 constexpr size_t PANEL_COUNT = static_cast<size_t>(PANEL::END);
 
 using SelectionChangedCB = function<void(const vector<Engine::CGameObject*>&)>;

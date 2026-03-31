@@ -6,11 +6,12 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
-	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
+	struct UIOBJECT_DESC : public CGameObject::GAMEOBJECT_DESC
 	{
-		_float fCenterX, fCenterY;
-		_float fSizeX, fSizeY;
-	}UIOBJECT_DESC;
+		_float fCenterX{}, fCenterY{};
+		_float fSizeX{}, fSizeY{};
+		_int iZOrder{};
+	};
 
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

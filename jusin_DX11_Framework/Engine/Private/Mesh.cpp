@@ -146,7 +146,7 @@ HRESULT CMesh::Ready_AnimMesh()
 	m_iNumBones = m_pAIMesh->mNumBones;
 
 	/* 이 메시에게 영향을 주는 뼈의 갯수 */
-	for (size_t i = 0; i < m_iNumBones; i++)
+	for (_uint i = 0; i < m_iNumBones; i++)
 	{
 		aiBone* pAIBone = m_pAIMesh->mBones[i];
 
