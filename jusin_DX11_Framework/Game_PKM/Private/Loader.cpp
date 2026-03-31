@@ -137,7 +137,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_Component_Model_Fiona */
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../../Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_ForkLift */

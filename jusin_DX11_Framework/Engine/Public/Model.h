@@ -30,9 +30,11 @@ private:
 	vector<class CMesh*> m_Meshes;
 	size_t m_iNumMaterials = {};
 	vector<class CMaterial*> m_Materials;
+	vector<class CBone*> m_Bones;
 private:
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials();
+	HRESULT Ready_Bones(aiNode* pNode, _int iParentIndex);
 
 public:
 	static CModel* XM_CALLCONV Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());

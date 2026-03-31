@@ -11,18 +11,18 @@ protected:
 	virtual ~CComponent() = default;
 
 public:
-	virtual HRESULT		Initialize_Prototype();
-	virtual HRESULT		Initialize(void* pArg);
+	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize(void* pArg);
 
 protected:
-	ID3D11Device*			m_pDevice = { nullptr };
-	ID3D11DeviceContext*	m_pContext = { nullptr };
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
 
 public:
 	virtual CComponent*	Clone(void* pArg) = 0;
 
 protected:
-	virtual void		Free() override;
+	virtual void Free() override;
 };
 
 NS_END

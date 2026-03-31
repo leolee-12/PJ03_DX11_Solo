@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "Bone.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _cmatrix PreTransformMatrix)
 	: CComponent{ pDevice, pContext }
@@ -17,12 +18,16 @@ CModel::CModel(const CModel& Prototype)
 	, m_Meshes{ Prototype.m_Meshes }
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
+	, m_Bones{ Prototype.m_Bones }
 {
-	for (auto& pMesh : m_Meshes)
-		Safe_AddRef(pMesh);
+	for (auto& pBone : m_Bones)
+		Safe_AddRef(pBone);
 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
+
+	for (auto& pMesh : m_Meshes)
+		Safe_AddRef(pMesh);
 
 	// m_pAIScene는 Importer가 소유하므로 복사 X
 	// m_Importer는 복사 생성자 제공하지 않으므로 복사 X
@@ -45,6 +50,9 @@ HRESULT CModel::Initialize_Prototype()
 		return E_FAIL;
 
 	if (FAILED(Ready_Materials()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
 		return E_FAIL;
 
 	return S_OK;
@@ -89,7 +97,7 @@ HRESULT CModel::Ready_Meshes()
 
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_pAIScene->mMeshes[i], PreTransformMatrix);
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, m_pAIScene->mMeshes[i], PreTransformMatrix);
 
 		if (nullptr == pMesh)
 			return E_FAIL;
@@ -111,6 +119,24 @@ HRESULT CModel::Ready_Materials()
 			return E_FAIL;
 
 		m_Materials.push_back(pMaterial);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Bones(aiNode* pAINode, _int iParentIndex)
+{
+	CBone* pBone = CBone::Create(pAINode, iParentIndex);
+	if (nullptr == pBone)
+		return E_FAIL;
+
+	m_Bones.push_back(pBone);
+
+	_int iParent = static_cast<_int>(m_Bones.size()) - 1;
+
+	for (_uint i = 0; i < pAINode->mNumChildren; ++i)
+	{
+		Ready_Bones(pAINode->mChildren[i], iParent);
 	}
 
 	return S_OK;
@@ -145,6 +171,10 @@ CComponent* CModel::Clone(void* pArg)
 void CModel::Free()
 {
 	__super::Free();
+
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
+	m_Bones.clear();
 
 	for (auto& pMaterial : m_Materials)
 		Safe_Release(pMaterial);

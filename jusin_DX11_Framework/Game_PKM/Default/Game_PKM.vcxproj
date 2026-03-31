@@ -54,6 +54,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">

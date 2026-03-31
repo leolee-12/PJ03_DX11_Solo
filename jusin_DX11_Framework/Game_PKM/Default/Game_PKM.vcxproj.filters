@@ -169,5 +169,8 @@
     <FxCompile Include="..\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
