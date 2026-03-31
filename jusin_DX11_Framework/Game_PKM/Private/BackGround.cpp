@@ -80,17 +80,17 @@ HRESULT CBackGround::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXTEX,
-		WName(L"Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_RECT,
-		WName(L"Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	/* For.Com_Texture*/
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
-		WName(L"Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	return S_OK;

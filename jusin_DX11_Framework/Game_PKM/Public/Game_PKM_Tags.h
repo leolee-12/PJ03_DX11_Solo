@@ -18,6 +18,12 @@ WNAME_TAG(PROTO_COM_VIBUFFER_TERRAIN, L"Prototype_Component_VIBuffer_Terrain");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
+// Layer
+WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
+WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
+WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
+WNAME_TAG(LAYER_MONSTER, L"Layer_Monster");
+
 // Object
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
 WNAME_TAG(PROTO_OBJ_TERRAIN, L"Prototype_GameObject_Terrain");
@@ -25,11 +31,11 @@ WNAME_TAG(PROTO_OBJ_CAMERA_FREE, L"Prototype_GameObject_Camera_Free");
 WNAME_TAG(PROTO_OBJ_MONSTER, L"Prototype_GameObject_Monster");
 WNAME_TAG(PROTO_OBJ_FORKLIFT, L"Prototype_GameObject_ForkLift");
 
-// Layer
-WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
-WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
-WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
-WNAME_TAG(LAYER_MONSTER, L"Layer_Monster");
+// Component
+WNAME_TAG(COM_VIBUFFER, L"Com_VIBuffer");
+WNAME_TAG(COM_TEXTURE, L"Com_Texture");
+WNAME_TAG(COM_SHADER, L"Com_Shader");
+WNAME_TAG(COM_MODEL, L"Com_Model");
 
 NS_END
 

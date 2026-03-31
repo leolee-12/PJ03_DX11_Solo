@@ -4,7 +4,7 @@
 CForkLift::CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
-
+	m_strName = { L"ForkLift_Default" };
 }
 
 CForkLift::CForkLift(const CForkLift& Prototype)
@@ -82,12 +82,12 @@ HRESULT CForkLift::Ready_Components()
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
-		WNAME(L"Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
-		WNAME(L"Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 

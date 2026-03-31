@@ -43,6 +43,12 @@
     <Filter Include="04. Panels\02. Property">
       <UniqueIdentifier>{076c556a-c1e4-484d-9849-22cab20544d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Editor_Serializer">
+      <UniqueIdentifier>{bfe0a8e0-f9dc-46a5-a1ed-4210867de63c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Panels\03. PlaceBrowser">
+      <UniqueIdentifier>{a40d7bf5-2769-4d7b-96ad-77c077c1325d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -98,6 +104,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Property.h">
       <Filter>04. Panels\02. Property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_Serializer.h">
+      <Filter>06. Editor_Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_PlaceBrowser.h">
+      <Filter>04. Panels\03. PlaceBrowser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +174,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Panel_Property.cpp">
       <Filter>04. Panels\02. Property</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Editor_Serializer.cpp">
+      <Filter>06. Editor_Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_PlaceBrowser.cpp">
+      <Filter>04. Panels\03. PlaceBrowser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 #include "Panel_OutLiner.h"
 #include "Panel_Property.h"
 #include "Panel_MapTool.h"
+#include "Panel_PlaceBrowser.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -138,26 +139,11 @@ HRESULT CImGui_Manager::Add_Panels()
 
 	m_Panels[ETOUI(PANEL::PROPERTY)] = pInstance;
 
-	//pInstance = CPanel_ObjectTool::Create();
-	//
-	//if (nullptr == pInstance)
-	//	return E_FAIL;
-	//
-	//m_vecPanels[ETOUI(PANEL::OBJECT)] = pInstance;
-	//
-	//pInstance = CPanel_UITool::Create();
-	//
-	//if (nullptr == pInstance)
-	//	return E_FAIL;
-	//
-	//m_vecPanels[ETOUI(PANEL::UI)] = pInstance;
-	//
-	//pInstance = CPanel_EffectTool::Create();
-	//
-	//if (nullptr == pInstance)
-	//	return E_FAIL;
-	//
-	//m_vecPanels[ETOUI(PANEL::EFFECT)] = pInstance;
+	pInstance = CPanel_PlaceBrowser::Create();
+	if (nullptr == pInstance)
+		return E_FAIL;
+
+	m_Panels[ETOUI(PANEL::PLACEBROWSER)] = pInstance;
 
 	return S_OK;
 }

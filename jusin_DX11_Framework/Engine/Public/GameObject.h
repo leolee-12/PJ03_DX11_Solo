@@ -17,6 +17,8 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
+	//virtual json Serialize_Props() const PURE;
+	//virtual void Deserialize_Props() const PURE;
 	virtual _bool Is_UI() { return false; }
 	virtual _string Get_TypeName() const { return "GameObject"; }
 	const _wstring& Get_Name() const { return m_strName; }
