@@ -15,12 +15,6 @@
 
 using namespace DirectX;
 
-#include <assimp/scene.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-
-using namespace Assimp;
-
 #pragma warning(push, 0)
 #include <PhysX/PxPhysicsAPI.h>
 #pragma warning(pop)

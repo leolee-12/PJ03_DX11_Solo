@@ -91,7 +91,6 @@ HRESULT CMonster::Ready_Components()
 	if(iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
 	else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
 	else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
-	else					strProtoModelTag = PROTO_COM_MODEL_PM0025_00;
 
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), strProtoModelTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))

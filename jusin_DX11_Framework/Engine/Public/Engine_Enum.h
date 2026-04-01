@@ -29,6 +29,20 @@ namespace Engine
 	enum class DIMM { X, Y, WHEEL, END };
 
 	enum class INPUT_STATE { GAMEPLAY, OBSERVE, MENU, NAVIGATE, LOCKED, END };
+	
+	enum class TEXTURE_TYPE
+	{
+		DUMMY = 0,
+		DIFFUSE,
+		SPECULAR,
+		AMBIENT,
+		EMISSIVE,
+		HEIGHT,
+		NORMALS,
+		SHININESS,
+		OPACITY,
+		END
+	};
 
 	namespace KeyGroup
 	{

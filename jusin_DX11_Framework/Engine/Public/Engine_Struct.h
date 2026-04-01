@@ -96,6 +96,25 @@ namespace Engine
 			{"BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 72, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
 	};
+
+
+
+	struct WMODEL_HEADER
+	{
+		char szMagic[4];			// "WMDL"
+		uint32_t iVersion;       // 포맷 버전
+		uint32_t iModelType;     // MODEL enum 값
+		uint32_t iNumMeshes;
+		uint32_t iNumMaterials;
+		uint32_t iNumBones;
+	};
+
+	struct WMODEL_BONE
+	{
+		char szName[MAX_PATH];
+		int32_t iParentIndex;
+		XMFLOAT4X4 transformationMatrix;
+	};
 }
 
 #endif // Engine_Struct_h__

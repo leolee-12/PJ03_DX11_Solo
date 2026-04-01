@@ -170,10 +170,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		return E_FAIL;
 
 	/* Prototype_Component_Model_PM0025_00 */
-	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
- 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0025_00/pm0025_00.fbx", PreTransformMatrix))))
-		return E_FAIL;
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+ //	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0025_00/pm0025_00.fbx", PreTransformMatrix))))
+	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
 	/* Prototype_GameObject_Terrain */

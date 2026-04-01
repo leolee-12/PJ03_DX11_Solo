@@ -52,6 +52,9 @@
     <Filter Include="04. Panels\04. UITool">
       <UniqueIdentifier>{ec1b3062-7bf7-401b-bee6-9a75cffb6db5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. Model_Loader">
+      <UniqueIdentifier>{4231252d-243e-434c-a985-98e1c822fb6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -119,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Panel_UITool.h">
       <Filter>04. Panels\04. UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Loader.h">
+      <Filter>96. Model_Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Panel_UITool.cpp">
       <Filter>04. Panels\04. UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Loader.cpp">
+      <Filter>96. Model_Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
