@@ -18,6 +18,11 @@ WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");
 WNAME_TAG(PROTO_COM_VIBUFFER_TERRAIN, L"Prototype_Component_VIBuffer_Terrain");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
+WNAME_TAG(PROTO_COM_MODEL_PM0001_00, L"Prototype_Component_Model_ÀÌ»óÇØ¾¾");
+WNAME_TAG(PROTO_COM_MODEL_PM0004_00, L"Prototype_Component_Model_ÆÄÀÌ¸®");
+WNAME_TAG(PROTO_COM_MODEL_PM0007_00, L"Prototype_Component_Model_²¿ºÎ±â");
+WNAME_TAG(PROTO_COM_MODEL_PM0025_00, L"Prototype_Component_Model_ÇÇÄ«Ãò");
+
 
 // Layer
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");

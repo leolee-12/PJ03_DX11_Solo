@@ -26,6 +26,14 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_State(STATE::POSITION,
+		XMVectorSet(
+			m_pGameInstance->Random(0.f, 10.f),
+			1.f,
+			m_pGameInstance->Random(0.f, 10.f),
+			1.f
+		));
+
 	return S_OK;
 }
 
@@ -78,7 +86,14 @@ HRESULT CMonster::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
+	_uint iRand = rand() % 4;
+	WNameID strProtoModelTag{};
+	if(iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
+	else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
+	else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
+	else					strProtoModelTag = PROTO_COM_MODEL_PM0025_00;
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), strProtoModelTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
