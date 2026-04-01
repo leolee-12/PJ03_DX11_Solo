@@ -19,6 +19,7 @@ CModel::CModel(const CModel& Prototype)
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
 	, m_Bones{ Prototype.m_Bones }
+	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
 {
 	for (auto& pBone : m_Bones)
 		Safe_AddRef(pBone);
@@ -31,7 +32,27 @@ CModel::CModel(const CModel& Prototype)
 
 	// m_pAIScene는 Importer가 소유하므로 복사 X
 	// m_Importer는 복사 생성자 제공하지 않으므로 복사 X
-	// m_strModelFilePath, m_PreTransformMatrix는 원본 생성에만	필요하므로 복사 X
+	// m_strModelFilePath는 원본 생성에만 필요하므로 복사 X
+}
+
+_int CModel::Get_BoneIndex(const _char* pBoneName)
+{
+	_int iIndex = { -1 };
+
+	auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			++iIndex;
+
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+			
+			return false;
+		});
+
+	if (iter == m_Bones.end())
+		return -1;
+
+	return iIndex;
 }
 
 HRESULT CModel::Initialize_Prototype()
@@ -46,13 +67,13 @@ HRESULT CModel::Initialize_Prototype()
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
+		return E_FAIL;
+
 	if (FAILED(Ready_Meshes()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Materials()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
 		return E_FAIL;
 
 	return S_OK;
@@ -61,6 +82,17 @@ HRESULT CModel::Initialize_Prototype()
 HRESULT CModel::Initialize(void* pArg)
 {
 	return S_OK;
+}
+
+void CModel::Play_Animation(_float fTimeDelta)
+{
+	/* 현재 애니메이션 이용하고 있는 뼈들의 TransformationMatrix를 갱신해준다.  */
+
+	/* 위의 갱신이 끝났다면, 모든 뼈의 CombinedTransformationMatrix갱신한다. */
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Update_CombinedTransformMatrices(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	}
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)
@@ -89,6 +121,14 @@ HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uin
 	return m_Materials[iMaterialIndex]->Bind_ShaderResource(pShader, pConstantName, eType, iIndex);
 }
 
+HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, _uint iMeshIndex)
+{
+	if (iMeshIndex >= m_iNumMeshes)
+		return E_FAIL;
+
+	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstName, m_Bones);
+}
+
 HRESULT CModel::Ready_Meshes()
 {
 	m_iNumMeshes = m_pAIScene->mNumMeshes;
@@ -97,7 +137,7 @@ HRESULT CModel::Ready_Meshes()
 
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, m_pAIScene->mMeshes[i], PreTransformMatrix);
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, this, m_pAIScene->mMeshes[i], PreTransformMatrix);
 
 		if (nullptr == pMesh)
 			return E_FAIL;

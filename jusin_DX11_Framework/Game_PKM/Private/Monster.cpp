@@ -36,7 +36,7 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
-
+	m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
@@ -57,6 +57,9 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, aiTextureType_DIFFUSE, 0)))
 			return E_FAIL;
 
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 
@@ -70,7 +73,7 @@ HRESULT CMonster::Render()
 HRESULT CMonster::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 

@@ -12,12 +12,15 @@ private:
 
 public:
 	size_t Get_NumMeshes() const { return m_iNumMeshes; }
+	_int Get_BoneIndex(const _char* pBoneName);
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
+	void Play_Animation(_float fTimeDelta);
 	HRESULT Render(_uint iMeshIndex);
-	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iIndex);
+	HRESULT Bind_Material(class CShader* pShader, const _char* pConstName, _uint iMeshIndex, aiTextureType eType, _uint iIndex);
+	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstName, _uint iMeshIndex);
 
 private:
 	const aiScene* m_pAIScene = { nullptr };

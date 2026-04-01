@@ -51,6 +51,7 @@ using namespace std;
 namespace Engine
 {
 	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
+	static constexpr _uint g_iNumMeshBones = { 512 };
 }
 
 namespace ObjFlag

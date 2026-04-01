@@ -11,6 +11,7 @@ WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN, L"Prototype_Component_Texture_Terrain");
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXMESH, L"Prototype_Component_Shader_VtxMesh");
+WNAME_TAG(PROTO_COM_SHADER_VTXANIMMESH, L"Prototype_Component_Shader_VtxAnimMesh");
 
 // VIBuffer & Model
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");

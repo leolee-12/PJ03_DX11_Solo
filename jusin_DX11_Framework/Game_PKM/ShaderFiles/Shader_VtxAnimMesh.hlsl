@@ -47,6 +47,8 @@ VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT Out;
 
+	In.vBlendWeight.w = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
+
 	float4x4 BoneMatrix =	g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
 							g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
 							g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +

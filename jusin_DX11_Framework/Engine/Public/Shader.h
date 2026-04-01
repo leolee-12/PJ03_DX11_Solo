@@ -18,9 +18,10 @@ public:
 	HRESULT Begin(_uint iPassIndex);
 
 public:
-	HRESULT Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix);
-	HRESULT Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV);
-	HRESULT Bind_RawValue(const _char* pConstantName, const void* pValue, _uint iLength);
+	HRESULT Bind_Matrix(const _char* pConstName, const _float4x4* pMatrix);
+	HRESULT Bind_Matrices(const _char* pConstName, const _float4x4* pMatrices, _uint iNumMatrices);
+	HRESULT Bind_SRV(const _char* pConstName, ID3D11ShaderResourceView* pSRV);
+	HRESULT Bind_RawValue(const _char* pConstName, const void* pValue, _uint iLength);
 
 private:
 	_uint m_iNumPasses = {};

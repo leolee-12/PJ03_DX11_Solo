@@ -1,22 +1,28 @@
 #include "Mesh.h"
+#include "Bone.h"
+#include "Shader.h"
 
-CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
+CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
 	: CVIBuffer{ pDevice, pContext }
 	, m_eType { eType }
 	, m_pAIMesh{ pAIMesh }
+	, m_pModel{ pModel }
 {
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	for (_uint i = 0; i < g_iNumMeshBones; ++i)
+		XMStoreFloat4x4(&m_BoneMatrices[i], XMMatrixIdentity());
 }
 
 CMesh::CMesh(const CMesh& Prototype)
 	: CVIBuffer{ Prototype }
-	, m_eType{ Prototype.m_eType }
-	, m_pAIMesh{ Prototype.m_pAIMesh }
 {
 }
 
 HRESULT CMesh::Initialize_Prototype()
 {
+	strcpy_s(m_szName, m_pAIMesh->mName.data);
+
 	m_iMaterialIndex = m_pAIMesh->mMaterialIndex;
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = m_pAIMesh->mNumVertices;
@@ -26,9 +32,8 @@ HRESULT CMesh::Initialize_Prototype()
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	// VB 생성?
-	//HRESULT hr = MODEL::NONANIM == m_eType ? Ready_NonAnimMesh() : Ready_AnimMesh();
-	if (FAILED(MODEL::NONANIM == m_eType ? Ready_NonAnimMesh() : Ready_AnimMesh()))
+	// VB 생성
+	if (FAILED(MODEL::NONANIM == m_eType ? Ready_NonAnimMesh() : Ready_AnimMesh(m_pModel)))
 		return E_FAIL;
 
 
@@ -69,6 +74,18 @@ HRESULT CMesh::Initialize_Prototype()
 HRESULT CMesh::Initialize(void* pArg)
 {
 	return S_OK;
+}
+
+HRESULT CMesh::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, vector<class CBone*>& Bones)
+{
+	for (size_t i = 0; i < m_iNumBones; i++)
+	{
+		XMStoreFloat4x4(&m_BoneMatrices[i],
+			XMLoadFloat4x4(&m_OffsetMatrices[i]) *
+			XMLoadFloat4x4(Bones[m_BoneIndices[i]]->Get_CombinedTransformationMatrixPtr()));
+	}
+
+	return pShader->Bind_Matrices(pConstName, m_BoneMatrices, m_iNumBones);
 }
 
 HRESULT CMesh::Ready_NonAnimMesh()
@@ -119,7 +136,7 @@ HRESULT CMesh::Ready_NonAnimMesh()
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_AnimMesh()
+HRESULT CMesh::Ready_AnimMesh(CModel* pModel)
 {
 	m_iVertexStride = sizeof(VTXANIMMESH);
 
@@ -150,6 +167,17 @@ HRESULT CMesh::Ready_AnimMesh()
 	{
 		aiBone* pAIBone = m_pAIMesh->mBones[i];
 
+		_int iBoneIndex = pModel->Get_BoneIndex(pAIBone->mName.data);
+		if (-1 == iBoneIndex)
+			return E_FAIL;
+
+		m_BoneIndices.push_back(iBoneIndex);
+
+		_float4x4 OffsetMatrix = {};
+		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof OffsetMatrix);
+		XMStoreFloat4x4(&OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
+		m_OffsetMatrices.push_back(OffsetMatrix);
+
 		/* 이 뼈가 영향을 주는 정점의 갯수  */
 		for (_uint j = 0; j < pAIBone->mNumWeights; j++)
 		{
@@ -178,6 +206,22 @@ HRESULT CMesh::Ready_AnimMesh()
 		}
 	}
 
+	if (0 == m_iNumBones)
+	{
+		m_iNumBones = 1;
+
+		_uint iBoneIndex = pModel->Get_BoneIndex(m_szName);
+		if (-1 == iBoneIndex)
+			return E_FAIL;
+
+		_float4x4      OffsetMatrix = {};
+		XMStoreFloat4x4(&OffsetMatrix, XMMatrixIdentity());
+
+		m_OffsetMatrices.push_back(OffsetMatrix);
+
+		m_BoneIndices.push_back(iBoneIndex);
+	}
+
 	D3D11_SUBRESOURCE_DATA VertexInitialData{};
 	VertexInitialData.pSysMem = pVertices;
 
@@ -190,9 +234,9 @@ HRESULT CMesh::Ready_AnimMesh()
 	return S_OK;
 }
 
-CMesh* XM_CALLCONV CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
+CMesh* XM_CALLCONV CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
 {
-	CMesh* pInstance = new CMesh(pDevice, pContext, eType, pAIMesh, PreTransformMatrix);
+	CMesh* pInstance = new CMesh(pDevice, pContext, eType, pModel, pAIMesh, PreTransformMatrix);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -212,5 +256,5 @@ void CMesh::Free()
 {
 	__super::Free();
 
-
+	m_pModel = nullptr;
 }
