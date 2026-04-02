@@ -34,10 +34,15 @@ private:
 	size_t m_iNumMaterials = {};
 	vector<class CMaterial*> m_Materials;
 	vector<class CBone*> m_Bones;
+	_uint						m_iCurrentAnimationIndex = {};
+	_uint						m_iNumAnimations = {};
+	vector<class CAnimation*>	m_Animations;
+
 private:
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials();
 	HRESULT Ready_Bones(aiNode* pNode, _int iParentIndex);
+	HRESULT Ready_Animations();
 
 public:
 	static CModel* XM_CALLCONV Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());

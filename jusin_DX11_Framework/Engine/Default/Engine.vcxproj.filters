@@ -195,6 +195,12 @@
     <ClInclude Include="..\Public\Bone.h">
       <Filter>07. Component\Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>07. Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>07. Component\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -285,6 +291,12 @@
       <Filter>07. Component\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>07. Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>07. Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
       <Filter>07. Component\Model</Filter>
     </ClCompile>
   </ItemGroup>

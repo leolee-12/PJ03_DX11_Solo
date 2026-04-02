@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Bone.h"
+#include "Animation.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _cmatrix PreTransformMatrix)
 	: CComponent{ pDevice, pContext }
@@ -20,7 +21,12 @@ CModel::CModel(const CModel& Prototype)
 	, m_Materials{ Prototype.m_Materials }
 	, m_Bones{ Prototype.m_Bones }
 	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
+	, m_iNumAnimations{ Prototype.m_iNumAnimations }
+	, m_Animations{ Prototype.m_Animations }
 {
+	for (auto& pAnimation : m_Animations)
+		Safe_AddRef(pAnimation);
+
 	for (auto& pBone : m_Bones)
 		Safe_AddRef(pBone);
 
@@ -75,6 +81,9 @@ HRESULT CModel::Initialize_Prototype()
 
 	if (FAILED(Ready_Materials()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Animations()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -87,6 +96,7 @@ HRESULT CModel::Initialize(void* pArg)
 void CModel::Play_Animation(_float fTimeDelta)
 {
 	/* 현재 애니메이션 이용하고 있는 뼈들의 TransformationMatrix를 갱신해준다.  */
+	m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
 
 	/* 위의 갱신이 끝났다면, 모든 뼈의 CombinedTransformationMatrix갱신한다. */
 	for (auto& pBone : m_Bones)
@@ -182,6 +192,22 @@ HRESULT CModel::Ready_Bones(aiNode* pAINode, _int iParentIndex)
 	return S_OK;
 }
 
+HRESULT CModel::Ready_Animations()
+{
+	m_iNumAnimations = m_pAIScene->mNumAnimations;
+
+	for (size_t i = 0; i < m_iNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i]);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
+	return S_OK;
+}
+
 CModel* XM_CALLCONV CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	CModel* pInstance = new CModel(pDevice, pContext, eType, pModelFilePath, PreTransformMatrix);
@@ -211,6 +237,9 @@ CComponent* CModel::Clone(void* pArg)
 void CModel::Free()
 {
 	__super::Free();
+	for (auto& pAnimation : m_Animations)
+		Safe_Release(pAnimation);
+	m_Animations.clear();
 
 	for (auto& pBone : m_Bones)
 		Safe_Release(pBone);
