@@ -20,7 +20,7 @@ private:
 
 	_float				m_fCurrentTrackPosition = {}; /* 현재 재생 위치. */
 
-	_uint					m_iNumChannels = {}; /* 현재 애니메이션의 재생을 위해 상태를 제어해야하는 뼈의 갯수 */
+	_uint m_iNumChannels = {}; /* 현재 애니메이션의 재생을 위해 상태를 제어해야하는 뼈의 갯수 */
 	vector<class CChannel*>	m_Channels;
 
 

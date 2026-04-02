@@ -198,7 +198,7 @@ HRESULT CModel::Ready_Animations()
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i]);
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], this);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 

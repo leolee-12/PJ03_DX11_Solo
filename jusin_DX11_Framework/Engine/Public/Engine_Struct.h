@@ -22,6 +22,14 @@ namespace Engine
 		float fRange;
 	};
 
+	struct KEYFRAME
+	{
+		XMFLOAT3 vScale;
+		XMFLOAT4 vRotation;
+		XMFLOAT3 vTranslation;
+		float fTrackPosition;
+	};
+
 	struct VTXTEX
 	{
 		XMFLOAT3 vPosition;

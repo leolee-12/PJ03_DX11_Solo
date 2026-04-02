@@ -31,12 +31,14 @@ private:
 
 	size_t m_iNumMeshes = {};
 	vector<class CMesh*> m_Meshes;
+
 	size_t m_iNumMaterials = {};
 	vector<class CMaterial*> m_Materials;
 	vector<class CBone*> m_Bones;
-	_uint						m_iCurrentAnimationIndex = {};
-	_uint						m_iNumAnimations = {};
-	vector<class CAnimation*>	m_Animations;
+	
+	_uint m_iCurrentAnimationIndex = {};
+	_uint m_iNumAnimations = {};
+	vector<class CAnimation*> m_Animations;
 
 private:
 	HRESULT Ready_Meshes();

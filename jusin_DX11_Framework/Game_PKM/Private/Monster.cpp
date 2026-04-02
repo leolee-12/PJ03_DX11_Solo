@@ -86,11 +86,12 @@ HRESULT CMonster::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	_uint iRand = rand() % 3;
 	WNameID strProtoModelTag{};
-	if(iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
-	else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
-	else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
+	//_uint iRand = rand() % 3;
+	//if(iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
+	//else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
+	//else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
+	strProtoModelTag = PROTO_COM_MODEL_FIONA;
 
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), strProtoModelTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
