@@ -1,8 +1,8 @@
 #pragma once
 #include "Editor_Defines.h"
-#include <assimp/scene.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
+//#include <assimp/scene.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/postprocess.h>
 
 NS_BEGIN(Editor)
 
@@ -49,6 +49,14 @@ private:
 
 private:
 	HRESULT XM_CALLCONV Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform);
+	HRESULT Extract_Bones(aiNode* pNode, _int iParentIndex);
+	HRESULT Extract_Meshes();
+	HRESULT Extract_Materials();
+	_int    Find_BoneIndex(const _char* pBoneName) const;
+	static TEXTURE_TYPE Convert_TextureType(aiTextureType eAIType);
+
+	HRESULT Write_Binary(const _char* pOutputPath) const;
+	HRESULT Write_JSON(const _char* pOutputPath, _uint iVertexSampleCount) const;
 
 };
 
