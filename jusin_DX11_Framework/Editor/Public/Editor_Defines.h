@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <process.h>
+#include <fstream>
 
 #include "Game_PKM_Defines.h"
 #include "Editor_Struct.h"

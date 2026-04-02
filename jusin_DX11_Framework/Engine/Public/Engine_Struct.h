@@ -115,13 +115,14 @@ namespace Engine
 		uint32_t iNumMeshes;
 		uint32_t iNumMaterials;
 		uint32_t iNumBones;
+		uint32_t iNumAnimations;
 	};
 
 	struct WMODEL_BONE
 	{
 		char szName[MAX_PATH];
 		int32_t iParentIndex;
-		XMFLOAT4X4 transformationMatrix;
+		XMFLOAT4X4 transformation;
 	};
 }
 
