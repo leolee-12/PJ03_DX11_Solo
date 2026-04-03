@@ -51,7 +51,7 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 
 
 	// 4. Bones, Meshes, Materials, Animations 추출
-	m_Bones.reserve(m_pAIScene->mRootNode->mNumChildren);
+	m_Bones.reserve(m_pAIScene->mRootNode->mNumChildren * 5);
 	m_Meshes.reserve(m_pAIScene->mNumMeshes);
 	m_Materials.reserve(m_pAIScene->mNumMaterials);
 	m_Animations.reserve(m_pAIScene->mNumAnimations);
@@ -106,17 +106,16 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 		aiMesh* pAIMesh = m_pAIScene->mMeshes[i];
 		strcpy_s(Mesh.szName, pAIMesh->mName.data);
 		Mesh.iMaterialIndex = pAIMesh->mMaterialIndex;
-
+		
 		// 2. 인덱스 데이터 추출
 		_uint iNumFaces = pAIMesh->mNumFaces;
-		_uint iNumIndices = {};
 
 		for (_uint j = 0; j < iNumFaces; ++j)
 		{
 			aiFace& AIFace = pAIMesh->mFaces[j];
-			Mesh.indices.push_back(AIFace.mIndices[iNumIndices++]);
-			Mesh.indices.push_back(AIFace.mIndices[iNumIndices++]);
-			Mesh.indices.push_back(AIFace.mIndices[iNumIndices++]);
+			Mesh.indices.push_back(AIFace.mIndices[0]);
+			Mesh.indices.push_back(AIFace.mIndices[1]);
+			Mesh.indices.push_back(AIFace.mIndices[2]);
 		}
 
 
@@ -144,6 +143,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 			}
 
 			Mesh.nonAnimVertices = vector<VTXMESH>(pVertices, pVertices + iNumVertices);
+			Safe_Delete_Array(pVertices);
 		}
 		else if (m_eType == MODEL::ANIM)
 		{
@@ -162,7 +162,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 			// 3-1. AnimMesh인 경우, Bone 이름, 인덱스, offsetMatrix 추출
 			_uint iNumBones = pAIMesh->mNumBones;
 			Mesh.boneIndices.reserve(iNumBones);
-			for (size_t j = 0; j < iNumBones; ++j)
+			for (_uint j = 0; j < iNumBones; ++j)
 			{
 				aiBone* pAIBone = pAIMesh->mBones[j];
 				_uint iBoneIndex = Find_BoneIndex(pAIBone->mName.data);
@@ -187,22 +187,22 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 
 					if (0.f == vertex.vBlendWeight.x)
 					{
-						vertex.vBlendIndex.x = i;
+						vertex.vBlendIndex.x = j;
 						vertex.vBlendWeight.x = AIVertexWeight.mWeight;
 					}
 					else if (0.f == pVertices[AIVertexWeight.mVertexId].vBlendWeight.y)
 					{
-						vertex.vBlendIndex.y = i;
+						vertex.vBlendIndex.y = j;
 						vertex.vBlendWeight.y = AIVertexWeight.mWeight;
 					}
 					else if (0.f == pVertices[AIVertexWeight.mVertexId].vBlendWeight.z)
 					{
-						vertex.vBlendIndex.z = i;
+						vertex.vBlendIndex.z = j;
 						vertex.vBlendWeight.z = AIVertexWeight.mWeight;
 					}
 					else
 					{
-						vertex.vBlendIndex.w = i;
+						vertex.vBlendIndex.w = j;
 						vertex.vBlendWeight.w = AIVertexWeight.mWeight;
 					}
 				}
@@ -220,9 +220,11 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				_float4x4 OffsetMatrix = {};
 				XMStoreFloat4x4(&OffsetMatrix, XMMatrixIdentity());
 				Mesh.boneIndices.push_back(iBoneIndex);
+				Mesh.boneOffsetMatrices.push_back(OffsetMatrix);
 			}
 
 			Mesh.animVertices = vector<VTXANIMMESH>(pVertices, pVertices + iNumVertices);
+			Safe_Delete_Array(pVertices);
 		}
 
 		// 4. 메쉬를 컨테이너에 저장
@@ -248,20 +250,20 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 		// 1. 각 텍스처 타입에 대해 작업
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
-			if (i == ETOUI(TEXTURE_TYPE::END)) continue;
+			if (j >= ETOUI(TEXTURE_TYPE::END)) continue;
 
 			// 2. 텍스처마다 경로 추출하여 경로 컨테이너에 삽입
 			_uint iNumTextures = pAIMaterial->GetTextureCount(static_cast<aiTextureType>(j));
-			Material.TexturePaths[i].reserve(iNumTextures);
+			Material.TexturePaths[j].reserve(iNumTextures);
 
 			for (_uint k = 0; k < iNumTextures; ++k)
 			{
-				if (pAIMaterial->GetTexture(static_cast<aiTextureType>(i), k, &AITexPath))
+				if (pAIMaterial->GetTexture(static_cast<aiTextureType>(j), k, &AITexPath))
 					return E_FAIL;
 
 				_string filename = fs::path(AITexPath.data).filename().string();
 				_string fullPath = modelDir.string() + "/" + filename;
-				Material.TexturePaths[i].push_back(fullPath);
+				Material.TexturePaths[j].push_back(fullPath);
 			}
 		}
 
@@ -292,10 +294,12 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 		for (_uint j = 0; j < iNumChannels; ++j)
 		{
 			aiNodeAnim* pAINodeAnim = pAIAnim->mChannels[j];
-			CHANNEL_DATA Channel = {};
-			Channel.iBoneIndex = static_cast<_uint>(Find_BoneIndex(pAINodeAnim->mNodeName.data));
-			if (-1 == Channel.iBoneIndex)
+			_int iBoneIndex = Find_BoneIndex(pAINodeAnim->mNodeName.data);
+			if (-1 == iBoneIndex)
 				return E_FAIL;
+
+			CHANNEL_DATA Channel = {};
+			Channel.iBoneIndex = static_cast<_uint>(iBoneIndex);
 
 			// 3. 각 키프레임에 대해 작업
 			_uint iNumScalingKeys = pAINodeAnim->mNumScalingKeys;
@@ -338,6 +342,8 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 			// 6. 채널 컨테이너에 삽입
 			Anim.channels.push_back(Channel);
 		}
+		// 7. 애니메이션 컨테이너에 삽입
+		m_Animations.push_back(Anim);
 	}
 
 	return S_OK;
@@ -347,7 +353,7 @@ _int CModel_Loader::Find_BoneIndex(const _char* pBoneName) const
 {
 	size_t iNumBones = m_Bones.size();
 
-	for (size_t i = 0; i < iNumBones; ++i)
+	for (_uint i = 0; i < iNumBones; ++i)
 		if (strcmp(m_Bones[i].szName, pBoneName) == 0) return i;
 
 	return -1;
@@ -356,18 +362,20 @@ _int CModel_Loader::Find_BoneIndex(const _char* pBoneName) const
 HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 {
 	// 1. 파일 열기
-	FILE* fp = {};
-	errno_t errorOpen = fopen_s(&fp, pOutputPath, "wb");
+	FILE* fp{};
+	errno_t errorOpen{};
+	if (0 != fopen_s(&fp, pOutputPath, "wb") || nullptr == fp)
+		return E_FAIL;
 
 	// 2. WMODEL_HEADER 쓰기
 	WMODEL_HEADER header{};
-	header.szMagic = "WMDL"; // (null 없이 4바이트만)
+	memcpy(header.szMagic, "WMDL", 4);
 	header.iVersion = 2;
 	header.iModelType = (uint32_t)m_eType;
-	header.iNumMeshes = m_Meshes.size();
-	header.iNumMaterials = m_Materials.size();
-	header.iNumBones = m_Bones.size();
-	header.iNumAnimations = m_Animations.size();
+	header.iNumMeshes = static_cast<_uint>(m_Meshes.size());
+	header.iNumMaterials = static_cast<_uint>(m_Materials.size());
+	header.iNumBones = static_cast<_uint>(m_Bones.size());
+	header.iNumAnimations = static_cast<_uint>(m_Animations.size());
 	fwrite(&header, sizeof(WMODEL_HEADER), 1, fp);
 
 	// 3. 본 데이터 쓰기
@@ -378,12 +386,12 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	{
 		for (_uint i = 0; i < ETOUI(TEXTURE_TYPE::END); ++i)
 		{
-			_uint numTex = material.TexturePaths[i].size();
+			_uint numTex = static_cast<_uint>(material.TexturePaths[i].size());
 			fwrite(&numTex, sizeof(_uint), 1, fp);
 
 			for (auto& path : material.TexturePaths[i])
 			{
-				_uint len = path.size() + 1;
+				size_t len = path.size() + 1;
 				fwrite(&len, sizeof(_uint), 1, fp);
 				fwrite(path.c_str(), 1, len, fp);
 			}
@@ -395,12 +403,12 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	{
 		fwrite(mesh.szName, 1, MAX_PATH, fp);
 		fwrite(&mesh.iMaterialIndex, sizeof(uint32_t), 1, fp);
-		_uint numVerts = m_eType == MODEL::NONANIM ? mesh.nonAnimVertices.size() : mesh.animVertices.size();
-		_uint numIdx = mesh.indices.size();
-		_uint numBones = mesh.boneIndices.size(); // (NONANIM이면 0)
-		fwrite(&numVerts, sizeof(uint32_t), 1, fp);
-		fwrite(&numIdx, sizeof(uint32_t), 1, fp);
-		fwrite(&numBones, sizeof(uint32_t), 1, fp);
+		size_t numVerts = m_eType == MODEL::NONANIM ? mesh.nonAnimVertices.size() : mesh.animVertices.size();
+		size_t numIdx = mesh.indices.size();
+		size_t numBones = mesh.boneIndices.size(); // (NONANIM이면 0)
+		fwrite(&numVerts, sizeof(_uint), 1, fp);
+		fwrite(&numIdx, sizeof(_uint), 1, fp);
+		fwrite(&numBones, sizeof(_uint), 1, fp);
 
 		if (MODEL::NONANIM == m_eType)
 		{
@@ -421,13 +429,13 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	{
 		fwrite(&anim.fDuration, sizeof(_float), 1, fp);
 		fwrite(&anim.fTicksPerSecond, sizeof(_float), 1, fp);
-		_uint numChannels = anim.channels.size();
-		fwrite(&numChannels, sizeof(uint32_t), 1, fp);
+		size_t numChannels = anim.channels.size();
+		fwrite(&numChannels, sizeof(_uint), 1, fp);
 
 		for (auto& channel : anim.channels)
 		{
 			fwrite(&channel.iBoneIndex, sizeof(_uint), 1, fp);
-			_uint numKF = channel.keyFrames.size();
+			size_t numKF = channel.keyFrames.size();
 			fwrite(&numKF, sizeof(_uint), 1, fp);
 			fwrite(channel.keyFrames.data(), sizeof(KEYFRAME), numKF, fp);
 		}
@@ -462,7 +470,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 	root["bones"] = json::array();
 	for (auto& bone : m_Bones)
 	{
-		const _float4x4& m = bone.Transformation;
+		const _float4x4& m = bone.transformation;
 		json bn_entry;
 		bn_entry["index"] = iIndex++;
 		bn_entry["name"] = bone.szName;
@@ -471,7 +479,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 										m._21, m._22, m._23, m._24, 
 										m._31, m._32, m._33, m._34, 
 										m._41, m._42, m._43, m._44 };
-		root["objects"].push_back(bn_entry);
+		root["bones"].push_back(bn_entry);
 	}
 
 	// 4. 재질 데이터 쓰기
@@ -480,6 +488,18 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 	root["materials"] = json::array();
 	for (auto& material : m_Materials)
 	{
+		json mat_entry;
+		mat_entry["index"] = iIndex++;
+		json textures_obj;
+
+		for (_uint slot = 1; slot < ETOUI(TEXTURE_TYPE::END); ++slot)
+		{
+			if (material.TexturePaths[slot].empty()) continue;
+
+			textures_obj[to_string(slot)] = material.TexturePaths[slot];
+		}
+		mat_entry["textures"] = textures_obj;
+		root["materials"].push_back(mat_entry);
 	}
 
 	// 5. 메쉬 데이터 쓰기
@@ -496,22 +516,6 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		ms_entry["numVertices"] = numVerts;
 		ms_entry["numIndices"] = mesh.indices.size();
 		ms_entry["numBones"] = mesh.boneIndices.size();
-
-		if (MODEL::NONANIM == m_eType)
-		{
-			for (auto& vertex : mesh.nonAnimVertices)
-			{
-
-			}
-		}
-		else if (MODEL::ANIM == m_eType)
-		{
-			for (auto& vertex : mesh.animVertices)
-			{
-
-			}
-		}
-
 		root["meshes"].push_back(ms_entry);
 	}
 
@@ -533,18 +537,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 			json ch_entry;
 			ch_entry["boneIndex"] = channel.iBoneIndex;
 			ch_entry["numKeyFrames"] = channel.keyFrames.size();
-
-			ch_entry["keyFrames"] = json::array();
-			for (auto& keyFrame : channel.keyFrames)
-			{
-				json kf_entry;
-				kf_entry["trackPosition"] = keyFrame.fTrackPosition;
-				kf_entry["scale"] = { keyFrame.vScale.x, keyFrame.vScale.y, keyFrame.vScale.z };
-				kf_entry["rotation"] = { keyFrame.vRotation.x, keyFrame.vRotation.y, keyFrame.vRotation.z, keyFrame.vRotation.w };
-				kf_entry["translation"] = { keyFrame.vTranslation.x, keyFrame.vTranslation.y, keyFrame.vTranslation.z };
-				ch_entry["keyFrames"].push_back(kf_entry);
-			}
-			anim_entry["keyFrames"].push_back(ch_entry);
+			anim_entry["channels"].push_back(ch_entry);
 		}
 		root["animations"].push_back(anim_entry);
 	}
@@ -571,4 +564,6 @@ CModel_Loader* CModel_Loader::Create()
 void CModel_Loader::Free()
 {
 	__super::Free();
+
+	m_Importer.FreeScene();
 }

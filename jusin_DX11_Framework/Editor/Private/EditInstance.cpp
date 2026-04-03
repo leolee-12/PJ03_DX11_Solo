@@ -4,6 +4,7 @@
 #include "ImGui_Manager.h"
 #include "Select_Manager.h"
 #include "Editor_Serializer.h"
+#include "Model_Loader.h"
 
 IMPLEMENT_SINGLETON(CEditInstance)
 
@@ -25,6 +26,10 @@ HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 
 	m_pObject_Registry = CObject_Registry::Create();
+	if (nullptr == m_pObject_Registry)
+		return E_FAIL;
+
+	m_pModel_Loader = CModel_Loader::Create();
 	if (nullptr == m_pObject_Registry)
 		return E_FAIL;
 
@@ -63,6 +68,7 @@ HRESULT CEditInstance::Draw()
 
 void CEditInstance::Release_Editor()
 {
+	Safe_Release(m_pModel_Loader);
 	Safe_Release(m_pObject_Registry);
 	Safe_Release(m_pImGui_Manager);
 	Safe_Release(m_pSelect_Manager);
@@ -177,8 +183,21 @@ HRESULT CEditInstance::Load_EffectPreset(const _string& strPath, vector<struct E
 }
 #pragma endregion
 
-#pragma region 5
+#pragma region MODEL_LOADER
+HRESULT XM_CALLCONV CEditInstance::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform)
+{
+	return m_pModel_Loader->Export_Binary(pFbxPath, pOutputPath, eType, PreTransform);
+}
 
+HRESULT XM_CALLCONV CEditInstance::Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount)
+{
+	return m_pModel_Loader->Export_JSON(pFbxPath, pOutputPath, eType, PreTransform, iVertexSampleCount);
+}
+
+HRESULT XM_CALLCONV CEditInstance::Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform)
+{
+	return m_pModel_Loader->Export_All(pFbxPath, pOutputDir, eType, PreTransform);
+}
 #pragma endregion
 
 #pragma region 6

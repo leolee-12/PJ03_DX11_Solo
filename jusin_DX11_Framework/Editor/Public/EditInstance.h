@@ -60,8 +60,10 @@ public:
 	HRESULT Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets);
 #pragma endregion
 
-#pragma region 5
-
+#pragma region MODEL_LOADER
+	HRESULT XM_CALLCONV Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform);
+	HRESULT XM_CALLCONV Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount = 3);
+	HRESULT XM_CALLCONV Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform);
 #pragma endregion
 
 #pragma region 6
@@ -83,6 +85,7 @@ private:
 	class CImGui_Manager* m_pImGui_Manager = { nullptr };
 	class CSelect_Manager* m_pSelect_Manager = { nullptr };
 	class CObject_Registry* m_pObject_Registry = { nullptr };
+	class CModel_Loader* m_pModel_Loader = { nullptr };
 
 private:
 	virtual void Free() override;
