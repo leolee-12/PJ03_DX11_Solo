@@ -76,6 +76,7 @@ private:
 	_int    Find_BoneIndex(const _char* pBoneName) const;
 	HRESULT Write_Binary(const _char* pOutputPath) const;
 	HRESULT Write_JSON(const _char* pOutputPath, _uint iVertexSampleCount) const;
+	void Clear_Data();
 
 public:
 	static CModel_Loader* Create();

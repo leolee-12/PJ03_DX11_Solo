@@ -4,7 +4,15 @@
 HRESULT XM_CALLCONV CModel_Loader::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform)
 {
 	if (FAILED(Load_FBX(pFbxPath, eType, PreTransform))) return E_FAIL;
-	return Write_Binary(pOutputPath);
+
+	if (FAILED(Write_Binary(pOutputPath))) return E_FAIL;
+
+	_tchar szMsg[512];
+	wprintf_s(szMsg, L"Export 완료\n- Bones: %zu\n- Meshes: %zu\n- Materials: %zu\n- Animations: %zu\n- 출력: %s",
+		m_Bones.size(), m_Meshes.size(), m_Materials.size(), m_Animations.size(), pOutputPath);
+	MessageBox(NULL, szMsg, L"System Message", MB_OK);
+
+	return S_OK;
 }
 
 HRESULT XM_CALLCONV CModel_Loader::Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount)
@@ -34,6 +42,9 @@ HRESULT CModel_Loader::Initialize()
 
 HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform) // ~ CModel::Initialize_Prototype()
 {
+	// 0. 멤버 초기화
+	Clear_Data();
+
 	// 1. 변수 저장
 	m_eType = eType;
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransform);
@@ -47,7 +58,10 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 	// 3. aiScene 로드
 	m_pAIScene = m_Importer.ReadFile(m_strFbxPath.c_str(), iFlag);
 	if (nullptr == m_pAIScene)
+	{
+		MSG_BOX("Model_Loader : FBX 파일 로드 실패");
 		return E_FAIL;
+	}
 
 
 	// 4. Bones, Meshes, Materials, Animations 추출
@@ -56,11 +70,29 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 	m_Materials.reserve(m_pAIScene->mNumMaterials);
 	m_Animations.reserve(m_pAIScene->mNumAnimations);
 
-	if (FAILED(Extract_Bones(m_pAIScene->mRootNode, -1))) return E_FAIL;
-	if (FAILED(Extract_Meshes())) return E_FAIL;
-	if (FAILED(Extract_Materials())) return E_FAIL;
+	if (FAILED(Extract_Bones(m_pAIScene->mRootNode, -1)))
+	{
+		MSG_BOX("Model_Loader : Bone 추출 실패");
+		return E_FAIL;
+	}
+	if (FAILED(Extract_Meshes()))
+	{
+		MSG_BOX("Model_Loader : Mesh 추출 실패");
+		return E_FAIL;
+	}
+	if (FAILED(Extract_Materials()))
+	{
+		MSG_BOX("Model_Loader : Material 추출 실패");
+		return E_FAIL;
+	}
 	if (m_eType == MODEL::ANIM)
-		if (FAILED(Extract_Animations())) return E_FAIL;
+	{
+		if (FAILED(Extract_Animations()))
+		{
+			MSG_BOX("Model_Loader : Animation 추출 실패");
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -546,6 +578,21 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 	ofstream(pOutputPath) << root.dump(2);
 
 	return S_OK;
+}
+
+void CModel_Loader::Clear_Data()
+{
+	m_Importer.FreeScene();
+	m_pAIScene = nullptr;
+
+	m_eType = MODEL::END;
+	XMStoreFloat4x4(&m_PreTransformMatrix, XMMatrixIdentity());
+	m_strFbxPath.clear();
+
+	m_Bones.clear();
+	m_Meshes.clear();
+	m_Materials.clear();
+	m_Animations.clear();
 }
 
 CModel_Loader* CModel_Loader::Create()
