@@ -141,6 +141,7 @@
     <ClInclude Include="..\..\ThirdParty\imgui\imgui.h" />
     <ClInclude Include="..\..\ThirdParty\Imgui\ImGuizmo.h" />
     <ClInclude Include="..\Public\EditInstance.h" />
+    <ClInclude Include="..\Public\Editor_Function.h" />
     <ClInclude Include="..\Public\Editor_Serializer.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
     <ClInclude Include="..\Public\ImGui_Manager.h" />

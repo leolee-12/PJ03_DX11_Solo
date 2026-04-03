@@ -1,4 +1,5 @@
-#pragma once
+#ifndef Editor_Struct_h__
+#define Editor_Struct_h__
 #include "UIObject.h"
 
 NS_BEGIN(Editor)
@@ -43,3 +44,5 @@ struct CATALOG_ITEM
 };
 
 NS_END
+
+#endif // Editor_Struct_h__

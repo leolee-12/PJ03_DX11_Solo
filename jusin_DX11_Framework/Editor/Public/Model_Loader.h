@@ -53,6 +53,9 @@ public:
 	// 바이너리 + JSON 동시
 	HRESULT XM_CALLCONV Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform);
 
+	// FBX 로드
+	HRESULT XM_CALLCONV Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform);
+
 private:
 	const aiScene* m_pAIScene = { nullptr };
 	Importer m_Importer = {};
@@ -68,7 +71,8 @@ private:
 
 private:
 	HRESULT Initialize();
-	HRESULT XM_CALLCONV Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform);
+	
+	// 추출 기능
 	HRESULT Extract_Bones(aiNode* pNode, _int iParentIndex);
 	HRESULT Extract_Meshes();
 	HRESULT Extract_Materials();
@@ -77,6 +81,16 @@ private:
 	HRESULT Write_Binary(const _char* pOutputPath) const;
 	HRESULT Write_JSON(const _char* pOutputPath, _uint iVertexSampleCount) const;
 	void Clear_Data();
+
+	// 로드 파일 조회
+	_bool Is_Loaded() const { return m_pAIScene != nullptr; }
+	size_t Get_NumBones() const { return m_Bones.size(); }
+	size_t Get_NumMeshes() const { return m_Meshes.size(); }
+	size_t Get_NumMaterials() const { return m_Materials.size(); }
+	size_t Get_NumAnimations() const { return m_Animations.size(); }
+	MODEL Get_ModelType() const { return m_eType; }
+	const _char* Get_FbxPath() const { return m_strFbxPath.c_str(); }
+	const vector<WMODEL_BONE>& Get_Bones() const { return m_Bones; }
 
 public:
 	static CModel_Loader* Create();

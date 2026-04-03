@@ -126,6 +126,9 @@
     <ClInclude Include="..\Public\Model_Loader.h">
       <Filter>96. Model_Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Editor_Function.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

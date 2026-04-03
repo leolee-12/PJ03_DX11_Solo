@@ -40,11 +40,11 @@ HRESULT CEditorApp::Initialize()
 		return E_FAIL;
 
 
-	_matrix PreTransformMatrix = {};
-	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	m_pEditInstance->Export_All("../../Resources/Models/PM0004_00/pm0004_00.fbx", "../../Resources/Models/PM0004_00/", MODEL::ANIM, PreTransformMatrix);
-	m_pEditInstance->Export_All("../../Resources/Models/PM0007_00/pm0007_00.fbx", "../../Resources/Models/PM0007_00/", MODEL::ANIM, PreTransformMatrix);
-	m_pEditInstance->Export_All("../../Resources/Models/PM0025_00/pm0025_00.fbx", "../../Resources/Models/PM0025_00/", MODEL::ANIM, PreTransformMatrix);
+	//_matrix PreTransformMatrix = {};
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	//m_pEditInstance->Export_All("../../Resources/Models/PM0004_00/pm0004_00.fbx", "../../Resources/Models/PM0004_00/", MODEL::ANIM, PreTransformMatrix);
+	//m_pEditInstance->Export_All("../../Resources/Models/PM0007_00/pm0007_00.fbx", "../../Resources/Models/PM0007_00/", MODEL::ANIM, PreTransformMatrix);
+	//m_pEditInstance->Export_All("../../Resources/Models/PM0025_00/pm0025_00.fbx", "../../Resources/Models/PM0025_00/", MODEL::ANIM, PreTransformMatrix);
 
 	return S_OK;
 }

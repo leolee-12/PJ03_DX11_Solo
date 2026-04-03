@@ -198,6 +198,11 @@ HRESULT XM_CALLCONV CEditInstance::Export_All(const _char* pFbxPath, const _char
 {
 	return m_pModel_Loader->Export_All(pFbxPath, pOutputDir, eType, PreTransform);
 }
+
+HRESULT XM_CALLCONV CEditInstance::Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform)
+{
+	return m_pModel_Loader->Load_FBX(pFbxPath, eType, PreTransform);
+}
 #pragma endregion
 
 #pragma region 6
