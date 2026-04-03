@@ -12,7 +12,7 @@ private:
 
 public:
 	HRESULT Initialize(const aiNodeAnim* pAINodeAnim, class CModel* pModel);
-	void Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fTimeDelta);
+	void Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyIndex);
 
 private:
 	_uint m_iBoneIndex = {};

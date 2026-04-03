@@ -19,26 +19,22 @@ CModel::CModel(const CModel& Prototype)
 	, m_Meshes{ Prototype.m_Meshes }
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
-	, m_Bones{ Prototype.m_Bones }
+	//, m_Bones{ Prototype.m_Bones } 깊은복사
 	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
 	, m_iNumAnimations{ Prototype.m_iNumAnimations }
-	, m_Animations{ Prototype.m_Animations }
+	//, m_Animations{ Prototype.m_Animations } 깊은복사
 {
-	for (auto& pAnimation : m_Animations)
-		Safe_AddRef(pAnimation);
+	for (auto& pPrototypeAnimation : Prototype.m_Animations)
+		m_Animations.push_back(pPrototypeAnimation->Clone());
 
-	for (auto& pBone : m_Bones)
-		Safe_AddRef(pBone);
+	for (auto& pPrototypeBone : Prototype.m_Bones)
+		m_Bones.push_back(pPrototypeBone->Clone());
 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
 
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
-
-	// m_pAIScene는 Importer가 소유하므로 복사 X
-	// m_Importer는 복사 생성자 제공하지 않으므로 복사 X
-	// m_strModelFilePath는 원본 생성에만 필요하므로 복사 X
 }
 
 _int CModel::Get_BoneIndex(const _char* pBoneName)
@@ -93,16 +89,20 @@ HRESULT CModel::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_float fTimeDelta)
+_bool CModel::Play_Animation(_float fTimeDelta)
 {
+	_bool isFinished = { false };
+
 	/* 현재 애니메이션 이용하고 있는 뼈들의 TransformationMatrix를 갱신해준다.  */
-	m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
+	isFinished = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
 
 	/* 위의 갱신이 끝났다면, 모든 뼈의 CombinedTransformationMatrix갱신한다. */
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Update_CombinedTransformMatrices(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
+
+	return isFinished;
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)

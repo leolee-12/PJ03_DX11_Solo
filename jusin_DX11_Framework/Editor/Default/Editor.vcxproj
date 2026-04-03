@@ -144,7 +144,9 @@
     <ClInclude Include="..\Public\Editor_Serializer.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
     <ClInclude Include="..\Public\ImGui_Manager.h" />
-    <ClInclude Include="..\Public\Model_Loader.h" />
+    <ClInclude Include="..\Public\Model_Loader.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Object_Registry.h" />
     <ClInclude Include="..\Public\Panel_Base.h" />
     <ClInclude Include="..\Public\Panel_MapTool.h" />
@@ -172,7 +174,9 @@
     <ClCompile Include="..\Private\EditInstance.cpp" />
     <ClCompile Include="..\Private\Editor_Serializer.cpp" />
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
-    <ClCompile Include="..\Private\Model_Loader.cpp" />
+    <ClCompile Include="..\Private\Model_Loader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\Object_Registry.cpp" />
     <ClCompile Include="..\Private\Panel_Base.cpp" />
     <ClCompile Include="..\Private\Panel_MapTool.cpp" />

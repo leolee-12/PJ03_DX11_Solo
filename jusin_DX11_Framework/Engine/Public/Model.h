@@ -13,11 +13,12 @@ private:
 public:
 	size_t Get_NumMeshes() const { return m_iNumMeshes; }
 	_int Get_BoneIndex(const _char* pBoneName);
+	void Set_AnimationIndex(_uint iIndex, _bool isLoop = false) { m_iCurrentAnimationIndex = iIndex; m_isAnimLoop = isLoop; }
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
-	void Play_Animation(_float fTimeDelta);
+	_bool Play_Animation(_float fTimeDelta);
 	HRESULT Render(_uint iMeshIndex);
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstName, _uint iMeshIndex, aiTextureType eType, _uint iIndex);
 	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstName, _uint iMeshIndex);
@@ -38,6 +39,7 @@ private:
 	
 	_uint m_iCurrentAnimationIndex = {};
 	_uint m_iNumAnimations = {};
+	_bool m_isAnimLoop = { false };
 	vector<class CAnimation*> m_Animations;
 
 private:

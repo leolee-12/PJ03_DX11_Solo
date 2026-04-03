@@ -26,11 +26,13 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pModelCom->Set_AnimationIndex(rand() % 20, true);
+
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(
-			m_pGameInstance->Random(0.f, 10.f),
-			1.f,
-			m_pGameInstance->Random(0.f, 10.f),
+			m_pGameInstance->Random(0.f, 30.f),
+			3.f,
+			m_pGameInstance->Random(0.f, 30.f),
 			1.f
 		));
 
@@ -44,7 +46,8 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	if (true == m_pModelCom->Play_Animation(fTimeDelta))
+		int a = 10; // 중단점용 임시 코드
 }
 
 void CMonster::Late_Update(_float fTimeDelta)

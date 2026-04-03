@@ -43,6 +43,10 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentIndex)
 	return pInstance;
 }
 
+CBone* CBone::Clone()
+{
+	return new CBone(*this);
+}
 
 void CBone::Free()
 {
