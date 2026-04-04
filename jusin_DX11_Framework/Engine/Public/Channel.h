@@ -12,6 +12,7 @@ private:
 
 public:
 	HRESULT Initialize(const aiNodeAnim* pAINodeAnim, class CModel* pModel);
+	HRESULT Initialize(const WMODEL_CHANNEL& tChannelData);
 	void Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyIndex);
 
 private:
@@ -21,6 +22,7 @@ private:
 
 public:
 	static CChannel* Create(const aiNodeAnim* pAINodeAnim, class CModel* pModel);
+	static CChannel* Create(const WMODEL_CHANNEL& tChannelData);
 	virtual void Free() override;
 };
 

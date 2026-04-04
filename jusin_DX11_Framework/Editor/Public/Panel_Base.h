@@ -17,8 +17,10 @@ protected:
 	virtual ~CPanel_Base() = default;
 
 public:
+	_bool* Get_OpenPtr() { return &m_bOpen; }
 	const _bool Is_Opened() const { return m_bOpen; }
 	void Switch() { m_bOpen = !m_bOpen; }
+	const _string& Get_Title() { return m_strTitle; }
 
 	virtual HRESULT Initialize() PURE;
 	virtual void Update(_float fTimeDelta) PURE;

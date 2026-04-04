@@ -27,7 +27,7 @@ constexpr unsigned int	g_iWinSizeY = { 720 };
 WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
 WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
 
-enum class PANEL { OUTLINER, PROPERTY, PLACEBROWSER, VIEWPORT, UITOOL, MAP, OBJECT, EFFECT, END };
+enum class PANEL { OUTLINER, MAP, PROPERTY, PLACEBROWSER, UI, MODEL, VIEWPORT, OBJECT, EFFECT, END };
 constexpr size_t PANEL_COUNT = static_cast<size_t>(PANEL::END);
 
 using SelectionChangedCB = function<void(const vector<Engine::CGameObject*>&)>;

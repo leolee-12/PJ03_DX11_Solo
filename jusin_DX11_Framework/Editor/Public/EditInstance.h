@@ -65,6 +65,11 @@ public:
 	HRESULT XM_CALLCONV Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount = 3);
 	HRESULT XM_CALLCONV Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform);
 	HRESULT XM_CALLCONV Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform);
+
+	_bool Is_ModelLoaded() const;
+	const _char* Get_FbxPath() const;
+	const WMODEL_HEADER& Get_ModelMetaData() const;
+	const vector<WMODEL_BONE>& Get_ModelBones() const;
 #pragma endregion
 
 #pragma region 6

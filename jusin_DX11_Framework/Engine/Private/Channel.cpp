@@ -50,6 +50,15 @@ HRESULT CChannel::Initialize(const aiNodeAnim* pAINodeAnim, class CModel* pModel
 	return S_OK;
 }
 
+HRESULT CChannel::Initialize(const WMODEL_CHANNEL& tChannelData)
+{
+	m_iBoneIndex = tChannelData.iBoneIndex;
+
+	m_KeyFrames = tChannelData.keyFrames;
+
+	return S_OK;
+}
+
 void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyIndex)
 {
 	if (0.f == fCurrentTrackPosition)
@@ -98,6 +107,19 @@ CChannel* CChannel::Create(const aiNodeAnim* pAINodeAnim, class CModel* pModel)
 	CChannel* pInstance = new CChannel();
 
 	if (FAILED(pInstance->Initialize(pAINodeAnim, pModel)))
+	{
+		MSG_BOX("Failed to Created : CChannel");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CChannel* CChannel::Create(const WMODEL_CHANNEL& tChannelData)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(tChannelData)))
 	{
 		MSG_BOX("Failed to Created : CChannel");
 		Safe_Release(pInstance);

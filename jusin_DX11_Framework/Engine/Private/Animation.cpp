@@ -8,7 +8,7 @@ CAnimation::CAnimation()
 
 CAnimation::CAnimation(const CAnimation& Prototype)
 	: m_fDuration{ Prototype.m_fDuration }
-	, m_fTickPerSecond{ Prototype.m_fTickPerSecond }
+	, m_fTicksPerSecond{ Prototype.m_fTicksPerSecond }
 	, m_fCurrentTrackPosition{ Prototype.m_fCurrentTrackPosition }
 	, m_iNumChannels{ Prototype.m_iNumChannels }
 	, m_Channels{ Prototype.m_Channels }
@@ -19,10 +19,10 @@ CAnimation::CAnimation(const CAnimation& Prototype)
 		Safe_AddRef(pChannel);
 }
 
-HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation, class CModel* pModel)
+HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation, CModel* pModel)
 {
 	m_fDuration = static_cast<_float>(pAIAnimation->mDuration);
-	m_fTickPerSecond = static_cast<_float>(pAIAnimation->mTicksPerSecond);
+	m_fTicksPerSecond = static_cast<_float>(pAIAnimation->mTicksPerSecond);
 
 	m_iNumChannels = pAIAnimation->mNumChannels;
 	m_CurrentKeyFrameIndices.resize(m_iNumChannels);
@@ -39,9 +39,30 @@ HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation, class CModel* pM
 	return S_OK;
 }
 
+HRESULT CAnimation::Initialize(const WMODEL_ANIMATION& tAnimData)
+{
+	m_fDuration = tAnimData.fDuration;
+	m_fTicksPerSecond = tAnimData.fTicksPerSecond;
+	m_iNumChannels = static_cast<_uint>(tAnimData.channels.size());
+	m_CurrentKeyFrameIndices.resize(m_iNumChannels);
+
+	const vector<WMODEL_CHANNEL>& channelDatas = tAnimData.channels;
+
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		CChannel* pChannel = CChannel::Create(channelDatas[i]);
+		if (nullptr == pChannel)
+			return E_FAIL;
+
+		m_Channels.push_back(pChannel);
+	}
+
+	return S_OK;
+}
+
 _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop)
 {
-	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
+	m_fCurrentTrackPosition += m_fTicksPerSecond * fTimeDelta;
 
 	if (m_fCurrentTrackPosition >= m_fDuration)
 	{
@@ -66,6 +87,19 @@ CAnimation* CAnimation::Create(const aiAnimation* pAIAnimation, class CModel* pM
 	CAnimation* pInstance = new CAnimation();
 
 	if (FAILED(pInstance->Initialize(pAIAnimation, pModel)))
+	{
+		MSG_BOX("Failed to Created : CAnimation");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CAnimation* CAnimation::Create(const WMODEL_ANIMATION& tAnimData)
+{
+	CAnimation* pInstance = new CAnimation();
+
+	if (FAILED(pInstance->Initialize(tAnimData)))
 	{
 		MSG_BOX("Failed to Created : CAnimation");
 		Safe_Release(pInstance);

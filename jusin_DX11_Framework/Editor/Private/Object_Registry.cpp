@@ -19,7 +19,7 @@ void CObject_Registry::Register_Object(_uint iProtoLevel, WNameID strProtoTag, _
 {
 	CGameObject* pObj = dynamic_cast<CGameObject*>(
 		m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iProtoLevel, strProtoTag, pArg));
-	if (!pObj) return;
+	if (nullptr == pObj) return;
 
 	pObj->Set_Name(Make_UniqueName(StoW(pObj->Get_TypeName())));
 	m_pGameInstance->Add_GameObject_Ex(iLayerLevel, strLayerTag, pObj);	// 레이어에 등록

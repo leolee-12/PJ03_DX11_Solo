@@ -109,6 +109,12 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 
 HRESULT CLoader::Ready_Resources_For_GamePlay()
 {
+	char szCWD[MAX_PATH];
+	GetCurrentDirectoryA(MAX_PATH, szCWD);
+	OutputDebugStringA("[GamePlay Loader] CWD: ");
+	OutputDebugStringA(szCWD);
+	OutputDebugStringA("\n");
+
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
 	/* Prototype_Component_Texture_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN,
@@ -140,16 +146,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	_matrix PreTransformMatrix = {};
 
 	/* Prototype_Component_Model_Fiona */
-	//PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.wmodel"))))
+		return E_FAIL;
 
 	/* Prototype_Component_Model_ForkLift */
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../../Resources/Models/ForkLift/ForkLift.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.wmodel"))))
+		return E_FAIL;
 
 	/* Prototype_Component_Model_PM0001_00 */
 	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));

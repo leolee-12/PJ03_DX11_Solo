@@ -124,6 +124,35 @@ namespace Engine
 		int32_t iParentIndex;
 		XMFLOAT4X4 transformation;
 	};
+
+	struct WMODEL_MESH
+	{
+		char szName[MAX_PATH];
+		uint32_t iMaterialIndex;
+		vector<VTXMESH> nonAnimVertices;		// NONANIM 전용
+		vector<VTXANIMMESH> animVertices;		// ANIM 전용
+		vector<uint32_t> indices;
+		vector<uint32_t> boneIndices;			// ANIM 전용
+		vector<XMFLOAT4X4> offsetMatrices;		// ANIM 전용
+	};
+
+	struct WMODEL_MATERIAL
+	{
+		vector<string> TexturePaths[ETOUI(TEXTURE_TYPE::END)];
+	};
+
+	struct WMODEL_CHANNEL
+	{
+		uint32_t iBoneIndex;
+		vector<KEYFRAME> keyFrames;
+	};
+
+	struct WMODEL_ANIMATION
+	{
+		float fDuration;
+		float fTicksPerSecond;
+		vector<WMODEL_CHANNEL> channels;
+	};
 }
 
 #endif // Engine_Struct_h__

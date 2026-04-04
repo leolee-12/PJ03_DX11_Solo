@@ -19,7 +19,6 @@ HRESULT CPanel_OutLiner::Initialize()
 
 void CPanel_OutLiner::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
 }
 
 HRESULT CPanel_OutLiner::Render()

@@ -20,7 +20,6 @@ HRESULT CPanel_Property::Initialize()
 
 void CPanel_Property::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
 }
 
 HRESULT CPanel_Property::Render()
@@ -65,33 +64,36 @@ void CPanel_Property::Draw_Transform(CTransform* pTransformCom)
 	if (!ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 		return;
 
-	_float fPos[3], fRot[3], fScale[3];
+	_float pPos[3], pRot[3], pScale[3];
 	ImGuizmo::DecomposeMatrixToComponents(
-		reinterpret_cast<const _float*>(pTransformCom->Get_WorldMatrixPtr()), fPos, fRot, fScale);
+		reinterpret_cast<const _float*>(pTransformCom->Get_WorldMatrixPtr()), pPos, pRot, pScale);
 
 	for (int i = 0; i < 3; ++i)
 	{
-		if (!_finite(fScale[i]) || fScale[i] < 1e-6f) fScale[i] = 1.f;
-		if (!_finite(fRot[i]))  fRot[i] = 0.f;
-		if (!_finite(fPos[i]))  fPos[i] = 0.f;
+		if (!_finite(pScale[i]) || pScale[i] < 1e-6f) pScale[i] = 1.f;
+		if (!_finite(pRot[i]))  pRot[i] = 0.f;
+		if (!_finite(pPos[i]))  pPos[i] = 0.f;
 	}
 
 	bool bChanged = false;
-	bChanged |= ImGui::DragFloat3(KOR("위치"), fPos, 0.05f);
-	bChanged |= ImGui::DragFloat3(KOR("회전"), fRot, 0.5f, -360.f, 360.f, "%.1f°");
-	bChanged |= ImGui::DragFloat3(KOR("스케일"), fScale, 0.01f, 0.001f, 100.f);
+	bChanged |= ImGui::DragFloat3(KOR("위치"), pPos, 0.05f);
+	bChanged |= ImGui::DragFloat3(KOR("회전"), pRot, 0.5f, -360.f, 360.f, "%.1f°");
+	bChanged |= ImGui::DragFloat3(KOR("스케일"), pScale, 0.01f, 0.001f, 100.f);
 
 	if (bChanged)
 	{
-		_float newMatrix[16];
-		ImGuizmo::RecomposeMatrixFromComponents(fPos, fRot, fScale, newMatrix);
 
-		_float4x4 worldMatrix;
-		memcpy(&worldMatrix, newMatrix, sizeof(_float) * 16);
-		pTransformCom->Set_State(STATE::RIGHT, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._11)));
-		pTransformCom->Set_State(STATE::UP, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._21)));
-		pTransformCom->Set_State(STATE::LOOK, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._31)));
-		pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._41)));
+		Set_WorldMatrix(pTransformCom, pPos, pRot, pScale);
+
+		//_float newMatrix[16];
+		//ImGuizmo::RecomposeMatrixFromComponents(pPos, pRot, pScale, newMatrix);
+
+		//_float4x4 worldMatrix;
+		//memcpy(&worldMatrix, newMatrix, sizeof(_float) * 16);
+		//pTransformCom->Set_State(STATE::RIGHT, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._11)));
+		//pTransformCom->Set_State(STATE::UP, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._21)));
+		//pTransformCom->Set_State(STATE::LOOK, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._31)));
+		//pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(reinterpret_cast<_float4*>(&worldMatrix._41)));
 	}
 }
 

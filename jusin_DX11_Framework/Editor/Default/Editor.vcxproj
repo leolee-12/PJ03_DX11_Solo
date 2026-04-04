@@ -112,6 +112,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../Public\;../../EngineSDK/Inc\;../../GameSDK/inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,6 +154,7 @@
     <ClInclude Include="..\Public\Panel_MapTool.h" />
     <ClInclude Include="..\Public\EditorApp.h" />
     <ClInclude Include="..\Public\Editor_Defines.h" />
+    <ClInclude Include="..\Public\Panel_Model.h" />
     <ClInclude Include="..\Public\Panel_OutLiner.h" />
     <ClInclude Include="..\Public\Panel_PlaceBrowser.h" />
     <ClInclude Include="..\Public\Panel_Property.h" />
@@ -182,6 +184,7 @@
     <ClCompile Include="..\Private\Panel_Base.cpp" />
     <ClCompile Include="..\Private\Panel_MapTool.cpp" />
     <ClCompile Include="..\Private\EditorApp.cpp" />
+    <ClCompile Include="..\Private\Panel_Model.cpp" />
     <ClCompile Include="..\Private\Panel_OutLiner.cpp" />
     <ClCompile Include="..\Private\Panel_PlaceBrowser.cpp" />
     <ClCompile Include="..\Private\Panel_Property.cpp" />

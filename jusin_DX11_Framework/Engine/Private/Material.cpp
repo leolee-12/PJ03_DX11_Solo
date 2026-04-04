@@ -78,7 +78,7 @@ HRESULT CMaterial::Initialize_Ex(aiMaterial* pAIMaterial, const _char* pModelFil
 	fs::path texPath = {};
 
 	// aiTextureType
-	for (size_t i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
+	for (size_t i = 0; i < ETOUI(TEXTURE_TYPE::END); i++)
 	{
 		_uint iNumTextures = pAIMaterial->GetTextureCount(static_cast<aiTextureType>(i));
 
@@ -117,13 +117,55 @@ HRESULT CMaterial::Initialize_Ex(aiMaterial* pAIMaterial, const _char* pModelFil
 	return S_OK;
 }
 
-HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, aiTextureType eType, _uint iIndex)
+HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir)
 {
-	if (eType >= AI_TEXTURE_TYPE_MAX ||
-		iIndex >= m_Materials[eType].size())
+	namespace fs = std::filesystem;
+	fs::path texPath = {};
+
+	// aiTextureType
+	for (size_t i = 0; i < ETOUI(TEXTURE_TYPE::END); i++)
+	{
+		_uint iNumTextures = static_cast<_uint>(tMat.TexturePaths[i].size());
+
+		for (_uint j = 0; j < iNumTextures; j++)
+		{
+			texPath = pBaseDir / fs::path(tMat.TexturePaths[i][j]).filename();
+			_wstring wStrFullPath = texPath.wstring();
+			_wstring wStrExt = texPath.extension().wstring();
+
+			HRESULT hr = {};
+			ID3D11ShaderResourceView* pSRV = { nullptr };
+
+			if (false == lstrcmpW(wStrExt.c_str(), L".dds"))
+			{
+				hr = CreateDDSTextureFromFile(m_pDevice, wStrFullPath.c_str(), nullptr, &pSRV);
+			}
+			else if (false == lstrcmpW(wStrExt.c_str(), L".tga"))
+			{
+				hr = E_FAIL;
+			}
+			else
+			{
+				hr = CreateWICTextureFromFile(m_pDevice, wStrFullPath.c_str(), nullptr, &pSRV);
+			}
+
+			if (FAILED(hr))
+				return E_FAIL;
+
+			m_Materials[i].push_back(pSRV);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, TEXTURE_TYPE eType, _uint iIndex)
+{
+	if (eType >= TEXTURE_TYPE::END ||
+		iIndex >= m_Materials[ETOUI(eType)].size())
 		return E_FAIL;
 
-	return pShader->Bind_SRV(pConstantName, m_Materials[eType][iIndex]);
+	return pShader->Bind_SRV(pConstantName, m_Materials[ETOUI(eType)][iIndex]);
 }
 
 CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, aiMaterial* pAIMaterial, const _char* pModelFilePath)
@@ -131,6 +173,19 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	CMaterial* pInstance = new CMaterial(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Ex(pAIMaterial, pModelFilePath)))
+	{
+		MSG_BOX("Failed to Created : CMaterial");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WMODEL_MATERIAL& tMat, const _char* pBaseDir)
+{
+	CMaterial* pInstance = new CMaterial(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(tMat, pBaseDir)))
 	{
 		MSG_BOX("Failed to Created : CMaterial");
 		Safe_Release(pInstance);

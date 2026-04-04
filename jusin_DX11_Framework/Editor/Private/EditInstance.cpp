@@ -203,6 +203,26 @@ HRESULT XM_CALLCONV CEditInstance::Load_FBX(const _char* pFbxPath, MODEL eType, 
 {
 	return m_pModel_Loader->Load_FBX(pFbxPath, eType, PreTransform);
 }
+
+_bool CEditInstance::Is_ModelLoaded() const
+{
+	return m_pModel_Loader->Is_ModelLoaded();
+}
+
+const _char* CEditInstance::Get_FbxPath() const
+{
+	return m_pModel_Loader->Get_FbxPath();
+}
+
+const WMODEL_HEADER& CEditInstance::Get_ModelMetaData() const
+{
+	return m_pModel_Loader->Get_ModelMetaData();
+}
+
+const vector<WMODEL_BONE>& CEditInstance::Get_ModelBones() const
+{
+	return m_pModel_Loader->Get_ModelBones();
+}
 #pragma endregion
 
 #pragma region 6

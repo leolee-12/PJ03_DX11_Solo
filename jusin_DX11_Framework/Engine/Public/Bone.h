@@ -15,6 +15,7 @@ public:
 	void XM_CALLCONV Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
 
 	HRESULT Initialize(const aiNode* pAINode, _int iParentIndex);
+	HRESULT Initialize(const WMODEL_BONE& tBone);
 	void XM_CALLCONV Update_CombinedTransformMatrices(const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix);
 
 private:
@@ -25,6 +26,7 @@ private:
 
 public:
 	static CBone* Create(const aiNode* pAINode, _int iParentIndex);
+	static CBone* Create(const WMODEL_BONE& tBone);
 	CBone* Clone();
 private:
 	virtual void Free() override;

@@ -8,6 +8,7 @@ class CMesh final : public CVIBuffer
 {
 private:
 	CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix);
+	CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData);
 	CMesh(const CMesh& Prototype);
 	virtual ~CMesh() = default;
 
@@ -33,12 +34,11 @@ private:
 	vector<_uint> m_BoneIndices;
 	vector<_float4x4> m_OffsetMatrices;
 
-private:
-	HRESULT Ready_NonAnimMesh();
-	HRESULT Ready_AnimMesh(CModel* pModel);
+	WMODEL_MESH m_tMesh;
 
 public:
 	static CMesh* XM_CALLCONV Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix);
+	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData);
 	virtual CComponent* Clone(void* pArg) override;
 
 private:

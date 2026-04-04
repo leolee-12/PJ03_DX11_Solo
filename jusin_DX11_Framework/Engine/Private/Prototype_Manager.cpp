@@ -55,6 +55,10 @@ void CPrototype_Manager::Clear(_uint iLevelIndex)
 	m_pPrototypes[iLevelIndex].clear();
 }
 
+void CPrototype_Manager::Visit_Prototypes(_uint iLevel, PROTOTYPE eType, function<void(WNameID, CBase*)> fn) const
+{
+}
+
 CBase* CPrototype_Manager::Find_Prototype(_uint iLevelIndex, WNameID strProtoTag)
 {
 	auto pp = m_pPrototypes[iLevelIndex].find(strProtoTag);

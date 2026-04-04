@@ -10,36 +10,6 @@ NS_BEGIN(Editor)
 class CModel_Loader final : public CBase
 {
 private:
-	struct MESH_DATA
-	{
-		_char szName[MAX_PATH];
-		_uint iMaterialIndex;
-		vector<VTXMESH> nonAnimVertices;		// NONANIM 전용
-		vector<VTXANIMMESH> animVertices;		// ANIM 전용
-		vector<_uint> indices;
-		vector<_uint> boneIndices;				// ANIM 전용
-		vector<_float4x4> boneOffsetMatrices;	// ANIM 전용
-	};
-
-	struct MATERIAL_DATA
-	{
-		vector<_string> TexturePaths[ETOUI(TEXTURE_TYPE::END)];
-	};
-
-	struct CHANNEL_DATA
-	{
-		_uint iBoneIndex;
-		vector<KEYFRAME> keyFrames;
-	};
-
-	struct ANIMATION_DATA
-	{
-		_float fDuration;
-		_float fTicksPerSecond;
-		vector<CHANNEL_DATA> channels;
-	};
-
-private:
 	CModel_Loader() = default;
 	virtual ~CModel_Loader() = default;
 
@@ -56,6 +26,11 @@ public:
 	// FBX 로드
 	HRESULT XM_CALLCONV Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform);
 
+	_bool Is_ModelLoaded() const { return m_pAIScene != nullptr; }
+	const _char* Get_FbxPath() const { return m_strFbxPath.c_str(); }
+	const WMODEL_HEADER& Get_ModelMetaData() const { return m_tHeader; }
+	const vector<WMODEL_BONE>& Get_ModelBones() const { return m_Bones; }
+
 private:
 	const aiScene* m_pAIScene = { nullptr };
 	Importer m_Importer = {};
@@ -65,9 +40,11 @@ private:
 	_string m_strFbxPath = {};
 	
 	vector<WMODEL_BONE> m_Bones;
-	vector<MATERIAL_DATA> m_Materials;
-	vector<MESH_DATA> m_Meshes;
-	vector<ANIMATION_DATA> m_Animations;
+	vector<WMODEL_MATERIAL> m_Materials;
+	vector<WMODEL_MESH> m_Meshes;
+	vector<WMODEL_ANIMATION> m_Animations;
+
+	WMODEL_HEADER m_tHeader = {};
 
 private:
 	HRESULT Initialize();
@@ -81,16 +58,6 @@ private:
 	HRESULT Write_Binary(const _char* pOutputPath) const;
 	HRESULT Write_JSON(const _char* pOutputPath, _uint iVertexSampleCount) const;
 	void Clear_Data();
-
-	// 로드 파일 조회
-	_bool Is_Loaded() const { return m_pAIScene != nullptr; }
-	size_t Get_NumBones() const { return m_Bones.size(); }
-	size_t Get_NumMeshes() const { return m_Meshes.size(); }
-	size_t Get_NumMaterials() const { return m_Materials.size(); }
-	size_t Get_NumAnimations() const { return m_Animations.size(); }
-	MODEL Get_ModelType() const { return m_eType; }
-	const _char* Get_FbxPath() const { return m_strFbxPath.c_str(); }
-	const vector<WMODEL_BONE>& Get_Bones() const { return m_Bones; }
 
 public:
 	static CModel_Loader* Create();

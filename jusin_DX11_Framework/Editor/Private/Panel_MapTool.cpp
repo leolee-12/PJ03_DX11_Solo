@@ -17,12 +17,11 @@ HRESULT CPanel_MapTool::Initialize()
 
 void CPanel_MapTool::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
 }
 
 HRESULT CPanel_MapTool::Render()
 {
-	return __super::Render();
+	return S_OK;
 }
 
 CPanel_MapTool* CPanel_MapTool::Create()

@@ -3,11 +3,12 @@
 
 HRESULT XM_CALLCONV CModel_Loader::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform)
 {
-	if (FAILED(Load_FBX(pFbxPath, eType, PreTransform))) return E_FAIL;
+	if (!Is_ModelLoaded() || m_strFbxPath != pFbxPath)
+		if (FAILED(Load_FBX(pFbxPath, eType, PreTransform))) return E_FAIL;
 
 	if (FAILED(Write_Binary(pOutputPath))) return E_FAIL;
 
-	_tchar szMsg[512];
+	_tchar szMsg[512] = {};
 	wprintf_s(szMsg, L"Export 완료\n- Bones: %zu\n- Meshes: %zu\n- Materials: %zu\n- Animations: %zu\n- 출력: %s",
 		m_Bones.size(), m_Meshes.size(), m_Materials.size(), m_Animations.size(), pOutputPath);
 	MessageBox(NULL, szMsg, L"System Message", MB_OK);
@@ -63,7 +64,6 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 		return E_FAIL;
 	}
 
-
 	// 4. Bones, Meshes, Materials, Animations 추출
 	m_Bones.reserve(m_pAIScene->mRootNode->mNumChildren * 5);
 	m_Meshes.reserve(m_pAIScene->mNumMeshes);
@@ -93,6 +93,14 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 			return E_FAIL;
 		}
 	}
+
+	m_tHeader.szMagic[4] = {};
+	m_tHeader.iVersion = {};
+	m_tHeader.iModelType = ETOUI(m_eType);
+	m_tHeader.iNumMeshes = static_cast<_uint>(m_Meshes.size());
+	m_tHeader.iNumMaterials = static_cast<_uint>(m_Materials.size());;
+	m_tHeader.iNumBones = static_cast<_uint>(m_Bones.size());;
+	m_tHeader.iNumAnimations = static_cast<_uint>(m_Animations.size());;
 
 	return S_OK;
 }
@@ -134,7 +142,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 	// 1. 메쉬 이름, 재질 인덱스 추출
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		MESH_DATA Mesh = {};
+		WMODEL_MESH Mesh = {};
 		aiMesh* pAIMesh = m_pAIScene->mMeshes[i];
 		strcpy_s(Mesh.szName, pAIMesh->mName.data);
 		Mesh.iMaterialIndex = pAIMesh->mMaterialIndex;
@@ -149,7 +157,6 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 			Mesh.indices.push_back(AIFace.mIndices[1]);
 			Mesh.indices.push_back(AIFace.mIndices[2]);
 		}
-
 
 		// 3. 버텍스 데이터 추출
 		_uint iNumVertices = pAIMesh->mNumVertices;
@@ -207,7 +214,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				XMStoreFloat4x4(&offsetMatrix, XMMatrixIdentity());
 				memcpy(&offsetMatrix, &pAIBone->mOffsetMatrix, sizeof offsetMatrix);
 				XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&offsetMatrix)));
-				Mesh.boneOffsetMatrices.push_back(offsetMatrix);
+				Mesh.offsetMatrices.push_back(offsetMatrix);
 
 				// 3-2. Bone 영향 받는 버텍스의 가중치 저장
 				_uint iNumWeights = pAIBone->mNumWeights;
@@ -252,7 +259,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				_float4x4 OffsetMatrix = {};
 				XMStoreFloat4x4(&OffsetMatrix, XMMatrixIdentity());
 				Mesh.boneIndices.push_back(iBoneIndex);
-				Mesh.boneOffsetMatrices.push_back(OffsetMatrix);
+				Mesh.offsetMatrices.push_back(OffsetMatrix);
 			}
 
 			Mesh.animVertices = vector<VTXANIMMESH>(pVertices, pVertices + iNumVertices);
@@ -276,7 +283,7 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 
 	for (_uint i = 0; i < iNumMaterials; ++i)
 	{
-		MATERIAL_DATA Material = {};
+		WMODEL_MATERIAL Material = {};
 		aiMaterial* pAIMaterial = m_pAIScene->mMaterials[i];
 
 		// 1. 각 텍스처 타입에 대해 작업
@@ -315,7 +322,7 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 	{
 		// 1. 애니메이션의 Duration, TicksPerSecond 정보 저장
 		aiAnimation* pAIAnim = m_pAIScene->mAnimations[i];
-		ANIMATION_DATA Anim = {};
+		WMODEL_ANIMATION Anim = {};
 		Anim.fDuration = static_cast<_float>(pAIAnim->mDuration);
 		Anim.fTicksPerSecond = static_cast<_float>(pAIAnim->mTicksPerSecond);
 
@@ -330,7 +337,7 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 			if (-1 == iBoneIndex)
 				return E_FAIL;
 
-			CHANNEL_DATA Channel = {};
+			WMODEL_CHANNEL Channel = {};
 			Channel.iBoneIndex = static_cast<_uint>(iBoneIndex);
 
 			// 3. 각 키프레임에 대해 작업
@@ -403,7 +410,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	WMODEL_HEADER header{};
 	memcpy(header.szMagic, "WMDL", 4);
 	header.iVersion = 2;
-	header.iModelType = (uint32_t)m_eType;
+	header.iModelType = static_cast<_uint>(m_eType);
 	header.iNumMeshes = static_cast<_uint>(m_Meshes.size());
 	header.iNumMaterials = static_cast<_uint>(m_Materials.size());
 	header.iNumBones = static_cast<_uint>(m_Bones.size());
@@ -423,7 +430,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 
 			for (auto& path : material.TexturePaths[i])
 			{
-				size_t len = path.size() + 1;
+				_uint len = static_cast<_uint>(path.size() + 1);
 				fwrite(&len, sizeof(_uint), 1, fp);
 				fwrite(path.c_str(), 1, len, fp);
 			}
@@ -435,9 +442,9 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	{
 		fwrite(mesh.szName, 1, MAX_PATH, fp);
 		fwrite(&mesh.iMaterialIndex, sizeof(uint32_t), 1, fp);
-		size_t numVerts = m_eType == MODEL::NONANIM ? mesh.nonAnimVertices.size() : mesh.animVertices.size();
-		size_t numIdx = mesh.indices.size();
-		size_t numBones = mesh.boneIndices.size(); // (NONANIM이면 0)
+		_uint numVerts = static_cast<_uint>(m_eType == MODEL::NONANIM ? mesh.nonAnimVertices.size() : mesh.animVertices.size());
+		_uint numIdx = static_cast<_uint>(mesh.indices.size());
+		_uint numBones = static_cast<_uint>(mesh.boneIndices.size()); // (NONANIM이면 0)
 		fwrite(&numVerts, sizeof(_uint), 1, fp);
 		fwrite(&numIdx, sizeof(_uint), 1, fp);
 		fwrite(&numBones, sizeof(_uint), 1, fp);
@@ -449,7 +456,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 		else if (MODEL::ANIM == m_eType)
 		{
 			fwrite(mesh.boneIndices.data(), sizeof(_uint), numBones, fp);
-			fwrite(mesh.boneOffsetMatrices.data(), sizeof(_float4x4), numBones, fp);
+			fwrite(mesh.offsetMatrices.data(), sizeof(_float4x4), numBones, fp);
 			fwrite(mesh.animVertices.data(), sizeof(VTXANIMMESH), numVerts, fp);
 		}
 
@@ -461,13 +468,13 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	{
 		fwrite(&anim.fDuration, sizeof(_float), 1, fp);
 		fwrite(&anim.fTicksPerSecond, sizeof(_float), 1, fp);
-		size_t numChannels = anim.channels.size();
+		_uint numChannels = static_cast<_uint>(anim.channels.size());
 		fwrite(&numChannels, sizeof(_uint), 1, fp);
 
 		for (auto& channel : anim.channels)
 		{
 			fwrite(&channel.iBoneIndex, sizeof(_uint), 1, fp);
-			size_t numKF = channel.keyFrames.size();
+			_uint numKF = static_cast<_uint>(channel.keyFrames.size());
 			fwrite(&numKF, sizeof(_uint), 1, fp);
 			fwrite(channel.keyFrames.data(), sizeof(KEYFRAME), numKF, fp);
 		}
@@ -593,6 +600,8 @@ void CModel_Loader::Clear_Data()
 	m_Meshes.clear();
 	m_Materials.clear();
 	m_Animations.clear();
+
+	m_tHeader = {};
 }
 
 CModel_Loader* CModel_Loader::Create()

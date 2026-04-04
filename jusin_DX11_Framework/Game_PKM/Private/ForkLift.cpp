@@ -62,7 +62,7 @@ HRESULT CForkLift::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, aiTextureType_DIFFUSE, 0)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, TEXTURE_TYPE::DIFFUSE, 0)))
 			return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Begin(0)))
@@ -71,7 +71,6 @@ HRESULT CForkLift::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-
 
 	return S_OK;
 

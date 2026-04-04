@@ -4,9 +4,6 @@
     <Filter Include="97. ThirdParty">
       <UniqueIdentifier>{2a788bb6-7af4-4336-8f4f-f9934d177970}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. Default">
-      <UniqueIdentifier>{c0f9d35a-8126-446a-a283-ab7441aedd1c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99. Defines">
       <UniqueIdentifier>{9be1c5ab-57ca-4a83-a25b-2e50fd9bce54}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,12 @@
     </Filter>
     <Filter Include="96. Model_Loader">
       <UniqueIdentifier>{4231252d-243e-434c-a985-98e1c822fb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Panels\05. Model">
+      <UniqueIdentifier>{ab3e6f76-705f-4e8c-8318-07957fd8d2a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{c0f9d35a-8126-446a-a283-ab7441aedd1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Editor_Function.h">
       <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_Model.h">
+      <Filter>04. Panels\05. Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +210,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Model_Loader.cpp">
       <Filter>96. Model_Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_Model.cpp">
+      <Filter>04. Panels\05. Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

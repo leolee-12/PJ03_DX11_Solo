@@ -20,7 +20,6 @@ HRESULT CPanel_PlaceBrowser::Initialize()
 
 void CPanel_PlaceBrowser::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
 }
 
 HRESULT CPanel_PlaceBrowser::Render()

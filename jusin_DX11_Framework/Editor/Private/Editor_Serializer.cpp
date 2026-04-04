@@ -100,13 +100,15 @@ void CEditor_Serializer::Deserialize_Transform(CTransform* pTransformCom, const 
 	float rot[3]	= { j["rot"][0],   j["rot"][1],   j["rot"][2] };
 	float scale[3]	= { j["scale"][0], j["scale"][1], j["scale"][2] };
 
-	float mat[16];
-	ImGuizmo::RecomposeMatrixFromComponents(pos, rot, scale, mat);
+	Set_WorldMatrix(pTransformCom, pos, rot, scale);
 
-	XMFLOAT4X4 m;
-	memcpy(&m, mat, sizeof(float) * 16);
-	pTransformCom->Set_State(STATE::RIGHT, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._11)));
-	pTransformCom->Set_State(STATE::UP, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._21)));
-	pTransformCom->Set_State(STATE::LOOK, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._31)));
-	pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._41)));
+	//float mat[16];
+	//ImGuizmo::RecomposeMatrixFromComponents(pos, rot, scale, mat);
+
+	//XMFLOAT4X4 m;
+	//memcpy(&m, mat, sizeof(float) * 16);
+	//pTransformCom->Set_State(STATE::RIGHT, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._11)));
+	//pTransformCom->Set_State(STATE::UP, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._21)));
+	//pTransformCom->Set_State(STATE::LOOK, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._31)));
+	//pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(reinterpret_cast<XMFLOAT4*>(&m._41)));
 }

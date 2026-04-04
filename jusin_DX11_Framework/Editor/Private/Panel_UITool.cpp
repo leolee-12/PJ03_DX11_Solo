@@ -19,7 +19,6 @@ HRESULT CPanel_UITool::Initialize()
 
 void CPanel_UITool::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
 }
 
 HRESULT CPanel_UITool::Render()

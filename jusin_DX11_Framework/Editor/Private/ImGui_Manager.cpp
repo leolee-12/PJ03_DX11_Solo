@@ -4,6 +4,7 @@
 #include "Panel_MapTool.h"
 #include "Panel_PlaceBrowser.h"
 #include "Panel_UITool.h"
+#include "Panel_Model.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -79,6 +80,20 @@ void CImGui_Manager::Update(_float fTimeDelta)
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
+
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Window"))
+		{
+			for (auto& pPanel : m_Panels)
+				if (pPanel) ImGui::MenuItem(pPanel->Get_Title().c_str(), nullptr, pPanel->Get_OpenPtr());
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+
 	for (auto& pPanel : m_Panels)
 	{
 		if(pPanel && pPanel->Is_Opened())
@@ -123,34 +138,28 @@ HRESULT CImGui_Manager::Add_Panels()
 	CPanel_Base* pInstance = nullptr;
 
 	pInstance = CPanel_OutLiner::Create();
-	if (nullptr == pInstance)
-		return E_FAIL;
-
+	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::OUTLINER)] = pInstance;
 
 	pInstance = CPanel_MapTool::Create();
-	if (nullptr == pInstance)
-		return E_FAIL;
-
+	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::MAP)] = pInstance;
 
 	pInstance = CPanel_Property::Create();
-	if (nullptr == pInstance)
-		return E_FAIL;
-
+	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::PROPERTY)] = pInstance;
 
 	pInstance = CPanel_PlaceBrowser::Create();
-	if (nullptr == pInstance)
-		return E_FAIL;
-
+	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::PLACEBROWSER)] = pInstance;
 
 	pInstance = CPanel_UITool::Create();
-	if (nullptr == pInstance)
-		return E_FAIL;
+	if (nullptr == pInstance) return E_FAIL;
+	m_Panels[ETOUI(PANEL::UI)] = pInstance;
 
-	m_Panels[ETOUI(PANEL::UITOOL)] = pInstance;
+	pInstance = CPanel_Model::Create();
+	if (nullptr == pInstance) return E_FAIL;
+	m_Panels[ETOUI(PANEL::MODEL)] = pInstance;
 
 	return S_OK;
 }
