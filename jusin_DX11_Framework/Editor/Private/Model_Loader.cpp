@@ -75,6 +75,11 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 		MSG_BOX("Model_Loader : Bone 추출 실패");
 		return E_FAIL;
 	}
+
+	// * 루트노드에 사전변환 적용
+	XMStoreFloat4x4(&m_Bones[0].transformation,
+		PreTransform * XMLoadFloat4x4(&m_Bones[0].transformation));
+
 	if (FAILED(Extract_Meshes()))
 	{
 		MSG_BOX("Model_Loader : Mesh 추출 실패");
@@ -91,6 +96,35 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 		{
 			MSG_BOX("Model_Loader : Animation 추출 실패");
 			return E_FAIL;
+		}
+	}
+
+	// 사전변환행렬의 요소 분리
+	_vector vPreScale, vPreRot, vPreTrans;
+	XMMatrixDecompose(&vPreScale, &vPreRot, &vPreTrans, PreTransform);
+
+	for (auto& anim : m_Animations)
+	{
+		for (auto& ch : anim.channels)
+		{
+			if (0 == ch.iBoneIndex)
+			{
+				for (auto& kf : ch.keyFrames)
+				{
+					// 크기 (균일 스케일인 경우에만 가능)
+					kf.vScale.x *= XMVectorGetX(vPreScale);
+					kf.vScale.y *= XMVectorGetX(vPreScale);
+					kf.vScale.z *= XMVectorGetX(vPreScale);
+
+					// 회전
+					XMStoreFloat4(&kf.vRotation, XMQuaternionMultiply(vPreRot, XMLoadFloat4(&kf.vRotation)));
+
+					// 이동
+					//XMStoreFloat3(&kf.vTranslation, XMVector3TransformCoord(XMLoadFloat3(&kf.vTranslation), PreTransform));
+				}
+
+				break;
+			}
 		}
 	}
 

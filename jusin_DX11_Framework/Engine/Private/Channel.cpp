@@ -93,6 +93,10 @@ void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _f
 			(m_KeyFrames[*pCurrentKeyIndex + 1].fTrackPosition - m_KeyFrames[*pCurrentKeyIndex].fTrackPosition);
 
 		vScale = XMVectorLerp(vSourScale, vDestScale, fRatio); // (vSourScale + vDestScale) * fRatio;
+
+		if (XMVectorGetX(XMVector4Dot(vSourRotation, vDestRotation)) < 0.f)
+			vDestRotation = XMVectorNegate(vDestRotation);
+
 		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, fRatio);
 		vTranslation = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
 	}

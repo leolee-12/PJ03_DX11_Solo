@@ -143,8 +143,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Height.bmp")))))
 		return E_FAIL;
 
-	_matrix PreTransformMatrix = {};
-
 	/* Prototype_Component_Model_Fiona */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.wmodel"))))
@@ -156,28 +154,28 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		return E_FAIL;
 
 	/* Prototype_Component_Model_PM0001_00 */
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	//_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel"))))
+		return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0001_00/pm0001_00.fbx", PreTransformMatrix))))
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0001_00/pm0001_00.wmodel", PreTransformMatrix))))
 	//	return E_FAIL;
 
 	/* Prototype_Component_Model_PM0004_00 */
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0004_00/pm0004_00.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel"))))
+		return E_FAIL;
 
 	/* Prototype_Component_Model_PM0007_00 */
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0007_00/pm0007_00.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel"))))
+		return E_FAIL;
 
 	/* Prototype_Component_Model_PM0025_00 */
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
- //	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0025_00/pm0025_00.fbx", PreTransformMatrix))))
-	//	return E_FAIL;
+ 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel"))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
 	/* Prototype_GameObject_Terrain */

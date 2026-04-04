@@ -232,6 +232,7 @@ HRESULT CModel::Ready_FromBinary()
 	if (memcmp(tHeader.szMagic, "WMDL", 4) != 0)	{ fclose(fp); return E_FAIL; }
 	if (tHeader.iVersion != 2)						{ fclose(fp); return E_FAIL; }
 	m_eType = static_cast<MODEL>(tHeader.iModelType);
+	XMStoreFloat4x4(&m_PreTransformMatrix, XMMatrixIdentity());
 
 	if (FAILED(Ready_Bones_FromBinary(fp, tHeader.iNumBones)))
 	{
