@@ -20,6 +20,27 @@ sampler DefaultSampler = sampler_state
 	AddressV = WRAP;
 };
 
+RasterizerState RS_CullBack
+{
+	FillMode = Solid;
+	CullMode = Back;
+	FrontCounterClockwise = false;
+};
+
+RasterizerState RS_CullNone
+{
+	FillMode = Solid;
+	CullMode = None;
+	FrontCounterClockwise = false;
+};
+
+RasterizerState RS_CullBack_CCW
+{
+	FillMode = Solid;
+	CullMode = Back;
+	FrontCounterClockwise = true;
+};
+
 struct VS_IN
 {
 	float3 vPos : POSITION;
@@ -71,8 +92,8 @@ PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
 
-	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
-		discard;
+	//if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
+	//	discard;
 
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);
@@ -101,10 +122,11 @@ PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
 {
 	PS_OUT Out;
+
 	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
 
-	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
-		discard;
+	//if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
+	//	discard;
 
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);
@@ -141,4 +163,27 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_BLINNPHONG();
 	}
+	pass Pass2	// 후면컬링
+	{
+		SetRasterizerState(RS_CullBack);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass Pass3 // 컬링X
+	{
+		SetRasterizerState(RS_CullNone);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass Pass4 // 전면컬링
+{
+	SetRasterizerState(RS_CullBack_CCW);
+
+	VertexShader = compile vs_5_0 VS_MAIN();
+	PixelShader = compile ps_5_0 PS_MAIN();
+}
 };

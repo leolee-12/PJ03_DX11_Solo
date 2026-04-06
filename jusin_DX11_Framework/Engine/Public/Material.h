@@ -19,6 +19,7 @@ private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	vector<ID3D11ShaderResourceView*> m_Materials[ETOUI(TEXTURE_TYPE::END)];
+	ID3D11ShaderResourceView* m_DefaultMaterial = { nullptr };
 
 public:
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, aiMaterial* pAIMaterial, const _char* pModelFilePath);

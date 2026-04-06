@@ -45,13 +45,17 @@ HRESULT CPanel_Model::Render()
 
 	/* ── 3. PreTransform 파라미터 ───────────────── */
 	ImGui::InputFloat("Scale", &m_fScale, 0.001f, 0.01f, "%.4f");
+	ImGui::InputFloat("Rotation X", &m_fRotationX, 1.f, 10.f, "%.1f deg");
 	ImGui::InputFloat("Rotation Y", &m_fRotationY, 1.f, 10.f, "%.1f deg");
-
+	ImGui::InputFloat("Rotation Z", &m_fRotationZ, 1.f, 10.f, "%.1f deg");
 	/* ── 4. Load 버튼 ───────────────────────────── */
 	ImGui::BeginDisabled(m_szFbxPath[0] == '\0');
 	if (ImGui::Button("[Load FBX]"))
 	{
-		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale) * XMMatrixRotationY(XMConvertToRadians(m_fRotationY));
+		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale)
+			* XMMatrixRotationX(XMConvertToRadians(m_fRotationX))
+			* XMMatrixRotationY(XMConvertToRadians(m_fRotationY))
+			* XMMatrixRotationZ(XMConvertToRadians(m_fRotationZ));
 		
 		m_pEditInstance->Load_FBX(m_szFbxPath, m_eType, PreTransform);
 	}
@@ -107,12 +111,18 @@ HRESULT CPanel_Model::Render()
 
 	if (ImGui::Button("[Export Binary]", ImVec2(-1, 0)))
 	{
-		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale) * XMMatrixRotationY(XMConvertToRadians(m_fRotationY));
+		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale)
+			* XMMatrixRotationX(XMConvertToRadians(m_fRotationX))
+			* XMMatrixRotationY(XMConvertToRadians(m_fRotationY))
+			* XMMatrixRotationZ(XMConvertToRadians(m_fRotationZ));
 		m_pEditInstance->Export_Binary(m_szFbxPath, m_szOutputDir, m_eType, PreTransform);
     }
     if (ImGui::Button("[Export All]", ImVec2(-1, 0)))   // Binary + Meta JSON
     {
-		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale) * XMMatrixRotationY(XMConvertToRadians(m_fRotationY));
+		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale)
+			* XMMatrixRotationX(XMConvertToRadians(m_fRotationX))
+			* XMMatrixRotationY(XMConvertToRadians(m_fRotationY))
+			* XMMatrixRotationZ(XMConvertToRadians(m_fRotationZ));
 		m_pEditInstance->Export_All(m_szFbxPath, m_szOutputDir, m_eType, PreTransform);
     }
 

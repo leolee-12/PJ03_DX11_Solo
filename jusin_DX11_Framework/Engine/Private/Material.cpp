@@ -156,14 +156,23 @@ HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir
 		}
 	}
 
+	if(FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/default_white.png", nullptr, &m_DefaultMaterial)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, TEXTURE_TYPE eType, _uint iIndex)
 {
-	if (eType >= TEXTURE_TYPE::END ||
-		iIndex >= m_Materials[ETOUI(eType)].size())
+	if (eType >= TEXTURE_TYPE::END)
 		return E_FAIL;
+
+
+	if (iIndex >= m_Materials[ETOUI(eType)].size())
+	{
+		//return E_FAIL;
+		return pShader->Bind_SRV(pConstantName, m_DefaultMaterial);
+	}
 
 	return pShader->Bind_SRV(pConstantName, m_Materials[ETOUI(eType)][iIndex]);
 }

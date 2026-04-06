@@ -61,6 +61,9 @@
     <Filter Include="01. Environment\00. Camera\Free">
       <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Environment\01. MapObject">
+      <UniqueIdentifier>{6c413437-f2b5-484b-bfce-c4486387ad32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -117,6 +120,9 @@
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>02. GameActor\00. Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>01. Environment\01. MapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -163,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>02. GameActor\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>01. Environment\01. MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

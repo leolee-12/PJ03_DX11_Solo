@@ -23,6 +23,8 @@ WNAME_TAG(PROTO_COM_MODEL_PM0004_00, L"Prototype_Component_Model_ÆÄÀÌ¸®");
 WNAME_TAG(PROTO_COM_MODEL_PM0007_00, L"Prototype_Component_Model_²¿ºÎ±â");
 WNAME_TAG(PROTO_COM_MODEL_PM0025_00, L"Prototype_Component_Model_ÇÇÄ«Ãò");
 
+WNAME_TAG(PROTO_COM_MODEL_TOWN01, L"Prototype_Component_Model_Town01");
+
 
 // Layer
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
@@ -36,6 +38,8 @@ WNAME_TAG(PROTO_OBJ_TERRAIN, L"Prototype_GameObject_Terrain");
 WNAME_TAG(PROTO_OBJ_CAMERA_FREE, L"Prototype_GameObject_Camera_Free");
 WNAME_TAG(PROTO_OBJ_MONSTER, L"Prototype_GameObject_Monster");
 WNAME_TAG(PROTO_OBJ_FORKLIFT, L"Prototype_GameObject_ForkLift");
+
+WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
 
 // Component
 WNAME_TAG(COM_VIBUFFER, L"Com_VIBuffer");
