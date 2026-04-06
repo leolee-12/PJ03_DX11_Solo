@@ -22,6 +22,8 @@ protected:
 	virtual ~CForkLift() = default;
 
 public:
+	class Engine::CModel* Get_Model() const { return m_pModelCom; }
+
 	virtual _string Get_TypeName() const { return "ForkLift"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

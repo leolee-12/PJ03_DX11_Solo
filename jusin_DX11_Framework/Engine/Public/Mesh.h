@@ -14,6 +14,10 @@ private:
 
 public:
 	_uint Get_MaterialIndex() const { return m_iMaterialIndex; }
+
+	const vector<XMFLOAT3>& Get_Positions() const { return m_vecPositions; }
+	const vector<_uint>& Get_Indices() const { return m_vecIndices; }
+	const BoundingBox& Get_LocalAABB() const { return m_tLocalAABB; }
 	
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -35,6 +39,10 @@ private:
 	vector<_float4x4> m_OffsetMatrices;
 
 	WMODEL_MESH m_tMesh;
+
+	vector<XMFLOAT3> m_vecPositions;
+	vector<_uint> m_vecIndices;
+	BoundingBox m_tLocalAABB = {};
 
 public:
 	static CMesh* XM_CALLCONV Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix);

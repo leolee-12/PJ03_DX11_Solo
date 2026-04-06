@@ -21,8 +21,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 NS_BEGIN(Editor)
 
-constexpr unsigned int	g_iWinSizeX = { 1280 };
-constexpr unsigned int	g_iWinSizeY = { 720 };
+constexpr unsigned int	g_iWinSizeX = { 1600 };
+constexpr unsigned int	g_iWinSizeY = { 900 };
 
 WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
 WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");

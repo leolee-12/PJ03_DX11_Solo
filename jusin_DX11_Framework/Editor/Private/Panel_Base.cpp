@@ -23,9 +23,12 @@ HRESULT CPanel_Base::Initialize()
 
 _bool CPanel_Base::Begin_Panel()
 {
-	// ImGui_Manager에서 Is_Opened() 체크 후 호출 : m_bOpen은 항상 true
-    return ImGui::Begin(m_strTitle.c_str(), &m_bOpen, m_iWindowFlags);
-	// 패널이 접혀있으면 false 반환
+	_bool bVisible = ImGui::Begin(m_strTitle.c_str(), &m_bOpen, m_iWindowFlags);
+
+	m_bHovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
+	m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
+	return bVisible;
 }
 
 void CPanel_Base::End_Panel()

@@ -81,7 +81,7 @@ namespace Engine
 			/* GAMEPLAY */ ALL,
 			/* OBSERVE	*/ SYSTEM,
 			/* MENU		*/ UI_NAVIGATE | SYSTEM,
-			/* NAVIGATE	*/ CAMERA | SYSTEM | TOOL,
+			/* NAVIGATE	*/ UI_NAVIGATE | SYSTEM | TOOL,
 			/* LOCKED	*/ SYSTEM | TOOL
 		};
 	}

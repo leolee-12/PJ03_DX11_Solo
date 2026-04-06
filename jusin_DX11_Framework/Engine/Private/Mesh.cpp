@@ -54,6 +54,33 @@ HRESULT CMesh::Initialize_Prototype()
 		? m_tMesh.nonAnimVertices.size()
 		: m_tMesh.animVertices.size());
 
+	// 마우스 피킹용 데이터 캐싱
+	if (m_eType == MODEL::NONANIM)
+	{
+		m_vecPositions.resize(m_tMesh.nonAnimVertices.size());
+
+		for (_uint i = 0; i < static_cast<_uint>(m_tMesh.nonAnimVertices.size()); ++i)
+			m_vecPositions[i] = m_tMesh.nonAnimVertices[i].vPosition;
+	}
+	else
+	{
+		m_vecPositions.resize(m_tMesh.animVertices.size());
+
+		for (_uint i = 0; i < static_cast<_uint>(m_tMesh.animVertices.size()); ++i)
+			m_vecPositions[i] = m_tMesh.animVertices[i].vPosition;
+	}
+
+	m_vecIndices = m_tMesh.indices;
+
+	if (!m_vecPositions.empty())
+	{
+		BoundingBox::CreateFromPoints(
+			m_tLocalAABB,
+			static_cast<size_t>(m_vecPositions.size()),
+			reinterpret_cast<const XMFLOAT3*>(m_vecPositions.data()),
+			sizeof(XMFLOAT3));
+	}
+
 	// VB 생성
 	D3D11_BUFFER_DESC VertexBufferDesc{};
 	VertexBufferDesc.ByteWidth = m_iVertexStride * m_iNumVertices;

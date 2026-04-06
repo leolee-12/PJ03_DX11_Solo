@@ -222,12 +222,16 @@ CGraphic_Device* CGraphic_Device::Create(HWND hWnd, WINMODE isWindowed, _uint iW
 
 void CGraphic_Device::Free()
 {
-	Safe_Release(m_pSwapChain);
+	if (m_pContext != nullptr)
+	{
+		m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+		m_pContext->ClearState();
+		m_pContext->Flush();
+	}
+
 	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferRTV);
-
-	m_pContext->ClearState();
-	m_pContext->Flush();
+	Safe_Release(m_pSwapChain);
 	Safe_Release(m_pContext);
 
 #if defined(DEBUG) || defined(_DEBUG)
@@ -245,7 +249,7 @@ void CGraphic_Device::Free()
 		OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker END \r ");
 		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
 	}
-	if (d3dDebug != nullptr)            d3dDebug->Release();
+	if (d3dDebug != nullptr) d3dDebug->Release();
 #endif
 
 	Safe_Release(m_pDevice);

@@ -5,6 +5,7 @@
 #include "Select_Manager.h"
 #include "Editor_Serializer.h"
 #include "Model_Loader.h"
+#include "Panel_Viewport.h"
 
 IMPLEMENT_SINGLETON(CEditInstance)
 
@@ -50,12 +51,30 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 
 	// ImGui 포커스 여부에 따라 입력 상태 전환
 	ImGuiIO& io = ImGui::GetIO();
-	if (io.WantCaptureMouse || io.WantCaptureKeyboard)
-		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);  // 패널 위 → 카메라 포함 차단
-	else if (io.WantTextInput)
-		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);     // 텍스트 입력 중 → WASD만 차단
-	else
+	const _bool bViewportActive = m_pImGui_Manager->Is_ViewportActive();
+	const _bool bOtherPanelActive = m_pImGui_Manager->Is_AnyNonViewportPanelActive();
+
+	if (io.WantTextInput)
+	{
+		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);	// 텍스트 입력 중 → WASD만 차단
+	}
+	else if (bOtherPanelActive)
+	{
+		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);	// 패널 위 → 카메라 포함 차단
+	}
+	else if (bViewportActive)
+	{
+		// Viewport 패널 조작 시에는 ImGui가 마우스를 캡처하더라도 게임 로직 입력 막지 않음
 		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+	}
+	else if (io.WantCaptureMouse || io.WantCaptureKeyboard)
+	{
+		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
+	}
+	else
+	{
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+	}
 }
 
 HRESULT CEditInstance::Draw()
@@ -64,6 +83,30 @@ HRESULT CEditInstance::Draw()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CEditInstance::Begin_ViewportRender()
+{
+	if (nullptr == m_pImGui_Manager)
+		return E_FAIL;
+
+	CPanel_Viewport* pPanel = m_pImGui_Manager->Get_ViewportPanel();
+	if (nullptr == pPanel)
+		return E_FAIL;
+
+	return pPanel->Begin_SceneRender();
+}
+
+HRESULT CEditInstance::End_ViewportRender()
+{
+	if (nullptr == m_pImGui_Manager)
+		return E_FAIL;
+
+	CPanel_Viewport* pPanel = m_pImGui_Manager->Get_ViewportPanel();
+	if (nullptr == pPanel)
+		return E_FAIL;
+
+	return pPanel->End_SceneRender();
 }
 
 void CEditInstance::Release_Editor()

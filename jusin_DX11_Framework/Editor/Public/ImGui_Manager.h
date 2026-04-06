@@ -11,6 +11,10 @@ private:
 	virtual ~CImGui_Manager() = default;
 
 public:
+	class CPanel_Viewport* Get_ViewportPanel() const;
+	_bool Is_ViewportActive() const;
+	_bool Is_AnyNonViewportPanelActive() const;
+
 	HRESULT Initialize(HWND hWnd);
 	void Update(_float fTimeDelta);
 	HRESULT Render();

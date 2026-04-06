@@ -5,6 +5,7 @@
 #include "Panel_PlaceBrowser.h"
 #include "Panel_UITool.h"
 #include "Panel_Model.h"
+#include "Panel_Viewport.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -12,6 +13,38 @@ CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+}
+
+CPanel_Viewport* CImGui_Manager::Get_ViewportPanel() const
+{
+	return static_cast<CPanel_Viewport*>(m_Panels[ETOUI(PANEL::VIEWPORT)]);
+}
+
+_bool CImGui_Manager::Is_ViewportActive() const
+{
+	CPanel_Viewport* pViewport = Get_ViewportPanel();
+	if (nullptr == pViewport)
+		return false;
+
+	return pViewport->Is_Hovered();
+}
+
+_bool CImGui_Manager::Is_AnyNonViewportPanelActive() const
+{
+	for (_uint i = 0; i < PANEL_COUNT; ++i)
+	{
+		if (i == ETOUI(PANEL::VIEWPORT))
+			continue;
+
+		CPanel_Base* pPanel = m_Panels[i];
+		if (nullptr == pPanel || !pPanel->Is_Opened())
+			continue;
+
+		if (pPanel->Is_Hovered() || pPanel->Is_Focused())
+			return true;
+	}
+
+	return false;
 }
 
 HRESULT CImGui_Manager::Initialize(HWND hWnd)
@@ -79,7 +112,6 @@ void CImGui_Manager::Update(_float fTimeDelta)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
-
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -161,6 +193,10 @@ HRESULT CImGui_Manager::Add_Panels()
 	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::MODEL)] = pInstance;
 
+	pInstance = CPanel_Viewport::Create(m_pDevice, m_pContext);
+	if (nullptr == pInstance) return E_FAIL;
+	m_Panels[ETOUI(PANEL::VIEWPORT)] = pInstance;
+
 	return S_OK;
 }
 
@@ -180,6 +216,14 @@ CImGui_Manager* CImGui_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 void CImGui_Manager::Free()
 {
 	__super::Free();
+
+	if (ImGui::GetCurrentContext() != nullptr)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			ImGui::DestroyPlatformWindows();
+	}
 
 	for(auto& pPanel : m_Panels)
 		Safe_Release(pPanel);

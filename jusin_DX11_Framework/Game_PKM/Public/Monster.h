@@ -22,6 +22,8 @@ protected:
 	virtual ~CMonster() = default;
 
 public:
+	class Engine::CModel* Get_Model() const { return m_pModelCom; }
+
 	virtual _string Get_TypeName() const { return "Monster"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

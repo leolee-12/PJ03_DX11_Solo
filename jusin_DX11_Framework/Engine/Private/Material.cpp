@@ -156,7 +156,7 @@ HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir
 		}
 	}
 
-	if(FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/default_white.png", nullptr, &m_DefaultMaterial)))
+	if(FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/default_white.png", nullptr, &m_pDefaultMaterial)))
 		return E_FAIL;
 
 	return S_OK;
@@ -171,7 +171,7 @@ HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantN
 	if (iIndex >= m_Materials[ETOUI(eType)].size())
 	{
 		//return E_FAIL;
-		return pShader->Bind_SRV(pConstantName, m_DefaultMaterial);
+		return pShader->Bind_SRV(pConstantName, m_pDefaultMaterial);
 	}
 
 	return pShader->Bind_SRV(pConstantName, m_Materials[ETOUI(eType)][iIndex]);
@@ -214,7 +214,7 @@ void CMaterial::Free()
 
 		SRVs.clear();
 	}
-
+	Safe_Release(m_pDefaultMaterial);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 }

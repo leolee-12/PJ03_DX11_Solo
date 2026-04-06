@@ -13,6 +13,14 @@ private:
 
 public:
 	size_t Get_NumMeshes() const { return m_iNumMeshes; }
+	class CMesh* Get_Mesh(_uint iIndex) const
+	{
+		if (iIndex >= m_Meshes.size())
+			return nullptr;
+
+		return m_Meshes[iIndex];
+	}
+
 	_int Get_BoneIndex(const _char* pBoneName);
 	void Set_AnimationIndex(_uint iIndex, _bool isLoop = false) { m_iCurrentAnimationIndex = iIndex; m_isAnimLoop = isLoop; }
 

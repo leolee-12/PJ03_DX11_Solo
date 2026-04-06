@@ -21,6 +21,8 @@ public:
 	HRESULT Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext);
 	void Update_Editor(_float fTimeDelta);
 	HRESULT Draw();
+	HRESULT Begin_ViewportRender();
+	HRESULT End_ViewportRender();
 	void Release_Editor();
 #pragma endregion
 

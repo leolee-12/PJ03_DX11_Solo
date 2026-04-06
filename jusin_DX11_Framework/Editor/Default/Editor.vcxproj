@@ -159,6 +159,7 @@
     <ClInclude Include="..\Public\Panel_PlaceBrowser.h" />
     <ClInclude Include="..\Public\Panel_Property.h" />
     <ClInclude Include="..\Public\Panel_UITool.h" />
+    <ClInclude Include="..\Public\Panel_Viewport.h" />
     <ClInclude Include="..\Public\Select_Manager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\Private\Panel_PlaceBrowser.cpp" />
     <ClCompile Include="..\Private\Panel_Property.cpp" />
     <ClCompile Include="..\Private\Panel_UITool.cpp" />
+    <ClCompile Include="..\Private\Panel_Viewport.cpp" />
     <ClCompile Include="..\Private\Select_Manager.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>

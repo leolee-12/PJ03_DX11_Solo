@@ -60,7 +60,14 @@ HRESULT CEditorApp::Render()
 	if (FAILED(m_pGameInstance->Begin_Draw()))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Draw()))
+	if (FAILED(m_pEditInstance->Begin_ViewportRender()))
+		return E_FAIL;
+
+	HRESULT hr = m_pGameInstance->Draw();
+
+	m_pEditInstance->End_ViewportRender();
+	
+	if(FAILED(hr))
 		return E_FAIL;
 
 	if (FAILED(m_pEditInstance->Draw()))

@@ -19,9 +19,6 @@
     <Filter Include="01. EditInstance">
       <UniqueIdentifier>{5e2a3e60-ff9c-4000-b2e7-5db60fff16a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. ImGui_Manager">
-      <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. Panels">
       <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
     </Filter>
@@ -58,6 +55,12 @@
     <Filter Include="98. Default">
       <UniqueIdentifier>{c0f9d35a-8126-446a-a283-ab7441aedd1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Panels\06. Viewport">
+      <UniqueIdentifier>{85f72900-5285-4888-b5c3-7b60bc58211d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Panels\03. ImGui_Manager">
+      <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -88,7 +91,7 @@
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Manager.h">
-      <Filter>03. ImGui_Manager</Filter>
+      <Filter>04. Panels\03. ImGui_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Base.h">
       <Filter>04. Panels</Filter>
@@ -135,6 +138,9 @@
     <ClInclude Include="..\Public\Panel_Model.h">
       <Filter>04. Panels\05. Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Panel_Viewport.h">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -170,7 +176,7 @@
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Manager.cpp">
-      <Filter>03. ImGui_Manager</Filter>
+      <Filter>04. Panels\03. ImGui_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_demo.cpp">
       <Filter>97. ThirdParty\00. imGui</Filter>
@@ -213,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Panel_Model.cpp">
       <Filter>04. Panels\05. Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_Viewport.cpp">
+      <Filter>04. Panels\06. Viewport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

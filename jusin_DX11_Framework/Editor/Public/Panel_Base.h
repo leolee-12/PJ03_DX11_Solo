@@ -17,6 +17,9 @@ protected:
 	virtual ~CPanel_Base() = default;
 
 public:
+	const _bool Is_Hovered() const { return m_bHovered; }
+	const _bool Is_Focused() const { return m_bFocused; }
+
 	_bool* Get_OpenPtr() { return &m_bOpen; }
 	const _bool Is_Opened() const { return m_bOpen; }
 	void Switch() { m_bOpen = !m_bOpen; }
@@ -35,6 +38,9 @@ protected:
 	CGameInstance* m_pGameInstance = { nullptr };
 	CEditInstance* m_pEditInstance = { nullptr };
 	CGameObject* m_pSelected = { nullptr };
+
+	_bool m_bHovered = { false };
+	_bool m_bFocused = { false };
 
 protected:
 	_bool Begin_Panel();
