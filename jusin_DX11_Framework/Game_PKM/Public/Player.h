@@ -1,24 +1,30 @@
 #pragma once
 #include "Game_PKM_Defines.h"
-#include "GameObject.h"
+#include "ContainerObject.h"
+
+NS_BEGIN(Engine)
+
+NS_END
 
 NS_BEGIN(Game_PKM)
 
-class CPlayer final : public CGameObject
+class CPlayer final : public CContainerObject
 {
 public:
-	struct PLAYER_DESC : public CGameObject::GAMEOBJECT_DESC
-	{
-
+	enum PLAYER_STATE {
+		IDLE = 0x00000001,
+		RUN = 0x00000002,
+		ATTACK = 0x00000004,
+		JUMP = 0x00000008,
 	};
 
+#define NOT_RUN PLAYER_STATE::IDLE | PLAYER_STATE::JUMP
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
 	virtual ~CPlayer() = default;
 
 public:
-	virtual _string Get_TypeName() const { return "Player"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -26,11 +32,19 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+private:
+	_uint				m_iState = {};
+
+private:
+	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects();
+	HRESULT Bind_ShaderResources();
+
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 
-protected:
+private:
 	virtual void Free() override;
 };
 

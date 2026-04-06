@@ -114,6 +114,9 @@
     <ClInclude Include="..\Public\ForkLift.h">
       <Filter>80. Study\02. Monster</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02. GameActor\00. Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
       <Filter>80. Study\02. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Player.cpp">
+      <Filter>02. GameActor\00. Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
