@@ -27,7 +27,10 @@ public:
 #pragma endregion
 
 #pragma region IMGUI_MANAGER
-
+	void Begin_PlaceMode(const CATALOG_ITEM& tItem);
+	void End_PlaceMode();
+	_bool Is_PlaceMode() const;
+	const CATALOG_ITEM& Get_PlaceItem() const;
 #pragma endregion
 
 #pragma region SELECT_MANAGER
@@ -46,9 +49,11 @@ public:
 #pragma region OBJECT_REGISTRY
 	const vector<OBJ_RECORD>& Get_Records() const;
 	const vector<CGameObject*>& Get_EditorObjects() const;
+	const vector<EDITOR_OBJECT_ENTRY>& Get_EditorObjectEntries() const;
 	void Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);
 	void Unregister_Object(CGameObject* pObj);
 	void Clone_Object(CGameObject* pObj);
+	void Sync_LevelObjects(_uint iLevel);
 #pragma endregion
 
 #pragma region EDITOR_SERIALIZER

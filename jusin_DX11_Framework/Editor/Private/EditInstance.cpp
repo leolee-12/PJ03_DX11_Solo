@@ -44,6 +44,7 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	if (m_iPrevLevel != iCurrLevel)
 	{
 		Clear();
+		Sync_LevelObjects(static_cast<_uint>(iCurrLevel));
 		m_iPrevLevel = iCurrLevel;
 	}
 
@@ -122,7 +123,25 @@ void CEditInstance::Release_Editor()
 #pragma endregion
 
 #pragma region IMGUI_MANAGER
+void CEditInstance::Begin_PlaceMode(const CATALOG_ITEM& tItem)
+{
+	m_pImGui_Manager->Begin_PlaceMode(tItem);
+}
 
+void CEditInstance::End_PlaceMode()
+{
+	m_pImGui_Manager->End_PlaceMode();
+}
+
+_bool CEditInstance::Is_PlaceMode() const
+{
+	return m_pImGui_Manager->Is_PlaceMode();
+}
+
+const CATALOG_ITEM& CEditInstance::Get_PlaceItem() const
+{
+	return m_pImGui_Manager->Get_PlaceItem();
+}
 #pragma endregion
 
 #pragma region SELECT_MANAGER
@@ -178,6 +197,11 @@ const vector<CGameObject*>& CEditInstance::Get_EditorObjects() const
 	return m_pObject_Registry->Get_EditorObjects();
 }
 
+const vector<EDITOR_OBJECT_ENTRY>& CEditInstance::Get_EditorObjectEntries() const
+{
+	return m_pObject_Registry->Get_EditorObjectEntries();
+}
+
 void CEditInstance::Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg)
 {
 	return m_pObject_Registry->Register_Object(iProtoLevel, strProtoTag, iLayerLevel, strLayerTag, pArg);
@@ -191,6 +215,11 @@ void CEditInstance::Unregister_Object(CGameObject* pObj)
 void CEditInstance::Clone_Object(CGameObject* pObj)
 {
 	return m_pObject_Registry->Clone_Object(pObj);
+}
+
+void CEditInstance::Sync_LevelObjects(_uint iLevel)
+{
+	m_pObject_Registry->Sync_LevelObjects(iLevel);
 }
 #pragma endregion
 

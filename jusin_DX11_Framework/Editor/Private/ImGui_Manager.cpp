@@ -47,6 +47,18 @@ _bool CImGui_Manager::Is_AnyNonViewportPanelActive() const
 	return false;
 }
 
+void CImGui_Manager::Begin_PlaceMode(const CATALOG_ITEM& tItem)
+{
+	m_bPlaceMode = true;
+	m_tPlaceItem = tItem;
+}
+
+void CImGui_Manager::End_PlaceMode()
+{
+	m_bPlaceMode = false;
+	m_tPlaceItem = {};
+}
+
 HRESULT CImGui_Manager::Initialize(HWND hWnd)
 {
 	_float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));

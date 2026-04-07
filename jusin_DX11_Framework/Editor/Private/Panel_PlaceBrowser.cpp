@@ -77,9 +77,23 @@ void CPanel_PlaceBrowser::Draw_Category(const _string& strCat)
 			pItem->strDisplayName.find(m_szFilter) == _string::npos)
 			continue;
 
+		const _bool bSelectedPlaceMode =
+			m_pEditInstance->Is_PlaceMode() &&
+			m_pEditInstance->Get_PlaceItem().strProtoTag == pItem->strProtoTag &&
+			m_pEditInstance->Get_PlaceItem().iProtoLevel == pItem->iProtoLevel;
+
 		bool bClicked = ImGui::Selectable(
-			pItem->strDisplayName.c_str(), false,
+			pItem->strDisplayName.c_str(),
+			bSelectedPlaceMode,
 			ImGuiSelectableFlags_AllowDoubleClick);
+
+		if (bClicked)
+		{
+			if (bSelectedPlaceMode)
+				m_pEditInstance->End_PlaceMode();
+			else
+				m_pEditInstance->Begin_PlaceMode(*pItem);
+		}
 
 		if (bClicked && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			Place_Object(*pItem);

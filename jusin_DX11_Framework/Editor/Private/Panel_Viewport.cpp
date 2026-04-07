@@ -4,9 +4,6 @@
 
 #include "Model.h"
 #include "Mesh.h"
-#include "ForkLift.h"
-#include "MapObject.h"
-#include "Monster.h"
 
 namespace
 {
@@ -97,7 +94,7 @@ HRESULT CPanel_Viewport::Render()
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
 		if (m_bHovered && m_pGameInstance->Mouse_Down(DIMB::LBUTTON))
-			Handle_DebugPicking();
+			Handle_ViewportClick();
 	}
 	else
 	{
@@ -120,15 +117,43 @@ HRESULT CPanel_Viewport::Render()
 		m_strPickTarget.c_str()
 	);
 
+	const char* pModeText = m_pEditInstance->Is_PlaceMode() ? "Mode : Place" : "Mode : Select";
+	pDrawList->AddText(
+		ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 50.f),
+		IM_COL32(255, 180, 120, 255),
+		pModeText
+	);
+
 	if (m_bHasLastHit)
 	{
-		char szBuf[128] = {};
-		sprintf_s(szBuf, "Hit Pos : %.2f, %.2f, %.2f", m_vLastHitPos.x, m_vLastHitPos.y, m_vLastHitPos.z);
+		char szObjBuf[128] = {};
+		sprintf_s(szObjBuf, "Obj Pos   : %.2f, %.2f, %.2f",
+			m_vLastObjectPos.x, m_vLastObjectPos.y, m_vLastObjectPos.z);
 
 		pDrawList->AddText(
-			ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 50.f),
+			ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 70.f),
+			IM_COL32(255, 180, 120, 255),
+			szObjBuf
+		);
+
+		char szLocalBuf[128] = {};
+		sprintf_s(szLocalBuf, "Local Hit : %.2f, %.2f, %.2f",
+			m_vLastLocalHitPos.x, m_vLastLocalHitPos.y, m_vLastLocalHitPos.z);
+
+		pDrawList->AddText(
+			ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 90.f),
+			IM_COL32(120, 220, 255, 255),
+			szLocalBuf
+		);
+
+		char szWorldBuf[128] = {};
+		sprintf_s(szWorldBuf, "World Hit : %.2f, %.2f, %.2f",
+			m_vLastWorldHitPos.x, m_vLastWorldHitPos.y, m_vLastWorldHitPos.z);
+
+		pDrawList->AddText(
+			ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 110.f),
 			IM_COL32(0, 255, 0, 255),
-			szBuf
+			szWorldBuf
 		);
 	}
 
@@ -271,37 +296,60 @@ void CPanel_Viewport::Handle_DebugPicking()
 	XMVECTOR vRayOrigin = XMLoadFloat3(&vRayOriginF3);
 	XMVECTOR vRayDir = XMVector3Normalize(XMLoadFloat3(&vRayDirF3));
 
-	vector<CGameObject*> objs = m_pGameInstance->Get_LevelObjects(ETOUI(LEVEL::GAMEPLAY));
+	const vector<EDITOR_OBJECT_ENTRY>& Entries = m_pEditInstance->Get_EditorObjectEntries();
 
 	_bool bHit = false;
 	_float fMinDist = FLT_MAX;
-	_float3 vBestHit{};
+	_float3 vBestLocalHit{};
+	_float3 vBestWorldHit{};
+	_float3 vBestObjectPos{};
 	_string strBestTarget = "Target : None";
 
-	for (CGameObject* pObj : objs)
+	for (const EDITOR_OBJECT_ENTRY& tEntry : Entries)
 	{
-		if (nullptr == pObj)
-			continue;
-
-		if (pObj->Get_TypeName() != "ForkLift")
-			continue;
-
-		CModel* pModel = static_cast<Game_PKM::CForkLift*>(pObj)->Get_Model();
-		if (nullptr == pModel)
-			continue;
-
-		_float3 vHitPos{};
-		if (Pick_ModelObject(pObj, pModel, vRayOrigin, vRayDir, &vHitPos))
+		if (m_pEditInstance->Is_PlaceMode())
 		{
-			_float fDist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&vHitPos) - vRayOrigin));
-			if (fDist < fMinDist)
+			if (false == tEntry.bPlacementSurface)
+				continue;
+		}
+		else
+		{
+			if (false == tEntry.bSelectable)
+				continue;
+		}
+
+		CGameObject* pObj = tEntry.pObj;
+		CModel* pModel = tEntry.pModel;
+
+		if (nullptr == pObj || nullptr == pModel)
+			continue;
+
+		CTransform* pTransform = pObj->Get_Transform();
+		if (nullptr == pTransform)
+			continue;
+
+		_float3 vLocalHitPos{};
+		_float3 vWorldHitPos{};
+
+		if (Pick_ModelObject(pObj, pModel, vRayOrigin, vRayDir, &vLocalHitPos, &vWorldHitPos))
+		{
+			const _float fHitDist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&vWorldHitPos) - vRayOrigin));
+
+			if (fHitDist < fMinDist)
 			{
-				fMinDist = fDist;
-				vBestHit = vHitPos;
+				fMinDist = fHitDist;
 				bHit = true;
+
+				vBestLocalHit = vLocalHitPos;
+				vBestWorldHit = vWorldHitPos;
+
+				_vector vObjPos = pTransform->Get_State(STATE::POSITION);
+				XMStoreFloat3(&vBestObjectPos, vObjPos);
 
 				_wstring wName = pObj->Get_Name();
 				strBestTarget = "Target : " + _string(wName.begin(), wName.end());
+
+				m_pLastPickedObject = pObj;
 			}
 		}
 	}
@@ -309,13 +357,16 @@ void CPanel_Viewport::Handle_DebugPicking()
 	if (!bHit)
 	{
 		m_bHasLastHit = false;
+		m_pLastPickedObject = nullptr;
 		m_strPickDebug = "Pick Result : No Hit";
 		m_strPickTarget = "Target : None";
 		return;
 	}
 
 	m_bHasLastHit = true;
-	m_vLastHitPos = vBestHit;
+	m_vLastObjectPos = vBestObjectPos;
+	m_vLastLocalHitPos = vBestLocalHit;
+	m_vLastWorldHitPos = vBestWorldHit;
 	m_strPickDebug = "Pick Result : Hit";
 	m_strPickTarget = strBestTarget;
 }
@@ -363,10 +414,9 @@ _bool CPanel_Viewport::Build_MouseRay(_float3* pOutOrigin, _float3* pOutDir) con
 	return true;
 }
 
-_bool CPanel_Viewport::Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvector vRayOrigin, _fvector vRayDir,
-	_float3* pOutHitPos) const
+_bool CPanel_Viewport::Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvector vRayOrigin, _fvector vRayDir, _float3* pOutLocalHitPos, _float3* pOutWorldHitPos) const
 {
-	if (nullptr == pObj || nullptr == pModel || nullptr == pOutHitPos)
+	if (nullptr == pObj || nullptr == pModel || nullptr == pOutLocalHitPos || nullptr == pOutWorldHitPos)
 		return false;
 
 	CTransform* pTransform = pObj->Get_Transform();
@@ -413,9 +463,13 @@ _bool CPanel_Viewport::Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvec
 				if (fDist < fMinDist)
 				{
 					fMinDist = fDist;
+
 					XMVECTOR vLocalHit = vLocalOrigin + vLocalDir * fDist;
 					XMVECTOR vWorldHit = XMVector3TransformCoord(vLocalHit, matWorld);
-					XMStoreFloat3(pOutHitPos, vWorldHit);
+
+					XMStoreFloat3(pOutLocalHitPos, vLocalHit);
+					XMStoreFloat3(pOutWorldHitPos, vWorldHit);
+
 					bHit = true;
 				}
 			}
@@ -425,27 +479,56 @@ _bool CPanel_Viewport::Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvec
 	return bHit;
 }
 
-//void CPanel_Viewport::Debug_PlaceMonster(const _float3& vHitPos)
-//{
-//	m_pEditInstance->Register_Object(
-//		ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
-//		ETOUI(LEVEL::GAMEPLAY), LAYER_MONSTER, nullptr);
-//
-//	const auto& objs = m_pEditInstance->Get_EditorObjects();
-//	if (objs.empty())
-//		return;
-//
-//	CGameObject* pNewObj = objs.back();
-//	if (nullptr == pNewObj)
-//		return;
-//
-//	CTransform* pTransform = pNewObj->Get_Transform();
-//	if (nullptr == pTransform)
-//		return;
-//
-//	pTransform->Set_State(STATE::POSITION, XMVectorSet(vHitPos.x, vHitPos.y, vHitPos.z, 1.f));
-//	m_pEditInstance->Select(pNewObj, false);
-//}
+void CPanel_Viewport::Handle_ViewportClick()
+{
+	Handle_DebugPicking();
+
+	if (false == m_bHasLastHit)
+		return;
+
+	if (m_pEditInstance->Is_PlaceMode())
+		Place_ObjectAtHit(m_vLastWorldHitPos);
+	else
+		Pick_SelectObject();
+}
+
+void CPanel_Viewport::Place_ObjectAtHit(const _float3& vHitPos)
+{
+	if (false == m_pEditInstance->Is_PlaceMode())
+		return;
+
+	const CATALOG_ITEM& tItem = m_pEditInstance->Get_PlaceItem();
+
+	m_pEditInstance->Register_Object(
+		tItem.iProtoLevel,
+		tItem.strProtoTag,
+		tItem.iLayerLevel,
+		tItem.strLayerTag,
+		nullptr);
+
+	const auto& EditorObjects = m_pEditInstance->Get_EditorObjects();
+	if (EditorObjects.empty())
+		return;
+
+	CGameObject* pNewObj = EditorObjects.back();
+	if (nullptr == pNewObj)
+		return;
+
+	CTransform* pTransform = pNewObj->Get_Transform();
+	if (nullptr == pTransform)
+		return;
+
+	pTransform->Set_State(STATE::POSITION, XMVectorSet(vHitPos.x, vHitPos.y, vHitPos.z, 1.f));
+	m_pEditInstance->Select(pNewObj, false);
+}
+
+void CPanel_Viewport::Pick_SelectObject()
+{
+	if (nullptr == m_pLastPickedObject)
+		return;
+
+	m_pEditInstance->Select(m_pLastPickedObject, false);
+}
 
 CPanel_Viewport* CPanel_Viewport::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

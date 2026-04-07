@@ -2,6 +2,10 @@
 #define Editor_Struct_h__
 #include "UIObject.h"
 
+NS_BEGIN(Engine)
+class CModel;
+NS_END
+
 NS_BEGIN(Editor)
 
 struct OBJ_RECORD
@@ -41,6 +45,16 @@ struct CATALOG_ITEM
 	WNameID strLayerTag = { };
 	_string strDisplayName;
 	_string strCategory;
+};
+
+struct EDITOR_OBJECT_ENTRY
+{
+	CGameObject* pObj = { nullptr };
+	Engine::CModel* pModel = { nullptr };
+
+	_bool bPickable = { false };
+	_bool bSelectable = { false };
+	_bool bPlacementSurface = { false };
 };
 
 NS_END

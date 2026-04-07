@@ -46,21 +46,25 @@ private:
 
 	ImVec2 m_vViewportSize = {};
 	ImVec2 m_vViewportPos = {};
-	_bool m_bPlaceMode = { false };
-	CATALOG_ITEM m_tPendingItem = {};
 
 	_bool m_bHasLastHit = { false };
-	_float3 m_vLastHitPos = {};
+	_float3 m_vLastObjectPos = {};
+	_float3 m_vLastLocalHitPos = {};
+	_float3 m_vLastWorldHitPos = {};
 	_string m_strPickDebug = { "No Pick" };
 	_string m_strPickTarget = { "Target : None" };
+	CGameObject* m_pLastPickedObject = { nullptr };
 
 private:
 	HRESULT Create_RenderTarget(_uint iWidth, _uint iHeight);
 	void Release_RenderTarget();
 	void Handle_DebugPicking();
 	_bool Build_MouseRay(_float3* pOutOrigin, _float3* pOutDir) const;
-	_bool Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvector vRayOrigin, _fvector vRayDir, _float3* pOutHitPos) const;
-	//void Debug_PlaceMonster(const _float3& vHitPos);
+	_bool Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvector vRayOrigin, _fvector vRayDir, _float3* pOutLocalHitPos, _float3* pOutWorldHitPos) const;
+
+	void Handle_ViewportClick();
+	void Place_ObjectAtHit(const _float3& vHitPos);
+	void Pick_SelectObject();
 
 public:
 	static CPanel_Viewport* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
