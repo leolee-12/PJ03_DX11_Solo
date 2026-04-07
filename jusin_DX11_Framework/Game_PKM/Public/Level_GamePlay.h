@@ -19,6 +19,7 @@ public:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
+	HRESULT Ready_Layer_Player(WNameID strLayerTag);
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 
 public:

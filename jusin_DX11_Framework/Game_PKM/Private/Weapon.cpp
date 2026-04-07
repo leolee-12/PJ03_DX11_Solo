@@ -1,34 +1,27 @@
-#include "Body_Player.h"
+#include "Weapon.h"
 #include "GameInstance.h"
 
-#include "Player.h"
-
-CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject{ pDevice, pContext }
 {
-
+	m_strName = { L"Weapon_Default" };
 }
 
-CBody_Player::CBody_Player(const CBody_Player& Prototype)
+CWeapon::CWeapon(const CWeapon& Prototype)
 	: CPartObject{ Prototype }
 {
-
 }
 
-const _float4x4* CBody_Player::Get_BoneMatrixPtr(const _char* pBoneName) const
-{
-	return m_pModelCom->Get_BoneMatrixPtr(pBoneName);
-}
-
-HRESULT CBody_Player::Initialize_Prototype()
+HRESULT CWeapon::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CBody_Player::Initialize(void* pArg)
+HRESULT CWeapon::Initialize(void* pArg)
 {
-	auto        pDesc = static_cast<BODY_PLAYER_DESC*>(pArg);
+	auto pDesc = static_cast<CWeapon::WEAPON_DESC*>(pArg);
 
+	m_pSocketBoneMatrix = pDesc->pSocketBoneMatrix;
 	m_pParentState = pDesc->pParentState;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -37,51 +30,45 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimationIndex(3, true);
+	m_pTransformCom->ScaleTo(0.1f, 0.1f, 0.1f);
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(90.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.75f, 0.f, 0.f, 1.f));
 
 	return S_OK;
 }
 
-void CBody_Player::Priority_Update(_float fTimeDelta)
+void CWeapon::Priority_Update(_float fTimeDelta)
 {
 
 }
 
-void CBody_Player::Update(_float fTimeDelta)
+void CWeapon::Update(_float fTimeDelta)
 {
-	if (*m_pParentState & CPlayer::PLAYER_STATE::IDLE)
-		m_pModelCom->Set_AnimationIndex(3, true);
-
-	if (*m_pParentState & CPlayer::PLAYER_STATE::RUN)
-		m_pModelCom->Set_AnimationIndex(4, true);
-
-
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10;
 
 }
 
-void CBody_Player::Late_Update(_float fTimeDelta)
+void CWeapon::Late_Update(_float fTimeDelta)
 {
+	_matrix SocketMatrix = XMLoadFloat4x4(m_pSocketBoneMatrix);
 
-	__super::Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+	for (size_t i = 0; i < 3; i++)
+		SocketMatrix.r[i] = XMVector3Normalize(SocketMatrix.r[i]);
+
+	Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()) * SocketMatrix);
 
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 }
 
-HRESULT CBody_Player::Render()
+HRESULT CWeapon::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	size_t      iNumMeshes = m_pModelCom->Get_NumMeshes();
+	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, TEXTURE_TYPE::DIFFUSE, 0)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Begin(0)))
@@ -92,41 +79,34 @@ HRESULT CBody_Player::Render()
 	}
 
 	return S_OK;
+
 }
 
-HRESULT CBody_Player::Ready_Components()
+HRESULT CWeapon::Ready_Components()
 {
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
-
-
-
 
 	return S_OK;
 }
 
-HRESULT CBody_Player::Bind_ShaderResources()
+HRESULT CWeapon::Bind_ShaderResources()
 {
-
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//    return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
@@ -147,33 +127,33 @@ HRESULT CBody_Player::Bind_ShaderResources()
 }
 
 
-CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CWeapon* CWeapon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBody_Player* pInstance = new CBody_Player(pDevice, pContext);
+	CWeapon* pInstance = new CWeapon(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CBody_Player");
+		MSG_BOX("Failed to Created : CWeapon");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBody_Player::Clone(void* pArg)
+CGameObject* CWeapon::Clone(void* pArg)
 {
-	CBody_Player* pInstance = new CBody_Player(*this);
+	CWeapon* pInstance = new CWeapon(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBody_Player");
+		MSG_BOX("Failed to Cloned : CWeapon");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBody_Player::Free()
+void CWeapon::Free()
 {
 	__super::Free();
 

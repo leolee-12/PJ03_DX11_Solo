@@ -8,6 +8,28 @@
 #include "MapObject.h"
 #include "Monster.h"
 
+namespace
+{
+	ImVec2 Fit_Size_To_Aspect(const ImVec2& vAvailableSize, _float fTargetAspect)
+	{
+		if (vAvailableSize.x <= 0.f || vAvailableSize.y <= 0.f || fTargetAspect <= 0.f)
+			return ImVec2(1.f, 1.f);
+
+		ImVec2 vFittedSize = vAvailableSize;
+		const _float fAvailableAspect = vAvailableSize.x / vAvailableSize.y;
+
+		if (fAvailableAspect > fTargetAspect)
+			vFittedSize.x = vAvailableSize.y * fTargetAspect;
+		else
+			vFittedSize.y = vAvailableSize.x / fTargetAspect;
+
+		vFittedSize.x = max(vFittedSize.x, 1.f);
+		vFittedSize.y = max(vFittedSize.y, 1.f);
+
+		return vFittedSize;
+	}
+}
+
 CPanel_Viewport::CPanel_Viewport(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPanel_Base()
 	, m_pDevice(pDevice)
@@ -46,9 +68,11 @@ HRESULT CPanel_Viewport::Render()
 	}
 
 	ImVec2 vAvail = ImGui::GetContentRegionAvail();
+	const _float fTargetAspect = static_cast<_float>(g_iWinSizeX) / static_cast<_float>(g_iWinSizeY);
+	const ImVec2 vRenderSize = Fit_Size_To_Aspect(vAvail, fTargetAspect);
 
-	const _uint iRTWidth = static_cast<_uint>(max(vAvail.x, 1.f));
-	const _uint iRTHeight = static_cast<_uint>(max(vAvail.y, 1.f));
+	const _uint iRTWidth = static_cast<_uint>(vRenderSize.x);
+	const _uint iRTHeight = static_cast<_uint>(vRenderSize.y);
 
 	if (static_cast<_uint>(m_vViewportSize.x) != iRTWidth ||
 		static_cast<_uint>(m_vViewportSize.y) != iRTHeight)
@@ -60,21 +84,24 @@ HRESULT CPanel_Viewport::Render()
 		}
 	}
 
+	const ImVec2 vCursorPos = ImGui::GetCursorPos();
+	const ImVec2 vOffset((vAvail.x - vRenderSize.x) * 0.5f, (vAvail.y - vRenderSize.y) * 0.5f);
+	ImGui::SetCursorPos(ImVec2(vCursorPos.x + max(vOffset.x, 0.f), vCursorPos.y + max(vOffset.y, 0.f)));
 	m_vViewportPos = ImGui::GetCursorScreenPos();
 
 	if (m_pSRV != nullptr)
 	{
-		ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vAvail);
-
-		if (m_bHovered && m_pGameInstance->Mouse_Down(DIMB::LBUTTON))
-			Handle_DebugPicking();
+		ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vRenderSize);
 
 		m_bHovered = ImGui::IsItemHovered();
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
+		if (m_bHovered && m_pGameInstance->Mouse_Down(DIMB::LBUTTON))
+			Handle_DebugPicking();
 	}
 	else
 	{
-		ImGui::Dummy(vAvail);
+		ImGui::Dummy(vRenderSize);
 		m_bHovered = false;
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 	}

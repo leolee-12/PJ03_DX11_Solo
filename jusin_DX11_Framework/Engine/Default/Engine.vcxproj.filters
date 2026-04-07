@@ -85,6 +85,9 @@
     <Filter Include="05. GameObject\ContainerObject">
       <UniqueIdentifier>{014aabd6-de5a-4121-93ad-79c029b4d64f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. ShaderFiles">
+      <UniqueIdentifier>{18a67bbb-0a80-4cd1-8a2c-f3df69eceb30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -210,6 +213,9 @@
     <ClInclude Include="..\Public\PartObject.h">
       <Filter>05. GameObject\ContainerObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>07. Component\VIBuffer\Cube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -314,5 +320,13 @@
     <ClCompile Include="..\Private\PartObject.cpp">
       <Filter>05. GameObject\ContainerObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
+      <Filter>07. Component\VIBuffer\Cube</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <Filter>97. ShaderFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>

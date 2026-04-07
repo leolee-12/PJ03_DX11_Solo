@@ -43,6 +43,20 @@ namespace Engine
 		};
 	};
 
+	struct VTXCUBE
+	{
+		XMFLOAT3 vPosition;
+		XMFLOAT3 vTexcoord;
+
+		static const unsigned int iNumElements = { 2 };
+
+		static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =
+		{
+			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		};
+	};
+
 	struct VTXNORTEX
 	{
 		XMFLOAT3 vPosition;
@@ -104,8 +118,6 @@ namespace Engine
 			{"BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 72, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
 	};
-
-
 
 	struct WMODEL_HEADER
 	{

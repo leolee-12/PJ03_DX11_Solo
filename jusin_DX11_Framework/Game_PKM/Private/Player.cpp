@@ -2,11 +2,12 @@
 #include "GameInstance.h"
 
 #include "Body_Player.h"
+#include "Weapon.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CContainerObject{ pDevice, pContext }
 {
-
+	m_strName = { L"Player" };
 }
 
 CPlayer::CPlayer(const CPlayer& Prototype)
@@ -22,7 +23,7 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	GAMEOBJECT_DESC     Desc{};
+	GAMEOBJECT_DESC Desc{};
 
 	Desc.fSpeedPerSec = 10.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.f);
@@ -36,14 +37,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
-	//m_pTransformCom->Set_State(STATE::POSITION,
-	//    XMVectorSet(
-	//        m_pGameInstance->Random(0.f, 30.f),
-	//       3.f,
-	//        m_pGameInstance->Random(0.f, 30.f),
-	//        1.f
-	//    ));
-
 	return S_OK;
 }
 
@@ -54,7 +47,6 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 			if (nullptr != Pair.second)
 				Pair.second->Priority_Update(fTimeDelta);
 		});
-
 }
 
 void CPlayer::Update(_float fTimeDelta)
@@ -80,8 +72,7 @@ void CPlayer::Update(_float fTimeDelta)
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
 
-		if (m_iState & NOT_RUN)
-			m_iState ^= NOT_RUN;
+		m_iState &= ~(NOT_RUN);
 
 		m_iState |= PLAYER_STATE::RUN;
 	}
@@ -116,25 +107,25 @@ HRESULT CPlayer::Render()
 
 HRESULT CPlayer::Ready_Components()
 {
-
-
-
-
-
-
 	return S_OK;
 }
 
 HRESULT CPlayer::Ready_PartObjects()
 {
-	CBody_Player::BODY_PLAYER_DESC      BodyDesc{};
+	CBody_Player::BODY_PLAYER_DESC BodyDesc{};
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	BodyDesc.pParentState = &m_iState;
 
-	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), WNAME(L"Prototype_GameObject_Body_Player"),
-		WNAME(L"Body"), &BodyDesc)))
+	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_PLAYER, PART_BODY, &BodyDesc)))
 		return E_FAIL;
 
+	CWeapon::WEAPON_DESC WeaponDesc{};
+	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	WeaponDesc.pParentState = &m_iState;
+	WeaponDesc.pSocketBoneMatrix = dynamic_cast<CBody_Player*>(m_PartObjects[PART_BODY])->Get_BoneMatrixPtr("SWORD");
+
+	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON, PART_WEAPON, &WeaponDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

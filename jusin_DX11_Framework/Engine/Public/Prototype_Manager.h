@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
 
 /* -------------------------------------------------- */

@@ -66,35 +66,81 @@ namespace Engine
 	private:
 		void promote()
 		{
-			for (auto& pair : m_Small) m_Large.emplace(pair.first, move(pair.second));
+			for (auto& pair : m_Small)
+			{
+				auto [iter, inserted] = m_Large.emplace(pair.first, move(pair.second));
+				assert(inserted && "WNameMap::promote - Duplicate Key Detected");
+			}
+
 			m_Small.clear();
 			m_bLarge = true;
+		}
+
+		T* find_ptr(WNameID id)
+		{
+			if (!m_bLarge)
+			{
+				for (auto& pair : m_Small)
+				{
+					if (pair.first == id)
+						return &pair.second;
+				}
+				return nullptr;
+			}
+
+			auto iter = m_Large.find(id);
+			return iter != m_Large.end() ? &iter->second : nullptr;
+		}
+
+		const T* find_ptr(WNameID id) const
+		{
+			if (!m_bLarge)
+			{
+				for (const auto& pair : m_Small)
+				{
+					if (pair.first == id)
+						return &pair.second;
+				}
+				return nullptr;
+			}
+
+			auto iter = m_Large.find(id);
+			return iter != m_Large.end() ? &iter->second : nullptr;
 		}
 
 	public:
 		void emplace(WNameID id, T value)
 		{
+			assert(find_ptr(id) == nullptr && "WNameMap::emplace - Duplicate Key");
+
 			if (!m_bLarge && m_Small.size() < THRESHOLD)
 			{
 				m_Small.emplace_back(id, move(value));
+				return;
 			}
-			else
-			{
-				if (!m_bLarge) { /* promote */ promote(); }
-				m_Large.emplace(id, move(value));
-			}
+
+			if (!m_bLarge)
+				promote();
+
+			auto [iter, inserted] = m_Large.emplace(id, move(value));
+			assert(inserted && "WNameMap::emplace - Duplicate Key");
 		}
 
-		T* find(WNameID id)
+		T* find(WNameID id) { return find_ptr(id); }
+		const T* find(WNameID id) const { return find_ptr(id); }
+
+		T& operator[](WNameID id)
 		{
-			if (!m_bLarge)
-			{
-				for (auto& pair : m_Small)
-					if (pair.first == id) return &pair.second;
-				return nullptr;
-			}
-			auto iter = m_Large.find(id);
-			return iter != m_Large.end() ? &iter->second : nullptr;
+			T* value = find_ptr(id);
+			assert(value && "WNameMap::operator[] - Key Not Found");
+			return *value;
+		}
+
+		const T& operator[](WNameID id) const
+		{
+			const T* value = find_ptr(id);
+			assert(value && "WNameMap::operator[] const - Key Not Found");
+			return *value;
 		}
 
 		template<typename F>
@@ -116,13 +162,44 @@ namespace Engine
 	class WNameMap<T, ALWAYS_HASHMAP>
 	{
 		unordered_map<WNameID, T> m_Map;
-	public:
-		void emplace(WNameID id, T value) { m_Map.emplace(id, move(value)); }
-		T* find(WNameID id)
+
+	private:
+		T* find_ptr(WNameID id)
 		{
 			auto iter = m_Map.find(id);
 			return iter != m_Map.end() ? &iter->second : nullptr;
 		}
+
+		const T* find_ptr(WNameID id) const
+		{
+			auto iter = m_Map.find(id);
+			return iter != m_Map.end() ? &iter->second : nullptr;
+		}
+
+	public:
+		void emplace(WNameID id, T value)
+		{
+			auto [iter, inserted] = m_Map.emplace(id, move(value));
+			assert(inserted && "WNameMap::emplace - Duplicate Key");
+		}
+
+		T* find(WNameID id) { return find_ptr(id); }
+		const T* find(WNameID id) const { return find_ptr(id); }
+		
+		T& operator[](WNameID id)
+		{
+			T* value = find_ptr(id);
+			assert(value != m_Map.end() && "WNameMap::operator[] - Key Not Found");
+			return *value;
+		}
+
+		const T& operator[](WNameID id) const
+		{
+			const T* value = find_ptr(id);
+			assert(value && "WNameMap::operator[] const - Key Not Found");
+			return *value;
+		}
+
 		template<typename F> void for_each(F&& func) { for (auto& pair : m_Map) func(pair); }
 		void clear() { m_Map.clear(); }
 	};

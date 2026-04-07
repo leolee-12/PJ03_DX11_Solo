@@ -1,28 +1,27 @@
 #pragma once
 #include "Game_PKM_Defines.h"
-#include "ContainerObject.h"
+#include "GameObject.h"
 
 NS_BEGIN(Engine)
-
+class CShader;
+class CTexture;
+class CVIBuffer_Cube;
 NS_END
 
 NS_BEGIN(Game_PKM)
 
-class CPlayer final : public CContainerObject
+class CSky final : public CGameObject
 {
 public:
-	enum PLAYER_STATE {
-		IDLE = 0x00000001,
-		RUN = 0x00000002,
-		ATTACK = 0x00000004,
-		JUMP = 0x00000008,
+	struct SKY_DESC : public CGameObject::GAMEOBJECT_DESC
+	{
+
 	};
 
-#define NOT_RUN PLAYER_STATE::IDLE | PLAYER_STATE::JUMP
-private:
-	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayer(const CPlayer& Prototype);
-	virtual ~CPlayer() = default;
+protected:
+	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSky(const CSky& Prototype);
+	virtual ~CSky() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,20 +31,20 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
 private:
-	_uint m_iState = {};
+	CShader* m_pShaderCom = { nullptr };
+	CTexture* m_pTextureCom = { nullptr };
+	CVIBuffer_Cube* m_pVIBufferCom = { nullptr };
 
 private:
 	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSky* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
-
-private:
-	virtual void Free() override;
+	virtual void Free();
 };
 
 NS_END

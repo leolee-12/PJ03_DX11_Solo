@@ -1,3 +1,5 @@
+#include "Engine_Shader_Defines.hlsli"
+
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_WITMatrix;
 vector g_vCamPos;
@@ -18,27 +20,6 @@ sampler DefaultSampler = sampler_state
 	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
-};
-
-RasterizerState RS_CullBack
-{
-	FillMode = Solid;
-	CullMode = Back;
-	FrontCounterClockwise = false;
-};
-
-RasterizerState RS_CullNone
-{
-	FillMode = Solid;
-	CullMode = None;
-	FrontCounterClockwise = false;
-};
-
-RasterizerState RS_CullBack_CCW
-{
-	FillMode = Solid;
-	CullMode = Back;
-	FrontCounterClockwise = true;
 };
 
 struct VS_IN
@@ -155,35 +136,18 @@ technique11 DefaultTechnique
 {
 	pass DefaultPass	// 0. Phong Model
 	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 	pass BlinnPhongPass	// 1. Blinn-Phong Model
 	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_BLINNPHONG();
 	}
-	pass Pass2	// 후면컬링
-	{
-		SetRasterizerState(RS_CullBack);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	pass Pass3 // 컬링X
-	{
-		SetRasterizerState(RS_CullNone);
-
-		VertexShader = compile vs_5_0 VS_MAIN();
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	pass Pass4 // 전면컬링
-{
-	SetRasterizerState(RS_CullBack_CCW);
-
-	VertexShader = compile vs_5_0 VS_MAIN();
-	PixelShader = compile ps_5_0 PS_MAIN();
-}
 };

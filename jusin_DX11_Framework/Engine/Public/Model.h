@@ -22,6 +22,7 @@ public:
 	}
 
 	_int Get_BoneIndex(const _char* pBoneName);
+	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	void Set_AnimationIndex(_uint iIndex, _bool isLoop = false) { m_iCurrentAnimationIndex = iIndex; m_isAnimLoop = isLoop; }
 
 	virtual HRESULT Initialize_Prototype();

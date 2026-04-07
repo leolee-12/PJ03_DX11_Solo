@@ -64,6 +64,9 @@
     <Filter Include="01. Environment\01. MapObject">
       <UniqueIdentifier>{6c413437-f2b5-484b-bfce-c4486387ad32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Environment\02. Sky">
+      <UniqueIdentifier>{629b5f95-f0dc-443b-bcdb-166a54a38379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -123,6 +126,12 @@
     <ClInclude Include="..\Public\MapObject.h">
       <Filter>01. Environment\01. MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Weapon.h">
+      <Filter>02. GameActor\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sky.h">
+      <Filter>01. Environment\02. Sky</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -173,6 +182,12 @@
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>01. Environment\01. MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Weapon.cpp">
+      <Filter>02. GameActor\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sky.cpp">
+      <Filter>01. Environment\02. Sky</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
@@ -185,6 +200,9 @@
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxCube.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

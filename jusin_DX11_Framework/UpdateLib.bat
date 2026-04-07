@@ -1,11 +1,12 @@
 @echo off
-:: 명령어	옵션			원본 파일의 위치					사본 파일을 저장할 위치
+:: 명령어	옵션			원본 파일의 위치				사본 파일을 저장할 위치
 
 :: Engine
-xcopy		/y /D /i /s		.\Engine\Public\*.h				.\EngineSDK\Inc\
+xcopy		/y /D /i /s		.\Engine\Public\*.h			.\EngineSDK\Inc\
 xcopy		/y /D /i /s		.\Engine\Bin\Engine.lib			.\EngineSDK\lib\
 xcopy		/y /D /i /s		.\Engine\Bin\*.dll				.\Client\Bin\
 xcopy		/y /D /i /s		.\Engine\Bin\*.dll				.\Editor\Bin\
+xcopy		/y /D /i /s		.\Engine\ShaderFiles\*.* 			.\ShaderFiles\
 
 :: Game
 xcopy		/y /D /i /s		.\Game_PKM\Public\*.h			.\GameSDK\Inc\
@@ -15,11 +16,11 @@ xcopy		/y /D /i /s		.\Game_PKM\ShaderFiles\*.* 		.\ShaderFiles\
 
 :: ThirdParty
 xcopy		/y /D /i /s		.\ThirdParty\inc\*				.\EngineSDK\Inc\
-xcopy		/y /D /i /s		.\ThirdParty\lib\*.lib				.\EngineSDK\Lib\
-xcopy		/y /D /i /s		.\ThirdParty\lib\*.dll				.\Client\Bin\
-xcopy		/y /D /i /s		.\ThirdParty\lib\*.dll				.\Editor\Bin\
-xcopy		/y /D /i /s		.\ThirdParty\lib\*.pdb				.\Client\Bin\
-xcopy		/y /D /i /s		.\ThirdParty\lib\*.pdb				.\Editor\Bin\
+xcopy		/y /D /i /s		.\ThirdParty\lib\*.lib			.\EngineSDK\Lib\
+xcopy		/y /D /i /s		.\ThirdParty\lib\*.dll			.\Client\Bin\
+xcopy		/y /D /i /s		.\ThirdParty\lib\*.dll			.\Editor\Bin\
+xcopy		/y /D /i /s		.\ThirdParty\lib\*.pdb			.\Client\Bin\
+xcopy		/y /D /i /s		.\ThirdParty\lib\*.pdb			.\Editor\Bin\
 
 :: 작업 완료 후 바로 종료
 exit /b 0

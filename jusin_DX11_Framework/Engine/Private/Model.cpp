@@ -63,6 +63,22 @@ _int CModel::Get_BoneIndex(const _char* pBoneName)
 	return iIndex;
 }
 
+const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
+{
+	auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+
+			return false;
+		});
+
+	if (iter == m_Bones.end())
+		return nullptr;
+
+	return (*iter)->Get_CombinedTransformationMatrixPtr();
+}
+
 HRESULT CModel::Initialize_Prototype()
 {
 	if (strstr(m_pModelFilePath.c_str(), ".wmodel"))
