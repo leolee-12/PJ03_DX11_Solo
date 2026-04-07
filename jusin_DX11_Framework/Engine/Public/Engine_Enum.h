@@ -85,5 +85,15 @@ namespace Engine
 			/* LOCKED	*/ SYSTEM | TOOL
 		};
 	}
+
+	enum class UI_ANCHOR
+	{
+		TL, TC, TR,
+		ML, MC, MR,
+		BL, BC, BR,
+		END
+	};
+
+	enum class UI_LAYOUT { NONE, CANVAS, HORIZONTAL, VERTICAL, OVERLAY, END };
 }
 #endif // Engine_Enum_h__

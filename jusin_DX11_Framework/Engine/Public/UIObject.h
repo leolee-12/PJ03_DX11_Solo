@@ -11,6 +11,10 @@ public:
 		_float fCenterX{}, fCenterY{};
 		_float fSizeX{}, fSizeY{};
 		_int iZOrder{};
+		_bool bVisible = { true };
+		UIANCHOR_DESC m_tAnchorDesc{};
+		UILAYOUT_SLOT_DESC m_tLayoutSlot{};
+		CUIObject* m_pParentUI = { nullptr };
 	};
 
 protected:
@@ -31,6 +35,15 @@ public:
 protected:
 	_float m_fViewWidth{}, m_fViewHeight{};
 	_float4x4 m_TransformMatrices[ETOUI(D3DTS::END)] = {};
+
+	_float m_fCenterX{}, m_fCenterY{};	// 로컬
+	_float m_fResolvedCenterX{}, m_fResolvedCenterY{};	// Combined (anchor, layout 계산 후)
+	_float m_fSizeX{}, m_fSizeY{};
+	_int m_iZOrder{};
+	_bool m_bVisible = true;
+	UIANCHOR_DESC m_tAnchorDesc{};
+	UILAYOUT_SLOT_DESC m_tLayoutSlot{};
+	CUIObject* m_pParentUI = nullptr;
 
 protected:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, D3DTS eType);

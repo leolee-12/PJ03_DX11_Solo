@@ -30,6 +30,9 @@ namespace Engine
 		float fTrackPosition;
 	};
 
+
+
+	// 버텍스 구조체
 	struct VTXTEX
 	{
 		XMFLOAT3 vPosition;
@@ -119,6 +122,9 @@ namespace Engine
 		};
 	};
 
+
+
+	// 바이너리 모델 관련
 	struct WMODEL_HEADER
 	{
 		char szMagic[4];			// "WMDL"
@@ -164,6 +170,31 @@ namespace Engine
 		float fDuration;
 		float fTicksPerSecond;
 		vector<WMODEL_CHANNEL> channels;
+	};
+
+
+
+	// UI 관련
+	struct UIANCHOR_DESC
+	{
+		UI_ANCHOR eAnchor = { UI_ANCHOR::MC };
+		_float fOffsetX = {};
+		_float fOffsetY = {};
+		_bool bUseAnchoredPos = { false };
+	};
+
+	struct UILAYOUT_DESC
+	{
+		UI_LAYOUT eLayout = { UI_LAYOUT::NONE };
+		_float fPadding = {};
+		_float fSpacing = {};
+	};
+
+	struct UILAYOUT_SLOT_DESC
+	{
+		_float4 vMargin = {};
+		_float fDesiredSizeX = {};
+		_float fDesiredSizeY = {};
 	};
 }
 
