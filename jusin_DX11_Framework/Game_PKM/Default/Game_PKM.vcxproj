@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Ability.h" />
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
@@ -36,6 +37,7 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Move.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\Player_LGPE.h" />
     <ClInclude Include="..\Public\Pokemon.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -44,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Ability.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
@@ -56,6 +59,7 @@
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Move.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\Player_LGPE.cpp" />
     <ClCompile Include="..\Private\Pokemon.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

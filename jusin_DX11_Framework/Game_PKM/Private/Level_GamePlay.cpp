@@ -107,6 +107,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(WNameID strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

@@ -16,9 +16,6 @@
     <Filter Include="02. GameActor">
       <UniqueIdentifier>{d772649f-03b1-4208-a21e-800813a55c9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameActor\00. Player">
-      <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Levels\00. Loading">
       <UniqueIdentifier>{205b1acc-cebf-4559-8130-4f9e02979b07}</UniqueIdentifier>
     </Filter>
@@ -67,13 +64,19 @@
     <Filter Include="01. Environment\02. Sky">
       <UniqueIdentifier>{629b5f95-f0dc-443b-bcdb-166a54a38379}</UniqueIdentifier>
     </Filter>
+    <Filter Include="80. Study\00. Player">
+      <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameActor\00. Player_LGPE">
+      <UniqueIdentifier>{f4477a45-3ec6-4251-97d9-309c0cd15fc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
-      <Filter>02. GameActor\00. Player</Filter>
+      <Filter>80. Study\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
       <Filter>80. Study\00. BackGround</Filter>
@@ -121,21 +124,27 @@
       <Filter>80. Study\02. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02. GameActor\00. Player</Filter>
+      <Filter>80. Study\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MapObject.h">
       <Filter>01. Environment\01. MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
-      <Filter>02. GameActor\00. Player</Filter>
+      <Filter>80. Study\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>01. Environment\02. Sky</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_LGPE.h">
+      <Filter>02. GameActor\00. Player_LGPE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Hero.h">
+      <Filter>02. GameActor\00. Player_LGPE</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02. GameActor\00. Player</Filter>
+      <Filter>80. Study\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
       <Filter>80. Study\00. BackGround</Filter>
@@ -177,16 +186,22 @@
       <Filter>80. Study\02. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
-      <Filter>02. GameActor\00. Player</Filter>
+      <Filter>80. Study\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>01. Environment\01. MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
-      <Filter>02. GameActor\00. Player</Filter>
+      <Filter>80. Study\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>01. Environment\02. Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_LGPE.cpp">
+      <Filter>02. GameActor\00. Player_LGPE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Hero.cpp">
+      <Filter>02. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

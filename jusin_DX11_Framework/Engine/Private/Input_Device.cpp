@@ -174,6 +174,11 @@ void CInput_Device::Ready_KeyGroupMap()
 	m_iKeyGroupMap[DIK_RETURN] = KeyGroup::UI_NAVIGATE;
 	m_iKeyGroupMap[DIK_TAB] = KeyGroup::UI_NAVIGATE;
 	m_iKeyGroupMap[DIK_SPACE] = KeyGroup::UI_NAVIGATE;
+
+	// 디버그용
+	m_iKeyGroupMap[DIK_Z] = KeyGroup::TOOL;
+	m_iKeyGroupMap[DIK_X] = KeyGroup::TOOL;
+	m_iKeyGroupMap[DIK_C] = KeyGroup::TOOL;
 }
 
 CInput_Device* CInput_Device::Create(HINSTANCE hInstance, HWND hWnd)

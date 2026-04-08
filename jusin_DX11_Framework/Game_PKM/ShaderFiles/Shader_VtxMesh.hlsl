@@ -122,6 +122,7 @@ PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
 	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff; // Ambt*TexDiff 보정
 	vector Spec = (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	Out.vCol = saturate(Diff + Ambt + Spec);
+	Out.vCol.w = 1.f;
 	// --------------------------------
 
 	// ---------- 학원 모델 -----------

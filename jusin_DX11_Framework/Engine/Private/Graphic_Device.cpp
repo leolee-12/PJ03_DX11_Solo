@@ -4,6 +4,7 @@ CGraphic_Device::CGraphic_Device()
 	: m_pDevice{ nullptr }
 	, m_pContext{ nullptr }
 {
+
 }
 
 HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSizeX, _uint iWinSizeY, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)

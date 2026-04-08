@@ -178,23 +178,23 @@ namespace Engine
 	struct UIANCHOR_DESC
 	{
 		UI_ANCHOR eAnchor = { UI_ANCHOR::MC };
-		_float fOffsetX = {};
-		_float fOffsetY = {};
-		_bool bUseAnchoredPos = { false };
+		float fOffsetX = {};
+		float fOffsetY = {};
+		bool bUseAnchoredPos = { false };
 	};
 
 	struct UILAYOUT_DESC
 	{
 		UI_LAYOUT eLayout = { UI_LAYOUT::NONE };
-		_float fPadding = {};
-		_float fSpacing = {};
+		float fPadding = {};
+		float fSpacing = {};
 	};
 
 	struct UILAYOUT_SLOT_DESC
 	{
-		_float4 vMargin = {};
-		_float fDesiredSizeX = {};
-		_float fDesiredSizeY = {};
+		XMFLOAT4 vMargin = {};
+		float fDesiredSizeX = {};
+		float fDesiredSizeY = {};
 	};
 }
 
