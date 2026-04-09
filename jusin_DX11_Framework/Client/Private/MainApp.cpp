@@ -24,6 +24,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Fonts()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Prototype_For_Static(m_pDevice, m_pContext)))
 		return E_FAIL;
 

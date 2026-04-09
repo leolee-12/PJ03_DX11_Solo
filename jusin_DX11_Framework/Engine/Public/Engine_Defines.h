@@ -12,6 +12,9 @@
 #include <fx11/d3dx11effect.h>
 #include <DirectTK/DDSTextureLoader.h>
 #include <DirectTK/WICTextureLoader.h>
+#include <DirectTK/SpriteBatch.h>
+#include <DirectTK/SpriteFont.h>
+#include <DirectTK/ScreenGrab.h>
 
 using namespace DirectX;
 

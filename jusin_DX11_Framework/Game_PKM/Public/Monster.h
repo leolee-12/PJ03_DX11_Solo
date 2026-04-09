@@ -37,6 +37,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
+	_float m_fAlpha = { };
+	_float m_fDir = { 3.f };
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

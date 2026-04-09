@@ -84,9 +84,9 @@ public:
 #pragma endregion
 
 #pragma region FONT_MANAGER
-	HRESULT Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
-	HRESULT XM_CALLCOV Draw_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition,
-		_fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
+	HRESULT Add_Font(const WNameID strFontTag, const _tchar* pFontFilePath);
+	HRESULT XM_CALLCONV Draw_Text(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f),
+		_float fRotation = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), const _float2& vScale = _float2(1.f, 1.f));
 #pragma endregion
 
 private:
@@ -102,7 +102,7 @@ private:
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 
 private:
-	virtual void	Free() override;
+	virtual void Free() override;
 };
 
 NS_END

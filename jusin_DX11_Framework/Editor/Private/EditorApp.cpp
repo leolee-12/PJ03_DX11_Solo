@@ -33,18 +33,14 @@ HRESULT CEditorApp::Initialize()
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Fonts()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Prototype_For_Static(m_pDevice, m_pContext)))
 		return E_FAIL;
 
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
 		return E_FAIL;
-
-
-	//_matrix PreTransformMatrix = {};
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	//m_pEditInstance->Export_All("../../Resources/Models/PM0004_00/pm0004_00.fbx", "../../Resources/Models/PM0004_00/", MODEL::ANIM, PreTransformMatrix);
-	//m_pEditInstance->Export_All("../../Resources/Models/PM0007_00/pm0007_00.fbx", "../../Resources/Models/PM0007_00/", MODEL::ANIM, PreTransformMatrix);
-	//m_pEditInstance->Export_All("../../Resources/Models/PM0025_00/pm0025_00.fbx", "../../Resources/Models/PM0025_00/", MODEL::ANIM, PreTransformMatrix);
 
 	return S_OK;
 }
@@ -73,7 +69,7 @@ HRESULT CEditorApp::Render()
 	if (FAILED(m_pEditInstance->Draw()))
 		return E_FAIL;
 
-	m_pGameInstance->Draw_Text(TEXT("Font_Default"), TEXT("한글 이다"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Draw_Text(FONT_MALGUN, TEXT("한글 이다"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 
 	if (FAILED(m_pGameInstance->End_Draw()))
 		return E_FAIL;

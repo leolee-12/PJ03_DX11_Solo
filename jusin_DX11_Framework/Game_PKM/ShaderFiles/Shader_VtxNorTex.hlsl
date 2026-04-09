@@ -69,7 +69,12 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 {
 	PS_OUT Out;
-	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
+
+	vector vSourMtrlDiff = g_TexDiff[0].Sample(DefaultSampler, In.vTex * 50.f);
+	vector vDescMtrlDiff = g_TexDiff[1].Sample(DefaultSampler, In.vTex * 50.f);
+	vector vMask = g_TexMask.Sample(DefaultSampler, In.vTex);
+
+	vector vMtrlDiff = vDescMtrlDiff * vMask + vSourMtrlDiff * (1.f - vMask);
 
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);

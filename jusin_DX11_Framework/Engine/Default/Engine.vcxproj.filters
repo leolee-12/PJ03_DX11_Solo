@@ -88,6 +88,9 @@
     <Filter Include="97. ShaderFiles">
       <UniqueIdentifier>{18a67bbb-0a80-4cd1-8a2c-f3df69eceb30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="10. Font">
+      <UniqueIdentifier>{5334b7a5-7f6c-4079-b0b7-bc6830e576ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -216,6 +219,12 @@
     <ClInclude Include="..\Public\VIBuffer_Cube.h">
       <Filter>07. Component\VIBuffer\Cube</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CustomFont.h">
+      <Filter>10. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Font_Manager.h">
+      <Filter>10. Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -322,6 +331,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
       <Filter>07. Component\VIBuffer\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomFont.cpp">
+      <Filter>10. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Font_Manager.cpp">
+      <Filter>10. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

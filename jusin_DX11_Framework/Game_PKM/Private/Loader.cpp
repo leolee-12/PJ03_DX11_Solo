@@ -123,7 +123,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Terrain_Mask */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK),
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.bmp"), 1))))
 		return E_FAIL;
 
@@ -199,9 +199,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		return E_FAIL;
 
 	/* Prototype_Component_Model_Hero */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/LGPE_Hero_anim.wmodel"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
+	//	CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/LGPE_Hero_anim.wmodel"))))
+	//	return E_FAIL;
 
 	/* Prototype_Component_Model_Town01 */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,

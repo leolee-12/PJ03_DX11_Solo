@@ -118,6 +118,7 @@ void CGameInstance::Clear_Resources(_int iLevelIndex)
 
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pPipeLine);
@@ -299,12 +300,12 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 #pragma endregion
 
 #pragma region FONT_MANAGER
-HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+HRESULT CGameInstance::Add_Font(const WNameID strFontTag, const _tchar* pFontFilePath)
 {
 	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
 }
 
-HRESULT CGameInstance::Draw_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
+HRESULT XM_CALLCONV CGameInstance::Draw_Text(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
 {
 	return m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, vScale);
 }

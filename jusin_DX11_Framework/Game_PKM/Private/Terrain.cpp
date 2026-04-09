@@ -74,12 +74,12 @@ HRESULT CTerrain::Ready_Components()
 
 	/* For.Com_Texture_Diff*/
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_DIFF,
-		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		COM_TEXTURE_DIFF, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::DIFFUSE]))))
 		return E_FAIL;
 
 	/* For.Com_Texture_Mask*/
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
-		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		COM_TEXTURE_MASK, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::MASK]))))
 		return E_FAIL;
 
 	return S_OK;
@@ -155,5 +155,7 @@ void CTerrain::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
+
+	for (auto& pTextureCom : m_TextureCom)
+		Safe_Release(pTextureCom);
 }

@@ -21,6 +21,22 @@ HRESULT Ready_Prototype_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	return S_OK;
 }
 
+HRESULT Ready_Fonts()
+{
+	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
+
+	if (FAILED(m_pGameInstance->Add_Font(FONT_MALGUN, TEXT("../../Resources/Fonts/malgun.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(FONT_NANUMBARUNGOTHIC, TEXT("../../Resources/Fonts/NanumBarunGothic.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(FONT_NOTOSANSKR, TEXT("../../Resources/Fonts/NotoSansKRThin.spritefont"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eStartLevelID)
 {
 	CLevel* pPreLevel = CLevel_Loading::Create(pDevice, pContext, eStartLevelID);

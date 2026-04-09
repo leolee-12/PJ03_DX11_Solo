@@ -5,7 +5,8 @@ NS_BEGIN(Game_PKM)
 
 // Texture
 WNAME_TAG(PROTO_COM_TEXTURE_BACKGROUND, L"Prototype_Component_Texture_BackGround");
-WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN, L"Prototype_Component_Texture_Terrain");
+WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_Diffuse");
+WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");
 WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
 
 // Shader
@@ -55,12 +56,19 @@ WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
 // Component
 WNAME_TAG(COM_VIBUFFER, L"Com_VIBuffer");
 WNAME_TAG(COM_TEXTURE, L"Com_Texture");
+WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
+WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
 WNAME_TAG(COM_SHADER, L"Com_Shader");
 WNAME_TAG(COM_MODEL, L"Com_Model");
 
-// PART
+// Part
 WNAME_TAG(PART_BODY, L"Part_Body");
 WNAME_TAG(PART_WEAPON, L"Part_Weapon");
+
+// Font
+WNAME_TAG(FONT_MALGUN, L"Font_Malgun");
+WNAME_TAG(FONT_NANUMBARUNGOTHIC, L"Font_NanumBarunGothic");
+WNAME_TAG(FONT_NOTOSANSKR, L"Font_NotoSansKR");
 
 NS_END
 

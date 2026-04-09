@@ -17,6 +17,8 @@ class CTerrain final : public CGameObject
 
 	};
 
+	enum TEXTURETYPE { DIFFUSE, MASK, END };
+
 protected:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTerrain(const CTerrain& Prototype);
@@ -34,7 +36,7 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom = { nullptr };
+	CTexture* m_TextureCom[TEXTURETYPE::END] = { nullptr };
 	CVIBuffer_Terrain* m_pVIBufferCom = { nullptr };
 
 private:
