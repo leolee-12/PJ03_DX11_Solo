@@ -117,9 +117,14 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 HRESULT CLoader::Ready_Resources_For_GamePlay()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
-	/* Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Tile0.jpg"), 1))))
+	/* Prototype_Component_Texture_Terrain_Diff */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_DIFF,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Tile%d.dds"), 2))))
+		return E_FAIL;
+
+	/* Prototype_Component_Texture_Terrain_Mask */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.bmp"), 1))))
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Sky */

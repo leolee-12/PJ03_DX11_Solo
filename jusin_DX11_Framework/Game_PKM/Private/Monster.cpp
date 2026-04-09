@@ -52,8 +52,12 @@ void CMonster::Update(_float fTimeDelta)
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
+	m_fAlpha += m_fDir * fTimeDelta;
+	if (m_fAlpha >= 1.f ||
+		m_fAlpha <= 0.f)
+		m_fDir *= -1.f;
 
-	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERID::BLEND, this);
 }
 
 HRESULT CMonster::Render()
@@ -71,7 +75,7 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(1)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))

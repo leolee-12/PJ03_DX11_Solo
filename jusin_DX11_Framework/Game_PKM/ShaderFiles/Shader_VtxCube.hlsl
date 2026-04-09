@@ -50,7 +50,6 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
 	Out.vCol = g_Texture.Sample(DefaultSampler, In.vTex);
-	Out.vCol.w = 1.f;
 	return Out;
 }
 
@@ -60,6 +59,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Cull_CW);
 		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();

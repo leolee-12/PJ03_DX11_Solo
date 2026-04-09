@@ -1,27 +1,27 @@
 RasterizerState RS_Wireframe
 {
-    FillMode = WireFrame;
+    FillMode = WIREFRAME;
     
 };
 
 RasterizerState RS_Default
 {
-    FillMode = Solid;
-    CullMode = Back;
+    FillMode = SOLID;
+    CullMode = BACK;
     FrontCounterClockwise = false;
 };
 
 RasterizerState RS_Cull_CW
 {
-    FillMode = Solid;
-    CullMode = Front;
+    FillMode = SOLID;
+    CullMode = FRONT;
     FrontCounterClockwise = false;
 };
 
 RasterizerState RS_Cull_None
 {
-    FillMode = Solid;
-    CullMode = None;
+    FillMode = SOLID;
+    CullMode = NONE;
     FrontCounterClockwise = false;
 };
 
@@ -29,16 +29,26 @@ DepthStencilState DSS_Default
 {
     DepthEnable = true;
     DepthWriteMask = All;
-    DepthFunc = less_equal;
+    DepthFunc = LESS;
 };
 
 DepthStencilState DSS_Z_Disable
 {
     DepthEnable = false;
-    DepthWriteMask = Zero;
+    DepthWriteMask = ZERO;
 };
 
 BlendState BS_Default
 {
+    BlendEnable[0] = false;
+};
 
+BlendState BS_AlphaBlend
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+    
+    SrcBlend = SRC_ALPHA;
+    DestBlend = INV_SRC_ALPHA;
+    BlendOp = ADD;
 };

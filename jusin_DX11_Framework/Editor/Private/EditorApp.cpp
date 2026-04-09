@@ -73,6 +73,8 @@ HRESULT CEditorApp::Render()
 	if (FAILED(m_pEditInstance->Draw()))
 		return E_FAIL;
 
+	m_pGameInstance->Draw_Text(TEXT("Font_Default"), TEXT("한글 이다"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+
 	if (FAILED(m_pGameInstance->End_Draw()))
 		return E_FAIL;
 

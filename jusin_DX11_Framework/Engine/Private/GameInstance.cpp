@@ -7,6 +7,7 @@
 #include "PipeLine.h"
 #include "Input_Device.h"
 #include "Light_Manager.h"
+#include "Font_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -19,10 +20,10 @@ CGameInstance::CGameInstance()
 HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)
 {
 	m_pGraphic_Device = CGraphic_Device::Create(EngineDesc.hWnd,
-		EngineDesc.eWinMode,
-		EngineDesc.iViewportWidth,
-		EngineDesc.iViewportHeight,
-		ppDevice, ppContext);
+												EngineDesc.eWinMode,
+												EngineDesc.iViewportWidth,
+												EngineDesc.iViewportHeight,
+												ppDevice, ppContext);
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 
@@ -56,6 +57,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pLight_Manager = CLight_Manager::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
 	return S_OK;
@@ -291,6 +296,18 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
 
+#pragma endregion
+
+#pragma region FONT_MANAGER
+HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+HRESULT CGameInstance::Draw_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
+{
+	return m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, vScale);
+}
 #pragma endregion
 
 void CGameInstance::Free()

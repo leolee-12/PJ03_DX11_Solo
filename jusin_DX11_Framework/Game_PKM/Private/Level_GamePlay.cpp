@@ -83,8 +83,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;

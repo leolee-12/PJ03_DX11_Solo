@@ -83,6 +83,12 @@ public:
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 #pragma endregion
 
+#pragma region FONT_MANAGER
+	HRESULT Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+	HRESULT XM_CALLCOV Draw_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition,
+		_fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -93,6 +99,7 @@ private:
 	class CPipeLine*			m_pPipeLine = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
+	class CFont_Manager*		m_pFont_Manager = { nullptr };
 
 private:
 	virtual void	Free() override;

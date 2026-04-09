@@ -11,7 +11,8 @@ vector g_vLightAmbt;
 vector g_vLightSpec;
 
 // 재질
-texture2D g_TexDiff;
+texture2D g_TexDiff[2];
+texture2D g_TexMask;
 vector g_vMtrlAmbt = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpec = vector(1.f, 1.f, 1.f, 1.f);
 
@@ -70,9 +71,6 @@ PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
 
-	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
-		discard;
-
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);
 
@@ -100,10 +98,12 @@ PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
 {
 	PS_OUT Out;
-	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
 
-	if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
-		discard;
+	vector vSourMtrlDiff = g_TexDiff[0].Sample(DefaultSampler, In.vTex * 50.f);
+	vector vDescMtrlDiff = g_TexDiff[1].Sample(DefaultSampler, In.vTex * 50.f);
+	vector vMask = g_TexMask.Sample(DefaultSampler, In.vTex);
+
+	vector vMtrlDiff = vDescMtrlDiff * vMask + vSourMtrlDiff * (1.f - vMask);
 
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);
@@ -134,6 +134,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
@@ -142,6 +143,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN_BLINNPHONG();

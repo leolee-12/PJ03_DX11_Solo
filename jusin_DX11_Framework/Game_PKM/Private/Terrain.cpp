@@ -72,8 +72,13 @@ HRESULT CTerrain::Ready_Components()
 		COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	/* For.Com_Texture*/
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN,
+	/* For.Com_Texture_Diff*/
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_DIFF,
+		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
+	/* For.Com_Texture_Mask*/
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
 		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
@@ -93,7 +98,9 @@ HRESULT CTerrain::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexDiff", 0)))
+	if (FAILED(m_TextureCom[TEXTURETYPE::DIFFUSE]->Bind_ShaderResources(m_pShaderCom, "g_TexDiff")))
+		return E_FAIL;
+	if (FAILED(m_TextureCom[TEXTURETYPE::MASK]->Bind_ShaderResource(m_pShaderCom, "g_TexMask", 0)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
