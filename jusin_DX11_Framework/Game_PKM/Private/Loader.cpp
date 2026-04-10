@@ -124,7 +124,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	/* Prototype_Component_Texture_Terrain_Mask */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.bmp"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.dds"), 1))))
+		return E_FAIL;
+
+	/* Prototype_Component_Texture_Terrain_BRUSH */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_BRUSH,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Brush.png"), 1))))
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Sky */

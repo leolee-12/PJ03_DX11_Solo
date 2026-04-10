@@ -82,6 +82,11 @@ HRESULT CTerrain::Ready_Components()
 		COM_TEXTURE_MASK, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::MASK]))))
 		return E_FAIL;
 
+	/* For.Com_Texture_Brush*/
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_BRUSH,
+		COM_TEXTURE_BRUSH, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::BRUSH]))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -101,6 +106,8 @@ HRESULT CTerrain::Bind_ShaderResources()
 	if (FAILED(m_TextureCom[TEXTURETYPE::DIFFUSE]->Bind_ShaderResources(m_pShaderCom, "g_TexDiff")))
 		return E_FAIL;
 	if (FAILED(m_TextureCom[TEXTURETYPE::MASK]->Bind_ShaderResource(m_pShaderCom, "g_TexMask", 0)))
+		return E_FAIL;
+	if (FAILED(m_TextureCom[TEXTURETYPE::BRUSH]->Bind_ShaderResource(m_pShaderCom, "g_TexBrush", 0)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))

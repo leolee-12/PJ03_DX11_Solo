@@ -3,13 +3,6 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 
-sampler DefaultSampler = sampler_state
-{	// D3D11_SAMPLER_DESC 참고
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
-
 struct VS_IN
 {
 	float3 vPos : POSITION;
@@ -49,7 +42,7 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
-	Out.vCol = g_Texture.Sample(DefaultSampler, In.vTex);
+	Out.vCol = g_Texture.Sample(LinearSampler, In.vTex);
 
 	if (Out.vCol.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
 		discard;

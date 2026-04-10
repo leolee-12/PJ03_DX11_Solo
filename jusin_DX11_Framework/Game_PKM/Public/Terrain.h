@@ -17,7 +17,7 @@ class CTerrain final : public CGameObject
 
 	};
 
-	enum TEXTURETYPE { DIFFUSE, MASK, END };
+	enum TEXTURETYPE { DIFFUSE, MASK, BRUSH, END };
 
 protected:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

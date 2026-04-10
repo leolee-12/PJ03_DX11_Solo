@@ -15,13 +15,6 @@ texture2D g_TexDiff;
 vector g_vMtrlAmbt = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpec = vector(1.f, 1.f, 1.f, 1.f);
 
-sampler DefaultSampler = sampler_state
-{	// D3D11_SAMPLER_DESC 참고
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
-
 struct VS_IN
 {
 	float3 vPos : POSITION;
@@ -71,7 +64,7 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 {
 	PS_OUT Out;
-	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
+	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 
 	//if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
 	//	discard;
@@ -104,7 +97,7 @@ PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
 {
 	PS_OUT Out;
 
-	vector vMtrlDiff = g_TexDiff.Sample(DefaultSampler, In.vTex);
+	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 
 	//if (vMtrlDiff.a < 0.1f)	// 일정 a값 미만은 버림 (알파테스트)
 	//	discard;

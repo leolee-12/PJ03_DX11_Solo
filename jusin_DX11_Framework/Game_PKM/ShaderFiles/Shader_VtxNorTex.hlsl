@@ -4,6 +4,9 @@ float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_WITMatrix;
 vector g_vCamPos;
 
+vector g_vBrushPos = float4(20.f, 0.f, 20.f, 1.f);
+float g_fBrushRange = 10.f;
+
 // 광원
 vector g_vLightDir;
 vector g_vLightDiff;
@@ -13,15 +16,9 @@ vector g_vLightSpec;
 // 재질
 texture2D g_TexDiff[2];
 texture2D g_TexMask;
+texture2D g_TexBrush;
 vector g_vMtrlAmbt = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpec = vector(1.f, 1.f, 1.f, 1.f);
-
-sampler DefaultSampler = sampler_state
-{	// D3D11_SAMPLER_DESC 참고
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
 
 struct VS_IN
 {
@@ -70,9 +67,9 @@ PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 {
 	PS_OUT Out;
 
-	vector vSourMtrlDiff = g_TexDiff[0].Sample(DefaultSampler, In.vTex * 50.f);
-	vector vDescMtrlDiff = g_TexDiff[1].Sample(DefaultSampler, In.vTex * 50.f);
-	vector vMask = g_TexMask.Sample(DefaultSampler, In.vTex);
+	vector vSourMtrlDiff = g_TexDiff[0].Sample(LinearSampler, In.vTex * 50.f);
+	vector vDescMtrlDiff = g_TexDiff[1].Sample(LinearSampler, In.vTex * 50.f);
+	vector vMask = g_TexMask.Sample(LinearSampler, In.vTex);
 
 	vector vMtrlDiff = vDescMtrlDiff * vMask + vSourMtrlDiff * (1.f - vMask);
 
@@ -104,11 +101,24 @@ PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
 {
 	PS_OUT Out;
 
-	vector vSourMtrlDiff = g_TexDiff[0].Sample(DefaultSampler, In.vTex * 50.f);
-	vector vDescMtrlDiff = g_TexDiff[1].Sample(DefaultSampler, In.vTex * 50.f);
-	vector vMask = g_TexMask.Sample(DefaultSampler, In.vTex);
+	vector vSourMtrlDiff = g_TexDiff[0].Sample(LinearSampler, In.vTex * 50.f);
+	vector vDescMtrlDiff = g_TexDiff[1].Sample(LinearSampler, In.vTex * 50.f);
+	vector vMask = g_TexMask.Sample(LinearSampler, In.vTex);
+	vector vBrush = 0.f;
 
-	vector vMtrlDiff = vDescMtrlDiff * vMask + vSourMtrlDiff * (1.f - vMask);
+	if (g_vBrushPos.x - g_fBrushRange * 0.5f < In.vWorldPos.x && In.vWorldPos.x <= g_vBrushPos.x + g_fBrushRange * 0.5f &&
+		g_vBrushPos.z - g_fBrushRange * 0.5f < In.vWorldPos.z && In.vWorldPos.z <= g_vBrushPos.z + g_fBrushRange * 0.5f)
+	{
+		float2 vTexcoord;
+
+		vTexcoord.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange * 0.5f)) / g_fBrushRange;
+		vTexcoord.y = ((g_vBrushPos.z + g_fBrushRange * 0.5f) - In.vWorldPos.z) / g_fBrushRange;
+
+
+		vBrush = g_TexBrush.Sample(LinearSampler, vTexcoord);
+	}
+
+	vector vMtrlDiff = vDescMtrlDiff * vMask + vSourMtrlDiff * (1.f - vMask) + vBrush;
 
 	vector Normal = normalize(In.vNorm);
 	vector Light = normalize(g_vLightDir);

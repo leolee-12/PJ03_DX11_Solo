@@ -7,6 +7,7 @@ NS_BEGIN(Game_PKM)
 WNAME_TAG(PROTO_COM_TEXTURE_BACKGROUND, L"Prototype_Component_Texture_BackGround");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_Diffuse");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");
+WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain_Brush");
 WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
 
 // Shader
@@ -58,6 +59,7 @@ WNAME_TAG(COM_VIBUFFER, L"Com_VIBuffer");
 WNAME_TAG(COM_TEXTURE, L"Com_Texture");
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
 WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
+WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
 WNAME_TAG(COM_SHADER, L"Com_Shader");
 WNAME_TAG(COM_MODEL, L"Com_Model");
 

@@ -91,6 +91,9 @@
     <Filter Include="10. Font">
       <UniqueIdentifier>{5334b7a5-7f6c-4079-b0b7-bc6830e576ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\Navigation">
+      <UniqueIdentifier>{b127afd0-722a-4797-88d2-caa270c01654}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -225,6 +228,12 @@
     <ClInclude Include="..\Public\Font_Manager.h">
       <Filter>10. Font</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>07. Component\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>07. Component\Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -337,6 +346,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Font_Manager.cpp">
       <Filter>10. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>07. Component\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>07. Component\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

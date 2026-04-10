@@ -14,6 +14,9 @@ public:
 	void Update(_float fTimeDelta) override;
 	HRESULT Render() override;
 
+private:
+	HRESULT Ready_EditableTexture(const _tchar* pFileDir);
+
 public:
 	static CPanel_MapTool* Create();
 	
