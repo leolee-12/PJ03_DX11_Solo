@@ -32,16 +32,23 @@ HRESULT CTransform::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)
+HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstName)
 {
-	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
+	return pShader->Bind_Matrix(pConstName, &m_WorldMatrix);
 }
 
-HRESULT CTransform::Bind_ShaderResourceWIT(CShader* pShader, const _char* pConstantName)
+HRESULT CTransform::Bind_ShaderResourceWIT(CShader* pShader, const _char* pConstName)
 {
 	_float4x4 WITMatrix;
 	XMStoreFloat4x4(&WITMatrix, XMMatrixTranspose(XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix))));
-	return pShader->Bind_Matrix(pConstantName, &WITMatrix);
+	return pShader->Bind_Matrix(pConstName, &WITMatrix);
+}
+
+HRESULT XM_CALLCONV CTransform::Bind_ShaderResourceCombinedWIT(CShader* pShader, const _char* pConstName, _fmatrix CombinedMatrix)
+{
+	_float4x4 WITMatrix;
+	XMStoreFloat4x4(&WITMatrix, XMMatrixTranspose(XMMatrixInverse(nullptr, CombinedMatrix)));
+	return pShader->Bind_Matrix(pConstName, &WITMatrix);
 }
 
 void CTransform::ScaleTo(_float fScaleX, _float fScaleY, _float fScaleZ)

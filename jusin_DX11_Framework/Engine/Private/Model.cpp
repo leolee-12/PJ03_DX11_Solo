@@ -10,14 +10,6 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char
 {
 }
 
-CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _cmatrix PreTransformMatrix)
-	: CComponent{ pDevice, pContext }
-	, m_eType{ eType }
-	, m_pModelFilePath{ pModelFilePath }
-{
-	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
-}
-
 CModel::CModel(const CModel& Prototype)
 	: CComponent{ Prototype }
 	, m_eType{ Prototype.m_eType }
@@ -81,30 +73,46 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
 
 HRESULT CModel::Initialize_Prototype()
 {
-	if (strstr(m_pModelFilePath.c_str(), ".wmodel"))
-		return Ready_FromBinary();
-
-	_uint iFlag = { aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast };
-
-	if (MODEL::NONANIM == m_eType)
-		iFlag |= aiProcess_PreTransformVertices;
-
-	m_pAIScene = m_Importer.ReadFile(m_pModelFilePath.c_str(), iFlag);
-
-	if (nullptr == m_pAIScene)
+	// 0. 파일 열기
+	FILE* fp{};
+	errno_t errorOpen{};
+	if (0 != fopen_s(&fp, m_pModelFilePath.c_str(), "rb") || nullptr == fp)
 		return E_FAIL;
 
-	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
-		return E_FAIL;
+	// 1. 헤더 읽기 + 검증
+	WMODEL_HEADER tHeader{};
+	fread(&tHeader, sizeof(WMODEL_HEADER), 1, fp);
 
-	if (FAILED(Ready_Meshes()))
-		return E_FAIL;
+	if (memcmp(tHeader.szMagic, "WMDL", 4) != 0) { fclose(fp); return E_FAIL; }
+	if (tHeader.iVersion != 2) { fclose(fp); return E_FAIL; }
+	m_eType = static_cast<MODEL>(tHeader.iModelType);
+	XMStoreFloat4x4(&m_PreTransformMatrix, XMMatrixIdentity());
 
-	if (FAILED(Ready_Materials()))
-		return E_FAIL;
-	
-	if (FAILED(Ready_Animations()))
-		return E_FAIL;
+	if (FAILED(Ready_Bones(fp, tHeader.iNumBones)))
+	{
+		fclose(fp); return E_FAIL;
+	}
+
+	if (FAILED(Ready_Materials(fp, tHeader.iNumMaterials)))
+	{
+		fclose(fp); return E_FAIL;
+	}
+
+	if (FAILED(Ready_Meshes(fp, tHeader.iNumMeshes)))
+	{
+		fclose(fp); return E_FAIL;
+	}
+
+	if (m_eType == MODEL::ANIM)
+	{
+		if (FAILED(Ready_Animations(fp, tHeader.iNumAnimations)))
+		{
+			fclose(fp); return E_FAIL;
+		}
+	}
+
+	// 파일 닫기
+	fclose(fp);
 
 	return S_OK;
 }
@@ -164,122 +172,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, _ui
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstName, m_Bones);
 }
 
-HRESULT CModel::Ready_Meshes()
-{
-	m_iNumMeshes = m_pAIScene->mNumMeshes;
-
-	_matrix PreTransformMatrix = XMLoadFloat4x4(&m_PreTransformMatrix);
-
-	for (size_t i = 0; i < m_iNumMeshes; i++)
-	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, this, m_pAIScene->mMeshes[i], PreTransformMatrix);
-
-		if (nullptr == pMesh)
-			return E_FAIL;
-
-		m_Meshes.push_back(pMesh);
-	}
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_Materials()
-{
-	m_iNumMaterials = m_pAIScene->mNumMaterials;
-
-	for (size_t i = 0; i < m_iNumMaterials; i++)
-	{
-		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, m_pAIScene->mMaterials[i], m_pModelFilePath.c_str());
-		if (nullptr == pMaterial)
-			return E_FAIL;
-
-		m_Materials.push_back(pMaterial);
-	}
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_Bones(aiNode* pAINode, _int iParentIndex)
-{
-	CBone* pBone = CBone::Create(pAINode, iParentIndex);
-	if (nullptr == pBone)
-		return E_FAIL;
-
-	m_Bones.push_back(pBone);
-
-	_int iParent = static_cast<_int>(m_Bones.size()) - 1;
-
-	for (_uint i = 0; i < pAINode->mNumChildren; ++i)
-	{
-		Ready_Bones(pAINode->mChildren[i], iParent);
-	}
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_Animations()
-{
-	m_iNumAnimations = m_pAIScene->mNumAnimations;
-
-	for (size_t i = 0; i < m_iNumAnimations; i++)
-	{
-		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], this);
-		if (nullptr == pAnimation)
-			return E_FAIL;
-
-		m_Animations.push_back(pAnimation);
-	}
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_FromBinary()
-{
-	// 0. 파일 열기
-	FILE* fp{};
-	errno_t errorOpen{};
-	if (0 != fopen_s(&fp, m_pModelFilePath.c_str(), "rb") || nullptr == fp)
-		return E_FAIL;
-
-	// 1. 헤더 읽기 + 검증
-	WMODEL_HEADER tHeader{};
-	fread(&tHeader, sizeof(WMODEL_HEADER), 1, fp);
-
-	if (memcmp(tHeader.szMagic, "WMDL", 4) != 0)	{ fclose(fp); return E_FAIL; }
-	if (tHeader.iVersion != 2)						{ fclose(fp); return E_FAIL; }
-	m_eType = static_cast<MODEL>(tHeader.iModelType);
-	XMStoreFloat4x4(&m_PreTransformMatrix, XMMatrixIdentity());
-
-	if (FAILED(Ready_Bones_FromBinary(fp, tHeader.iNumBones)))
-	{
-		fclose(fp); return E_FAIL;
-	}
-
-	if (FAILED(Ready_Materials_FromBinary(fp, tHeader.iNumMaterials)))
-	{
-		fclose(fp); return E_FAIL;
-	}
-
-	if (FAILED(Ready_Meshes_FromBinary(fp, tHeader.iNumMeshes)))
-	{
-		fclose(fp); return E_FAIL;
-	}
-
-	if (m_eType == MODEL::ANIM)
-	{
-		if (FAILED(Ready_Animations_FromBinary(fp, tHeader.iNumAnimations)))
-		{
-			fclose(fp); return E_FAIL;
-		}
-	}
-
-	// 파일 닫기
-	fclose(fp);
-
-	return S_OK;
-}
-
-HRESULT CModel::Ready_Meshes_FromBinary(FILE* fp, _uint iNumMeshes)
+HRESULT CModel::Ready_Meshes(FILE* fp, _uint iNumMeshes)
 {
 	m_iNumMeshes = iNumMeshes;
 	m_Meshes.reserve(iNumMeshes);
@@ -323,7 +216,7 @@ HRESULT CModel::Ready_Meshes_FromBinary(FILE* fp, _uint iNumMeshes)
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Materials_FromBinary(FILE* fp, _uint iNumMaterials)
+HRESULT CModel::Ready_Materials(FILE* fp, _uint iNumMaterials)
 {
 	// 베이스 디렉터리
 	_string baseDir = filesystem::path(m_pModelFilePath).parent_path().string() + "/";
@@ -359,7 +252,7 @@ HRESULT CModel::Ready_Materials_FromBinary(FILE* fp, _uint iNumMaterials)
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Bones_FromBinary(FILE* fp, _uint iNumBones)
+HRESULT CModel::Ready_Bones(FILE* fp, _uint iNumBones)
 {
 	vector<WMODEL_BONE> bones(iNumBones);
 	fread(bones.data(), sizeof(WMODEL_BONE), iNumBones, fp);
@@ -374,7 +267,7 @@ HRESULT CModel::Ready_Bones_FromBinary(FILE* fp, _uint iNumBones)
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Animations_FromBinary(FILE* fp, _uint iNumAnimations)
+HRESULT CModel::Ready_Animations(FILE* fp, _uint iNumAnimations)
 {
 	m_iNumAnimations = iNumAnimations;
 	m_Animations.reserve(iNumAnimations);
@@ -382,8 +275,9 @@ HRESULT CModel::Ready_Animations_FromBinary(FILE* fp, _uint iNumAnimations)
 	for (_uint i = 0; i < iNumAnimations; ++i)
 	{
 		WMODEL_ANIMATION tAnim{};
-		_uint numChannels;
+		_uint numChannels{};
 
+		fread(tAnim.szName, 1, MAX_PATH, fp);
 		fread(&tAnim.fDuration, sizeof(_float), 1, fp);
 		fread(&tAnim.fTicksPerSecond, sizeof(_float), 1, fp);
 		fread(&numChannels, sizeof(_uint), 1, fp);
@@ -391,13 +285,32 @@ HRESULT CModel::Ready_Animations_FromBinary(FILE* fp, _uint iNumAnimations)
 
 		for (_uint j = 0; j < numChannels; ++j)
 		{
-			_uint numKF;
-			fread(&tAnim.channels[j].iBoneIndex, sizeof(_uint), 1, fp);
-			fread(&numKF, sizeof(_uint), 1, fp);
+			WMODEL_CHANNEL& tChannel = tAnim.channels[j];
 
-			tAnim.channels[j].keyFrames.resize(numKF);
-			fread(tAnim.channels[j].keyFrames.data(), sizeof(KEYFRAME), numKF, fp);
+			_uint numScalingKeys{};
+			_uint numRotationKeys{};
+			_uint numPositionKeys{};
 
+			fread(&tChannel.iBoneIndex, sizeof(_uint), 1, fp);
+			fread(&tChannel.vDefaultScale, sizeof(_float3), 1, fp);
+			fread(&tChannel.vDefaultRotation, sizeof(_float4), 1, fp);
+			fread(&tChannel.vDefaultTranslation, sizeof(_float3), 1, fp);
+			fread(&numScalingKeys, sizeof(_uint), 1, fp);
+			fread(&numRotationKeys, sizeof(_uint), 1, fp);
+			fread(&numPositionKeys, sizeof(_uint), 1, fp);
+
+			tChannel.scalingKeys.resize(numScalingKeys);
+			tChannel.rotationKeys.resize(numRotationKeys);
+			tChannel.positionKeys.resize(numPositionKeys);
+
+			if (numScalingKeys > 0)
+				fread(tChannel.scalingKeys.data(), sizeof(SCALING_KEY), numScalingKeys, fp);
+
+			if (numRotationKeys > 0)
+				fread(tChannel.rotationKeys.data(), sizeof(ROTATION_KEY), numRotationKeys, fp);
+
+			if (numPositionKeys > 0)
+				fread(tChannel.positionKeys.data(), sizeof(POSITION_KEY), numPositionKeys, fp);
 		}
 
 		CAnimation* pAnim = CAnimation::Create(tAnim);
@@ -405,19 +318,6 @@ HRESULT CModel::Ready_Animations_FromBinary(FILE* fp, _uint iNumAnimations)
 		m_Animations.push_back(pAnim);
 	}
 	return S_OK;
-}
-
-CModel* XM_CALLCONV CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
-{
-	CModel* pInstance = new CModel(pDevice, pContext, eType, pModelFilePath, PreTransformMatrix);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CModel");
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
 }
 
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath)
@@ -433,7 +333,7 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, con
 	return pInstance;
 }
 
-CModel* CModel::CreateFromData(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const vector<CBone*> bones, vector<CMesh*>& meshes, vector<CMaterial*>& materials, vector<CAnimation*>& animations)
+CModel* CModel::Create_FromData(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const vector<CBone*> bones, vector<CMesh*>& meshes, vector<CMaterial*>& materials, vector<CAnimation*>& animations)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
@@ -482,6 +382,4 @@ void CModel::Free()
 	for (auto& pMesh : m_Meshes)
 		Safe_Release(pMesh);
 	m_Meshes.clear();
-
-	m_Importer.FreeScene();
 }

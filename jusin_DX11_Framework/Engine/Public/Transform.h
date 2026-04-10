@@ -50,9 +50,10 @@ public:
 	virtual HRESULT	Initialize(void* pArg);
 
 public:
-	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
-	HRESULT Bind_ShaderResourceWIT(class CShader* pShader, const _char* pConstantName);
-
+	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstName);
+	HRESULT Bind_ShaderResourceWIT(class CShader* pShader, const _char* pConstName);
+	HRESULT XM_CALLCONV Bind_ShaderResourceCombinedWIT(class CShader* pShader, const _char* pConstName, _fmatrix CombinedMatrix);
+	
 public:
 	void ScaleTo(_float fScaleX = 1.f, _float fScaleY = 1.f, _float fScaleZ = 1.f);
 	void Scaling(_float fScaleX = 1.f, _float fScaleY = 1.f, _float fScaleZ = 1.f);

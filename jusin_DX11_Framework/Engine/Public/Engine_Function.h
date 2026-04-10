@@ -52,6 +52,40 @@ namespace Engine
 
 		return iRefCnt;
 	}
+
+    template <typename T>
+    unsigned int Find_KeyIndex(const vector<T>& keys, float t)
+    {
+        if (keys.size() <= 1)
+            return 0;
+
+        for (unsigned int i = 0; i < keys.size() - 1; ++i)
+        {
+            if (t < keys[i + 1].fTrackPosition)
+                return i;
+        }
+
+        return static_cast<unsigned int>(keys.size() - 2);
+    }
+
+    static void Debug_DumpMatrix(const char* tag, const _float4x4& m)
+    {
+#ifdef _DEBUG
+        char buf[1024];
+        sprintf_s(buf,
+            "[%s]\n"
+            "[% .4f % .4f % .4f % .4f]\n"
+            "[% .4f % .4f % .4f % .4f]\n"
+            "[% .4f % .4f % .4f % .4f]\n"
+            "[% .4f % .4f % .4f % .4f]\n",
+            tag,
+            m._11, m._12, m._13, m._14,
+            m._21, m._22, m._23, m._24,
+            m._31, m._32, m._33, m._34,
+            m._41, m._42, m._43, m._44);
+        OutputDebugStringA(buf);
+#endif
+    }
 }
 
 #endif // Engine_Function_h__

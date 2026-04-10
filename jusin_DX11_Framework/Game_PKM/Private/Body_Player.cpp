@@ -27,7 +27,7 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {
-	auto        pDesc = static_cast<BODY_PLAYER_DESC*>(pArg);
+	auto pDesc = static_cast<BODY_PLAYER_DESC*>(pArg);
 
 	m_pParentState = pDesc->pParentState;
 
@@ -74,7 +74,7 @@ HRESULT CBody_Player::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	size_t      iNumMeshes = m_pModelCom->Get_NumMeshes();
+	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -115,11 +115,9 @@ HRESULT CBody_Player::Ready_Components()
 
 HRESULT CBody_Player::Bind_ShaderResources()
 {
-
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//    return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pTransformCom->Bind_ShaderResourceCombinedWIT(m_pShaderCom, "g_WITMatrix", XMLoadFloat4x4(&m_CombinedWorldMatrix))))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
@@ -145,7 +143,6 @@ HRESULT CBody_Player::Bind_ShaderResources()
 
 	return S_OK;
 }
-
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

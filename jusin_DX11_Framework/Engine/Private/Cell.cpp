@@ -10,7 +10,7 @@ CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CCell::Initialize(const _float3* pPoints)
 {
-	memcpy(m_vPoints, pPoints, sizeof(_float3) * ETOUI(POINT::END));
+	memcpy(m_vPoints, pPoints, sizeof(_float3) * ETOUI(VTXPOINT::END));
 
 
 

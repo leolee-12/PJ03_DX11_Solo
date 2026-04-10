@@ -2,18 +2,6 @@
 #include "Bone.h"
 #include "Shader.h"
 
-CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
-	: CVIBuffer{ pDevice, pContext }
-	, m_eType { eType }
-	, m_pAIMesh{ pAIMesh }
-	, m_pModel{ pModel }
-{
-	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
-
-	for (_uint i = 0; i < g_iNumMeshBones; ++i)
-		XMStoreFloat4x4(&m_BoneMatrices[i], XMMatrixIdentity());
-}
-
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData)
 	: CVIBuffer{ pDevice, pContext }
 	, m_eType{ eType }
@@ -146,19 +134,6 @@ HRESULT CMesh::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, vect
 	return pShader->Bind_Matrices(pConstName, m_BoneMatrices, m_iNumBones);
 }
 
-CMesh* XM_CALLCONV CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix)
-{
-	CMesh* pInstance = new CMesh(pDevice, pContext, eType, pModel, pAIMesh, PreTransformMatrix);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CMesh");
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext, eType, tMeshData);
@@ -180,6 +155,4 @@ CComponent* CMesh::Clone(void* pArg)
 void CMesh::Free()
 {
 	__super::Free();
-
-	m_pModel = nullptr;
 }

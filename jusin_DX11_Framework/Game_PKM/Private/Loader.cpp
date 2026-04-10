@@ -181,27 +181,27 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	/* Prototype_Component_Model_PM0001_00 */
 	//_matrix PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
+	//	CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel"))))
+	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../../Resources/Models/PM0001_00/pm0001_00.wmodel", PreTransformMatrix))))
 	//	return E_FAIL;
 
 	/* Prototype_Component_Model_PM0004_00 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
+	//	CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel"))))
+	//	return E_FAIL;
 
 	/* Prototype_Component_Model_PM0007_00 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
+	//	CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel"))))
+	//	return E_FAIL;
 
 	/* Prototype_Component_Model_PM0025_00 */
- 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel"))))
-		return E_FAIL;
+ 	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
+		//CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel"))))
+		//return E_FAIL;
 
 	/* Prototype_Component_Model_Hero */
 	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
@@ -209,9 +209,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	//	return E_FAIL;
 
 	/* Prototype_Component_Model_Town01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
+	//	CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"))))
+	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
 	/* Prototype_GameObject_Terrain */
@@ -225,9 +225,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		return E_FAIL;
 
 	/* Prototype_GameObject_Monster */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
-		CMonster::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
+	//	CMonster::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	/* Prototype_GameObject_ForkLift */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
@@ -254,20 +254,20 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CSky::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* Prototype_GameObject_Player_LGPE */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
-		CPlayer_LGPE::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* Prototype_GameObject_Body_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO,
-		CBody_Hero::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* Prototype_MapObject_Town01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01,
-		CMapObject::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	///* Prototype_GameObject_Player_LGPE */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
+	//	CPlayer_LGPE::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	///* Prototype_GameObject_Body_Player */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO,
+	//	CBody_Hero::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	///* Prototype_MapObject_Town01 */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01,
+	//	CMapObject::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

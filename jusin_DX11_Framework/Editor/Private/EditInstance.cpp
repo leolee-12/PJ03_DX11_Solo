@@ -31,7 +31,7 @@ HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 
 	m_pModel_Loader = CModel_Loader::Create();
-	if (nullptr == m_pObject_Registry)
+	if (nullptr == m_pModel_Loader)
 		return E_FAIL;
 
 	return S_OK;

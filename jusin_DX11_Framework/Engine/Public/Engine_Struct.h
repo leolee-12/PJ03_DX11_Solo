@@ -22,10 +22,20 @@ namespace Engine
 		float fRange;
 	};
 
-	struct KEYFRAME
+	struct SCALING_KEY
 	{
 		XMFLOAT3 vScale;
+		float fTrackPosition;
+	};
+
+	struct ROTATION_KEY
+	{
 		XMFLOAT4 vRotation;
+		float fTrackPosition;
+	};
+
+	struct POSITION_KEY
+	{
 		XMFLOAT3 vTranslation;
 		float fTrackPosition;
 	};
@@ -162,11 +172,17 @@ namespace Engine
 	struct WMODEL_CHANNEL
 	{
 		uint32_t iBoneIndex;
-		vector<KEYFRAME> keyFrames;
+		XMFLOAT3 vDefaultScale;
+		XMFLOAT4 vDefaultRotation;
+		XMFLOAT3 vDefaultTranslation;
+		vector<SCALING_KEY> scalingKeys;
+		vector<ROTATION_KEY> rotationKeys;
+		vector<POSITION_KEY> positionKeys;
 	};
 
 	struct WMODEL_ANIMATION
 	{
+		char szName[MAX_PATH];
 		float fDuration;
 		float fTicksPerSecond;
 		vector<WMODEL_CHANNEL> channels;

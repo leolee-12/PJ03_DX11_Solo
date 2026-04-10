@@ -1,5 +1,5 @@
 #include "Model_Loader.h"
-//using namespace Assimp;
+using namespace Assimp;
 
 HRESULT XM_CALLCONV CModel_Loader::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform)
 {
@@ -77,6 +77,12 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 	}
 
 	// * 루트노드에 사전변환 적용
+	if (m_Bones.empty())
+	{
+		MSG_BOX("Model_Loader : Bone 추출 결과가 없음");
+		return E_FAIL;
+	}
+	
 	XMStoreFloat4x4(&m_Bones[0].transformation,
 		PreTransform * XMLoadFloat4x4(&m_Bones[0].transformation));
 
@@ -99,42 +105,13 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 		}
 	}
 
-	// 사전변환행렬의 요소 분리
-	_vector vPreScale, vPreRot, vPreTrans;
-	XMMatrixDecompose(&vPreScale, &vPreRot, &vPreTrans, PreTransform);
-
-	for (auto& anim : m_Animations)
-	{
-		for (auto& ch : anim.channels)
-		{
-			if (0 == ch.iBoneIndex)
-			{
-				for (auto& kf : ch.keyFrames)
-				{
-					// 크기 (균일 스케일인 경우에만 가능)
-					kf.vScale.x *= XMVectorGetX(vPreScale);
-					kf.vScale.y *= XMVectorGetX(vPreScale);
-					kf.vScale.z *= XMVectorGetX(vPreScale);
-
-					// 회전
-					XMStoreFloat4(&kf.vRotation, XMQuaternionMultiply(vPreRot, XMLoadFloat4(&kf.vRotation)));
-
-					// 이동
-					//XMStoreFloat3(&kf.vTranslation, XMVector3TransformCoord(XMLoadFloat3(&kf.vTranslation), PreTransform));
-				}
-
-				break;
-			}
-		}
-	}
-
-	m_tHeader.szMagic[4] = {};
-	m_tHeader.iVersion = {};
+	memcpy(m_tHeader.szMagic, "WMDL", 4);
+	m_tHeader.iVersion = 2;
 	m_tHeader.iModelType = ETOUI(m_eType);
 	m_tHeader.iNumMeshes = static_cast<_uint>(m_Meshes.size());
-	m_tHeader.iNumMaterials = static_cast<_uint>(m_Materials.size());;
-	m_tHeader.iNumBones = static_cast<_uint>(m_Bones.size());;
-	m_tHeader.iNumAnimations = static_cast<_uint>(m_Animations.size());;
+	m_tHeader.iNumMaterials = static_cast<_uint>(m_Materials.size());
+	m_tHeader.iNumBones = static_cast<_uint>(m_Bones.size());
+	m_tHeader.iNumAnimations = static_cast<_uint>(m_Animations.size());
 
 	return S_OK;
 }
@@ -296,6 +273,24 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				Mesh.offsetMatrices.push_back(OffsetMatrix);
 			}
 
+			// 3-4. weight 정규화 (fallback)
+			for (_uint v = 0; v < iNumVertices; ++v)
+			{
+				_float fSum =
+					pVertices[v].vBlendWeight.x +
+					pVertices[v].vBlendWeight.y +
+					pVertices[v].vBlendWeight.z +
+					pVertices[v].vBlendWeight.w;
+
+				if (fSum > 0.f)
+				{
+					pVertices[v].vBlendWeight.x /= fSum;
+					pVertices[v].vBlendWeight.y /= fSum;
+					pVertices[v].vBlendWeight.z /= fSum;
+					pVertices[v].vBlendWeight.w /= fSum;
+				}
+			}
+
 			Mesh.animVertices = vector<VTXANIMMESH>(pVertices, pVertices + iNumVertices);
 			Safe_Delete_Array(pVertices);
 		}
@@ -311,7 +306,6 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 {
 	// 0. 각 재질에 대해 작업
 	namespace fs = std::filesystem;
-	fs::path modelDir = fs::path(m_strFbxPath).parent_path();
 	aiString AITexPath = {};
 	_uint iNumMaterials = m_pAIScene->mNumMaterials;
 
@@ -335,8 +329,7 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 					return E_FAIL;
 
 				_string filename = fs::path(AITexPath.data).filename().string();
-				_string fullPath = modelDir.string() + "/" + filename;
-				Material.TexturePaths[j].push_back(fullPath);
+				Material.TexturePaths[j].push_back(filename);
 			}
 		}
 
@@ -354,9 +347,10 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 
 	for (_uint i = 0; i < iNumAnimations; ++i)
 	{
-		// 1. 애니메이션의 Duration, TicksPerSecond 정보 저장
+		// 1. 애니메이션의 Name, Duration, TicksPerSecond 정보 저장
 		aiAnimation* pAIAnim = m_pAIScene->mAnimations[i];
 		WMODEL_ANIMATION Anim = {};
+		strcpy_s(Anim.szName, pAIAnim->mName.data);
 		Anim.fDuration = static_cast<_float>(pAIAnim->mDuration);
 		Anim.fTicksPerSecond = static_cast<_float>(pAIAnim->mTicksPerSecond);
 
@@ -374,47 +368,79 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 			WMODEL_CHANNEL Channel = {};
 			Channel.iBoneIndex = static_cast<_uint>(iBoneIndex);
 
-			// 3. 각 키프레임에 대해 작업
+			_vector vScale, vRotation, vTranslation;
+			_matrix bindLocal = XMLoadFloat4x4(&m_Bones[iBoneIndex].transformation);
+
+			if (false == XMMatrixDecompose(&vScale, &vRotation, &vTranslation, bindLocal))
+			{
+				vScale = XMVectorSet(1.f, 1.f, 1.f, 0.f);
+				vRotation = XMQuaternionIdentity();
+				vTranslation = XMVectorZero();
+			}
+
+			XMStoreFloat3(&Channel.vDefaultScale, vScale);
+			XMStoreFloat4(&Channel.vDefaultRotation, vRotation);
+			XMStoreFloat3(&Channel.vDefaultTranslation, vTranslation);
+
 			_uint iNumScalingKeys = pAINodeAnim->mNumScalingKeys;
 			_uint iNumRotationKeys = pAINodeAnim->mNumRotationKeys;
 			_uint iNumPositionKeys = pAINodeAnim->mNumPositionKeys;
-			_uint iNumKeyFrames = max(max(iNumScalingKeys, iNumRotationKeys), iNumPositionKeys);
-			Channel.keyFrames.reserve(iNumKeyFrames);
+			Channel.scalingKeys.reserve(iNumScalingKeys);
+			Channel.rotationKeys.reserve(iNumRotationKeys);
+			Channel.positionKeys.reserve(iNumPositionKeys);
 
-			_float3 vScale{};
-			_float4 vRotation{};
-			_float3 vTranslation{};
-			_float fTrackPosition{};
-
-			for (_uint k = 0; k < iNumKeyFrames; ++k)
+			// 3. 스케일 키 추출
+			for (_uint k = 0; k < iNumScalingKeys; ++k)
 			{
-				// 4. 크기, 회전, 이동 값과 TrackPosition 데이터 추출
-				if (k < iNumScalingKeys)
-				{
-					memcpy(&vScale, &pAINodeAnim->mScalingKeys[k].mValue, sizeof(_float3));
-					fTrackPosition = static_cast<_float>(pAINodeAnim->mScalingKeys[k].mTime);
-				}
-				if (k < iNumRotationKeys)
-				{
-					vRotation.x = pAINodeAnim->mRotationKeys[k].mValue.x;
-					vRotation.y = pAINodeAnim->mRotationKeys[k].mValue.y;
-					vRotation.z = pAINodeAnim->mRotationKeys[k].mValue.z;
-					vRotation.w = pAINodeAnim->mRotationKeys[k].mValue.w;
-					fTrackPosition = static_cast<_float>(pAINodeAnim->mRotationKeys[k].mTime);
-				}
-				if (k < iNumPositionKeys)
-				{
-					memcpy(&vTranslation, &pAINodeAnim->mPositionKeys[k].mValue, sizeof(_float3));
-					fTrackPosition = static_cast<_float>(pAINodeAnim->mPositionKeys[k].mTime);
-				}
+				SCALING_KEY key{};
+				key.vScale.x = pAINodeAnim->mScalingKeys[k].mValue.x;
+				key.vScale.y = pAINodeAnim->mScalingKeys[k].mValue.y;
+				key.vScale.z = pAINodeAnim->mScalingKeys[k].mValue.z;
+				key.fTrackPosition = static_cast<_float>(pAINodeAnim->mScalingKeys[k].mTime);
+				Channel.scalingKeys.push_back(key);
+			}
 
-				// 5. 키프레임 컨테이너에 삽입
-				Channel.keyFrames.push_back({ vScale, vRotation, vTranslation, fTrackPosition });
+			// 4. 회전 키 추출
+			for (_uint k = 0; k < iNumRotationKeys; ++k)
+			{
+				ROTATION_KEY key{};
+				key.vRotation.x = pAINodeAnim->mRotationKeys[k].mValue.x;
+				key.vRotation.y = pAINodeAnim->mRotationKeys[k].mValue.y;
+				key.vRotation.z = pAINodeAnim->mRotationKeys[k].mValue.z;
+				key.vRotation.w = pAINodeAnim->mRotationKeys[k].mValue.w;
+				key.fTrackPosition = static_cast<_float>(pAINodeAnim->mRotationKeys[k].mTime);
+				Channel.rotationKeys.push_back(key);
+
+				// 4-1. 회전 키프레임 전처리 : hemisphere 통일
+				if (k > 0)
+				{
+					_vector vPrevQuat = XMLoadFloat4(&Channel.rotationKeys[k - 1].vRotation);
+					_vector vCurrQuat = XMLoadFloat4(&Channel.rotationKeys[k].vRotation);
+
+					// 이전 키프레임과 내적했을 때 음수이면(다른 반구에 있다면)
+					if (XMVectorGetX(XMVector4Dot(vPrevQuat, vCurrQuat)) < 0.f)
+					{
+						vCurrQuat = XMVectorNegate(vCurrQuat);	// 모든 성분에 -1을 곱함
+						XMStoreFloat4(&Channel.rotationKeys[k].vRotation, vCurrQuat);
+					}
+				}
+			}
+
+			// 5. 위치 키 추출
+			for (_uint k = 0; k < iNumPositionKeys; ++k)
+			{
+				POSITION_KEY key{};
+				key.vTranslation.x = pAINodeAnim->mPositionKeys[k].mValue.x;
+				key.vTranslation.y = pAINodeAnim->mPositionKeys[k].mValue.y;
+				key.vTranslation.z = pAINodeAnim->mPositionKeys[k].mValue.z;
+				key.fTrackPosition = static_cast<_float>(pAINodeAnim->mPositionKeys[k].mTime);
+				Channel.positionKeys.push_back(key);
 			}
 
 			// 6. 채널 컨테이너에 삽입
 			Anim.channels.push_back(Channel);
 		}
+
 		// 7. 애니메이션 컨테이너에 삽입
 		m_Animations.push_back(Anim);
 	}
@@ -500,6 +526,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	// 6. 애니메이션 데이터 쓰기
 	for (auto& anim : m_Animations)
 	{
+		fwrite(anim.szName, 1, MAX_PATH, fp);
 		fwrite(&anim.fDuration, sizeof(_float), 1, fp);
 		fwrite(&anim.fTicksPerSecond, sizeof(_float), 1, fp);
 		_uint numChannels = static_cast<_uint>(anim.channels.size());
@@ -508,9 +535,23 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 		for (auto& channel : anim.channels)
 		{
 			fwrite(&channel.iBoneIndex, sizeof(_uint), 1, fp);
-			_uint numKF = static_cast<_uint>(channel.keyFrames.size());
-			fwrite(&numKF, sizeof(_uint), 1, fp);
-			fwrite(channel.keyFrames.data(), sizeof(KEYFRAME), numKF, fp);
+			fwrite(&channel.vDefaultScale, sizeof(_float3), 1, fp);
+			fwrite(&channel.vDefaultRotation, sizeof(_float4), 1, fp);
+			fwrite(&channel.vDefaultTranslation, sizeof(_float3), 1, fp);
+			_uint numScalingKeys = static_cast<_uint>(channel.scalingKeys.size());
+			_uint numRotationKeys = static_cast<_uint>(channel.rotationKeys.size());
+			_uint numPositionKeys = static_cast<_uint>(channel.positionKeys.size());
+
+			fwrite(&numScalingKeys, sizeof(_uint), 1, fp);
+			fwrite(&numRotationKeys, sizeof(_uint), 1, fp);
+			fwrite(&numPositionKeys, sizeof(_uint), 1, fp);
+
+			if (!channel.scalingKeys.empty())
+				fwrite(channel.scalingKeys.data(), sizeof(SCALING_KEY), numScalingKeys, fp);
+			if (!channel.rotationKeys.empty())
+				fwrite(channel.rotationKeys.data(), sizeof(ROTATION_KEY), numRotationKeys, fp);
+			if (!channel.positionKeys.empty())
+				fwrite(channel.positionKeys.data(), sizeof(POSITION_KEY), numPositionKeys, fp);
 		}
 	}
 
@@ -600,6 +641,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 	{
 		json anim_entry;
 		anim_entry["index"] = iIndex++;
+		anim_entry["name"] = anim.szName;
 		anim_entry["duration"] = anim.fDuration;
 		anim_entry["tickPerSecond"] = anim.fTicksPerSecond;
 		anim_entry["numChannels"] = anim.channels.size();
@@ -609,9 +651,31 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		{
 			json ch_entry;
 			ch_entry["boneIndex"] = channel.iBoneIndex;
-			ch_entry["numKeyFrames"] = channel.keyFrames.size();
+			ch_entry["defaultScale"] =
+			{
+				channel.vDefaultScale.x,
+				channel.vDefaultScale.y,
+				channel.vDefaultScale.z
+			};
+			ch_entry["defaultRotation"] =
+			{
+				channel.vDefaultRotation.x,
+				channel.vDefaultRotation.y,
+				channel.vDefaultRotation.z,
+				channel.vDefaultRotation.w
+			};
+			ch_entry["defaultTranslation"] =
+			{
+				channel.vDefaultTranslation.x,
+				channel.vDefaultTranslation.y,
+				channel.vDefaultTranslation.z
+			};
+			ch_entry["numScalingKeys"] = channel.scalingKeys.size();
+			ch_entry["numRotationKeys"] = channel.rotationKeys.size();
+			ch_entry["numPositionKeys"] = channel.positionKeys.size();
 			anim_entry["channels"].push_back(ch_entry);
 		}
+
 		root["animations"].push_back(anim_entry);
 	}
 

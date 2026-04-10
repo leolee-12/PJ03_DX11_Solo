@@ -1,9 +1,9 @@
 #pragma once
 #include "Base.h"
 #include "Editor_Defines.h"
-//#include <assimp/scene.h>
-//#include <assimp/Importer.hpp>
-//#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 NS_BEGIN(Editor)
 
@@ -33,7 +33,7 @@ public:
 
 private:
 	const aiScene* m_pAIScene = { nullptr };
-	Importer m_Importer = {};
+	Assimp::Importer m_Importer = {};
 	
 	MODEL m_eType = { MODEL::END };
 	_float4x4 m_PreTransformMatrix = {};

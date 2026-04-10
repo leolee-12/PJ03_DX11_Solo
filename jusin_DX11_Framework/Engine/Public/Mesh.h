@@ -7,7 +7,6 @@ NS_BEGIN(Engine)
 class CMesh final : public CVIBuffer
 {
 private:
-	CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix);
 	CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData);
 	CMesh(const CMesh& Prototype);
 	virtual ~CMesh() = default;
@@ -27,13 +26,9 @@ public:
 private:
 	_char m_szName[MAX_PATH] = {};
 	MODEL m_eType = { MODEL::END };
-	const aiMesh* m_pAIMesh = { nullptr };
-	CModel* m_pModel = { nullptr };
-	
 	_uint m_iMaterialIndex = {};
 
 	_uint m_iNumBones = {};
-	_float4x4 m_PreTransformMatrix = {};
 	_float4x4 m_BoneMatrices[g_iNumMeshBones] = {};
 	vector<_uint> m_BoneIndices;
 	vector<_float4x4> m_OffsetMatrices;
@@ -45,7 +40,6 @@ private:
 	BoundingBox m_tLocalAABB = {};
 
 public:
-	static CMesh* XM_CALLCONV Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, class CModel* pModel, const aiMesh* pAIMesh, _cmatrix PreTransformMatrix);
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData);
 	virtual CComponent* Clone(void* pArg) override;
 
