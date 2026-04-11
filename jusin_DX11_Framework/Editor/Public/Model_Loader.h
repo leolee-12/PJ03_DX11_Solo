@@ -14,17 +14,19 @@ private:
 	virtual ~CModel_Loader() = default;
 
 public:
-	// 바이너리 Export
-	HRESULT XM_CALLCONV Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform);
+	HRESULT XM_CALLCONV Export_Binary(const _char* pFbxPath, const _char* pOutputPath,
+		MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath = nullptr);
 
-	// JSON Export
-	HRESULT XM_CALLCONV Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount = 3);
+	HRESULT XM_CALLCONV Export_JSON(const _char* pFbxPath, const _char* pOutputPath,
+		MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount = 3);
 
-	// 바이너리 + JSON 동시
-	HRESULT XM_CALLCONV Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform);
+	HRESULT XM_CALLCONV Export_All(const _char* pFbxPath, const _char* pOutputDir,
+		MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath = nullptr);
 
-	// FBX 로드
 	HRESULT XM_CALLCONV Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform);
+
+	HRESULT Generate_MappingJSON(const _char* pTexDir, const _char* pOutputPath);
+	HRESULT Apply_MappingJSON(const _char* pMappingJsonPath);
 
 	_bool Is_ModelLoaded() const { return m_pAIScene != nullptr; }
 	const _char* Get_FbxPath() const { return m_strFbxPath.c_str(); }

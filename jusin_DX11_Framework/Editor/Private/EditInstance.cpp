@@ -86,30 +86,6 @@ HRESULT CEditInstance::Draw()
 	return S_OK;
 }
 
-HRESULT CEditInstance::Begin_ViewportRender()
-{
-	if (nullptr == m_pImGui_Manager)
-		return E_FAIL;
-
-	CPanel_Viewport* pPanel = m_pImGui_Manager->Get_ViewportPanel();
-	if (nullptr == pPanel)
-		return E_FAIL;
-
-	return pPanel->Begin_SceneRender();
-}
-
-HRESULT CEditInstance::End_ViewportRender()
-{
-	if (nullptr == m_pImGui_Manager)
-		return E_FAIL;
-
-	CPanel_Viewport* pPanel = m_pImGui_Manager->Get_ViewportPanel();
-	if (nullptr == pPanel)
-		return E_FAIL;
-
-	return pPanel->End_SceneRender();
-}
-
 void CEditInstance::Release_Editor()
 {
 	Safe_Release(m_pModel_Loader);
@@ -141,6 +117,16 @@ _bool CEditInstance::Is_PlaceMode() const
 const CATALOG_ITEM& CEditInstance::Get_PlaceItem() const
 {
 	return m_pImGui_Manager->Get_PlaceItem();
+}
+
+HRESULT CEditInstance::Begin_ViewportRender()
+{
+	return m_pImGui_Manager->Get_ViewportPanel()->Begin_SceneRender();
+}
+
+HRESULT CEditInstance::End_ViewportRender()
+{
+	return m_pImGui_Manager->Get_ViewportPanel()->End_SceneRender();
 }
 #pragma endregion
 
@@ -256,9 +242,9 @@ HRESULT CEditInstance::Load_EffectPreset(const _string& strPath, vector<struct E
 #pragma endregion
 
 #pragma region MODEL_LOADER
-HRESULT XM_CALLCONV CEditInstance::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform)
+HRESULT XM_CALLCONV CEditInstance::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath)
 {
-	return m_pModel_Loader->Export_Binary(pFbxPath, pOutputPath, eType, PreTransform);
+	return m_pModel_Loader->Export_Binary(pFbxPath, pOutputPath, eType, PreTransform, pMappingJsonPath);
 }
 
 HRESULT XM_CALLCONV CEditInstance::Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount)
@@ -266,14 +252,19 @@ HRESULT XM_CALLCONV CEditInstance::Export_JSON(const _char* pFbxPath, const _cha
 	return m_pModel_Loader->Export_JSON(pFbxPath, pOutputPath, eType, PreTransform, iVertexSampleCount);
 }
 
-HRESULT XM_CALLCONV CEditInstance::Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform)
+HRESULT XM_CALLCONV CEditInstance::Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath)
 {
-	return m_pModel_Loader->Export_All(pFbxPath, pOutputDir, eType, PreTransform);
+	return m_pModel_Loader->Export_All(pFbxPath, pOutputDir, eType, PreTransform, pMappingJsonPath);
 }
 
 HRESULT XM_CALLCONV CEditInstance::Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform)
 {
 	return m_pModel_Loader->Load_FBX(pFbxPath, eType, PreTransform);
+}
+
+HRESULT CEditInstance::Generate_MappingJSON(const _char* pTexDir, const _char* pOutputPath)
+{
+	return m_pModel_Loader->Generate_MappingJSON(pTexDir, pOutputPath);
 }
 
 _bool CEditInstance::Is_ModelLoaded() const

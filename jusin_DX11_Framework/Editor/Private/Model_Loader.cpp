@@ -1,30 +1,38 @@
 #include "Model_Loader.h"
 using namespace Assimp;
 
-HRESULT XM_CALLCONV CModel_Loader::Export_Binary(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform)
+HRESULT XM_CALLCONV CModel_Loader::Export_Binary(const _char* pFbxPath, const _char* pOutputPath,
+	MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath)
 {
 	if (!Is_ModelLoaded() || m_strFbxPath != pFbxPath)
 		if (FAILED(Load_FBX(pFbxPath, eType, PreTransform))) return E_FAIL;
 
+	if (pMappingJsonPath != nullptr)
+		if (FAILED(Apply_MappingJSON(pMappingJsonPath))) return E_FAIL;
+
 	if (FAILED(Write_Binary(pOutputPath))) return E_FAIL;
 
 	_tchar szMsg[512] = {};
-	wprintf_s(szMsg, L"Export 완료\n- Bones: %zu\n- Meshes: %zu\n- Materials: %zu\n- Animations: %zu\n- 출력: %s",
-		m_Bones.size(), m_Meshes.size(), m_Materials.size(), m_Animations.size(), pOutputPath);
+	swprintf_s(szMsg, L"Export 완료\n- Bones: %zu\n- Meshes: %zu\n- Materials: %zu\n- Animations: %zu\n", m_Bones.size(), m_Meshes.size(), m_Materials.size(), m_Animations.size());
 	MessageBox(NULL, szMsg, L"System Message", MB_OK);
 
 	return S_OK;
 }
 
-HRESULT XM_CALLCONV CModel_Loader::Export_JSON(const _char* pFbxPath, const _char* pOutputPath, MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount)
+HRESULT XM_CALLCONV CModel_Loader::Export_JSON(const _char* pFbxPath, const _char* pOutputPath,
+	MODEL eType, _fmatrix PreTransform, _uint iVertexSampleCount)
 {
 	if (FAILED(Load_FBX(pFbxPath, eType, PreTransform))) return E_FAIL;
 	return Write_JSON(pOutputPath, iVertexSampleCount);
 }
 
-HRESULT XM_CALLCONV CModel_Loader::Export_All(const _char* pFbxPath, const _char* pOutputDir, MODEL eType, _fmatrix PreTransform)
+HRESULT XM_CALLCONV CModel_Loader::Export_All(const _char* pFbxPath, const _char* pOutputDir,
+	MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath)
 {
 	if (FAILED(Load_FBX(pFbxPath, eType, PreTransform))) return E_FAIL;
+
+	if (pMappingJsonPath != nullptr)
+		if (FAILED(Apply_MappingJSON(pMappingJsonPath))) return E_FAIL;
 
 	namespace fs = std::filesystem;
 	_string stem = fs::path(pFbxPath).stem().string();
@@ -112,6 +120,115 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 	m_tHeader.iNumMaterials = static_cast<_uint>(m_Materials.size());
 	m_tHeader.iNumBones = static_cast<_uint>(m_Bones.size());
 	m_tHeader.iNumAnimations = static_cast<_uint>(m_Animations.size());
+
+	return S_OK;
+}
+
+HRESULT CModel_Loader::Generate_MappingJSON(const _char* pTexDir, const _char* pOutputPath)
+{
+	if (!Is_ModelLoaded()) return E_FAIL;
+
+	namespace fs = std::filesystem;
+	json root;
+
+	// 1. 모델 정보
+	root["model"] = fs::path(m_strFbxPath).stem().string();
+
+	// 2. 슬롯 정보 참고
+	root["slot_reference"] =
+	{
+			{ "1",  "DIFFUSE" },
+			{ "2",  "SPECULAR" },
+			{ "3",  "AMBIENT" },
+			{ "4",  "EMISSIVE" },
+			{ "6",  "NORMALS" },
+			{ "7",  "SHININESS" },
+			{ "8",  "OPACITY" },
+			{ "17", "AMBIENT_OCCLUSION" },
+			{ "28", "LAYER_MASK" },
+			{ "29", "LAYER_COLOR" }
+	};
+
+	// 3. 텍스처 디렉토리 내 파일 목록
+	root["available_textures"] = json::array();
+	if (pTexDir != nullptr && fs::exists(pTexDir) && fs::is_directory(pTexDir))
+	{
+		for (auto& entry : fs::directory_iterator(pTexDir))
+		{
+			if (entry.is_regular_file())
+				root["available_textures"].push_back(entry.path().filename().string());
+		}
+		sort(root["available_textures"].begin(), root["available_textures"].end());
+	}
+
+	// 4. 머테리얼 목록
+	root["materials"] = json::array();
+	for (_uint i = 0; i < static_cast<_uint>(m_Materials.size()); ++i)
+	{
+		json matEntry;
+		matEntry["index"] = i;
+
+		// 머테리얼 이름 (Assimp)
+		aiString matName;
+		m_pAIScene->mMaterials[i]->Get(AI_MATKEY_NAME, matName);
+		matEntry["name"] = matName.C_Str();
+
+		// 이 머테리얼을 참조하는 메쉬 목록
+		matEntry["meshes"] = json::array();
+		for (auto& mesh : m_Meshes)
+		{
+			if (mesh.iMaterialIndex == i)
+				matEntry["meshes"].push_back(mesh.szName);
+		}
+
+		// 텍스처 슬롯 - 직접 채울 것
+		matEntry["textures"] = json::object();
+
+		root["materials"].push_back(matEntry);
+	}
+
+	// 5. JSON 파일 출력
+	ofstream(pOutputPath) << root.dump(2);
+	return S_OK;
+}
+
+HRESULT CModel_Loader::Apply_MappingJSON(const _char* pMappingJsonPath)
+{
+	ifstream f(pMappingJsonPath);
+	if (!f.is_open())
+	{
+		MSG_BOX("Model_Loader : Mapping JSON 열기 실패");
+		return E_FAIL;
+	}
+
+	json root = json::parse(f);
+	if (!root.contains("materials"))
+	{
+		MSG_BOX("Model_Loader : Mapping JSON에 materials 키 없음");
+		return E_FAIL;
+	}
+
+	for (auto& matEntry : root["materials"])
+	{
+		_uint idx = matEntry["index"].get<_uint>();
+		if (idx >= static_cast<_uint>(m_Materials.size())) continue;
+
+		// 기존 데이터 초기화
+		for (auto& paths : m_Materials[idx].TexturePaths)
+			paths.clear();
+
+		// JSON에서 읽어서 배정
+		if (!matEntry.contains("textures")) continue;
+
+		for (auto& [slotStr, files] : matEntry["textures"].items())
+		{
+			int iSlot = stoi(slotStr);
+			if (iSlot < 0 || iSlot >= ETOUI(MATERIAL_TYPE::END)) continue;
+
+			for (auto& file : files)
+				m_Materials[idx].TexturePaths[iSlot].push_back(file.get<_string>());
+		}
+	}
 
 	return S_OK;
 }
@@ -317,7 +434,7 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 		// 1. 각 텍스처 타입에 대해 작업
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
-			if (j >= ETOUI(TEXTURE_TYPE::END)) continue;
+			if (j >= ETOUI(MATERIAL_TYPE::END)) continue;
 
 			// 2. 텍스처마다 경로 추출하여 경로 컨테이너에 삽입
 			_uint iNumTextures = pAIMaterial->GetTextureCount(static_cast<aiTextureType>(j));
@@ -483,7 +600,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	// 4. 재질 데이터 쓰기
 	for (auto& material : m_Materials)
 	{
-		for (_uint i = 0; i < ETOUI(TEXTURE_TYPE::END); ++i)
+		for (_uint i = 0; i < ETOUI(MATERIAL_TYPE::END); ++i)
 		{
 			_uint numTex = static_cast<_uint>(material.TexturePaths[i].size());
 			fwrite(&numTex, sizeof(_uint), 1, fp);
@@ -606,7 +723,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		mat_entry["index"] = iIndex++;
 		json textures_obj;
 
-		for (_uint slot = 1; slot < ETOUI(TEXTURE_TYPE::END); ++slot)
+		for (_uint slot = 1; slot < ETOUI(MATERIAL_TYPE::END); ++slot)
 		{
 			if (material.TexturePaths[slot].empty()) continue;
 

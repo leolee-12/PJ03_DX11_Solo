@@ -40,7 +40,19 @@ namespace Engine
 		float fTrackPosition;
 	};
 
+	struct RENDER_TABLE
+	{
+		vector<array<unsigned int, ETOUI(MATERIAL_TYPE::END)>> variants;
+		vector<unsigned int> passes;
 
+		void Ready_RenderTable(unsigned int iNumMaterials)
+		{
+			variants.resize(iNumMaterials);
+			for (auto& slots : variants)
+				slots.fill(0);
+			passes.assign(iNumMaterials, 0);
+		}
+	};
 
 	// 버텍스 구조체
 	struct VTXTEX
@@ -166,7 +178,7 @@ namespace Engine
 
 	struct WMODEL_MATERIAL
 	{
-		vector<string> TexturePaths[ETOUI(TEXTURE_TYPE::END)];
+		vector<string> TexturePaths[ETOUI(MATERIAL_TYPE::END)];
 	};
 
 	struct WMODEL_CHANNEL

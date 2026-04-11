@@ -79,7 +79,7 @@ HRESULT CPlayer_LGPE::Ready_Components()
 
 HRESULT CPlayer_LGPE::Ready_PartObjects()
 {
-	CBody_Hero::BODY_PLAYER_DESC BodyDesc{};
+	CBody_Hero::BODY_HERO_DESC BodyDesc{};
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	BodyDesc.pParentState = &m_iState;
 

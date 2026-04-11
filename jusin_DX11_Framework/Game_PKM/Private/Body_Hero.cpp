@@ -11,6 +11,7 @@ CBody_Hero::CBody_Hero(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CBody_Hero::CBody_Hero(const CBody_Hero& Prototype)
 	: CPartObject{ Prototype }
+	, m_RenderTable{ Prototype.m_RenderTable }
 {
 
 }
@@ -27,7 +28,7 @@ HRESULT CBody_Hero::Initialize_Prototype()
 
 HRESULT CBody_Hero::Initialize(void* pArg)
 {
-	auto        pDesc = static_cast<BODY_PLAYER_DESC*>(pArg);
+	auto        pDesc = static_cast<BODY_HERO_DESC*>(pArg);
 
 	m_pParentState = pDesc->pParentState;
 
@@ -38,6 +39,8 @@ HRESULT CBody_Hero::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+
+	Ready_DefaultVariant();
 
 	return S_OK;
 }
@@ -73,17 +76,24 @@ HRESULT CBody_Hero::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	size_t      iNumMeshes = m_pModelCom->Get_NumMeshes();
+	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, TEXTURE_TYPE::DIFFUSE, 0)))
-			return E_FAIL;
+		_uint matIdx = m_pModelCom->Get_MeshMaterialIndex(i);
+
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::DIFFUSE)]);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexSpec", i, MATERIAL_TYPE::SPECULAR, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::SPECULAR)]);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_R", i, MATERIAL_TYPE::AMBIENT, 0);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_G", i, MATERIAL_TYPE::AMBIENT, 1);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_B", i, MATERIAL_TYPE::AMBIENT, 2);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexEmit", i, MATERIAL_TYPE::EMISSIVE, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::EMISSIVE)]);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexLycl", i, MATERIAL_TYPE::LAYER_COLOR, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::LAYER_COLOR)]);
 
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(m_RenderTable.passes[matIdx])))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -97,7 +107,7 @@ HRESULT CBody_Hero::Ready_Components()
 {
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -120,7 +130,7 @@ HRESULT CBody_Hero::Bind_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
+	if (FAILED(m_pTransformCom->Bind_ShaderResourceCombinedWIT(m_pShaderCom, "g_WITMatrix", XMLoadFloat4x4(&m_CombinedWorldMatrix))))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
@@ -145,6 +155,16 @@ HRESULT CBody_Hero::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CBody_Hero::Ready_DefaultVariant()
+{
+	//enum MESH { BAG, BOTTOMS, CAP, R_EYE, L_EYE, SKIN, HAIR, SHOES, TOPS, END };
+
+	m_RenderTable.Ready_RenderTable(ETOUI(CBody_Hero::END));	// 0 √ ±‚»≠
+	m_RenderTable.passes[ETOUI(CBody_Hero::R_EYE)] = m_RenderTable.passes[ETOUI(CBody_Hero::L_EYE)] = 1;
+	m_RenderTable.passes[ETOUI(CBody_Hero::SKIN)] = m_RenderTable.passes[ETOUI(CBody_Hero::HAIR)]
+		= m_RenderTable.passes[ETOUI(CBody_Hero::SHOES)] = m_RenderTable.passes[ETOUI(CBody_Hero::TOPS)] = 1;
 }
 
 

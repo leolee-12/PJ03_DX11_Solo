@@ -34,6 +34,23 @@ HRESULT CPanel_Model::Render()
 		Open_FileDialog(m_szFbxPath, MAX_PATH, "FBX Files\0*.fbx\0All Files\0*.*\0");
 	}
 
+	// FBX 경로가 바뀌었으면 나머지 경로 자동 갱신
+	if (strcmp(m_szFbxPath, m_szPrevFbxPath) != 0 && m_szFbxPath[0] != '\0')
+	{
+		namespace fs = std::filesystem;
+		fs::path fbxPath(m_szFbxPath);
+		_string dir = fbxPath.parent_path().string();
+		_string stem = fbxPath.stem().string();
+
+		strcpy_s(m_szTexDir, dir.c_str());
+		strcpy_s(m_szOutputDir, dir.c_str());
+
+		_string jsonPath = dir + "/" + stem + "_mapping.json";
+		strcpy_s(m_szMappingJsonPath, jsonPath.c_str());
+
+		strcpy_s(m_szPrevFbxPath, m_szFbxPath);
+	}
+
 	/* ── 2. 모델 타입 선택 ──────────────────────── */
 	_int iType = ETOI(m_eType);
 	ImGui::Text("Type :");
@@ -95,9 +112,57 @@ HRESULT CPanel_Model::Render()
 
 	ImGui::EndChild();
 
-	ImGui::Separator();
+	/* ── 7. 머테리얼 수정 ──────────────────────────────── */
+	ImGui::SeparatorText("Material Mapping");
 
-	/* ── 7. Export ──────────────────────────────── */
+	// 텍스처 디렉토리
+	ImGui::Text("Tex Dir");
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 36.f);
+	ImGui::InputText("##tex_dir", m_szTexDir, MAX_PATH, ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine(0.f, 4.f);
+	if (ImGui::Button("...##tex"))
+		Open_FolderDialog(m_szTexDir, MAX_PATH);
+
+	// Mapping JSON 경로
+	ImGui::Text("Mapping JSON");
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+	ImGui::InputText("##mapping_json", m_szMappingJsonPath, MAX_PATH);
+	ImGui::SameLine(0.f, 4.f);
+	if (ImGui::Button("...##json"))
+		Open_FileDialog(m_szMappingJsonPath, MAX_PATH, "JSON Files\0*.json\0All Files\0*.*\0");
+
+	// Generate 버튼
+	ImGui::BeginDisabled(!m_pEditInstance->Is_ModelLoaded()
+		|| m_szTexDir[0] == '\0'
+		|| m_szMappingJsonPath[0] == '\0');
+
+	if (ImGui::Button("[Generate Mapping JSON]", ImVec2(-1, 0)))
+	{
+		namespace fs = std::filesystem;
+		bool bProceed = true;
+
+		if (fs::exists(m_szMappingJsonPath))
+		{
+			int result = MessageBox(NULL,
+				L"이미 Mapping JSON이 존재합니다.\n덮어쓰시겠습니까?",
+				L"Warning", MB_YESNO | MB_ICONWARNING | MB_SETFOREGROUND);
+			bProceed = (result == IDYES);
+		}
+
+		if (bProceed)
+		{
+			if (SUCCEEDED(m_pEditInstance->Generate_MappingJSON(m_szTexDir, m_szMappingJsonPath)))
+				m_bMappingGenerated = true;
+		}
+	}
+
+	ImGui::EndDisabled();
+
+	if (m_bMappingGenerated)
+		ImGui::TextColored(ImVec4(0.2f, 0.8f, 0.2f, 1.f), "Mapping JSON generated.");
+
+	/* ── 8. Export ──────────────────────────────── */
+	ImGui::SeparatorText("Export");
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 36.f);
 	ImGui::InputText("##out_dir", m_szOutputDir, MAX_PATH);
 	ImGui::SameLine(0.f, 4.f);
@@ -115,16 +180,18 @@ HRESULT CPanel_Model::Render()
 			* XMMatrixRotationX(XMConvertToRadians(m_fRotationX))
 			* XMMatrixRotationY(XMConvertToRadians(m_fRotationY))
 			* XMMatrixRotationZ(XMConvertToRadians(m_fRotationZ));
-		m_pEditInstance->Export_Binary(m_szFbxPath, m_szOutputDir, m_eType, PreTransform);
-    }
-    if (ImGui::Button("[Export All]", ImVec2(-1, 0)))   // Binary + Meta JSON
-    {
+		const _char* pJson = (m_szMappingJsonPath[0] != '\0') ? m_szMappingJsonPath : nullptr;
+		m_pEditInstance->Export_Binary(m_szFbxPath, m_szOutputDir, m_eType, PreTransform, pJson);
+	}
+	if (ImGui::Button("[Export All]", ImVec2(-1, 0)))
+	{
 		_matrix PreTransform = XMMatrixScaling(m_fScale, m_fScale, m_fScale)
 			* XMMatrixRotationX(XMConvertToRadians(m_fRotationX))
 			* XMMatrixRotationY(XMConvertToRadians(m_fRotationY))
 			* XMMatrixRotationZ(XMConvertToRadians(m_fRotationZ));
-		m_pEditInstance->Export_All(m_szFbxPath, m_szOutputDir, m_eType, PreTransform);
-    }
+		const _char* pJson = (m_szMappingJsonPath[0] != '\0') ? m_szMappingJsonPath : nullptr;
+		m_pEditInstance->Export_All(m_szFbxPath, m_szOutputDir, m_eType, PreTransform, pJson);
+	}
 
 	ImGui::EndDisabled();
 

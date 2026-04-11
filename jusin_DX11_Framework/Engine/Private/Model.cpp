@@ -35,6 +35,11 @@ CModel::CModel(const CModel& Prototype)
 		Safe_AddRef(pMesh);
 }
 
+_uint CModel::Get_MeshMaterialIndex(_uint iMeshIdx)
+{
+	return Get_Mesh(iMeshIdx)->Get_MaterialIndex();
+}
+
 _int CModel::Get_BoneIndex(const _char* pBoneName)
 {
 	_int iIndex = { -1 };
@@ -152,7 +157,7 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, TEXTURE_TYPE eType, _uint iIndex)
+HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, MATERIAL_TYPE eType, _uint iIndex)
 {
 	if (iMeshIndex >= m_iNumMeshes)
 		return E_FAIL;
@@ -228,7 +233,7 @@ HRESULT CModel::Ready_Materials(FILE* fp, _uint iNumMaterials)
 	{
 		WMODEL_MATERIAL tMat{};
 
-		for (_uint j = 0; j < ETOUI(TEXTURE_TYPE::END); ++j)
+		for (_uint j = 0; j < ETOUI(MATERIAL_TYPE::END); ++j)
 		{
 			_uint numTex = 0;
 			fread(&numTex, sizeof(_uint), 1, fp);

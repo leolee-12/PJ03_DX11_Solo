@@ -12,10 +12,13 @@ NS_BEGIN(Game_PKM)
 class CBody_Hero final : public CPartObject
 {
 public:
-	typedef struct tagBodyPlayerDesc : public CPartObject::PARTOBJECT_DESC
+	struct BODY_HERO_DESC : public CPartObject::PARTOBJECT_DESC
 	{
 		const _uint* pParentState = { nullptr };
-	}BODY_PLAYER_DESC;
+	};
+
+	enum MATERIAL_NAME { BAG, BOTTOMS, CAP, R_EYE, L_EYE, SKIN, HAIR, SHOES, TOPS, END };
+
 private:
 	CBody_Hero(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBody_Hero(const CBody_Hero& Prototype);
@@ -23,6 +26,8 @@ private:
 
 public:
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
+	void Set_Variant(unsigned int iMatIdx, MATERIAL_TYPE eType, unsigned int iMatNum) { m_RenderTable.variants[iMatIdx][static_cast<unsigned int>(eType)] = iMatNum; }
+	void Set_Pass(unsigned int iMatIdx, unsigned int iPassIdx) { m_RenderTable.passes[iMatIdx] = iPassIdx; }
 
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -31,19 +36,18 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
-private:
 	const _uint* m_pParentState = { nullptr };
 	_uint m_iDummy = {};
+	RENDER_TABLE m_RenderTable;
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
+	void Ready_DefaultVariant();
 
 public:
 	static CBody_Hero* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -19,6 +19,7 @@ public:
 
 		return m_Meshes[iIndex];
 	}
+	_uint Get_MeshMaterialIndex(_uint iMeshIdx);
 
 	_int Get_BoneIndex(const _char* pBoneName);
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
@@ -29,18 +30,18 @@ public:
 
 	_bool Play_Animation(_float fTimeDelta);
 	HRESULT Render(_uint iMeshIndex);
-	HRESULT Bind_Material(class CShader* pShader, const _char* pConstName, _uint iMeshIndex, TEXTURE_TYPE eType, _uint iIndex);
+	HRESULT Bind_Material(class CShader* pShader, const _char* pConstName, _uint iMeshIndex, MATERIAL_TYPE eType, _uint iIndex);
 	HRESULT Bind_BoneMatrices(class CShader* pShader, const _char* pConstName, _uint iMeshIndex);
 
 private:
 	const _string m_pModelFilePath = {};
 	MODEL m_eType = { MODEL::END };
 	_float4x4 m_PreTransformMatrix = {};
-
-	size_t m_iNumMeshes = {};
+	
+	_uint m_iNumMeshes = {};
 	vector<class CMesh*> m_Meshes;
 
-	size_t m_iNumMaterials = {};
+	_uint m_iNumMaterials = {};
 	vector<class CMaterial*> m_Materials;
 	vector<class CBone*> m_Bones;
 	
@@ -54,6 +55,7 @@ private:
 	HRESULT Ready_Materials(FILE* fp, _uint iNumMaterials);
 	HRESULT Ready_Bones(FILE* fp, _uint iNumBones);
 	HRESULT Ready_Animations(FILE* fp, _uint iNumAnimations);
+	void Ready_VariantTable(_uint iNumMaterials);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath);

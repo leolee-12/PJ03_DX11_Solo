@@ -57,7 +57,7 @@ void CMonster::Late_Update(_float fTimeDelta)
 		m_fAlpha <= 0.f)
 		m_fDir *= -1.f;
 
-	m_pGameInstance->Add_RenderGroup(RENDERID::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 }
 
 HRESULT CMonster::Render()
@@ -69,7 +69,7 @@ HRESULT CMonster::Render()
 
 	for(_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, TEXTURE_TYPE::DIFFUSE, 0)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, 0)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
@@ -88,21 +88,12 @@ HRESULT CMonster::Render()
 HRESULT CMonster::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	WNameID strProtoModelTag{};
-	_uint iRand = rand() % 4;
-	if(iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
-	else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
-	else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
-	else if (iRand == 3)	strProtoModelTag = PROTO_COM_MODEL_PM0025_00;
-
-	//strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
-
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), strProtoModelTag,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 

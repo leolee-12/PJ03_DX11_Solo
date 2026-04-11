@@ -220,5 +220,8 @@
     <FxCompile Include="..\ShaderFiles\Shader_VtxCube.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

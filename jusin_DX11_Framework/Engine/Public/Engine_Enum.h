@@ -32,7 +32,7 @@ namespace Engine
 
 	enum class INPUT_STATE { GAMEPLAY, OBSERVE, MENU, NAVIGATE, LOCKED, END };
 
-	enum class TEXTURE_TYPE
+	enum class MATERIAL_TYPE
 	{
 		NONE = 0,
 		DIFFUSE = 1,
@@ -62,6 +62,8 @@ namespace Engine
 		MAYA_SPECULAR_ROUGHNESS = 25,
 		ANISOTROPY = 26,
 		GLTF_METALLIC_ROUGHNESS = 27,
+		LAYER_MASK = 28,	// lym (레이어 마스크)
+		LAYER_COLOR = 29,	// lyc (눈동자 레이어 컬러)
 		END
 	};
 

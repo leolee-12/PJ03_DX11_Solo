@@ -25,17 +25,17 @@ HRESULT Ready_Fonts()
 {
 	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
 
-	if (FAILED(m_pGameInstance->Add_Font(FONT_MALGUN, TEXT("../../Resources/Fonts/156ex.spritefont"))))
+	/*if (FAILED(m_pGameInstance->Add_Font(FONT_MALGUN, TEXT("../../Resources/Fonts/156ex.spritefont"))))
+		return E_FAIL;*/
+
+	if (FAILED(m_pGameInstance->Add_Font(FONT_MALGUN, TEXT("../../Resources/Fonts/malgun.spritefont"))))
 		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_Font(FONT_MALGUN, TEXT("../../Resources/Fonts/malgun.spritefont"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(FONT_NANUMBARUNGOTHIC, TEXT("../../Resources/Fonts/NanumBarunGothic.spritefont"))))
+		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_Font(FONT_NANUMBARUNGOTHIC, TEXT("../../Resources/Fonts/NanumBarunGothic.spritefont"))))
-	//	return E_FAIL;
-
-	//if (FAILED(m_pGameInstance->Add_Font(FONT_NOTOSANSKR, TEXT("../../Resources/Fonts/NotoSansKRThin.spritefont"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Font(FONT_NOTOSANSKR, TEXT("../../Resources/Fonts/NotoSansKRThin.spritefont"))))
+		return E_FAIL;
 
 	return S_OK;
 }

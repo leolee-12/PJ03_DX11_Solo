@@ -15,7 +15,7 @@ HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir
 	fs::path texPath = {};
 
 	// aiTextureType
-	for (size_t i = 0; i < ETOUI(TEXTURE_TYPE::END); i++)
+	for (size_t i = 0; i < ETOUI(MATERIAL_TYPE::END); i++)
 	{
 		_uint iNumTextures = static_cast<_uint>(tMat.TexturePaths[i].size());
 
@@ -54,9 +54,9 @@ HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir
 	return S_OK;
 }
 
-HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, TEXTURE_TYPE eType, _uint iIndex)
+HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, MATERIAL_TYPE eType, _uint iIndex)
 {
-	if (eType >= TEXTURE_TYPE::END)
+	if (eType >= MATERIAL_TYPE::END)
 		return E_FAIL;
 
 

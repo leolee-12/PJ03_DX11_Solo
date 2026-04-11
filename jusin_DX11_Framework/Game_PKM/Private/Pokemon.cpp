@@ -26,6 +26,16 @@ HRESULT CPokemon::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pModelCom->Set_AnimationIndex(rand() % 20, true);
+
+	m_pTransformCom->Set_State(STATE::POSITION,
+		XMVectorSet(
+			m_pGameInstance->Random(0.f, 30.f),
+			3.f,
+			m_pGameInstance->Random(0.f, 30.f),
+			1.f
+		));
+
 	return S_OK;
 }
 
@@ -36,7 +46,8 @@ void CPokemon::Priority_Update(_float fTimeDelta)
 
 void CPokemon::Update(_float fTimeDelta)
 {
-
+	if (true == m_pModelCom->Play_Animation(fTimeDelta))
+		int a = 10; // 중단점용 임시 코드
 }
 
 void CPokemon::Late_Update(_float fTimeDelta)
@@ -54,13 +65,13 @@ HRESULT CPokemon::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, TEXTURE_TYPE::DIFFUSE, 0)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, 0)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(1)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -73,12 +84,21 @@ HRESULT CPokemon::Render()
 HRESULT CPokemon::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
+	WNameID strProtoModelTag{};
+	_uint iRand = rand() % 4;
+	if (iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
+	else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
+	else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
+	else if (iRand == 3)	strProtoModelTag = PROTO_COM_MODEL_PM0025_00;
+
+	//strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), strProtoModelTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
