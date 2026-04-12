@@ -28,6 +28,7 @@ public:
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	void Set_Variant(unsigned int iMatIdx, MATERIAL_TYPE eType, unsigned int iMatNum) { m_RenderTable.variants[iMatIdx][static_cast<unsigned int>(eType)] = iMatNum; }
 	void Set_Pass(unsigned int iMatIdx, unsigned int iPassIdx) { m_RenderTable.passes[iMatIdx] = iPassIdx; }
+	const _float3& Get_RootMotionDelta() const;
 
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

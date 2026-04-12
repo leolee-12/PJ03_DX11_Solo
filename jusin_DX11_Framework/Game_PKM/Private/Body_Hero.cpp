@@ -21,6 +21,11 @@ const _float4x4* CBody_Hero::Get_BoneMatrixPtr(const _char* pBoneName) const
 	return m_pModelCom->Get_BoneMatrixPtr(pBoneName);
 }
 
+const _float3& CBody_Hero::Get_RootMotionDelta() const
+{
+	return m_pModelCom->Get_RootMotionDelta();
+}
+
 HRESULT CBody_Hero::Initialize_Prototype()
 {
 	return S_OK;
@@ -39,8 +44,10 @@ HRESULT CBody_Hero::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pModelCom->Set_EnableRootMotion(true);
 
 	Ready_DefaultVariant();
+
 
 	return S_OK;
 }
@@ -55,8 +62,8 @@ void CBody_Hero::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
 		m_iDummy++;
-		if (m_iDummy > 10) m_iDummy = 0;
-		m_pModelCom->Set_AnimationIndex(m_iDummy, true, 0.2f);
+		if (m_iDummy > 77) m_iDummy = 0;
+		m_pModelCom->Set_AnimationIndex(m_iDummy, false, 0.2f);
 	}
 
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))

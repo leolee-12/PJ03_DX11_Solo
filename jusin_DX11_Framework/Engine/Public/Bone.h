@@ -11,13 +11,16 @@ private:
 
 public:
 	_bool Compare_Name(const _char* pBoneName) { return !strcmp(pBoneName, m_szName); }
+	_int Get_ParentIndex() { return m_iParentIndex; }
 	const _float4x4& Get_BindPoseMatrix() const { return m_BindPoseMatrix; }
 	const _float4x4& Get_TransformationMatrix() const { return m_TransformationMatrix; }
+	_float4x4& Get_TransformationMatrix() { return m_TransformationMatrix; }
 	const _float4x4* Get_CombinedTransformationMatrixPtr() const { return &m_CombinedTransformationMatrix; }
 	void XM_CALLCONV Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
+	void Zero_TranslationXZ() { m_TransformationMatrix._41 = 0.f; m_TransformationMatrix._43 = 0.f; }
 
 	HRESULT Initialize(const WMODEL_BONE& tBone);
-	void XM_CALLCONV Update_CombinedTransformMatrices(const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix);
+	void Update_CombinedTransformMatrices(const vector<class CBone*>& Bones);
 	void Decompose_BindPose(BONE_SRT& outSnapshot) const;
 	void Decompose_Transformation(BONE_SRT& outSnapshot) const;
 	void Decompose_Combined(BONE_SRT& outSnapshot) const;

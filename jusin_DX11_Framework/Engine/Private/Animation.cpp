@@ -21,6 +21,19 @@ CAnimation::CAnimation(const CAnimation& Prototype)
 		Safe_AddRef(pChannel);
 }
 
+_vector CAnimation::Reset_TrackPosition(_uint iRootBoneIdx)
+{
+	m_fCurrentTrackPosition = 0.f;
+
+	for (_uint i = 0; i < m_iNumChannels; ++i)
+	{
+		if (m_Channels[i]->Get_BoneIndex() == iRootBoneIdx)
+			return m_Channels[i]->Get_RootPosition();
+	}
+
+	return XMVectorSet(0.f, 0.f, 0.f, 1.f);
+}
+
 HRESULT CAnimation::Initialize(const WMODEL_ANIMATION& tAnimData)
 {
 	m_fDuration = tAnimData.fDuration;

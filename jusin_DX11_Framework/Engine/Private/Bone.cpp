@@ -14,11 +14,11 @@ HRESULT CBone::Initialize(const WMODEL_BONE& tBone)
 	return S_OK;
 }
 
-void XM_CALLCONV CBone::Update_CombinedTransformMatrices(const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix)
+void CBone::Update_CombinedTransformMatrices(const vector<class CBone*>& Bones)
 {
 	if (-1 == m_iParentIndex)
-		XMStoreFloat4x4(&m_CombinedTransformationMatrix,
-			PreTransformMatrix * XMLoadFloat4x4(&m_TransformationMatrix));
+		m_CombinedTransformationMatrix = m_TransformationMatrix;
+
 	else
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix,
 			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentIndex]->m_CombinedTransformationMatrix));

@@ -19,9 +19,9 @@ CModel::CModel(const CModel& Prototype)
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
 	//, m_Bones{ Prototype.m_Bones } 깊은복사
-	, m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
 	, m_iNumAnimations{ Prototype.m_iNumAnimations }
 	//, m_Animations{ Prototype.m_Animations } 깊은복사
+	, m_iRootBoneIndex{ Prototype.m_iRootBoneIndex }
 {
 	for (auto& pPrototypeAnimation : Prototype.m_Animations)
 		m_Animations.push_back(pPrototypeAnimation->Clone());
@@ -85,6 +85,14 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 	{
 		m_iCurrentAnimationIndex = iIndex;
 		m_isAnimLoop = isLoop;
+
+		if (m_bEnableRootMotion)
+		{
+			XMStoreFloat3(&m_vPrevRootPos,
+				m_Animations[iIndex]->Reset_TrackPosition(m_iRootBoneIndex));
+			m_vPrevRootPos.y = 0.f;
+		}
+
 		return;
 	}
 
@@ -154,7 +162,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 
 	m_iCurrentAnimationIndex = iIndex;
 	m_isAnimLoop = isLoop;
-	m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition();
+	XMStoreFloat3(&m_vPrevRootPos, m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition(m_iRootBoneIndex));
+	m_vPrevRootPos.y = 0.f;
 }
 
 HRESULT CModel::Initialize_Prototype()
@@ -172,9 +181,7 @@ HRESULT CModel::Initialize_Prototype()
 	if (memcmp(tHeader.szMagic, "WMDL", 4) != 0) { fclose(fp); return E_FAIL; }
 	if (tHeader.iVersion != 2) { fclose(fp); return E_FAIL; }
 	m_eType = static_cast<MODEL>(tHeader.iModelType);
-	XMStoreFloat4x4(&m_PreTransformMatrix, XMMatrixIdentity());
 
-	
 	m_iNumBones = tHeader.iNumBones;
 	if (FAILED(Ready_Bones(fp, m_iNumBones)))
 	{
@@ -217,16 +224,30 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 	// 1. 애니메이션 갱신 : 시간 전진, 채널 갱신
 	isAnimFinished = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
 
+	// 3. 루트 모션 추출
+	if (m_bEnableRootMotion)
+	{
+		// 3-1. 현재 RootPos 추출
+		const _float4x4& rootMat = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
+		_float3 vCurrRootPos = { rootMat._41, 0.f, rootMat._43 };
+
+		// 3-2. 델타 계산 (현재 - 이전)
+		m_vRootMotionDelta.x = vCurrRootPos.x - m_vPrevRootPos.x;
+		m_vRootMotionDelta.y = vCurrRootPos.y - m_vPrevRootPos.y;
+		m_vRootMotionDelta.z = vCurrRootPos.z - m_vPrevRootPos.z;
+
+		// 3-3. 이전 프레임 갱신 및 루트본 로컬 이동 제거
+		m_vPrevRootPos = vCurrRootPos;
+		m_Bones[m_iRootBoneIndex]->Zero_TranslationXZ();
+	}
+
 	// 2. 블렌드 상태인 경우 블렌드 로직 수행
 	if (m_isBlending)
 		Update_Blend(fTimeDelta);
 
-	// 3. 루트 모션 추출
-
-
 	// 4. Combined 행렬 갱신
 	for (auto& pBone : m_Bones)
-		pBone->Update_CombinedTransformMatrices(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+		pBone->Update_CombinedTransformMatrices(m_Bones);
 
 	// 5. 반환 값 결정 : 블렌드 중이면 Anim종료 보류
 	if (m_isBlending)
@@ -315,10 +336,6 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, _ui
 		return E_FAIL;
 
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstName, m_Bones);
-}
-
-void CModel::Decompose_BoneSRT(_uint iBoneIdx)
-{
 }
 
 HRESULT CModel::Ready_Meshes(FILE* fp, _uint iNumMeshes)

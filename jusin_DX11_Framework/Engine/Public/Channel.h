@@ -12,6 +12,7 @@ private:
 
 public:
 	_uint Get_BoneIndex() const { return m_iBoneIndex; }
+	_vector Get_RootPosition() { return Interpolate_Position(0.f); }
 
 	HRESULT Initialize(const WMODEL_CHANNEL& tChannelData);
 	void Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition);

@@ -14,7 +14,7 @@ private:
 public:
 	const unordered_set<_uint>* Get_ChanneledBoneIndicesPtr() const { return &m_ChanneledBoneIndices; }
 	_bool Has_Channel(_uint iBoneIdx) const { return (m_ChanneledBoneIndices.find(iBoneIdx) != m_ChanneledBoneIndices.end()); }
-	void Reset_TrackPosition() { m_fCurrentTrackPosition = 0.f; }
+	_vector Reset_TrackPosition(_uint iRootBoneIdx);
 
 	HRESULT Initialize(const WMODEL_ANIMATION& tAnimData);
 	_bool Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop);

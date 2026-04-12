@@ -55,6 +55,11 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 			if (nullptr != Pair.second)
 				Pair.second->Update(fTimeDelta);
 		});
+
+	_vector vDelta = XMLoadFloat3(&static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Get_RootMotionDelta());
+	_vector vWorldDelta = XMVector3TransformNormal(vDelta, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+	_vector vCurrPos = m_pTransformCom->Get_State(STATE::POSITION);
+	m_pTransformCom->Set_State(STATE::POSITION, vCurrPos + vWorldDelta);
 }
 
 void CPlayer_LGPE::Late_Update(_float fTimeDelta)
