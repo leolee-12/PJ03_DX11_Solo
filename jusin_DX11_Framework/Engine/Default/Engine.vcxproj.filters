@@ -79,9 +79,6 @@
     <Filter Include="09. Light">
       <UniqueIdentifier>{35554806-2e45-476b-a94e-febb3fb0ce26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07. Component\Model">
-      <UniqueIdentifier>{fe267372-dc6f-42a5-a9c2-190216338a3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05. GameObject\ContainerObject">
       <UniqueIdentifier>{014aabd6-de5a-4121-93ad-79c029b4d64f}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,9 @@
     </Filter>
     <Filter Include="07. Component\Navigation">
       <UniqueIdentifier>{b127afd0-722a-4797-88d2-caa270c01654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\Model">
+      <UniqueIdentifier>{fe267372-dc6f-42a5-a9c2-190216338a3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

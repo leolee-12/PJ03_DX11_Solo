@@ -15,6 +15,7 @@ CModel::CModel(const CModel& Prototype)
 	, m_eType{ Prototype.m_eType }
 	, m_iNumMeshes{ Prototype.m_iNumMeshes }
 	, m_Meshes{ Prototype.m_Meshes }
+	, m_iNumBones{ Prototype.m_iNumBones }
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
 	//, m_Bones{ Prototype.m_Bones } 깊은복사
@@ -76,6 +77,86 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
 	return (*iter)->Get_CombinedTransformationMatrixPtr();
 }
 
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuration)
+{
+	if (m_iCurrentAnimationIndex == iIndex) return;
+
+	if (1e-6f > fBlendDuration)
+	{
+		m_iCurrentAnimationIndex = iIndex;
+		m_isAnimLoop = isLoop;
+		return;
+	}
+
+	// 1. 벡터 준비
+	m_BlendSnapshots.resize(m_Bones.size()); // resize : 크기만 조절
+	m_BlendTargetMask.assign(m_Bones.size(), false); // assign : size 및 초기값 재설정
+
+	// 2. 새 애니메이션의 채널 본 집합 캐싱
+	m_pNextChanneledSet = m_Animations[iIndex]->Get_ChanneledBoneIndicesPtr();
+
+	// 3. 스냅샷 캡처
+	if (m_isBlending) // 3-1. 재전환(전환 중 다시 전환)
+	{
+		for (_uint i = 0; i < m_iNumBones; ++i)
+		{
+			_bool wasBlending = m_BlendTargetMask[i];	// 이전 블렌드에서 보간 중이었는 지
+			_bool isInNext = { false };					// 다음 애니메이션에 속하는 지
+
+			if (m_pNextChanneledSet->find(i) != m_pNextChanneledSet->end())
+				isInNext = true;
+
+			if (!wasBlending && !isInNext)
+			{	// 둘 다 아니면 보간할 필요 없음
+				m_BlendTargetMask[i] = false;
+				continue;
+			}
+
+			m_BlendTargetMask[i] = true;
+			m_Bones[i]->Decompose_Transformation(m_BlendSnapshots[i]);
+		}
+	}
+	else
+	{	// 3-2. 일반 전환
+		const unordered_set<_uint>* pPrevChanneledSet = m_Animations[m_iCurrentAnimationIndex]->Get_ChanneledBoneIndicesPtr();
+
+		for (_uint i = 0; i < m_iNumBones; ++i)
+		{
+			_bool isInPrev = { false };	// 이전 애니메이션에 속하는 지
+			_bool isInNext = { false };	// 다음 애니메이션에 속하는 지
+
+			if (pPrevChanneledSet->find(i) != pPrevChanneledSet->end())
+				isInPrev = true;
+
+			if (m_pNextChanneledSet->find(i) != m_pNextChanneledSet->end())
+				isInNext = true;
+
+			if (!isInPrev && !isInNext)
+			{	// 둘 다 아니면 보간할 필요 없음
+				m_BlendTargetMask[i] = false;
+				continue;
+			}
+
+			m_BlendTargetMask[i] = true;
+
+			if (isInPrev)	// 이전 애니메이션이 사용했다면 Transformation(AnimatedLocal)을 스냅샷
+				m_Bones[i]->Decompose_Transformation(m_BlendSnapshots[i]);
+			else			// 이전 애니메이션이 사용하지 않았다면 BindPose를 스냅샷
+				m_Bones[i]->Decompose_BindPose(m_BlendSnapshots[i]);
+
+		}
+	}
+
+	// 4. 블렌드 상태로 전환
+	m_isBlending = true;
+	m_fBlendDuration = fBlendDuration;
+	m_fBlendElapsed = 0.f;
+
+	m_iCurrentAnimationIndex = iIndex;
+	m_isAnimLoop = isLoop;
+	m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition();
+}
+
 HRESULT CModel::Initialize_Prototype()
 {
 	// 0. 파일 열기
@@ -93,7 +174,9 @@ HRESULT CModel::Initialize_Prototype()
 	m_eType = static_cast<MODEL>(tHeader.iModelType);
 	XMStoreFloat4x4(&m_PreTransformMatrix, XMMatrixIdentity());
 
-	if (FAILED(Ready_Bones(fp, tHeader.iNumBones)))
+	
+	m_iNumBones = tHeader.iNumBones;
+	if (FAILED(Ready_Bones(fp, m_iNumBones)))
 	{
 		fclose(fp); return E_FAIL;
 	}
@@ -129,18 +212,75 @@ HRESULT CModel::Initialize(void* pArg)
 
 _bool CModel::Play_Animation(_float fTimeDelta)
 {
-	_bool isFinished = { false };
+	_bool isAnimFinished = { false };
 
-	/* 현재 애니메이션 이용하고 있는 뼈들의 TransformationMatrix를 갱신해준다.  */
-	isFinished = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
+	// 1. 애니메이션 갱신 : 시간 전진, 채널 갱신
+	isAnimFinished = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
 
-	/* 위의 갱신이 끝났다면, 모든 뼈의 CombinedTransformationMatrix갱신한다. */
+	// 2. 블렌드 상태인 경우 블렌드 로직 수행
+	if (m_isBlending)
+		Update_Blend(fTimeDelta);
+
+	// 3. 루트 모션 추출
+
+
+	// 4. Combined 행렬 갱신
 	for (auto& pBone : m_Bones)
-	{
 		pBone->Update_CombinedTransformMatrices(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+
+	// 5. 반환 값 결정 : 블렌드 중이면 Anim종료 보류
+	if (m_isBlending)
+		return false;
+
+	return isAnimFinished;
+}
+
+void CModel::Update_Blend(_float fTimeDelta)
+{
+	m_fBlendElapsed += fTimeDelta;
+
+	_float fRatio = (m_fBlendDuration > 0.f) ? clamp(m_fBlendElapsed / m_fBlendDuration, 0.f, 1.f) : 1.f;
+
+	// 선형 보간 대신 ease 등 적용 가능
+	// fRatio = fRatio * fRatio * (3.f - 2.f * fRatio);	// smoothstep
+
+	for (_uint i = 0; i < m_iNumBones; ++i)
+	{
+		if (!m_BlendTargetMask[i])
+			continue;
+
+		// 2-1. 블렌드 타겟 설정
+		BONE_SRT tTargetSRT;
+		auto iter = m_pNextChanneledSet->find(i);
+		if (iter != m_pNextChanneledSet->end())	// 다음 애니메이션에서 사용될 본인 경우
+			m_Bones[i]->Decompose_Transformation(tTargetSRT);
+		else									// 다음 애니메이션에서 사용되지 않을 본인 경우
+			m_Bones[i]->Decompose_BindPose(tTargetSRT);
+
+		// 2-2. 블렌드 소스 설정
+		BONE_SRT& tSourceSRT = m_BlendSnapshots[i];
+
+		// 2-3. 보간 수행
+		_vector vScale = XMVectorLerp(XMLoadFloat3(&tSourceSRT.vScale), XMLoadFloat3(&tTargetSRT.vScale), fRatio);
+
+		_vector vSrcQuat = XMLoadFloat4(&tSourceSRT.vRotation);
+		_vector vTgtQuat = XMLoadFloat4(&tTargetSRT.vRotation);
+		if (XMVectorGetX(XMVector4Dot(vSrcQuat, vTgtQuat)) < 0.f)
+			vTgtQuat = XMVectorNegate(vTgtQuat);
+		_vector vRotation = XMQuaternionNormalize(XMQuaternionSlerp(vSrcQuat, vTgtQuat, fRatio));
+
+		_vector vTranslation = XMVectorLerp(XMLoadFloat3(&tSourceSRT.vTranslation), XMLoadFloat3(&tTargetSRT.vTranslation), fRatio);
+
+		// 2-4. 본에 기록
+		m_Bones[i]->Set_TransformationMatrix(XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation));
 	}
 
-	return isFinished;
+	// 2-5. 시간 초과 시 블렌드 상태 종료
+	if (fRatio >= 1.f)
+	{
+		m_isBlending = false;
+		m_pNextChanneledSet = nullptr;
+	}
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)
@@ -175,6 +315,10 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, _ui
 		return E_FAIL;
 
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstName, m_Bones);
+}
+
+void CModel::Decompose_BoneSRT(_uint iBoneIdx)
+{
 }
 
 HRESULT CModel::Ready_Meshes(FILE* fp, _uint iNumMeshes)

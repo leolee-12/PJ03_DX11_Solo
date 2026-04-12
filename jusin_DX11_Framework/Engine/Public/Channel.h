@@ -11,6 +11,8 @@ private:
 	virtual ~CChannel() = default;
 
 public:
+	_uint Get_BoneIndex() const { return m_iBoneIndex; }
+
 	HRESULT Initialize(const WMODEL_CHANNEL& tChannelData);
 	void Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition);
 

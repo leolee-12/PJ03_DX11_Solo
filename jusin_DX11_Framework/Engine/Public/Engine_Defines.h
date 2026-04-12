@@ -32,6 +32,7 @@ using json = nlohmann::json;
 #include <algorithm>
 #include <functional>
 #include <string>
+#include <unordered_set>
 #include <unordered_map>
 #include <ctime>
 #include <atomic>

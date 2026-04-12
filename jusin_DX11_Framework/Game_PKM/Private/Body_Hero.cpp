@@ -56,7 +56,7 @@ void CBody_Hero::Update(_float fTimeDelta)
 	{
 		m_iDummy++;
 		if (m_iDummy > 10) m_iDummy = 0;
-		m_pModelCom->Set_AnimationIndex(m_iDummy);
+		m_pModelCom->Set_AnimationIndex(m_iDummy, true, 0.2f);
 	}
 
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))

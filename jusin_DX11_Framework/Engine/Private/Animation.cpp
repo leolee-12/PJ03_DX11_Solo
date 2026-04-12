@@ -12,8 +12,11 @@ CAnimation::CAnimation(const CAnimation& Prototype)
 	, m_fCurrentTrackPosition{ Prototype.m_fCurrentTrackPosition }
 	, m_iNumChannels{ Prototype.m_iNumChannels }
 	, m_Channels{ Prototype.m_Channels }
+	, m_ChanneledBoneIndices{ Prototype.m_ChanneledBoneIndices }
 
 {
+	strcpy_s(m_szName, Prototype.m_szName);
+
 	for (auto& pChannel : m_Channels)
 		Safe_AddRef(pChannel);
 }
@@ -33,6 +36,7 @@ HRESULT CAnimation::Initialize(const WMODEL_ANIMATION& tAnimData)
 			return E_FAIL;
 
 		m_Channels.push_back(pChannel);
+		m_ChanneledBoneIndices.insert(pChannel->Get_BoneIndex());
 	}
 
 	return S_OK;

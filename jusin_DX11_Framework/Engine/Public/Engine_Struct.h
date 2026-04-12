@@ -40,6 +40,13 @@ namespace Engine
 		float fTrackPosition;
 	};
 
+	struct BONE_SRT
+	{
+		XMFLOAT3 vScale;
+		XMFLOAT4 vRotation;
+		XMFLOAT3 vTranslation;
+	};
+
 	struct RENDER_TABLE
 	{
 		vector<array<unsigned int, ETOUI(MATERIAL_TYPE::END)>> variants;
