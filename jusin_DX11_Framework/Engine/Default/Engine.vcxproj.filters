@@ -94,6 +94,9 @@
     <Filter Include="07. Component\Model">
       <UniqueIdentifier>{fe267372-dc6f-42a5-a9c2-190216338a3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\VIBuffer\Cell">
+      <UniqueIdentifier>{8e30216c-21ea-4010-8e7a-423372826468}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -234,6 +237,9 @@
     <ClInclude Include="..\Public\Cell.h">
       <Filter>07. Component\Navigation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cell.h">
+      <Filter>07. Component\VIBuffer\Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -353,10 +359,18 @@
     <ClCompile Include="..\Private\Cell.cpp">
       <Filter>07. Component\Navigation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
+      <Filter>07. Component\VIBuffer\Cell</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ShaderFiles\Engine_Shader_Defines.hlsli">
       <Filter>97. ShaderFiles</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_Cell.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,9 @@
 #include "Cell.h"
 
+#ifdef _DEBUG
+#include "VIBuffer_Cell.h"
+#endif
+
 CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
 	, m_pContext{ pContext }
@@ -8,20 +12,91 @@ CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	Safe_AddRef(m_pContext);
 }
 
-HRESULT CCell::Initialize(const _float3* pPoints)
+HRESULT CCell::Initialize(const _float3* pPoints, _uint iIndex)
 {
+	m_iIndex = iIndex;
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * ETOUI(VTXPOINT::END));
 
+	m_vNormals[ETOUI(LINE::AB)] = _float3((m_vPoints[ETOUI(VTXPOINT::B)].z - m_vPoints[ETOUI(VTXPOINT::A)].z) * -1.f, 0.f, m_vPoints[ETOUI(VTXPOINT::B)].x - m_vPoints[ETOUI(VTXPOINT::A)].x);
+	m_vNormals[ETOUI(LINE::BC)] = _float3((m_vPoints[ETOUI(VTXPOINT::C)].z - m_vPoints[ETOUI(VTXPOINT::B)].z) * -1.f, 0.f, m_vPoints[ETOUI(VTXPOINT::C)].x - m_vPoints[ETOUI(VTXPOINT::B)].x);
+	m_vNormals[ETOUI(LINE::CA)] = _float3((m_vPoints[ETOUI(VTXPOINT::A)].z - m_vPoints[ETOUI(VTXPOINT::C)].z) * -1.f, 0.f, m_vPoints[ETOUI(VTXPOINT::A)].x - m_vPoints[ETOUI(VTXPOINT::C)].x);
 
+	for (size_t i = 0; i < ETOUI(LINE::END); i++)
+		XMStoreFloat3(&m_vNormals[i], XMVector3Normalize(XMLoadFloat3(&m_vNormals[i])));
+
+#ifdef _DEBUG
+	m_pVIBuffer = CVIBuffer_Cell::Create(m_pDevice, m_pContext, m_vPoints);
+	if (nullptr == m_pVIBuffer)
+		return E_FAIL;
+#endif
 
 	return S_OK;
 }
 
-CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints)
+_bool XM_CALLCONV CCell::Is_In(_fvector vResultPos, _int* pNeighborIndex)
+{
+	for (size_t i = 0; i < ETOUI(LINE::END); i++)
+	{
+		_vector		vDir = XMVector3Normalize(vResultPos - XMLoadFloat3(&m_vPoints[i]));
+		_vector		vNormal = XMLoadFloat3(&m_vNormals[i]);
+
+		if (0 < XMVectorGetX(XMVector3Dot(vDir, vNormal)))
+		{
+			*pNeighborIndex = m_iNeighbors[i];
+			return false;
+		}
+	}
+
+	return true;
+}
+
+_bool XM_CALLCONV CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
+{
+	if (true == XMVector3Equal(vSourPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::A)])))
+	{
+		if (true == XMVector3Equal(vDestPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::B)])))
+			return true;
+		if (true == XMVector3Equal(vDestPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::C)])))
+			return true;
+	}
+
+	if (true == XMVector3Equal(vSourPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::B)])))
+	{
+		if (true == XMVector3Equal(vDestPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::C)])))
+			return true;
+		if (true == XMVector3Equal(vDestPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::A)])))
+			return true;
+	}
+
+	if (true == XMVector3Equal(vSourPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::C)])))
+	{
+		if (true == XMVector3Equal(vDestPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::A)])))
+			return true;
+		if (true == XMVector3Equal(vDestPoint, XMLoadFloat3(&m_vPoints[ETOUI(VTXPOINT::B)])))
+			return true;
+	}
+
+	return false;
+}
+
+#ifdef _DEBUG
+HRESULT CCell::Render()
+{
+	if (nullptr == m_pVIBuffer)
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Bind_Resources()))
+		return E_FAIL;
+
+	return m_pVIBuffer->Render();
+}
+#endif
+
+CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _uint iIndex)
 {
 	CCell* pInstance = new CCell(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(pPoints)))
+	if (FAILED(pInstance->Initialize(pPoints, iIndex)))
 	{
 		MSG_BOX("Failed to Created : CCell");
 		Safe_Release(pInstance);
