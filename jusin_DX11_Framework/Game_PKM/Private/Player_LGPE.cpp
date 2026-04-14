@@ -50,6 +50,13 @@ void CPlayer_LGPE::Priority_Update(_float fTimeDelta)
 
 void CPlayer_LGPE::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Pressing(DIK_UP))
+	{
+		static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Set_Anim(RUN, true);
+	}
+	else
+		static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Set_Anim(IDLE, true);
+
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
 			if (nullptr != Pair.second)

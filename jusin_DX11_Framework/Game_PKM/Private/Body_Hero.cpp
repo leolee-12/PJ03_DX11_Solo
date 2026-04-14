@@ -21,6 +21,11 @@ const _float4x4* CBody_Hero::Get_BoneMatrixPtr(const _char* pBoneName) const
 	return m_pModelCom->Get_BoneMatrixPtr(pBoneName);
 }
 
+void CBody_Hero::Set_Anim(_uint iAnimIdx, _bool isLoop, _float fBlendDuration)
+{
+	m_pModelCom->Set_AnimationIndex(iAnimIdx, isLoop, fBlendDuration);
+}
+
 const _float3& CBody_Hero::Get_RootMotionDelta() const
 {
 	return m_pModelCom->Get_RootMotionDelta();
@@ -33,7 +38,7 @@ HRESULT CBody_Hero::Initialize_Prototype()
 
 HRESULT CBody_Hero::Initialize(void* pArg)
 {
-	auto        pDesc = static_cast<BODY_HERO_DESC*>(pArg);
+	auto pDesc = static_cast<BODY_HERO_DESC*>(pArg);
 
 	m_pParentState = pDesc->pParentState;
 
@@ -44,6 +49,7 @@ HRESULT CBody_Hero::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pModelCom->Set_AnimationIndex(0, true);
+	m_pModelCom->Set_RootMotionBoneIndex(3);
 	m_pModelCom->Set_EnableRootMotion(true);
 
 	Ready_DefaultVariant();
@@ -59,12 +65,12 @@ void CBody_Hero::Priority_Update(_float fTimeDelta)
 
 void CBody_Hero::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_Z))
-	{
-		m_iDummy++;
-		if (m_iDummy > 77) m_iDummy = 0;
-		m_pModelCom->Set_AnimationIndex(m_iDummy, false, 0.2f);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_Z))
+	//{
+	//	m_iDummy++;
+	//	if (m_iDummy > 77) m_iDummy = 0;
+	//	m_pModelCom->Set_AnimationIndex(m_iDummy, false, 0.2f);
+	//}
 
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
 		int a = 10;
@@ -106,6 +112,8 @@ HRESULT CBody_Hero::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
+
+	m_pGameInstance->Draw_Text(FONT_MALGUN, to_wstring(m_iDummy).c_str(), _float2(10.f, 10.f));
 
 	return S_OK;
 }

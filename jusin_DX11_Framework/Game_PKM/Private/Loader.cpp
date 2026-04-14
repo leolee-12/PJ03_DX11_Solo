@@ -212,9 +212,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		return E_FAIL;
 
 	/* Prototype_Component_Model_Town01 */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
-	//	CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
 	/* Prototype_GameObject_Terrain */
@@ -267,10 +267,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CBody_Hero::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	///* Prototype_MapObject_Town01 */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01,
-	//	CMapObject::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* Prototype_MapObject_Town01 */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01,
+		CMapObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

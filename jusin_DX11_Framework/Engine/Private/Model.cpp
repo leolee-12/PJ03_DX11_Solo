@@ -86,11 +86,12 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 		m_iCurrentAnimationIndex = iIndex;
 		m_isAnimLoop = isLoop;
 
+		_vector vRootStart = m_Animations[iIndex]->Reset_TrackPosition(m_iRootBoneIndex);
 		if (m_bEnableRootMotion)
 		{
-			XMStoreFloat3(&m_vPrevRootPos,
-				m_Animations[iIndex]->Reset_TrackPosition(m_iRootBoneIndex));
+			XMStoreFloat3(&m_vPrevRootPos, vRootStart);
 			m_vPrevRootPos.y = 0.f;
+			m_vRootMotionDelta = {};
 		}
 
 		return;
@@ -126,6 +127,9 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 	}
 	else
 	{	// 3-2. 일반 전환
+		if (m_iCurrentAnimationIndex >= m_iNumAnimations)
+			return;
+
 		const unordered_set<_uint>* pPrevChanneledSet = m_Animations[m_iCurrentAnimationIndex]->Get_ChanneledBoneIndicesPtr();
 
 		for (_uint i = 0; i < m_iNumBones; ++i)
@@ -151,7 +155,6 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 				m_Bones[i]->Decompose_Transformation(m_BlendSnapshots[i]);
 			else			// 이전 애니메이션이 사용하지 않았다면 BindPose를 스냅샷
 				m_Bones[i]->Decompose_BindPose(m_BlendSnapshots[i]);
-
 		}
 	}
 
@@ -162,7 +165,30 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 
 	m_iCurrentAnimationIndex = iIndex;
 	m_isAnimLoop = isLoop;
-	XMStoreFloat3(&m_vPrevRootPos, m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition(m_iRootBoneIndex));
+
+	_vector vRootStart = m_Animations[iIndex]->Reset_TrackPosition(m_iRootBoneIndex);
+	if (m_bEnableRootMotion)
+	{
+		XMStoreFloat3(&m_vPrevRootPos, vRootStart);
+		m_vPrevRootPos.y = 0.f;
+		m_vRootMotionDelta = {};
+	}
+}
+
+void CModel::Set_EnableRootMotion(_bool bEnable)
+{
+	m_bEnableRootMotion = bEnable;
+	m_vRootMotionDelta = {};
+
+	if (!m_bEnableRootMotion)
+	{
+		m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition(m_iRootBoneIndex);
+		m_vPrevRootPos = {};
+		return;
+	}
+
+	_vector vRootStart = m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition(m_iRootBoneIndex);
+	XMStoreFloat3(&m_vPrevRootPos, vRootStart);
 	m_vPrevRootPos.y = 0.f;
 }
 
@@ -219,10 +245,12 @@ HRESULT CModel::Initialize(void* pArg)
 
 _bool CModel::Play_Animation(_float fTimeDelta)
 {
-	_bool isAnimFinished = { false };
-
 	// 1. 애니메이션 갱신 : 시간 전진, 채널 갱신
-	isAnimFinished = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
+	_uint iAnimResult = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
+
+	// 2. 블렌드 상태인 경우 블렌드 로직 수행
+	if (m_isBlending)
+		Update_Blend(fTimeDelta);
 
 	// 3. 루트 모션 추출
 	if (m_bEnableRootMotion)
@@ -231,19 +259,25 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 		const _float4x4& rootMat = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
 		_float3 vCurrRootPos = { rootMat._41, 0.f, rootMat._43 };
 
-		// 3-2. 델타 계산 (현재 - 이전)
-		m_vRootMotionDelta.x = vCurrRootPos.x - m_vPrevRootPos.x;
-		m_vRootMotionDelta.y = vCurrRootPos.y - m_vPrevRootPos.y;
-		m_vRootMotionDelta.z = vCurrRootPos.z - m_vPrevRootPos.z;
+		// 3-2. 델타 계산
+		if (ETOUI(ANIM_UPDATE_RESULT::LOOP_WRAPPED) == iAnimResult)
+		{	// 루프 랩 시 델타 버림
+			m_vRootMotionDelta = {};
+		}
+		else
+		{	// 루프 랩 아닐 때 : 현재 - 이전
+			_float fMulti = { 0.01f };
+			m_vRootMotionDelta.x = fMulti * (vCurrRootPos.x - m_vPrevRootPos.x);
+			m_vRootMotionDelta.y = 0.f;
+			m_vRootMotionDelta.z = -fMulti * (vCurrRootPos.z - m_vPrevRootPos.z);
+		}
 
 		// 3-3. 이전 프레임 갱신 및 루트본 로컬 이동 제거
 		m_vPrevRootPos = vCurrRootPos;
 		m_Bones[m_iRootBoneIndex]->Zero_TranslationXZ();
 	}
-
-	// 2. 블렌드 상태인 경우 블렌드 로직 수행
-	if (m_isBlending)
-		Update_Blend(fTimeDelta);
+	else
+		m_vRootMotionDelta = {};
 
 	// 4. Combined 행렬 갱신
 	for (auto& pBone : m_Bones)
@@ -253,7 +287,7 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 	if (m_isBlending)
 		return false;
 
-	return isAnimFinished;
+	return (ETOUI(ANIM_UPDATE_RESULT::FINISHED) == iAnimResult);
 }
 
 void CModel::Update_Blend(_float fTimeDelta)

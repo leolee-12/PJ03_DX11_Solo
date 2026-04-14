@@ -55,26 +55,31 @@ HRESULT CAnimation::Initialize(const WMODEL_ANIMATION& tAnimData)
 	return S_OK;
 }
 
-_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop)
+_uint CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop)
 {
 	m_fCurrentTrackPosition += m_fTicksPerSecond * fTimeDelta;
+	_uint iResult = ETOUI(ANIM_UPDATE_RESULT::PLAYING);
 
 	if (m_fCurrentTrackPosition >= m_fDuration)
 	{
 		if (false == isLoop)
-			return true;
-
-		m_fCurrentTrackPosition = fmodf(m_fCurrentTrackPosition, m_fDuration);
+		{
+			m_fCurrentTrackPosition = m_fDuration;
+			iResult = ETOUI(ANIM_UPDATE_RESULT::FINISHED);
+		}
+		else
+		{
+			m_fCurrentTrackPosition = fmodf(m_fCurrentTrackPosition, m_fDuration);
+			iResult = ETOUI(ANIM_UPDATE_RESULT::LOOP_WRAPPED);
+		}
 	}
-
-	_uint iChannelIndex = {};
 
 	for (auto& pChannel : m_Channels)
 	{
 		pChannel->Update_TransformationMatrix(Bones, m_fCurrentTrackPosition);
 	}
 
-	return false;
+	return iResult;
 }
 
 CAnimation* CAnimation::Create(const WMODEL_ANIMATION& tAnimData)

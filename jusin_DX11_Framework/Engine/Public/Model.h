@@ -26,7 +26,7 @@ public:
 	const _float3& Get_RootMotionDelta() const { return m_vRootMotionDelta; }
 	void Set_AnimationIndex(_uint iIndex, _bool isLoop = false, _float fBlendDuration = 0.f);
 	void Set_RootMotionBoneIndex(_uint iIndex) { m_iRootBoneIndex = iIndex; }
-	void Set_EnableRootMotion(_bool bEnable) { m_bEnableRootMotion = bEnable; }
+	void Set_EnableRootMotion(_bool bEnable);
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -50,7 +50,7 @@ private:
 	_uint m_iNumBones = {};
 	vector<class CBone*> m_Bones;
 	
-	_uint m_iCurrentAnimationIndex = {};
+	_uint m_iCurrentAnimationIndex = { UINT_MAX };
 	_uint m_iNumAnimations = {};
 	_bool m_isAnimLoop = { false };
 	vector<class CAnimation*> m_Animations;

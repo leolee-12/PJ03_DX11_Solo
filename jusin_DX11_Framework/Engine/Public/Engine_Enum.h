@@ -28,6 +28,13 @@ namespace Engine
 	//
 	//enum TEXTUREID { TEX_NORMAL, TEX_CUBE, TEX_END };
 
+	enum class ANIM_UPDATE_RESULT
+	{
+		PLAYING = 0,
+		FINISHED = 1,
+		LOOP_WRAPPED = 2
+	};
+
 	enum class DIMB { LBUTTON, RBUTTON, WHEEL, END };
 
 	enum class DIMM { X, Y, WHEEL, END };

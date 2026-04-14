@@ -17,7 +17,7 @@ public:
 	_vector Reset_TrackPosition(_uint iRootBoneIdx);
 
 	HRESULT Initialize(const WMODEL_ANIMATION& tAnimData);
-	_bool Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop);
+	_uint Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop);
 
 private:
 	_char m_szName[MAX_PATH] = {};

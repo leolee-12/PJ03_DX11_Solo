@@ -50,6 +50,7 @@ namespace Engine
 {
 	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
 	static constexpr _uint g_iNumMeshBones = { 512 };
+	static constexpr _float DEFAULT_BLENDDURATION = 0.2f;
 }
 
 namespace ObjFlag
