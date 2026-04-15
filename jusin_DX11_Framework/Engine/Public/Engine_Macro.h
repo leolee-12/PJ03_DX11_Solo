@@ -7,6 +7,9 @@
 #define ETOI(_enum) static_cast<int>(_enum)
 #define ETOUI(_enum) static_cast<unsigned int>(_enum)
 
+#define INV_SQRT2	0.70710678f
+
+
 #ifndef			MSG_BOX
 #define			MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK)
 #endif

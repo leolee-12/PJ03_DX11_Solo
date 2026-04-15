@@ -33,6 +33,8 @@ public:
 private:
 	_uint m_iState = {};
 
+	static constexpr _float m_kRootMotionScale = { 0.025f };
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();

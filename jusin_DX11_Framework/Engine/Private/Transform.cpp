@@ -163,6 +163,37 @@ void XM_CALLCONV CTransform::Chase(_fvector vGoal, _float fTimeDelta, _float fLi
 		Set_State(STATE::POSITION, vPosition);
 }
 
+void XM_CALLCONV CTransform::Face_Direction(_fvector vTargetDir, _float fTimeDelta)
+{
+	if (XMVectorGetX(XMVector3LengthSq(vTargetDir)) < 1e-6f)
+		return;
+
+	_float3 vScale = Get_Scaled();
+	_vector vCurLook = XMVector3Normalize(Get_State(STATE::LOOK));
+	_vector vTgtLook = XMVector3Normalize(XMVectorSet(XMVectorGetX(vTargetDir), 0.f, XMVectorGetZ(vTargetDir), 0.f));
+
+	_float t = 1.f - expf(-m_fRotationPerSec * fTimeDelta);
+	_float dot = XMVectorGetX(XMVector3Dot(vCurLook, vTgtLook));
+	if (dot < -0.95f) t = min(1.f, t * 2.f);	// 급격한 변화일 때
+
+	_vector vNewLook = XMVectorLerp(vCurLook, vTgtLook, t);
+	if (XMVectorGetX(XMVector3LengthSq(vNewLook)) < 1e-6f)
+		vNewLook = vTgtLook;
+
+	vNewLook = XMVector3Normalize(vNewLook);
+	_vector vWorldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector vNewRight = XMVector3Cross(vWorldUp, vNewLook);
+	if (XMVectorGetX(XMVector3LengthSq(vNewRight)) < 1e-6f)
+		return;
+
+	vNewRight = XMVector3Normalize(vNewRight);
+	_vector vNewUp = XMVector3Normalize(XMVector3Cross(vNewLook, vNewRight));
+
+	Set_State(STATE::RIGHT, vNewRight * vScale.x);
+	Set_State(STATE::UP, vNewUp * vScale.y);
+	Set_State(STATE::LOOK, vNewLook * vScale.z);
+}
+
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTransform* pInstance = new CTransform(pDevice, pContext);

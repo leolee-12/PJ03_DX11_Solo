@@ -19,7 +19,7 @@ public:
 		_ubyte eType1, eType2;						// 타입, 타입2는 단일 타입인 경우 TYPE_END
 		_ushort iBaseHP, iBaseAtk, iBaseDef, iBaseSpAtk, iBaseSpDef, iBaseSpd;	// 종족값
 		_uint iAbility1, iAbility2, iHiddenAbility;	// 특성, 특성2는 단일 특성인 경우 ABILITY_END
-		_uint iLearnset[MAX_LEARNSET];				// 기술 습득 정보
+		_uint iLearnset[g_kMaxLearnSet];				// 기술 습득 정보
 	};
 
 protected:

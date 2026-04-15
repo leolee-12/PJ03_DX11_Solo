@@ -25,7 +25,7 @@ HRESULT CPlayer_LGPE::Initialize(void* pArg)
 	GAMEOBJECT_DESC Desc{};
 
 	Desc.fSpeedPerSec = 10.f;
-	Desc.fRotationPerSec = XMConvertToRadians(180.f);
+	Desc.fRotationPerSec = XMConvertToRadians(720.f);
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
@@ -50,8 +50,22 @@ void CPlayer_LGPE::Priority_Update(_float fTimeDelta)
 
 void CPlayer_LGPE::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Pressing(DIK_UP))
+	_vector vMoveDir = XMVectorZero();
+
+	_float x = 0.f;
+	_float z = 0.f;
+
+	if (m_pGameInstance->Key_Pressing(DIK_LEFT))  x -= 1.f;
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHT)) x += 1.f;
+	if (m_pGameInstance->Key_Pressing(DIK_UP))    z += 1.f;
+	if (m_pGameInstance->Key_Pressing(DIK_DOWN))  z -= 1.f;
+
+	if (x != 0.f || z != 0.f)
+		vMoveDir = XMVector3Normalize(XMVectorSet(x, 0.f, z, 0.f));
+
+	if (XMVectorGetX(XMVector3LengthSq(vMoveDir)) > 1e-6f)
 	{
+		m_pTransformCom->Face_Direction(vMoveDir, fTimeDelta);
 		static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Set_Anim(RUN, true);
 	}
 	else
@@ -63,7 +77,7 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 				Pair.second->Update(fTimeDelta);
 		});
 
-	_vector vDelta = XMLoadFloat3(&static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Get_RootMotionDelta());
+	_vector vDelta = m_kRootMotionScale * XMLoadFloat3(&static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Get_RootMotionDelta());
 	_vector vWorldDelta = XMVector3TransformNormal(vDelta, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
 	_vector vCurrPos = m_pTransformCom->Get_State(STATE::POSITION);
 	m_pTransformCom->Set_State(STATE::POSITION, vCurrPos + vWorldDelta);

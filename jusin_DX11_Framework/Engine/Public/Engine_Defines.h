@@ -49,11 +49,10 @@ using namespace std;
 namespace Engine
 {
 	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
-	static constexpr _uint g_iNumMeshBones = { 512 };
-	static constexpr _uint MAX_TRAVERSE = { 64 };
-	static constexpr _float DEFAULT_BLENDDURATION = { 0.2f };
-	static constexpr float DEBUG_Y_OFFSET = 0.05f;
-
+	inline constexpr _uint g_iNumMeshBones = { 512 };
+	inline constexpr _uint g_kMaxTraverse = { 64 };
+	inline constexpr _float g_kDefaultBlendDuration = { 0.2f };
+	inline constexpr _float g_kDebugOffset_Y = { 0.05f };
 }
 
 namespace ObjFlag

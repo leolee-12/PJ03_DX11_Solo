@@ -12,7 +12,17 @@ NS_BEGIN(Game_PKM)
 
 enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, BATTLE, END };
 
-inline constexpr _uint MAX_LEARNSET = 128;
+inline constexpr _float3 g_kDir_UP = { 0.f, 0.f,  1.f };
+inline constexpr _float3 g_kDir_DOWN = { 0.f, 0.f, -1.f };
+inline constexpr _float3 g_kDir_LEFT = { -1.f, 0.f,  0.f };
+inline constexpr _float3 g_kDir_RIGHT = { 1.f, 0.f,  0.f };
+
+inline constexpr _float3 g_kDir_UP_LEFT = { -INV_SQRT2, 0.f,  INV_SQRT2 };
+inline constexpr _float3 g_kDir_UP_RIGHT = { INV_SQRT2, 0.f,  INV_SQRT2 };
+inline constexpr _float3 g_kDir_DOWN_LEFT = { -INV_SQRT2, 0.f, -INV_SQRT2 };
+inline constexpr _float3 g_kDir_DOWN_RIGHT = { INV_SQRT2, 0.f, -INV_SQRT2 };
+
+inline constexpr _uint g_kMaxLearnSet = 128;
 
 NS_END
 

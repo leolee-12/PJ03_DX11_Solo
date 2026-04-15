@@ -28,7 +28,7 @@ private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 
-	array<class CPanel_Base*, PANEL_COUNT> m_Panels{};
+	array<class CPanel_Base*, g_kNumPanels> m_Panels{};
 
 	_bool m_bPlaceMode = { false };
 	CATALOG_ITEM m_tPlaceItem = {};

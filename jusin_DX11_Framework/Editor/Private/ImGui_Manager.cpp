@@ -31,7 +31,7 @@ _bool CImGui_Manager::Is_ViewportActive() const
 
 _bool CImGui_Manager::Is_AnyNonViewportPanelActive() const
 {
-	for (_uint i = 0; i < PANEL_COUNT; ++i)
+	for (_uint i = 0; i < g_kNumPanels; ++i)
 	{
 		if (i == ETOUI(PANEL::VIEWPORT))
 			continue;

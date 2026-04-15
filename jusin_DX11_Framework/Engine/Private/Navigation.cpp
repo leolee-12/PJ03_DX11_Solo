@@ -132,7 +132,7 @@ _bool XM_CALLCONV CNavigation::Is_Move(_fvector vResultPos)
 			_int iCnt{};
 			while (true)
 			{
-				if (++iCnt > MAX_TRAVERSE) return false;
+				if (++iCnt > g_kMaxTraverse) return false;
 
 				if (true == m_Cells[iNeighborIndex]->Is_In(vResultPos, &iNeighborIndex))
 					break;
@@ -185,7 +185,7 @@ HRESULT CNavigation::Render()
 
 	else
 	{
-		WorldMatrix._42 += DEBUG_Y_OFFSET;
+		WorldMatrix._42 += g_kDebugOffset_Y;
 		vColor = _float4(1.f, 0.f, 0.f, 1.f);
 
 		m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);

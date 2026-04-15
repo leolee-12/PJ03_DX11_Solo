@@ -68,6 +68,7 @@ public:
 	void Go_Right(_float fTimeDelta);
 
 	void XM_CALLCONV Chase(_fvector vGoal, _float fTimeDelta, _float fLimit = 0.1f, class CNavigation* pNavigation = nullptr);
+	void XM_CALLCONV Face_Direction(_fvector vTargetDir, _float fTimeDelta);
 
 private:
 	_float4x4 m_WorldMatrix = {};

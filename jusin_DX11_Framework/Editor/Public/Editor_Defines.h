@@ -21,14 +21,14 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 NS_BEGIN(Editor)
 
-constexpr unsigned int	g_iWinSizeX = { 1920 };
-constexpr unsigned int	g_iWinSizeY = { 1080 };
+inline constexpr unsigned int	g_iWinSizeX = { 1920 };
+inline constexpr unsigned int	g_iWinSizeY = { 1080 };
 
 WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
 WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
 
 enum class PANEL { OUTLINER, MAP, PROPERTY, PLACEBROWSER, UI, MODEL, VIEWPORT, OBJECT, EFFECT, END };
-constexpr size_t PANEL_COUNT = static_cast<size_t>(PANEL::END);
+inline constexpr size_t g_kNumPanels = static_cast<size_t>(PANEL::END);
 
 using SelectionChangedCB = function<void(const vector<Engine::CGameObject*>&)>;
 

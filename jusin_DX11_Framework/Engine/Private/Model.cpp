@@ -266,10 +266,9 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 		}
 		else
 		{	// 루프 랩 아닐 때 : 현재 - 이전
-			_float fMulti = { 0.01f };
-			m_vRootMotionDelta.x = fMulti * (vCurrRootPos.x - m_vPrevRootPos.x);
+			m_vRootMotionDelta.x = vCurrRootPos.x - m_vPrevRootPos.x;
 			m_vRootMotionDelta.y = 0.f;
-			m_vRootMotionDelta.z = -fMulti * (vCurrRootPos.z - m_vPrevRootPos.z);
+			m_vRootMotionDelta.z = -(vCurrRootPos.z - m_vPrevRootPos.z);
 		}
 
 		// 3-3. 이전 프레임 갱신 및 루트본 로컬 이동 제거
