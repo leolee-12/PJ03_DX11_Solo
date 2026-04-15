@@ -10,6 +10,7 @@ private:
 	virtual ~CLayer() = default;
 
 public:
+	class CComponent* Get_Component(const WNameID strComponentTag, _uint iIndex);
 	const list<class CGameObject*>& Get_ObjectList() const { return m_GameObjects; }
 
 	HRESULT Add_GameObject(class CGameObject* pGameObject);

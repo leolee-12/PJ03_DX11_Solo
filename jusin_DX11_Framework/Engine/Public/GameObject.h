@@ -39,6 +39,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	class CComponent* Find_Component(WNameID strComTag);
+
 protected:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
@@ -51,7 +53,6 @@ protected:
 
 protected:
 	HRESULT Add_Component(_uint iLevel, WNameID strProtoTag, WNameID strComTag, CComponent** ppOut, void* pArg = nullptr);
-	class CComponent* Find_Component(WNameID strComTag);
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

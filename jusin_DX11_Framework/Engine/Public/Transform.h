@@ -62,10 +62,12 @@ public:
 	void XM_CALLCONV Turn(_fvector vAxis, _float fTimeDelta);
 	void XM_CALLCONV LookAt(_fvector vFocus);
 
-	void Go_Straight(_float fTimeDelta);
+	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void Go_Backward(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
+
+	void XM_CALLCONV Chase(_fvector vGoal, _float fTimeDelta, _float fLimit = 0.1f, class CNavigation* pNavigation = nullptr);
 
 private:
 	_float4x4 m_WorldMatrix = {};

@@ -17,6 +17,7 @@ private:
 	virtual ~CObject_Manager() = default;
 
 public:
+	class CComponent* Get_Component(_uint iLevelIndex, const WNameID strLayerTag, const WNameID strComponentTag, _uint iIndex);
 	const list<class CGameObject*>* Get_ObjectList(_uint iLevel, WNameID strLayerTag);
 	vector<CGameObject*> Get_LevelObjects(_uint iLevel) const;
 

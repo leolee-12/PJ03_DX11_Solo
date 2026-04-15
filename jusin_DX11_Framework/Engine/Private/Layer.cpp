@@ -5,6 +5,16 @@ CLayer::CLayer()
 {
 }
 
+CComponent* CLayer::Get_Component(const WNameID strComponentTag, _uint iIndex)
+{
+	if (iIndex >= m_GameObjects.size())
+		return nullptr;
+
+	auto iter = m_GameObjects.begin();
+	std::advance(iter, iIndex); // 컨테이너에 따라 최적 방식으로 동작
+	return (*iter)->Find_Component(strComponentTag);
+}
+
 HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)

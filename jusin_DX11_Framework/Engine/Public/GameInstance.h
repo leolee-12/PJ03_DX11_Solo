@@ -46,6 +46,7 @@ public:
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
+	class CComponent* Get_Component(_uint iLevelIndex, const WNameID strLayerTag, const WNameID strComponentTag, _uint iIndex = 0);
 	HRESULT Add_GameObject(_uint iPrototypeLevelIndex, WNameID strProtoTag, _uint iLayerLevelIndex, WNameID strLayerTag, void* pArg = nullptr);
 	HRESULT Add_GameObject_Ex(_uint iLayerLevel, WNameID strLayerTag, CGameObject* pObj);
 	const list<class CGameObject*>* Get_ObjectList(_uint iLevel, WNameID strLayerTag);

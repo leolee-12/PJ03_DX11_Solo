@@ -110,13 +110,16 @@ void XM_CALLCONV CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScaled.z);
 }
 
-void CTransform::Go_Straight(_float fTimeDelta)
+void CTransform::Go_Straight(_float fTimeDelta, class CNavigation* pNavigation)
 {
 	_vector vPosition	= Get_State(STATE::POSITION);
 	_vector vLook		= Get_State(STATE::LOOK);
 
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
-	Set_State(STATE::POSITION, vPosition);
+
+	if (nullptr == pNavigation ||
+		true == pNavigation->Is_Move(vPosition))
+		Set_State(STATE::POSITION, vPosition);
 }
 
 void CTransform::Go_Backward(_float fTimeDelta)
@@ -144,6 +147,20 @@ void CTransform::Go_Right(_float fTimeDelta)
 
 	vPosition += XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 	Set_State(STATE::POSITION, vPosition);
+}
+
+void XM_CALLCONV CTransform::Chase(_fvector vGoal, _float fTimeDelta, _float fLimit, CNavigation* pNavigation)
+{
+	_vector vPosition = Get_State(STATE::POSITION);
+	_vector vDir = vGoal - vPosition;
+	_float fDistance = XMVectorGetX(XMVector3Length(vDir));
+
+	if (fDistance >= fLimit)
+		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
+
+	if (nullptr == pNavigation ||
+		true == pNavigation->Is_Move(vPosition))
+		Set_State(STATE::POSITION, vPosition);
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

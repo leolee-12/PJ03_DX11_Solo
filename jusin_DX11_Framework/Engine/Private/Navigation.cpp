@@ -5,15 +5,17 @@
 
 const _float4x4* CNavigation::m_pParentMatrixPtr = { nullptr };
 
-CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviDataFile)
+CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviFilePath, const _tchar* pNeighborFilePath)
 	: CComponent{ pDevice, pContext }
-	, m_pNaviDataFile{ pNaviDataFile }
+	, m_pNaviFilePath{ pNaviFilePath }
+	, m_pNeighborFilePath{ pNeighborFilePath }
 {
 }
 
 CNavigation::CNavigation(const CNavigation& Prototype)
 	: CComponent{ Prototype }
-	, m_pNaviDataFile{ Prototype.m_pNaviDataFile }
+	, m_pNaviFilePath{ Prototype.m_pNaviFilePath }
+	, m_pNeighborFilePath{ Prototype.m_pNeighborFilePath }
 	, m_Cells{ Prototype.m_Cells }
 #ifdef _DEBUG
 	, m_pShader{ Prototype.m_pShader }
@@ -30,7 +32,7 @@ CNavigation::CNavigation(const CNavigation& Prototype)
 HRESULT CNavigation::Initialize_Prototype()
 {
 	_ulong dwByte = {};
-	HANDLE hFile = CreateFile(m_pNaviDataFile, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	HANDLE hFile = CreateFile(m_pNaviFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
@@ -95,6 +97,25 @@ HRESULT CNavigation::SetUp_Neighbors()
 	return S_OK;
 }
 
+HRESULT CNavigation::SetUp_NeighborsFromFile()
+{
+	_ulong dwByte = {};
+	HANDLE hFile = CreateFile(m_pNeighborFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (0 == hFile)
+		return E_FAIL;
+
+	_int iNeighbors[3] = {};
+
+	for (auto& pCell : m_Cells)
+	{
+		ReadFile(hFile, iNeighbors, sizeof(_int) * 3, &dwByte, nullptr);
+		pCell->Set_Neighbors(iNeighbors);
+	}
+
+	CloseHandle(hFile);
+	return S_OK;
+}
+
 _bool XM_CALLCONV CNavigation::Is_Move(_fvector vResultPos)
 {
 	if (-1 == m_iCurrentCellIndex)
@@ -108,6 +129,18 @@ _bool XM_CALLCONV CNavigation::Is_Move(_fvector vResultPos)
 	{
 		if (-1 != iNeighborIndex)
 		{
+			_int iCnt{};
+			while (true)
+			{
+				if (++iCnt > MAX_TRAVERSE) return false;
+
+				if (true == m_Cells[iNeighborIndex]->Is_In(vResultPos, &iNeighborIndex))
+					break;
+
+				if (-1 == iNeighborIndex)
+					return false;
+			}
+
 			m_iCurrentCellIndex = iNeighborIndex;
 			return true;
 		}
@@ -116,27 +149,59 @@ _bool XM_CALLCONV CNavigation::Is_Move(_fvector vResultPos)
 	}
 }
 
+_vector CNavigation::Compute_OnNavigation(const CTransform* pTargetTransform)
+{
+	if (-1 == m_iCurrentCellIndex)
+		return XMVectorZero();
+
+	_vector vCurrentPosition = pTargetTransform->Get_State(STATE::POSITION);
+
+	_float fHeight = m_Cells[m_iCurrentCellIndex]->Compute_Height(vCurrentPosition);
+
+	return XMVectorSetY(vCurrentPosition, fHeight);
+}
+
 #ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
-	m_pShader->Bind_Matrix("g_WorldMatrix", m_pParentMatrixPtr);
+	_float4x4 WorldMatrix = *m_pParentMatrixPtr;
+	_float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
+
 	m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW));
 	m_pShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ));
 
-	m_pShader->Begin(0);
-
-	for (auto& pCell : m_Cells)
+	if (-1 == m_iCurrentCellIndex)
 	{
-		if (nullptr != pCell)
-			pCell->Render();
+		m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
+		m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof vColor);
+		m_pShader->Begin(0);
+
+		for (auto& pCell : m_Cells)
+		{
+			if (nullptr != pCell)
+				pCell->Render();
+		}
 	}
+
+	else
+	{
+		WorldMatrix._42 += DEBUG_Y_OFFSET;
+		vColor = _float4(1.f, 0.f, 0.f, 1.f);
+
+		m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
+		m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof vColor);
+		m_pShader->Begin(0);
+
+		m_Cells[m_iCurrentCellIndex]->Render();
+	}
+
 	return S_OK;
 }
 #endif
 
-CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviDataFile)
+CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviFilePath, const _tchar* pNeighborFilePath)
 {
-	CNavigation* pInstance = new CNavigation(pDevice, pContext, pNaviDataFile);
+	CNavigation* pInstance = new CNavigation(pDevice, pContext, pNaviFilePath, pNeighborFilePath);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

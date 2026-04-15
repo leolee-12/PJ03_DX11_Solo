@@ -183,6 +183,10 @@ CBase* CGameInstance::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameI
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
+CComponent* CGameInstance::Get_Component(_uint iLevelIndex, const WNameID strLayerTag, const WNameID strComponentTag, _uint iIndex)
+{
+	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex);
+}
 HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, WNameID strProtoTag, _uint iLayerLevelIndex, WNameID strLayerTag, void* pArg)
 {
 	return m_pObject_Manager->Add_GameObject(iPrototypeLevelIndex, strProtoTag, iLayerLevelIndex, strLayerTag, pArg);
