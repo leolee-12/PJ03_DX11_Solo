@@ -18,9 +18,9 @@
 
 using namespace DirectX;
 
-#pragma warning(push, 0)
-#include <PhysX/PxPhysicsAPI.h>
-#pragma warning(pop)
+//#pragma warning(push, 0)
+//#include <PhysX/PxPhysicsAPI.h>
+//#pragma warning(pop)
 
 #include <json/json.hpp>
 using json = nlohmann::json;

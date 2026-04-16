@@ -149,9 +149,12 @@ call PreBuild.bat</Command>
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Base.h" />
     <ClInclude Include="..\Public\Bone.h" />
+    <ClInclude Include="..\Public\Bounding.h" />
+    <ClInclude Include="..\Public\Bounding_AABB.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\Cell.h" />
     <ClInclude Include="..\Public\Channel.h" />
+    <ClInclude Include="..\Public\Collider.h" />
     <ClInclude Include="..\Public\Component.h" />
     <ClInclude Include="..\Public\ContainerObject.h" />
     <ClInclude Include="..\Public\CustomFont.h" />
@@ -178,7 +181,9 @@ call PreBuild.bat</Command>
     <ClInclude Include="..\Public\Navigation.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
     <ClInclude Include="..\Public\PartObject.h" />
-    <ClInclude Include="..\Public\PhysX_Manager.h" />
+    <ClInclude Include="..\Public\PhysX_Manager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Prototype_Manager.h" />
     <ClInclude Include="..\Public\Renderer.h" />
@@ -198,9 +203,12 @@ call PreBuild.bat</Command>
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
     <ClCompile Include="..\Private\Bone.cpp" />
+    <ClCompile Include="..\Private\Bounding.cpp" />
+    <ClCompile Include="..\Private\Bounding_AABB.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\Cell.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />
+    <ClCompile Include="..\Private\Collider.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\CustomFont.cpp" />
@@ -220,7 +228,9 @@ call PreBuild.bat</Command>
     <ClCompile Include="..\Private\Navigation.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
-    <ClCompile Include="..\Private\PhysX_Manager.cpp" />
+    <ClCompile Include="..\Private\PhysX_Manager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />

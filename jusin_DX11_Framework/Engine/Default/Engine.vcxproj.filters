@@ -97,6 +97,12 @@
     <Filter Include="07. Component\VIBuffer\Cell">
       <UniqueIdentifier>{8e30216c-21ea-4010-8e7a-423372826468}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\Collider">
+      <UniqueIdentifier>{c4350a6e-cf86-4d72-b79f-d0a4f9451b61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\Collider\Bounding">
+      <UniqueIdentifier>{3c51e65e-ef37-4f52-9304-2f5d1bf8a9b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -240,6 +246,15 @@
     <ClInclude Include="..\Public\VIBuffer_Cell.h">
       <Filter>07. Component\VIBuffer\Cell</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Collider.h">
+      <Filter>07. Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding.h">
+      <Filter>07. Component\Collider\Bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_AABB.h">
+      <Filter>07. Component\Collider\Bounding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -361,6 +376,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
       <Filter>07. Component\VIBuffer\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp">
+      <Filter>07. Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding.cpp">
+      <Filter>07. Component\Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_AABB.cpp">
+      <Filter>07. Component\Collider\Bounding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
