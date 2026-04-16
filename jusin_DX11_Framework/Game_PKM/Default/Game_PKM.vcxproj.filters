@@ -141,6 +141,9 @@
     <ClInclude Include="..\Public\Body_Hero.h">
       <Filter>02. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Game_PKM_Enum.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
