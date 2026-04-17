@@ -95,6 +95,16 @@ HRESULT CWeapon::Ready_Components()
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	/* For.Com_Collider_OBB */
+	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{ };
+	OBBDesc.vSize = _float3(1.5f, 3.f, 3.5f);
+	OBBDesc.vCenter = _float3(0.f, OBBDesc.vSize.y * 0.5f, 0.f);
+	OBBDesc.vRadians = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_OBB,
+		COM_COLLIDER_OBB, reinterpret_cast<CComponent**>(&m_pColliderCom), &OBBDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

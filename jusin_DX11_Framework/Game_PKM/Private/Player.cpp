@@ -107,6 +107,21 @@ HRESULT CPlayer::Render()
 
 HRESULT CPlayer::Ready_Components()
 {
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC NaviDesc{ 5 };
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION,
+		COM_NAVIGATION, reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider_AABB */
+	CBounding_AABB::BOUNDING_AABB_DESC  AABBDesc{ };
+	AABBDesc.vSize = _float3(0.7f, 0.2f, 0.7f);
+	AABBDesc.vCenter = _float3(0.f, AABBDesc.vSize.y * 0.5f, 0.f);
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_AABB,
+		COM_COLLIDER_AABB, reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
+		return E_FAIL;
 	return S_OK;
 }
 

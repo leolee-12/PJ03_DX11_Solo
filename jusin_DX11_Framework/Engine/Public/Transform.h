@@ -59,6 +59,7 @@ public:
 	void Scaling(_float fScaleX = 1.f, _float fScaleY = 1.f, _float fScaleZ = 1.f);
 
 	void XM_CALLCONV Rotation(_fvector vAxis, _float fRadian);
+	void Rotation(_float fRotationX, _float fRotationY, _float fRotationZ);
 	void XM_CALLCONV Turn(_fvector vAxis, _float fTimeDelta);
 	void XM_CALLCONV LookAt(_fvector vFocus);
 

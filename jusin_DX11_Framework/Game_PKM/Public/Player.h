@@ -3,7 +3,7 @@
 #include "ContainerObject.h"
 
 NS_BEGIN(Engine)
-
+class CCollider;
 NS_END
 
 NS_BEGIN(Game_PKM)
@@ -33,6 +33,8 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	CCollider* m_pColliderCom = { nullptr };
+	CNavigation* m_pNavigationCom = { nullptr };
 	_uint m_iState = {};
 
 private:

@@ -15,6 +15,9 @@
 #include <DirectTK/SpriteBatch.h>
 #include <DirectTK/SpriteFont.h>
 #include <DirectTK/ScreenGrab.h>
+#include <DirectTK/PrimitiveBatch.h>
+#include <DirectTK/VertexTypes.h>
+#include <DirectTK/Effects.h>
 
 using namespace DirectX;
 

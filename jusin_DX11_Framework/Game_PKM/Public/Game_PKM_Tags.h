@@ -35,6 +35,12 @@ WNAME_TAG(PROTO_COM_MODEL_HERO, L"Prototype_Component_Model_Hero");
 
 WNAME_TAG(PROTO_COM_MODEL_TOWN01, L"Prototype_Component_Model_Town01");
 
+// Navigation & Collider
+WNAME_TAG(PROTO_COM_NAVIGATION, L"Prototype_Component_Navigation");
+WNAME_TAG(PROTO_COM_COLLIDER_AABB, L"Prototype_Component_Collider_AABB");
+WNAME_TAG(PROTO_COM_COLLIDER_OBB, L"Prototype_Component_Collider_OBB");
+WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
+
 // Layer
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
 WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
@@ -64,6 +70,10 @@ WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
 WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
 WNAME_TAG(COM_SHADER, L"Com_Shader");
 WNAME_TAG(COM_MODEL, L"Com_Model");
+WNAME_TAG(COM_NAVIGATION, L"Com_Navigation");
+WNAME_TAG(COM_COLLIDER_AABB, L"Com_Collider_AABB");
+WNAME_TAG(COM_COLLIDER_OBB, L"Com_Collider_OBB");
+WNAME_TAG(COM_COLLIDER_SPHERE, L"Com_Collider_Sphere");
 
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");

@@ -96,7 +96,6 @@ HRESULT CBody_Player::Render()
 
 HRESULT CBody_Player::Ready_Components()
 {
-
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -107,8 +106,14 @@ HRESULT CBody_Player::Ready_Components()
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	/* For.Com_Collider_Sphere */
+	CBounding_Sphere::BOUNDING_SPHERE_DESC  SphereDesc{ };
+	SphereDesc.fRadius = 0.7f;
+	SphereDesc.vCenter = _float3(0.f, SphereDesc.fRadius, 0.f);
 
-
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_SPHERE,
+		COM_COLLIDER_SPHERE, reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

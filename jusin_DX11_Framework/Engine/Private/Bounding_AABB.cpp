@@ -1,4 +1,7 @@
 #include "Bounding_AABB.h"
+#include "Bounding_OBB.h"
+#include "Bounding_Sphere.h"
+#include "DebugDraw.h"
 
 CBounding_AABB::CBounding_AABB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBounding{ pDevice, pContext }
@@ -14,6 +17,26 @@ HRESULT CBounding_AABB::Initialize(const CBounding::BOUNDING_DESC* pBoundingDesc
 
 	return S_OK;
 }
+
+void XM_CALLCONV CBounding_AABB::Update(_fmatrix TransformMatrix)
+{
+	_matrix Matrix = TransformMatrix;
+
+	Matrix.r[0] = XMVectorSet(1.f, 0.f, 0.f, 0.f) * XMVector3Length(Matrix.r[0]);
+	Matrix.r[1] = XMVectorSet(0.f, 1.f, 0.f, 0.f) * XMVector3Length(Matrix.r[1]);
+	Matrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVector3Length(Matrix.r[2]);
+
+	m_pOriginalDesc->Transform(*m_pDesc, Matrix);
+}
+
+#ifdef _DEBUG
+HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
+{
+	DX::Draw(pBatch, *m_pDesc, true == m_isColl ? XMVectorSet(1.f, 0.f, 0.f, 1.f) : XMVectorSet(0.f, 1.f, 0.f, 1.f));
+
+	return S_OK;
+}
+#endif
 
 CBounding_AABB* CBounding_AABB::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const CBounding::BOUNDING_DESC* pDesc)
 {

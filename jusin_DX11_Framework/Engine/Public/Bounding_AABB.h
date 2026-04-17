@@ -17,6 +17,11 @@ private:
 
 public:
 	virtual HRESULT Initialize(const CBounding::BOUNDING_DESC* pBoundingDesc) override;
+	virtual void XM_CALLCONV Update(_fmatrix TransformMatrix) override;
+
+#ifdef _DEBUG
+	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch) override;
+#endif
 
 private:
 	BoundingBox* m_pOriginalDesc = { nullptr };
