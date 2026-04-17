@@ -128,6 +128,31 @@ HRESULT CEditInstance::End_ViewportRender()
 {
 	return m_pImGui_Manager->Get_ViewportPanel()->End_SceneRender();
 }
+
+_bool CEditInstance::Is_NavEditMode() const
+{
+	return m_pImGui_Manager->Is_NavEditMode();
+}
+
+_bool CEditInstance::Is_NavPointMode() const
+{
+	return m_pImGui_Manager->Is_NavPointMode();
+}
+
+void  CEditInstance::Fire_NavClick(const _float3& vWorldPos)
+{
+	m_pImGui_Manager->Fire_NavClick(vWorldPos);
+}
+
+ImVec2 CEditInstance::Get_ViewportScreenPos()  const
+{
+	return m_pImGui_Manager->Get_ViewportScreenPos();
+}
+
+ImVec2 CEditInstance::Get_ViewportScreenSize() const
+{
+	return m_pImGui_Manager->Get_ViewportScreenSize();
+}
 #pragma endregion
 
 #pragma region SELECT_MANAGER

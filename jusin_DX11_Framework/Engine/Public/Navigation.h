@@ -9,7 +9,6 @@ public:
 	struct NAVIGATION_DESC
 	{
 		_int iCurrentCellIndex;
-		const _float4x4* pParentMatrix = { nullptr };
 	};
 
 private:
@@ -18,7 +17,8 @@ private:
 	virtual ~CNavigation() = default;
 
 public:
-	_vector Get_CellPos();
+	void Set_CurrentCellIndex(_int iCellIdx);
+	_int Get_CurrentCellIndex() const { return m_iCurrentCellIndex; }
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -27,6 +27,7 @@ public:
 	HRESULT SetUp_NeighborsFromFile();
 	_bool XM_CALLCONV Is_Move(_fvector vResultPos);
 	_vector Compute_OnNavigation(const class CTransform* pTargetTransform);
+	_int XM_CALLCONV Find_CellIndex_ByPos(_fvector vWorldPos) const;
 
 #ifdef _DEBUG
 public:
@@ -38,7 +39,6 @@ private:
 	const _tchar* m_pNeighborFilePath = {};
 	vector<class CCell*> m_Cells;
 	_uint m_iCurrentCellIndex = {};
-	static const _float4x4* m_pParentMatrixPtr;
 
 #ifdef _DEBUG
 private:

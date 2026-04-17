@@ -15,6 +15,22 @@ CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	Safe_AddRef(m_pContext);
 }
 
+ImVec2 CImGui_Manager::Get_ViewportScreenPos() const
+{
+	CPanel_Viewport* pViewport = Get_ViewportPanel();
+	if (nullptr == pViewport)
+		return ImVec2(0.f, 0.f);
+	return pViewport->Get_ViewportPos();
+}
+
+ImVec2 CImGui_Manager::Get_ViewportScreenSize() const
+{
+	CPanel_Viewport* pViewport = Get_ViewportPanel();
+	if (nullptr == pViewport)
+		return ImVec2(1.f, 1.f);
+	return pViewport->Get_ViewportSize();
+}
+
 CPanel_Viewport* CImGui_Manager::Get_ViewportPanel() const
 {
 	return static_cast<CPanel_Viewport*>(m_Panels[ETOUI(PANEL::VIEWPORT)]);
@@ -57,6 +73,24 @@ void CImGui_Manager::End_PlaceMode()
 {
 	m_bPlaceMode = false;
 	m_tPlaceItem = {};
+}
+
+_bool CImGui_Manager::Is_NavEditMode() const
+{
+	auto* pMapTool = static_cast<CPanel_MapTool*>(m_Panels[ETOUI(PANEL::MAP)]);
+	return pMapTool ? pMapTool->Is_NavEditMode() : false;
+}
+
+_bool CImGui_Manager::Is_NavPointMode() const
+{
+	auto* pMapTool = static_cast<CPanel_MapTool*>(m_Panels[ETOUI(PANEL::MAP)]);
+	return pMapTool ? pMapTool->Is_NavPointMode() : false;
+}
+
+void CImGui_Manager::Fire_NavClick(const _float3& vWorldPos)
+{
+	auto* pMapTool = static_cast<CPanel_MapTool*>(m_Panels[ETOUI(PANEL::MAP)]);
+	if (pMapTool) pMapTool->Add_NavPoint(vWorldPos);
 }
 
 HRESULT CImGui_Manager::Initialize(HWND hWnd)
@@ -103,9 +137,9 @@ HRESULT CImGui_Manager::Initialize(HWND hWnd)
 	style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
 	style.FontScaleDpi = main_scale;        // Set initial font scale. (in docking branch: using io.ConfigDpiScaleFonts=true automatically overrides this for every window depending on the current monitor)
 	io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
-	io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
+	//io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.5
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		style.WindowRounding = 0.0f;

@@ -1,4 +1,4 @@
-#include "Panel_Viewport.h"
+﻿#include "Panel_Viewport.h"
 #include "GameInstance.h"
 #include "EditInstance.h"
 
@@ -86,9 +86,13 @@ HRESULT CPanel_Viewport::Render()
 	ImGui::SetCursorPos(ImVec2(vCursorPos.x + max(vOffset.x, 0.f), vCursorPos.y + max(vOffset.y, 0.f)));
 	m_vViewportPos = ImGui::GetCursorScreenPos();
 
-	if (m_pSRV != nullptr)
+	if (nullptr != m_pSRV)
 	{
 		ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vRenderSize);
+
+		// Image() 후에 실제 렌더된 위치/크기를 가져옴 → GetMousePos()와 동일한 좌표계 보장
+		m_vViewportPos = ImGui::GetItemRectMin();
+		m_vViewportSize = ImGui::GetItemRectSize();
 
 		m_bHovered = ImGui::IsItemHovered();
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
@@ -482,9 +486,15 @@ _bool CPanel_Viewport::Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvec
 void CPanel_Viewport::Handle_ViewportClick()
 {
 	Handle_DebugPicking();
-
-	if (false == m_bHasLastHit)
+	if (!m_bHasLastHit)
 		return;
+
+	// Nav 점 찍기 모드 — EditInstance를 통해 MapTool에 전달
+	if (m_pEditInstance->Is_NavEditMode() && m_pEditInstance->Is_NavPointMode())
+	{
+		m_pEditInstance->Fire_NavClick(m_vLastWorldHitPos);
+		return;
+	}
 
 	if (m_pEditInstance->Is_PlaceMode())
 		Place_ObjectAtHit(m_vLastWorldHitPos);

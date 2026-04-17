@@ -11,6 +11,9 @@ private:
 	virtual ~CImGui_Manager() = default;
 
 public:
+	ImVec2 Get_ViewportScreenPos() const;
+	ImVec2 Get_ViewportScreenSize() const;
+
 	class CPanel_Viewport* Get_ViewportPanel() const;
 	_bool Is_ViewportActive() const;
 	_bool Is_AnyNonViewportPanelActive() const;
@@ -19,6 +22,9 @@ public:
 	void End_PlaceMode();
 	_bool Is_PlaceMode() const { return m_bPlaceMode; }
 	const CATALOG_ITEM& Get_PlaceItem() const { return m_tPlaceItem; }
+	_bool Is_NavEditMode() const;
+	_bool Is_NavPointMode() const;
+	void Fire_NavClick(const _float3& vWorldPos);
 
 	HRESULT Initialize(HWND hWnd);
 	void Update(_float fTimeDelta);

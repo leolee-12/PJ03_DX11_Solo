@@ -3,8 +3,6 @@
 #include "Cell.h"
 #include "GameInstance.h"
 
-const _float4x4* CNavigation::m_pParentMatrixPtr = { nullptr };
-
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviFilePath, const _tchar* pNeighborFilePath)
 	: CComponent{ pDevice, pContext }
 	, m_pNaviFilePath{ pNaviFilePath }
@@ -27,6 +25,14 @@ CNavigation::CNavigation(const CNavigation& Prototype)
 
 	for (auto& pCell : m_Cells)
 		Safe_AddRef(pCell);
+}
+
+void CNavigation::Set_CurrentCellIndex(_int iCellIdx)
+{
+	if (0 <= iCellIdx && iCellIdx < static_cast<_int>(m_Cells.size()))
+		m_iCurrentCellIndex = iCellIdx;
+	else
+		m_iCurrentCellIndex = -1;
 }
 
 HRESULT CNavigation::Initialize_Prototype()
@@ -53,7 +59,20 @@ HRESULT CNavigation::Initialize_Prototype()
 
 	CloseHandle(hFile);
 
-	SetUp_Neighbors();
+	_bool bLoadedNeighborFromFile = false;
+
+	if (nullptr != m_pNeighborFilePath && m_pNeighborFilePath[0] != TEXT('\0'))
+	{
+		DWORD dwAttr = GetFileAttributes(m_pNeighborFilePath);
+		if (dwAttr != INVALID_FILE_ATTRIBUTES && !(dwAttr & FILE_ATTRIBUTE_DIRECTORY))
+		{
+			if (SUCCEEDED(SetUp_NeighborsFromFile()))
+				bLoadedNeighborFromFile = true;
+		}
+	}
+
+	if (false == bLoadedNeighborFromFile)
+		SetUp_Neighbors();
 
 #ifdef _DEBUG
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Cell.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements);
@@ -66,12 +85,14 @@ HRESULT CNavigation::Initialize_Prototype()
 
 HRESULT CNavigation::Initialize(void* pArg)
 {
+	if (nullptr == pArg)
+	{
+		Set_CurrentCellIndex(-1);
+		return S_OK;
+	}
+
 	auto pDesc = static_cast<NAVIGATION_DESC*>(pArg);
-
-	m_iCurrentCellIndex = pDesc->iCurrentCellIndex;
-
-	if (-1 == m_iCurrentCellIndex)
-		m_pParentMatrixPtr = pDesc->pParentMatrix;
+	Set_CurrentCellIndex(pDesc->iCurrentCellIndex);
 
 	return S_OK;
 }
@@ -101,7 +122,7 @@ HRESULT CNavigation::SetUp_NeighborsFromFile()
 {
 	_ulong dwByte = {};
 	HANDLE hFile = CreateFile(m_pNeighborFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-	if (0 == hFile)
+	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
 	_int iNeighbors[3] = {};
@@ -161,10 +182,37 @@ _vector CNavigation::Compute_OnNavigation(const CTransform* pTargetTransform)
 	return XMVectorSetY(vCurrentPosition, fHeight);
 }
 
+_int XM_CALLCONV CNavigation::Find_CellIndex_ByPos(_fvector vWorldPos) const
+{
+	_float fMinHeightDiff = FLT_MAX;
+	_int iBestIdx = -1;
+	size_t iNumCells = m_Cells.size();
+
+	for (_int i = 0; i < iNumCells; ++i)
+	{
+		_int iDummyNeighbor = -1;
+
+		if (m_Cells[i]->Is_In(vWorldPos, &iDummyNeighbor))
+		{
+			const _float fCellHeight = m_Cells[i]->Compute_Height(vWorldPos);
+			const _float fHeightDiff = fabsf(XMVectorGetY(vWorldPos) - fCellHeight);
+
+			if (fHeightDiff < fMinHeightDiff)
+			{
+				fMinHeightDiff = fHeightDiff;
+				iBestIdx = i;
+			}
+		}
+	}
+
+	return iBestIdx;
+}
+
 #ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
-	_float4x4 WorldMatrix = *m_pParentMatrixPtr;
+	_float4x4 WorldMatrix{};
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
 	_float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
 
 	m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW));

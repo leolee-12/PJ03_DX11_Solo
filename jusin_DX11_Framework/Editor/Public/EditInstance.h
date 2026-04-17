@@ -31,6 +31,12 @@ public:
 	void End_PlaceMode();
 	_bool Is_PlaceMode() const;
 	const CATALOG_ITEM& Get_PlaceItem() const;
+
+	_bool Is_NavEditMode() const;
+	_bool Is_NavPointMode() const;
+	void Fire_NavClick(const _float3& vWorldPos);
+	ImVec2 Get_ViewportScreenPos() const;
+	ImVec2 Get_ViewportScreenSize() const;
 #pragma endregion
 
 #pragma region SELECT_MANAGER
