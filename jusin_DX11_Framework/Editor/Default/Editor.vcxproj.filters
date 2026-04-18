@@ -19,26 +19,29 @@
     <Filter Include="01. EditInstance">
       <UniqueIdentifier>{5e2a3e60-ff9c-4000-b2e7-5db60fff16a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Panels">
-      <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Select_Manager">
       <UniqueIdentifier>{27e72977-2063-4785-96d9-13ad06e60bfc}</UniqueIdentifier>
     </Filter>
     <Filter Include="05. Object_Registry">
       <UniqueIdentifier>{b6a75dbe-54a4-4d51-84a9-65c1e5555523}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Editor_Serializer">
+      <UniqueIdentifier>{bfe0a8e0-f9dc-46a5-a1ed-4210867de63c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Model_Loader">
+      <UniqueIdentifier>{4231252d-243e-434c-a985-98e1c822fb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{c0f9d35a-8126-446a-a283-ab7441aedd1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Panels">
+      <UniqueIdentifier>{808f94e7-ca64-45c6-8d61-22a501681489}</UniqueIdentifier>
+    </Filter>
     <Filter Include="04. Panels\00. OutLiner">
       <UniqueIdentifier>{422f79f2-72b4-49e9-b768-23226a46f6f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Panels\01. Map">
-      <UniqueIdentifier>{f47304f2-d1a1-4e46-9a41-792c8343a34f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. Panels\02. Property">
       <UniqueIdentifier>{076c556a-c1e4-484d-9849-22cab20544d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06. Editor_Serializer">
-      <UniqueIdentifier>{bfe0a8e0-f9dc-46a5-a1ed-4210867de63c}</UniqueIdentifier>
     </Filter>
     <Filter Include="04. Panels\03. PlaceBrowser">
       <UniqueIdentifier>{a40d7bf5-2769-4d7b-96ad-77c077c1325d}</UniqueIdentifier>
@@ -46,19 +49,16 @@
     <Filter Include="04. Panels\04. UITool">
       <UniqueIdentifier>{ec1b3062-7bf7-401b-bee6-9a75cffb6db5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Model_Loader">
-      <UniqueIdentifier>{4231252d-243e-434c-a985-98e1c822fb6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. Panels\05. Model">
       <UniqueIdentifier>{ab3e6f76-705f-4e8c-8318-07957fd8d2a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. Default">
-      <UniqueIdentifier>{c0f9d35a-8126-446a-a283-ab7441aedd1c}</UniqueIdentifier>
     </Filter>
     <Filter Include="04. Panels\06. Viewport">
       <UniqueIdentifier>{85f72900-5285-4888-b5c3-7b60bc58211d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Panels\03. ImGui_Manager">
+    <Filter Include="04. Panels\01. MapTool">
+      <UniqueIdentifier>{f47304f2-d1a1-4e46-9a41-792c8343a34f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. ImGui_Manager">
       <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -91,7 +91,7 @@
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Manager.h">
-      <Filter>04. Panels\03. ImGui_Manager</Filter>
+      <Filter>03. ImGui_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Base.h">
       <Filter>04. Panels</Filter>
@@ -112,7 +112,7 @@
       <Filter>04. Panels\00. OutLiner</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Panel_MapTool.h">
-      <Filter>04. Panels\01. Map</Filter>
+      <Filter>04. Panels\01. MapTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Property.h">
       <Filter>04. Panels\02. Property</Filter>
@@ -176,7 +176,7 @@
       <Filter>97. ThirdParty\00. imGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Manager.cpp">
-      <Filter>04. Panels\03. ImGui_Manager</Filter>
+      <Filter>03. ImGui_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_demo.cpp">
       <Filter>97. ThirdParty\00. imGui</Filter>
@@ -197,7 +197,7 @@
       <Filter>05. Object_Registry</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Panel_MapTool.cpp">
-      <Filter>04. Panels\01. Map</Filter>
+      <Filter>04. Panels\01. MapTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Panel_OutLiner.cpp">
       <Filter>04. Panels\00. OutLiner</Filter>

@@ -33,6 +33,8 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	// TODO: 여기에 코드를 입력합니다.
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
 	CEditorApp* pEditorApp = { nullptr };
 
 	// 전역 문자열을 초기화합니다.
@@ -148,7 +150,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	RECT rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
-	AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
+	AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);

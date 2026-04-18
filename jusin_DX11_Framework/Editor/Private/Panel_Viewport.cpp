@@ -88,17 +88,28 @@ HRESULT CPanel_Viewport::Render()
 
 	if (nullptr != m_pSRV)
 	{
-		ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vRenderSize);
+		const ImVec2 vImageSize(static_cast<_float>(iRTWidth), static_cast<_float>(iRTHeight));
+		//ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vRenderSize);
+		ImGui::Image(m_pSRV, vImageSize);
 
 		// Image() 후에 실제 렌더된 위치/크기를 가져옴 → GetMousePos()와 동일한 좌표계 보장
 		m_vViewportPos = ImGui::GetItemRectMin();
-		m_vViewportSize = ImGui::GetItemRectSize();
+		//m_vViewportSize = ImGui::GetItemRectSize();
 
 		m_bHovered = ImGui::IsItemHovered();
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
 		if (m_bHovered && m_pGameInstance->Mouse_Down(DIMB::LBUTTON))
 			Handle_ViewportClick();
+
+		if (m_bHovered && m_pEditInstance->Is_NavEditMode()
+			&& m_pEditInstance->Get_NavToolMode() == 2 /* NAV_TOOL_MODE::MOVE */
+			&& m_pGameInstance->Mouse_Pressing(DIMB::LBUTTON))
+		{
+			Handle_DebugPicking();
+			if (m_bHasLastHit)
+				m_pEditInstance->Update_NavDragHit(m_vLastWorldHitPos);
+		}
 	}
 	else
 	{
@@ -108,6 +119,10 @@ HRESULT CPanel_Viewport::Render()
 	}
 
 	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
+
+	const char* szCamState = m_pEditInstance->Is_CameraEnabled() ? "CAM: ON" : "CAM: OFF";
+	pDrawList->AddText(ImVec2(1920.f - m_vViewportPos.x, m_vViewportPos.y + 30.f),
+		m_pEditInstance->Is_CameraEnabled() ? IM_COL32(100, 255, 100, 255) : IM_COL32(255, 100, 100, 255), szCamState);
 
 	pDrawList->AddText(
 		ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 10.f),
@@ -311,7 +326,7 @@ void CPanel_Viewport::Handle_DebugPicking()
 
 	for (const EDITOR_OBJECT_ENTRY& tEntry : Entries)
 	{
-		if (m_pEditInstance->Is_PlaceMode())
+		if (m_pEditInstance->Is_PlaceMode() || m_pEditInstance->Is_NavEditMode())
 		{
 			if (false == tEntry.bPlacementSurface)
 				continue;
@@ -490,7 +505,7 @@ void CPanel_Viewport::Handle_ViewportClick()
 		return;
 
 	// Nav 점 찍기 모드 — EditInstance를 통해 MapTool에 전달
-	if (m_pEditInstance->Is_NavEditMode() && m_pEditInstance->Is_NavPointMode())
+	if (m_pEditInstance->Is_NavEditMode())
 	{
 		m_pEditInstance->Fire_NavClick(m_vLastWorldHitPos);
 		return;

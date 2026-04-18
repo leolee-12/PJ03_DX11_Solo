@@ -24,6 +24,10 @@ public:
 	HRESULT Begin_ViewportRender();
 	HRESULT End_ViewportRender();
 	void Release_Editor();
+
+	_bool Is_CameraEnabled() const { return m_bCameraEnabled; }
+	void Toggle_Camera() { m_bCameraEnabled = !m_bCameraEnabled; }
+	void Set_CameraEnabled(_bool b) { m_bCameraEnabled = b; }
 #pragma endregion
 
 #pragma region IMGUI_MANAGER
@@ -37,6 +41,10 @@ public:
 	void Fire_NavClick(const _float3& vWorldPos);
 	ImVec2 Get_ViewportScreenPos() const;
 	ImVec2 Get_ViewportScreenSize() const;
+
+	_uint Get_NavToolMode() const;
+	void Update_NavDragHit(const _float3& vWorldPos);
+	//_bool Get_CurrentWorldHit(_float3* pOut) const;
 #pragma endregion
 
 #pragma region SELECT_MANAGER
@@ -103,6 +111,7 @@ public:
 
 private:
 	_int m_iPrevLevel = { -1 };
+	_bool m_bCameraEnabled = { false };
 
 	class CGameInstance* m_pGameInstance = { nullptr };
 	class CImGui_Manager* m_pImGui_Manager = { nullptr };

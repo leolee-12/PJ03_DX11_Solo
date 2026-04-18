@@ -86,11 +86,7 @@ _bool CInput_Device::Mouse_Down(DIMB eMouse)
 	_byte byMouseID = static_cast<_byte>(eMouse);
 
 	if (!(m_byPrevMouseButtons[byMouseID] & 0x80) && (m_tMouseState.rgbButtons[byMouseID] & 0x80))
-	{
-		_uint iAllowed = KeyGroup::s_AllowedGroups[ETOUI(m_eInputState)];
-		return (KeyGroup::CAMERA & iAllowed) != 0;
-	}
-
+		return true;
 	return false;
 }
 
@@ -99,11 +95,7 @@ _bool CInput_Device::Mouse_Up(DIMB eMouse)
 	_byte byMouseID = static_cast<_byte>(eMouse);
 
 	if ((m_byPrevMouseButtons[byMouseID] & 0x80) && !(m_tMouseState.rgbButtons[byMouseID] & 0x80))
-	{
-		_uint iAllowed = KeyGroup::s_AllowedGroups[ETOUI(m_eInputState)];
-		return (KeyGroup::CAMERA & iAllowed) != 0;
-	}
-
+		return true;
 	return false;
 }
 
@@ -113,9 +105,7 @@ _bool CInput_Device::Mouse_Pressing(DIMB eMouse)
 
 	if (!(m_tMouseState.rgbButtons[byMouseID] & 0x80))
 		return false;
-
-	_uint iAllowed = KeyGroup::s_AllowedGroups[ETOUI(m_eInputState)];
-	return (KeyGroup::CAMERA & iAllowed) != 0;
+	return true;
 }
 
 _long CInput_Device::Mouse_Move(DIMM eMouseState)
