@@ -32,6 +32,7 @@ public:
 
 private:
 	_uint m_iState = {};
+	CNavigation* m_pNavigationCom = { nullptr };
 
 	static constexpr _float m_kRootMotionScale = { 0.025f };
 

@@ -1,5 +1,6 @@
 #include "Level_GamePlay.h"
 #include "Camera_Free.h"
+#include "Player_LGPE.h"
 
 #include "GameInstance.h"
 
@@ -29,11 +30,20 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
 
+	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
+	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
+	pCamera->Set_FollowTarget(pPlayer->Get_Transform());
+	pCamera->Set_FollowOffset({ 0.f, 5.f, -7.f });
+	m_pGameInstance->Set_MainCamera(pCamera);
+
 	return S_OK;
 }
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_F4))
+		m_pGameInstance->Toggle_CameraFollow();
+
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -95,23 +105,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
-	for (size_t i = 0; i < 10; i++)
-	{
-		if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
-			ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-			return E_FAIL;
-	}
+	//for (size_t i = 0; i < 10; i++)
+	//{
+	//	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
+	//		ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	//		return E_FAIL;
+	//}
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-		return E_FAIL;
-
-	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }

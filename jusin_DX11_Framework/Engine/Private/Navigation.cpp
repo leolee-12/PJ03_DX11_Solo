@@ -1,4 +1,5 @@
 #include "Navigation.h"
+#include "Navigation.h"
 
 #include "Cell.h"
 #include "GameInstance.h"
@@ -33,6 +34,14 @@ void CNavigation::Set_CurrentCellIndex(_int iCellIdx)
 		m_iCurrentCellIndex = iCellIdx;
 	else
 		m_iCurrentCellIndex = -1;
+}
+
+_vector CNavigation::Get_CellPos()
+{
+	if (-1 == m_iCurrentCellIndex)
+		return XMVectorZero();
+
+	return m_Cells[m_iCurrentCellIndex]->Get_Center();
 }
 
 HRESULT CNavigation::Initialize_Prototype()
@@ -180,6 +189,15 @@ _vector CNavigation::Compute_OnNavigation(const CTransform* pTargetTransform)
 	_float fHeight = m_Cells[m_iCurrentCellIndex]->Compute_Height(vCurrentPosition);
 
 	return XMVectorSetY(vCurrentPosition, fHeight);
+}
+
+_vector XM_CALLCONV CNavigation::Compute_Height(_fvector vPos) const
+{
+	if (-1 == m_iCurrentCellIndex)
+		return vPos;
+
+	_float fHeight = m_Cells[m_iCurrentCellIndex]->Compute_Height(vPos);
+	return XMVectorSetY(vPos, fHeight);
 }
 
 _int XM_CALLCONV CNavigation::Find_CellIndex_ByPos(_fvector vWorldPos) const

@@ -67,6 +67,7 @@ public:
 	void Go_Backward(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
+	void Move_Delta(_fvector vLocalDelta, class CNavigation* pNavigation = nullptr, _bool bSnapY = true);
 
 	void XM_CALLCONV Chase(_fvector vGoal, _float fTimeDelta, _float fLimit = 0.1f, class CNavigation* pNavigation = nullptr);
 	void XM_CALLCONV Face_Direction(_fvector vTargetDir, _float fTimeDelta);

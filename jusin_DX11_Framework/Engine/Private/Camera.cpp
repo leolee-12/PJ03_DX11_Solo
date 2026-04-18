@@ -11,6 +11,15 @@ CCamera::CCamera(const CCamera& Prototype)
 {
 }
 
+void CCamera::Set_FollowTarget(CTransform* pTarget)
+{
+	if (nullptr != m_pFollowTarget)
+		Safe_Release(m_pFollowTarget);
+
+	m_pFollowTarget = pTarget;
+	Safe_AddRef(m_pFollowTarget);
+}
+
 HRESULT CCamera::Initialize_Prototype()
 {
 	return S_OK;
@@ -53,6 +62,12 @@ void CCamera::Update(_float fTimeDelta)
 
 void CCamera::Late_Update(_float fTimeDelta)
 {
+	if (m_bFollow && m_pFollowTarget)
+	{
+		_vector vTargetPos = m_pFollowTarget->Get_State(STATE::POSITION);
+		m_pTransformCom->Set_State(STATE::POSITION, vTargetPos + XMLoadFloat3(&m_vFollowOffset));
+		m_pTransformCom->LookAt(vTargetPos + XMLoadFloat3(&m_vLookOffset));
+	}
 }
 
 HRESULT CCamera::Render()
@@ -80,5 +95,6 @@ void CCamera::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pFollowTarget);
 	//Safe_Release(m_pPipeLine);
 }

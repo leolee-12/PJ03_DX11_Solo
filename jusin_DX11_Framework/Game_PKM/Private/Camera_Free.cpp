@@ -30,6 +30,12 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
+	if (Is_Following())
+	{
+		__super::Priority_Update(fTimeDelta);
+		return;
+	}
+
 	if (m_pGameInstance->Key_Pressing(DIK_W))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);

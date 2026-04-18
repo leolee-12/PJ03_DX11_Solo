@@ -18,6 +18,13 @@ protected:
 	virtual ~CCamera() = default;
 
 public:
+	void Set_FollowTarget(class CTransform* pTarget);
+	void Set_FollowOffset(const _float3& v) { m_vFollowOffset = v; }
+	void Set_LookOffset(const _float3& v) { m_vLookOffset = v; }
+	_bool Is_Following() const { return m_bFollow; }
+	void Set_Following(_bool b) { m_bFollow = b; }
+	void Toggle_Following() { m_bFollow = !m_bFollow; }
+
 	virtual _string Get_TypeName() const { return "Camera"; }
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -31,6 +38,12 @@ private:
 	_float4x4 m_ProjMatrix = {};
 	_bool m_bProjDirty = {};
 	class CPipeLine* m_pPipeLine = { nullptr };
+
+	_bool m_bFollow = { false };
+	CTransform* m_pFollowTarget = { nullptr };
+	_float3 m_vFollowOffset = { 0.f, 5.f, -7.f };
+	_float3 m_vLookOffset = { 0.f, 1.5f, 0.f };
+	_float m_fFollowLerp = 10.f;
 
 private:
 	void Update_PipeLine();

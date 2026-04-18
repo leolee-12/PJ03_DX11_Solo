@@ -175,6 +175,32 @@ void CTransform::Go_Right(_float fTimeDelta)
 	Set_State(STATE::POSITION, vPosition);
 }
 
+void CTransform::Move_Delta(_fvector vLocalDelta, CNavigation* pNavigation, _bool bSnapY)
+{
+	// 1) 스케일 분리된 회전행렬로 delta → 월드
+	_vector vRight	= XMVector3Normalize(Get_State(STATE::RIGHT));
+	_vector vUp		= XMVector3Normalize(Get_State(STATE::UP));
+	_vector vLook	= XMVector3Normalize(Get_State(STATE::LOOK));
+
+	_matrix matRot{};
+	matRot.r[0] = vRight;
+	matRot.r[1] = vUp;
+	matRot.r[2] = vLook;
+	matRot.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+	_vector vDesired = Get_State(STATE::POSITION) + XMVector3TransformNormal(vLocalDelta, matRot);
+
+	// 2) XZ 셀 판정 (셀 전이 갱신 포함, 지상/공중 공통)
+	if (nullptr != pNavigation && false == pNavigation->Is_Move(vDesired))
+		return;  // 셀 밖이면 이동 자체를 취소 (기존 위치 유지)
+
+	// 3) Y 처리 (셀 기반)
+	if (bSnapY && nullptr != pNavigation)
+		Set_State(STATE::POSITION, pNavigation->Compute_Height(vDesired));	// 셀의 Y값 사용
+	else
+		Set_State(STATE::POSITION, vDesired);	// 루트모션의 Y 이동량 사용
+}
+
 void XM_CALLCONV CTransform::Chase(_fvector vGoal, _float fTimeDelta, _float fLimit, CNavigation* pNavigation)
 {
 	_vector vPosition = Get_State(STATE::POSITION);

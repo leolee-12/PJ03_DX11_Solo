@@ -63,6 +63,10 @@ public:
 	const _float4* Get_CamPosition() const;
 	void Set_CameraWorld(_fmatrix StateMatrix);
 	void Set_Projection(_fmatrix StateMatrix);
+
+	void Set_MainCamera(class CCamera* pCamera);
+	class CCamera* Get_MainCamera() const;
+	void Toggle_CameraFollow();
 #pragma endregion
 
 #pragma region INPUT_DEVICE
@@ -101,6 +105,8 @@ private:
 	class CInput_Device*		m_pInput_Device = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
+
+	class CCamera*				m_pMainCamera = { nullptr };
 
 private:
 	virtual void Free() override;

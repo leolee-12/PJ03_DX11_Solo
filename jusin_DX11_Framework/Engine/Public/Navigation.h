@@ -19,6 +19,7 @@ private:
 public:
 	void Set_CurrentCellIndex(_int iCellIdx);
 	_int Get_CurrentCellIndex() const { return m_iCurrentCellIndex; }
+	_vector Get_CellPos();
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -27,6 +28,7 @@ public:
 	HRESULT SetUp_NeighborsFromFile();
 	_bool XM_CALLCONV Is_Move(_fvector vResultPos);
 	_vector Compute_OnNavigation(const class CTransform* pTargetTransform);
+	_vector XM_CALLCONV Compute_Height(_fvector vPos) const;
 	_int XM_CALLCONV Find_CellIndex_ByPos(_fvector vWorldPos) const;
 
 #ifdef _DEBUG
@@ -46,7 +48,7 @@ private:
 #endif
 
 public:
-	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviFilePath, const _tchar* pNeighborFilePath);
+	static CNavigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviFilePath, const _tchar* pNeighborFilePath = nullptr);
 	virtual CComponent* Clone(void* pArg);
 	virtual void Free() override;
 };

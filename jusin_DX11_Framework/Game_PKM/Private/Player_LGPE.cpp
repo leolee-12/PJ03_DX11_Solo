@@ -36,6 +36,8 @@ HRESULT CPlayer_LGPE::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CellPos());
+
 	return S_OK;
 }
 
@@ -77,10 +79,9 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 				Pair.second->Update(fTimeDelta);
 		});
 
-	_vector vDelta = m_kRootMotionScale * XMLoadFloat3(&static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Get_RootMotionDelta());
-	_vector vWorldDelta = XMVector3TransformNormal(vDelta, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
-	_vector vCurrPos = m_pTransformCom->Get_State(STATE::POSITION);
-	m_pTransformCom->Set_State(STATE::POSITION, vCurrPos + vWorldDelta);
+
+	_vector vLocalDelta = m_kRootMotionScale * XMLoadFloat3(&static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Get_RootMotionDelta());
+	m_pTransformCom->Move_Delta(vLocalDelta, m_pNavigationCom);
 }
 
 void CPlayer_LGPE::Late_Update(_float fTimeDelta)
@@ -90,16 +91,28 @@ void CPlayer_LGPE::Late_Update(_float fTimeDelta)
 			if (nullptr != Pair.second)
 				Pair.second->Late_Update(fTimeDelta);
 		});
+
+	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 }
 
 HRESULT CPlayer_LGPE::Render()
 {
+#ifdef _DEBUG
+	m_pNavigationCom->Render();
+#endif
 
 	return S_OK;
 }
 
 HRESULT CPlayer_LGPE::Ready_Components()
 {
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC NaviDesc{ 5 };
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_MAP,
+		COM_NAVIGATION, reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -154,6 +167,5 @@ void CPlayer_LGPE::Free()
 {
 	__super::Free();
 
-
-
+	Safe_Release(m_pNavigationCom);
 }

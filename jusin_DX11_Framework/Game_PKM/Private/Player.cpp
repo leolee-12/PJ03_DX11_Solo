@@ -37,6 +37,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CellPos());
+
 	return S_OK;
 }
 
@@ -70,7 +72,7 @@ void CPlayer::Update(_float fTimeDelta)
 
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
 
 		m_iState &= ~(NOT_RUN);
 
@@ -79,6 +81,11 @@ void CPlayer::Update(_float fTimeDelta)
 
 	else
 		m_iState = PLAYER_STATE::IDLE;
+
+	m_pTransformCom->Set_State(STATE::POSITION,
+		m_pNavigationCom->Compute_OnNavigation(m_pTransformCom));
+
+	m_pColliderCom->Update(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
 
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
@@ -97,10 +104,15 @@ void CPlayer::Late_Update(_float fTimeDelta)
 				Pair.second->Late_Update(fTimeDelta);
 		});
 
+	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 }
 
 HRESULT CPlayer::Render()
 {
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+	m_pNavigationCom->Render();
+#endif
 
 	return S_OK;
 }
@@ -110,7 +122,7 @@ HRESULT CPlayer::Ready_Components()
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC NaviDesc{ 5 };
 
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_TERRAIN,
 		COM_NAVIGATION, reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
@@ -134,13 +146,13 @@ HRESULT CPlayer::Ready_PartObjects()
 	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_PLAYER, PART_BODY, &BodyDesc)))
 		return E_FAIL;
 
-	//CWeapon::WEAPON_DESC WeaponDesc{};
-	//WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	//WeaponDesc.pParentState = &m_iState;
-	//WeaponDesc.pSocketBoneMatrix = dynamic_cast<CBody_Player*>(m_PartObjects[PART_BODY])->Get_BoneMatrixPtr("SWORD");
-	//
-	//if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON, PART_WEAPON, &WeaponDesc)))
-	//	return E_FAIL;
+	CWeapon::WEAPON_DESC WeaponDesc{};
+	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	WeaponDesc.pParentState = &m_iState;
+	WeaponDesc.pSocketBoneMatrix = dynamic_cast<CBody_Player*>(m_PartObjects[PART_BODY])->Get_BoneMatrixPtr("SWORD");
+	
+	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON, PART_WEAPON, &WeaponDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -184,6 +196,6 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-
-
+	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pNavigationCom);
 }

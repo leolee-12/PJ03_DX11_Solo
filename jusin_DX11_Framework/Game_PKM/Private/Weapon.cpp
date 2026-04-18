@@ -44,7 +44,7 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 
 void CWeapon::Update(_float fTimeDelta)
 {
-
+	m_pColliderCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 }
 
 void CWeapon::Late_Update(_float fTimeDelta)
@@ -77,6 +77,10 @@ HRESULT CWeapon::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
+
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif
 
 	return S_OK;
 
@@ -169,6 +173,7 @@ void CWeapon::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 }

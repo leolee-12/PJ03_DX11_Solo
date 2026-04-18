@@ -9,6 +9,8 @@
 #include "Light_Manager.h"
 #include "Font_Manager.h"
 
+#include "Camera.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -239,6 +241,22 @@ void CGameInstance::Set_CameraWorld(_fmatrix StateMatrix)
 void CGameInstance::Set_Projection(_fmatrix StateMatrix)
 {
 	m_pPipeLine->Set_Projection(StateMatrix);
+}
+void CGameInstance::Set_MainCamera(CCamera* pCamera)
+{
+	if (nullptr != m_pMainCamera)
+		Safe_Release(m_pMainCamera);
+
+	m_pMainCamera = pCamera;
+	Safe_AddRef(m_pMainCamera);
+}
+CCamera* CGameInstance::Get_MainCamera() const
+{
+	return m_pMainCamera;
+}
+void CGameInstance::Toggle_CameraFollow()
+{
+	m_pMainCamera->Toggle_Following();
 }
 #pragma endregion
 

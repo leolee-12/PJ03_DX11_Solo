@@ -37,7 +37,8 @@ WNAME_TAG(PROTO_COM_MODEL_TOWN01, L"Prototype_Component_Model_Town01");
 WNAME_TAG(PROTO_COM_MODEL_ROAD01, L"Prototype_Component_Model_Road01");
 
 // Navigation & Collider
-WNAME_TAG(PROTO_COM_NAVIGATION, L"Prototype_Component_Navigation");
+WNAME_TAG(PROTO_COM_NAVIGATION_TERRAIN, L"Prototype_Component_Navigation_Terrain");
+WNAME_TAG(PROTO_COM_NAVIGATION_MAP, L"Prototype_Component_Navigation_Map");
 WNAME_TAG(PROTO_COM_COLLIDER_AABB, L"Prototype_Component_Collider_AABB");
 WNAME_TAG(PROTO_COM_COLLIDER_OBB, L"Prototype_Component_Collider_OBB");
 WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
