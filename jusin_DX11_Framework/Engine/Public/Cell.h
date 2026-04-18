@@ -13,7 +13,7 @@ public:
 	_fvector Get_Point(VTXPOINT ePoint) { return XMLoadFloat3(&m_vPoints[ETOUI(ePoint)]); }
 	void Set_Neighbor(LINE eLine, CCell* pNeighborCell) { m_iNeighbors[ETOUI(eLine)] = pNeighborCell->m_iIndex; }
 	void Set_Neighbors(const _int* pNeighborIndices) { memcpy(m_iNeighbors, pNeighborIndices, sizeof(_int) * 3); }
-	const _int* Get_NeighborIndices() { return m_iNeighbors; }
+	_int* Get_NeighborIndices() { return m_iNeighbors; }
 	_vector Get_Center()
 	{
 		_vector vCenter = {};

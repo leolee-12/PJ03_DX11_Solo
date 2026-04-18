@@ -39,6 +39,9 @@ HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11De
 
 void CEditInstance::Update_Editor(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_F1))
+		m_bCameraEnabled = !m_bCameraEnabled;
+
 	_int iCurrLevel = m_pGameInstance->Get_CurrentLevel();
 
 	if (m_iPrevLevel != iCurrLevel)
@@ -50,27 +53,11 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 
 	m_pImGui_Manager->Update(fTimeDelta);
 
-	// ImGui 포커스 여부에 따라 입력 상태 전환
 	ImGuiIO& io = ImGui::GetIO();
-	const _bool bViewportActive = m_pImGui_Manager->Is_ViewportActive();
-	const _bool bOtherPanelActive = m_pImGui_Manager->Is_AnyNonViewportPanelActive();
 
-	if (io.WantTextInput)
+	if (io.WantTextInput || !m_bCameraEnabled)
 	{
-		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);	// 텍스트 입력 중 → WASD만 차단
-	}
-	else if (bOtherPanelActive)
-	{
-		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);	// 패널 위 → 카메라 포함 차단
-	}
-	else if (bViewportActive)
-	{
-		// Viewport 패널 조작 시에는 ImGui가 마우스를 캡처하더라도 게임 로직 입력 막지 않음
-		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-	}
-	else if (io.WantCaptureMouse || io.WantCaptureKeyboard)
-	{
-		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
+		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);
 	}
 	else
 	{
@@ -128,6 +115,46 @@ HRESULT CEditInstance::End_ViewportRender()
 {
 	return m_pImGui_Manager->Get_ViewportPanel()->End_SceneRender();
 }
+
+_bool CEditInstance::Is_NavEditMode() const
+{
+	return m_pImGui_Manager->Is_NavEditMode();
+}
+
+_bool CEditInstance::Is_NavPointMode() const
+{
+	return m_pImGui_Manager->Is_NavPointMode();
+}
+
+void  CEditInstance::Fire_NavClick(const _float3& vWorldPos)
+{
+	m_pImGui_Manager->Fire_NavClick(vWorldPos);
+}
+
+ImVec2 CEditInstance::Get_ViewportScreenPos()  const
+{
+	return m_pImGui_Manager->Get_ViewportScreenPos();
+}
+
+ImVec2 CEditInstance::Get_ViewportScreenSize() const
+{
+	return m_pImGui_Manager->Get_ViewportScreenSize();
+}
+
+_uint CEditInstance::Get_NavToolMode() const
+{
+	return m_pImGui_Manager->Get_NavToolMode();
+}
+
+void CEditInstance::Update_NavDragHit(const _float3& vWorldPos)
+{
+	m_pImGui_Manager->Update_NavDragHit(vWorldPos);
+}
+
+//_bool CEditInstance::Get_CurrentWorldHit(_float3* pOut) const
+//{
+//	return m_pImGui_Manager->Get_CurrentWorldHit(pOut);
+//}
 #pragma endregion
 
 #pragma region SELECT_MANAGER

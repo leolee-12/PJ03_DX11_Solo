@@ -34,6 +34,7 @@ WNAME_TAG(PROTO_COM_MODEL_PM0025_00, L"Prototype_Component_Model_ÇÇÄ«Ãò");
 WNAME_TAG(PROTO_COM_MODEL_HERO, L"Prototype_Component_Model_Hero");
 
 WNAME_TAG(PROTO_COM_MODEL_TOWN01, L"Prototype_Component_Model_Town01");
+WNAME_TAG(PROTO_COM_MODEL_ROAD01, L"Prototype_Component_Model_Road01");
 
 // Navigation & Collider
 WNAME_TAG(PROTO_COM_NAVIGATION, L"Prototype_Component_Navigation");
@@ -61,6 +62,7 @@ WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
 WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
+WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
 
 // Component
 WNAME_TAG(COM_VIBUFFER, L"Com_VIBuffer");

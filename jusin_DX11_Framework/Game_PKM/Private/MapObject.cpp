@@ -1,16 +1,11 @@
 #include "MapObject.h"
 #include "GameInstance.h"
 
-CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag)
 	: CGameObject{ pDevice, pContext }
+	, m_strMapModelTag{ strMapModelTag }
 {
-	m_strName = { L"Map" };
-}
-
-CMapObject::CMapObject(const CMapObject& Prototype)
-	: CGameObject{ Prototype }
-{
-
+	m_strName = L"Map_" + to_wstring(m_strMapModelTag);
 }
 
 HRESULT CMapObject::Initialize_Prototype()
@@ -74,7 +69,7 @@ HRESULT CMapObject::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), m_strMapModelTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -112,9 +107,9 @@ HRESULT CMapObject::Bind_ShaderResources()
 }
 
 
-CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag)
 {
-	CMapObject* pInstance = new CMapObject(pDevice, pContext);
+	CMapObject* pInstance = new CMapObject(pDevice, pContext, strMapModelTag);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

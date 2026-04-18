@@ -1,4 +1,4 @@
-#include "Panel_Viewport.h"
+﻿#include "Panel_Viewport.h"
 #include "GameInstance.h"
 #include "EditInstance.h"
 
@@ -24,6 +24,16 @@ namespace
 		vFittedSize.y = max(vFittedSize.y, 1.f);
 
 		return vFittedSize;
+	}
+
+	void SetNoBlendCallback(const ImDrawList*, const ImDrawCmd* pCmd)
+	{
+		ID3D11DeviceContext* pContext = static_cast<ID3D11DeviceContext*>(pCmd->UserCallbackData);
+		if (nullptr == pContext)
+			return;
+
+		const FLOAT blendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
+		pContext->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
 	}
 }
 
@@ -86,15 +96,32 @@ HRESULT CPanel_Viewport::Render()
 	ImGui::SetCursorPos(ImVec2(vCursorPos.x + max(vOffset.x, 0.f), vCursorPos.y + max(vOffset.y, 0.f)));
 	m_vViewportPos = ImGui::GetCursorScreenPos();
 
-	if (m_pSRV != nullptr)
+	if (nullptr != m_pSRV)
 	{
-		ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vRenderSize);
+		const ImVec2 vImageSize(static_cast<_float>(iRTWidth), static_cast<_float>(iRTHeight));
+
+		ImDrawList* dl = ImGui::GetWindowDrawList();
+		dl->AddCallback(SetNoBlendCallback, m_pContext);
+		ImGui::Image(m_pSRV, vImageSize);
+		dl->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+
+		// Image() 후에 실제 렌더된 위치를 가져옴 → GetMousePos()와 동일한 좌표계 보장
+		m_vViewportPos = ImGui::GetItemRectMin();
 
 		m_bHovered = ImGui::IsItemHovered();
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
 		if (m_bHovered && m_pGameInstance->Mouse_Down(DIMB::LBUTTON))
 			Handle_ViewportClick();
+
+		if (m_bHovered && m_pEditInstance->Is_NavEditMode()
+			&& m_pEditInstance->Get_NavToolMode() == 2 /* NAV_TOOL_MODE::MOVE */
+			&& m_pGameInstance->Mouse_Pressing(DIMB::LBUTTON))
+		{
+			Handle_DebugPicking();
+			if (m_bHasLastHit)
+				m_pEditInstance->Update_NavDragHit(m_vLastWorldHitPos);
+		}
 	}
 	else
 	{
@@ -104,6 +131,10 @@ HRESULT CPanel_Viewport::Render()
 	}
 
 	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
+
+	const char* szCamState = m_pEditInstance->Is_CameraEnabled() ? "CAM: ON" : "CAM: OFF";
+	pDrawList->AddText(ImVec2(static_cast<_float>(g_iWinSizeX) - m_vViewportPos.x, m_vViewportPos.y + 30.f),
+		m_pEditInstance->Is_CameraEnabled() ? IM_COL32(100, 255, 100, 255) : IM_COL32(255, 100, 100, 255), szCamState);
 
 	pDrawList->AddText(
 		ImVec2(m_vViewportPos.x + 10.f, m_vViewportPos.y + 10.f),
@@ -307,7 +338,7 @@ void CPanel_Viewport::Handle_DebugPicking()
 
 	for (const EDITOR_OBJECT_ENTRY& tEntry : Entries)
 	{
-		if (m_pEditInstance->Is_PlaceMode())
+		if (m_pEditInstance->Is_PlaceMode() || m_pEditInstance->Is_NavEditMode())
 		{
 			if (false == tEntry.bPlacementSurface)
 				continue;
@@ -346,9 +377,7 @@ void CPanel_Viewport::Handle_DebugPicking()
 				_vector vObjPos = pTransform->Get_State(STATE::POSITION);
 				XMStoreFloat3(&vBestObjectPos, vObjPos);
 
-				_wstring wName = pObj->Get_Name();
-				strBestTarget = "Target : " + _string(wName.begin(), wName.end());
-
+				strBestTarget = "Target : " + WtoS(pObj->Get_Name());
 				m_pLastPickedObject = pObj;
 			}
 		}
@@ -482,9 +511,15 @@ _bool CPanel_Viewport::Pick_ModelObject(CGameObject* pObj, CModel* pModel, _fvec
 void CPanel_Viewport::Handle_ViewportClick()
 {
 	Handle_DebugPicking();
-
-	if (false == m_bHasLastHit)
+	if (!m_bHasLastHit)
 		return;
+
+	// Nav 점 찍기 모드 — EditInstance를 통해 MapTool에 전달
+	if (m_pEditInstance->Is_NavEditMode())
+	{
+		m_pEditInstance->Fire_NavClick(m_vLastWorldHitPos);
+		return;
+	}
 
 	if (m_pEditInstance->Is_PlaceMode())
 		Place_ObjectAtHit(m_vLastWorldHitPos);

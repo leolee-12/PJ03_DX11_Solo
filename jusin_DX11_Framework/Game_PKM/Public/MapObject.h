@@ -17,8 +17,7 @@ class CMapObject final : public CGameObject
 	};
 
 protected:
-	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMapObject(const CMapObject& Prototype);
+	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag);
 	virtual ~CMapObject() = default;
 
 public:
@@ -32,8 +31,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
 private:
+	WNameID m_strMapModelTag = {};
+
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
@@ -42,7 +42,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CMapObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMapObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag);
 	virtual CGameObject* Clone(void* pArg) override;
 
 private:

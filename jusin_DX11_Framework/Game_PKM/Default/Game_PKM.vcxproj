@@ -27,6 +27,7 @@
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Game_API.h" />
     <ClInclude Include="..\Public\Game_PKM_Defines.h" />
+    <ClInclude Include="..\Public\Game_PKM_Enum.h" />
     <ClInclude Include="..\Public\Game_PKM_Tags.h" />
     <ClInclude Include="..\Public\Game_PKM_Types.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />

@@ -5,12 +5,11 @@
 #include <process.h>
 
 #include "Engine_Defines.h"
+#include "Game_PKM_Enum.h"
 #include "Game_PKM_Tags.h"
 #include "Game_PKM_Types.h"
 
 NS_BEGIN(Game_PKM)
-
-enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, BATTLE, END };
 
 inline constexpr _float3 g_kDir_UP = { 0.f, 0.f,  1.f };
 inline constexpr _float3 g_kDir_DOWN = { 0.f, 0.f, -1.f };
