@@ -24,6 +24,25 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSiz
 		0, D3D11_SDK_VERSION, &m_pDevice, &FeatureLV, &m_pContext)))
 		return E_FAIL;
 
+#if defined(_DEBUG)	// FX11 디버그 네이밍 노이즈 경고 제거
+	ID3D11InfoQueue* pInfoQueue = nullptr;
+	if (SUCCEEDED(m_pDevice->QueryInterface(__uuidof(ID3D11InfoQueue),
+		reinterpret_cast<void**>(&pInfoQueue))))
+	{
+		D3D11_MESSAGE_ID HideIDs[] =
+		{
+				D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS
+		};
+
+		D3D11_INFO_QUEUE_FILTER Filter = {};
+		Filter.DenyList.NumIDs = _countof(HideIDs);
+		Filter.DenyList.pIDList = HideIDs;
+
+		pInfoQueue->AddStorageFilterEntries(&Filter);
+		Safe_Release(pInfoQueue);
+	}
+#endif
+
 	/* 스왑체인 객체 생성 */
 	if (FAILED(Ready_SwapChain(hWnd, isWindowed, iWinSizeX, iWinSizeY)))
 		return E_FAIL;

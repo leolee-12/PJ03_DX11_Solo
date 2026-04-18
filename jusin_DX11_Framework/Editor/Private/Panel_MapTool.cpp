@@ -14,7 +14,7 @@ HRESULT CPanel_MapTool::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	strcpy_s(m_szNavSavePath, "../../Resources/Navigation/NavMesh.nav");
+	strcpy_s(m_szNavSavePath, "../../DataFiles/MapNaviMesh.nav");
 
 	return S_OK;
 }
@@ -97,10 +97,44 @@ HRESULT CPanel_MapTool::Render()
 			ImGui::Separator();
 			ImGui::Text("Selected Cell: %d", m_iSelectedCell);
 			const auto& c = m_NavCells[m_iSelectedCell];
-			ImGui::Text("  A(%.2f, %.2f, %.2f)", c[0].x, c[0].y, c[0].z);
-			ImGui::Text("  B(%.2f, %.2f, %.2f)", c[1].x, c[1].y, c[1].z);
-			ImGui::Text("  C(%.2f, %.2f, %.2f)", c[2].x, c[2].y, c[2].z);
 
+			// ── 꼭짓점별 Y 조정 (공유 꼭짓점 자동 동기화) ──
+			const char* szLabel[3] = { "Y [A]##selY0", "Y [B]##selY1", "Y [C]##selY2" };
+			for (_int v = 0; v < 3; ++v)
+			{
+				_float3 vOld = c[v];
+				_float fNewY = vOld.y;
+				if (ImGui::DragFloat(szLabel[v], &fNewY, 0.01f, -1000.f, 1000.f, "%.3f"))
+				{
+					_float3 vNew = { vOld.x, fNewY, vOld.z };
+					Update_SharedVertex(vOld, vNew);
+				}
+			}
+
+			// ── 셀 단위 Y 오프셋 (세 꼭짓점 동시 ± delta) ──
+			static _float fDeltaY = 0.05f;
+			ImGui::DragFloat("Delta Y", &fDeltaY, 0.01f, 0.f, 10.f, "%.3f");
+			if (ImGui::Button("Cell Y -"))
+			{
+				for (_int v = 0; v < 3; ++v)
+				{
+					_float3 vOld = c[v];
+					_float3 vNew = { vOld.x, vOld.y - fDeltaY, vOld.z };
+					Update_SharedVertex(vOld, vNew);
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cell Y +"))
+			{
+				for (_int v = 0; v < 3; ++v)
+				{
+					_float3 vOld = c[v];
+					_float3 vNew = { vOld.x, vOld.y + fDeltaY, vOld.z };
+					Update_SharedVertex(vOld, vNew);
+				}
+			}
+
+			ImGui::Spacing();
 			if (ImGui::Button("Delete Selected"))
 			{
 				m_NavCells.erase(m_NavCells.begin() + m_iSelectedCell);
@@ -132,10 +166,16 @@ HRESULT CPanel_MapTool::Render()
 		ImGui::InputText("Path##nav", m_szNavSavePath, sizeof(m_szNavSavePath));
 
 		if (ImGui::Button("Save .nav"))
-			Save_NavMesh();
+			ImGui::OpenPopup("Confirm Save");
 		ImGui::SameLine();
+
 		if (ImGui::Button("Load .nav"))
-			Load_NavMesh();
+		{
+			if (m_NavCells.empty())
+				Load_NavMesh();  // 비어있으면 바로 로드
+			else
+				ImGui::OpenPopup("Confirm Load");
+		}
 
 		ImGui::Separator();
 
@@ -156,6 +196,56 @@ HRESULT CPanel_MapTool::Render()
 
 		// ── 뷰포트 오버레이 렌더링 ──
 		Render_NavOverlay();
+	}
+
+	// ── 저장 확인 모달 ──
+	if (ImGui::BeginPopupModal("Confirm Save", nullptr,
+		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings))
+	{
+		ImGui::Text("Path: %s", m_szNavSavePath);
+		ImGui::Text("Cells: %d", static_cast<_int>(m_NavCells.size()));
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(1.f, 0.7f, 0.2f, 1.f),
+			"Existing file will be overwritten.");
+		ImGui::TextColored(ImVec4(1.f, 0.7f, 0.2f, 1.f),
+			"Continue?");
+		ImGui::Spacing();
+
+		if (ImGui::Button("Yes##save", ImVec2(120, 0)))
+		{
+			Save_NavMesh();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##save", ImVec2(120, 0)))
+			ImGui::CloseCurrentPopup();
+
+		ImGui::EndPopup();
+	}
+
+	// ── 로드 확인 모달 ──
+	if (ImGui::BeginPopupModal("Confirm Load", nullptr,
+		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings))
+	{
+		ImGui::Text("Path: %s", m_szNavSavePath);
+		ImGui::Text("Cells: %d", static_cast<_int>(m_NavCells.size()));
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(1.f, 0.7f, 0.2f, 1.f),
+			"Added Cells will be deleted.");
+		ImGui::TextColored(ImVec4(1.f, 0.7f, 0.2f, 1.f),
+			"Continue?");
+		ImGui::Spacing();
+
+		if (ImGui::Button("Yes##load", ImVec2(120, 0)))
+		{
+			Load_NavMesh();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##load", ImVec2(120, 0)))
+			ImGui::CloseCurrentPopup();
+
+		ImGui::EndPopup();
 	}
 
 	End_Panel();
@@ -540,6 +630,14 @@ _int CPanel_MapTool::HitTest_Vertex(const _float3& vWorldPos, _int* pOutCellIdx)
 		*pOutCellIdx = iBestCell;
 
 	return iBestVtx;
+}
+
+void CPanel_MapTool::Update_SharedVertex(const _float3& vOld, const _float3& vNew)
+{
+	for (auto& cell : m_NavCells)
+		for (_int v = 0; v < 3; ++v)
+			if (cell[v].x == vOld.x && cell[v].y == vOld.y && cell[v].z == vOld.z)
+				cell[v] = vNew;
 }
 
 CPanel_MapTool* CPanel_MapTool::Create()

@@ -53,8 +53,10 @@ private:
 	ImVec2 Project_To_Screen(const _float3& vWorldPos) const;
 	void Save_NavMesh();
 	void Load_NavMesh();
-	_int  HitTest_Cell(const _float3& vWorldPos) const;							// 클릭 위치가 어느 셀 안인지
-	_int  HitTest_Vertex(const _float3& vWorldPos, _int* pOutCellIdx) const;	// 근접 꼭짓점 찾기
+	_int HitTest_Cell(const _float3& vWorldPos) const;							// 클릭 위치가 어느 셀 안인지
+	_int HitTest_Vertex(const _float3& vWorldPos, _int* pOutCellIdx) const;	// 근접 꼭짓점 찾기
+	void Update_SharedVertex(const _float3& vOld, const _float3& vNew);
+
 
 private:
 

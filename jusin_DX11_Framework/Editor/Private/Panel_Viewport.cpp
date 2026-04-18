@@ -25,6 +25,16 @@ namespace
 
 		return vFittedSize;
 	}
+
+	void SetNoBlendCallback(const ImDrawList*, const ImDrawCmd* pCmd)
+	{
+		ID3D11DeviceContext* pContext = static_cast<ID3D11DeviceContext*>(pCmd->UserCallbackData);
+		if (nullptr == pContext)
+			return;
+
+		const FLOAT blendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
+		pContext->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
+	}
 }
 
 CPanel_Viewport::CPanel_Viewport(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -89,12 +99,14 @@ HRESULT CPanel_Viewport::Render()
 	if (nullptr != m_pSRV)
 	{
 		const ImVec2 vImageSize(static_cast<_float>(iRTWidth), static_cast<_float>(iRTHeight));
-		//ImGui::Image(reinterpret_cast<ImTextureID>(m_pSRV), vRenderSize);
-		ImGui::Image(m_pSRV, vImageSize);
 
-		// Image() 후에 실제 렌더된 위치/크기를 가져옴 → GetMousePos()와 동일한 좌표계 보장
+		ImDrawList* dl = ImGui::GetWindowDrawList();
+		dl->AddCallback(SetNoBlendCallback, m_pContext);
+		ImGui::Image(m_pSRV, vImageSize);
+		dl->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+
+		// Image() 후에 실제 렌더된 위치를 가져옴 → GetMousePos()와 동일한 좌표계 보장
 		m_vViewportPos = ImGui::GetItemRectMin();
-		//m_vViewportSize = ImGui::GetItemRectSize();
 
 		m_bHovered = ImGui::IsItemHovered();
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
@@ -121,7 +133,7 @@ HRESULT CPanel_Viewport::Render()
 	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
 
 	const char* szCamState = m_pEditInstance->Is_CameraEnabled() ? "CAM: ON" : "CAM: OFF";
-	pDrawList->AddText(ImVec2(1920.f - m_vViewportPos.x, m_vViewportPos.y + 30.f),
+	pDrawList->AddText(ImVec2(static_cast<_float>(g_iWinSizeX) - m_vViewportPos.x, m_vViewportPos.y + 30.f),
 		m_pEditInstance->Is_CameraEnabled() ? IM_COL32(100, 255, 100, 255) : IM_COL32(255, 100, 100, 255), szCamState);
 
 	pDrawList->AddText(
@@ -365,9 +377,7 @@ void CPanel_Viewport::Handle_DebugPicking()
 				_vector vObjPos = pTransform->Get_State(STATE::POSITION);
 				XMStoreFloat3(&vBestObjectPos, vObjPos);
 
-				_wstring wName = pObj->Get_Name();
-				strBestTarget = "Target : " + _string(wName.begin(), wName.end());
-
+				strBestTarget = "Target : " + WtoS(pObj->Get_Name());
 				m_pLastPickedObject = pObj;
 			}
 		}
