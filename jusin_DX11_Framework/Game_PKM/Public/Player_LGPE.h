@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Game_PKM_Defines.h"
 #include "ContainerObject.h"
 
@@ -34,12 +34,13 @@ private:
 	_uint m_iState = {};
 	CNavigation* m_pNavigationCom = { nullptr };
 
-	static constexpr _float m_kRootMotionScale = { 0.025f };
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 	HRESULT Bind_ShaderResources();
+
+	_vector Read_MoveInput() const;
+	void Update_AnimState(_bool bHasInput);
 
 public:
 	static CPlayer_LGPE* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

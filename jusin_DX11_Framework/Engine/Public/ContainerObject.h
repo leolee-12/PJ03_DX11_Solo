@@ -21,9 +21,18 @@ public:
 protected:
 	WNameMap<class CPartObject*> m_PartObjects;
 
+	MOVEMENT_TUNING m_Tuning = {};
+	MOVEMENT_STATE m_MoveState = {};
+
 protected:
 	HRESULT Add_PartObject(_uint iPrototypeLevelIndex, const WNameID strPrototypeTag,
 		const WNameID strPartTag, void* pArg = nullptr);
+	void XM_CALLCONV Tick_RootMotionMovement(
+		_fvector vMoveDir,
+		_bool bHasInput,
+		const _float3& vRawRootMotionDelta,
+		CNavigation* pNavigation,
+		_float fTimeDelta);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

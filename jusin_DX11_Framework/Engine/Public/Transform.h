@@ -70,13 +70,12 @@ public:
 	void Move_Delta(_fvector vLocalDelta, class CNavigation* pNavigation = nullptr, _bool bSnapY = true);
 
 	void XM_CALLCONV Chase(_fvector vGoal, _float fTimeDelta, _float fLimit = 0.1f, class CNavigation* pNavigation = nullptr);
-	void XM_CALLCONV Face_Direction(_fvector vTargetDir, _float fTimeDelta);
+	void XM_CALLCONV Face_Direction(_fvector vCurLook, _fvector vTargetDir, _float fTimeDelta);
 
 private:
 	_float4x4 m_WorldMatrix = {};
 	_float m_fSpeedPerSec = {};
 	_float m_fRotationPerSec = {};
-
 
 public:
 	static CTransform*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

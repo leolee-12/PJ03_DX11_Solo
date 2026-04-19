@@ -242,6 +242,20 @@ namespace Engine
 		float fDesiredSizeX = {};
 		float fDesiredSizeY = {};
 	};
+
+	struct MOVEMENT_TUNING
+	{
+		float fRootMotionScale = { 0.015f };
+		float fPivotEnterDot = { -0.5f };
+		float fPivotExitDot = { 0.95f };
+		float fDeltaSmoothingPerSec = { 18.f };
+	};
+
+	struct MOVEMENT_STATE
+	{
+		bool Pivoting = { false };
+		XMFLOAT3 vSmoothedLocalDelta = {};
+	};
 }
 
 #endif // Engine_Struct_h__

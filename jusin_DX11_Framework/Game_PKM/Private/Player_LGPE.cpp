@@ -25,7 +25,7 @@ HRESULT CPlayer_LGPE::Initialize(void* pArg)
 	GAMEOBJECT_DESC Desc{};
 
 	Desc.fSpeedPerSec = 10.f;
-	Desc.fRotationPerSec = XMConvertToRadians(720.f);
+	Desc.fRotationPerSec = XMConvertToRadians(1800.f);
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
@@ -52,36 +52,22 @@ void CPlayer_LGPE::Priority_Update(_float fTimeDelta)
 
 void CPlayer_LGPE::Update(_float fTimeDelta)
 {
-	_vector vMoveDir = XMVectorZero();
-
-	_float x = 0.f;
-	_float z = 0.f;
-
-	if (m_pGameInstance->Key_Pressing(DIK_LEFT))  x -= 1.f;
-	if (m_pGameInstance->Key_Pressing(DIK_RIGHT)) x += 1.f;
-	if (m_pGameInstance->Key_Pressing(DIK_UP))    z += 1.f;
-	if (m_pGameInstance->Key_Pressing(DIK_DOWN))  z -= 1.f;
-
-	if (x != 0.f || z != 0.f)
-		vMoveDir = XMVector3Normalize(XMVectorSet(x, 0.f, z, 0.f));
-
-	if (XMVectorGetX(XMVector3LengthSq(vMoveDir)) > 1e-6f)
-	{
-		m_pTransformCom->Face_Direction(vMoveDir, fTimeDelta);
-		static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Set_Anim(RUN, true);
-	}
-	else
-		static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Set_Anim(IDLE, true);
-
+	// 1) 파츠 애니메이션 진행 : 이전 프레임에 애님 결정 -> RootMotionDelta 생성
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
 			if (nullptr != Pair.second)
 				Pair.second->Update(fTimeDelta);
 		});
+	
+	// 2) 입력 → 이동 방향
+	_vector vMoveDir = Read_MoveInput();
+	_bool bHasInput = (XMVectorGetX(XMVector3LengthSq(vMoveDir)) > 1e-6f);
+	CBody_Hero* pBody = static_cast<CBody_Hero*>(m_PartObjects[PART_BODY]);
 
+	Tick_RootMotionMovement(vMoveDir, bHasInput, pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
 
-	_vector vLocalDelta = m_kRootMotionScale * XMLoadFloat3(&static_cast<CBody_Hero*>(m_PartObjects[PART_BODY])->Get_RootMotionDelta());
-	m_pTransformCom->Move_Delta(vLocalDelta, m_pNavigationCom);
+	// 3) 다음 프레임 애니메이션 상태
+	Update_AnimState(bHasInput);
 }
 
 void CPlayer_LGPE::Late_Update(_float fTimeDelta)
@@ -136,6 +122,29 @@ HRESULT CPlayer_LGPE::Bind_ShaderResources()
 	return S_OK;
 }
 
+_vector CPlayer_LGPE::Read_MoveInput() const
+{
+	_vector vMoveDir = XMVectorZero();
+
+	_float x = 0.f;
+	_float z = 0.f;
+
+	if (m_pGameInstance->Key_Pressing(DIK_LEFT))  x -= 1.f;
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHT)) x += 1.f;
+	if (m_pGameInstance->Key_Pressing(DIK_UP))    z += 1.f;
+	if (m_pGameInstance->Key_Pressing(DIK_DOWN))  z -= 1.f;
+
+	if (x == 0.f && z == 0.f)
+		return XMVectorZero();
+
+	return XMVector3Normalize(XMVectorSet(x, 0.f, z, 0.f));
+}
+
+void CPlayer_LGPE::Update_AnimState(_bool bHasInput)
+{
+	CBody_Hero* pBody = static_cast<CBody_Hero*>(m_PartObjects[PART_BODY]);
+	pBody->Set_Anim(bHasInput && !m_MoveState.Pivoting ? RUN : IDLE, true);
+}
 
 CPlayer_LGPE* CPlayer_LGPE::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -215,24 +215,22 @@ void XM_CALLCONV CTransform::Chase(_fvector vGoal, _float fTimeDelta, _float fLi
 		Set_State(STATE::POSITION, vPosition);
 }
 
-void XM_CALLCONV CTransform::Face_Direction(_fvector vTargetDir, _float fTimeDelta)
+void XM_CALLCONV CTransform::Face_Direction(_fvector vCurLook, _fvector vTargetDir, _float fTimeDelta)
 {
 	if (XMVectorGetX(XMVector3LengthSq(vTargetDir)) < 1e-6f)
 		return;
 
-	_float3 vScale = Get_Scaled();
-	_vector vCurLook = XMVector3Normalize(Get_State(STATE::LOOK));
 	_vector vTgtLook = XMVector3Normalize(XMVectorSet(XMVectorGetX(vTargetDir), 0.f, XMVectorGetZ(vTargetDir), 0.f));
 
+	// 이미 정렬된 상태면 조기 종료
+	_float fDot = XMVectorGetX(XMVector3Dot(vCurLook, vTgtLook));
+	if (fDot > 0.9999f)
+		return;
+
 	_float t = 1.f - expf(-m_fRotationPerSec * fTimeDelta);
-	_float dot = XMVectorGetX(XMVector3Dot(vCurLook, vTgtLook));
-	if (dot < -0.95f) t = min(1.f, t * 2.f);	// 급격한 변화일 때
-
-	_vector vNewLook = XMVectorLerp(vCurLook, vTgtLook, t);
-	if (XMVectorGetX(XMVector3LengthSq(vNewLook)) < 1e-6f)
-		vNewLook = vTgtLook;
-
-	vNewLook = XMVector3Normalize(vNewLook);
+	_vector vNewLook = XMVector3Normalize(XMVectorLerp(vCurLook, vTgtLook, t));
+	
+	_float3 vScale = Get_Scaled();
 	_vector vWorldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	_vector vNewRight = XMVector3Cross(vWorldUp, vNewLook);
 	if (XMVectorGetX(XMVector3LengthSq(vNewRight)) < 1e-6f)

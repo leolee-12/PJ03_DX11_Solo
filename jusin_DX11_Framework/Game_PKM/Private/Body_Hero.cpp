@@ -48,6 +48,8 @@ HRESULT CBody_Hero::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->ScaleTo(0.4f, 0.4f, 0.4f);
+
 	m_pModelCom->Set_AnimationIndex(0, true);
 	m_pModelCom->Set_RootMotionBoneIndex(3);
 	m_pModelCom->Set_EnableRootMotion(true);

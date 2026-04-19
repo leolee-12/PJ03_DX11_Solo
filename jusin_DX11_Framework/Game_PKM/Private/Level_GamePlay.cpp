@@ -33,7 +33,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
 	pCamera->Set_FollowTarget(pPlayer->Get_Transform());
-	pCamera->Set_FollowOffset({ 0.f, 5.f, -7.f });
+	pCamera->Set_FollowOffset({ 0.f, 6.5f, -7.5f });
 	m_pGameInstance->Set_MainCamera(pCamera);
 
 	return S_OK;
@@ -75,9 +75,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
 
-	CameraDesc.vEye = _float3(0.f, 10.f, -7.f);
+	CameraDesc.vEye = _float3(0.f, 8.f, -7.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fFovy = XMConvertToRadians(60.f);
+	CameraDesc.fFovy = XMConvertToRadians(35.f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 20.f;

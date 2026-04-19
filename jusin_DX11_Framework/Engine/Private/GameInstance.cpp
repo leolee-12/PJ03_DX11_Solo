@@ -120,6 +120,8 @@ void CGameInstance::Clear_Resources(_int iLevelIndex)
 
 void CGameInstance::Release_Engine()
 {
+	Safe_Release(m_pMainCamera);
+
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pInput_Device);
