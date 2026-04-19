@@ -30,6 +30,7 @@ public:
 	_vector Compute_OnNavigation(const class CTransform* pTargetTransform);
 	_vector XM_CALLCONV Compute_Height(_fvector vPos) const;
 	_int XM_CALLCONV Find_CellIndex_ByPos(_fvector vWorldPos) const;
+	_vector XM_CALLCONV Compute_SlidePos(_fvector vCurPos, _fvector vDesiredPos);
 
 #ifdef _DEBUG
 public:

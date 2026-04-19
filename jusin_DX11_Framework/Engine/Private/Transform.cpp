@@ -143,9 +143,10 @@ void CTransform::Go_Straight(_float fTimeDelta, class CNavigation* pNavigation)
 
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	if (nullptr == pNavigation ||
-		true == pNavigation->Is_Move(vPosition))
-		Set_State(STATE::POSITION, vPosition);
+	if (nullptr != pNavigation)
+		vPosition = pNavigation->Compute_SlidePos(Get_State(STATE::POSITION), vPosition);
+
+	Set_State(STATE::POSITION, vPosition);
 }
 
 void CTransform::Go_Backward(_float fTimeDelta)
@@ -191,8 +192,8 @@ void CTransform::Move_Delta(_fvector vLocalDelta, CNavigation* pNavigation, _boo
 	_vector vDesired = Get_State(STATE::POSITION) + XMVector3TransformNormal(vLocalDelta, matRot);
 
 	// 2) XZ 셀 판정 (셀 전이 갱신 포함, 지상/공중 공통)
-	if (nullptr != pNavigation && false == pNavigation->Is_Move(vDesired))
-		return;  // 셀 밖이면 이동 자체를 취소 (기존 위치 유지)
+	if (nullptr != pNavigation)
+		vDesired = pNavigation->Compute_SlidePos(Get_State(STATE::POSITION), vDesired);
 
 	// 3) Y 처리 (셀 기반)
 	if (bSnapY && nullptr != pNavigation)
@@ -210,9 +211,10 @@ void XM_CALLCONV CTransform::Chase(_fvector vGoal, _float fTimeDelta, _float fLi
 	if (fDistance >= fLimit)
 		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
 
-	if (nullptr == pNavigation ||
-		true == pNavigation->Is_Move(vPosition))
-		Set_State(STATE::POSITION, vPosition);
+	if (nullptr != pNavigation)
+		vPosition = pNavigation->Compute_SlidePos(Get_State(STATE::POSITION), vPosition);
+
+	Set_State(STATE::POSITION, vPosition);
 }
 
 void XM_CALLCONV CTransform::Face_Direction(_fvector vCurLook, _fvector vTargetDir, _float fTimeDelta)

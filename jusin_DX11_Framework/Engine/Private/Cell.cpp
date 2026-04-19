@@ -39,7 +39,7 @@ HRESULT CCell::Initialize(const _float3* pPoints, _uint iIndex)
 	return S_OK;
 }
 
-_bool XM_CALLCONV CCell::Is_In(_fvector vResultPos, _int* pNeighborIndex)
+_bool XM_CALLCONV CCell::Is_In(_fvector vResultPos, _int* pNeighborIndex, _vector* pOutBlockedNormal)
 {
 	for (size_t i = 0; i < ETOUI(LINE::END); i++)
 	{
@@ -49,6 +49,10 @@ _bool XM_CALLCONV CCell::Is_In(_fvector vResultPos, _int* pNeighborIndex)
 		if (0 < XMVectorGetX(XMVector3Dot(vDir, vNormal)))
 		{
 			*pNeighborIndex = m_iNeighbors[i];
+
+			if (nullptr != pOutBlockedNormal)
+				*pOutBlockedNormal = XMLoadFloat3(&m_vNormals[i]);
+			
 			return false;
 		}
 	}

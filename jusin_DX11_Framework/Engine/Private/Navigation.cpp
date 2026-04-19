@@ -226,6 +226,38 @@ _int XM_CALLCONV CNavigation::Find_CellIndex_ByPos(_fvector vWorldPos) const
 	return iBestIdx;
 }
 
+_vector XM_CALLCONV CNavigation::Compute_SlidePos(_fvector vCurPos, _fvector vDesiredPos)
+{
+	if (Is_Move(vDesiredPos))
+		return vDesiredPos;
+
+	_vector vNorm{};
+	_int iCellIdx = m_iCurrentCellIndex;
+	_int iTraverse{};
+
+	while (true)
+	{
+		if (++iTraverse > g_kMaxTraverse) return vCurPos;
+
+		_int iNeighbor{ -1 };
+		if (m_Cells[iCellIdx]->Is_In(vDesiredPos, &iNeighbor, &vNorm))
+			return vCurPos;
+
+		if (-1 == iNeighbor)	// 진짜 벽을 만남
+			break;				// vNorm에 그 벽 법선이 들어 있음
+
+		iCellIdx = iNeighbor;	// 이웃 셀로 계속 추적
+	}
+
+	const _float fSlideScale = 0.5f;
+	_vector vDelta = vDesiredPos - vCurPos;
+	_vector vSlideDelta = vDelta - XMVector3Dot(vDelta, vNorm) * vNorm;
+	_vector vSlidePos = vCurPos + vSlideDelta * fSlideScale;
+
+	// 이동 가능 시 슬라이드, 아니면 원 위치
+	return Is_Move(vSlidePos) ? vSlidePos : vCurPos;
+}
+
 #ifdef _DEBUG
 HRESULT CNavigation::Render()
 {

@@ -23,7 +23,7 @@ public:
 	}
 
 	HRESULT Initialize(const _float3* pPoints, _uint iIndex);
-	_bool XM_CALLCONV Is_In(_fvector vResultPos, _int* pNeighborIndex);
+	_bool XM_CALLCONV Is_In(_fvector vResultPos, _int* pNeighborIndex, _vector* pOutBlockedNormal = nullptr);
 	_bool XM_CALLCONV Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 	_float XM_CALLCONV Compute_Height(_fvector vTargetPos);
 

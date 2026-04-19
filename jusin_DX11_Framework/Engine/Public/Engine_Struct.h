@@ -245,7 +245,7 @@ namespace Engine
 
 	struct MOVEMENT_TUNING
 	{
-		float fRootMotionScale = { 0.015f };
+		float fRootMotionScale = { 0.013f };
 		float fPivotEnterDot = { -0.5f };
 		float fPivotExitDot = { 0.95f };
 		float fDeltaSmoothingPerSec = { 18.f };
