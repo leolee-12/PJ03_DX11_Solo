@@ -28,296 +28,262 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 unsigned int APIENTRY ThreadMain(void* pArg)
 {
 	CLoader* pLoader = static_cast<CLoader*>(pArg);
+	HRESULT hrCoInit = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-	if (FAILED(pLoader->Loading()))
-		return -1;
+	while (true)
+	{
+		CLoader::TaskFunc task;
+		if (pLoader->Get_TaskQueue()->try_pop(task))
+		{
+			if (FAILED(task()))
+				pLoader->Set_Error(true);
 
+			pLoader->Add_Progress();
+			continue;
+		}
+
+		if (pLoader->Get_TaskQueue()->empty())
+			break;
+
+		this_thread::yield();
+	}
+
+	if (SUCCEEDED(hrCoInit)) CoUninitialize();
 	return 0;
 }
 
 HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
+	Enqueue_All(eNextLevelID);	// 큐 적재 + Total 계산 : 메인스레드 단독
 
-	InitializeCriticalSection(&m_CriticalSection);
+	_uint iHW = thread::hardware_concurrency();
+	_uint iMax = iHW / 2;
+	_uint iWorkerCount = (iHW > 1u) ? (iHW - 1u) : 1u;
+	iWorkerCount = min(iWorkerCount, iMax);
+	m_Threads.resize(iWorkerCount);
 
-	m_hThread = reinterpret_cast<HANDLE>(_beginthreadex(nullptr, 0, ThreadMain, this, 0, nullptr));
-
-	if (0 == m_hThread)
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CLoader::Loading()
-{
-	EnterCriticalSection(&m_CriticalSection);
-
-	HRESULT initSuccessed = CoInitializeEx(nullptr, 0);
-
-	HRESULT	hr = {};
-
-	switch (m_eNextLevelID)
+	for (auto& handle : m_Threads)
 	{
-	case LEVEL::LOGO:
-		hr = Ready_Resources_For_Logo();
-		break;
-	case LEVEL::GAMEPLAY:
-		hr = Ready_Resources_For_GamePlay();
-		break;
+		handle = reinterpret_cast<HANDLE>(_beginthreadex(nullptr, 0, ThreadMain, this, 0, nullptr));
+		if (0 == handle) return E_FAIL;
 	}
-
-	if (SUCCEEDED(initSuccessed))
-		CoUninitialize();
-
-	LeaveCriticalSection(&m_CriticalSection);
-
-	if (FAILED(hr))
-		return E_FAIL;
-
 	return S_OK;
 }
-
 
 #ifdef _DEBUG
 
 void CLoader::Show()
 {
-	SetWindowText(m_pGameInstance->Get_HWND(), m_szLoadingText);
+	_wstring strLoadText = to_wstring(m_iCompletedCount.load()) + L" / "
+		+ to_wstring(m_iTotalCount) + L" ("
+		+ to_wstring(m_Threads.size()) + L"개 스레드 가동 중)";
+	SetWindowText(m_pGameInstance->Get_HWND(), strLoadText.c_str());
 }
 
 #endif
 
+void CLoader::Enqueue_All(LEVEL eNextLevelID)
+{
+	switch (eNextLevelID)
+	{
+	case LEVEL::LOGO:
+		Ready_Resources_For_Logo();
+		break;
+
+	case LEVEL::GAMEPLAY:
+		Ready_Resources_For_GamePlay();
+		break;
+
+	default:
+		break;
+	}
+}
+
 HRESULT CLoader::Ready_Resources_For_Logo()
 {
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
+	auto Enqueue = [this](TaskFunc fn)
+		{
+			m_TaskQueue.push(move(fn));
+			++m_iTotalCount;
+		};
+	
 	/* Prototype_Component_Texture_BackGround */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2)); });
 
-	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중"));
-
-
-	lstrcpy(m_szLoadingText, TEXT("정점, 인덱스 버퍼 로딩 중"));
-
-
-	lstrcpy(m_szLoadingText, TEXT("객체원본 로딩 중"));
 	/* Prototype_GameObject_BackGround */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_BACKGROUND,
-		CBackGround::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
-
-	m_isFinished = true;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_BACKGROUND,
+		CBackGround::Create(m_pDevice, m_pContext)); });
 
 	return S_OK;
 }
 
 HRESULT CLoader::Ready_Resources_For_GamePlay()
 {
-	lstrcpy(m_szLoadingText, TEXT("텍스쳐 로딩 중"));
+	auto Enqueue = [this](TaskFunc fn)
+		{
+			m_TaskQueue.push(move(fn));
+			++m_iTotalCount;
+		};
 
-	lstrcpy(m_szLoadingText, TEXT("셰이더 로딩 중"));
 	/* Prototype_Component_Shader_VtxNorTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXNORTEX,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXNORTEX,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements)); });
 
 	/* Prototype_Component_Shader_VtxMesh */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements)); });
 
 	/* Prototype_Component_Shader_VtxAnimMesh */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXANIMMESH,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); });
 
 	/* Prototype_Component_Shader_VtxCube */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXCUBE,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXCUBE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements)); });
 
 	/* Prototype_Component_Shader_Player_LGPE */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); });
 
-	lstrcpy(m_szLoadingText, TEXT("정점, 인덱스 버퍼 로딩 중"));
+	// ---------- VIBuffer ----------
 	/* Prototype_Component_VIBuffer_Cube */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_CUBE,
-		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_CUBE,
+		CVIBuffer_Cube::Create(m_pDevice, m_pContext)); });
 
+	// ---------- Model ----------
 	/* Prototype_Component_Model_PM0001_00 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel")); });
 
 	/* Prototype_Component_Model_PM0004_00 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel")); });
 
 	/* Prototype_Component_Model_PM0007_00 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel")); });
 
 	/* Prototype_Component_Model_PM0025_00 */
- 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel")); });
 
 	/* Prototype_Component_Model_Hero */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel")); });
 
 	/* Prototype_Component_Model_Town01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_TOWN01,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel")); });
 
 	/* Prototype_Component_Model_Road01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_ROAD01,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/road01.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_ROAD01,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/road01.wmodel")); });
 
-	lstrcpy(m_szLoadingText, TEXT("네비게이션 로딩 중"));
+	// ---------- Navigation & Collider ----------
 	/* Prototype_Component_Navigation_Map */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_MAP,
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../DataFiles/MapNaviMesh.nav")))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_MAP,
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../DataFiles/MapNaviMesh.nav"))); });
 
-	lstrcpy(m_szLoadingText, TEXT("콜라이더 로딩 중"));
 	/* Prototype_Component_Collider_AABB */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_AABB,
-		CCollider::Create(m_pDevice, m_pContext, COLLIDER::AABB))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_AABB,
+		CCollider::Create(m_pDevice, m_pContext, COLLIDER::AABB)); });
 
 	/* Prototype_Component_Collider_OBB */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_OBB,
-		CCollider::Create(m_pDevice, m_pContext, COLLIDER::OBB))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_OBB,
+		CCollider::Create(m_pDevice, m_pContext, COLLIDER::OBB)); });
 
 	/* Prototype_Component_Collider_Sphere */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_SPHERE,
-		CCollider::Create(m_pDevice, m_pContext, COLLIDER::SPHERE))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_SPHERE,
+		CCollider::Create(m_pDevice, m_pContext, COLLIDER::SPHERE)); });
 
-	lstrcpy(m_szLoadingText, TEXT("객체원형 로딩 중"));
+	// ---------- Objects ----------
 	/* Prototype_GameObject_Camera_Free */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
-		CCamera_Free::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
+		CCamera_Free::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Player_LGPE */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
-		CPlayer_LGPE::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
+		CPlayer_LGPE::Create(m_pDevice, m_pContext)); });
+
 	/* Prototype_GameObject_Body_Hero */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO,
-		CBody_Hero::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO,
+		CBody_Hero::Create(m_pDevice, m_pContext)); });
+
 	/* Prototype_MapObject_Town01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01,
-		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_TOWN01))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01,
+		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_TOWN01)); });
 
 	/* Prototype_MapObject_Road01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01,
-		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_ROAD01))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01,
+		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_ROAD01)); });
 
 #pragma region STUDY
 	// Texture
 	/* Prototype_Component_Texture_Terrain_Diff */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_DIFF,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Tile%d.dds"), 2))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_DIFF,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Tile%d.dds"), 2)); });
 
 	/* Prototype_Component_Texture_Terrain_Mask */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.dds"), 1))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.dds"), 1)); });
 
 	/* Prototype_Component_Texture_Terrain_BRUSH */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_BRUSH,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Brush.png"), 1))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_BRUSH,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Brush.png"), 1)); });
 
 	/* Prototype_Component_Texture_Sky */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_SKY,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_SKY,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/SkyBox/Sky_%d.dds"), 4)); });
 
 	// VIBuffer
 	/* Prototype_Component_VIBuffer_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_TERRAIN,
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Height.bmp")))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_TERRAIN,
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Height.bmp"))); });
 
 	/* Prototype_Component_Model_Fiona */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.wmodel")); });
 
 	/* Prototype_Component_Model_ForkLift */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.wmodel"))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.wmodel")); });
 
 	// Navigation
 	/* Prototype_Component_Navigation_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_TERRAIN,
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../DataFiles/Navigation.dat"), TEXT("../../DataFiles/Neighbors.dat")))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_TERRAIN,
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../DataFiles/Navigation.dat"), TEXT("../../DataFiles/Neighbors.dat"))); });
 
 	// Object
 	/* Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN,
-		CTerrain::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN,
+		CTerrain::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Monster */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
-		CPokemon::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
+		CPokemon::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_ForkLift */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
-		CForkLift::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
+		CForkLift::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER,
-		CPlayer::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER,
+		CPlayer::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Body_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_PLAYER,
-		CBody_Player::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_PLAYER,
+		CBody_Player::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Weapon */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON,
-		CWeapon::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON,
+		CWeapon::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Sky */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY,
-		CSky::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY,
+		CSky::Create(m_pDevice, m_pContext)); });
 #pragma endregion
-
-	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
-
-	m_isFinished = true;
 
 	return S_OK;
 }
@@ -339,9 +305,15 @@ void CLoader::Free()
 {
 	__super::Free();
 
-	WaitForSingleObject(m_hThread, INFINITE);
-	DeleteCriticalSection(&m_CriticalSection);
-	CloseHandle(m_hThread);
+	if (!m_Threads.empty())
+	{
+		WaitForMultipleObjects(static_cast<DWORD>(m_Threads.size()), m_Threads.data(), TRUE, INFINITE);
+
+		for (HANDLE h : m_Threads)
+			if (h) CloseHandle(h);
+
+		m_Threads.clear();
+	}
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);

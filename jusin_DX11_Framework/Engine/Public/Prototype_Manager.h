@@ -27,15 +27,17 @@ public:
 	HRESULT		Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype);
 	CBase*		Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg);
 	void		Clear(_uint iLevelIndex);
-	void		Visit_Prototypes(_uint iLevel, PROTOTYPE eType, function<void(WNameID, CBase*)> fn) const;
 
 private:
 	typedef WNameMap<class CBase*, ALWAYS_HASHMAP>	PROTOTYPES;
 	PROTOTYPES*	m_pPrototypes = { nullptr };
 	_uint		m_iNumLevels = {};
 
+	mutex m_Mutex;
+
 private:
-	CBase*	Find_Prototype(_uint iLevelIndex, WNameID strPrototypeTag);
+	CBase*	Find_Prototype(_uint iLevelIndex, WNameID strProtoTag);
+	CBase* Find_Prototype_NoLock(_uint iLevelIndex, WNameID strProtoTag);
 
 public:
 	static CPrototype_Manager*	Create(_uint iNumLevels);

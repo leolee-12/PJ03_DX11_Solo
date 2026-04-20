@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include <process.h>
+#include <concurrent_queue.h>
 
 #include "Engine_Defines.h"
 #include "Game_PKM_Enum.h"

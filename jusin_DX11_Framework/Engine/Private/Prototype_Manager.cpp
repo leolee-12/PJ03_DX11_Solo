@@ -20,9 +20,11 @@ HRESULT CPrototype_Manager::Initialize(_uint iNumLevels)
 
 HRESULT CPrototype_Manager::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype)
 {
+	lock_guard<mutex> lock(m_Mutex);
+
 	if (nullptr == m_pPrototypes ||
 		iLevelIndex >= m_iNumLevels ||
-		nullptr != Find_Prototype(iLevelIndex, strProtoTag))
+		nullptr != Find_Prototype_NoLock(iLevelIndex, strProtoTag))
 		return E_FAIL;
 
 	m_pPrototypes[iLevelIndex].emplace(strProtoTag, pPrototype);
@@ -32,7 +34,7 @@ HRESULT CPrototype_Manager::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag
 
 CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg)
 {
-	CBase* pPrototype = Find_Prototype(iLevelIndex, strProtoTag);
+	CBase* pPrototype = Find_Prototype_NoLock(iLevelIndex, strProtoTag);
 	if (nullptr == pPrototype)
 		return nullptr;
 
@@ -55,11 +57,16 @@ void CPrototype_Manager::Clear(_uint iLevelIndex)
 	m_pPrototypes[iLevelIndex].clear();
 }
 
-void CPrototype_Manager::Visit_Prototypes(_uint iLevel, PROTOTYPE eType, function<void(WNameID, CBase*)> fn) const
+CBase* CPrototype_Manager::Find_Prototype(_uint iLevelIndex, WNameID strProtoTag)
 {
+	lock_guard<mutex> lock(m_Mutex);
+
+	auto pp = m_pPrototypes[iLevelIndex].find(strProtoTag);
+
+	return pp ? *pp : nullptr;
 }
 
-CBase* CPrototype_Manager::Find_Prototype(_uint iLevelIndex, WNameID strProtoTag)
+CBase* CPrototype_Manager::Find_Prototype_NoLock(_uint iLevelIndex, WNameID strProtoTag)
 {
 	auto pp = m_pPrototypes[iLevelIndex].find(strProtoTag);
 

@@ -26,9 +26,14 @@ HRESULT CLevel_Loading::Initialize()
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->Key_Down(DIK_SPACE) &&
-        true == m_pLoader->isFinished())
+    if (m_pGameInstance->Key_Down(DIK_SPACE) && m_pLoader->Is_Finished())
     {
+        if (m_pLoader->Has_Error())
+        {
+            MSG_BOX("Loading failed");
+            return;
+        }
+
         CLevel* pNextLevel = { nullptr };
 
         switch (m_eNextLevelID)
