@@ -110,5 +110,9 @@ namespace Engine
 	};
 
 	enum class UI_LAYOUT { NONE, CANVAS, HORIZONTAL, VERTICAL, OVERLAY, END };
+
+	enum class UI_TYPE { WIDGET, CONTAINER, IMAGE, TEXT, BUTTON, PROGRESSBAR, END };
+
+	enum class UI_TEXT_ALIGN { LEFT, CENTER, RIGHT, END };
 }
 #endif // Engine_Enum_h__

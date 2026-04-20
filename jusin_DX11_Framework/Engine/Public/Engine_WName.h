@@ -8,6 +8,7 @@ namespace Engine
 	typedef unsigned int	_uint32;
 
 	using WNameID = _uint32;
+	inline constexpr WNameID INVALID_TAG = static_cast<WNameID>(-1);
 
 	// FNV-1a 32bit Hash - constexpr ¿¬»ê °¡´É, Ãæµ¹ È®·ü ³·À½
 	constexpr WNameID WName(const wchar_t* wStr, size_t iLength) noexcept

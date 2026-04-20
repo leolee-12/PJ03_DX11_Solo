@@ -51,6 +51,26 @@ using namespace std;
 
 namespace Engine
 {
+	inline constexpr _uint INVALID_INDEX = static_cast<_uint>(-1);
+
+	inline constexpr _float4 g_kBlack	= { 0.f, 0.f, 0.f, 1.f };
+	inline constexpr _float4 g_kRed		= { 1.f, 0.f, 0.f, 1.f };
+	inline constexpr _float4 g_kGreen	= { 0.f, 1.f, 0.f, 1.f };
+	inline constexpr _float4 g_kBlue	= { 0.f, 0.f, 1.f, 1.f };
+	inline constexpr _float4 g_kYellow	= { 1.f, 1.f, 0.f, 1.f };
+	inline constexpr _float4 g_kMagenta	= { 1.f, 0.f, 1.f, 1.f };
+	inline constexpr _float4 g_kCyan	= { 0.f, 1.f, 1.f, 1.f };
+	inline constexpr _float4 g_kWhite	= { 1.f, 1.f, 1.f, 1.f };
+
+	inline constexpr XMVECTORF32 g_XMBlack		= { 0.f, 0.f, 0.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMRed		= { 1.f, 0.f, 0.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMGreen		= { 0.f, 1.f, 0.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMBlue		= { 0.f, 0.f, 1.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMYellow		= { 1.f, 1.f, 0.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMMagenta	= { 1.f, 0.f, 1.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMCyan		= { 0.f, 1.f, 1.f, 1.f };
+	inline constexpr XMVECTORF32 g_XMWhite		= { 1.f, 1.f, 1.f, 1.f };
+
 	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
 	inline constexpr _uint g_iNumMeshBones = { 512 };
 	inline constexpr _uint g_kMaxTraverse = { 64 };
