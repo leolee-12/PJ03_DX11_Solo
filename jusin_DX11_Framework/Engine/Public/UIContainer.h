@@ -3,7 +3,7 @@
 
 NS_BEGIN(Engine)
 
-class CUIContainer abstract : public CUIObject
+class ENGINE_DLL CUIContainer : public CUIObject
 {
 public:
 	struct UICONTAINER_DESC : public CUIObject::UIOBJECT_DESC

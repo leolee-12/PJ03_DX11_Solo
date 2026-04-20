@@ -3,7 +3,7 @@
 
 NS_BEGIN(Engine)
 
-class CUIProgressBar final : public CUIObject
+class ENGINE_DLL CUIProgressBar : public CUIObject
 {
 public:
 	enum class UI_PROGRESS_DIR { LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP, END };

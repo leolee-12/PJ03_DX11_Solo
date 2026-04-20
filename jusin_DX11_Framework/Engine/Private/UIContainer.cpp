@@ -195,6 +195,19 @@ void CUIContainer::Arrange_Vertical()
 	}
 }
 
+CUIContainer* CUIContainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CUIContainer* pInstance = new CUIContainer(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CUIContainer");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 CGameObject* CUIContainer::Clone(void* pArg)
 {
 	CUIContainer* pInstance = new CUIContainer(*this);

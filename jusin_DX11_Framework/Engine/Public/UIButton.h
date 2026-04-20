@@ -3,7 +3,7 @@
 
 NS_BEGIN(Engine)
 
-class CUIButton final : public CUIObject
+class ENGINE_DLL CUIButton : public CUIObject
 {
 public:
 	enum class UI_BUTTON_STATE { NORMAL, HOVER, PRESSED, DISABLED, END };

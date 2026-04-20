@@ -48,6 +48,15 @@ HRESULT CUIImage::Render()
 	return S_OK;
 }
 
+HRESULT CUIImage::Ready_Components()
+{
+}
+
+_bool CUIImage::Has_ValidData() const
+{
+	return _bool();
+}
+
 CUIImage* CUIImage::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CUIImage* pInstance = new CUIImage(pDevice, pContext);

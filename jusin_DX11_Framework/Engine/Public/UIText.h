@@ -3,7 +3,7 @@
 
 NS_BEGIN(Engine)
 
-class CUIText final : public CUIObject
+class ENGINE_DLL CUIText : public CUIObject
 {
 public:
 	struct UITEXT_DESC : public CUIObject::UIOBJECT_DESC
