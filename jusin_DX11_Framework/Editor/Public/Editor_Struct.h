@@ -21,7 +21,7 @@ struct UI_ELEMENT
 {
 	_string id{};						// 고유 식별자
 	_string displayName{};				// 표시 이름
-	_string UITypeName{};				// "CHP_Bar", "CPokeball_Gauge" 등
+	_string UITypeName{};				//
 	_string spriteName{};				// 연결 스프라이트 이름
 	// 앵커: 부모(화면) 기준 9방향
 	// "TL","TC","TR","ML","MC","MR","BL","BC","BR"

@@ -238,11 +238,12 @@ namespace Engine
 
 	struct UILAYOUT_SLOT_DESC
 	{
-		XMFLOAT4 vMargin = {};
+		XMFLOAT4 vMargin = {};	// (left, top, right, bottom)
 		float fDesiredSizeX = {};
 		float fDesiredSizeY = {};
 	};
 
+	// 루트모션 이동- 관련
 	struct MOVEMENT_TUNING
 	{
 		float fRootMotionScale = { 0.013f };

@@ -103,6 +103,21 @@
     <Filter Include="07. Component\Collider\Bounding">
       <UniqueIdentifier>{3c51e65e-ef37-4f52-9304-2f5d1bf8a9b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. GameObject\UIObject\Container">
+      <UniqueIdentifier>{024452c7-e141-461d-a1ac-707961634894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\Image">
+      <UniqueIdentifier>{2cae2d0e-bcb0-4a15-aeca-f8832ef99ceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\Text">
+      <UniqueIdentifier>{9aa958d4-cc6c-4de0-b620-8065ffe35791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\Button">
+      <UniqueIdentifier>{a65230d1-8180-4498-8e8f-7d2fd7c153bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\ProgressBar">
+      <UniqueIdentifier>{2cd6a07f-61e2-4bd3-95f3-ae58966160c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -264,6 +279,21 @@
     <ClInclude Include="..\Public\Bounding_Sphere.h">
       <Filter>07. Component\Collider\Bounding</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIContainer.h">
+      <Filter>05. GameObject\UIObject\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIImage.h">
+      <Filter>05. GameObject\UIObject\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIText.h">
+      <Filter>05. GameObject\UIObject\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIProgressBar.h">
+      <Filter>05. GameObject\UIObject\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton.h">
+      <Filter>05. GameObject\UIObject\Button</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -403,6 +433,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bounding_OBB.cpp">
       <Filter>07. Component\Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIContainer.cpp">
+      <Filter>05. GameObject\UIObject\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIImage.cpp">
+      <Filter>05. GameObject\UIObject\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton.cpp">
+      <Filter>05. GameObject\UIObject\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIText.cpp">
+      <Filter>05. GameObject\UIObject\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIProgressBar.cpp">
+      <Filter>05. GameObject\UIObject\ProgressBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
