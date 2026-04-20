@@ -66,6 +66,15 @@ void XM_CALLCONV CCollider::Update(_fmatrix TransformMatrix)
 	m_pBounding->Update(TransformMatrix);
 }
 
+_bool CCollider::Intersect(CCollider* pTarget)
+{
+	m_isColl = false;
+
+	m_isColl = m_pBounding->Intersect(pTarget->m_eType, pTarget->m_pBounding);
+
+	return m_isColl;
+}
+
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {

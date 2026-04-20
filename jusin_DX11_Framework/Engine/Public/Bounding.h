@@ -19,6 +19,7 @@ protected:
 public:
 	virtual HRESULT Initialize(const CBounding::BOUNDING_DESC* pBoundingDesc);
 	virtual void XM_CALLCONV Update(_fmatrix TransformMatrix) = 0;
+	virtual _bool Intersect(COLLIDER eTargetType, CBounding* pBounding) = 0;
 
 #ifdef _DEBUG
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch) = 0;
