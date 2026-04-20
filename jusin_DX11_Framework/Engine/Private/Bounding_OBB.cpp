@@ -27,6 +27,28 @@ void XM_CALLCONV CBounding_OBB::Update(_fmatrix TransformMatrix)
 	m_pOriginalDesc->Transform(*m_pDesc, TransformMatrix);
 }
 
+_bool CBounding_OBB::Intersect(COLLIDER eTargetType, CBounding* pBounding)
+{
+	m_isColl = false;
+
+	switch (eTargetType)
+	{
+	case COLLIDER::AABB:
+		m_isColl = m_pDesc->Intersects(*dynamic_cast<CBounding_AABB*>(pBounding)->Get_Desc());
+		break;
+
+	case COLLIDER::OBB:
+		m_isColl = m_pDesc->Intersects(*dynamic_cast<CBounding_OBB*>(pBounding)->Get_Desc());
+		break;
+
+	case COLLIDER::SPHERE:
+		m_isColl = m_pDesc->Intersects(*dynamic_cast<CBounding_Sphere*>(pBounding)->Get_Desc());
+		break;
+	}
+
+	return m_isColl;
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch)
 {

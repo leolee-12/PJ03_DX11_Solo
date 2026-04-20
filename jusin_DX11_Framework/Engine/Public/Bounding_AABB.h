@@ -16,8 +16,11 @@ private:
 	virtual ~CBounding_AABB() = default;
 
 public:
+	const BoundingBox* Get_Desc() const { return m_pDesc; }
+
 	virtual HRESULT Initialize(const CBounding::BOUNDING_DESC* pBoundingDesc) override;
 	virtual void XM_CALLCONV Update(_fmatrix TransformMatrix) override;
+	virtual _bool Intersect(COLLIDER eTargetType, CBounding* pBounding) override;
 
 #ifdef _DEBUG
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch) override;
