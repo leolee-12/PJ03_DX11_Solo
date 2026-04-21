@@ -17,6 +17,13 @@ WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_BG_GRAD, L"Prototype_Component_Texture_Title_BG_Grad");
 WNAME_TAG(PROTO_COM_TEXTURE_PIKA_MASK, L"Prototype_Component_Texture_Title_Pika_Mask");
 
+WNAME_TAG(PROTO_COM_TEXTURE_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
+WNAME_TAG(PROTO_COM_TEXTURE_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
+WNAME_TAG(PROTO_COM_TEXTURE_MENU_BAG, L"Prototype_Component_Texture_Menu_Bag");
+WNAME_TAG(PROTO_COM_TEXTURE_MENU_ENTRY, L"Prototype_Component_Texture_Menu_Entry");
+WNAME_TAG(PROTO_COM_TEXTURE_MENU_LINK, L"Prototype_Component_Texture_Menu_Link");
+WNAME_TAG(PROTO_COM_TEXTURE_MENU_REPORT, L"Prototype_Component_Texture_Menu_Report");
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");

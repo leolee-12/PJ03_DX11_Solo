@@ -118,6 +118,9 @@
     <Filter Include="05. GameObject\UIObject\04. ProgressBar">
       <UniqueIdentifier>{2cd6a07f-61e2-4bd3-95f3-ae58966160c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. GameObject\UIObject\99. Tween">
+      <UniqueIdentifier>{91719731-bc7d-488d-9d1f-ff169571f254}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -297,6 +300,9 @@
     <ClInclude Include="..\Public\Engine_Tags.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UITween.h">
+      <Filter>05. GameObject\UIObject\99. Tween</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -451,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIProgressBar.cpp">
       <Filter>05. GameObject\UIObject\04. ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UITween.cpp">
+      <Filter>05. GameObject\UIObject\99. Tween</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
+float4 g_vColor = float4(1.f, 1.f, 1.f, 1.f);
 
 struct VS_IN
 {
@@ -42,7 +43,11 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
-	Out.vCol = g_Texture.Sample(LinearSampler, In.vTex);
+	Out.vCol = g_Texture.Sample(LinearSampler, In.vTex) * g_vColor;
+
+	if (Out.vCol.a < 0.01f)
+		discard;
+
 	return Out;
 }
 

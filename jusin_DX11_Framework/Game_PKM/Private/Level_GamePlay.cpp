@@ -3,6 +3,8 @@
 #include "Player_LGPE.h"
 
 #include "UIImage.h"
+#include "UIButton.h"
+#include "UIProgressBar.h"
 
 #include "GameInstance.h"
 
@@ -172,6 +174,50 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 
 	if (FAILED(m_pGameInstance->Add_GameObject(CURRENT_LEVEL, PROTO_UI_IMAGE, CURRENT_LEVEL, strLayerTag, &tDesc)))
 		return E_FAIL;
+
+	CUIButton::UIBUTTON_DESC tBtn{};
+	tBtn.fCenterX = 200.f; tBtn.fCenterY = 200.f;
+	tBtn.fSizeX = 200.f;   tBtn.fSizeY = 80.f;
+	tBtn.iZOrder = 10;
+	tBtn.bVisible = true;
+	tBtn.strTextureTag = PROTO_COM_TEXTURE_TITLE_LOGO_DIFF; // 기존 멀티프레임 텍스처 재사용
+	tBtn.strShaderTag = PROTO_COM_SHADER_UI;
+	tBtn.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
+	tBtn.iTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	tBtn.iShaderLevel = ETOUI(LEVEL::GAMEPLAY);
+	tBtn.iVIBufferLevel = ETOUI(LEVEL::STATIC);
+	tBtn.iNormalTextureIndex = 0;
+	tBtn.iHoverTextureIndex = 1;
+	tBtn.iPressedTextureIndex = 2;
+	tBtn.iDisabledTextureIndex = INVALID_INDEX;  // fallback → NORMAL
+	tBtn.bInteractable = true;
+	tBtn.vColor = g_kWhite;
+
+	m_pGameInstance->Add_GameObject(CURRENT_LEVEL, PROTO_UI_BUTTON,
+		CURRENT_LEVEL, strLayerTag, &tBtn);
+
+	CUIProgressBar::UIPROGRESSBAR_DESC tBar{};
+	tBar.fCenterX = 640.f; tBar.fCenterY = 400.f;
+	tBar.fSizeX = 400.f;   tBar.fSizeY = 40.f;
+	tBar.iZOrder = 5;
+	tBar.bVisible = true;
+	tBar.strBackTextureTag = PROTO_COM_TEXTURE_TITLE_BG_GRAD;
+	tBar.iBackTextureIndex = 0;
+	tBar.strFillTextureTag = PROTO_COM_TEXTURE_TITLE_LOGO_DIFF;
+	tBar.iFillTextureIndex = 0;
+	tBar.strShaderTag = PROTO_COM_SHADER_UI;
+	tBar.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
+	tBar.iShaderLevel = ETOUI(LEVEL::GAMEPLAY);
+	tBar.iVIBufferLevel = ETOUI(LEVEL::STATIC);
+	tBar.iBackTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	tBar.iFillTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	tBar.vBackColor = _float4(0.2f, 0.2f, 0.2f, 1.f);  // 어두운 배경
+	tBar.vFillColor = _float4(1.0f, 0.3f, 0.3f, 1.f);  // 붉은 HP
+	tBar.fFillAmount = 0.6f;
+	tBar.eDirection = CUIProgressBar::UI_PROGRESS_DIR::LEFT_TO_RIGHT;
+
+	m_pGameInstance->Add_GameObject(CURRENT_LEVEL, PROTO_UI_PROGRESSBAR,
+		CURRENT_LEVEL, strLayerTag, &tBar);
 
 	return S_OK;
 }

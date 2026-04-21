@@ -1,6 +1,7 @@
 ﻿#include "UIImage.h"
 
 #include "GameInstance.h"
+#include "UIButton.h"
 
 CUIImage::CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }

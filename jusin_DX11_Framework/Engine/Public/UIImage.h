@@ -44,6 +44,10 @@ public:
 	virtual HRESULT Render();
 
 protected:
+	class CShader* m_pShaderCom = { nullptr };
+	class CTexture* m_pTextureCom = { nullptr };
+	class CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
 	WNameID m_strTextureTag = { INVALID_TAG };
 	WNameID m_strShaderTag = { INVALID_TAG };
 	WNameID m_strVIBufferTag = { INVALID_TAG };
@@ -54,10 +58,6 @@ protected:
 
 	_uint m_iTextureIndex = { INVALID_INDEX };
 	_float4 m_vColor = { g_kWhite };
-
-	class CShader* m_pShaderCom = { nullptr };
-	class CTexture* m_pTextureCom = { nullptr };
-	class CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 protected:
 	HRESULT Ready_Components();
