@@ -10,6 +10,13 @@ WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain_Brush");
 WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
 
+WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_WHITE, L"Prototype_Component_Texture_Dummy_White");
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_NOISE, L"Prototype_Component_Texture_Title_pbgf_Noise");
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_BG_GRAD, L"Prototype_Component_Texture_Title_BG_Grad");
+WNAME_TAG(PROTO_COM_TEXTURE_PIKA_MASK, L"Prototype_Component_Texture_Title_Pika_Mask");
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
@@ -18,6 +25,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXANIMMESH, L"Prototype_Component_Shader_VtxAnimMesh
 WNAME_TAG(PROTO_COM_SHADER_VTXCUBE, L"Prototype_Component_Shader_VtxCube");
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
+WNAME_TAG(PROTO_COM_SHADER_UI, L"Prototype_Component_Shader_UI");
 
 // VIBuffer & Model
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");
@@ -48,6 +56,7 @@ WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
 WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
 WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
 WNAME_TAG(LAYER_MONSTER, L"Layer_Monster");
+WNAME_TAG(LAYER_UI, L"Layer_UI");
 
 // Object
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
@@ -65,18 +74,17 @@ WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
 WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
 
+WNAME_TAG(PROTO_UI_CONTAINER, L"Prototype_UIContainer");
+WNAME_TAG(PROTO_UI_IMAGE, L"Prototype_UIImage");
+WNAME_TAG(PROTO_UI_TEXT, L"Prototype_UIText");
+WNAME_TAG(PROTO_UI_BUTTON, L"Prototype_UIButton");
+WNAME_TAG(PROTO_UI_PROGRESSBAR, L"Prototype_UIProgressBar");
+
 // Component
-WNAME_TAG(COM_VIBUFFER, L"Com_VIBuffer");
-WNAME_TAG(COM_TEXTURE, L"Com_Texture");
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
 WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
 WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
-WNAME_TAG(COM_SHADER, L"Com_Shader");
-WNAME_TAG(COM_MODEL, L"Com_Model");
-WNAME_TAG(COM_NAVIGATION, L"Com_Navigation");
-WNAME_TAG(COM_COLLIDER_AABB, L"Com_Collider_AABB");
-WNAME_TAG(COM_COLLIDER_OBB, L"Com_Collider_OBB");
-WNAME_TAG(COM_COLLIDER_SPHERE, L"Com_Collider_Sphere");
+
 
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");

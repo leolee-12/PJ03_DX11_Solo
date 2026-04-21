@@ -13,6 +13,12 @@
 #include "Player_LGPE.h"
 #include "Body_Hero.h"
 
+#include "UIContainer.h"
+#include "UIImage.h"
+#include "UIText.h"
+#include "UIButton.h"
+#include "UIProgressBar.h"
+
 #include "GameInstance.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -127,6 +133,32 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 			++m_iTotalCount;
 		};
 
+	// ---------- Texture ----------
+	/* Prototype_Component_Texture_Dummy_White */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_DUMMY_WHITE,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/dummy/dummy_white.png"), 1)); });
+
+	/* Prototype_Component_Texture_Title_pbgf_Diff */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_DIFF,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbgf_00.png"), 1)); });
+
+	/* Prototype_Component_Texture_Title_pbgf_Noise */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_NOISE,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_noise_00.png"), 1)); });
+
+	/* Prototype_Component_Texture_Title_Logo_Diff */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_LOGO_DIFF,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_logo_%02d.png"), 3)); });
+
+	/* Prototype_Component_Texture_Title_BG_Grad */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_BG_GRAD,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/bg_gradation_alpha_%02d.png"), 1)); });
+
+	/* Prototype_Component_Texture_Title_Pika_Mask */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_PIKA_MASK,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/pber_pika_%02d.png"), 11)); });
+
+	// ---------- Shader ----------
 	/* Prototype_Component_Shader_VtxNorTex */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXNORTEX,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements)); });
@@ -146,6 +178,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_Component_Shader_Player_LGPE */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); });
+
+	/* Prototype_Component_Shader_UI */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_UI,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); });
 
 	// ---------- VIBuffer ----------
 	/* Prototype_Component_VIBuffer_Cube */
@@ -218,6 +254,26 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_MapObject_Road01 */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01,
 		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_ROAD01)); });
+
+	/* Prototype_UIContainer */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_CONTAINER,
+		CUIContainer::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_UIImage */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_IMAGE,
+		CUIImage::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_UIText */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_TEXT,
+		CUIText::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_UIButton */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_BUTTON,
+		CUIButton::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_UIProgressBar */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_PROGRESSBAR,
+		CUIProgressBar::Create(m_pDevice, m_pContext)); });
 
 #pragma region STUDY
 	// Texture

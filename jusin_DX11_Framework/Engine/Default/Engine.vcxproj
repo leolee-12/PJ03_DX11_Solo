@@ -161,6 +161,7 @@ call PreBuild.bat</Command>
     <ClInclude Include="..\Public\ContainerObject.h" />
     <ClInclude Include="..\Public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\Public\Engine_Tags.h" />
     <ClInclude Include="..\Public\Engine_WName.h" />
     <ClInclude Include="..\Public\Font_Manager.h" />
     <ClInclude Include="..\Public\Input_Device.h" />

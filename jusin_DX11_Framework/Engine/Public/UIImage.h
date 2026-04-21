@@ -9,6 +9,13 @@ public:
 	struct UIIMAGE_DESC : public CUIObject::UIOBJECT_DESC
 	{
 		WNameID strTextureTag = { INVALID_TAG };
+		WNameID strShaderTag = { INVALID_TAG };
+		WNameID strVIBufferTag = { INVALID_TAG };
+
+		_uint iShaderLevel = { INVALID_INDEX };
+		_uint iVIBufferLevel = { INVALID_INDEX };
+		_uint iTextureLevel = { INVALID_INDEX };
+		
 		_uint iTextureIndex = { INVALID_INDEX };
 		_float4 vColor = { g_kWhite };
 	};
@@ -38,6 +45,13 @@ public:
 
 protected:
 	WNameID m_strTextureTag = { INVALID_TAG };
+	WNameID m_strShaderTag = { INVALID_TAG };
+	WNameID m_strVIBufferTag = { INVALID_TAG };
+
+	_uint m_iTextureLevel = { INVALID_INDEX };
+	_uint m_iShaderLevel = { INVALID_INDEX };
+	_uint m_iVIBufferLevel = { INVALID_INDEX };
+
 	_uint m_iTextureIndex = { INVALID_INDEX };
 	_float4 m_vColor = { g_kWhite };
 
@@ -47,6 +61,7 @@ protected:
 
 protected:
 	HRESULT Ready_Components();
+	HRESULT Bind_ShaderResources();
 	_bool Has_ValidData() const;
 
 public:

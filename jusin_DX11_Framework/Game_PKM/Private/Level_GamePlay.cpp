@@ -2,6 +2,8 @@
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
 
+#include "UIImage.h"
+
 #include "GameInstance.h"
 
 NS_BEGIN(Game_PKM)
@@ -28,6 +30,9 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
@@ -133,6 +138,40 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 	//	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 	//		return E_FAIL;
 	//}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
+{
+	_uint iNumViewport = { 1 };
+	D3D11_VIEWPORT ViewportDesc = {};
+	m_pContext->RSGetViewports(&iNumViewport, &ViewportDesc);
+	_float fViewWidth = ViewportDesc.Width;
+	_float fViewHeight = ViewportDesc.Height;
+
+	CUIImage::UIIMAGE_DESC tDesc{};
+	tDesc.fSpeedPerSec = 30.f;
+	tDesc.fRotationPerSec = 1.f;
+	tDesc.fCenterX = fViewWidth * 0.5f;
+	tDesc.fCenterY = fViewHeight * 0.5f;
+	tDesc.fSizeX = fViewWidth;
+	tDesc.fSizeY = fViewHeight;
+	tDesc.iZOrder = 0;
+
+	tDesc.bVisible = true;
+
+	tDesc.strTextureTag = PROTO_COM_TEXTURE_TITLE_LOGO_DIFF;
+	tDesc.strShaderTag = PROTO_COM_SHADER_UI;
+	tDesc.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
+	tDesc.iTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	tDesc.iShaderLevel = ETOUI(LEVEL::GAMEPLAY);
+	tDesc.iVIBufferLevel = ETOUI(LEVEL::STATIC);
+	tDesc.iTextureIndex = 2;
+	tDesc.vColor = g_kBlack;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(CURRENT_LEVEL, PROTO_UI_IMAGE, CURRENT_LEVEL, strLayerTag, &tDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

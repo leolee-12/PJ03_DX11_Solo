@@ -1,5 +1,8 @@
 #include "Level_Logo.h"
 #include "Level_Loading.h"
+
+#include "UIImage.h"
+
 #include "GameInstance.h"
 
 NS_BEGIN(Game_PKM)
