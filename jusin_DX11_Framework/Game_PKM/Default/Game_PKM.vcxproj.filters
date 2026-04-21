@@ -70,6 +70,9 @@
     <Filter Include="02. GameActor\00. Player_LGPE">
       <UniqueIdentifier>{f4477a45-3ec6-4251-97d9-309c0cd15fc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="80. Study\03. Particles">
+      <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -144,6 +147,9 @@
     <ClInclude Include="..\Public\Game_PKM_Enum.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Snow.h">
+      <Filter>80. Study\03. Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -206,6 +212,9 @@
     <ClCompile Include="..\Private\Body_Hero.cpp">
       <Filter>02. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Snow.cpp">
+      <Filter>80. Study\03. Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
@@ -224,6 +233,9 @@
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -42,7 +42,7 @@ HRESULT CCollider::Initialize_Prototype()
 
 HRESULT CCollider::Initialize(void* pArg)
 {
-	auto    pBoundingDesc = static_cast<CBounding::BOUNDING_DESC*>(pArg);
+	auto pBoundingDesc = static_cast<CBounding::BOUNDING_DESC*>(pArg);
 
 	switch (m_eType)
 	{

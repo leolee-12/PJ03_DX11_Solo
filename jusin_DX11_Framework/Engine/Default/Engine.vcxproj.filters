@@ -118,6 +118,18 @@
     <Filter Include="05. GameObject\UIObject\ProgressBar">
       <UniqueIdentifier>{2cd6a07f-61e2-4bd3-95f3-ae58966160c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\VIBuffer\Instance">
+      <UniqueIdentifier>{9214c758-223b-4b52-b560-17307bbf3fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Instance\Point">
+      <UniqueIdentifier>{7aaca4c4-a059-4c2c-819e-97c6d99a1428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Instance\Rect">
+      <UniqueIdentifier>{24b8091d-dab0-4714-9202-6f5a1cbaa297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\VIBuffer\Instance\Model">
+      <UniqueIdentifier>{a8ee257a-f747-4377-a084-906c8e25836f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -294,6 +306,12 @@
     <ClInclude Include="..\Public\UIButton.h">
       <Filter>05. GameObject\UIObject\Button</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Instance.h">
+      <Filter>07. Component\VIBuffer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect_Instance.h">
+      <Filter>07. Component\VIBuffer\Instance\Rect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -448,6 +466,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIProgressBar.cpp">
       <Filter>05. GameObject\UIObject\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Instance.cpp">
+      <Filter>07. Component\VIBuffer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect_Instance.cpp">
+      <Filter>07. Component\VIBuffer\Instance\Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

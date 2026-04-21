@@ -12,6 +12,7 @@
 #include "MapObject.h"
 #include "Player_LGPE.h"
 #include "Body_Hero.h"
+#include "Snow.h"
 
 #include "GameInstance.h"
 
@@ -127,6 +128,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 			++m_iTotalCount;
 		};
 
+	// ---------- Shader ----------
 	/* Prototype_Component_Shader_VtxNorTex */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXNORTEX,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements)); });
@@ -142,6 +144,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_Component_Shader_VtxCube */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXCUBE,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements)); });
+
+	/* Prototype_Component_Shader_VtxRectInstance */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXRECTINST,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXPARTICLE_INSTANCE_DESC::Elements, VTXPARTICLE_INSTANCE_DESC::iNumElements)); });
 
 	/* Prototype_Component_Shader_Player_LGPE */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
@@ -237,6 +243,13 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_SKY,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/SkyBox/Sky_%d.dds"), 4)); });
 
+	/* Prototype_Component_Texture_Snow */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_SNOW,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Snow/Snow.png"), 1)); });
+
+	// Shader
+
+
 	// VIBuffer
 	/* Prototype_Component_VIBuffer_Terrain */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_TERRAIN,
@@ -249,6 +262,17 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_Component_Model_ForkLift */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.wmodel")); });
+
+	/* Prototype_Component_VIBuffer_Instance_Snow */
+	CVIBuffer_Rect_Instance::RECT_INSTANCE_DESC SnowDesc{};
+	SnowDesc.iNumInstance = 3000;
+	SnowDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	SnowDesc.vRange = _float3(129.f, 0.3f, 129.f);
+	SnowDesc.fMinSize = 0.2f;
+	SnowDesc.fMaxSize = 0.5f;
+
+ 	Enqueue([this, SnowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_SNOW,
+		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &SnowDesc)); });
 
 	// Navigation
 	/* Prototype_Component_Navigation_Terrain */
@@ -283,6 +307,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_GameObject_Sky */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY,
 		CSky::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_GameObject_Snow */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
+		CSnow::Create(m_pDevice, m_pContext)); });
 #pragma endregion
 
 	return S_OK;

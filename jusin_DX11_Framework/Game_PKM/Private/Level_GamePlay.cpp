@@ -112,6 +112,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 	//		return E_FAIL;
 	//}
 
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
+		ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

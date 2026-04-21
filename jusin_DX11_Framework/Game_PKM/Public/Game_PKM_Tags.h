@@ -9,6 +9,7 @@ WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain_Brush");
 WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
+WNAME_TAG(PROTO_COM_TEXTURE_SNOW, L"Prototype_Component_Texture_Snow");
 
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
@@ -16,6 +17,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXMESH, L"Prototype_Component_Shader_VtxMesh");
 WNAME_TAG(PROTO_COM_SHADER_VTXANIMMESH, L"Prototype_Component_Shader_VtxAnimMesh");
 WNAME_TAG(PROTO_COM_SHADER_VTXCUBE, L"Prototype_Component_Shader_VtxCube");
+WNAME_TAG(PROTO_COM_SHADER_VTXRECTINST, L"Prototype_Component_Shader_VtxRectInstance");
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
 
@@ -23,6 +25,7 @@ WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");
 WNAME_TAG(PROTO_COM_VIBUFFER_TERRAIN, L"Prototype_Component_VIBuffer_Terrain");
 WNAME_TAG(PROTO_COM_VIBUFFER_CUBE, L"Prototype_Component_VIBuffer_Cube");
+WNAME_TAG(PROTO_COM_VIBUFFER_INST_SNOW, L"Prototype_Component_VIBuffer_RInstance_Snow");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
@@ -59,6 +62,7 @@ WNAME_TAG(PROTO_OBJ_PLAYER, L"Prototype_GameObject_Player");
 WNAME_TAG(PROTO_OBJ_BODY_PLAYER, L"Prototype_GameObject_Body_Player");
 WNAME_TAG(PROTO_OBJ_WEAPON, L"Prototype_GameObject_Weapon");
 WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
+WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");

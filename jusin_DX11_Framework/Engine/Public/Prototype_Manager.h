@@ -1,12 +1,13 @@
 #pragma once
-#include "Collider.h"
-#include "Navigation.h"
 #include "Model.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Collider.h"
+#include "Navigation.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_Rect_Instance.h"
 
 /* -------------------------------------------------- */
 // 프로토타입 매니저
