@@ -50,6 +50,7 @@ HRESULT CUIImage::Render()
 
 HRESULT CUIImage::Ready_Components()
 {
+	return S_OK;
 }
 
 _bool CUIImage::Has_ValidData() const

@@ -28,27 +28,21 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 unsigned int APIENTRY ThreadMain(void* pArg)
 {
 	CLoader* pLoader = static_cast<CLoader*>(pArg);
-	HRESULT hrCoInit = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	auto* pTaskQueue = pLoader->Get_TaskQueue();
+	const HRESULT hrCoInit = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-	while (true)
+	CLoader::TaskFunc task;
+	while (pTaskQueue->try_pop(task))
 	{
-		CLoader::TaskFunc task;
-		if (pLoader->Get_TaskQueue()->try_pop(task))
-		{
-			if (FAILED(task()))
-				pLoader->Set_Error(true);
+		if (FAILED(task()))
+			pLoader->Set_Error(true);
 
-			pLoader->Add_Progress();
-			continue;
-		}
-
-		if (pLoader->Get_TaskQueue()->empty())
-			break;
-
-		this_thread::yield();
+		pLoader->Add_Progress();
 	}
 
-	if (SUCCEEDED(hrCoInit)) CoUninitialize();
+	if (SUCCEEDED(hrCoInit))
+		CoUninitialize();
+	
 	return 0;
 }
 
@@ -57,16 +51,28 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 	m_eNextLevelID = eNextLevelID;
 	Enqueue_All(eNextLevelID);	// 큐 적재 + Total 계산 : 메인스레드 단독
 
-	_uint iHW = thread::hardware_concurrency();
-	_uint iMax = iHW / 2;
-	_uint iWorkerCount = (iHW > 1u) ? (iHW - 1u) : 1u;
-	iWorkerCount = min(iWorkerCount, iMax);
-	m_Threads.resize(iWorkerCount);
+	_uint iHW = max(2u, thread::hardware_concurrency());
+	_uint iWorkerCount = max(1u, min(iHW - 1u, iHW * 2 / 3));
+	m_Threads.resize(iWorkerCount, nullptr);
 
-	for (auto& handle : m_Threads)
+	for (size_t i = 0; i < m_Threads.size(); ++i)
 	{
-		handle = reinterpret_cast<HANDLE>(_beginthreadex(nullptr, 0, ThreadMain, this, 0, nullptr));
-		if (0 == handle) return E_FAIL;
+		HANDLE handle = reinterpret_cast<HANDLE>(_beginthreadex(nullptr, 0, ThreadMain, this, 0, nullptr));
+
+		if (nullptr == handle)
+		{
+			for (size_t j = 0; j < i; ++j)
+			{
+				WaitForSingleObject(m_Threads[j], INFINITE);
+				CloseHandle(m_Threads[j]);
+				m_Threads[j] = nullptr;
+			}
+
+			m_Threads.clear();
+			return E_FAIL;
+		}
+
+		m_Threads[i] = handle;
 	}
 	return S_OK;
 }
@@ -75,9 +81,10 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 
 void CLoader::Show()
 {
-	_wstring strLoadText = to_wstring(m_iCompletedCount.load()) + L" / "
-		+ to_wstring(m_iTotalCount) + L" ("
-		+ to_wstring(m_Threads.size()) + L"개 스레드 가동 중)";
+	_wstring strLoadText =	to_wstring(m_iCompletedCount.load()) + L" / "
+							+ to_wstring(m_iTotalCount) + L" ("
+							+ to_wstring(m_Threads.size()) + L"개 스레드 가동 중)";
+
 	SetWindowText(m_pGameInstance->Get_HWND(), strLoadText.c_str());
 }
 
