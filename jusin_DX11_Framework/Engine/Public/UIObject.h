@@ -51,6 +51,9 @@ public:
 
 	virtual void Refresh_Layout();
 	void Apply_LayoutCenter(_float fCenterX, _float fCenterY);
+
+	virtual _bool Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const;
+	virtual HRESULT Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue);
 	
 protected:
 	_float m_fViewWidth{}, m_fViewHeight{};

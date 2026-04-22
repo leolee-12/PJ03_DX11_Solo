@@ -77,6 +77,33 @@ HRESULT CUIProgressBar::Render()
 	return S_OK;
 }
 
+_bool CUIProgressBar::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::COLOR_R:
+	case UI_TWEEN_TARGET::COLOR_G:
+	case UI_TWEEN_TARGET::COLOR_B:
+	case UI_TWEEN_TARGET::COLOR_A:
+	case UI_TWEEN_TARGET::FILL_AMOUNT:
+		return true;
+
+	default: return __super::Can_Apply_Tween_Target(eTarget);
+	}
+}
+HRESULT CUIProgressBar::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::COLOR_R:		m_vFillColor.x = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::COLOR_G:		m_vFillColor.y = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::COLOR_B:		m_vFillColor.z = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::COLOR_A:		m_vFillColor.w = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::FILL_AMOUNT:	Set_FillAmount(fValue);		return S_OK;
+	default: return __super::Apply_Tween_Target(eTarget, fValue);
+	}
+}
+
 HRESULT CUIProgressBar::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(m_iShaderLevel, m_strShaderTag, COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))

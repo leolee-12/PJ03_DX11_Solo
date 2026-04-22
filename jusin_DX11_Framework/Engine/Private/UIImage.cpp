@@ -1,7 +1,6 @@
 ﻿#include "UIImage.h"
 
 #include "GameInstance.h"
-#include "UIButton.h"
 
 CUIImage::CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
@@ -76,6 +75,31 @@ HRESULT CUIImage::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_bool CUIImage::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::COLOR_R:
+	case UI_TWEEN_TARGET::COLOR_G:
+	case UI_TWEEN_TARGET::COLOR_B:
+	case UI_TWEEN_TARGET::COLOR_A:
+		return true;
+
+	default: return __super::Can_Apply_Tween_Target(eTarget);
+	}
+}
+HRESULT CUIImage::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::COLOR_R: m_vColor.x = fValue; return S_OK;
+	case UI_TWEEN_TARGET::COLOR_G: m_vColor.y = fValue; return S_OK;
+	case UI_TWEEN_TARGET::COLOR_B: m_vColor.z = fValue; return S_OK;
+	case UI_TWEEN_TARGET::COLOR_A: m_vColor.w = fValue; return S_OK;
+	default: return __super::Apply_Tween_Target(eTarget, fValue);
+	}
 }
 
 HRESULT CUIImage::Ready_Components()

@@ -3,7 +3,7 @@
 
 NS_BEGIN(Engine)
 
-class CUITween : public CBase
+class ENGINE_DLL CUITween final : public CBase
 {
 public:
 	struct UITWEEN_DESC
@@ -19,19 +19,18 @@ public:
 
 private:
 	CUITween() = default;
-	~CUITween() = default;
+	virtual ~CUITween() = default;
 	
 public:	
 	UI_TWEEN_TARGET Get_Target() const { return m_tDesc.eTarget; }
 
 	HRESULT Initialize(class CUIObject* pOwner, const UITWEEN_DESC& tDesc);
-	void Tick(_float fTimeDelta, class CUIObject* pOwner);
-	_bool Is_Finished() const;
-	void Stop();
+	void Tick(_float fTimeDelta);
+	_bool Is_Finished() const { return m_bFinished; }
+	void Stop() { m_bFinished = true; }
 
 private:
-	CUIObject* m_pOwner = { nullptr };  // base ops용
-	CUIProgressBar* m_pOwnerAsBar = { nullptr };  // FILL_AMOUNT 전용, 해당 시에만 set
+	class CUIObject* m_pOwner = { nullptr };  // base ops용
 
 	UITWEEN_DESC m_tDesc;
 	_float m_fElapsed = { 0.f };

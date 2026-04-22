@@ -126,6 +126,31 @@ HRESULT CUIButton::Render()
 	return S_OK;
 }
 
+_bool CUIButton::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::COLOR_R:
+	case UI_TWEEN_TARGET::COLOR_G:
+	case UI_TWEEN_TARGET::COLOR_B:
+	case UI_TWEEN_TARGET::COLOR_A:
+		return true;
+
+	default: return __super::Can_Apply_Tween_Target(eTarget);
+	}
+}
+HRESULT CUIButton::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::COLOR_R: m_vColor.x = fValue; return S_OK;
+	case UI_TWEEN_TARGET::COLOR_G: m_vColor.y = fValue; return S_OK;
+	case UI_TWEEN_TARGET::COLOR_B: m_vColor.z = fValue; return S_OK;
+	case UI_TWEEN_TARGET::COLOR_A: m_vColor.w = fValue; return S_OK;
+	default: return __super::Apply_Tween_Target(eTarget, fValue);
+	}
+}
+
 HRESULT CUIButton::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(m_iShaderLevel, m_strShaderTag, COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))

@@ -43,6 +43,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	virtual _bool Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const;
+	virtual HRESULT Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue);
+
 protected:
 	class CShader* m_pShaderCom = { nullptr };
 	class CTexture* m_pTextureCom = { nullptr };

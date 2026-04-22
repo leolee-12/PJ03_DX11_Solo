@@ -5,6 +5,7 @@
 #include "UIImage.h"
 #include "UIButton.h"
 #include "UIProgressBar.h"
+#include "UITween.h"
 
 #include "GameInstance.h"
 
@@ -37,6 +38,24 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
+	//auto pList = m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_UI);
+	//if (nullptr == pList || pList->empty()) return E_FAIL;
+
+	//auto it = pList->begin();
+	//CUIImage* pUIImage = static_cast<CUIImage*>(*it); ++it;
+	//CUIButton* pUIButton = static_cast<CUIButton*>(*it); ++it;
+	//CUIProgressBar* pUIBar = static_cast<CUIProgressBar*>(*it);
+
+	//CUITween::UITWEEN_DESC tDesc{};
+	//tDesc.eTarget = UI_TWEEN_TARGET::FILL_AMOUNT;
+	//tDesc.fStart = 0.f;
+	//tDesc.fEnd = 1.f;
+	//tDesc.fDuration = 2.f;
+	//tDesc.eEase = UI_EASE::LINEAR;
+	//tDesc.eLoop = UI_TWEEN_LOOP::NONE;
+	//
+	//m_pTestTween = CUITween::Create(pUIImage, tDesc);
+
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
 	pCamera->Set_FollowTarget(pPlayer->Get_Transform());
@@ -51,6 +70,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F4))
 		m_pGameInstance->Toggle_CameraFollow();
 
+	if (m_pTestTween) m_pTestTween->Tick(fTimeDelta);
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -238,4 +258,6 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTestTween);
 }

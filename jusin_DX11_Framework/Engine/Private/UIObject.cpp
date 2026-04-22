@@ -125,6 +125,37 @@ void CUIObject::Apply_LayoutCenter(_float fCenterX, _float fCenterY)
 	Update_UI_Transform();
 }
 
+_bool CUIObject::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::POSITION_X:
+	case UI_TWEEN_TARGET::POSITION_Y:
+	case UI_TWEEN_TARGET::SIZE_X:
+	case UI_TWEEN_TARGET::SIZE_Y:
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X:
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y:
+		return true;
+
+	default:
+		return false;
+	}
+}
+
+HRESULT CUIObject::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
+{
+	switch (eTarget)
+	{
+	case UI_TWEEN_TARGET::POSITION_X:      m_fCenterX = fValue;             Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::POSITION_Y:      m_fCenterY = fValue;             Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::SIZE_X:          m_fSizeX = fValue;				Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::SIZE_Y:          m_fSizeY = fValue;				Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X: m_tAnchorDesc.fOffsetX = fValue;	Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y: m_tAnchorDesc.fOffsetY = fValue;	Refresh_Layout(); return S_OK;
+	default: return E_FAIL;
+	}
+}
+
 HRESULT CUIObject::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, D3DTS eType)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_TransformMatrices[ETOUI(eType)]);
