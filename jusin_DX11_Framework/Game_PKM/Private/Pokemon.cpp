@@ -30,9 +30,9 @@ HRESULT CPokemon::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(
-			m_pGameInstance->Random(0.f, 30.f),
-			3.f,
-			m_pGameInstance->Random(0.f, 30.f),
+			m_pGameInstance->Random(10.f, 30.f),
+			0.f,
+			m_pGameInstance->Random(-20.f, 0.f),
 			1.f
 		));
 

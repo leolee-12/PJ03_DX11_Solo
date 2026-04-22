@@ -10,9 +10,8 @@ public:
 	{
 		_uint iNumInstance = {};
 		_float3 vCenter;
-		_float3 vRange;
-		_float fMinSize;
-		_float fMaxSize;
+		_float3 vPosOffset;
+		_float2 vSizeRange;
 	};
 
 protected:
@@ -32,6 +31,9 @@ protected:
 	_uint m_iNumInstances = { };
 	_uint m_iInstanceStride = { };
 	_uint m_iIndexCountPerInstance = {};
+
+	D3D11_BUFFER_DESC m_InstanceBufferDesc = {};
+	VTXPARTICLE_INSTANCE* m_pInstanceVertices = { nullptr };
 
 public:
 	virtual CComponent* Clone(void* pArg) = 0;

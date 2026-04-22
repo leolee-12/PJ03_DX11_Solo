@@ -93,8 +93,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	//	return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
@@ -133,11 +133,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 {
-	//for (size_t i = 0; i < 20; i++)
-	//{
-	//	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-	//		return E_FAIL;
-	//}
+	for (size_t i = 0; i < 20; i++)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

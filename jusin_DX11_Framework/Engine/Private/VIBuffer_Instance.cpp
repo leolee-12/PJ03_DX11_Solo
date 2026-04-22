@@ -12,8 +12,9 @@ CVIBuffer_Instance::CVIBuffer_Instance(const CVIBuffer_Instance& Prototype)
 	, m_iNumInstances{ Prototype.m_iNumInstances }
 	, m_iInstanceStride{ Prototype.m_iInstanceStride }
 	, m_iIndexCountPerInstance{ Prototype.m_iIndexCountPerInstance }
+	, m_InstanceBufferDesc{ Prototype.m_InstanceBufferDesc }
+	, m_pInstanceVertices{ Prototype.m_pInstanceVertices }
 {
-	Safe_AddRef(m_pVBInstance);
 }
 
 HRESULT CVIBuffer_Instance::Initialize_Prototype()
@@ -62,6 +63,9 @@ HRESULT CVIBuffer_Instance::Render()
 void CVIBuffer_Instance::Free()
 {
 	__super::Free();
+
+	if (false == m_isCloned)
+		Safe_Delete_Array(m_pInstanceVertices);
 
 	Safe_Release(m_pVBInstance);
 }

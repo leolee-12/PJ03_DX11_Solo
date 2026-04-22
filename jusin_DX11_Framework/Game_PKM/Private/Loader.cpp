@@ -265,11 +265,13 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	/* Prototype_Component_VIBuffer_Instance_Snow */
 	CVIBuffer_Rect_Instance::RECT_INSTANCE_DESC SnowDesc{};
-	SnowDesc.iNumInstance = 3000;
+	SnowDesc.iNumInstance = 6000;
 	SnowDesc.vCenter = _float3(0.f, 0.f, 0.f);
-	SnowDesc.vRange = _float3(129.f, 0.3f, 129.f);
-	SnowDesc.fMinSize = 0.2f;
-	SnowDesc.fMaxSize = 0.5f;
+	SnowDesc.vPosOffset = _float3(129.f, 0.3f, 129.f);
+	SnowDesc.vSizeRange = _float2(0.2f, 0.5f);
+	SnowDesc.vSpeedRange = _float2(1.f, 3.f);
+	SnowDesc.vLifeRange = _float2(4.f, 8.f);
+	SnowDesc.isLoop = true;
 
  	Enqueue([this, SnowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_SNOW,
 		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &SnowDesc)); });

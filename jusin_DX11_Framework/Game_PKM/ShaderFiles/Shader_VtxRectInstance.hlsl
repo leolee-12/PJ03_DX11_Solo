@@ -12,12 +12,14 @@ struct VS_IN
 	float4 vUp : TEXCOORD2;
 	float4 vLook : TEXCOORD3;
 	float4 vTranslation : TEXCOORD4;
+	float2 vLifeTime : TEXCOORD5;
 };
 
 struct VS_OUT
 {
 	float4 vPos : SV_POSITION;
 	float2 vTex : TEXCOORD0;
+	float2 vLifeTime : TEXCOORD1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -34,6 +36,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	
 	Out.vPos = vPos;
 	Out.vTex = In.vTex;
+	Out.vLifeTime = In.vLifeTime;
 	return Out;
 }
 
@@ -41,6 +44,7 @@ struct PS_IN
 {
 	float4 vPos : SV_POSITION;
 	float2 vTex : TEXCOORD0;
+	float2 vLifeTime : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -52,10 +56,8 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
 	Out.vCol = g_Texture.Sample(LinearSampler, In.vTex);
-
-	if (Out.vCol.a < 0.4f)	// 일정 a값 미만은 버림 (알파테스트)
-		discard;
-
+	Out.vCol.rgb += 1.f - saturate(In.vLifeTime.x - In.vLifeTime.y);
+	Out.vCol.a = Out.vCol.a * saturate(In.vLifeTime.x - In.vLifeTime.y);
 	return Out;
 }
 
@@ -65,7 +67,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
