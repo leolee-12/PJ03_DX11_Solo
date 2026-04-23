@@ -114,5 +114,35 @@ namespace Engine
 	enum class UI_TYPE { WIDGET, CONTAINER, IMAGE, TEXT, BUTTON, PROGRESSBAR, END };
 
 	enum class UI_TEXT_ALIGN { LEFT, CENTER, RIGHT, END };
+
+	enum class UI_EASE : unsigned int
+	{
+		LINEAR,
+		EASE_IN_SINE, EASE_OUT_SINE, EASE_IN_OUT_SINE,
+		EASE_IN_QUAD, EASE_OUT_QUAD, EASE_IN_OUT_QUAD,
+		EASE_IN_CUBIC, EASE_OUT_CUBIC, EASE_IN_OUT_CUBIC,
+		END
+	};
+
+	enum class UI_TWEEN_TARGET : unsigned int
+	{	
+		POSITION_X, POSITION_Y,
+		SIZE_X, SIZE_Y,
+		COLOR_R, COLOR_G, COLOR_B, COLOR_A,
+		FILL_AMOUNT,
+		ANCHOR_OFFSET_X, ANCHOR_OFFSET_Y,
+		END
+	};
+
+	enum class UI_TWEEN_LOOP : unsigned int { NONE, LOOP, PINGPONG, END };
+
+	enum class UI_SEQ_STEP_KIND : unsigned int
+	{
+		PLAY_ANIM,		// target->Get_Animator()->Play_Animation(AnimName, target)
+		SET_VISIBLE,	// target->Set_Visible(bVisible)
+		WAIT,			// fWaitSec 경과 대기
+		USE_CALLBACK,	// fnCallback 호출
+		END
+	};
 }
 #endif // Engine_Enum_h__

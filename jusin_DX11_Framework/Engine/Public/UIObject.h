@@ -28,18 +28,20 @@ public:
 	virtual UI_TYPE Get_UIType() const { return UI_TYPE::WIDGET; }
 	
 	void Set_Center(_float fCenterX, _float fCenterY);
-	_float2 Get_Center() const { return _float2(m_fResolvedCenterX, m_fResolvedCenterY); }
-
 	void Set_Size(_float fSizeX, _float fSizeY);
+	void Set_LayoutSlot(const UILAYOUT_SLOT_DESC& tLayoutDesc) { m_tLayoutSlot = tLayoutDesc; };
+	void Set_Anchor(UI_ANCHOR eAnchor, _float fOffsetX, _float fOffsetY, _bool bUseAnchoredPos = true);
+	void Set_AnchorOffset(_float fOffsetX, _float fOffsetY);
+	void Set_ParentUI(CUIObject* pParent) { m_pParentUI = pParent; }
+	void Set_Visible(_bool b) { m_bVisible = b; }
+
+	_float2 Get_Center() const { return _float2(m_fResolvedCenterX, m_fResolvedCenterY); }
 	_float2 Get_Size() const { return _float2(m_fSizeX, m_fSizeY); }
 	_float4 Get_ScreenRect() const;
-
-	void Set_LayoutSlot(const UILAYOUT_SLOT_DESC& tLayoutDesc) { m_tLayoutSlot = tLayoutDesc; };
 	const UILAYOUT_SLOT_DESC& Get_LayoutSlot() const { return m_tLayoutSlot; }
-
-	void Set_Anchor(UI_ANCHOR eAnchor, _float fOffsetX, _float fOffsetY, _bool bUseAnchoredPos = true);
-	void Set_ParentUI(CUIObject* pParent) { m_pParentUI = pParent; }
+	UI_ANCHOR Get_Anchor() { return (m_tAnchorDesc.bUseAnchoredPos ? m_tAnchorDesc.eAnchor : UI_ANCHOR::END); }
 	CUIObject* Get_ParentUI() const { return m_pParentUI; }
+	class CUIAnimator* Get_Animator() const { return m_pAnimatorCom; }
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -50,6 +52,9 @@ public:
 
 	virtual void Refresh_Layout();
 	void Apply_LayoutCenter(_float fCenterX, _float fCenterY);
+
+	virtual _bool Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const;
+	virtual HRESULT Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue);
 	
 protected:
 	_float m_fViewWidth{}, m_fViewHeight{};
@@ -64,7 +69,10 @@ protected:
 	UILAYOUT_SLOT_DESC m_tLayoutSlot{};
 	CUIObject* m_pParentUI = nullptr;
 
+	class CUIAnimator* m_pAnimatorCom = { nullptr };
+
 protected:
+	HRESULT Ready_Animator();
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, D3DTS eType);
 	_float4 Get_ReferenceRect() const;
 	_float2 Resolve_AnchorCenter() const;

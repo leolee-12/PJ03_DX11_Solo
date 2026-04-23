@@ -7,9 +7,6 @@
     <Filter Include="01. Device">
       <UniqueIdentifier>{0f6957c8-e780-440a-afcf-2c25a89ed9f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. Defines">
-      <UniqueIdentifier>{e7229af7-7022-43a2-815d-a47a3d9f6eb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Timers">
       <UniqueIdentifier>{ec13b709-e201-4e8d-a89b-94b8d9fbd85e}</UniqueIdentifier>
     </Filter>
@@ -103,20 +100,29 @@
     <Filter Include="07. Component\Collider\Bounding">
       <UniqueIdentifier>{3c51e65e-ef37-4f52-9304-2f5d1bf8a9b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. GameObject\UIObject\Container">
-      <UniqueIdentifier>{024452c7-e141-461d-a1ac-707961634894}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. GameObject\UIObject\Image">
+    <Filter Include="05. GameObject\UIObject\01. Image">
       <UniqueIdentifier>{2cae2d0e-bcb0-4a15-aeca-f8832ef99ceb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. GameObject\UIObject\Text">
+    <Filter Include="05. GameObject\UIObject\00. Container">
+      <UniqueIdentifier>{024452c7-e141-461d-a1ac-707961634894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\02. Text">
       <UniqueIdentifier>{9aa958d4-cc6c-4de0-b620-8065ffe35791}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. GameObject\UIObject\Button">
+    <Filter Include="05. GameObject\UIObject\03. Button">
       <UniqueIdentifier>{a65230d1-8180-4498-8e8f-7d2fd7c153bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. GameObject\UIObject\ProgressBar">
+    <Filter Include="05. GameObject\UIObject\04. ProgressBar">
       <UniqueIdentifier>{2cd6a07f-61e2-4bd3-95f3-ae58966160c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\99. Tween">
+      <UniqueIdentifier>{91719731-bc7d-488d-9d1f-ff169571f254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\UIAnimator">
+      <UniqueIdentifier>{1687a60c-8a1d-4ce3-9d2a-b99da95702e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{e7229af7-7022-43a2-815d-a47a3d9f6eb9}</UniqueIdentifier>
     </Filter>
     <Filter Include="07. Component\VIBuffer\Instance">
       <UniqueIdentifier>{9214c758-223b-4b52-b560-17307bbf3fc9}</UniqueIdentifier>
@@ -292,19 +298,31 @@
       <Filter>07. Component\Collider\Bounding</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIContainer.h">
-      <Filter>05. GameObject\UIObject\Container</Filter>
+      <Filter>05. GameObject\UIObject\00. Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIImage.h">
-      <Filter>05. GameObject\UIObject\Image</Filter>
+      <Filter>05. GameObject\UIObject\01. Image</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIText.h">
-      <Filter>05. GameObject\UIObject\Text</Filter>
+      <Filter>05. GameObject\UIObject\02. Text</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIProgressBar.h">
-      <Filter>05. GameObject\UIObject\ProgressBar</Filter>
+      <Filter>05. GameObject\UIObject\04. ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIButton.h">
-      <Filter>05. GameObject\UIObject\Button</Filter>
+      <Filter>05. GameObject\UIObject\03. Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Tags.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UITween.h">
+      <Filter>05. GameObject\UIObject\99. Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIAnimator.h">
+      <Filter>07. Component\UIAnimator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UISequence.h">
+      <Filter>05. GameObject\UIObject\00. Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Instance.h">
       <Filter>07. Component\VIBuffer\Instance</Filter>
@@ -456,19 +474,28 @@
       <Filter>07. Component\Collider\Bounding</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIContainer.cpp">
-      <Filter>05. GameObject\UIObject\Container</Filter>
+      <Filter>05. GameObject\UIObject\00. Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIImage.cpp">
-      <Filter>05. GameObject\UIObject\Image</Filter>
+      <Filter>05. GameObject\UIObject\01. Image</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIButton.cpp">
-      <Filter>05. GameObject\UIObject\Button</Filter>
+      <Filter>05. GameObject\UIObject\03. Button</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIText.cpp">
-      <Filter>05. GameObject\UIObject\Text</Filter>
+      <Filter>05. GameObject\UIObject\02. Text</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIProgressBar.cpp">
-      <Filter>05. GameObject\UIObject\ProgressBar</Filter>
+      <Filter>05. GameObject\UIObject\04. ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UITween.cpp">
+      <Filter>05. GameObject\UIObject\99. Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIAnimator.cpp">
+      <Filter>07. Component\UIAnimator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UISequence.cpp">
+      <Filter>05. GameObject\UIObject\00. Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Instance.cpp">
       <Filter>07. Component\VIBuffer\Instance</Filter>

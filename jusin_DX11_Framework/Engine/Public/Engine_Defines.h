@@ -49,6 +49,7 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
+#include "Engine_Tags.h"
 
 namespace Engine
 {
@@ -72,11 +73,18 @@ namespace Engine
 	inline constexpr XMVECTORF32 g_XMCyan		= { 0.f, 1.f, 1.f, 1.f };
 	inline constexpr XMVECTORF32 g_XMWhite		= { 1.f, 1.f, 1.f, 1.f };
 
-	WNAME_TAG(COM_TRANSFORM, L"Com_Transform");
 	inline constexpr _uint g_iNumMeshBones = { 512 };
 	inline constexpr _uint g_kMaxTraverse = { 64 };
 	inline constexpr _float g_kDefaultBlendDuration = { 0.2f };
 	inline constexpr _float g_kDebugOffset_Y = { 0.05f };
+
+
+
+	// UI ฐüทร
+	inline _float Evaluate_Ease(UI_EASE eEase, _float t)
+	{
+		return _float();
+	}
 }
 
 namespace ObjFlag
