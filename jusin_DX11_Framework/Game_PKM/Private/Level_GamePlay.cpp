@@ -1,4 +1,4 @@
-#include "Level_GamePlay.h"
+﻿#include "Level_GamePlay.h"
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
 
@@ -6,6 +6,8 @@
 #include "UIButton.h"
 #include "UIProgressBar.h"
 #include "UITween.h"
+#include "UIAnimator.h"
+#include "UISequence.h"
 
 #include "GameInstance.h"
 
@@ -38,23 +40,90 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
-	//auto pList = m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_UI);
-	//if (nullptr == pList || pList->empty()) return E_FAIL;
+	auto pList = m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, LAYER_UI);
+	if (pList && pList->size() >= 3)
+	{
+		auto it = pList->begin();
+		CUIImage* pImg = static_cast<CUIImage*>(*it);       ++it;
+		CUIButton* pBtn = static_cast<CUIButton*>(*it);      ++it;
+		CUIProgressBar* pBar = static_cast<CUIProgressBar*>(*it);
 
-	//auto it = pList->begin();
-	//CUIImage* pUIImage = static_cast<CUIImage*>(*it); ++it;
-	//CUIButton* pUIButton = static_cast<CUIButton*>(*it); ++it;
-	//CUIProgressBar* pUIBar = static_cast<CUIProgressBar*>(*it);
+		// 1) 각 위젯의 Animator에 네임드 애니메이션 등록
+		{
+			CUITween::UITWEEN_DESC t{};
+			t.eTarget = UI_TWEEN_TARGET::COLOR_A;
+			t.fStart = 0.f; t.fEnd = 1.f; t.fDuration = 0.5f;
+			t.eEase = UI_EASE::EASE_OUT_CUBIC;
+			pImg->Get_Animator()->Register_Animation(L"fade_in", { t });
+		}
+		{
+			CUITween::UITWEEN_DESC tA{};
+			tA.eTarget = UI_TWEEN_TARGET::COLOR_A;
+			tA.fStart = 0.f; tA.fEnd = 1.f; tA.fDuration = 0.5f;
 
-	//CUITween::UITWEEN_DESC tDesc{};
-	//tDesc.eTarget = UI_TWEEN_TARGET::FILL_AMOUNT;
-	//tDesc.fStart = 0.f;
-	//tDesc.fEnd = 1.f;
-	//tDesc.fDuration = 2.f;
-	//tDesc.eEase = UI_EASE::LINEAR;
-	//tDesc.eLoop = UI_TWEEN_LOOP::NONE;
-	//
-	//m_pTestTween = CUITween::Create(pUIImage, tDesc);
+			CUITween::UITWEEN_DESC tS{};
+			tS.eTarget = UI_TWEEN_TARGET::SIZE_X;
+			tS.fStart = 100.f; tS.fEnd = 200.f; tS.fDuration = 0.5f;
+
+			pBtn->Get_Animator()->Register_Animation(L"appear", { tA, tS });
+		}
+		{
+			CUITween::UITWEEN_DESC t{};
+			t.eTarget = UI_TWEEN_TARGET::FILL_AMOUNT;
+			t.fStart = 0.f; t.fEnd = 1.f; t.fDuration = 1.f;
+			pBar->Get_Animator()->Register_Animation(L"fill", { t });
+		}
+
+		// 2) Sequence 수동 생성 (프로토타입 미경유)
+		m_pTestSequence = CUISequence::Create(m_pDevice, m_pContext);
+		if (m_pTestSequence)
+		{
+			m_pTestSequence->Initialize(nullptr);
+
+			// 3) 타임라인 구성
+			CUISequence::UISEQ_STEP step{};
+
+			// [0] Image fade_in
+			step = {};
+			step.eKind = UI_SEQ_STEP_KIND::PLAY_ANIM;
+			step.pTarget = pImg;
+			step.strAnimName = L"fade_in";
+			m_pTestSequence->Append(step);
+
+			// [1] 0.3초 대기
+			step = {};
+			step.eKind = UI_SEQ_STEP_KIND::WAIT;
+			step.fWaitSec = 0.3f;
+			m_pTestSequence->Append(step);
+
+			// [2] Button appear
+			step = {};
+			step.eKind = UI_SEQ_STEP_KIND::PLAY_ANIM;
+			step.pTarget = pBtn;
+			step.strAnimName = L"appear";
+			m_pTestSequence->Append(step);
+
+			// [3] Join: ProgressBar fill — [2]와 동일 프레임 연쇄
+			step = {};
+			step.eKind = UI_SEQ_STEP_KIND::PLAY_ANIM;
+			step.pTarget = pBar;
+			step.strAnimName = L"fill";
+			m_pTestSequence->Join(step);
+
+			// [4] 1.0초 대기 (appear/fill 완료 시간 확보)
+			step = {};
+			step.eKind = UI_SEQ_STEP_KIND::WAIT;
+			step.fWaitSec = 1.0f;
+			m_pTestSequence->Append(step);
+
+			// [5] Image 숨김
+			step = {};
+			step.eKind = UI_SEQ_STEP_KIND::SET_VISIBLE;
+			step.pTarget = pImg;
+			step.bVisible = false;
+			m_pTestSequence->Append(step);
+		}
+	}
 
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
@@ -70,13 +139,19 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F4))
 		m_pGameInstance->Toggle_CameraFollow();
 
-	if (m_pTestTween) m_pTestTween->Tick(fTimeDelta);
+	if (m_pTestSequence)
+	{
+		m_pTestSequence->Update(fTimeDelta);
+
+		if (m_pGameInstance->Key_Down(DIK_F2))
+			m_pTestSequence->Play();
+	}
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("�����÷��̷����Դϴ�."));
+	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("게임플레이레벨입니다."));
 #endif
 
 	return S_OK;
@@ -200,7 +275,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	tBtn.fSizeX = 200.f;   tBtn.fSizeY = 80.f;
 	tBtn.iZOrder = 10;
 	tBtn.bVisible = true;
-	tBtn.strTextureTag = PROTO_COM_TEXTURE_TITLE_LOGO_DIFF; // ���� ��Ƽ������ �ؽ�ó ����
+	tBtn.strTextureTag = PROTO_COM_TEXTURE_TITLE_LOGO_DIFF; // 기존 멀티프레임 텍스처 재사용
 	tBtn.strShaderTag = PROTO_COM_SHADER_UI;
 	tBtn.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
 	tBtn.iTextureLevel = ETOUI(LEVEL::GAMEPLAY);
@@ -209,7 +284,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	tBtn.iNormalTextureIndex = 0;
 	tBtn.iHoverTextureIndex = 1;
 	tBtn.iPressedTextureIndex = 2;
-	tBtn.iDisabledTextureIndex = INVALID_INDEX;  // fallback �� NORMAL
+	tBtn.iDisabledTextureIndex = INVALID_INDEX;  // fallback → NORMAL
 	tBtn.bInteractable = true;
 	tBtn.vColor = g_kWhite;
 
@@ -231,8 +306,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	tBar.iVIBufferLevel = ETOUI(LEVEL::STATIC);
 	tBar.iBackTextureLevel = ETOUI(LEVEL::GAMEPLAY);
 	tBar.iFillTextureLevel = ETOUI(LEVEL::GAMEPLAY);
-	tBar.vBackColor = _float4(0.2f, 0.2f, 0.2f, 1.f);  // ��ο� ���
-	tBar.vFillColor = _float4(1.0f, 0.3f, 0.3f, 1.f);  // ���� HP
+	tBar.vBackColor = _float4(0.2f, 0.2f, 0.2f, 1.f);  // 어두운 배경
+	tBar.vFillColor = _float4(1.0f, 0.3f, 0.3f, 1.f);  // 붉은 HP
 	tBar.fFillAmount = 0.6f;
 	tBar.eDirection = CUIProgressBar::UI_PROGRESS_DIR::LEFT_TO_RIGHT;
 
@@ -259,5 +334,5 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTestTween);
+	Safe_Release(m_pTestSequence);
 }

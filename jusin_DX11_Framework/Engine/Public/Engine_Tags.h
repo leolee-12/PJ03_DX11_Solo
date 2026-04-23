@@ -14,6 +14,7 @@ namespace Engine
 	WNAME_TAG(COM_COLLIDER_AABB, L"Com_Collider_AABB");
 	WNAME_TAG(COM_COLLIDER_OBB, L"Com_Collider_OBB");
 	WNAME_TAG(COM_COLLIDER_SPHERE, L"Com_Collider_Sphere");
+	WNAME_TAG(COM_UI_ANIMATOR, L"Com_UI_Animator");
 }
 
 #endif // Engine_Tags_h__

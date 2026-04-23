@@ -1,4 +1,5 @@
 #include "UIObject.h"
+#include "UIAnimator.h"
 #include "GameInstance.h"
 
 CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -42,6 +43,13 @@ void CUIObject::Set_Anchor(UI_ANCHOR eAnchor, _float fOffsetX, _float fOffsetY, 
 	Refresh_Layout();
 }
 
+void CUIObject::Set_AnchorOffset(_float fOffsetX, _float fOffsetY)
+{
+	m_tAnchorDesc.fOffsetX = fOffsetX;
+	m_tAnchorDesc.fOffsetY = fOffsetY;
+	Refresh_Layout();
+}
+
 HRESULT CUIObject::Initialize_Prototype()
 {
 	return S_OK;
@@ -64,6 +72,9 @@ HRESULT CUIObject::Initialize(void* pArg)
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Animator()))
 		return E_FAIL;
 
 	_uint iNumViewport = { 1 };
@@ -90,6 +101,8 @@ void CUIObject::Priority_Update(_float fTimeDelta)
 
 void CUIObject::Update(_float fTimeDelta)
 {
+	if (m_pAnimatorCom)
+		m_pAnimatorCom->Tick(fTimeDelta, this);
 }
 
 void CUIObject::Late_Update(_float fTimeDelta)
@@ -156,6 +169,22 @@ HRESULT CUIObject::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
 	}
 }
 
+HRESULT CUIObject::Ready_Animator()
+{
+	m_pAnimatorCom = CUIAnimator::Create(m_pDevice, m_pContext);
+
+	if (nullptr == m_pAnimatorCom)
+		return E_FAIL;
+
+	if (FAILED(m_pAnimatorCom->Initialize(nullptr)))
+		return E_FAIL;
+
+	m_Components.emplace(COM_UI_ANIMATOR, m_pAnimatorCom);
+	Safe_AddRef(m_pAnimatorCom);
+
+	return S_OK;
+}
+
 HRESULT CUIObject::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, D3DTS eType)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_TransformMatrices[ETOUI(eType)]);
@@ -217,4 +246,6 @@ void CUIObject::Update_UI_Transform()
 void CUIObject::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pAnimatorCom);
 }

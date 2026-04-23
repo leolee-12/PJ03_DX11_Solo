@@ -57,6 +57,7 @@ void CUIProgressBar::Priority_Update(_float fTimeDelta)
 
 void CUIProgressBar::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 }
 
 void CUIProgressBar::Late_Update(_float fTimeDelta)

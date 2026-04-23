@@ -135,5 +135,14 @@ namespace Engine
 	};
 
 	enum class UI_TWEEN_LOOP : unsigned int { NONE, LOOP, PINGPONG, END };
+
+	enum class UI_SEQ_STEP_KIND : unsigned int
+	{
+		PLAY_ANIM,		// target->Get_Animator()->Play_Animation(AnimName, target)
+		SET_VISIBLE,	// target->Set_Visible(bVisible)
+		WAIT,			// fWaitSec 경과 대기
+		USE_CALLBACK,	// fnCallback 호출
+		END
+	};
 }
 #endif // Engine_Enum_h__

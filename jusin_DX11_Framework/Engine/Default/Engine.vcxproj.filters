@@ -7,9 +7,6 @@
     <Filter Include="01. Device">
       <UniqueIdentifier>{0f6957c8-e780-440a-afcf-2c25a89ed9f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. Defines">
-      <UniqueIdentifier>{e7229af7-7022-43a2-815d-a47a3d9f6eb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Timers">
       <UniqueIdentifier>{ec13b709-e201-4e8d-a89b-94b8d9fbd85e}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,12 @@
     </Filter>
     <Filter Include="05. GameObject\UIObject\99. Tween">
       <UniqueIdentifier>{91719731-bc7d-488d-9d1f-ff169571f254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\UIAnimator">
+      <UniqueIdentifier>{1687a60c-8a1d-4ce3-9d2a-b99da95702e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{e7229af7-7022-43a2-815d-a47a3d9f6eb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +306,12 @@
     <ClInclude Include="..\Public\UITween.h">
       <Filter>05. GameObject\UIObject\99. Tween</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIAnimator.h">
+      <Filter>07. Component\UIAnimator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UISequence.h">
+      <Filter>05. GameObject\UIObject\00. Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -460,6 +469,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UITween.cpp">
       <Filter>05. GameObject\UIObject\99. Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIAnimator.cpp">
+      <Filter>07. Component\UIAnimator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UISequence.cpp">
+      <Filter>05. GameObject\UIObject\00. Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

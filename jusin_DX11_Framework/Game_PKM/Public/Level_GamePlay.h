@@ -3,9 +3,8 @@
 #include "Level.h"
 
 NS_BEGIN(Engine)
-class CUITween;
+class CUISequence;
 NS_END
-
 
 NS_BEGIN(Game_PKM)
 
@@ -29,7 +28,7 @@ public:
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
 private:
-	CUITween* m_pTestTween{ nullptr };
+	CUISequence* m_pTestSequence{ nullptr };
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

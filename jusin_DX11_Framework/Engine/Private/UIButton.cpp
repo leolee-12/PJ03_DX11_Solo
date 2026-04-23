@@ -105,6 +105,7 @@ void CUIButton::Priority_Update(_float fTimeDelta)
 
 void CUIButton::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 }
 
 void CUIButton::Late_Update(_float fTimeDelta)
