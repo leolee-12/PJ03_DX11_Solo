@@ -49,7 +49,7 @@ void CUISequence::Update(_float fTimeDelta)
 			{
 			case UI_SEQ_STEP_KIND::PLAY_ANIM:
 				if (s.pTarget && s.pTarget->Get_Animator())
-					s.pTarget->Get_Animator()->Play_Animation(s.strAnimName, s.pTarget);
+					s.pTarget->Get_Animator()->Play_Animation(s.strAnimName);
 				break;
 
 			case UI_SEQ_STEP_KIND::SET_VISIBLE:

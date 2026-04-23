@@ -102,7 +102,7 @@ void CUIObject::Priority_Update(_float fTimeDelta)
 void CUIObject::Update(_float fTimeDelta)
 {
 	if (m_pAnimatorCom)
-		m_pAnimatorCom->Tick(fTimeDelta, this);
+		m_pAnimatorCom->Tick(fTimeDelta);
 }
 
 void CUIObject::Late_Update(_float fTimeDelta)
@@ -176,7 +176,10 @@ HRESULT CUIObject::Ready_Animator()
 	if (nullptr == m_pAnimatorCom)
 		return E_FAIL;
 
-	if (FAILED(m_pAnimatorCom->Initialize(nullptr)))
+	CUIAnimator::UIANIMATOR_DESC tDesc = {};
+	tDesc.pOwner = this;
+
+	if (FAILED(m_pAnimatorCom->Initialize(&tDesc)))
 		return E_FAIL;
 
 	m_Components.emplace(COM_UI_ANIMATOR, m_pAnimatorCom);
