@@ -18,6 +18,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXMESH, L"Prototype_Component_Shader_VtxMesh");
 WNAME_TAG(PROTO_COM_SHADER_VTXANIMMESH, L"Prototype_Component_Shader_VtxAnimMesh");
 WNAME_TAG(PROTO_COM_SHADER_VTXCUBE, L"Prototype_Component_Shader_VtxCube");
 WNAME_TAG(PROTO_COM_SHADER_VTXRECTINST, L"Prototype_Component_Shader_VtxRectInstance");
+WNAME_TAG(PROTO_COM_SHADER_VTXPOINTINST, L"Prototype_Component_Shader_VtxPointInstance");
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
 
@@ -25,7 +26,8 @@ WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");
 WNAME_TAG(PROTO_COM_VIBUFFER_TERRAIN, L"Prototype_Component_VIBuffer_Terrain");
 WNAME_TAG(PROTO_COM_VIBUFFER_CUBE, L"Prototype_Component_VIBuffer_Cube");
-WNAME_TAG(PROTO_COM_VIBUFFER_INST_SNOW, L"Prototype_Component_VIBuffer_RInstance_Snow");
+WNAME_TAG(PROTO_COM_VIBUFFER_INST_SNOW, L"Prototype_Component_VIBuffer_Instance_Snow");
+WNAME_TAG(PROTO_COM_VIBUFFER_INST_EXPLOSION, L"Prototype_Component_VIBuffer_Instance_Explosion");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
@@ -51,6 +53,7 @@ WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
 WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
 WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
 WNAME_TAG(LAYER_MONSTER, L"Layer_Monster");
+WNAME_TAG(LAYER_EFFECT, L"Layer_Effect");
 
 // Object
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
@@ -63,6 +66,7 @@ WNAME_TAG(PROTO_OBJ_BODY_PLAYER, L"Prototype_GameObject_Body_Player");
 WNAME_TAG(PROTO_OBJ_WEAPON, L"Prototype_GameObject_Weapon");
 WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
+WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");

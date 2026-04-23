@@ -24,6 +24,7 @@
     <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Game_API.h" />
     <ClInclude Include="..\Public\Game_PKM_Defines.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Game_API.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -74,6 +76,7 @@
     <FxCompile Include="..\ShaderFiles\Shader_VtxCube.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

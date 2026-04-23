@@ -161,6 +161,7 @@ technique11 DefaultTechnique
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DS();
 	}
 	pass Pass_DSEL	// 1. R_EYE, L_EYE
@@ -170,6 +171,7 @@ technique11 DefaultTechnique
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DSEL();
 	}
 	pass Pass_DSAAA	// 2. SKIN, HAIR, SHOES, TOPS
@@ -179,6 +181,7 @@ technique11 DefaultTechnique
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DSAAA();
 	}
 

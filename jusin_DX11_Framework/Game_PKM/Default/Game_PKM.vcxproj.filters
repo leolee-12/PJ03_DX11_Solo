@@ -150,6 +150,9 @@
     <ClInclude Include="..\Public\Snow.h">
       <Filter>80. Study\03. Particles</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Explosion.h">
+      <Filter>80. Study\03. Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -215,6 +218,9 @@
     <ClCompile Include="..\Private\Snow.cpp">
       <Filter>80. Study\03. Particles</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Explosion.cpp">
+      <Filter>80. Study\03. Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
@@ -236,6 +242,9 @@
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxPointInstance.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

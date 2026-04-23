@@ -13,6 +13,7 @@
 #include "Player_LGPE.h"
 #include "Body_Hero.h"
 #include "Snow.h"
+#include "Explosion.h"
 
 #include "GameInstance.h"
 
@@ -147,7 +148,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	/* Prototype_Component_Shader_VtxRectInstance */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXRECTINST,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXPARTICLE_INSTANCE_DESC::Elements, VTXPARTICLE_INSTANCE_DESC::iNumElements)); });
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXRECT_INSTANCE_DESC::Elements, VTXRECT_INSTANCE_DESC::iNumElements)); });
+
+	/* Prototype_Component_Shader_VtxPointInstance */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXPOINTINST,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxPointInstance.hlsl"), VTXPOINT_INSTANCE_DESC::Elements, VTXPOINT_INSTANCE_DESC::iNumElements)); });
+
 
 	/* Prototype_Component_Shader_Player_LGPE */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
@@ -276,6 +282,20 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
  	Enqueue([this, SnowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_SNOW,
 		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &SnowDesc)); });
 
+	/* Prototype_Component_VIBuffer_Instance_Explosion */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC ExplDesc{};
+	ExplDesc.iNumInstance = 600;
+	ExplDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	ExplDesc.vPosOffset = _float3(0.3f, 0.3f, 0.3f);
+	ExplDesc.vSizeRange = _float2(0.1f, 0.3f);
+	ExplDesc.vSpeedRange = _float2(1.f, 3.f);
+	ExplDesc.vLifeRange = _float2(0.5f, 1.f);
+	ExplDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	ExplDesc.isLoop = true;
+
+	Enqueue([this, ExplDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_EXPLOSION,
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplDesc)); });
+
 	// Navigation
 	/* Prototype_Component_Navigation_Terrain */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_TERRAIN,
@@ -313,6 +333,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_GameObject_Snow */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
 		CSnow::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_GameObject_Explosion */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EXPLOSION,
+		CExplosion::Create(m_pDevice, m_pContext)); });
 #pragma endregion
 
 	return S_OK;

@@ -8,6 +8,7 @@
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Rect_Instance.h"
+#include "VIBuffer_Point_Instance.h"
 
 /* -------------------------------------------------- */
 // 프로토타입 매니저

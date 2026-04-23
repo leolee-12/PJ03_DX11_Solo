@@ -21,6 +21,8 @@ public:
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
 	HRESULT Ready_Layer_Player(WNameID strLayerTag);
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
+	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
+
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
