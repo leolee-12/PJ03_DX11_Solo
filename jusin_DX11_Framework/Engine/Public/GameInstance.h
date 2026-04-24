@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include "GameObject.h"
 #include "Prototype_Manager.h"
 
 /* ------------------------------------------------------------ */
-// CGameInstance : Å¬¶óÀÌ¾ğÆ®¿¡°Ô ¿£Áø ±â´ÉÀ» À§ÇÑ ¸Ş¼­µå Á¦°ø
+// CGameInstance : í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ì—”ì§„ ê¸°ëŠ¥ì„ ìœ„í•œ ë©”ì„œë“œ ì œê³µ
 /* ------------------------------------------------------------ */
 
 NS_BEGIN(Engine)
@@ -90,6 +90,7 @@ public:
 
 #pragma region FONT_MANAGER
 	HRESULT Add_Font(const WNameID strFontTag, const _tchar* pFontFilePath);
+	_float2 Measure_Text(const WNameID strFontTag, const _tchar* pText);
 	HRESULT XM_CALLCONV Draw_Text(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f),
 		_float fRotation = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), const _float2& vScale = _float2(1.f, 1.f));
 #pragma endregion

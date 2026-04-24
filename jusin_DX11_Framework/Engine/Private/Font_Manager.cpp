@@ -1,4 +1,4 @@
-#include "Font_Manager.h"
+﻿#include "Font_Manager.h"
 #include "CustomFont.h"
 
 CFont_Manager::CFont_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -21,6 +21,15 @@ HRESULT CFont_Manager::Add_Font(const WNameID strFontTag, const _tchar* pFontFil
 	m_Fonts.emplace(strFontTag, pFont);
 
 	return S_OK;
+}
+
+_float2 CFont_Manager::Measure_Text(const WNameID strFontTag, const _tchar* pText)
+{
+	CCustomFont* pFont = Find_Font(strFontTag);
+	if (nullptr == pFont)
+		return _float2(0.f, 0.f);
+
+	return pFont->Measure_Text(pText);
 }
 
 HRESULT XM_CALLCONV CFont_Manager::Draw(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)

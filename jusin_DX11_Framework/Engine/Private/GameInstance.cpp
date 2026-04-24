@@ -1,4 +1,4 @@
-#include "GameInstance.h"
+ï»¿#include "GameInstance.h"
 #include "Graphic_Device.h"
 #include "Timer_Manager.h"
 #include "Level_Manager.h"
@@ -113,7 +113,7 @@ void CGameInstance::Clear_Resources(_int iLevelIndex)
 	if (-1 == iLevelIndex)
 		return;
 
-	/* iLevelIndex¿ë ÀÚ¿øÀ» Á¤¸® */
+	/* iLevelIndexìš© ìžì›ì„ ì •ë¦¬ */
 	m_pObject_Manager->Clear(iLevelIndex);
 	m_pPrototype_Manager->Clear(iLevelIndex);
 }
@@ -327,6 +327,11 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 HRESULT CGameInstance::Add_Font(const WNameID strFontTag, const _tchar* pFontFilePath)
 {
 	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+_float2 CGameInstance::Measure_Text(const WNameID strFontTag, const _tchar* pText)
+{
+	return m_pFont_Manager->Measure_Text(strFontTag, pText);
 }
 
 HRESULT XM_CALLCONV CGameInstance::Draw_Text(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)

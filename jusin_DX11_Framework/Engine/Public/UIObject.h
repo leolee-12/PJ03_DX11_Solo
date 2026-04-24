@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
@@ -60,9 +60,10 @@ protected:
 	_float m_fViewWidth{}, m_fViewHeight{};
 	_float4x4 m_TransformMatrices[ETOUI(D3DTS::END)] = {};
 
-	_float m_fCenterX{}, m_fCenterY{};	// ·ÎÄÃ
-	_float m_fResolvedCenterX{}, m_fResolvedCenterY{};	// Combined (anchor, layout °è»ê ÈÄ)
+	_float m_fCenterX{}, m_fCenterY{};	// ë¡œì»¬
+	_float m_fResolvedCenterX{}, m_fResolvedCenterY{};	// Combined (anchor, layout ê³„ì‚° í›„)
 	_float m_fSizeX{}, m_fSizeY{};
+	_float m_fRotation{ 0.f };
 	_int m_iZOrder{};
 	_bool m_bVisible = true;
 	UIANCHOR_DESC m_tAnchorDesc{};
