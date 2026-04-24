@@ -28,9 +28,6 @@ public:
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
-private:
-	CUISequence* m_pTestSequence{ nullptr };
-
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 

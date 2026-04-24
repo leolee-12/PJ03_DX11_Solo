@@ -136,6 +136,9 @@
     <Filter Include="07. Component\VIBuffer\Instance\Model">
       <UniqueIdentifier>{a8ee257a-f747-4377-a084-906c8e25836f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="11. RenderTargets">
+      <UniqueIdentifier>{0e99d385-8887-40ba-a3b9-2428c4282278}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -333,6 +336,12 @@
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
       <Filter>07. Component\VIBuffer\Instance\Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Target_Manager.h">
+      <Filter>11. RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>11. RenderTargets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -505,6 +514,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp">
       <Filter>07. Component\VIBuffer\Instance\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Target_Manager.cpp">
+      <Filter>11. RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>11. RenderTargets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

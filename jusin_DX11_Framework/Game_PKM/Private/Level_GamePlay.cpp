@@ -40,93 +40,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(LAYER_UI)))
-		return E_FAIL;
-
-	auto pList = m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, LAYER_UI);
-	if (pList && pList->size() >= 3)
-	{
-		auto it = pList->begin();
-		CUIImage* pImg = static_cast<CUIImage*>(*it);       ++it;
-		CUIButton* pBtn = static_cast<CUIButton*>(*it);      ++it;
-		CUIProgressBar* pBar = static_cast<CUIProgressBar*>(*it);
-
-		// 1) 각 위젯의 Animator에 네임드 애니메이션 등록
-		{
-			CUITween::UITWEEN_DESC t{};
-			t.eTarget = UI_TWEEN_TARGET::COLOR_A;
-			t.fStart = 0.f; t.fEnd = 1.f; t.fDuration = 0.5f;
-			t.eEase = UI_EASE::EASE_OUT_CUBIC;
-			pImg->Get_Animator()->Register_Animation(L"fade_in", { t });
-		}
-		{
-			CUITween::UITWEEN_DESC tA{};
-			tA.eTarget = UI_TWEEN_TARGET::COLOR_A;
-			tA.fStart = 0.f; tA.fEnd = 1.f; tA.fDuration = 0.5f;
-
-			CUITween::UITWEEN_DESC tS{};
-			tS.eTarget = UI_TWEEN_TARGET::SIZE_X;
-			tS.fStart = 100.f; tS.fEnd = 200.f; tS.fDuration = 0.5f;
-
-			pBtn->Get_Animator()->Register_Animation(L"appear", { tA, tS });
-		}
-		{
-			CUITween::UITWEEN_DESC t{};
-			t.eTarget = UI_TWEEN_TARGET::FILL_AMOUNT;
-			t.fStart = 0.f; t.fEnd = 1.f; t.fDuration = 1.f;
-			pBar->Get_Animator()->Register_Animation(L"fill", { t });
-		}
-
-		// 2) Sequence 수동 생성 (프로토타입 미경유)
-		m_pTestSequence = CUISequence::Create(m_pDevice, m_pContext);
-		if (m_pTestSequence)
-		{
-			m_pTestSequence->Initialize(nullptr);
-
-			// 3) 타임라인 구성
-			CUISequence::UISEQ_STEP step{};
-
-			// [0] Image fade_in
-			step = {};
-			step.eKind = UI_SEQ_STEP_KIND::PLAY_ANIM;
-			step.pTarget = pImg;
-			step.strAnimName = L"fade_in";
-			m_pTestSequence->Append(step);
-
-			// [1] 0.3초 대기
-			step = {};
-			step.eKind = UI_SEQ_STEP_KIND::WAIT;
-			step.fWaitSec = 0.3f;
-			m_pTestSequence->Append(step);
-
-			// [2] Button appear
-			step = {};
-			step.eKind = UI_SEQ_STEP_KIND::PLAY_ANIM;
-			step.pTarget = pBtn;
-			step.strAnimName = L"appear";
-			m_pTestSequence->Append(step);
-
-			// [3] Join: ProgressBar fill — [2]와 동일 프레임 연쇄
-			step = {};
-			step.eKind = UI_SEQ_STEP_KIND::PLAY_ANIM;
-			step.pTarget = pBar;
-			step.strAnimName = L"fill";
-			m_pTestSequence->Join(step);
-
-			// [4] 1.0초 대기 (appear/fill 완료 시간 확보)
-			step = {};
-			step.eKind = UI_SEQ_STEP_KIND::WAIT;
-			step.fWaitSec = 1.0f;
-			m_pTestSequence->Append(step);
-
-			// [5] Image 숨김
-			step = {};
-			step.eKind = UI_SEQ_STEP_KIND::SET_VISIBLE;
-			step.pTarget = pImg;
-			step.bVisible = false;
-			m_pTestSequence->Append(step);
-		}
-	}
+	//if (FAILED(Ready_Layer_UI(LAYER_UI)))
+	//	return E_FAIL;
 
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
@@ -141,14 +56,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_F4))
 		m_pGameInstance->Toggle_CameraFollow();
-
-	if (m_pTestSequence)
-	{
-		m_pTestSequence->Update(fTimeDelta);
-
-		if (m_pGameInstance->Key_Down(DIK_F2))
-			m_pTestSequence->Play();
-	}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -350,6 +257,4 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pTestSequence);
 }

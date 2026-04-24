@@ -28,6 +28,7 @@ public:
 
 	const HWND Get_HWND() const;
 	_float Random(_float fMin, _float fMax);
+	_float2 Get_ViewportDesc() { return m_vViewportDesc; }
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -94,6 +95,10 @@ public:
 		_float fRotation = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), const _float2& vScale = _float2(1.f, 1.f));
 #pragma endregion
 
+#pragma region TARGET_MANAGER
+	HRESULT Add_RenderTarget(WNameID strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -105,8 +110,11 @@ private:
 	class CInput_Device*		m_pInput_Device = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
+	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
+
+	_float2						m_vViewportDesc{};
 
 private:
 	virtual void Free() override;

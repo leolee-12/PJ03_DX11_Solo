@@ -8,6 +8,7 @@
 #include "Input_Device.h"
 #include "Light_Manager.h"
 #include "Font_Manager.h"
+#include "Target_Manager.h"
 
 #include "Camera.h"
 
@@ -21,6 +22,9 @@ CGameInstance::CGameInstance()
 
 HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)
 {
+	m_vViewportDesc = _float2(	static_cast<_float>(EngineDesc.iViewportWidth),
+								static_cast<_float>(EngineDesc.iViewportHeight));
+
 	m_pGraphic_Device = CGraphic_Device::Create(EngineDesc.hWnd,
 												EngineDesc.eWinMode,
 												EngineDesc.iViewportWidth,
@@ -45,12 +49,16 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pObject_Manager)
 		return E_FAIL;
 
+	m_pTarget_Manager = CTarget_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+
 	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
 	m_pPipeLine = CPipeLine::Create();
-	if (nullptr == m_pRenderer)
+	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
 	m_pInput_Device = CInput_Device::Create(EngineDesc.hInstance, EngineDesc.hWnd);
@@ -127,6 +135,7 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pRenderer);
+	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pPrototype_Manager);
 	Safe_Release(m_pLevel_Manager);
@@ -332,6 +341,13 @@ HRESULT CGameInstance::Add_Font(const WNameID strFontTag, const _tchar* pFontFil
 HRESULT XM_CALLCONV CGameInstance::Draw_Text(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
 {
 	return m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, vScale);
+}
+#pragma endregion
+
+#pragma region TARGET_MANAGER
+HRESULT CGameInstance::Add_RenderTarget(WNameID strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
+{
+	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iWidth, iHeight, ePixelFormat, vClearColor);
 }
 #pragma endregion
 
