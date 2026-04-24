@@ -25,6 +25,21 @@ protected:
 public:
 	virtual _string Get_TypeName() const override { return "UISequence"; }
 
+	// ── 조회 ──
+	const vector<UISEQ_STEP>& Get_Steps() const { return m_Steps; }
+	_int   Get_Cursor() const { return m_iCursor; }
+	_float Get_Timer()  const { return m_fTimer; }
+
+	// ── 편집(재생 중에는 모두 false 반환) ──
+	_bool  Insert_Step(_int iIndex, const UISEQ_STEP& step);
+	_bool  Remove_Step(_int iIndex);
+	_bool  Move_Step(_int iFrom, _int iTo);
+	_bool  Update_Step(_int iIndex, const UISEQ_STEP& step);
+
+	// ── 스크럽(Play 중에만 의미) ──
+	void   Seek_ToStep(_int iIndex);
+	void   Set_Timer(_float fTimer);
+
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void    Update(_float fTimeDelta) override;

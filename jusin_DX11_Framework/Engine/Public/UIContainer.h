@@ -33,6 +33,8 @@ public:
 	virtual void Refresh_Layout() override;
 	void Add_Child(CUIObject* pChild);
 	void Remove_Child(CUIObject* pChild);
+	_bool Insert_Child(_int iIndex, CUIObject* pChild);
+	_bool Move_Child(_int iFrom, _int iTo);
 
 protected:
 	vector<CUIObject*> m_Children;

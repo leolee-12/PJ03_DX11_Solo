@@ -102,9 +102,6 @@
     <ClInclude Include="..\Public\Select_Manager.h">
       <Filter>02. Select_Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EditInstance.h">
-      <Filter>01. EditInstance</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Object_Registry.h">
       <Filter>05. Object_Registry</Filter>
     </ClInclude>
@@ -140,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Viewport.h">
       <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EditInstance.h">
+      <Filter>01. EditInstance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

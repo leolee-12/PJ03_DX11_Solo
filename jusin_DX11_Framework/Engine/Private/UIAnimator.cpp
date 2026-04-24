@@ -11,6 +11,43 @@ CUIAnimator::CUIAnimator(const CUIAnimator& Prototype)
 {
 }
 
+_bool CUIAnimator::Has_Animation(const _wstring& strName) const
+{
+	return m_NamedAnimations.find(strName) != m_NamedAnimations.end();
+}
+
+_bool CUIAnimator::Remove_Animation(const _wstring& strName)
+{
+	auto it = m_NamedAnimations.find(strName);
+	if (it == m_NamedAnimations.end()) return false;
+	if (Is_Animation_Active(strName))  return false;
+
+	m_NamedAnimations.erase(it);
+	return true;
+}
+
+_bool CUIAnimator::Rename_Animation(const _wstring& strOld, const _wstring& strNew)
+{
+	if (strOld == strNew)                    return false;
+	if (strNew.empty())                      return false;
+	if (m_NamedAnimations.find(strNew) != m_NamedAnimations.end()) return false;
+
+	auto it = m_NamedAnimations.find(strOld);
+	if (it == m_NamedAnimations.end())       return false;
+	if (Is_Animation_Active(strOld))         return false;
+
+	vector<CUITween::UITWEEN_DESC> vTracks = std::move(it->second);
+	m_NamedAnimations.erase(it);
+	m_NamedAnimations[strNew] = std::move(vTracks);
+	return true;
+}
+
+void CUIAnimator::Clear_Animations()
+{
+	// 활성 Tween은 값 복사본을 쥐고 있으므로 안전. 단 이름 소스는 비게 됨.
+	m_NamedAnimations.clear();
+}
+
 HRESULT CUIAnimator::Initialize_Prototype()
 {
 	return S_OK;
@@ -146,6 +183,15 @@ void CUIAnimator::Purge_FinishedTweens()
 		});
 
 	m_ActiveTweens.erase(itEnd, m_ActiveTweens.end());
+}
+
+_bool CUIAnimator::Is_Animation_Active(const _wstring& strName) const
+{
+	for (const auto& e : m_ActiveTweens)
+	{
+		if (e.strSource == strName && e.pTween) return true;
+	}
+	return false;
 }
 
 CUIAnimator* CUIAnimator::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -74,8 +74,8 @@ public:
 	HRESULT Save_Map(const _string& strPath);
 	HRESULT Load_Map(const _string& strPath);
 
-	HRESULT Save_UILayout(const _string& strPath, const vector<struct UI_ELEMENT>& Elements);
-	HRESULT Load_UILayout(const _string& strPath, vector<struct UI_ELEMENT>& Elements);
+	HRESULT Save_UISequence(const _string& strPath, const UISEQ_DOC& tDoc);
+	HRESULT Load_UISequence(const _string& strPath, UISEQ_DOC& tDoc);
 
 	HRESULT Save_EffectPreset(const _string& strPath, const vector<struct EFFECT_PRESET>& Presets);
 	HRESULT Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets);

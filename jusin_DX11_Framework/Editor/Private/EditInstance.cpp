@@ -247,14 +247,14 @@ HRESULT CEditInstance::Load_Map(const _string& strPath)
 	return CEditor_Serializer::Load_Map(strPath, this);
 }
 
-HRESULT CEditInstance::Save_UILayout(const _string& strPath, const vector<struct UI_ELEMENT>& Elements)
+HRESULT CEditInstance::Save_UISequence(const _string& strPath, const UISEQ_DOC& tDoc)
 {
-	return CEditor_Serializer::Save_UILayout(strPath, Elements);
+	return CEditor_Serializer::Save_UISequence(strPath, tDoc);
 }
 
-HRESULT CEditInstance::Load_UILayout(const _string& strPath, vector<struct UI_ELEMENT>& Elements)
+HRESULT CEditInstance::Load_UISequence(const _string& strPath, UISEQ_DOC& tDoc)
 {
-	return CEditor_Serializer::Load_UILayout(strPath, Elements);
+	return CEditor_Serializer::Load_UISequence(strPath, tDoc);
 }
 
 HRESULT CEditInstance::Save_EffectPreset(const _string& strPath, const vector<struct EFFECT_PRESET>& Presets)

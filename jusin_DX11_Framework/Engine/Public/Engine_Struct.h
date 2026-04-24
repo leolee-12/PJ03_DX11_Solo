@@ -258,29 +258,6 @@ namespace Engine
 
 
 
-	// UI 관련
-	struct UIANCHOR_DESC
-	{
-		UI_ANCHOR eAnchor = { UI_ANCHOR::MC };
-		float fOffsetX = {};
-		float fOffsetY = {};
-		bool bUseAnchoredPos = { false };
-	};
-
-	struct UILAYOUT_DESC
-	{
-		UI_LAYOUT eLayout = { UI_LAYOUT::NONE };
-		float fPadding = {};
-		float fSpacing = {};
-	};
-
-	struct UILAYOUT_SLOT_DESC
-	{
-		XMFLOAT4 vMargin = {};	// (left, top, right, bottom)
-		float fDesiredSizeX = {};
-		float fDesiredSizeY = {};
-	};
-
 	// 루트모션 이동- 관련
 	struct MOVEMENT_TUNING
 	{

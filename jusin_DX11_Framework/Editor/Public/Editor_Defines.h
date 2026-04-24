@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <process.h>
 #include <fstream>
+#include <variant>
 
 #include "Game_PKM_Defines.h"
 

@@ -333,6 +333,9 @@
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
       <Filter>07. Component\VIBuffer\Instance\Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_UI.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

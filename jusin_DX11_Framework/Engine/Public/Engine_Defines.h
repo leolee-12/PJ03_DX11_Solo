@@ -49,7 +49,9 @@ using namespace std;
 #include "Engine_Struct.h"
 #include "Engine_Typedef.h"
 #include "Engine_Function.h"
+
 #include "Engine_Tags.h"
+#include "Engine_UI.h"
 
 namespace Engine
 {
@@ -77,14 +79,6 @@ namespace Engine
 	inline constexpr _uint g_kMaxTraverse = { 64 };
 	inline constexpr _float g_kDefaultBlendDuration = { 0.2f };
 	inline constexpr _float g_kDebugOffset_Y = { 0.05f };
-
-
-
-	// UI ฐüทร
-	inline _float Evaluate_Ease(UI_EASE eEase, _float t)
-	{
-		return _float();
-	}
 }
 
 namespace ObjFlag
