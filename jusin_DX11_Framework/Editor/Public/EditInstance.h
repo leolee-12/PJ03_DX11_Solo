@@ -81,6 +81,10 @@ public:
 	HRESULT Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets);
 #pragma endregion
 
+#pragma region UIEDITOR_SESSION
+	class CUIEditorSession* Get_UISession() const { return m_pUIEditorSession; }
+#pragma endregion
+
 #pragma region MODEL_LOADER
 	HRESULT XM_CALLCONV Export_Binary(const _char* pFbxPath, const _char* pOutputPath,
 		MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath = nullptr);
@@ -114,6 +118,7 @@ private:
 	_bool m_bCameraEnabled = { false };
 
 	class CGameInstance* m_pGameInstance = { nullptr };
+	class CUIEditorSession* m_pUIEditorSession = { nullptr };
 	class CImGui_Manager* m_pImGui_Manager = { nullptr };
 	class CSelect_Manager* m_pSelect_Manager = { nullptr };
 	class CObject_Registry* m_pObject_Registry = { nullptr };

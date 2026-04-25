@@ -17,6 +17,8 @@ namespace Engine
 
 	enum class UI_TEXT_ALIGN { LEFT, CENTER, RIGHT, END };
 
+	enum class UI_PROGRESS_DIR { LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP, END };
+
 	enum class UI_EASE : unsigned int
 	{
 		LINEAR,
@@ -54,6 +56,14 @@ namespace Engine
 		template <typename E>
 		struct EnumStringPair { E e; const char* s; };
 
+		inline constexpr EnumStringPair<UI_LAYOUT> kUILayout[] = {
+			{ UI_LAYOUT::NONE,			"NONE"			},
+			{ UI_LAYOUT::CANVAS,		"CANVAS"		},
+			{ UI_LAYOUT::HORIZONTAL,	"HORIZONTAL"	},
+			{ UI_LAYOUT::VERTICAL,		"VERTICAL"		},
+			{ UI_LAYOUT::OVERLAY,		"OVERLAY"		},
+		};
+
 		inline constexpr EnumStringPair<UI_TYPE> kUIType[] = {
 			{ UI_TYPE::WIDGET,		"WIDGET"		},
 			{ UI_TYPE::CONTAINER,	"CONTAINER"		},
@@ -61,6 +71,13 @@ namespace Engine
 			{ UI_TYPE::TEXT,		"TEXT"			},
 			{ UI_TYPE::BUTTON,		"BUTTON"		},	
 			{ UI_TYPE::PROGRESSBAR,	"PROGRESSBAR"	},
+		};
+
+		inline constexpr EnumStringPair<UI_PROGRESS_DIR> kProgressDir[] = {
+			{ UI_PROGRESS_DIR::LEFT_TO_RIGHT, "LEFT_TO_RIGHT" },
+			{ UI_PROGRESS_DIR::RIGHT_TO_LEFT, "RIGHT_TO_LEFT" },
+			{ UI_PROGRESS_DIR::TOP_TO_BOTTOM, "TOP_TO_BOTTOM" },
+			{ UI_PROGRESS_DIR::BOTTOM_TO_TOP, "BOTTOM_TO_TOP" },
 		};
 
 		inline constexpr EnumStringPair<UI_TWEEN_TARGET> kTweenTarget[] = {
@@ -139,6 +156,8 @@ namespace Engine
 	}
 
 	inline const char* To_String(UI_TYPE e) { return detail::Enum_To_String(e, detail::kUIType); }
+	inline const char* To_String(UI_LAYOUT e) { return detail::Enum_To_String(e, detail::kUILayout); }
+	inline const char* To_String(UI_PROGRESS_DIR e) { return detail::Enum_To_String(e, detail::kProgressDir); }
 	inline const char* To_String(UI_TWEEN_TARGET e) { return detail::Enum_To_String(e, detail::kTweenTarget); }
 	inline const char* To_String(UI_EASE e) { return detail::Enum_To_String(e, detail::kEase); }
 	inline const char* To_String(UI_TWEEN_LOOP e) { return detail::Enum_To_String(e, detail::kTweenLoop); }
@@ -147,6 +166,8 @@ namespace Engine
 	inline const char* To_String(UI_TEXT_ALIGN e) { return detail::Enum_To_String(e, detail::kTextAlign); }
 
 	inline UI_TYPE			UI_TYPE_From_String(const char* s) { return detail::Enum_From_String(s, detail::kUIType, UI_TYPE::END); }
+	inline UI_LAYOUT		UI_LAYOUT_From_String(const char* s) { return detail::Enum_From_String(s, detail::kUILayout, UI_LAYOUT::END); }
+	inline UI_PROGRESS_DIR	UI_PROGRESS_DIR_From_String(const char* s) { return detail::Enum_From_String(s, detail::kProgressDir, UI_PROGRESS_DIR::END); }
 	inline UI_TWEEN_TARGET  UI_TWEEN_TARGET_From_String(const char* s) { return detail::Enum_From_String(s, detail::kTweenTarget, UI_TWEEN_TARGET::END); }
 	inline UI_EASE          UI_EASE_From_String(const char* s) { return detail::Enum_From_String(s, detail::kEase, UI_EASE::END); }
 	inline UI_TWEEN_LOOP    UI_TWEEN_LOOP_From_String(const char* s) { return detail::Enum_From_String(s, detail::kTweenLoop, UI_TWEEN_LOOP::END); }

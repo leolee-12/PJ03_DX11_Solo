@@ -145,6 +145,7 @@
     <ClInclude Include="..\Public\Editor_Function.h" />
     <ClInclude Include="..\Public\Editor_Serializer.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
+    <ClInclude Include="..\Public\Editor_UI.h" />
     <ClInclude Include="..\Public\ImGui_Manager.h" />
     <ClInclude Include="..\Public\Model_Loader.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -158,9 +159,11 @@
     <ClInclude Include="..\Public\Panel_OutLiner.h" />
     <ClInclude Include="..\Public\Panel_PlaceBrowser.h" />
     <ClInclude Include="..\Public\Panel_Property.h" />
-    <ClInclude Include="..\Public\Panel_UITool.h" />
+    <ClInclude Include="..\Public\Panel_UIAnim.h" />
+    <ClInclude Include="..\Public\Panel_UILayout.h" />
     <ClInclude Include="..\Public\Panel_Viewport.h" />
     <ClInclude Include="..\Public\Select_Manager.h" />
+    <ClInclude Include="..\Public\UIEditorSession.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -189,9 +192,11 @@
     <ClCompile Include="..\Private\Panel_OutLiner.cpp" />
     <ClCompile Include="..\Private\Panel_PlaceBrowser.cpp" />
     <ClCompile Include="..\Private\Panel_Property.cpp" />
-    <ClCompile Include="..\Private\Panel_UITool.cpp" />
+    <ClCompile Include="..\Private\Panel_UIAnim.cpp" />
+    <ClCompile Include="..\Private\Panel_UILayout.cpp" />
     <ClCompile Include="..\Private\Panel_Viewport.cpp" />
     <ClCompile Include="..\Private\Select_Manager.cpp" />
+    <ClCompile Include="..\Private\UIEditorSession.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>
   <ItemGroup>

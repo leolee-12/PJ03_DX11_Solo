@@ -4,6 +4,7 @@
 #include "ImGui_Manager.h"
 #include "Select_Manager.h"
 #include "Editor_Serializer.h"
+#include "UIEditorSession.h"
 #include "Model_Loader.h"
 #include "Panel_Viewport.h"
 
@@ -20,6 +21,10 @@ HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11De
 {
 	m_pSelect_Manager = CSelect_Manager::Create();
 	if (nullptr == m_pSelect_Manager)
+		return E_FAIL;
+
+	m_pUIEditorSession = CUIEditorSession::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pUIEditorSession)
 		return E_FAIL;
 
 	m_pImGui_Manager = CImGui_Manager::Create(*ppDevice, *ppContext, EngineDesc.hWnd);
@@ -78,10 +83,14 @@ void CEditInstance::Release_Editor()
 	Safe_Release(m_pModel_Loader);
 	Safe_Release(m_pObject_Registry);
 	Safe_Release(m_pImGui_Manager);
+	Safe_Release(m_pUIEditorSession);
 	Safe_Release(m_pSelect_Manager);
 
 	DestroyInstance();
 }
+#pragma endregion
+
+#pragma region UIEDITOR_SESSION
 
 #pragma endregion
 

@@ -231,11 +231,11 @@ namespace Helper
 
         d.fFillAmount = std::clamp(j.value("fillAmount", 1.f), 0.f, 1.f);
 
-        const _int iDirection = j.value("direction", static_cast<_int>(CUIProgressBar::UI_PROGRESS_DIR::LEFT_TO_RIGHT));
-        if (iDirection >= 0 && iDirection < static_cast<_int>(CUIProgressBar::UI_PROGRESS_DIR::END))
-            d.eDirection = static_cast<CUIProgressBar::UI_PROGRESS_DIR>(iDirection);
+        const _int iDirection = j.value("direction", static_cast<_int>(UI_PROGRESS_DIR::LEFT_TO_RIGHT));
+        if (iDirection >= 0 && iDirection < static_cast<_int>(UI_PROGRESS_DIR::END))
+            d.eDirection = static_cast<UI_PROGRESS_DIR>(iDirection);
         else
-            d.eDirection = CUIProgressBar::UI_PROGRESS_DIR::LEFT_TO_RIGHT;
+            d.eDirection = UI_PROGRESS_DIR::LEFT_TO_RIGHT;
     }
 
     // UITEXT_DESC

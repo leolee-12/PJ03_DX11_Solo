@@ -393,7 +393,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	tBar.vBackColor = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	tBar.vFillColor = _float4(1.0f, 0.3f, 0.3f, 1.f);
 	tBar.fFillAmount = 0.f;
-	tBar.eDirection = CUIProgressBar::UI_PROGRESS_DIR::LEFT_TO_RIGHT;
+	tBar.eDirection = UI_PROGRESS_DIR::LEFT_TO_RIGHT;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(CURRENT_LEVEL, PROTO_UI_PROGRESSBAR,
 		CURRENT_LEVEL, strLayerTag, &tBar)))

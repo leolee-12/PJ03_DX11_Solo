@@ -28,7 +28,7 @@ inline constexpr unsigned int	g_iWinSizeY = { 990 };
 WNAME_TAG(TIMER_DEFAULT, L"Timer_Default");
 WNAME_TAG(TIMER_FPS60, L"Timer_FPS60");
 
-enum class PANEL { OUTLINER, MAP, PROPERTY, PLACEBROWSER, UI, MODEL, VIEWPORT, OBJECT, EFFECT, END };
+enum class PANEL { OUTLINER, MAP, PROPERTY, PLACEBROWSER, UI_LAYOUT, UI_ANIM, MODEL, VIEWPORT, OBJECT, EFFECT, END };
 inline constexpr size_t g_kNumPanels = static_cast<size_t>(PANEL::END);
 
 using SelectionChangedCB = function<void(const vector<Engine::CGameObject*>&)>;
@@ -37,6 +37,8 @@ NS_END
 
 #include "Editor_Function.h"
 #include "Editor_Struct.h"
+
+#include "Editor_UI.h"
 
 using namespace Editor;
 
