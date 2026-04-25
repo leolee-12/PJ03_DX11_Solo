@@ -6,8 +6,6 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUIProgressBar : public CUIObject
 {
 public:
-	enum class UI_PROGRESS_DIR { LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP, END };
-
 	struct UIPROGRESSBAR_DESC : public CUIObject::UIOBJECT_DESC
 	{
 		WNameID strBackTextureTag{ INVALID_TAG };

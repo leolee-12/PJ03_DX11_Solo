@@ -91,6 +91,31 @@ void CUIContainer::Remove_Child(CUIObject* pChild)
 	Arrange_Children();
 }
 
+_bool CUIContainer::Insert_Child(_int iIndex, CUIObject* pChild)
+{
+	if (nullptr == pChild) return false;
+	if (iIndex < 0 || iIndex > static_cast<_int>(m_Children.size())) return false;
+
+	m_Children.insert(m_Children.begin() + iIndex, pChild);
+	pChild->Set_ParentUI(this);
+	Refresh_Layout();
+	return true;
+}
+
+_bool CUIContainer::Move_Child(_int iFrom, _int iTo)
+{
+	const _int iSize = static_cast<_int>(m_Children.size());
+	if (iFrom < 0 || iFrom >= iSize) return false;
+	if (iTo < 0 || iTo >= iSize) return false;
+	if (iFrom == iTo) return true;
+
+	CUIObject* pMoved = m_Children[iFrom];
+	m_Children.erase(m_Children.begin() + iFrom);
+	m_Children.insert(m_Children.begin() + iTo, pMoved);
+	Refresh_Layout();
+	return true;
+}
+
 void CUIContainer::Arrange_Children()
 {
 	if (m_Children.empty())

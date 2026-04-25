@@ -143,10 +143,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		};
 
 	// ---------- Texture ----------
-	/* Prototype_Component_Texture_Dummy_White */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_DUMMY_WHITE,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/dummy/dummy_white.png"), 1)); });
-
 	/* Prototype_Component_Texture_Title_pbgf_Diff */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_DIFF,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbgf_00.png"), 1)); });

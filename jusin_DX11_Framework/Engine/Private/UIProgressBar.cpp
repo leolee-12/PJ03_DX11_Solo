@@ -1,4 +1,4 @@
-#include "UIProgressBar.h"
+﻿#include "UIProgressBar.h"
 
 #include "GameInstance.h"
 
@@ -80,6 +80,9 @@ HRESULT CUIProgressBar::Render()
 
 _bool CUIProgressBar::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
 {
+	if (UI_TWEEN_TARGET::ROTATION == eTarget)
+		return false;
+
 	switch (eTarget)
 	{
 	case UI_TWEEN_TARGET::COLOR_R:
@@ -87,6 +90,10 @@ _bool CUIProgressBar::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
 	case UI_TWEEN_TARGET::COLOR_B:
 	case UI_TWEEN_TARGET::COLOR_A:
 	case UI_TWEEN_TARGET::FILL_AMOUNT:
+	case UI_TWEEN_TARGET::BACK_COLOR_R:
+	case UI_TWEEN_TARGET::BACK_COLOR_G:
+	case UI_TWEEN_TARGET::BACK_COLOR_B:
+	case UI_TWEEN_TARGET::BACK_COLOR_A:
 		return true;
 
 	default: return __super::Can_Apply_Tween_Target(eTarget);
@@ -100,6 +107,10 @@ HRESULT CUIProgressBar::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValu
 	case UI_TWEEN_TARGET::COLOR_G:		m_vFillColor.y = fValue;	return S_OK;
 	case UI_TWEEN_TARGET::COLOR_B:		m_vFillColor.z = fValue;	return S_OK;
 	case UI_TWEEN_TARGET::COLOR_A:		m_vFillColor.w = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::BACK_COLOR_R:	m_vBackColor.x = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::BACK_COLOR_G:	m_vBackColor.y = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::BACK_COLOR_B:	m_vBackColor.z = fValue;	return S_OK;
+	case UI_TWEEN_TARGET::BACK_COLOR_A:	m_vBackColor.w = fValue;	return S_OK;
 	case UI_TWEEN_TARGET::FILL_AMOUNT:	Set_FillAmount(fValue);		return S_OK;
 	default: return __super::Apply_Tween_Target(eTarget, fValue);
 	}

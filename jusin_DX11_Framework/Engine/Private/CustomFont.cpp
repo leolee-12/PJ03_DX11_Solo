@@ -1,4 +1,4 @@
-#include "CustomFont.h"
+﻿#include "CustomFont.h"
 
 CCustomFont::CCustomFont(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -16,6 +16,16 @@ HRESULT CCustomFont::Initialize(const _tchar* pFontFilePath)
 	return S_OK;
 }
 
+_float2 CCustomFont::Measure_Text(const _tchar* pText) const
+{
+	if (nullptr == m_pFont || nullptr == pText)
+		return _float2(0.f, 0.f);
+
+	_float2 vSize{};
+	XMStoreFloat2(&vSize, m_pFont->MeasureString(pText));
+	return vSize;
+}
+
 HRESULT XM_CALLCONV CCustomFont::Draw(const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
 {
 	m_pBatch->Begin();
@@ -26,8 +36,6 @@ HRESULT XM_CALLCONV CCustomFont::Draw(const _tchar* pText, const _float2& vPosit
 
 	return S_OK;
 }
-
-
 
 CCustomFont* CCustomFont::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontFilePath)
 {

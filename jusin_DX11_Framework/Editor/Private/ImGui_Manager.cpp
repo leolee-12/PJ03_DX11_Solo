@@ -1,11 +1,12 @@
-#include "ImGui_Manager.h"
+ï»¿#include "ImGui_Manager.h"
 #include "EditInstance.h"
 
 #include "Panel_OutLiner.h"
 #include "Panel_Property.h"
 #include "Panel_MapTool.h"
 #include "Panel_PlaceBrowser.h"
-#include "Panel_UITool.h"
+#include "Panel_UILayout.h"
+#include "Panel_UIAnim.h"
 #include "Panel_Model.h"
 #include "Panel_Viewport.h"
 
@@ -20,13 +21,13 @@ CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CImGui_Manager::Initialize(HWND hWnd)
 {
-	// ImGui ÄÁÅØ½ºÆ® »ý¼º
+	// ImGui ì»¨í…ìŠ¤íŠ¸ ìƒì„±
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
 
-	// ÇÑ±Û Áö¿ø ÆùÆ® ·Îµå
+	// í•œê¸€ ì§€ì› í°íŠ¸ ë¡œë“œ
 	io.Fonts->AddFontFromFileTTF(
 		"../../Resources/Fonts/NanumBarunGothic.ttf",
 		16.0f,
@@ -34,19 +35,19 @@ HRESULT CImGui_Manager::Initialize(HWND hWnd)
 		io.Fonts->GetGlyphRangesKorean()
 	);
 
-	// 		"../../Resources/Fonts/malgun.ttf",				// ¸¼Àº °íµñ
+	// 		"../../Resources/Fonts/malgun.ttf",				// ë§‘ì€ ê³ ë”•
 	//		"../../Resources/Fonts/NotoSansKR-VF.ttf",		// Noto Sans KR
-	//		"../../Resources/Fonts/NanumBarunGothic.ttf",	// ³ª´® ¹Ù¸¥ °íµñ
+	//		"../../Resources/Fonts/NanumBarunGothic.ttf",	// ë‚˜ëˆ” ë°”ë¥¸ ê³ ë”•
 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// IF using Docking Branch - Docking
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;	// IF using Docking Branch - Multi-Viewport
 
-	// ÇÃ·§Æû/·»´õ·¯ ¹é¿£µå ÃÊ±âÈ­
+	// í”Œëž«í¼/ë Œë”ëŸ¬ ë°±ì—”ë“œ ì´ˆê¸°í™”
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
-	// ½ºÅ¸ÀÏ ¼³Á¤
+	// ìŠ¤íƒ€ì¼ ì„¤ì •
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsLight();
 
@@ -125,7 +126,7 @@ HRESULT CImGui_Manager::Render()
 	}
 
 	m_pContext->OMSetRenderTargets(1, &pBackBufferRTV, pDepthStencilView);
-	// OMGetRenderTargets°¡ AddRefÇÏ¹Ç·Î ReleaseÇÊ¿ä
+	// OMGetRenderTargetsê°€ AddRefí•˜ë¯€ë¡œ Releaseí•„ìš”
 	Safe_Release(pBackBufferRTV);
 	Safe_Release(pDepthStencilView);
 
@@ -144,12 +145,6 @@ void CImGui_Manager::Update_NavDragHit(const _float3& vWorldPos)
 	auto* pMapTool = static_cast<CPanel_MapTool*>(m_Panels[ETOUI(PANEL::MAP)]);
 	if (pMapTool) pMapTool->Set_DragHitPos(vWorldPos);
 }
-
-//_bool CImGui_Manager::Get_CurrentWorldHit(_float3* pOut) const
-//{
-//	auto* pMapTool = static_cast<CPanel_MapTool*>(m_Panels[ETOUI(PANEL::MAP)]);
-//	return pMapTool->Get_CurrentWorldHit(pOut);
-//}
 
 _bool CImGui_Manager::Is_NavEditMode() const
 {
@@ -254,9 +249,13 @@ HRESULT CImGui_Manager::Add_Panels()
 	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::PLACEBROWSER)] = pInstance;
 
-	pInstance = CPanel_UITool::Create();
+	pInstance = CPanel_UILayout::Create();
 	if (nullptr == pInstance) return E_FAIL;
-	m_Panels[ETOUI(PANEL::UI)] = pInstance;
+	m_Panels[ETOUI(PANEL::UI_LAYOUT)] = pInstance;
+
+	pInstance = CPanel_UIAnim::Create();
+	if (nullptr == pInstance) return E_FAIL;
+	m_Panels[ETOUI(PANEL::UI_ANIM)] = pInstance;
 
 	pInstance = CPanel_Model::Create();
 	if (nullptr == pInstance) return E_FAIL;

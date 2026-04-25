@@ -1,4 +1,4 @@
-#include "EditorApp.h"
+ï»¿#include "EditorApp.h"
 #include "GameInstance.h"
 #include "EditInstance.h"
 #include "Game_API.h"
@@ -39,6 +39,9 @@ HRESULT CEditorApp::Initialize()
 	if (FAILED(Ready_Prototype_For_Static(m_pDevice, m_pContext)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Prototypes_For_Editor(m_pDevice, m_pContext)))
+		return E_FAIL;
+
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
 		return E_FAIL;
 
@@ -69,7 +72,7 @@ HRESULT CEditorApp::Render()
 	if (FAILED(m_pEditInstance->Draw()))
 		return E_FAIL;
 
-	m_pGameInstance->Draw_Text(FONT_MALGUN, TEXT("ÇÑ±Û ÀÌ´Ù"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Draw_Text(FONT_MALGUN, TEXT("í•œê¸€ ì´ë‹¤"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 
 	if (FAILED(m_pGameInstance->End_Draw()))
 		return E_FAIL;

@@ -336,6 +336,9 @@
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
       <Filter>07. Component\VIBuffer\Instance\Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_UI.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Target_Manager.h">
       <Filter>11. RenderTargets</Filter>
     </ClInclude>

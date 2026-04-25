@@ -4,6 +4,7 @@
 NS_BEGIN(Game_PKM)
 
 HRESULT Ready_Prototype_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 HRESULT Ready_Fonts();
 

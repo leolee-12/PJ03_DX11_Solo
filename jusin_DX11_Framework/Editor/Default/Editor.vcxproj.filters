@@ -28,9 +28,6 @@
     <Filter Include="06. Editor_Serializer">
       <UniqueIdentifier>{bfe0a8e0-f9dc-46a5-a1ed-4210867de63c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. Model_Loader">
-      <UniqueIdentifier>{4231252d-243e-434c-a985-98e1c822fb6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98. Default">
       <UniqueIdentifier>{c0f9d35a-8126-446a-a283-ab7441aedd1c}</UniqueIdentifier>
     </Filter>
@@ -102,9 +99,6 @@
     <ClInclude Include="..\Public\Select_Manager.h">
       <Filter>02. Select_Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EditInstance.h">
-      <Filter>01. EditInstance</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Object_Registry.h">
       <Filter>05. Object_Registry</Filter>
     </ClInclude>
@@ -126,12 +120,6 @@
     <ClInclude Include="..\Public\Editor_Struct.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Panel_UITool.h">
-      <Filter>04. Panels\04. UITool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Model_Loader.h">
-      <Filter>96. Model_Loader</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Editor_Function.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
@@ -140,6 +128,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Panel_Viewport.h">
       <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EditInstance.h">
+      <Filter>01. EditInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIEditorSession.h">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_UILayout.h">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_UIAnim.h">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Loader.h">
+      <Filter>04. Panels\05. Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Editor_UI.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIPreviewHost.h">
+      <Filter>04. Panels\04. UITool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -211,17 +220,26 @@
     <ClCompile Include="..\Private\Panel_PlaceBrowser.cpp">
       <Filter>04. Panels\03. PlaceBrowser</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Panel_UITool.cpp">
-      <Filter>04. Panels\04. UITool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Model_Loader.cpp">
-      <Filter>96. Model_Loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Panel_Model.cpp">
       <Filter>04. Panels\05. Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Panel_Viewport.cpp">
       <Filter>04. Panels\06. Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIEditorSession.cpp">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_UILayout.cpp">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_UIAnim.cpp">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Loader.cpp">
+      <Filter>04. Panels\05. Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIPreviewHost.cpp">
+      <Filter>04. Panels\04. UITool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "name": "HUD_Layout",
+    "version": 1
+  },
+  "widgets": [
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "New Text",
+        "transform": {
+          "centerX": 880.0,
+          "centerY": 495.0,
+          "sizeX": 240.0,
+          "sizeY": 48.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text Copy",
+      "id": "widget_001",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "New Text",
+        "transform": {
+          "centerX": 880.0,
+          "centerY": 495.0,
+          "sizeX": 240.0,
+          "sizeY": 48.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text",
+      "id": "widget_002",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "back": {
+          "index": 0,
+          "level": 0,
+          "tag": ""
+        },
+        "backColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "direction": 0,
+        "fill": {
+          "index": 0,
+          "level": 0,
+          "tag": ""
+        },
+        "fillAmount": 1.0,
+        "fillColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "transform": {
+          "centerX": 880.0,
+          "centerY": 495.0,
+          "sizeX": 240.0,
+          "sizeY": 24.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "ProgressBar",
+      "id": "widget_004",
+      "type": "PROGRESSBAR"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 0,
+          "tag": ""
+        },
+        "transform": {
+          "centerX": 880.0,
+          "centerY": 495.0,
+          "sizeX": 200.0,
+          "sizeY": 64.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button",
+      "id": "widget_003",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "layout": {
+          "kind": 0,
+          "padding": 0.0,
+          "spacing": 0.0
+        },
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "transform": {
+          "centerX": 880.0,
+          "centerY": 495.0,
+          "sizeX": 320.0,
+          "sizeY": 180.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Container",
+      "id": "widget_005",
+      "type": "CONTAINER"
+    }
+  ]
+}

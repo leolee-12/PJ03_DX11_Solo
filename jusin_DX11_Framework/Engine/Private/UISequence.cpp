@@ -1,5 +1,4 @@
 #include "UISequence.h"
-#include "UIObject.h"
 #include "UIAnimator.h"
 
 CUISequence::CUISequence(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -10,6 +9,62 @@ CUISequence::CUISequence(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CUISequence::CUISequence(const CUISequence& Prototype)
 	: CUIContainer{ Prototype }
 {
+}
+
+_bool CUISequence::Insert_Step(_int iIndex, const UISEQ_STEP& step)
+{
+	if (m_bPlaying) return false;
+	if (iIndex < 0 || iIndex > static_cast<_int>(m_Steps.size())) return false;
+
+	m_Steps.insert(m_Steps.begin() + iIndex, step);
+	return true;
+}
+
+_bool CUISequence::Remove_Step(_int iIndex)
+{
+	if (m_bPlaying) return false;
+	if (iIndex < 0 || iIndex >= static_cast<_int>(m_Steps.size())) return false;
+
+	m_Steps.erase(m_Steps.begin() + iIndex);
+	return true;
+}
+
+_bool CUISequence::Move_Step(_int iFrom, _int iTo)
+{
+	if (m_bPlaying) return false;
+
+	const _int iSize = static_cast<_int>(m_Steps.size());
+	if (iFrom < 0 || iFrom >= iSize) return false;
+	if (iTo < 0 || iTo >= iSize) return false;
+	if (iFrom == iTo) return true;
+
+	UISEQ_STEP tMoved = m_Steps[iFrom];
+	m_Steps.erase(m_Steps.begin() + iFrom);
+	m_Steps.insert(m_Steps.begin() + iTo, tMoved);
+	return true;
+}
+
+_bool CUISequence::Update_Step(_int iIndex, const UISEQ_STEP& step)
+{
+	if (m_bPlaying) return false;
+	if (iIndex < 0 || iIndex >= static_cast<_int>(m_Steps.size())) return false;
+
+	m_Steps[iIndex] = step;
+	return true;
+}
+
+void CUISequence::Seek_ToStep(_int iIndex)
+{
+	if (iIndex < 0 || iIndex >= static_cast<_int>(m_Steps.size())) return;
+
+	m_iCursor = iIndex;
+	m_fTimer = 0.f;
+	m_bStepStarted = false;
+}
+
+void CUISequence::Set_Timer(_float fTimer)
+{
+	m_fTimer = fTimer;
 }
 
 HRESULT CUISequence::Initialize_Prototype()

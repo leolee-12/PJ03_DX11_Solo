@@ -30,6 +30,11 @@ public:
 	void Set_CameraEnabled(_bool b) { m_bCameraEnabled = b; }
 #pragma endregion
 
+#pragma region UIEDITOR_SESSION & UIPREVIEW_HOST
+	class CUIEditorSession* Get_UISession() const { return m_pUIEditorSession; }
+	class CUIPreviewHost* Get_UIPreviewHost() const { return m_pUIPreviewHost; }
+#pragma endregion
+
 #pragma region IMGUI_MANAGER
 	void Begin_PlaceMode(const CATALOG_ITEM& tItem);
 	void End_PlaceMode();
@@ -74,8 +79,8 @@ public:
 	HRESULT Save_Map(const _string& strPath);
 	HRESULT Load_Map(const _string& strPath);
 
-	HRESULT Save_UILayout(const _string& strPath, const vector<struct UI_ELEMENT>& Elements);
-	HRESULT Load_UILayout(const _string& strPath, vector<struct UI_ELEMENT>& Elements);
+	HRESULT Save_UISequence(const _string& strPath, const UISEQ_DOC& tDoc);
+	HRESULT Load_UISequence(const _string& strPath, UISEQ_DOC& tDoc);
 
 	HRESULT Save_EffectPreset(const _string& strPath, const vector<struct EFFECT_PRESET>& Presets);
 	HRESULT Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets);
@@ -114,7 +119,9 @@ private:
 	_bool m_bCameraEnabled = { false };
 
 	class CGameInstance* m_pGameInstance = { nullptr };
+	class CUIEditorSession* m_pUIEditorSession = { nullptr };
 	class CImGui_Manager* m_pImGui_Manager = { nullptr };
+	class CUIPreviewHost* m_pUIPreviewHost = { nullptr };
 	class CSelect_Manager* m_pSelect_Manager = { nullptr };
 	class CObject_Registry* m_pObject_Registry = { nullptr };
 	class CModel_Loader* m_pModel_Loader = { nullptr };

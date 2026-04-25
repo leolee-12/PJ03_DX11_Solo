@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "UIObject.h"
 
 NS_BEGIN(Engine)
@@ -39,6 +39,8 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual _bool Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const override;
+	virtual HRESULT Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue) override;
 
 private:
 	_wstring m_strText = {};

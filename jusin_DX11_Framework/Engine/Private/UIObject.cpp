@@ -1,4 +1,4 @@
-#include "UIObject.h"
+ï»¿#include "UIObject.h"
 #include "UIAnimator.h"
 #include "GameInstance.h"
 
@@ -83,10 +83,10 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fViewWidth = ViewportDesc.Width;
 	m_fViewHeight = ViewportDesc.Height;
 
-	/* Á÷±³ Åõ¿µÀ¸·Î ±×·ÁÁÖ±âÀ§ÇÑ ºäÇà·Ä ¼Â */
+	// View í–‰ë ¬ ì„¸íŒ…
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::VIEW)], XMMatrixIdentity());
 
-	/* Á÷±³ Åõ¿µÀ¸·Î ±×·ÁÁÖ±âÀ§ÇÑ Åõ¿µÇà·Ä ¼Â */
+	// Proj í–‰ë ¬ ì„¸íŒ…
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::PROJ)],
 		XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.f, 1.f));
 
@@ -142,10 +142,11 @@ _bool CUIObject::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
 {
 	switch (eTarget)
 	{
-	case UI_TWEEN_TARGET::POSITION_X:
-	case UI_TWEEN_TARGET::POSITION_Y:
 	case UI_TWEEN_TARGET::SIZE_X:
 	case UI_TWEEN_TARGET::SIZE_Y:
+	case UI_TWEEN_TARGET::ROTATION:
+	case UI_TWEEN_TARGET::POSITION_X:
+	case UI_TWEEN_TARGET::POSITION_Y:
 	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X:
 	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y:
 		return true;
@@ -159,12 +160,13 @@ HRESULT CUIObject::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
 {
 	switch (eTarget)
 	{
-	case UI_TWEEN_TARGET::POSITION_X:      m_fCenterX = fValue;             Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::POSITION_Y:      m_fCenterY = fValue;             Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::SIZE_X:          m_fSizeX = fValue;				Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::SIZE_Y:          m_fSizeY = fValue;				Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X: m_tAnchorDesc.fOffsetX = fValue;	Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y: m_tAnchorDesc.fOffsetY = fValue;	Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::SIZE_X:			m_fSizeX = fValue;					Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::SIZE_Y:			m_fSizeY = fValue;					Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::ROTATION:			m_fRotation = fValue;				Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::POSITION_X:		m_fCenterX = fValue;				Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::POSITION_Y:		m_fCenterY = fValue;				Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X:	m_tAnchorDesc.fOffsetX = fValue;	Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y:	m_tAnchorDesc.fOffsetY = fValue;	Refresh_Layout(); return S_OK;
 	default: return E_FAIL;
 	}
 }
@@ -240,6 +242,7 @@ _float2 CUIObject::Resolve_AnchorCenter() const
 void CUIObject::Update_UI_Transform()
 {
 	m_pTransformCom->ScaleTo(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_fRotation);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fResolvedCenterX - m_fViewWidth * 0.5f,
 															-m_fResolvedCenterY + m_fViewHeight * 0.5f,
 															0.f,

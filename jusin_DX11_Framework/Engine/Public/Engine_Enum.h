@@ -1,4 +1,4 @@
-#ifndef Engine_Enum_h__
+ï»¿#ifndef Engine_Enum_h__
 #define Engine_Enum_h__
 
 namespace Engine
@@ -23,7 +23,7 @@ namespace Engine
 
 	enum class COLLIDER { AABB, OBB, SPHERE, END };
 
-	//// Dynamic ÄÄÆ÷³ÍÆ® °æ¿ì ¸Å ÇÁ·¹ÀÓ¸¶´Ù °»½ÅÇØ¾ßÇÏ´Â ÄÄÆ÷³ÍÆ® Áı´Ü
+	//// Dynamic ì»´í¬ë„ŒíŠ¸ ê²½ìš° ë§¤ í”„ë ˆì„ë§ˆë‹¤ ê°±ì‹ í•´ì•¼í•˜ëŠ” ì»´í¬ë„ŒíŠ¸ ì§‘ë‹¨
 	//enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 	//
 	//enum ROTATION { ROT_X, ROT_Y, ROT_Z, ROT_END };
@@ -73,8 +73,8 @@ namespace Engine
 		MAYA_SPECULAR_ROUGHNESS = 25,
 		ANISOTROPY = 26,
 		GLTF_METALLIC_ROUGHNESS = 27,
-		LAYER_MASK = 28,	// lym (·¹ÀÌ¾î ¸¶½ºÅ©)
-		LAYER_COLOR = 29,	// lyc (´«µ¿ÀÚ ·¹ÀÌ¾î ÄÃ·¯)
+		LAYER_MASK = 28,	// lym (ë ˆì´ì–´ ë§ˆìŠ¤í¬)
+		LAYER_COLOR = 29,	// lyc (ëˆˆë™ì ë ˆì´ì–´ ì»¬ëŸ¬)
 		END
 	};
 
@@ -82,12 +82,12 @@ namespace Engine
 	{
 		enum  : unsigned int
 		{
-			MOVEMENT	= 1u << 0,	// WASD, È­»ìÇ¥ µî ÀÌµ¿ °ü·Ã Å°
-			CAMERA		= 1u << 1,	// ¸¶¿ì½º ÀÌµ¿, ¸¶¿ì½º ¹öÆ°
-			ACTION		= 1u << 2,	// °ø°İ, ½ºÅ³ µî °ÔÀÓ ¾×¼Ç Å°
-			UI_NAVIGATE = 1u << 3,	// Enter, ¹æÇâÅ°, Tab µî UI Å½»ö Å°
-			SYSTEM		= 1u << 4,	// Esc, F1-F12 µî ½Ã½ºÅÛ Á¦¾î Å°
-			TOOL		= 1u << 5,	// °³¹ß °ü·ÃÀ¸·Î »ç¿ëÇÏ´Â Å°
+			MOVEMENT	= 1u << 0,	// WASD, í™”ì‚´í‘œ ë“± ì´ë™ ê´€ë ¨ í‚¤
+			CAMERA		= 1u << 1,	// ë§ˆìš°ìŠ¤ ì´ë™, ë§ˆìš°ìŠ¤ ë²„íŠ¼
+			ACTION		= 1u << 2,	// ê³µê²©, ìŠ¤í‚¬ ë“± ê²Œì„ ì•¡ì…˜ í‚¤
+			UI_NAVIGATE = 1u << 3,	// Enter, ë°©í–¥í‚¤, Tab ë“± UI íƒìƒ‰ í‚¤
+			SYSTEM		= 1u << 4,	// Esc, F1-F12 ë“± ì‹œìŠ¤í…œ ì œì–´ í‚¤
+			TOOL		= 1u << 5,	// ê°œë°œ ê´€ë ¨ìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” í‚¤
 			ALL			= 0xFFFFFFFF
 		};
 
@@ -100,49 +100,6 @@ namespace Engine
 			/* LOCKED	*/ SYSTEM | TOOL
 		};
 	}
-
-	enum class UI_ANCHOR
-	{
-		TL, TC, TR,
-		ML, MC, MR,
-		BL, BC, BR,
-		END
-	};
-
-	enum class UI_LAYOUT { NONE, CANVAS, HORIZONTAL, VERTICAL, OVERLAY, END };
-
-	enum class UI_TYPE { WIDGET, CONTAINER, IMAGE, TEXT, BUTTON, PROGRESSBAR, END };
-
-	enum class UI_TEXT_ALIGN { LEFT, CENTER, RIGHT, END };
-
-	enum class UI_EASE : unsigned int
-	{
-		LINEAR,
-		EASE_IN_SINE, EASE_OUT_SINE, EASE_IN_OUT_SINE,
-		EASE_IN_QUAD, EASE_OUT_QUAD, EASE_IN_OUT_QUAD,
-		EASE_IN_CUBIC, EASE_OUT_CUBIC, EASE_IN_OUT_CUBIC,
-		END
-	};
-
-	enum class UI_TWEEN_TARGET : unsigned int
-	{	
-		POSITION_X, POSITION_Y,
-		SIZE_X, SIZE_Y,
-		COLOR_R, COLOR_G, COLOR_B, COLOR_A,
-		FILL_AMOUNT,
-		ANCHOR_OFFSET_X, ANCHOR_OFFSET_Y,
-		END
-	};
-
-	enum class UI_TWEEN_LOOP : unsigned int { NONE, LOOP, PINGPONG, END };
-
-	enum class UI_SEQ_STEP_KIND : unsigned int
-	{
-		PLAY_ANIM,		// target->Get_Animator()->Play_Animation(AnimName, target)
-		SET_VISIBLE,	// target->Set_Visible(bVisible)
-		WAIT,			// fWaitSec °æ°ú ´ë±â
-		USE_CALLBACK,	// fnCallback È£Ãâ
-		END
-	};
 }
+
 #endif // Engine_Enum_h__

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Base.h"
 
 NS_BEGIN(Engine)
@@ -11,6 +11,7 @@ private:
 
 public:
 	HRESULT Initialize(const _tchar* pFontFilePath);
+	_float2 Measure_Text(const _tchar* pText) const;
 	HRESULT XM_CALLCONV Draw(const _tchar* pText, const _float2& vPosition,
 		_fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale);
 
