@@ -28,15 +28,17 @@ struct UISEQ_STEP_NODE
 
 struct UISEQ_WIDGET_NODE
 {
-	_string strId;
-	_string strDisplayName;
-	std::variant<
+	using tDescType = std::variant<
 		CUIContainer::UICONTAINER_DESC,
 		CUIImage::UIIMAGE_DESC,
 		CUIText::UITEXT_DESC,
 		CUIButton::UIBUTTON_DESC,
 		CUIProgressBar::UIPROGRESSBAR_DESC
-	> tDesc;
+	>;
+
+	_string strId;
+	_string strDisplayName;
+	tDescType tDesc;
 	vector<UISEQ_ANIMATION_NODE> vAnimations;
 
 	UI_TYPE Get_Type() const

@@ -1,10 +1,11 @@
 #include "EditInstance.h"
 
 #include "GameInstance.h"
+#include "UIEditorSession.h"
+#include "UIPreviewHost.h"
 #include "ImGui_Manager.h"
 #include "Select_Manager.h"
 #include "Editor_Serializer.h"
-#include "UIEditorSession.h"
 #include "Model_Loader.h"
 #include "Panel_Viewport.h"
 
@@ -29,6 +30,10 @@ HRESULT CEditInstance::Initialize_Editor(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pImGui_Manager = CImGui_Manager::Create(*ppDevice, *ppContext, EngineDesc.hWnd);
 	if (nullptr == m_pImGui_Manager)
+		return E_FAIL;
+
+	m_pUIPreviewHost = CUIPreviewHost::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pUIPreviewHost)
 		return E_FAIL;
 
 	m_pObject_Registry = CObject_Registry::Create();
@@ -56,6 +61,9 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 		m_iPrevLevel = iCurrLevel;
 	}
 
+	if (m_pUIPreviewHost)
+		m_pUIPreviewHost->Tick(fTimeDelta);
+
 	m_pImGui_Manager->Update(fTimeDelta);
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -82,6 +90,7 @@ void CEditInstance::Release_Editor()
 {
 	Safe_Release(m_pModel_Loader);
 	Safe_Release(m_pObject_Registry);
+	Safe_Release(m_pUIPreviewHost);
 	Safe_Release(m_pImGui_Manager);
 	Safe_Release(m_pUIEditorSession);
 	Safe_Release(m_pSelect_Manager);
@@ -90,7 +99,7 @@ void CEditInstance::Release_Editor()
 }
 #pragma endregion
 
-#pragma region UIEDITOR_SESSION
+#pragma region UIEDITOR_SESSION & UIPREVIEW_HOST
 
 #pragma endregion
 
@@ -117,7 +126,19 @@ const CATALOG_ITEM& CEditInstance::Get_PlaceItem() const
 
 HRESULT CEditInstance::Begin_ViewportRender()
 {
-	return m_pImGui_Manager->Get_ViewportPanel()->Begin_SceneRender();
+	/*return m_pImGui_Manager->Get_ViewportPanel()->Begin_SceneRender();*/
+
+	auto pViewport = m_pImGui_Manager->Get_ViewportPanel();
+	if (FAILED(pViewport->Begin_SceneRender()))
+		return E_FAIL;
+
+	// RT가 active된 시점에서 위젯 재구성 (UIObject가 viewport size를 캡처하기 때문)
+	if (m_pUIPreviewHost->Has_Rebuild_Pending())
+		m_pUIPreviewHost->Process_Rebuild_If_Pending();   // 내부에서 Rebuild() 호출
+
+	// Late_Update를 여기서 부르면 GameInstance::Draw가 RENDERID::UI 큐를 소비할 때 즉시 그려짐
+	m_pUIPreviewHost->Render_Queue_Submit();
+	return S_OK;
 }
 
 HRESULT CEditInstance::End_ViewportRender()

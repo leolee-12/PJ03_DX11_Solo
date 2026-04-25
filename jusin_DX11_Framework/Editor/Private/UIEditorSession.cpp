@@ -1,4 +1,5 @@
 #include "UIEditorSession.h"
+#include "UIPreviewHost.h"
 
 #include "EditInstance.h"
 
@@ -547,6 +548,10 @@ void CUIEditorSession::Mark_Dirty(const char* pszReason)
 {
 	m_bDirty = true;
 	m_strStatus = (nullptr != pszReason && '\0' != pszReason[0]) ? pszReason : "Modified";
+
+	// host¿¡ rebuild ½ÅÈ£
+	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
+		pHost->Mark_Rebuild_Pending();
 }
 
 HRESULT CUIEditorSession::Save(const _string& strPath)

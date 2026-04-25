@@ -48,7 +48,7 @@ HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir
 		}
 	}
 
-	if(FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/default_white.png", nullptr, &m_pDefaultMaterial)))
+	if(FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/dummy/dummy_white.png", nullptr, &m_pDefaultMaterial)))
 		return E_FAIL;
 
 	return S_OK;

@@ -1,5 +1,4 @@
 #include "UISequence.h"
-#include "UIObject.h"
 #include "UIAnimator.h"
 
 CUISequence::CUISequence(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

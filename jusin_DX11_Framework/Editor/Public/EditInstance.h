@@ -30,6 +30,11 @@ public:
 	void Set_CameraEnabled(_bool b) { m_bCameraEnabled = b; }
 #pragma endregion
 
+#pragma region UIEDITOR_SESSION & UIPREVIEW_HOST
+	class CUIEditorSession* Get_UISession() const { return m_pUIEditorSession; }
+	class CUIPreviewHost* Get_UIPreviewHost() const { return m_pUIPreviewHost; }
+#pragma endregion
+
 #pragma region IMGUI_MANAGER
 	void Begin_PlaceMode(const CATALOG_ITEM& tItem);
 	void End_PlaceMode();
@@ -81,10 +86,6 @@ public:
 	HRESULT Load_EffectPreset(const _string& strPath, vector<struct EFFECT_PRESET>& Presets);
 #pragma endregion
 
-#pragma region UIEDITOR_SESSION
-	class CUIEditorSession* Get_UISession() const { return m_pUIEditorSession; }
-#pragma endregion
-
 #pragma region MODEL_LOADER
 	HRESULT XM_CALLCONV Export_Binary(const _char* pFbxPath, const _char* pOutputPath,
 		MODEL eType, _fmatrix PreTransform, const _char* pMappingJsonPath = nullptr);
@@ -120,6 +121,7 @@ private:
 	class CGameInstance* m_pGameInstance = { nullptr };
 	class CUIEditorSession* m_pUIEditorSession = { nullptr };
 	class CImGui_Manager* m_pImGui_Manager = { nullptr };
+	class CUIPreviewHost* m_pUIPreviewHost = { nullptr };
 	class CSelect_Manager* m_pSelect_Manager = { nullptr };
 	class CObject_Registry* m_pObject_Registry = { nullptr };
 	class CModel_Loader* m_pModel_Loader = { nullptr };

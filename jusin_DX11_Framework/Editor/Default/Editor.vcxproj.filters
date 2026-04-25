@@ -147,6 +147,9 @@
     <ClInclude Include="..\Public\Editor_UI.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIPreviewHost.h">
+      <Filter>04. Panels\04. UITool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -234,6 +237,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Model_Loader.cpp">
       <Filter>04. Panels\05. Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIPreviewHost.cpp">
+      <Filter>04. Panels\04. UITool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

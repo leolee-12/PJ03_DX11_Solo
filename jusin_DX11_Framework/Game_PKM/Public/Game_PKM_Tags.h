@@ -4,6 +4,10 @@
 NS_BEGIN(Game_PKM)
 
 // Texture
+WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_BLACK, L"Prototype_Component_Texture_Dummy_Black");
+WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_MAGENTA, L"Prototype_Component_Texture_Dummy_Magenta");
+WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_WHITE, L"Prototype_Component_Texture_Dummy_White");
+
 WNAME_TAG(PROTO_COM_TEXTURE_BACKGROUND, L"Prototype_Component_Texture_BackGround");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_Diffuse");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");
@@ -11,7 +15,6 @@ WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain
 WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
 WNAME_TAG(PROTO_COM_TEXTURE_SNOW, L"Prototype_Component_Texture_Snow");
 
-WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_WHITE, L"Prototype_Component_Texture_Dummy_White");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_NOISE, L"Prototype_Component_Texture_Title_pbgf_Noise");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
