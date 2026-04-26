@@ -18,6 +18,8 @@ public:
 		
 		_uint iTextureIndex = { INVALID_INDEX };
 		_float4 vColor = { g_kWhite };
+
+		vector<UI_SHARED_TEXTURE_BINDING_DESC> SharedTextureBindings;
 	};
 
 protected:
@@ -31,7 +33,8 @@ public:
 
 	void Set_Texture(WNameID strTextureTag, _uint iTextureIndex) { m_strTextureTag = strTextureTag; m_iTextureIndex = iTextureIndex; }
 	void Set_Color(const _float4& vColor) { m_vColor = vColor; }
-
+	void Set_SharedTextureBindings(const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Bindings) { m_SharedTextureBindings = Bindings; }
+	const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Get_SharedTextureBindings() const { return m_SharedTextureBindings; }
 	WNameID Get_TextureTag() const { return m_strTextureTag; }
 	_uint Get_TextureIndex() const { return m_iTextureIndex; }
 	const _float4& Get_Color() const { return m_vColor; }
@@ -61,6 +64,7 @@ protected:
 
 	_uint m_iTextureIndex = { INVALID_INDEX };
 	_float4 m_vColor = { g_kWhite };
+	vector<UI_SHARED_TEXTURE_BINDING_DESC> m_SharedTextureBindings;
 
 protected:
 	HRESULT Ready_Components();

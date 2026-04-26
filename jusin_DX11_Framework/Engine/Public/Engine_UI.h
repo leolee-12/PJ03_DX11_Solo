@@ -198,6 +198,13 @@ namespace Engine
 		float fDesiredSizeX = {};
 		float fDesiredSizeY = {};
 	};
+
+	struct UI_SHARED_TEXTURE_BINDING_DESC
+	{
+		string strSharedTexName;
+		string strShaderVarName;
+		unsigned int iTextureIndex = { static_cast<unsigned int>(-1) };
+	};
 }
 
 #endif // Engine_UI_h__

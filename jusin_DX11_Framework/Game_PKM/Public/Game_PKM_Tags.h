@@ -8,6 +8,13 @@ WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_BLACK, L"Prototype_Component_Texture_Dummy_Bla
 WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_MAGENTA, L"Prototype_Component_Texture_Dummy_Magenta");
 WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_WHITE, L"Prototype_Component_Texture_Dummy_White");
 
+WNAME_TAG(PROTO_COM_TEXTURE_SHARED_MASK, L"Prototype_Component_Texture_Shared_Mask");
+WNAME_TAG(PROTO_COM_TEXTURE_SHARED_NOISE, L"Prototype_Component_Texture_Shared_Noise");
+WNAME_TAG(PROTO_COM_TEXTURE_SHARED_GRADIENT, L"Prototype_Component_Texture_Shared_Gradient");
+WNAME_TAG(PROTO_COM_TEXTURE_SHARED_HIGHLIGHT, L"Prototype_Component_Texture_Shared_Highlight");
+WNAME_TAG(PROTO_COM_TEXTURE_SHARED_OPACITY, L"Prototype_Component_Texture_Shared_Opacity");
+WNAME_TAG(PROTO_COM_TEXTURE_SHARED_SHADOW, L"Prototype_Component_Texture_Shared_Shadow");
+
 WNAME_TAG(PROTO_COM_TEXTURE_BACKGROUND, L"Prototype_Component_Texture_BackGround");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_Diffuse");
 WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");

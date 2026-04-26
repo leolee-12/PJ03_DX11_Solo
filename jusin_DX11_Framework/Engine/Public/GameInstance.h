@@ -106,6 +106,11 @@ public:
 	HRESULT Add_RenderTarget(WNameID strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 #pragma endregion
 
+#pragma region SHARED_TEXTURE_BINDER
+	void Set_SharedTextureBinder(class ISharedTextureBinder* pBinder) { m_pSharedTextureBinder = pBinder; }
+	class ISharedTextureBinder* Get_SharedTextureBinder() const { return m_pSharedTextureBinder; }
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -120,6 +125,7 @@ private:
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
+	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };
 
 	_float2						m_vOriginVPSize{}, m_vCurrentVPSize{};
 

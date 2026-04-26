@@ -1,6 +1,9 @@
 #include "MainApp.h"
-#include "GameInstance.h"
+
 #include "Game_API.h"
+#include "SharedTexture_Manager.h"
+
+#include "GameInstance.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -27,8 +30,11 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Fonts()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Prototype_For_Static(m_pDevice, m_pContext)))
+	if (FAILED(Ready_Prototypes_For_Static(m_pDevice, m_pContext)))
 		return E_FAIL;
+
+	//if (FAILED(Ready_SharedTextures()))
+	//	return E_FAIL;
 
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
 		return E_FAIL;
@@ -74,6 +80,9 @@ void CMainApp::Free()
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	m_pGameInstance->Set_SharedTextureBinder(nullptr);
+	CSharedTexture_Manager::DestroyInstance();
 
 	m_pGameInstance->Release_Engine();
 	Safe_Release(m_pGameInstance);

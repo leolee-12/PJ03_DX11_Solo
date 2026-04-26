@@ -194,6 +194,7 @@ call PreBuild.bat</Command>
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\SharedTextureBinder.h" />
     <ClInclude Include="..\Public\Target_Manager.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Timer.h" />

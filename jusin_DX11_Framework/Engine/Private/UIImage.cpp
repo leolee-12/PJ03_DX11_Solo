@@ -1,4 +1,5 @@
 ﻿#include "UIImage.h"
+#include "SharedTextureBinder.h"
 
 #include "GameInstance.h"
 
@@ -30,6 +31,7 @@ HRESULT CUIImage::Initialize(void* pArg)
 		m_iVIBufferLevel = pDesc->iVIBufferLevel;
 		m_iTextureIndex = pDesc->iTextureIndex;
 		m_vColor = pDesc->vColor;
+		m_SharedTextureBindings = pDesc->SharedTextureBindings;
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -142,6 +144,15 @@ HRESULT CUIImage::Bind_ShaderResources()
 
 	// 틴트 색상 — UI 전용 셰이더 도입 시 자동 반영
 	m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4));
+
+	if (!m_SharedTextureBindings.empty())
+	{
+		if (auto* pBinder = m_pGameInstance->Get_SharedTextureBinder())
+		{
+			if (FAILED(pBinder->Bind_SharedTextures(m_pShaderCom, m_SharedTextureBindings)))
+				return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }

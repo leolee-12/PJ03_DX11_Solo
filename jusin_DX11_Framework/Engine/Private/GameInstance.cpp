@@ -10,6 +10,8 @@
 #include "Font_Manager.h"
 #include "Target_Manager.h"
 
+#include "SharedTextureBinder.h"
+
 #include "Camera.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)

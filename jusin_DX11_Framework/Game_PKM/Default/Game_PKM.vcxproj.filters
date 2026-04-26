@@ -76,6 +76,9 @@
     <Filter Include="04. UI">
       <UniqueIdentifier>{02c28f6f-f37c-46f8-9897-e2e65ccc1fbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Manager">
+      <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\Public\UI_RTSequence.h">
       <Filter>04. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SharedTexture_Manager.h">
+      <Filter>05. Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -229,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_RTSequence.cpp">
       <Filter>04. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SharedTexture_Manager.cpp">
+      <Filter>05. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

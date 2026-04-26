@@ -139,6 +139,9 @@
     <Filter Include="11. RenderTargets">
       <UniqueIdentifier>{0e99d385-8887-40ba-a3b9-2428c4282278}</UniqueIdentifier>
     </Filter>
+    <Filter Include="81. Interface">
+      <UniqueIdentifier>{1b484866-4655-4cb9-a270-4a3e31398876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -344,6 +347,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\RenderTarget.h">
       <Filter>11. RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SharedTextureBinder.h">
+      <Filter>81. Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

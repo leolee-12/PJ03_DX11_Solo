@@ -1,6 +1,8 @@
 #include "Game_API.h"
-#include "GameInstance.h"
 #include "Level_Loading.h"
+#include "SharedTexture_Manager.h"
+
+#include "GameInstance.h"
 #include "UIContainer.h"
 #include "UIImage.h"
 #include "UIText.h"
@@ -9,7 +11,7 @@
 
 NS_BEGIN(Game_PKM)
 
-HRESULT Ready_Prototype_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
 
@@ -69,6 +71,31 @@ HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* 
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_PROGRESSBAR,
 		CUIProgressBar::Create(pDevice, pContext))))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT Ready_SharedTextures()
+{
+	CSharedTexture_Manager* pManager = CSharedTexture_Manager::GetInstance();
+
+	if (FAILED(pManager->Initialize()))
+		return E_FAIL;
+
+	if (FAILED(pManager->Register_TextureGroup(SHARED_TEXTURE::NOISE, ETOUI(LEVEL::STATIC),
+		PROTO_COM_TEXTURE_SHARED_NOISE)))
+		return E_FAIL;
+
+	if (FAILED(pManager->Register_TextureGroup(SHARED_TEXTURE::GRADIENT, ETOUI(LEVEL::STATIC),
+		PROTO_COM_TEXTURE_SHARED_GRADIENT)))
+		return E_FAIL;
+
+	if (FAILED(pManager->Register_TextureGroup(SHARED_TEXTURE::MASK, ETOUI(LEVEL::STATIC),
+		PROTO_COM_TEXTURE_SHARED_MASK)))
+		return E_FAIL;
+
+	// 등록 후 Engine UI leaf의 binder hook이 호출할 binder를 매니저로 지정
+	CGameInstance::GetInstance()->Set_SharedTextureBinder(pManager);
 
 	return S_OK;
 }
