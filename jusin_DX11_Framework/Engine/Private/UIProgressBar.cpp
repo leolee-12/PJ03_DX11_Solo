@@ -142,8 +142,8 @@ HRESULT CUIProgressBar::Render_Rect(const _float4& rc, CTexture* pTexture, _uint
 	XMStoreFloat4x4(&matWorld,
 		XMMatrixScaling(rc.z, rc.w, 1.f) *
 		XMMatrixTranslation(
-			fCenterX - m_fViewWidth * 0.5f,
-			-fCenterY + m_fViewHeight * 0.5f,
+			fCenterX - m_vRefSize.x * 0.5f,
+			-fCenterY + m_vRefSize.y * 0.5f,
 			0.f));
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &matWorld)))

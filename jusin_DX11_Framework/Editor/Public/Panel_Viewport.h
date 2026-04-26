@@ -19,8 +19,8 @@ public:
 	ID3D11DepthStencilView* Get_DepthStencilView() const { return m_pDSV; }
 	ID3D11ShaderResourceView* Get_ShaderResourceView() const { return m_pSRV; }
 
-	const ImVec2& Get_ViewportSize() const { return m_vViewportSize; }
-	const ImVec2& Get_ViewportPos() const { return m_vViewportPos; }
+	const ImVec2& Get_PanelRTSize() const { return m_vPanelRTSize; }
+	const ImVec2& Get_PanelPTPos() const { return m_vPanelRTPos; }
 
 	HRESULT Initialize() override;
 	void Update(_float fTimeDelta) override;
@@ -44,8 +44,9 @@ private:
 	D3D11_VIEWPORT m_tPrevViewport = {};
 	_uint m_iPrevViewportCount = { 1 };
 
-	ImVec2 m_vViewportSize = {};
-	ImVec2 m_vViewportPos = {};
+	_float2 m_vRefSize = {};
+	ImVec2 m_vPanelRTSize = {};
+	ImVec2 m_vPanelRTPos = {};
 
 	_bool m_bHasLastHit = { false };
 	_float3 m_vLastObjectPos = {};
@@ -54,6 +55,14 @@ private:
 	_string m_strPickDebug = { "No Pick" };
 	_string m_strPickTarget = { "Target : None" };
 	CGameObject* m_pLastPickedObject = { nullptr };
+
+	// drag ป๓ลย
+	_bool m_bUIDragging = { false };
+	_string m_strDragId;
+	ImVec2 m_vDragStartMouse = {};
+	_float m_fDragStartCenterX = { 0.f };
+	_float m_fDragStartCenterY = { 0.f };
+	_bool m_bDragWasAnchored = { false };
 
 private:
 	HRESULT Create_RenderTarget(_uint iWidth, _uint iHeight);
@@ -65,6 +74,10 @@ private:
 	void Handle_ViewportClick();
 	void Place_ObjectAtHit(const _float3& vHitPos);
 	void Pick_SelectObject();
+
+	void Draw_UIOverlay();
+	void Handle_UIPick();
+	void Handle_UIDrag();
 
 public:
 	static CPanel_Viewport* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

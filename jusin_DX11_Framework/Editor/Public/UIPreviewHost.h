@@ -27,6 +27,10 @@ public:
 	UI_PREVIEW_MODE Get_Mode() const { return m_eMode; }
 	UI_PREVIEW_STATE Get_State() const { return m_eState; }
 
+	const ImVec2& Get_LastViewportSize() const { return m_vLastViewportSize; }
+	const vector<CUIObject*>& Get_Widgets() const { return m_vWidgets; }
+	const vector<_int>& Get_ZOrderIdx() const { return m_vZOrderIdx; }
+
 	HRESULT Initialize();
 	void Tick(_float fTimeDelta);	// Update_Editor 안에서 호출
 	void Render_Queue_Submit();		// Late_Update 호출 (RT active 후)
@@ -42,6 +46,7 @@ public:
 	void Restart();
 
 	CUIObject* Find_Runtime(const _string& strId) const;
+	_string Hit_Test_TopMost(const ImVec2& vDocXY) const;	// z-order 우선, hit widget의 ID 반환, 없으면 빈 문자열
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };

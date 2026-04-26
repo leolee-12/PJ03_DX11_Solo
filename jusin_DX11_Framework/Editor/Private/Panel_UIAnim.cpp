@@ -1,4 +1,4 @@
-#include "Panel_UIAnim.h"
+﻿#include "Panel_UIAnim.h"
 #include "UIEditorSession.h"
 
 #include "EditInstance.h"
@@ -32,16 +32,382 @@ HRESULT CPanel_UIAnim::Render()
 		return S_OK;
 	}
 
-	ImGui::Text("Selected widget : %d", m_pSession->Get_SelectedWidget());
-	ImGui::Text("Selected anim   : %d", m_pSession->Get_SelectedAnimation());
-	ImGui::Text("Selected step   : %d", m_pSession->Get_SelectedStep());
-	ImGui::Text("widgets=%zu  steps=%zu",
-		m_pSession->Get_Doc().vWidgets.size(),
-		m_pSession->Get_Doc().vSteps.size());
-	ImGui::TextDisabled("[Phase D] animation/timeline editor will be moved here.");
+	ImGui::PushID(m_strTitle.c_str());
 
+	Draw_Header();
+	ImGui::Separator();
+
+	const ImVec2 vAvail = ImGui::GetContentRegionAvail();
+	const _float fAnimH = std::clamp(vAvail.y * 0.5f, 240.f, 480.f);
+
+	if (ImGui::BeginChild("Animations", ImVec2(0.f, fAnimH), true))
+		Draw_Animations();
+	ImGui::EndChild();
+
+	if (ImGui::BeginChild("Timeline", ImVec2(0.f, 0.f), true))
+		Draw_Timeline();
+	ImGui::EndChild();
+
+	ImGui::PopID();
 	End_Panel();
 	return S_OK;
+}
+
+void CPanel_UIAnim::Draw_Header()
+{
+	const _int iSel = m_pSession->Get_SelectedWidget();
+	const auto& vW = m_pSession->Get_Doc().vWidgets;
+	if (iSel < 0 || iSel >= (_int)vW.size())
+	{
+		ImGui::TextDisabled("Select a widget in UI_Layout panel.");
+		return;
+	}
+	const auto& w = vW[iSel];
+	ImGui::Text("Widget: [%s] %s   id=%s",
+		Engine::To_String(w.Get_Type()),
+		w.strDisplayName.c_str(),
+		w.strId.c_str());
+
+	ImGui::Separator();
+	Draw_VPModeRadio(m_pSession, "vpmode_anim");
+}
+
+void CPanel_UIAnim::Draw_Animations()
+{
+	const _int iSel = m_pSession->Get_SelectedWidget();
+	auto& tDoc = m_pSession->Get_DocMutable();
+	if (iSel < 0 || iSel >= (_int)tDoc.vWidgets.size())
+	{
+		ImGui::TextUnformatted("No widget selected.");
+		return;
+	}
+	auto& w = tDoc.vWidgets[iSel];
+
+	Draw_AnimationList(w);
+
+	const _int iAnim = m_pSession->Get_SelectedAnimation();
+	if (iAnim < 0 || iAnim >= (_int)w.vAnimations.size())
+	{
+		ImGui::TextDisabled("Select an animation.");
+		return;
+	}
+	auto& tAnim = w.vAnimations[iAnim];
+
+	ImGui::Separator();
+	Draw_TrackList(w, tAnim);
+
+	const _int iTrack = m_pSession->Get_SelectedTrack();
+	if (iTrack < 0 || iTrack >= (_int)tAnim.vTracks.size())
+	{
+		ImGui::TextDisabled("Select a track.");
+		return;
+	}
+
+	ImGui::Separator();
+	Draw_TrackInspector(w, tAnim.vTracks[iTrack]);
+}
+
+void CPanel_UIAnim::Draw_AnimationList(UISEQ_WIDGET_NODE& tWidget)
+{
+	if (ImGui::Button("+ Anim"))
+	{
+		// 첫 사용 가능한 Anim_NNN 이름 생성
+		_wstring strName;
+		for (_int i = 1;; ++i)
+		{
+			wchar_t szBuf[32] = {};
+			swprintf_s(szBuf, L"Anim_%03d", i);
+			strName = m_pSession->Make_UniqueAnimationName(tWidget, szBuf);
+			// ↑ 세션의 Make_UniqueAnimationName이 private이므로 public 노출 필요
+			if (strName == szBuf) break;
+		}
+		tWidget.vAnimations.push_back({ strName, {} });
+		m_pSession->Set_SelectedAnimation(static_cast<_int>(tWidget.vAnimations.size()) - 1);
+		m_pSession->Set_SelectedTrack(-1);
+		m_pSession->Mark_Dirty("Animation added");
+	}
+
+	ImGui::SameLine();
+	const _int iAnim = m_pSession->Get_SelectedAnimation();
+	ImGui::BeginDisabled(iAnim < 0);
+	if (ImGui::Button("- Anim"))
+	{
+		tWidget.vAnimations.erase(tWidget.vAnimations.begin() + iAnim);
+		m_pSession->Sanitize_DocReferences();
+		m_pSession->Mark_Dirty("Animation deleted");
+	}
+	ImGui::EndDisabled();
+
+	if (ImGui::BeginChild("AnimList", ImVec2(0.f, 80.f), true))
+	{
+		for (_int i = 0; i < static_cast<_int>(tWidget.vAnimations.size()); ++i)
+		{
+			const _string strLabel =
+				WtoS(tWidget.vAnimations[i].strName) + "##anim_" + std::to_string(i);
+			if (ImGui::Selectable(strLabel.c_str(), iAnim == i))
+			{
+				m_pSession->Set_SelectedAnimation(i);
+				m_pSession->Set_SelectedTrack(-1);
+			}
+		}
+	}
+	ImGui::EndChild();
+
+	// Animation rename — step rewrite 로직은 세션으로 이전하는 편이 깔끔
+	if (iAnim >= 0)
+	{
+		auto& tAnim = tWidget.vAnimations[iAnim];
+		const _wstring strOld = tAnim.strName;
+		if (Edit_WStringField<256>("Anim Name", tAnim.strName))
+		{
+			// 세션 헬퍼 호출(권장):
+			m_pSession->Rename_Animation(tWidget, iAnim, strOld, tAnim.strName);
+			// 내부에서 Make_UniqueAnimationName + step rewrite + Mark_Dirty 처리
+		}
+	}
+}
+
+void CPanel_UIAnim::Draw_TrackList(UISEQ_WIDGET_NODE& tWidget, UISEQ_ANIMATION_NODE& tAnim)
+{
+	if (ImGui::Button("+ Track"))
+	{
+		tAnim.vTracks.push_back(m_pSession->Make_DefaultTrack(tWidget));
+		m_pSession->Set_SelectedTrack((_int)tAnim.vTracks.size() - 1);
+		m_pSession->Mark_Dirty("Track added");
+	}
+	ImGui::SameLine();
+	const _int iTrack = m_pSession->Get_SelectedTrack();
+	ImGui::BeginDisabled(iTrack < 0);
+	if (ImGui::Button("- Track"))
+	{
+		tAnim.vTracks.erase(tAnim.vTracks.begin() + iTrack);
+		m_pSession->Mark_Dirty("Track deleted");
+	}
+	ImGui::EndDisabled();
+
+	if (ImGui::BeginChild("TrackList", ImVec2(0.f, 80.f), true))
+	{
+		for (_int i = 0; i < (_int)tAnim.vTracks.size(); ++i)
+		{
+			const _string strLabel =
+				std::to_string(i) + " " +
+				Engine::To_String(tAnim.vTracks[i].eTarget) +
+				"##track_" + std::to_string(i);
+			if (ImGui::Selectable(strLabel.c_str(), iTrack == i))
+				m_pSession->Set_SelectedTrack(i);
+		}
+	}
+	ImGui::EndChild();
+}
+
+void CPanel_UIAnim::Draw_TrackInspector(UISEQ_WIDGET_NODE& tWidget, CUITween::UITWEEN_DESC& tTrack)
+{
+	auto MarkUpdated = [&] { m_pSession->Mark_Dirty("Track updated"); };
+
+	// Target combo (sentinel-filtered)
+	CUIObject* pSentinel = m_pSession->Resolve_Sentinel(tWidget.Get_Type());
+	if (pSentinel)
+	{
+		const char* pszPreview = Engine::To_String(tTrack.eTarget);
+		if (ImGui::BeginCombo("Target", pszPreview))
+		{
+			for (_int i = 0; i < (_int)UI_TWEEN_TARGET::END; ++i)
+			{
+				const auto eT = (UI_TWEEN_TARGET)i;
+				if (!pSentinel->Can_Apply_Tween_Target(eT)) continue;
+
+				const _bool bSel = (tTrack.eTarget == eT);
+				if (ImGui::Selectable(Engine::To_String(eT), bSel) && !bSel)
+				{
+					tTrack.eTarget = eT;
+					MarkUpdated();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	if (ImGui::DragFloat("Start", &tTrack.fStart, 0.01f)) MarkUpdated();
+	if (ImGui::DragFloat("End", &tTrack.fEnd, 0.01f)) MarkUpdated();
+	if (ImGui::DragFloat("Duration", &tTrack.fDuration, 0.01f, 0.f, 60.f)) MarkUpdated();
+
+	if (Combo_Enum("Ease", tTrack.eEase, Engine::detail::kEase))      MarkUpdated();
+	if (Combo_Enum("Loop", tTrack.eLoop, Engine::detail::kTweenLoop)) MarkUpdated();
+}
+
+void CPanel_UIAnim::Draw_Timeline()
+{
+	auto& tDoc = m_pSession->Get_DocMutable();
+
+	auto AddStep = [&](UI_SEQ_STEP_KIND eKind, _bool bJoin)
+		{
+			tDoc.vSteps.push_back(m_pSession->Make_DefaultStep(eKind, bJoin));
+			m_pSession->Set_SelectedStep((_int)tDoc.vSteps.size() - 1);
+			m_pSession->Mark_Dirty("Step added");
+		};
+
+	ImGui::TextUnformatted("Sequence Timeline");
+	if (ImGui::Button("+ PLAY_ANIM"))    AddStep(UI_SEQ_STEP_KIND::PLAY_ANIM, false);
+	ImGui::SameLine();
+	if (ImGui::Button("+ SET_VISIBLE"))  AddStep(UI_SEQ_STEP_KIND::SET_VISIBLE, false);
+	ImGui::SameLine();
+	if (ImGui::Button("+ WAIT"))         AddStep(UI_SEQ_STEP_KIND::WAIT, false);
+	ImGui::SameLine();
+	if (ImGui::Button("+ CALLBACK"))     AddStep(UI_SEQ_STEP_KIND::USE_CALLBACK, false);
+
+	const _int iStep = m_pSession->Get_SelectedStep();
+	const _bool bHasSel = (iStep >= 0 && iStep < (_int)tDoc.vSteps.size());
+
+	ImGui::BeginDisabled(!bHasSel);
+	if (ImGui::Button("- Step"))
+	{
+		tDoc.vSteps.erase(tDoc.vSteps.begin() + iStep);
+		m_pSession->Sanitize_DocReferences();
+		m_pSession->Mark_Dirty("Step deleted");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Up") && iStep > 0)
+	{
+		std::swap(tDoc.vSteps[iStep], tDoc.vSteps[iStep - 1]);
+		m_pSession->Set_SelectedStep(iStep - 1);
+		m_pSession->Mark_Dirty("Step reordered");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Down") && bHasSel
+		&& iStep + 1 < (_int)tDoc.vSteps.size())
+	{
+		std::swap(tDoc.vSteps[iStep], tDoc.vSteps[iStep + 1]);
+		m_pSession->Set_SelectedStep(iStep + 1);
+		m_pSession->Mark_Dirty("Step reordered");
+	}
+	ImGui::EndDisabled();
+
+	if (ImGui::BeginChild("StepList", ImVec2(0.f, 120.f), true))
+	{
+		for (_int i = 0; i < (_int)tDoc.vSteps.size(); ++i)
+		{
+			const auto& s = tDoc.vSteps[i];
+			char szLabel[256];
+			sprintf_s(szLabel, "%s%d %s %s %s##step_%d",
+				s.bJoinPrev ? "└─ " : "",
+				i,
+				Engine::To_String(s.eKind),
+				s.strTargetId.c_str(),
+				WtoS(s.strAnimName).c_str(),
+				i);
+			if (ImGui::Selectable(szLabel, iStep == i))
+				m_pSession->Set_SelectedStep(i);
+		}
+	}
+	ImGui::EndChild();
+
+	if (bHasSel)
+	{
+		ImGui::Separator();
+		Draw_StepInspector(tDoc.vSteps[iStep]);
+	}
+}
+
+void CPanel_UIAnim::Draw_StepInspector(UISEQ_STEP_NODE& tStep)
+{
+	auto MarkUpdated = [&] { m_pSession->Mark_Dirty("Step updated"); };
+
+	if (Combo_Enum("Kind", tStep.eKind, Engine::detail::kStepKind))
+	{
+		// kind 변경 시 fallback 적용
+		m_pSession->Apply_StepTargetFallback(tStep);
+		MarkUpdated();
+	}
+
+	if (ImGui::Checkbox("Join Prev", &tStep.bJoinPrev))
+	{
+		m_pSession->Sanitize_DocReferences(); // 첫 step의 join 자동 false
+		MarkUpdated();
+	}
+
+	switch (tStep.eKind)
+	{
+	case UI_SEQ_STEP_KIND::PLAY_ANIM:
+	{
+		// Target widget combo (PLAY_ANIM 가능한 widget만)
+		const auto& vW = m_pSession->Get_Doc().vWidgets;
+		const char* pszPrev = tStep.strTargetId.empty() ? "<none>" : tStep.strTargetId.c_str();
+		if (ImGui::BeginCombo("Target Widget", pszPrev))
+		{
+			for (const auto& w : vW)
+			{
+				const _bool bSel = (tStep.strTargetId == w.strId);
+				char szLbl[128];
+				sprintf_s(szLbl, "[%s] %s##t_%s",
+					Engine::To_String(w.Get_Type()),
+					w.strId.c_str(),
+					w.strId.c_str());
+				if (ImGui::Selectable(szLbl, bSel) && !bSel)
+				{
+					tStep.strTargetId = w.strId;
+					m_pSession->Apply_StepTargetFallback(tStep);
+					MarkUpdated();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		// Animation combo (해당 widget의 animations만)
+		if (const UISEQ_WIDGET_NODE* pW = m_pSession->Find_WidgetById(tStep.strTargetId)) // 세션에 노출 필요
+		{
+			const _string strPrev = WtoS(tStep.strAnimName);
+			if (ImGui::BeginCombo("Animation",
+				strPrev.empty() ? "<none>" : strPrev.c_str()))
+			{
+				for (const auto& a : pW->vAnimations)
+				{
+					const _bool bSel = (tStep.strAnimName == a.strName);
+					const _string strLbl = WtoS(a.strName) + "##a_" + WtoS(a.strName);
+					if (ImGui::Selectable(strLbl.c_str(), bSel) && !bSel)
+					{
+						tStep.strAnimName = a.strName;
+						MarkUpdated();
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		break;
+	}
+
+	case UI_SEQ_STEP_KIND::SET_VISIBLE:
+	{
+		// Target widget combo (전 widget 후보)
+		const auto& vW = m_pSession->Get_Doc().vWidgets;
+		const char* pszPrev = tStep.strTargetId.empty() ? "<none>" : tStep.strTargetId.c_str();
+		if (ImGui::BeginCombo("Target Widget", pszPrev))
+		{
+			for (const auto& w : vW)
+			{
+				const _bool bSel = (tStep.strTargetId == w.strId);
+				if (ImGui::Selectable(w.strId.c_str(), bSel) && !bSel)
+				{
+					tStep.strTargetId = w.strId;
+					MarkUpdated();
+				}
+			}
+			ImGui::EndCombo();
+		}
+		if (ImGui::Checkbox("Visible", &tStep.bVisible)) MarkUpdated();
+		break;
+	}
+
+	case UI_SEQ_STEP_KIND::WAIT:
+		if (ImGui::DragFloat("Wait (sec)", &tStep.fWaitSec, 0.01f, 0.f, 60.f))
+			MarkUpdated();
+		break;
+
+	case UI_SEQ_STEP_KIND::USE_CALLBACK:
+		if (Edit_StringField<256>("Callback Id", tStep.strCallbackId))
+			MarkUpdated();
+		ImGui::TextDisabled("(callback execution is not implemented in this phase)");
+		break;
+	}
 }
 
 CPanel_UIAnim* CPanel_UIAnim::Create()

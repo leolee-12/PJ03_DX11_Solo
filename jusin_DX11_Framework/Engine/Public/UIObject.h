@@ -39,6 +39,7 @@ public:
 	_float2 Get_Center() const { return _float2(m_fResolvedCenterX, m_fResolvedCenterY); }
 	_float2 Get_Size() const { return _float2(m_fSizeX, m_fSizeY); }
 	_int Get_ZOrder() const { return m_iZOrder; }
+	_bool Get_Visible() { return m_bVisible; }
 	_float4 Get_ScreenRect() const;
 	const UILAYOUT_SLOT_DESC& Get_LayoutSlot() const { return m_tLayoutSlot; }
 	UI_ANCHOR Get_Anchor() { return (m_tAnchorDesc.bUseAnchoredPos ? m_tAnchorDesc.eAnchor : UI_ANCHOR::END); }
@@ -59,7 +60,7 @@ public:
 	virtual HRESULT Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue);
 	
 protected:
-	_float m_fViewWidth{}, m_fViewHeight{};
+	_float2 m_vRefSize{};
 	_float4x4 m_TransformMatrices[ETOUI(D3DTS::END)] = {};
 
 	_float m_fCenterX{}, m_fCenterY{};	// 로컬

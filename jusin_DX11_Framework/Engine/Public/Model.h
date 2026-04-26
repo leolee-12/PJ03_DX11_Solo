@@ -27,6 +27,7 @@ public:
 	void Set_AnimationIndex(_uint iIndex, _bool isLoop = false, _float fBlendDuration = 0.f);
 	void Set_RootMotionBoneIndex(_uint iIndex) { m_iRootBoneIndex = iIndex; }
 	void Set_EnableRootMotion(_bool bEnable);
+	_uint Get_CurrAnimIndex() { return m_iCurrentAnimationIndex; }
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

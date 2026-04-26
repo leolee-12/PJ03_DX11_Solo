@@ -241,6 +241,9 @@
     <ClCompile Include="..\Private\UIPreviewHost.cpp">
       <Filter>04. Panels\04. UITool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Editor_UI.cpp">
+      <Filter>99. Defines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

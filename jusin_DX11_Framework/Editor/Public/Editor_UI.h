@@ -238,6 +238,10 @@ inline const CUIObject::UIOBJECT_DESC& Get_BaseDesc(const UISEQ_WIDGET_NODE& tWi
 		}, tWidget.tDesc);
 }
 
+
+
+void Draw_VPModeRadio(class CUIEditorSession* pSession, const char* pszId);
+
 NS_END
 
 #endif // Editor_UI_h__

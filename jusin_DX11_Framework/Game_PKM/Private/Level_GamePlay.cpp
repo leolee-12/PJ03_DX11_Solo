@@ -314,11 +314,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 {
-	_uint iNumViewport = { 1 };
-	D3D11_VIEWPORT ViewportDesc = {};
-	m_pContext->RSGetViewports(&iNumViewport, &ViewportDesc);
-	_float fViewWidth = ViewportDesc.Width;
-	_float fViewHeight = ViewportDesc.Height;
+	_float2 vViewportSize = m_pGameInstance->Get_CurrentRefSize();
+	_float fViewWidth = vViewportSize.x;
+	_float fViewHeight = vViewportSize.y;
 
 	CUIImage::UIIMAGE_DESC tDesc{};
 	tDesc.fSpeedPerSec = 30.f;

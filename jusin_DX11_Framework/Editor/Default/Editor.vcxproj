@@ -181,6 +181,7 @@
     <ClCompile Include="..\..\ThirdParty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Private\EditInstance.cpp" />
     <ClCompile Include="..\Private\Editor_Serializer.cpp" />
+    <ClCompile Include="..\Private\Editor_UI.cpp" />
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
     <ClCompile Include="..\Private\Model_Loader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

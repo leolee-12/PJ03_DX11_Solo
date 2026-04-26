@@ -22,8 +22,8 @@ CGameInstance::CGameInstance()
 
 HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)
 {
-	m_vViewportDesc = _float2(	static_cast<_float>(EngineDesc.iViewportWidth),
-								static_cast<_float>(EngineDesc.iViewportHeight));
+	m_vCurrentVPSize = m_vOriginVPSize = _float2(	static_cast<_float>(EngineDesc.iViewportWidth),
+													static_cast<_float>(EngineDesc.iViewportHeight));
 
 	m_pGraphic_Device = CGraphic_Device::Create(EngineDesc.hWnd,
 												EngineDesc.eWinMode,

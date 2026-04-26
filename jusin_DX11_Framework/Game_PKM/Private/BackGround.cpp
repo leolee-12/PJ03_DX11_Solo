@@ -19,11 +19,9 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	_uint iNumViewport = { 1 };
-	D3D11_VIEWPORT ViewportDesc = {};
-	m_pContext->RSGetViewports(&iNumViewport, &ViewportDesc);
-	_float fViewWidth = ViewportDesc.Width;
-	_float fViewHeight = ViewportDesc.Height;
+	_float2 vViewportSize = m_pGameInstance->Get_CurrentRefSize();
+	_float fViewWidth = vViewportSize.x;
+	_float fViewHeight = vViewportSize.y;
 
 	BACKGROUND_DESC Desc{};
 	Desc.fSpeedPerSec = 30.f;

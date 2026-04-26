@@ -28,7 +28,10 @@ public:
 
 	const HWND Get_HWND() const;
 	_float Random(_float fMin, _float fMax);
-	_float2 Get_ViewportDesc() { return m_vViewportDesc; }
+	void Set_ViewportSize(_float fSizeX, _float fSizeY) { m_vCurrentVPSize = { fSizeX, fSizeY }; }
+	void Reset_ViewportSize() { m_vCurrentVPSize = m_vOriginVPSize; }
+	_float2 Get_CurrentRefSize() { return m_vCurrentVPSize; }
+	_float2 Get_OriginRefSize() { return m_vOriginVPSize; }
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -115,7 +118,7 @@ private:
 
 	class CCamera*				m_pMainCamera = { nullptr };
 
-	_float2						m_vViewportDesc{};
+	_float2						m_vOriginVPSize{}, m_vCurrentVPSize{};
 
 private:
 	virtual void Free() override;

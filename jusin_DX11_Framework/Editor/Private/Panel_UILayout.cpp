@@ -1,6 +1,7 @@
 #include "Panel_UILayout.h"
 #include "UIEditorSession.h"
 
+#include "GameInstance.h"
 #include "EditInstance.h"
 
 CPanel_UILayout::CPanel_UILayout()
@@ -32,6 +33,8 @@ HRESULT CPanel_UILayout::Render()
 		return S_OK;
 	}
 
+	ImGui::PushID(m_strTitle.c_str());
+
 	Draw_Toolbar();
 	ImGui::Separator();
 
@@ -46,6 +49,7 @@ HRESULT CPanel_UILayout::Render()
 		Draw_Inspector();
 	ImGui::EndChild();
 
+	ImGui::PopID();
 	End_Panel();
 	return S_OK;
 }
@@ -74,6 +78,9 @@ void CPanel_UILayout::Draw_Toolbar()
 		m_pSession->Get_DocPath().c_str(),
 		m_pSession->Is_Dirty() ? " *" : "",
 		m_pSession->Get_Status().c_str());
+
+	ImGui::Separator();
+	Draw_VPModeRadio(m_pSession, "vpmode_layout");
 }
 
 void CPanel_UILayout::Draw_Hierarchy()
@@ -167,10 +174,12 @@ void CPanel_UILayout::Draw_Inspector()
 	if (ImGui::DragInt("Z Order", &tBase.iZOrder, 1.f))
 		MarkWidgetUpdated();
 
-	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, static_cast<_float>(g_iWinSizeX) * 4.f))
+	_float2 vViewportSize = m_pGameInstance->Get_CurrentRefSize();
+
+	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, vViewportSize.x * 4.f))
 		MarkWidgetUpdated();
 
-	if (ImGui::DragFloat("Size Y", &tBase.fSizeY, 1.f, 1.f, static_cast<_float>(g_iWinSizeY) * 4.f))
+	if (ImGui::DragFloat("Size Y", &tBase.fSizeY, 1.f, 1.f, vViewportSize.y * 4.f))
 		MarkWidgetUpdated();
 
 	if (ImGui::Checkbox("Use Anchored Pos", &tBase.tAnchorDesc.bUseAnchoredPos))
@@ -279,149 +288,6 @@ void CPanel_UILayout::Draw_Inspector()
 				if (ImGui::DragFloat("Spacing", &tDesc.tLayoutDesc.fSpacing, 1.f)) MarkWidgetUpdated();
 			}
 		}, w.tDesc);
-
-	ImGui::Separator();
-	//ImGui::TextUnformatted("Animations");
-	//
-	//if (ImGui::Button("Add Anim"))
-	//{
-	//	_wstring strName;
-	//	for (_int iAnim = 1;; ++iAnim)
-	//	{
-	//		wchar_t szBuffer[32] = {};
-	//		swprintf_s(szBuffer, L"Anim_%03d", iAnim);
-	//		strName = Make_UniqueAnimationName(*pWidget, szBuffer);
-	//		if (strName == szBuffer)
-	//			break;
-	//	}
-	//
-	//	pWidget->vAnimations.push_back({ strName, {} });
-	//	m_iSelectedAnimation = static_cast<_int>(pWidget->vAnimations.size()) - 1;
-	//	m_iSelectedTrack = -1;
-	//	Mark_Dirty("Animation added");
-	//}
-	//
-	//ImGui::SameLine();
-	//if (ImGui::Button("Delete Anim") && m_iSelectedAnimation >= 0)
-	//{
-	//	pWidget->vAnimations.erase(pWidget->vAnimations.begin() + m_iSelectedAnimation);
-	//	Normalize_Selection();
-	//	Sanitize_DocReferences();
-	//	Mark_Dirty("Animation deleted");
-	//}
-	//
-	//if (ImGui::BeginChild("AnimationList", ImVec2(0.f, 90.f), true))
-	//{
-	//	for (_int iAnim = 0; iAnim < static_cast<_int>(pWidget->vAnimations.size()); ++iAnim)
-	//	{
-	//		const _string strLabel = WtoS(pWidget->vAnimations[iAnim].strName) + "##anim_" + std::to_string(iAnim);
-	//		if (ImGui::Selectable(strLabel.c_str(), m_iSelectedAnimation == iAnim))
-	//		{
-	//			m_iSelectedAnimation = iAnim;
-	//			m_iSelectedTrack = -1;
-	//			Normalize_Selection();
-	//		}
-	//	}
-	//}
-	//ImGui::EndChild();
-	//
-	//UISEQ_ANIMATION_NODE* pAnimation = Get_SelectedAnimation();
-	//if (nullptr != pAnimation)
-	//{
-	//	const _wstring strOldName = pAnimation->strName;
-	//	if (Edit_WStringField<256>("Animation Name", pAnimation->strName))
-	//	{
-	//		pAnimation->strName = Make_UniqueAnimationName(*pWidget, pAnimation->strName, m_iSelectedAnimation);
-	//		if (strOldName != pAnimation->strName)
-	//		{
-	//			for (auto& tStep : m_Doc.vSteps)
-	//			{
-	//				if (tStep.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM
-	//					&& tStep.strTargetId == pWidget->strId
-	//					&& tStep.strAnimName == strOldName)
-	//				{
-	//					tStep.strAnimName = pAnimation->strName;
-	//				}
-	//			}
-	//		}
-	//		Mark_Dirty("Animation renamed");
-	//	}
-	//
-	//	if (ImGui::Button("Add Track"))
-	//	{
-	//		pAnimation->vTracks.push_back(Make_DefaultTrack(*pWidget));
-	//		m_iSelectedTrack = static_cast<_int>(pAnimation->vTracks.size()) - 1;
-	//		Mark_Dirty("Track added");
-	//	}
-	//
-	//	ImGui::SameLine();
-	//	if (ImGui::Button("Delete Track") && m_iSelectedTrack >= 0)
-	//	{
-	//		pAnimation->vTracks.erase(pAnimation->vTracks.begin() + m_iSelectedTrack);
-	//		Normalize_Selection();
-	//		Mark_Dirty("Track deleted");
-	//	}
-	//
-	//	if (ImGui::BeginChild("TrackList", ImVec2(0.f, 90.f), true))
-	//	{
-	//		for (_int iTrack = 0; iTrack < static_cast<_int>(pAnimation->vTracks.size()); ++iTrack)
-	//		{
-	//			const _string strLabel = std::to_string(iTrack) + " " + To_String(pAnimation->vTracks[iTrack].eTarget) + "##track_" + std::to_string(iTrack);
-	//			if (ImGui::Selectable(strLabel.c_str(), m_iSelectedTrack == iTrack))
-	//				m_iSelectedTrack = iTrack;
-	//		}
-	//	}
-	//	ImGui::EndChild();
-	//
-	//	CUITween::UITWEEN_DESC* pTrack = Get_SelectedTrack();
-	//	if (nullptr != pTrack)
-	//	{
-	//		CUIObject* pSentinel = Resolve_Sentinel(pWidget->Get_Type());
-	//		if (nullptr != pSentinel)
-	//		{
-	//			const char* pszPreview = To_String(pTrack->eTarget);
-	//			if (ImGui::BeginCombo("Target", pszPreview))
-	//			{
-	//				for (_int iTarget = 0; iTarget < static_cast<_int>(UI_TWEEN_TARGET::END); ++iTarget)
-	//				{
-	//					const UI_TWEEN_TARGET eTarget = static_cast<UI_TWEEN_TARGET>(iTarget);
-	//					if (!pSentinel->Can_Apply_Tween_Target(eTarget))
-	//						continue;
-	//
-	//					const _bool bSelected = (pTrack->eTarget == eTarget);
-	//					if (ImGui::Selectable(To_String(eTarget), bSelected))
-	//					{
-	//						pTrack->eTarget = eTarget;
-	//						Mark_Dirty("Track updated");
-	//					}
-	//				}
-	//				ImGui::EndCombo();
-	//			}
-	//		}
-	//
-	//		if (ImGui::DragFloat("Start", &pTrack->fStart, 0.01f)) Mark_Dirty("Track updated");
-	//		if (ImGui::DragFloat("End", &pTrack->fEnd, 0.01f)) Mark_Dirty("Track updated");
-	//		if (ImGui::DragFloat("Duration", &pTrack->fDuration, 0.01f, 0.f, 60.f)) Mark_Dirty("Track updated");
-	//
-	//		_int iEase = static_cast<_int>(pTrack->eEase);
-	//		if (iEase < 0 || iEase >= IM_ARRAYSIZE(g_ppEaseNames))
-	//			iEase = 0;
-	//		if (ImGui::Combo("Ease", &iEase, g_ppEaseNames, IM_ARRAYSIZE(g_ppEaseNames)))
-	//		{
-	//			pTrack->eEase = static_cast<UI_EASE>(iEase);
-	//			Mark_Dirty("Track updated");
-	//		}
-	//
-	//		_int iLoop = static_cast<_int>(pTrack->eLoop);
-	//		if (iLoop < 0 || iLoop >= IM_ARRAYSIZE(g_ppLoopNames))
-	//			iLoop = 0;
-	//		if (ImGui::Combo("Loop", &iLoop, g_ppLoopNames, IM_ARRAYSIZE(g_ppLoopNames)))
-	//		{
-	//			pTrack->eLoop = static_cast<UI_TWEEN_LOOP>(iLoop);
-	//			Mark_Dirty("Track updated");
-	//		}
-	//	}
-	//}
 }
 
 CPanel_UILayout* CPanel_UILayout::Create()
