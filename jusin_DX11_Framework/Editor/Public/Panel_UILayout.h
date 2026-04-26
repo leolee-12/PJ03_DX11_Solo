@@ -17,6 +17,10 @@ public:
 private:
 	class CUIEditorSession* m_pSession = { nullptr };
 
+	enum class PENDING_ACTION { NONE, NEW_DOC, LOAD };
+	PENDING_ACTION m_ePendingAction = PENDING_ACTION::NONE;
+	_string m_strPendingPath;
+
 private:
 	void Draw_Toolbar();
 	void Draw_Hierarchy();

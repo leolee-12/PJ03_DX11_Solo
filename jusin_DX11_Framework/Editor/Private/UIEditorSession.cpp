@@ -1,4 +1,4 @@
-#include "UIEditorSession.h"
+ï»¿#include "UIEditorSession.h"
 #include "UIPreviewHost.h"
 
 #include "GameInstance.h"
@@ -524,7 +524,7 @@ void CUIEditorSession::Mark_Dirty(const char* pszReason)
 	m_bDirty = true;
 	m_strStatus = (nullptr != pszReason && '\0' != pszReason[0]) ? pszReason : "Modified";
 
-	// host¿¡ rebuild ½ÅÈ£
+	// hostì— rebuild ì‹ í˜¸
 	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
 		pHost->Mark_Rebuild_Pending();
 }
@@ -533,7 +533,7 @@ void CUIEditorSession::Mark_Dirty_Property(const char* pszReason)
 {
 	m_bDirty = true;
 	m_strStatus = (pszReason && pszReason[0]) ? pszReason : "Modified";
-	// host->Mark_Rebuild_Pending() È£ÃâÇÏÁö ¾ÊÀ½
+	// host->Mark_Rebuild_Pending() í˜¸ì¶œí•˜ì§€ ì•ŠìŒ
 }
 
 const UISEQ_WIDGET_NODE* CUIEditorSession::Find_WidgetById(const _string& strId) const
@@ -597,6 +597,15 @@ _bool CUIEditorSession::Apply_StepTargetFallback(UISEQ_STEP_NODE& tStep) const
 
 HRESULT CUIEditorSession::Save(const _string& strPath)
 {
+	std::error_code ec;
+	if (std::filesystem::exists(strPath, ec))
+	{
+		const _string strBackup = strPath + ".bak";
+		std::filesystem::copy_file(strPath, strBackup,
+			std::filesystem::copy_options::overwrite_existing, ec);
+		// ec ë¬´ì‹œ â€” ê¶Œí•œ ë¬¸ì œ ë“±ì€ status í‘œì‹œ ì •ë„ë§Œ
+	}
+
 	if (FAILED(m_pEditInstance->Save_UISequence(strPath, m_Doc)))
 	{
 		m_strStatus = "Save failed: " + strPath;
@@ -611,7 +620,7 @@ HRESULT CUIEditorSession::Save(const _string& strPath)
 HRESULT CUIEditorSession::Load(const _string& strPath)
 {
 	UISEQ_DOC tLoaded{};
-	if (FAILED(CEditInstance::GetInstance()->Load_UISequence(strPath, tLoaded)))
+	if (FAILED(m_pEditInstance->Load_UISequence(strPath, tLoaded)))
 	{
 		m_strStatus = "Load failed: " + strPath;
 		return E_FAIL;
@@ -623,6 +632,10 @@ HRESULT CUIEditorSession::Load(const _string& strPath)
 	Normalize_Selection();
 	Clear_Dirty();
 	m_strStatus = "Loaded: " + strPath;
+
+	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
+		pHost->Mark_Rebuild_Pending();
+
 	return S_OK;
 }
 
@@ -630,6 +643,10 @@ HRESULT CUIEditorSession::New_Doc()
 {
 	Reset_Doc();
 	m_strStatus = "New document";
+
+	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
+		pHost->Mark_Rebuild_Pending();
+
 	return S_OK;
 }
 

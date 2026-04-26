@@ -43,6 +43,7 @@ void CUIContainer::Priority_Update(_float fTimeDelta)
 
 void CUIContainer::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 }
 
 void CUIContainer::Late_Update(_float fTimeDelta)

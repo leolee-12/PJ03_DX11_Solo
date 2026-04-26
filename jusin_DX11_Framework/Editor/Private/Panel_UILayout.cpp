@@ -56,27 +56,118 @@ HRESULT CPanel_UILayout::Render()
 
 void CPanel_UILayout::Draw_Toolbar()
 {
-	if (ImGui::Button("New"))
-		m_pSession->New_Doc();
+	namespace fs = std::filesystem;
+	const _string strDir = "../../DataFiles/UI/";
 
+	// ── Row 1: 파일 콤보 (좌측 라벨 + 남은 폭 가득) ──
+	{
+		Label_Left("File");
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		_string strCurPath = m_pSession->Get_DocPath();
+		if (ImGui::BeginCombo("##file_combo", strCurPath.c_str()))
+		{
+			std::error_code ec;
+			if (fs::exists(strDir, ec))
+			{
+				for (const auto& entry : fs::directory_iterator(strDir, ec))
+				{
+					if (!entry.is_regular_file()) continue;
+					if (entry.path().extension() != ".uiseq") continue;
+					const _string strPath = entry.path().string();
+					const _bool bSel = (strPath == strCurPath);
+					if (ImGui::Selectable(strPath.c_str(), bSel) && !bSel)
+						m_pSession->Set_DocPath(strPath);
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	// ── Row 2: 경로 편집 ──
+	{
+		Label_Left("Path");
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		_string strDocPath = m_pSession->Get_DocPath();
+		if (Edit_StringField<512>("##path_edit", strDocPath))
+			m_pSession->Set_DocPath(strDocPath);
+	}
+
+	// ── Row 3: 액션 버튼 ──
+	if (ImGui::Button("New"))
+	{
+		if (m_pSession->Is_Dirty())
+		{
+			m_ePendingAction = PENDING_ACTION::NEW_DOC;
+			ImGui::OpenPopup("Discard Changes?");
+		}
+		else m_pSession->New_Doc();
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Load"))
-		m_pSession->Load(m_pSession->Get_DocPath());
-
+	{
+		const _string strPath = m_pSession->Get_DocPath();
+		if (m_pSession->Is_Dirty())
+		{
+			m_ePendingAction = PENDING_ACTION::LOAD;
+			m_strPendingPath = strPath;
+			ImGui::OpenPopup("Discard Changes?");
+		}
+		else m_pSession->Load(strPath);
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save"))
 		m_pSession->Save(m_pSession->Get_DocPath());
 
-	ImGui::SameLine();
+	// ── Modal (액션 버튼 직후로 이동, 가독성) ──
+	if (ImGui::BeginPopupModal("Discard Changes?", nullptr,
+		ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		_string strPath = m_pSession->Get_DocPath();
-		if (Edit_StringField<260>("##path", strPath))
-			m_pSession->Set_DocPath(strPath);
+		ImGui::TextUnformatted("Unsaved changes will be lost.");
+		ImGui::TextUnformatted("Continue?");
+		ImGui::Separator();
+		if (ImGui::Button("Save and Continue", ImVec2(160, 0)))
+		{
+			if (SUCCEEDED(m_pSession->Save(m_pSession->Get_DocPath())))
+			{
+				switch (m_ePendingAction)
+				{
+				case PENDING_ACTION::NEW_DOC: m_pSession->New_Doc(); break;
+				case PENDING_ACTION::LOAD:    m_pSession->Load(m_strPendingPath); break;
+				default: break;
+				}
+			}
+			m_ePendingAction = PENDING_ACTION::NONE;
+			m_strPendingPath.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Discard", ImVec2(120, 0)))
+		{
+			switch (m_ePendingAction)
+			{
+			case PENDING_ACTION::NEW_DOC: m_pSession->New_Doc(); break;
+			case PENDING_ACTION::LOAD:    m_pSession->Load(m_strPendingPath); break;
+			default: break;
+			}
+			m_ePendingAction = PENDING_ACTION::NONE;
+			m_strPendingPath.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(80, 0)))
+		{
+			m_ePendingAction = PENDING_ACTION::NONE;
+			m_strPendingPath.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 
-	ImGui::Text("[%s]%s  status: %s",
-		m_pSession->Get_DocPath().c_str(),
-		m_pSession->Is_Dirty() ? " *" : "",
+	// ── Row 4: 상태 (별도 줄) ──
+	ImGui::TextColored(
+		m_pSession->Is_Dirty() ? ImVec4(1.f, 0.7f, 0.2f, 1.f) : ImVec4(0.7f, 0.7f, 0.7f, 1.f),
+		"%s%s",
+		m_pSession->Is_Dirty() ? "* " : "",
 		m_pSession->Get_Status().c_str());
 
 	ImGui::Separator();

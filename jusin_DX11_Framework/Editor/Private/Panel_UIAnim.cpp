@@ -1,5 +1,6 @@
 ﻿#include "Panel_UIAnim.h"
 #include "UIEditorSession.h"
+#include "UIPreviewHost.h"
 
 #include "EditInstance.h"
 
@@ -37,6 +38,9 @@ HRESULT CPanel_UIAnim::Render()
 	Draw_Header();
 	ImGui::Separator();
 
+	Draw_PreviewBar();
+	ImGui::Separator();
+
 	const ImVec2 vAvail = ImGui::GetContentRegionAvail();
 	const _float fAnimH = std::clamp(vAvail.y * 0.5f, 240.f, 480.f);
 
@@ -70,6 +74,80 @@ void CPanel_UIAnim::Draw_Header()
 
 	ImGui::Separator();
 	Draw_VPModeRadio(m_pSession, "vpmode_anim");
+}
+
+void CPanel_UIAnim::Draw_PreviewBar()
+{
+	CUIPreviewHost* pHost = m_pEditInstance->Get_UIPreviewHost();
+	if (!pHost) return;
+
+	// ── Row 1: Preview mode + State ──
+	{
+		UI_PREVIEW_MODE eMode = pHost->Get_Mode();
+		static const std::pair<UI_PREVIEW_MODE, const char*> kPreviewModes[] = {
+			{ UI_PREVIEW_MODE::LAYOUT,        "Layout" },
+			{ UI_PREVIEW_MODE::SELECTED_ANIM, "Selected Anim" },
+			{ UI_PREVIEW_MODE::SEQUENCE,      "Sequence" },
+		};
+		const char* pszCur = "Layout";
+		for (auto& p : kPreviewModes) if (p.first == eMode) { pszCur = p.second; break; }
+
+		Label_Left("Mode");
+		ImGui::SetNextItemWidth(-100.f);  // State 텍스트 자리 남김
+		if (ImGui::BeginCombo("##preview_mode", pszCur))
+		{
+			for (auto& p : kPreviewModes)
+			{
+				const _bool bSel = (p.first == eMode);
+				if (ImGui::Selectable(p.second, bSel) && !bSel)
+				{
+					pHost->Stop();
+					pHost->Set_Mode(p.first);
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::SameLine();
+		const UI_PREVIEW_STATE eState = pHost->Get_State();
+		const char* pszState =
+			(eState == UI_PREVIEW_STATE::PLAYING) ? "PLAYING" :
+			(eState == UI_PREVIEW_STATE::PAUSED) ? "PAUSED" : "IDLE";
+		ImGui::TextDisabled("[%s]", pszState);
+	}
+
+	// ── Row 2: Transport buttons ──
+	{
+		const UI_PREVIEW_STATE eState = pHost->Get_State();
+		const _bool bPlaying = (eState == UI_PREVIEW_STATE::PLAYING);
+		const _bool bPaused = (eState == UI_PREVIEW_STATE::PAUSED);
+		const _bool bIdle = (eState == UI_PREVIEW_STATE::IDLE);
+
+		if (ImGui::Button("Rebuild")) pHost->Mark_Rebuild_Pending();
+		ImGui::SameLine();
+
+		ImGui::BeginDisabled(!bIdle);
+		if (ImGui::Button("Play")) pHost->Play();
+		ImGui::EndDisabled();
+		ImGui::SameLine();
+
+		ImGui::BeginDisabled(!bPlaying);
+		if (ImGui::Button("Pause")) pHost->Pause();
+		ImGui::EndDisabled();
+		ImGui::SameLine();
+
+		ImGui::BeginDisabled(!bPaused);
+		if (ImGui::Button("Resume")) pHost->Resume();
+		ImGui::EndDisabled();
+		ImGui::SameLine();
+
+		ImGui::BeginDisabled(bIdle);
+		if (ImGui::Button("Stop")) pHost->Stop();
+		ImGui::EndDisabled();
+		ImGui::SameLine();
+
+		if (ImGui::Button("Restart")) pHost->Restart();
+	}
 }
 
 void CPanel_UIAnim::Draw_Animations()
@@ -250,19 +328,20 @@ void CPanel_UIAnim::Draw_Timeline()
 	if (ImGui::Button("+ PLAY_ANIM"))    AddStep(UI_SEQ_STEP_KIND::PLAY_ANIM, false);
 	ImGui::SameLine();
 	if (ImGui::Button("+ SET_VISIBLE"))  AddStep(UI_SEQ_STEP_KIND::SET_VISIBLE, false);
-	ImGui::SameLine();
+
 	if (ImGui::Button("+ WAIT"))         AddStep(UI_SEQ_STEP_KIND::WAIT, false);
 	ImGui::SameLine();
 	if (ImGui::Button("+ CALLBACK"))     AddStep(UI_SEQ_STEP_KIND::USE_CALLBACK, false);
 
 	const _int iStep = m_pSession->Get_SelectedStep();
-	const _bool bHasSel = (iStep >= 0 && iStep < (_int)tDoc.vSteps.size());
+	const _bool bHasSel = (iStep >= 0 && iStep < static_cast<_int>(tDoc.vSteps.size()));
 
 	ImGui::BeginDisabled(!bHasSel);
 	if (ImGui::Button("- Step"))
 	{
 		tDoc.vSteps.erase(tDoc.vSteps.begin() + iStep);
 		m_pSession->Sanitize_DocReferences();
+		m_pSession->Set_SelectedStep(iStep);
 		m_pSession->Mark_Dirty("Step deleted");
 	}
 	ImGui::SameLine();
@@ -301,10 +380,13 @@ void CPanel_UIAnim::Draw_Timeline()
 	}
 	ImGui::EndChild();
 
-	if (bHasSel)
+	const _int iStepNow = m_pSession->Get_SelectedStep();
+	const _bool bValidNow = (iStepNow >= 0 && iStepNow < (_int)tDoc.vSteps.size());
+
+	if (bValidNow)
 	{
 		ImGui::Separator();
-		Draw_StepInspector(tDoc.vSteps[iStep]);
+		Draw_StepInspector(tDoc.vSteps[iStepNow]);
 	}
 }
 

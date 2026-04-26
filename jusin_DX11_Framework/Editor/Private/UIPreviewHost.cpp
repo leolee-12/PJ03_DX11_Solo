@@ -1,4 +1,4 @@
-#include "UIPreviewHost.h"
+ï»¿#include "UIPreviewHost.h"
 #include "UIEditorSession.h"
 #include "UISequence.h"
 #include "UIAnimator.h"
@@ -27,7 +27,7 @@ HRESULT CUIPreviewHost::Initialize()
 
 void CUIPreviewHost::Tick(_float fTimeDelta)
 {
-	// viewport size º¯°æ °¨Áö
+	// viewport size ë³€ê²½ ê°ì§€
 	const ImVec2 vNow = m_pEditInstance->Get_ViewportScreenSize();
 	if (vNow.x != m_vLastViewportSize.x || vNow.y != m_vLastViewportSize.y)
 	{
@@ -35,7 +35,20 @@ void CUIPreviewHost::Tick(_float fTimeDelta)
 		m_bRebuildPending = true;
 	}
 
-	// À§Á¬ tick (paused ½Ã Update¸¸ skip)
+	if (m_eMode == UI_PREVIEW_MODE::SELECTED_ANIM)
+	{
+		const _int iW = m_pSession->Get_SelectedWidget();
+		const _int iA = m_pSession->Get_SelectedAnimation();
+		if (iW != m_iLastSelWidget || iA != m_iLastSelAnim)
+		{
+			if (m_eState != UI_PREVIEW_STATE::IDLE)
+				Stop();
+			m_iLastSelWidget = iW;
+			m_iLastSelAnim = iA;
+		}
+	}
+
+	// ìœ„ì ¯ tick (paused ì‹œ Updateë§Œ skip)
 	const _bool bPaused = (m_eState == UI_PREVIEW_STATE::PAUSED);
 
 	for (CUIObject* p : m_vWidgets) p->Priority_Update(fTimeDelta);
@@ -46,23 +59,58 @@ void CUIPreviewHost::Tick(_float fTimeDelta)
 		if (m_eMode == UI_PREVIEW_MODE::SEQUENCE && m_pSequence)
 			m_pSequence->Update(fTimeDelta);
 	}
+
+	// PLAYING â†’ IDLE ìë™ ì „ì´
+	if (m_eState == UI_PREVIEW_STATE::PLAYING)
+	{
+		_bool bAnyActive = false;
+
+		switch (m_eMode)
+		{
+		case UI_PREVIEW_MODE::LAYOUT:
+			// ì •ì  ëª¨ë“œ â€” Play ìì²´ê°€ ë¬´ì˜ë¯¸í•˜ë¯€ë¡œ ì¦‰ì‹œ IDLE ë³µê·€
+			bAnyActive = false;
+			break;
+
+		case UI_PREVIEW_MODE::SELECTED_ANIM:
+		{
+			const _int iSel = m_pSession->Get_SelectedWidget();
+			const auto& vW = m_pSession->Get_Doc().vWidgets;
+			if (iSel >= 0 && iSel < (_int)vW.size())
+			{
+				CUIObject* pUI = Find_Runtime(vW[iSel].strId);
+				if (pUI && pUI->Get_Animator() && pUI->Get_Animator()->Is_Playing())
+					bAnyActive = true;
+			}
+			break;
+		}
+
+		case UI_PREVIEW_MODE::SEQUENCE:
+			if (m_pSequence && m_pSequence->Is_Playing())
+				bAnyActive = true;
+			break;
+		}
+
+		if (!bAnyActive)
+			m_eState = UI_PREVIEW_STATE::IDLE;
+	}
 }
 
 void CUIPreviewHost::Render_Queue_Submit()
 {
-	// z-order ¿À¸§Â÷¼øÀ¸·Î Late_Update È£Ãâ (RENDERID::UI °¡ FIFOÀÌ¹Ç·Î)
+	// z-order ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ Late_Update í˜¸ì¶œ (RENDERID::UI ê°€ FIFOì´ë¯€ë¡œ)
 	for (_int idx : m_vZOrderIdx)
 		m_vWidgets[idx]->Late_Update(0.f);
 }
 
 HRESULT CUIPreviewHost::Rebuild()
 {
-	// viewport size°¡ ¾ÆÁ÷ 0ÀÌ¸é rebuild º¸·ù (´ÙÀ½ ÇÁ·¹ÀÓ Àç½Ãµµ)
+	// viewport sizeê°€ ì•„ì§ 0ì´ë©´ rebuild ë³´ë¥˜ (ë‹¤ìŒ í”„ë ˆì„ ì¬ì‹œë„)
 	if (m_vLastViewportSize.x < 1.f || m_vLastViewportSize.y < 1.f)
 	{
 		const ImVec2 vNow = m_pEditInstance->Get_ViewportScreenSize();
 		if (vNow.x < 1.f || vNow.y < 1.f)
-			return S_OK;   // pending À¯Áö
+			return S_OK;   // pending ìœ ì§€
 		m_vLastViewportSize = vNow;
 	}
 
@@ -72,7 +120,7 @@ HRESULT CUIPreviewHost::Rebuild()
 
 	for (const auto& w : tDoc.vWidgets)
 	{
-		// desc »çº»
+		// desc ì‚¬ë³¸
 		UISEQ_WIDGET_NODE::tDescType tDescCopy = w.tDesc;
 
 		std::visit([&](auto& d) {
@@ -85,7 +133,7 @@ HRESULT CUIPreviewHost::Rebuild()
 				Apply_Fallback_ProgressBar(d);
 			else if constexpr (std::is_same_v<T, CUIText::UITEXT_DESC>)
 				Apply_Fallback_Text(d);
-			// CONTAINER: fallback ¾øÀ½
+			// CONTAINER: fallback ì—†ìŒ
 			}, tDescCopy);
 
 		WNameID strProto = INVALID_TAG;
@@ -99,7 +147,7 @@ HRESULT CUIPreviewHost::Rebuild()
 		default: continue;
 		}
 
-		// desc »çº»ÀÇ base ºÎºĞ Æ÷ÀÎÅÍ ÃßÃâ
+		// desc ì‚¬ë³¸ì˜ base ë¶€ë¶„ í¬ì¸í„° ì¶”ì¶œ
 		void* pArg = std::visit([](auto& d) -> void* {
 			return static_cast<void*>(&d);
 			}, tDescCopy);
@@ -111,12 +159,49 @@ HRESULT CUIPreviewHost::Rebuild()
 		CUIObject* pUI = static_cast<CUIObject*>(pClone);
 		m_vWidgets.push_back(pUI);
 		m_id2Widget[w.strId] = pUI;
+
+		// runtime animatorì— docìƒì˜ animationë“¤ì„ ë“±ë¡
+		if (CUIAnimator* pAnimator = pUI->Get_Animator())
+		{
+			pAnimator->Clear_Animations();   // ë©±ë“±ì„±: rebuild ë°˜ë³µ í˜¸ì¶œ ëŒ€ë¹„
+			for (const UISEQ_ANIMATION_NODE& a : w.vAnimations)
+			{
+				if (a.strName.empty()) continue;
+				pAnimator->Register_Animation(a.strName, a.vTracks);
+			}
+		}
 	}
 
-	// CUISequence Á÷Á¢ »ı¼º (PROTO_UI_SEQUENCE ¹Ìµî·Ï Á¤Ã¥ ¡×10.3)
+	// CUISequence ì§ì ‘ ìƒì„± (PROTO_UI_SEQUENCE ë¯¸ë“±ë¡ ì •ì±… Â§10.3)
 	m_pSequence = CUISequence::Create(m_pDevice, m_pContext);
 	if (nullptr != m_pSequence)
 		m_pSequence->Initialize(nullptr);
+
+	if (m_pSequence)
+	{
+		m_pSequence->Clear_Timeline();   // ë©±ë“±ì„± ë³´ì¥
+
+		for (const UISEQ_STEP_NODE& sn : tDoc.vSteps)
+		{
+			CUISequence::UISEQ_STEP s{};
+			s.eKind = sn.eKind;
+			s.pTarget = Find_Runtime(sn.strTargetId);  // ì—†ìœ¼ë©´ nullptr (engine ì¸¡ì—ì„œ null-guardí•¨)
+			s.strAnimName = sn.strAnimName;
+			s.fWaitSec = sn.fWaitSec;
+			s.bVisible = sn.bVisible;
+			s.bJoinPrev = sn.bJoinPrev;
+
+			// USE_CALLBACKì€ í˜„ ë‹¨ê³„ì—ì„œ ë¯¸êµ¬í˜„ â€” ë””ë²„ê·¸ìš© stub
+			if (sn.eKind == UI_SEQ_STEP_KIND::USE_CALLBACK && !sn.strCallbackId.empty())
+			{
+				const _string strId = sn.strCallbackId;
+				s.fnCallback = [strId]() { /* TODO: callback registry */ };
+			}
+
+			if (sn.bJoinPrev) m_pSequence->Join(s);
+			else              m_pSequence->Append(s);
+		}
+	}
 
 	Sort_ZOrder();
 	m_bRebuildPending = false;
@@ -132,19 +217,19 @@ void CUIPreviewHost::Process_Rebuild_If_Pending()
 
 void CUIPreviewHost::Play()
 {
+	if (m_eMode == UI_PREVIEW_MODE::LAYOUT)
+		return;
+
 	if (m_eState == UI_PREVIEW_STATE::PAUSED)
 	{
 		m_eState = UI_PREVIEW_STATE::PLAYING;
 		return;
 	}
+
 	if (m_eState != UI_PREVIEW_STATE::IDLE) return;
 
 	switch (m_eMode)
 	{
-	case UI_PREVIEW_MODE::LAYOUT:
-		// Á¤Àû ¸ğµå: Àç»ıÇÒ °Í ¾øÀ½. »óÅÂ¸¸ PLAYING·Î µÎ¸é Pause/Stop UI°¡ ÀÇ¹Ì ¾øÀ½.
-		break;
-
 	case UI_PREVIEW_MODE::SELECTED_ANIM:
 	{
 		const _int iSel = m_pSession->Get_SelectedWidget();
@@ -165,7 +250,11 @@ void CUIPreviewHost::Play()
 	case UI_PREVIEW_MODE::SEQUENCE:
 		if (m_pSequence) m_pSequence->Play();
 		break;
+
+	default:
+		break;
 	}
+
 	m_eState = UI_PREVIEW_STATE::PLAYING;
 }
 
@@ -203,20 +292,20 @@ CUIObject* CUIPreviewHost::Find_Runtime(const _string& strId) const
 
 _string CUIPreviewHost::Hit_Test_TopMost(const ImVec2& vDocXY) const
 {
-	// m_vZOrderIdx´Â z-order ¿À¸§Â÷¼ø ¡æ À§¿¡¼­ºÎÅÍ hit-testÇÏ·Á¸é ¿ª¼ø ¼øÈ¸
+	// m_vZOrderIdxëŠ” z-order ì˜¤ë¦„ì°¨ìˆœ â†’ ìœ„ì—ì„œë¶€í„° hit-testí•˜ë ¤ë©´ ì—­ìˆœ ìˆœíšŒ
 	for (auto it = m_vZOrderIdx.rbegin(); it != m_vZOrderIdx.rend(); ++it)
 	{
 		CUIObject* pUI = m_vWidgets[*it];
 		if (nullptr == pUI) continue;
 
-		// visible == falseÀÎ widgetÀº hit Á¦¿Ü
-		if (!pUI->Get_Visible()) continue;     // getter°¡ ¾ø´Ù¸é Ãß°¡ ÇÊ¿ä
+		// visible == falseì¸ widgetì€ hit ì œì™¸
+		if (!pUI->Get_Visible()) continue;     // getterê°€ ì—†ë‹¤ë©´ ì¶”ê°€ í•„ìš”
 
 		const _float4 rc = pUI->Get_ScreenRect(); // (l, t, w, h)
 		if (vDocXY.x >= rc.x && vDocXY.x <= rc.x + rc.z &&
 			vDocXY.y >= rc.y && vDocXY.y <= rc.y + rc.w)
 		{
-			// m_id2Widget ¿ª¹æÇâ °Ë»ö
+			// m_id2Widget ì—­ë°©í–¥ ê²€ìƒ‰
 			for (const auto& kv : m_id2Widget)
 				if (kv.second == pUI) return kv.first;
 		}
@@ -284,8 +373,8 @@ void CUIPreviewHost::Sort_ZOrder()
 	std::iota(m_vZOrderIdx.begin(), m_vZOrderIdx.end(), 0);
 	std::stable_sort(m_vZOrderIdx.begin(), m_vZOrderIdx.end(),
 		[this](_int a, _int b) {
-			// CUIObject´Â z-order getter°¡ ¾øÀ¸¸é Ãß°¡ÇÏ°Å³ª Get_BaseDesc È°¿ë ¾î·Á¿ò
-			// ¡æ CUIObject¿¡ _int Get_ZOrder() const { return m_iZOrder; } Ãß°¡ ±ÇÀå
+			// CUIObjectëŠ” z-order getterê°€ ì—†ìœ¼ë©´ ì¶”ê°€í•˜ê±°ë‚˜ Get_BaseDesc í™œìš© ì–´ë ¤ì›€
+			// â†’ CUIObjectì— _int Get_ZOrder() const { return m_iZOrder; } ì¶”ê°€ ê¶Œì¥
 			return m_vWidgets[a]->Get_ZOrder() < m_vWidgets[b]->Get_ZOrder();
 		});
 }

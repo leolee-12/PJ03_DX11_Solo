@@ -20,6 +20,7 @@ private:
 
 private:
 	void Draw_Header();
+	void Draw_PreviewBar();
 	void Draw_Animations();	// 선택 widget의 animation/track 편집
 	void Draw_AnimationList(UISEQ_WIDGET_NODE& tWidget);
 	void Draw_TrackList(UISEQ_WIDGET_NODE& tWidget, UISEQ_ANIMATION_NODE& tAnim);

@@ -9,12 +9,12 @@ public:
 	struct UITWEEN_DESC
 	{
 		UI_TWEEN_TARGET eTarget{ UI_TWEEN_TARGET::END };
-		UI_EASE eEase{ UI_EASE::LINEAR };
-		UI_TWEEN_LOOP eLoop{ UI_TWEEN_LOOP::NONE };
 		_float fStart{ 0.f };
 		_float fEnd{ 0.f };
 		_float fDuration{ 1.f };
 		_float fDelay{ 0.f };
+		UI_EASE eEase{ UI_EASE::LINEAR };
+		UI_TWEEN_LOOP eLoop{ UI_TWEEN_LOOP::NONE };
 	};
 
 private:

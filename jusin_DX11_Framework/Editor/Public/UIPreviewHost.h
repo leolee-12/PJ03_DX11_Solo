@@ -67,6 +67,9 @@ private:
 
 	vector<_int> m_vZOrderIdx;	// tick ½Ã »ç¿ë
 
+	_int m_iLastSelWidget = { -2 };
+	_int m_iLastSelAnim = { -2 };
+
 private:
 	void Release_All();
 	void Apply_Fallback_Image(CUIImage::UIIMAGE_DESC& d) const;
