@@ -73,6 +73,9 @@
     <Filter Include="80. Study\03. Particles">
       <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI">
+      <UniqueIdentifier>{02c28f6f-f37c-46f8-9897-e2e65ccc1fbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="..\Public\Explosion.h">
       <Filter>80. Study\03. Particles</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_RTSequence.h">
+      <Filter>04. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -220,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Explosion.cpp">
       <Filter>80. Study\03. Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_RTSequence.cpp">
+      <Filter>04. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

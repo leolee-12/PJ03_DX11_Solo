@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 #include <process.h>
+#include <set>
+#include <variant>
 #include <concurrent_queue.h>
 
 #include "Engine_Defines.h"

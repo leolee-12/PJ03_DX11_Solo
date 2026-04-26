@@ -2,9 +2,6 @@
 #define Editor_Defines_h__
 #include <Windows.h>
 #include <process.h>
-#include <fstream>
-#include <variant>
-#include <set>
 
 #include "Game_PKM_Defines.h"
 
