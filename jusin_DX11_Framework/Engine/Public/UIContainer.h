@@ -45,6 +45,7 @@ protected:
 	void Arrange_Overlay();
 	void Arrange_Horizontal();
 	void Arrange_Vertical();
+	_bool Prepare_Adopt_Child(CUIObject* pChild);
 
 public:
 	static CUIContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

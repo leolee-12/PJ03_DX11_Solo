@@ -64,14 +64,8 @@ void CUIContainer::Refresh_Layout()
 
 void CUIContainer::Add_Child(CUIObject* pChild)
 {
-	if (nullptr == pChild || this == pChild)
+	if (!Prepare_Adopt_Child(pChild))
 		return;
-
-	if (m_Children.end() != find(m_Children.begin(), m_Children.end(), pChild))
-		return;
-
-	if(auto pOldParent = dynamic_cast<CUIContainer*>(pChild->Get_ParentUI()))
-		pOldParent->Remove_Child(pChild);
 
 	pChild->Set_ParentUI(this);
 	m_Children.push_back(pChild);
@@ -94,12 +88,15 @@ void CUIContainer::Remove_Child(CUIObject* pChild)
 
 _bool CUIContainer::Insert_Child(_int iIndex, CUIObject* pChild)
 {
-	if (nullptr == pChild) return false;
-	if (iIndex < 0 || iIndex > static_cast<_int>(m_Children.size())) return false;
+	if (iIndex < 0 || iIndex > static_cast<_int>(m_Children.size()))
+		return false;
 
-	m_Children.insert(m_Children.begin() + iIndex, pChild);
+	if (!Prepare_Adopt_Child(pChild))
+		return false;
+
 	pChild->Set_ParentUI(this);
-	Refresh_Layout();
+	m_Children.insert(m_Children.begin() + iIndex, pChild);
+	Arrange_Children();
 	return true;
 }
 
@@ -219,6 +216,20 @@ void CUIContainer::Arrange_Vertical()
 
 		fCursor += fChildH + slot.vMargin.w + m_tLayoutDesc.fSpacing;
 	}
+}
+
+_bool CUIContainer::Prepare_Adopt_Child(CUIObject* pChild)
+{
+	if (nullptr == pChild || this == pChild)
+		return false;
+
+	if (m_Children.end() != find(m_Children.begin(), m_Children.end(), pChild))
+		return false;
+
+	if (auto pOldParent = dynamic_cast<CUIContainer*>(pChild->Get_ParentUI()))
+		pOldParent->Remove_Child(pChild);
+
+	return true;
 }
 
 CUIContainer* CUIContainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

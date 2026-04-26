@@ -43,6 +43,8 @@ public:
 						XMVectorGetX(XMVector3Length(Get_State(STATE::LOOK))));
 	}
 
+	_float Get_Depth() const { return m_WorldMatrix._43; }
+
 	const _float4x4* Get_WorldMatrixPtr() const { return &m_WorldMatrix; }
 
 public:

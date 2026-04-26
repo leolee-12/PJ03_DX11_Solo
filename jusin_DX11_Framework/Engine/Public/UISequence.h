@@ -44,12 +44,12 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void    Update(_float fTimeDelta) override;
 
-	void  Append(const UISEQ_STEP& step);	// bJoinPrev=false 강제
-	void  Join(const UISEQ_STEP& step);		// bJoinPrev=true 강제
-	void  Play();
-	void  Stop();
+	_bool Append(const UISEQ_STEP& step);	// bJoinPrev=false 강제
+	_bool Join(const UISEQ_STEP& step);		// bJoinPrev=true 강제
+	void Play();
+	void Stop();
 	_bool Is_Playing() const { return m_bPlaying; }
-	void  Clear_Timeline();					// Play 중이 아닐 때만 호출
+	_bool Clear_Timeline();					// Play 중이 아닐 때만 호출
 
 private:
 	vector<UISEQ_STEP> m_Steps;

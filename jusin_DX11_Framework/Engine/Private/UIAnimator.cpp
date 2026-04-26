@@ -130,12 +130,14 @@ HRESULT CUIAnimator::Register_Animation(const _wstring& strName, const vector<CU
 
 void CUIAnimator::Play_Animation(const _wstring& strName)
 {
-	if (nullptr == m_pOwner)
-		return;
+	if (nullptr == m_pOwner) return;
 
 	auto iter = m_NamedAnimations.find(strName);
-	if (iter == m_NamedAnimations.end())
-		return;
+	if (iter == m_NamedAnimations.end()) return;
+
+	// 동일 source 의 active tween 자동 정지 (중복 재생 시 중첩 방지)
+	if (Is_Animation_Active(strName))
+		Stop_Animation(strName);
 
 	for (const auto& tDesc : iter->second)
 		Activate_Tween(tDesc, strName);
@@ -143,11 +145,17 @@ void CUIAnimator::Play_Animation(const _wstring& strName)
 
 void CUIAnimator::Stop_Animation(const _wstring& strName)
 {
+	_bool bStopped = false;
 	for (auto& entry : m_ActiveTweens)
 	{
 		if (entry.strSource == strName && entry.pTween)
+		{
 			entry.pTween->Stop();
+			bStopped = true;
+		}
 	}
+	if (bStopped)
+		Purge_FinishedTweens();
 }
 
 _int CUIAnimator::Activate_Tween(const CUITween::UITWEEN_DESC& tDesc, const _wstring& strName)

@@ -82,7 +82,14 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
-	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::UI)])
+	auto& UIList = m_RenderObjects[ETOUI(RENDERID::UI)];
+
+	UIList.sort([](CGameObject* pL, CGameObject* pR)
+		{
+			return pL->Get_RenderOrder() < pR->Get_RenderOrder();
+		});
+
+	for (auto& pRenderObject : UIList)
 	{
 		if (nullptr != pRenderObject)
 			pRenderObject->Render();
@@ -90,8 +97,7 @@ HRESULT CRenderer::Render_UI()
 		Safe_Release(pRenderObject);
 	}
 
-	m_RenderObjects[ETOUI(RENDERID::UI)].clear();
-
+	UIList.clear();
 	return S_OK;
 }
 

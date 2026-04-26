@@ -163,18 +163,24 @@ void CUISequence::Update(_float fTimeDelta)
 	}
 }
 
-void CUISequence::Append(const UISEQ_STEP& step)
+_bool CUISequence::Append(const UISEQ_STEP& step)
 {
+	if (m_bPlaying) return false;
+
 	UISEQ_STEP s = step;
 	s.bJoinPrev = false;
 	m_Steps.push_back(s);
+	return true;
 }
 
-void CUISequence::Join(const UISEQ_STEP& step)
+_bool CUISequence::Join(const UISEQ_STEP& step)
 {
+	if (m_bPlaying) return false;
+
 	UISEQ_STEP s = step;
 	s.bJoinPrev = true;
 	m_Steps.push_back(s);
+	return true;
 }
 
 void CUISequence::Play()
@@ -194,10 +200,12 @@ void CUISequence::Stop()
 	m_bStepStarted = false;
 }
 
-void CUISequence::Clear_Timeline()
+_bool CUISequence::Clear_Timeline()
 {
-	if (m_bPlaying) return;
+	if (m_bPlaying) return false;
+	
 	m_Steps.clear();
+	return true;
 }
 
 CUISequence* CUISequence::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
