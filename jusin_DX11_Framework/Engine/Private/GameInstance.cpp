@@ -157,7 +157,6 @@ _float CGameInstance::Random(_float fMin, _float fMax)
 #pragma endregion
 
 #pragma region TIMER_MANAGER
-
 HRESULT CGameInstance::Add_Timer(WNameID strTimerTag)
 {
 	return m_pTimer_Manager->Add_Timer(strTimerTag);
@@ -167,11 +166,9 @@ float CGameInstance::Compute_Timer(WNameID strTimerTag)
 {
 	return m_pTimer_Manager->Compute_Timer(strTimerTag);
 }
-
 #pragma endregion
 
 #pragma region LEVEL_MANAGER
-
 HRESULT CGameInstance::Change_Level(_int iNewLevelIndex, CLevel* pNewLevel)
 {
 	return m_pLevel_Manager->Change_Level(iNewLevelIndex, pNewLevel);
@@ -272,6 +269,16 @@ void CGameInstance::Toggle_CameraFollow()
 #pragma endregion
 
 #pragma region INPUT_DEVICE
+_float2 CGameInstance::Get_CursorClientF() const
+{
+	return m_pInput_Device->Get_CursorClientF();
+}
+
+_bool CGameInstance::Is_Cursor_InClient() const
+{
+	return m_pInput_Device->Is_Cursor_InClient();
+}
+
 void CGameInstance::Set_InputState(INPUT_STATE eState)
 {
 	m_pInput_Device->Set_InputState(eState);

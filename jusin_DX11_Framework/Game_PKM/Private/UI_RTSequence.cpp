@@ -269,15 +269,73 @@ HRESULT CUI_RTSequence::Initialize(const _string& strPath, _uint iLevel, WNameID
 	pSeq->Clear_Timeline();
 
 	// 7) timeline step 빌드
-	for (const auto& sn : vLoadedSteps)
+	//for (const auto& sn : vLoadedSteps)
+	//{
+	//	// sanitize 후 target이 비어 있으면 skip
+	//	const _bool bNeedTarget = (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM ||
+	//		sn.eKind == UI_SEQ_STEP_KIND::SET_VISIBLE);
+	//	if (bNeedTarget && sn.strTargetId.empty())
+	//		continue;
+	//	if (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM && sn.strAnimName.empty())
+	//		continue;
+	//
+	//	CUISequence::UISEQ_STEP s{};
+	//	s.eKind = sn.eKind;
+	//	s.strAnimName = sn.strAnimName;
+	//	s.fWaitSec = sn.fWaitSec;
+	//	s.bVisible = sn.bVisible;
+	//	s.bJoinPrev = sn.bJoinPrev;
+	//	s.pTarget = nullptr;
+	//
+	//	if (bNeedTarget)
+	//	{
+	//		auto it = mapTmpById.find(sn.strTargetId);
+	//		if (it == mapTmpById.end()) continue;
+	//		s.pTarget = it->second;
+	//	}
+	//
+	//	if (sn.eKind == UI_SEQ_STEP_KIND::USE_CALLBACK && !sn.strCallbackId.empty())
+	//	{
+	//		const _string strId = sn.strCallbackId;
+	//		s.fnCallback = [strId]() { Log_Loader("callback stub fired: %s", strId.c_str()); };
+	//	}
+	//}
+
+	// 7) timeline step 빌드 — 진단 버전
+	_uint iSkipEmptyTarget = 0;
+	_uint iSkipEmptyAnim = 0;
+	_uint iSkipNotInMap = 0;
+	_uint iAppendCalled = 0;
+	_uint iAppendOk = 0;
+
+	Log_Loader("DEBUG: build start, vLoadedSteps=%zu, mapTmpById=%zu",
+		vLoadedSteps.size(), mapTmpById.size());
+
+	for (auto& kv : mapTmpById)
+		Log_Loader("DEBUG: widget id='%s'", kv.first.c_str());
+
+	for (size_t i = 0; i < vLoadedSteps.size(); ++i)
 	{
-		// sanitize 후 target이 비어 있으면 skip
+		const auto& sn = vLoadedSteps[i];
+
+		Log_Loader("DEBUG: step[%zu] kind=%d, target='%s', joinPrev=%d",
+			i, (int)sn.eKind, sn.strTargetId.c_str(), (int)sn.bJoinPrev);
+
 		const _bool bNeedTarget = (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM ||
 			sn.eKind == UI_SEQ_STEP_KIND::SET_VISIBLE);
+
 		if (bNeedTarget && sn.strTargetId.empty())
+		{
+			++iSkipEmptyTarget;
+			Log_Loader("  SKIP: empty target");
 			continue;
+		}
 		if (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM && sn.strAnimName.empty())
+		{
+			++iSkipEmptyAnim;
+			Log_Loader("  SKIP: empty anim name");
 			continue;
+		}
 
 		CUISequence::UISEQ_STEP s{};
 		s.eKind = sn.eKind;
@@ -290,7 +348,12 @@ HRESULT CUI_RTSequence::Initialize(const _string& strPath, _uint iLevel, WNameID
 		if (bNeedTarget)
 		{
 			auto it = mapTmpById.find(sn.strTargetId);
-			if (it == mapTmpById.end()) continue;
+			if (it == mapTmpById.end())
+			{
+				++iSkipNotInMap;
+				Log_Loader("  SKIP: target '%s' not in map", sn.strTargetId.c_str());
+				continue;
+			}
 			s.pTarget = it->second;
 		}
 
@@ -299,7 +362,17 @@ HRESULT CUI_RTSequence::Initialize(const _string& strPath, _uint iLevel, WNameID
 			const _string strId = sn.strCallbackId;
 			s.fnCallback = [strId]() { Log_Loader("callback stub fired: %s", strId.c_str()); };
 		}
+
+		const _bool bOk = sn.bJoinPrev ? pSeq->Join(s) : pSeq->Append(s);
+		++iAppendCalled;
+		if (bOk) ++iAppendOk;
+		else Log_Loader("  WARN: Append/Join returned false (kind=%d)", (int)sn.eKind);
 	}
+
+	Log_Loader("DEBUG: build done — total=%zu, skipEmptyTarget=%u, skipEmptyAnim=%u, "
+		"skipNotInMap=%u, appendCalled=%u, appendOk=%u, finalSteps=%zu",
+		vLoadedSteps.size(), iSkipEmptyTarget, iSkipEmptyAnim,
+		iSkipNotInMap, iAppendCalled, iAppendOk, pSeq->Get_Steps().size());
 
 	// 8) 모든 검증 통과 — 이제 layer 등록 (§8.8 정책 1: all-or-nothing)
 	for (size_t i = 0; i < vTmp.size(); ++i)

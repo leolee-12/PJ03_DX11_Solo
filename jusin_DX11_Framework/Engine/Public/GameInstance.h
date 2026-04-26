@@ -74,6 +74,9 @@ public:
 #pragma endregion
 
 #pragma region INPUT_DEVICE
+	_float2 Get_CursorClientF() const;
+	_bool   Is_Cursor_InClient() const;
+
 	void Set_InputState(INPUT_STATE eState);
 	INPUT_STATE Get_InputState() const;
 

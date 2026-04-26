@@ -54,7 +54,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pRuntimeUI)
 		m_pRuntimeUI->Update(fTimeDelta);
 
-	if(m_pGameInstance->Key_Down(DIK_F2) && m_pRuntimeUI)
+	if (m_pGameInstance->Key_Down(DIK_F2) && m_pRuntimeUI)
 		m_pRuntimeUI->Play();
 }
 
