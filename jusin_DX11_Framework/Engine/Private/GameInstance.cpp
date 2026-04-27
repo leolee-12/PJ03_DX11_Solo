@@ -354,6 +354,33 @@ HRESULT CGameInstance::Add_RenderTarget(WNameID strTargetTag, _uint iWidth, _uin
 {
 	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iWidth, iHeight, ePixelFormat, vClearColor);
 }
+
+HRESULT CGameInstance::Add_MRT(WNameID strMRTTag, WNameID strTargetTag)
+{
+	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
+}
+
+HRESULT CGameInstance::Begin_MRT(WNameID strMRTTag)
+{
+	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+}
+
+HRESULT CGameInstance::End_MRT()
+{
+	return m_pTarget_Manager->End_MRT();
+}
+
+#ifdef _DEBUG
+HRESULT CGameInstance::Ready_RT_Debug(WNameID strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
+}
+
+HRESULT CGameInstance::Render_RT_Debug(WNameID strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
+}
+#endif
 #pragma endregion
 
 void CGameInstance::Free()

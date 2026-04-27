@@ -190,7 +190,7 @@ namespace Engine
 		T& operator[](WNameID id)
 		{
 			T* value = find_ptr(id);
-			assert(value != m_Map.end() && "WNameMap::operator[] - Key Not Found");
+			assert(value && "WNameMap::operator[] - Key Not Found");
 			return *value;
 		}
 

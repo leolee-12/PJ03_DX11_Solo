@@ -25,7 +25,12 @@ private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
+	class CGameInstance*		m_pGameInstance = { nullptr };
 	list<class CGameObject*>	m_RenderObjects[ETOUI(RENDERID::END)];
+
+	class CShader*				m_pShader = { nullptr };
+	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
+	_float4x4					m_ViewMatrix{}, m_ProjMatrix{};
 
 private:
 	HRESULT Render_Priority();
@@ -33,11 +38,16 @@ private:
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
 
+#ifdef _DEBUG
+private:
+	HRESULT Render_Debug();
+#endif
+
 public:
-	static CRenderer*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 
 protected:
-	virtual void		Free() override;
+	virtual void Free() override;
 };
 
 NS_END

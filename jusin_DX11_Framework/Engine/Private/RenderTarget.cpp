@@ -1,5 +1,7 @@
 #include "RenderTarget.h"
 
+#include "GameInstance.h"
+
 CRenderTarget::CRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
 	, m_pContext{ pContext }
@@ -35,6 +37,43 @@ HRESULT CRenderTarget::Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT ePixe
 
 	return S_OK;
 }
+
+void CRenderTarget::Clear()
+{
+	m_pContext->ClearRenderTargetView(m_pRTV, reinterpret_cast<_float*>(&m_vClearColor));
+}
+
+#ifdef _DEBUG
+
+HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(fSizeX, fSizeY, 1.f));
+
+	_float2		vViewportDesc = CGameInstance::GetInstance()->Get_ViewportDesc();
+
+	m_WorldMatrix._41 = fX - vViewportDesc.x * 0.5f;
+	m_WorldMatrix._42 = -fY + vViewportDesc.y * 0.5f;
+
+	return S_OK;
+}
+HRESULT CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+
+	if (FAILED(pShader->Bind_SRV("g_Texture", m_pSRV)))
+		return E_FAIL;
+
+	if (FAILED(pShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+#endif
 
 CRenderTarget* CRenderTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
 {

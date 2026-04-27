@@ -15,6 +15,17 @@ namespace Engine
 	WNAME_TAG(COM_COLLIDER_OBB, L"Com_Collider_OBB");
 	WNAME_TAG(COM_COLLIDER_SPHERE, L"Com_Collider_Sphere");
 	WNAME_TAG(COM_UI_ANIMATOR, L"Com_UI_Animator");
+
+
+
+	WNAME_TAG(TARGET_DIFFUSE, L"Target_Diffuse");
+	WNAME_TAG(TARGET_NORMAL, L"Target_Normal");
+	WNAME_TAG(TARGET_SHADE, L"Target_Shade");
+
+
+
+	WNAME_TAG(MRT_GAMEOBJECTS, L"MRT_GameObjects");
+	WNAME_TAG(MRT_LIGHTACC, L"MRT_LightAcc");
 }
 
 #endif // Engine_Tags_h__
