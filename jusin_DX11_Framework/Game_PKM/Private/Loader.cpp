@@ -147,20 +147,16 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_DIFF,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbgf_00.png"), 1)); });
 
-	/* Prototype_Component_Texture_Title_pbgf_Noise */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_NOISE,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_noise_00.png"), 1)); });
-
 	/* Prototype_Component_Texture_Title_Logo_Diff */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_LOGO_DIFF,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_logo_%02d.png"), 3)); });
 
-	/* Prototype_Component_Texture_Title_BG_Grad */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_BG_GRAD,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/bg_gradation_alpha_%02d.png"), 1)); });
+	/* Prototype_Component_Texture_Title_pbtn_Diff */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBTN_DIFF,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbtn_%02d.png"), 1)); });
 
-	/* Prototype_Component_Texture_Title_Pika_Mask */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_PIKA_MASK,
+	/* Prototype_Component_Texture_Title_Pika */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PIKA,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/pber_pika_%02d.png"), 11)); });
 
 	// ---------- Shader ----------

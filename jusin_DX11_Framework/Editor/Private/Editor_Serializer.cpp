@@ -121,10 +121,29 @@ namespace Helper
 	json To_Json(const CUIImage::UIIMAGE_DESC& d)
 	{
 		json j = Base_To_Json(d);
-		j["shader"] = { { "tag", TagToS(d.strShaderTag) },    { "level", d.iShaderLevel } };
-		j["viBuffer"] = { { "tag", TagToS(d.strVIBufferTag) },  { "level", d.iVIBufferLevel } };
-		j["texture"] = { { "tag", TagToS(d.strTextureTag) },   { "level", d.iTextureLevel }, { "index", d.iTextureIndex } };
-		j["color"] = { d.vColor.x, d.vColor.y, d.vColor.z, d.vColor.w };
+		j["shader"]		= {	{ "tag", TagToS(d.strShaderTag) },
+							{ "level", d.iShaderLevel },
+							{ "pass",  d.iShaderPass } };
+		j["viBuffer"]	= {	{ "tag", TagToS(d.strVIBufferTag) },
+							{ "level", d.iVIBufferLevel } };
+		j["texture"]	= {	{ "tag", TagToS(d.strTextureTag) },
+							{ "level", d.iTextureLevel },
+							{ "index", d.iTextureIndex } };
+		j["color"]		= { d.vColor.x, d.vColor.y, d.vColor.z, d.vColor.w };
+		j["spriteAnim"] = {	{ "enabled",       d.bSpriteAnimEnabled },
+							{ "frameDuration", d.fSpriteFrameDuration } };
+
+		json jArr = json::array();
+		for (const auto& b : d.SharedTextureBindings)
+		{
+			jArr.push_back({
+				{ "group",     b.strSharedTexName },
+				{ "shaderVar", b.strShaderVarName },
+				{ "index",     b.iTextureIndex },
+				});
+		}
+		j["sharedTextures"] = std::move(jArr);
+
 		return j;
 	}
 	void From_Json(const json& j, CUIImage::UIIMAGE_DESC& d)
@@ -133,17 +152,40 @@ namespace Helper
 		const auto sh = j.value("shader", json::object());
 		const auto vb = j.value("viBuffer", json::object());
 		const auto tx = j.value("texture", json::object());
+		const auto jSprite = j.value("spriteAnim", json::object());
 
 		d.strShaderTag = SToTag(sh.value("tag", _string(kDefaultShader)));
 		d.iShaderLevel = sh.value("level", 0u);
+		d.iShaderPass = sh.value("pass", 0u);
+
 		d.strVIBufferTag = SToTag(vb.value("tag", _string(kDefaultVIBuffer)));
 		d.iVIBufferLevel = vb.value("level", 0u);
+
 		d.strTextureTag = SToTag(tx.value("tag", _string{}));
 		d.iTextureLevel = tx.value("level", 0u);
 		d.iTextureIndex = tx.value("index", 0u);
 
 		auto c = j.value("color", json::array({ 1.f,1.f,1.f,1.f }));
 		d.vColor = { c[0], c[1], c[2], c[3] };
+
+		d.bSpriteAnimEnabled = jSprite.value("enabled", false);
+		d.fSpriteFrameDuration = jSprite.value("frameDuration", 0.f);
+
+		d.SharedTextureBindings.clear();
+		for (const auto& jb : j.value("sharedTextures", json::array()))
+		{
+			UI_SHARED_TEXTURE_BINDING_DESC b{};
+			b.strSharedTexName = jb.value("group", _string{});
+			b.strShaderVarName = jb.value("shaderVar", _string{});
+			b.iTextureIndex = jb.value("index", static_cast<unsigned int>(-1));
+
+			if (b.strSharedTexName.empty()
+				|| b.strShaderVarName.empty()
+				|| b.iTextureIndex == static_cast<unsigned int>(-1))
+				continue;       // 결손 entry는 묵음 skip — 사용자 편집 중간 상태 보호
+
+			d.SharedTextureBindings.push_back(std::move(b));
+		}
 	}
 
 	// UIBUTTON_DESC — Image와 유사 + hover/pressed/disabled/interactable

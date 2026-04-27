@@ -75,28 +75,21 @@ HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* 
 	return S_OK;
 }
 
-HRESULT Ready_SharedTextures()
+HRESULT Ready_SharedTextures(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CSharedTexture_Manager* pManager = CSharedTexture_Manager::GetInstance();
+	auto* pManager = CSharedTexture_Manager::GetInstance();
+	if (FAILED(pManager->Initialize(pDevice, pContext))) return E_FAIL;
 
-	if (FAILED(pManager->Initialize()))
-		return E_FAIL;
+	//pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::MASK,
+	//     TEXT("../../Resources/Shared/mask/mask_%02d.png"), 1);
+	 pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::NOISE,
+		 TEXT("../../Resources/Shared/noise/noise_%02d.png"), 1);
+	 pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::GRADIENT,
+		 TEXT("../../Resources/Shared/gradient/gradient_%02d.png"), 1);
+	 //pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::HIGHLIGHT,
+		// TEXT("../../Resources/Shared/highlight/highlight_%02d.png"), 1);
 
-	if (FAILED(pManager->Register_TextureGroup(SHARED_TEXTURE::NOISE, ETOUI(LEVEL::STATIC),
-		PROTO_COM_TEXTURE_SHARED_NOISE)))
-		return E_FAIL;
-
-	if (FAILED(pManager->Register_TextureGroup(SHARED_TEXTURE::GRADIENT, ETOUI(LEVEL::STATIC),
-		PROTO_COM_TEXTURE_SHARED_GRADIENT)))
-		return E_FAIL;
-
-	if (FAILED(pManager->Register_TextureGroup(SHARED_TEXTURE::MASK, ETOUI(LEVEL::STATIC),
-		PROTO_COM_TEXTURE_SHARED_MASK)))
-		return E_FAIL;
-
-	// 등록 후 Engine UI leaf의 binder hook이 호출할 binder를 매니저로 지정
 	CGameInstance::GetInstance()->Set_SharedTextureBinder(pManager);
-
 	return S_OK;
 }
 

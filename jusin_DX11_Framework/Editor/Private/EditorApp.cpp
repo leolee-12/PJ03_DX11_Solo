@@ -45,8 +45,8 @@ HRESULT CEditorApp::Initialize()
 	if (FAILED(Ready_Prototypes_For_Editor(m_pDevice, m_pContext)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_SharedTextures()))
-	//	return E_FAIL;
+	if (FAILED(Ready_SharedTextures(m_pDevice, m_pContext)))
+		return E_FAIL;
 
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
 		return E_FAIL;

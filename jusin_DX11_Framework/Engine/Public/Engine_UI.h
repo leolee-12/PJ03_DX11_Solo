@@ -201,6 +201,7 @@ namespace Engine
 
 	struct UI_SHARED_TEXTURE_BINDING_DESC
 	{
+		string strRole;
 		string strSharedTexName;
 		string strShaderVarName;
 		unsigned int iTextureIndex = { static_cast<unsigned int>(-1) };

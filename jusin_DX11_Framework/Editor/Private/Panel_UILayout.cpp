@@ -1,8 +1,10 @@
-#include "Panel_UILayout.h"
+Ôªø#include "Panel_UILayout.h"
 #include "UIEditorSession.h"
+#include "EditInstance.h"
+
+#include "SharedTexture_Manager.h"
 
 #include "GameInstance.h"
-#include "EditInstance.h"
 
 CPanel_UILayout::CPanel_UILayout()
 	: CPanel_Base()
@@ -59,7 +61,7 @@ void CPanel_UILayout::Draw_Toolbar()
 	namespace fs = std::filesystem;
 	const _string strDir = "../../DataFiles/UI/";
 
-	// ¶°¶° Row 1: ∆ƒ¿œ ƒﬁ∫∏ (¡¬√¯ ∂Û∫ß + ≥≤¿∫ ∆¯ ∞°µÊ) ¶°¶°
+	// ‚îÄ‚îÄ Row 1: ÌååÏùº ÏΩ§Î≥¥ (Ï¢åÏ∏° ÎùºÎ≤® + ÎÇ®ÏùÄ Ìè≠ Í∞ÄÎìù) ‚îÄ‚îÄ
 	{
 		Label_Left("File");
 		ImGui::SetNextItemWidth(-FLT_MIN);
@@ -83,7 +85,7 @@ void CPanel_UILayout::Draw_Toolbar()
 		}
 	}
 
-	// ¶°¶° Row 2: ∞Ê∑Œ ∆Ì¡˝ ¶°¶°
+	// ‚îÄ‚îÄ Row 2: Í≤ΩÎ°ú Ìé∏Ïßë ‚îÄ‚îÄ
 	{
 		Label_Left("Path");
 		ImGui::SetNextItemWidth(-FLT_MIN);
@@ -92,7 +94,7 @@ void CPanel_UILayout::Draw_Toolbar()
 			m_pSession->Set_DocPath(strDocPath);
 	}
 
-	// ¶°¶° Row 3: æ◊º« πˆ∆∞ ¶°¶°
+	// ‚îÄ‚îÄ Row 3: Ïï°ÏÖò Î≤ÑÌäº ‚îÄ‚îÄ
 	if (ImGui::Button("New"))
 	{
 		if (m_pSession->Is_Dirty())
@@ -118,7 +120,7 @@ void CPanel_UILayout::Draw_Toolbar()
 	if (ImGui::Button("Save"))
 		m_pSession->Save(m_pSession->Get_DocPath());
 
-	// ¶°¶° Modal (æ◊º« πˆ∆∞ ¡˜»ƒ∑Œ ¿Ãµø, ∞°µ∂º∫) ¶°¶°
+	// ‚îÄ‚îÄ Modal (Ïï°ÏÖò Î≤ÑÌäº ÏßÅÌõÑÎ°ú Ïù¥Îèô, Í∞ÄÎèÖÏÑ±) ‚îÄ‚îÄ
 	if (ImGui::BeginPopupModal("Discard Changes?", nullptr,
 		ImGuiWindowFlags_AlwaysAutoResize))
 	{
@@ -163,7 +165,7 @@ void CPanel_UILayout::Draw_Toolbar()
 		ImGui::EndPopup();
 	}
 
-	// ¶°¶° Row 4: ªÛ≈¬ (∫∞µµ ¡Ÿ) ¶°¶°
+	// ‚îÄ‚îÄ Row 4: ÏÉÅÌÉú (Î≥ÑÎèÑ Ï§Ñ) ‚îÄ‚îÄ
 	ImGui::TextColored(
 		m_pSession->Is_Dirty() ? ImVec4(1.f, 0.7f, 0.2f, 1.f) : ImVec4(0.7f, 0.7f, 0.7f, 1.f),
 		"%s%s",
@@ -327,11 +329,102 @@ void CPanel_UILayout::Draw_Inspector()
 				if (Edit_TagField<256>("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Level", tDesc.iTextureLevel)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Index", tDesc.iTextureIndex)) MarkWidgetUpdated();
+
 				if (Edit_TagField<256>("Shader Tag", tDesc.strShaderTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Shader Level", tDesc.iShaderLevel)) MarkWidgetUpdated();
+				if (Edit_UIntField("Shader Pass", tDesc.iShaderPass)) MarkWidgetUpdated();
+
 				if (Edit_TagField<256>("VIBuffer Tag", tDesc.strVIBufferTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("VIBuffer Level", tDesc.iVIBufferLevel)) MarkWidgetUpdated();
+
 				if (ImGui::ColorEdit4("Color", reinterpret_cast<float*>(&tDesc.vColor))) MarkWidgetUpdated();
+
+				// ‚îÄ‚îÄ Sprite Animation ‚îÄ‚îÄ
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Sprite Animation", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					if (ImGui::Checkbox("Enabled", &tDesc.bSpriteAnimEnabled))
+					{
+						// Ïº∞ÏùÑ Îïå frameDuration 0Ïù¥Î©¥ 12FPS Í∏∞Î≥∏Í∞í
+						if (tDesc.bSpriteAnimEnabled && tDesc.fSpriteFrameDuration <= 0.f)
+							tDesc.fSpriteFrameDuration = 1.f / 12.f;
+						MarkWidgetUpdated();
+					}
+
+					if (ImGui::DragFloat("Frame Duration (s)", &tDesc.fSpriteFrameDuration,
+						0.001f, 0.f, 10.f, "%.4f"))
+					{
+						if (tDesc.fSpriteFrameDuration < 0.f)
+							tDesc.fSpriteFrameDuration = 0.f;
+						MarkWidgetUpdated();
+					}
+
+					if (tDesc.fSpriteFrameDuration > 0.f)
+						ImGui::Text("‚âà %.2f FPS", 1.f / tDesc.fSpriteFrameDuration);
+					else
+						ImGui::TextDisabled("(disabled)");
+				}
+
+				// ‚îÄ‚îÄ Shared Textures ‚îÄ‚îÄ
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Shared Textures", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					if (ImGui::Button("Add Binding"))
+					{
+						tDesc.SharedTextureBindings.emplace_back();
+						MarkWidgetUpdated();
+					}
+
+					for (size_t i = 0; i < tDesc.SharedTextureBindings.size(); )
+					{
+						ImGui::PushID(static_cast<int>(i));
+						auto& b = tDesc.SharedTextureBindings[i];
+
+						ImGui::Text("[%zu]", i);
+
+						// Group combo
+						namespace G = Game_PKM;
+						const _uint iCount = ETOUI(G::SHARED_TEXTURE_TYPE::END);
+
+						const char* pszPreview = b.strSharedTexName.empty() ? "(none)" : b.strSharedTexName.c_str();
+						if (ImGui::BeginCombo("Group", pszPreview))
+						{
+							for (_uint k = 0; k < iCount; ++k)
+							{
+								const char* psz = G::To_String(static_cast<G::SHARED_TEXTURE_TYPE>(k));
+								const bool bSel = (b.strSharedTexName == psz);
+								if (ImGui::Selectable(psz, bSel) && !bSel)
+								{
+									b.strSharedTexName = psz;
+									MarkWidgetUpdated();
+								}
+							}
+							ImGui::EndCombo();
+						}
+
+						if (Edit_StringField<128>("Shader Var", b.strShaderVarName))
+							MarkWidgetUpdated();
+
+						int iIdx = static_cast<int>(b.iTextureIndex);
+						if (ImGui::InputInt("Index", &iIdx))
+						{
+							b.iTextureIndex = (iIdx < 0) ? 0u : static_cast<unsigned int>(iIdx);
+							MarkWidgetUpdated();
+						}
+
+						if (ImGui::Button("Remove"))
+						{
+							tDesc.SharedTextureBindings.erase(tDesc.SharedTextureBindings.begin() + i);
+							MarkWidgetUpdated();
+							ImGui::PopID();
+							continue;          // i Ïú†ÏßÄ ‚Äî Îã§Ïùå ÏõêÏÜåÍ∞Ä Í∞ôÏùÄ ÏúÑÏπòÎ°ú ÎãπÍ≤®Ïßê
+						}
+
+						ImGui::Separator();
+						ImGui::PopID();
+						++i;
+					}
+				}
 			}
 			else if constexpr (std::is_same_v<T, CUIButton::UIBUTTON_DESC>)
 			{

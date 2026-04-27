@@ -1,13 +1,15 @@
 ﻿#include "UI_RTSequence.h"
+
+#include "SharedTexture_Manager.h"
+
 #include "UISequence.h"
 #include "UIImage.h"
 #include "UIText.h"
 #include "UIButton.h"
 #include "UIProgressBar.h"
 #include "UITween.h"
-
-#include "GameInstance.h"
 #include "UIAnimator.h"
+#include "GameInstance.h"
 
 namespace
 {
@@ -462,14 +464,62 @@ namespace
 
 		d.strShaderTag = SToTag(sh.value("tag", _string(kDefaultShader)));
 		d.iShaderLevel = sh.value("level", 0u);
+		d.iShaderPass = sh.value("pass", 0u);
+
 		d.strVIBufferTag = SToTag(vb.value("tag", _string(kDefaultVIBuffer)));
 		d.iVIBufferLevel = vb.value("level", 0u);
+
 		d.strTextureTag = SToTag(tx.value("tag", _string{}));
 		d.iTextureLevel = tx.value("level", 0u);
 		d.iTextureIndex = tx.value("index", 0u);
 
 		auto c = j.value("color", json::array({ 1.f,1.f,1.f,1.f }));
 		d.vColor = { c[0], c[1], c[2], c[3] };
+
+		// ── Sprite Animation ──
+		const auto jSprite = j.value("spriteAnim", json::object());
+		d.bSpriteAnimEnabled = jSprite.value("enabled", false);
+		d.fSpriteFrameDuration = jSprite.value("frameDuration", 0.f);
+
+		if (d.bSpriteAnimEnabled && d.fSpriteFrameDuration <= 0.f)
+		{
+			Log_Loader("spriteAnim: enabled but frameDuration<=0 — disabling");
+			d.bSpriteAnimEnabled = false;
+			d.fSpriteFrameDuration = 0.f;
+		}
+
+		// ── Shared Textures ──
+		d.SharedTextureBindings.clear();
+		for (const auto& jb : j.value("sharedTextures", json::array()))
+		{
+			UI_SHARED_TEXTURE_BINDING_DESC b{};
+			b.strSharedTexName = jb.value("group", _string{});
+			b.strShaderVarName = jb.value("shaderVar", _string{});
+			b.iTextureIndex = jb.value("index", static_cast<unsigned int>(-1));
+
+			// 결손 entry — 묵음 skip(편집 중간 상태 보호)
+			if (b.strSharedTexName.empty()
+				|| b.strShaderVarName.empty()
+				|| b.iTextureIndex == static_cast<unsigned int>(-1))
+			{
+				Log_Loader("sharedTextures: incomplete entry skipped (group='%s', shaderVar='%s', index = % u)",
+					b.strSharedTexName.c_str(),
+					b.strShaderVarName.c_str(),
+					b.iTextureIndex);
+					continue;
+			}
+
+			// group 이름 검증 — 단일 진실원천(SHARED_TEXTURE_From_String) 사용
+			if (SHARED_TEXTURE_TYPE::END == SHARED_TEXTURE_From_String(b.strSharedTexName.c_str()))
+			{
+				Log_Loader("sharedTextures: unknown group '%s' (skipped)",
+					b.strSharedTexName.c_str());
+				continue;
+			}
+
+			d.SharedTextureBindings.push_back(std::move(b));
+		}
+
 		return S_OK;
 	}
 

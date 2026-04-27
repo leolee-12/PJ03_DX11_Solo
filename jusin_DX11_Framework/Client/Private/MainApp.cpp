@@ -33,8 +33,8 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototypes_For_Static(m_pDevice, m_pContext)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_SharedTextures()))
-	//	return E_FAIL;
+	if (FAILED(Ready_SharedTextures(m_pDevice, m_pContext)))
+		return E_FAIL;
 
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
 		return E_FAIL;

@@ -30,8 +30,12 @@ HRESULT CUIImage::Initialize(void* pArg)
 		m_iShaderLevel = pDesc->iShaderLevel;
 		m_iVIBufferLevel = pDesc->iVIBufferLevel;
 		m_iTextureIndex = pDesc->iTextureIndex;
+		m_iShaderPass = pDesc->iShaderPass;
 		m_vColor = pDesc->vColor;
+		m_bSpriteAnimEnabled = pDesc->bSpriteAnimEnabled;
+		m_fSpriteFrameDuration = pDesc->fSpriteFrameDuration;
 		m_SharedTextureBindings = pDesc->SharedTextureBindings;
+
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -68,7 +72,7 @@ HRESULT CUIImage::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(0)))
+	if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources()))

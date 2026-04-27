@@ -86,7 +86,13 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
         },
         "texture": {
           "index": 0,
@@ -106,7 +112,7 @@
           "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "Image",
+      "displayName": "pbgf",
       "id": "widget_001",
       "type": "IMAGE"
     },
@@ -151,7 +157,13 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
         },
         "texture": {
           "index": 0,
@@ -171,7 +183,7 @@
           "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "Image",
+      "displayName": "logo1",
       "id": "widget_003",
       "type": "IMAGE"
     },
@@ -216,12 +228,18 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": true,
+          "frameDuration": 0.0833333358168602
         },
         "texture": {
           "index": 0,
           "level": 3,
-          "tag": "Prototype_Component_Texture_Title_Pika_Mask"
+          "tag": "Prototype_Component_Texture_Title_Pika"
         },
         "transform": {
           "centerX": 169.42059326171875,
@@ -236,8 +254,64 @@
           "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "Image",
+      "displayName": "pika",
       "id": "widget_004",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BC",
+          "offsetX": 0.0,
+          "offsetY": -100.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Title_pbtn_Diff"
+        },
+        "transform": {
+          "centerX": 848.7476196289063,
+          "centerY": 860.0830688476563,
+          "sizeX": 445.0,
+          "sizeY": 66.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "pbtn",
+      "id": "widget_002",
       "type": "IMAGE"
     }
   ]

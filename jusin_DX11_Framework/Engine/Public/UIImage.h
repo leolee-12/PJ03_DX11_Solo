@@ -17,7 +17,11 @@ public:
 		_uint iTextureLevel = { INVALID_INDEX };
 		
 		_uint iTextureIndex = { INVALID_INDEX };
+		_uint iShaderPass = { 0 };
 		_float4 vColor = { g_kWhite };
+
+		_bool bSpriteAnimEnabled = { false };
+		_float fSpriteFrameDuration = { 0.f };
 
 		vector<UI_SHARED_TEXTURE_BINDING_DESC> SharedTextureBindings;
 	};
@@ -63,8 +67,12 @@ protected:
 	_uint m_iVIBufferLevel = { INVALID_INDEX };
 
 	_uint m_iTextureIndex = { INVALID_INDEX };
+	_uint m_iShaderPass = { 0 };
 	_float4 m_vColor = { g_kWhite };
 	vector<UI_SHARED_TEXTURE_BINDING_DESC> m_SharedTextureBindings;
+
+	_bool m_bSpriteAnimEnabled = { false };
+	_float m_fSpriteFrameDuration = { 0.f };
 
 protected:
 	HRESULT Ready_Components();
