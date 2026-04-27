@@ -48,6 +48,11 @@ void CUIPreviewHost::Tick(_float fTimeDelta)
 		}
 	}
 
+	// Sprite 진행 허용 여부
+	const _bool bAllowSprite = (m_eMode != UI_PREVIEW_MODE::LAYOUT);
+	for (CUIObject* p : m_vWidgets)
+		p->Set_SpriteTickAllowed(bAllowSprite);
+
 	// 위젯 tick (paused 시 Update만 skip)
 	const _bool bPaused = (m_eState == UI_PREVIEW_STATE::PAUSED);
 

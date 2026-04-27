@@ -1,7 +1,6 @@
 ﻿#include "UIImage.h"
-#include "SharedTextureBinder.h"
-
 #include "GameInstance.h"
+#include "SharedTextureBinder.h"
 
 CUIImage::CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
@@ -11,6 +10,13 @@ CUIImage::CUIImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CUIImage::CUIImage(const CUIImage& Prototype)
 	: CUIObject{ Prototype }
 {
+}
+
+void CUIImage::Set_SpriteAnim(_bool bEnabled, _float fFrameDuration)
+{
+	m_bSpriteAnimEnabled = bEnabled;
+	m_fSpriteFrameDuration = fFrameDuration;
+	Refresh_SpriteAnimState();
 }
 
 HRESULT CUIImage::Initialize_Prototype()
@@ -44,6 +50,7 @@ HRESULT CUIImage::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	Refresh_SpriteAnimState();
 	return S_OK;
 }
 
@@ -54,6 +61,20 @@ void CUIImage::Priority_Update(_float fTimeDelta)
 void CUIImage::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
+
+	if (!m_bSpriteAnimEnabled || !m_bSpriteTickAllowed)
+		return;
+	if (!m_bVisible)
+		return;
+	if (m_iSpriteFrameCount <= 1 || m_fSpriteFrameDuration <= 0.f)
+		return;
+
+	m_fSpriteAccumTime += fTimeDelta;
+	while (m_fSpriteAccumTime >= m_fSpriteFrameDuration)
+	{
+		m_fSpriteAccumTime -= m_fSpriteFrameDuration;
+		m_iTextureIndex = (m_iTextureIndex + 1) % m_iSpriteFrameCount;
+	}
 }
 
 void CUIImage::Late_Update(_float fTimeDelta)
@@ -167,6 +188,21 @@ _bool CUIImage::Has_ValidData() const
 		&& (nullptr != m_pVIBufferCom)
 		&& (nullptr != m_pTextureCom)
 		&& (INVALID_INDEX != m_iTextureIndex);
+}
+
+void CUIImage::Refresh_SpriteAnimState()
+{
+	m_iSpriteFrameCount = (nullptr != m_pTextureCom) ? m_pTextureCom->Get_NumTextures() : 0;
+
+	if (m_iSpriteFrameCount > 0)
+	{
+		if (INVALID_INDEX == m_iTextureIndex)
+			m_iTextureIndex = 0;
+		else if (m_iTextureIndex >= m_iSpriteFrameCount)
+			m_iTextureIndex %= m_iSpriteFrameCount;
+	}
+
+	m_fSpriteAccumTime = 0.f;
 }
 
 CUIImage* CUIImage::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -502,7 +502,7 @@ namespace
 				|| b.strShaderVarName.empty()
 				|| b.iTextureIndex == static_cast<unsigned int>(-1))
 			{
-				Log_Loader("sharedTextures: incomplete entry skipped (group='%s', shaderVar='%s', index = % u)",
+				Log_Loader("sharedTextures: incomplete entry skipped (group='%s', shaderVar='%s', index='%u')",
 					b.strSharedTexName.c_str(),
 					b.strShaderVarName.c_str(),
 					b.iTextureIndex);

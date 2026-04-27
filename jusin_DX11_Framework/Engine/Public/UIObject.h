@@ -27,6 +27,7 @@ public:
 	virtual _string Get_TypeName() const { return "UIObject"; }
 	virtual UI_TYPE Get_UIType() const { return UI_TYPE::WIDGET; }
 	virtual _float Get_RenderOrder() const { return static_cast<_float>(m_iZOrder); }
+	virtual void Set_SpriteTickAllowed(_bool /*bAllowed*/) {}
 	
 	void Set_Center(_float fCenterX, _float fCenterY);
 	void Set_Size(_float fSizeX, _float fSizeY);

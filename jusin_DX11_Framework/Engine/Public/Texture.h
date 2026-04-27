@@ -11,6 +11,8 @@ private:
 	virtual ~CTexture() = default;
 
 public:
+	_uint Get_NumTextures() { return m_iNumTextures; }
+
 	virtual HRESULT Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNumTextures);
 	virtual HRESULT Initialize(void* pArg) override;
 

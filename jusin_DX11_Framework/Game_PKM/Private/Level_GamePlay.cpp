@@ -34,8 +34,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(LAYER_UI)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_UI(LAYER_UI)))
+	//	return E_FAIL;
 
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
