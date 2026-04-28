@@ -45,7 +45,7 @@ void CSnow::Update(_float fTimeDelta)
 
 void CSnow::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERID::NONLIGHT, this);
 }
 
 HRESULT CSnow::Render()

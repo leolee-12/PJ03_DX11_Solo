@@ -79,14 +79,14 @@ void CPlayer_LGPE::Late_Update(_float fTimeDelta)
 		});
 
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+#ifdef _DEBUG
+	//m_pGameInstance->Add_DebugComponent(m_pColliderCom);
+	m_pGameInstance->Add_DebugComponent(m_pNavigationCom);
+#endif
 }
 
 HRESULT CPlayer_LGPE::Render()
 {
-#ifdef _DEBUG
-	m_pNavigationCom->Render();
-#endif
-
 	return S_OK;
 }
 

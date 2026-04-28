@@ -35,7 +35,14 @@ HRESULT CRenderTarget::Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT ePixe
 	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, nullptr, &m_pSRV)))
 		return E_FAIL;
 
+	m_vClearColor = vClearColor;
+
 	return S_OK;
+}
+
+HRESULT CRenderTarget::Bind_ShaderResource(CShader* pShader, const _char* pConstName)
+{
+	return pShader->Bind_SRV(pConstName, m_pSRV);
 }
 
 void CRenderTarget::Clear()

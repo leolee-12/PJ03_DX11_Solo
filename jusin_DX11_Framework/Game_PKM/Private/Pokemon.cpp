@@ -26,7 +26,8 @@ HRESULT CPokemon::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimationIndex(rand() % 20, true);
+	//m_pModelCom->Set_AnimationIndex(rand() % 20, true);
+	m_pModelCom->Set_AnimationIndex(m_iDummy, true);
 
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(
@@ -71,7 +72,7 @@ HRESULT CPokemon::Render()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(1)))
+		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -111,25 +112,9 @@ HRESULT CPokemon::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pTransformCom->Bind_ShaderResourceWIT(m_pShaderCom, "g_WITMatrix")))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-
-	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_LightDesc(0);
-	if (nullptr == pLightDesc)
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiff", &pLightDesc->vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbt", &pLightDesc->vAmbient, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpec", &pLightDesc->vSpecular, sizeof(_float4))))
 		return E_FAIL;
 
 	return S_OK;

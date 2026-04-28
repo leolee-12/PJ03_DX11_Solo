@@ -2,6 +2,11 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
+texture2D g_TexNorm;
+texture2D g_TexDiff;
+texture2D g_TexShade;
+
+vector g_vLightDir;
 
 struct VS_IN
 {
@@ -39,8 +44,6 @@ struct PS_OUT_BACKBUFFER
 	float4 vBackBuffer : SV_TARGET0;
 };
 
-
-/* 픽셀셰이더 : 픽셀의 최종적인 색을 결정해준다. */
 PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
 {
 	PS_OUT_BACKBUFFER Out;
@@ -50,6 +53,37 @@ PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
 	return Out;
 };
 
+struct PS_OUT_LIGHT
+{
+	float4 vShade : SV_TARGET0;
+};
+
+PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
+{
+	PS_OUT_LIGHT Out = (PS_OUT_LIGHT)0;
+
+	vector vNormalDesc = g_TexNorm.Sample(LinearSampler, In.vTex);
+	float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	Out.vShade = saturate(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal)));
+
+	return Out;
+}
+
+
+PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
+{
+	PS_OUT_BACKBUFFER Out;
+
+	vector vDiffuse = g_TexDiff.Sample(LinearSampler, In.vTex);
+	if (0.5f > vDiffuse.a)
+		discard;
+
+	vector vShade = g_TexShade.Sample(LinearSampler, In.vTex);
+
+	Out.vBackBuffer = vDiffuse * vShade;
+	return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -62,5 +96,49 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
+	}
+
+	pass Directional
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
+	}
+
+	pass Point
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
+	}
+
+	pass Spot
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
+	}
+
+	pass Combined
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_COMBINED();
 	}
 }

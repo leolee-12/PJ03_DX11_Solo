@@ -39,6 +39,7 @@ public:
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	_uint m_iDummy = { 0 };
 
 private:
 	HRESULT Ready_Components();

@@ -21,7 +21,7 @@ public:
 	_bool Intersect(CCollider* pTarget);
 
 #ifdef _DEBUG
-	HRESULT Render();
+	HRESULT Render() override;
 #endif
 
 private:

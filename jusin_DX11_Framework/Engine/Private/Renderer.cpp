@@ -17,9 +17,9 @@ HRESULT CRenderer::Initialize()
 	_float2 vViewportDesc = m_pGameInstance->Get_ViewportDesc();
 
 	// RT »ý¼º
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DIFFUSE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DIFFUSE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_NORMAL, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_NORMAL, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SHADE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
@@ -40,6 +40,7 @@ HRESULT CRenderer::Initialize()
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
 
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(vViewportDesc.x, vViewportDesc.y, 1.f));
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(vViewportDesc.x, vViewportDesc.y, 0.f, 1.f));
 
@@ -47,6 +48,8 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_DIFFUSE, 150.f, 150.f, 300.f, 300.f)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_NORMAL, 150.f, 450.f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SHADE, 450.f, 150.f, 300.f, 300.f)))
 		return E_FAIL;
 #endif
 
@@ -64,10 +67,22 @@ HRESULT CRenderer::Draw()
 {
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
+
 	if (FAILED(Render_NonBlend()))
 		return E_FAIL;
+
+	if (FAILED(Render_Lights()))
+		return E_FAIL;
+
+	if (FAILED(Render_Combined()))
+		return E_FAIL;
+
+	if (FAILED(Render_NonLight()))
+		return E_FAIL;
+
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
+
 	if (FAILED(Render_UI()))
 		return E_FAIL;
 
@@ -78,6 +93,14 @@ HRESULT CRenderer::Draw()
 
 	return S_OK;
 }
+
+#ifdef _DEBUG
+void CRenderer::Add_DebugComponent(CComponent* pComponent)
+{
+	m_DebugComponents.push_back(pComponent);
+	Safe_AddRef(pComponent);
+}
+#endif
 
 HRESULT CRenderer::Render_Priority()
 {
@@ -109,8 +132,84 @@ HRESULT CRenderer::Render_NonBlend()
 
 	m_RenderObjects[ETOUI(RENDERID::NONBLEND)].clear();
 
+	ID3D11ShaderResourceView* nullSRV[] = {nullptr, nullptr};
+
+	m_pContext->PSSetShaderResources(0, 2, nullSRV);
+
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Lights()
+{
+	if (FAILED(m_pGameInstance->Begin_MRT(MRT_LIGHTACC)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_NORMAL, m_pShader, "g_TexNorm")))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pVIBuffer->Bind_Resources()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Render_Light(m_pShader, m_pVIBuffer)))
+		return E_FAIL;
+
+	ID3D11ShaderResourceView* nullSRV = { nullptr };
+
+	m_pContext->PSSetShaderResources(0, 1, &nullSRV);
+
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Combined()
+{
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DIFFUSE, m_pShader, "g_TexDiff")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_SHADE, m_pShader, "g_TexShade")))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pVIBuffer->Bind_Resources()))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Begin(ETOUI(DEFERRED::COMBINED))))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_NonLight()
+{
+	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::NONLIGHT)])
+	{
+		if (nullptr != pRenderObject)
+			pRenderObject->Render();
+
+		Safe_Release(pRenderObject);
+	}
+
+	m_RenderObjects[ETOUI(RENDERID::NONLIGHT)].clear();
 
 	return S_OK;
 }
@@ -149,6 +248,14 @@ HRESULT CRenderer::Render_UI()
 
 HRESULT CRenderer::Render_Debug()
 {
+	for (auto& pDebugCom : m_DebugComponents)
+	{
+		pDebugCom->Render();
+		Safe_Release(pDebugCom);
+	}
+
+	m_DebugComponents.clear();
+
 	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
@@ -157,8 +264,12 @@ HRESULT CRenderer::Render_Debug()
 	if (FAILED(m_pVIBuffer->Bind_Resources()))
 		return E_FAIL;
 
-	m_pGameInstance->Render_RT_Debug(MRT_GAMEOBJECTS, m_pShader, m_pVIBuffer);
 
+	if (m_pGameInstance->Is_Debug())
+	{
+		m_pGameInstance->Render_RT_Debug(MRT_GAMEOBJECTS, m_pShader, m_pVIBuffer);
+		m_pGameInstance->Render_RT_Debug(MRT_LIGHTACC, m_pShader, m_pVIBuffer);
+	}
 	return S_OK;
 }
 

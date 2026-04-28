@@ -34,7 +34,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Render();
+	HRESULT Render() override;
 #endif
 	
 private:

@@ -83,6 +83,15 @@ HRESULT CTarget_Manager::End_MRT()
 	return S_OK;
 }
 
+HRESULT CTarget_Manager::Bind_ShaderResource(WNameID strTargetTag, CShader* pShader, const _char* pConstName)
+{
+	auto pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->Bind_ShaderResource(pShader, pConstName);
+}
+
 #ifdef _DEBUG
 
 HRESULT CTarget_Manager::Ready_Debug(WNameID strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)

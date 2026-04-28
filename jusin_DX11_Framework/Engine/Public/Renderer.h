@@ -21,6 +21,10 @@ public:
 	void		Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
 	HRESULT		Draw();
 
+#ifdef _DEBUG
+	void Add_DebugComponent(class CComponent* pComponent);
+#endif
+
 private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
@@ -30,11 +34,18 @@ private:
 
 	class CShader*				m_pShader = { nullptr };
 	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
-	_float4x4					m_ViewMatrix{}, m_ProjMatrix{};
+	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
+
+#ifdef _DEBUG
+	list<class CComponent*>		m_DebugComponents;
+#endif
 
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonBlend();
+	HRESULT Render_Lights();
+	HRESULT Render_Combined();
+	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
 

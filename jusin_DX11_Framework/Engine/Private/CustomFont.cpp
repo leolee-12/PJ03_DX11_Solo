@@ -28,6 +28,8 @@ _float2 CCustomFont::Measure_Text(const _tchar* pText) const
 
 HRESULT XM_CALLCONV CCustomFont::Draw(const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
 {
+	m_pContext->GSSetShader(nullptr, nullptr, 0);
+
 	m_pBatch->Begin();
 
 	m_pFont->DrawString(m_pBatch, pText, vPosition, vColor, fRotation, vOrigin, vScale);

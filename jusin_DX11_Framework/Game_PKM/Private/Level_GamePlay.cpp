@@ -206,12 +206,15 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_F4))
+	if (m_pGameInstance->Key_Down(DIK_F2))
 		m_pGameInstance->Toggle_CameraFollow();
+
+	if (m_pGameInstance->Key_Down(DIK_F3))
+		m_pGameInstance->Toggle_Debug();
 
 	if (m_pTestSequence)
 	{
-		if (m_pGameInstance->Key_Down(DIK_F2))
+		if (m_pGameInstance->Key_Down(DIK_F4))
 		{
 			Reset_TestUIState();
 			m_pTestSequence->Play();

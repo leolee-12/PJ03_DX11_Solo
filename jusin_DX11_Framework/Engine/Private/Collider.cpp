@@ -78,6 +78,8 @@ _bool CCollider::Intersect(CCollider* pTarget)
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {
+	m_pContext->GSSetShader(nullptr, nullptr, 0);
+
 	m_pEffect->SetWorld(XMMatrixIdentity());
 	m_pEffect->SetView(XMLoadFloat4x4(m_pGameInstance->Get_Transform(D3DTS::VIEW)));
 	m_pEffect->SetProjection(XMLoadFloat4x4(m_pGameInstance->Get_Transform(D3DTS::PROJ)));

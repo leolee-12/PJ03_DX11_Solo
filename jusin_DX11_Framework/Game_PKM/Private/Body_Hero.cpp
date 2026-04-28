@@ -98,10 +98,10 @@ HRESULT CBody_Hero::Render()
 		_uint matIdx = m_pModelCom->Get_MeshMaterialIndex(i);
 
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::DIFFUSE)]);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexSpec", i, MATERIAL_TYPE::SPECULAR, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::SPECULAR)]);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_R", i, MATERIAL_TYPE::AMBIENT, 0);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_G", i, MATERIAL_TYPE::AMBIENT, 1);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_B", i, MATERIAL_TYPE::AMBIENT, 2);
+		//m_pModelCom->Bind_Material(m_pShaderCom, "g_TexSpec", i, MATERIAL_TYPE::SPECULAR, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::SPECULAR)]);
+		//m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_R", i, MATERIAL_TYPE::AMBIENT, 0);
+		//m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_G", i, MATERIAL_TYPE::AMBIENT, 1);
+		//m_pModelCom->Bind_Material(m_pShaderCom, "g_TexAmbt_B", i, MATERIAL_TYPE::AMBIENT, 2);
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexEmit", i, MATERIAL_TYPE::EMISSIVE, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::EMISSIVE)]);
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_TexLycl", i, MATERIAL_TYPE::LAYER_COLOR, m_RenderTable.variants[matIdx][ETOUI(MATERIAL_TYPE::LAYER_COLOR)]);
 
@@ -141,10 +141,6 @@ HRESULT CBody_Hero::Ready_Components()
 
 HRESULT CBody_Hero::Bind_ShaderResources()
 {
-
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//    return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pTransformCom->Bind_ShaderResourceCombinedWIT(m_pShaderCom, "g_WITMatrix", XMLoadFloat4x4(&m_CombinedWorldMatrix))))
@@ -153,22 +149,6 @@ HRESULT CBody_Hero::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-
-	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_LightDesc(0);
-	if (nullptr == pLightDesc)
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiff", &pLightDesc->vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbt", &pLightDesc->vAmbient, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpec", &pLightDesc->vSpecular, sizeof(_float4))))
 		return E_FAIL;
 
 	return S_OK;

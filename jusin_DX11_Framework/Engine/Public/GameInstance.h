@@ -29,6 +29,8 @@ public:
 	const HWND Get_HWND() const;
 	_float Random(_float fMin, _float fMax);
 	_float2 Get_ViewportDesc() { return m_vViewportDesc; }
+	void Toggle_Debug() { m_bDebug = !m_bDebug; }
+	_bool Is_Debug() { return m_bDebug; }
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -56,6 +58,9 @@ public:
 
 #pragma region RENDERER
 	void Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
+#ifdef _DEBUG
+	void Add_DebugComponent(class CComponent* pComponent);
+#endif
 #pragma endregion
 
 #pragma region PIPELINE
@@ -87,6 +92,7 @@ public:
 #pragma region LIGHT_MANAGER
 	const LIGHT_DESC* Get_LightDesc(_uint iIndex);
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Render_Light(CShader* pShader, CVIBuffer_Rect* pVIBuffer);
 #pragma endregion
 
 #pragma region FONT_MANAGER
@@ -101,6 +107,7 @@ public:
 	HRESULT Add_MRT(WNameID strMRTTag, WNameID strTargetTag);
 	HRESULT Begin_MRT(WNameID strMRTTag);
 	HRESULT End_MRT();
+	HRESULT Bind_RT_ShaderResource(WNameID strTargetTag, class CShader* pShader, const _char* pConstantName);
 
 #ifdef _DEBUG
 	HRESULT Ready_RT_Debug(WNameID strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
@@ -124,6 +131,7 @@ private:
 	class CCamera*				m_pMainCamera = { nullptr };
 
 	_float2						m_vViewportDesc{};
+	_bool						m_bDebug = { false };
 
 private:
 	virtual void Free() override;
