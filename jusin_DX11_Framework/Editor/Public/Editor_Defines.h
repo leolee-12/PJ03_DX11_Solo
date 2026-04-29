@@ -1,7 +1,9 @@
 #ifndef Editor_Defines_h__
 #define Editor_Defines_h__
+
 #include <Windows.h>
 #include <process.h>
+#include <numeric>
 
 #include "Game_PKM_Defines.h"
 

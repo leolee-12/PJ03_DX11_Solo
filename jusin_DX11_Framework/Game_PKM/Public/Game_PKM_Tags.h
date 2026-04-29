@@ -91,12 +91,6 @@ WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
 WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
 
-WNAME_TAG(PROTO_UI_CONTAINER, L"Prototype_UIContainer");
-WNAME_TAG(PROTO_UI_IMAGE, L"Prototype_UIImage");
-WNAME_TAG(PROTO_UI_TEXT, L"Prototype_UIText");
-WNAME_TAG(PROTO_UI_BUTTON, L"Prototype_UIButton");
-WNAME_TAG(PROTO_UI_PROGRESSBAR, L"Prototype_UIProgressBar");
-
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
 WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");

@@ -39,7 +39,7 @@ namespace
 		pContext->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
 	}
 
-	// 화면 좌표 → preview RT 좌표(= widget 생성 시점 viewport 좌표)
+	// 화면 좌표 -> preview RT 좌표(= widget 생성 시점 viewport 좌표)
 	inline ImVec2 ScreenToDoc(const ImVec2& vScreen,
 		const ImVec2& vRTPos,
 		const ImVec2& vRTSize,
@@ -51,7 +51,7 @@ namespace
 			(vScreen.y - vRTPos.y) * sy);
 	}
 
-	// doc(rect.xy, w, h) → 화면 사각형 (min, max)
+	// doc(rect.xy, w, h) -> 화면 사각형 (min, max)
 	inline void DocRectToScreen(const _float4& rcDoc,
 		const ImVec2& vRTPos,
 		const ImVec2& vRTSize,
@@ -87,7 +87,8 @@ HRESULT CPanel_Viewport::Initialize()
 	if (FAILED(Create_RenderTarget(1, 1)))
 		return E_FAIL;
 
-	m_vRefSize = m_pGameInstance->Get_CurrentRefSize();
+	/*m_vRefSize = m_pGameInstance->Get_CurrentRefSize();*/
+	m_vRefSize = { 1280.f, 720.f };
 
 	return S_OK;
 }
@@ -139,7 +140,7 @@ HRESULT CPanel_Viewport::Render()
 		dl->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
 		Draw_UIOverlay();
 
-		// Image() 후에 실제 렌더된 위치를 가져옴 → GetMousePos()와 동일한 좌표계 보장
+		// Image() 후에 실제 렌더된 위치를 가져옴 -> GetMousePos()와 동일한 좌표계 보장
 		m_vPanelRTPos = ImGui::GetItemRectMin();
 
 		m_bHovered = ImGui::IsItemHovered();
@@ -609,7 +610,7 @@ void CPanel_Viewport::Handle_ViewportClick()
 	if (!m_bHasLastHit)
 		return;
 
-	// Nav 점 찍기 모드 — EditInstance를 통해 MapTool에 전달
+	// Nav 점 찍기 모드 - EditInstance를 통해 MapTool에 전달
 	if (m_pEditInstance->Is_NavEditMode())
 	{
 		m_pEditInstance->Fire_NavClick(m_vLastWorldHitPos);
@@ -706,10 +707,10 @@ void CPanel_Viewport::Draw_UIOverlay()
 			case UI_TYPE::BUTTON:      col = IM_COL32(180, 255, 180, 200); break;
 			case UI_TYPE::PROGRESSBAR: col = IM_COL32(255, 180, 180, 200); break;
 			}
-			// container는 점선 효과 — 두 번 짧은 직선
+			// container는 점선 효과 - 두 번 짧은 직선
 			if (vDocW[idx].Get_Type() == UI_TYPE::CONTAINER)
 			{
-				// 단순 dashed: 작은 세그먼트 반복 — 생략 가능, 일단 일반 rect
+				// 단순 dashed: 작은 세그먼트 반복 - 생략 가능, 일단 일반 rect
 			}
 		}
 		dl->AddRect(vMin, vMax, col, 0.f, 0, 1.f);

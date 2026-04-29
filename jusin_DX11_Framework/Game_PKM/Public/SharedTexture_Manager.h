@@ -10,14 +10,10 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 
-enum class SHARED_TEXTURE_TYPE	: _uint { MASK, NOISE, GRADIENT, HIGHLIGHT, END };
 enum class SHARED_MASK			: _uint { MASK1, END };
 enum class SHARED_NOISE			: _uint { TITLE, END };
 enum class SHARED_GRADIENT		: _uint { ALPHA, END };
 enum class SHARED_HIGHLIGHT		: _uint { HIGHLIGHT1, END };
-
-const _char* To_String(SHARED_TEXTURE_TYPE eType);
-SHARED_TEXTURE_TYPE SHARED_TEXTURE_From_String(const _char* psz);
 
 class CSharedTexture_Manager : public CBase, public ISharedTextureBinder
 {

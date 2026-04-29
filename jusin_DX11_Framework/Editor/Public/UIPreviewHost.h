@@ -28,8 +28,8 @@ public:
 	UI_PREVIEW_STATE Get_State() const { return m_eState; }
 
 	const ImVec2& Get_LastViewportSize() const { return m_vLastViewportSize; }
-	const vector<CUIObject*>& Get_Widgets() const { return m_vWidgets; }
 	const vector<_int>& Get_ZOrderIdx() const { return m_vZOrderIdx; }
+	const vector<CUIObject*>& Get_Widgets() const;
 
 	HRESULT Initialize();
 	void Tick(_float fTimeDelta);	// Update_Editor 안에서 호출
@@ -55,8 +55,7 @@ private:
 	class CEditInstance* m_pEditInstance = { nullptr };
 	class CUIEditorSession* m_pSession = { nullptr };	// weak
 
-	vector<CUIObject*> m_vWidgets;					// owned
-	unordered_map<_string, CUIObject*> m_id2Widget;	// weak refs into m_vWidgets
+	unordered_map<_string, CUIObject*> m_id2Widget;	// weak refs into sequence children
 	CUISequence* m_pSequence = { nullptr };			// owned
 
 	UI_PREVIEW_MODE m_eMode = UI_PREVIEW_MODE::LAYOUT;

@@ -17,6 +17,12 @@ public:
 		_bool bJoinPrev{ false };       // true면 이전 step과 동일 프레임 내 연쇄
 	};
 
+	struct UISEQUENCE_DESC : public CUIContainer::UICONTAINER_DESC
+	{
+		_string strPath{};
+		_uint iProtoLevel{ INVALID_INDEX };
+	};
+
 protected:
 	CUISequence(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUISequence(const CUISequence& Prototype);
@@ -24,19 +30,20 @@ protected:
 
 public:
 	virtual _string Get_TypeName() const override { return "UISequence"; }
+	CUIObject* Find_Widget(const _string& strId) const;
 
-	// ── 조회 ──
+	// -- 조회 --
 	const vector<UISEQ_STEP>& Get_Steps() const { return m_Steps; }
 	_int   Get_Cursor() const { return m_iCursor; }
 	_float Get_Timer()  const { return m_fTimer; }
 
-	// ── 편집(재생 중에는 모두 false 반환) ──
+	// -- 편집(재생 중에는 모두 false 반환) --
 	_bool  Insert_Step(_int iIndex, const UISEQ_STEP& step);
 	_bool  Remove_Step(_int iIndex);
 	_bool  Move_Step(_int iFrom, _int iTo);
 	_bool  Update_Step(_int iIndex, const UISEQ_STEP& step);
 
-	// ── 스크럽(Play 중에만 의미) ──
+	// -- 스크럽(Play 중에만 의미) --
 	void   Seek_ToStep(_int iIndex);
 	void   Set_Timer(_float fTimer);
 
@@ -57,6 +64,11 @@ private:
 	_float m_fTimer = { 0.f };
 	_bool  m_bPlaying = { false };
 	_bool  m_bStepStarted = { false };
+
+	unordered_map<_string, class CUIObject*> m_mapById;	// weak (child가 owner)
+
+private:
+	HRESULT Build_FromFile(const _string& strPath, _uint iProtoLevel);
 
 public:
 	static CUISequence* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

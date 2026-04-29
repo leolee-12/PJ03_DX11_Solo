@@ -603,7 +603,7 @@ HRESULT CUIEditorSession::Save(const _string& strPath)
 		const _string strBackup = strPath + ".bak";
 		std::filesystem::copy_file(strPath, strBackup,
 			std::filesystem::copy_options::overwrite_existing, ec);
-		// ec 무시 — 권한 문제 등은 status 표시 정도만
+		// ec 무시 - 권한 문제 등은 status 표시 정도만
 	}
 
 	if (FAILED(m_pEditInstance->Save_UISequence(strPath, m_Doc)))

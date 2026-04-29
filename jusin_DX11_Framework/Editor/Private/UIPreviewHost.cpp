@@ -1,10 +1,10 @@
 ﻿#include "UIPreviewHost.h"
 #include "UIEditorSession.h"
+#include "EditInstance.h"
+
 #include "UISequence.h"
 #include "UIAnimator.h"
-
 #include "GameInstance.h"
-#include "EditInstance.h"
 
 CUIPreviewHost::CUIPreviewHost(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -18,6 +18,12 @@ CUIPreviewHost::CUIPreviewHost(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pContext);
 	Safe_AddRef(m_pDevice);
+}
+
+const vector<CUIObject*>& CUIPreviewHost::Get_Widgets() const
+{
+	static const vector<CUIObject*> sEmpty;
+	return m_pSequence ? m_pSequence->Get_Children() : sEmpty;
 }
 
 HRESULT CUIPreviewHost::Initialize()
@@ -48,35 +54,29 @@ void CUIPreviewHost::Tick(_float fTimeDelta)
 		}
 	}
 
-	// Sprite 진행 허용 여부
-	const _bool bAllowSprite = (m_eMode != UI_PREVIEW_MODE::LAYOUT);
-	for (CUIObject* p : m_vWidgets)
-		p->Set_SpriteTickAllowed(bAllowSprite);
+	if (nullptr == m_pSequence) return;
 
-	// 위젯 tick (paused 시 Update만 skip)
+	// Sprite 진행 허용 여부 - 자식 일괄 적용
+	const _bool bAllowSprite = (m_eMode != UI_PREVIEW_MODE::LAYOUT);
+	for (CUIObject* p : m_pSequence->Get_Children())
+		if (p) p->Set_SpriteTickAllowed(bAllowSprite);
+
 	const _bool bPaused = (m_eState == UI_PREVIEW_STATE::PAUSED);
 
-	for (CUIObject* p : m_vWidgets) p->Priority_Update(fTimeDelta);
-
+	m_pSequence->Priority_Update(fTimeDelta);
 	if (!bPaused)
-	{
-		for (CUIObject* p : m_vWidgets) p->Update(fTimeDelta);
-		if (m_eMode == UI_PREVIEW_MODE::SEQUENCE && m_pSequence)
-			m_pSequence->Update(fTimeDelta);
-	}
+		m_pSequence->Update(fTimeDelta);
+	// CUISequence::Update가 자식 재귀 + timeline 진행(m_bPlaying 기준)
 
-	// PLAYING → IDLE 자동 전이
+// PLAYING -> IDLE 자동 전이
 	if (m_eState == UI_PREVIEW_STATE::PLAYING)
 	{
 		_bool bAnyActive = false;
-
 		switch (m_eMode)
 		{
 		case UI_PREVIEW_MODE::LAYOUT:
-			// 정적 모드 — Play 자체가 무의미하므로 즉시 IDLE 복귀
 			bAnyActive = false;
 			break;
-
 		case UI_PREVIEW_MODE::SELECTED_ANIM:
 		{
 			const _int iSel = m_pSession->Get_SelectedWidget();
@@ -89,13 +89,11 @@ void CUIPreviewHost::Tick(_float fTimeDelta)
 			}
 			break;
 		}
-
 		case UI_PREVIEW_MODE::SEQUENCE:
 			if (m_pSequence && m_pSequence->Is_Playing())
 				bAnyActive = true;
 			break;
 		}
-
 		if (!bAnyActive)
 			m_eState = UI_PREVIEW_STATE::IDLE;
 	}
@@ -103,9 +101,8 @@ void CUIPreviewHost::Tick(_float fTimeDelta)
 
 void CUIPreviewHost::Render_Queue_Submit()
 {
-	// z-order 오름차순으로 Late_Update 호출 (RENDERID::UI 가 FIFO이므로)
-	for (_int idx : m_vZOrderIdx)
-		m_vWidgets[idx]->Late_Update(0.f);
+	if (m_pSequence)
+		m_pSequence->Late_Update(0.f);
 }
 
 HRESULT CUIPreviewHost::Rebuild()
@@ -115,17 +112,24 @@ HRESULT CUIPreviewHost::Rebuild()
 	{
 		const ImVec2 vNow = m_pEditInstance->Get_ViewportScreenSize();
 		if (vNow.x < 1.f || vNow.y < 1.f)
-			return S_OK;   // pending 유지
+			return S_OK;
 		m_vLastViewportSize = vNow;
 	}
 
 	Release_All();
 
+	// 빈 sequence prototype clone (path 없음 -> doc 기반 manual build)
+	CUISequence::UISEQUENCE_DESC tSeqDesc{};
+	m_pSequence = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tSeqDesc));
+	if (nullptr == m_pSequence) return E_FAIL;
+	m_pSequence->Clear_Timeline();   // 멱등성
+
 	const UISEQ_DOC& tDoc = m_pSession->Get_Doc();
 
+	// 자식 widget clone + animator 등록 + sequence Add_Child + id map
 	for (const auto& w : tDoc.vWidgets)
 	{
-		// desc 사본
 		UISEQ_WIDGET_NODE::tDescType tDescCopy = w.tDesc;
 
 		std::visit([&](auto& d) {
@@ -138,7 +142,6 @@ HRESULT CUIPreviewHost::Rebuild()
 				Apply_Fallback_ProgressBar(d);
 			else if constexpr (std::is_same_v<T, CUIText::UITEXT_DESC>)
 				Apply_Fallback_Text(d);
-			// CONTAINER: fallback 없음
 			}, tDescCopy);
 
 		WNameID strProto = INVALID_TAG;
@@ -152,7 +155,6 @@ HRESULT CUIPreviewHost::Rebuild()
 		default: continue;
 		}
 
-		// desc 사본의 base 부분 포인터 추출
 		void* pArg = std::visit([](auto& d) -> void* {
 			return static_cast<void*>(&d);
 			}, tDescCopy);
@@ -162,50 +164,41 @@ HRESULT CUIPreviewHost::Rebuild()
 		if (nullptr == pClone) continue;
 
 		CUIObject* pUI = static_cast<CUIObject*>(pClone);
-		m_vWidgets.push_back(pUI);
-		m_id2Widget[w.strId] = pUI;
 
-		// runtime animator에 doc상의 animation들을 등록
 		if (CUIAnimator* pAnimator = pUI->Get_Animator())
 		{
-			pAnimator->Clear_Animations();   // 멱등성: rebuild 반복 호출 대비
+			pAnimator->Clear_Animations();
 			for (const UISEQ_ANIMATION_NODE& a : w.vAnimations)
 			{
 				if (a.strName.empty()) continue;
 				pAnimator->Register_Animation(a.strName, a.vTracks);
 			}
 		}
+
+		m_id2Widget[w.strId] = pUI;   // weak ref
+		m_pSequence->Add_Child(pUI);  // ref++ (sequence가 owner)
+		Safe_Release(pUI);            // clone ref-- -> sequence ref만 남음
 	}
 
-	// CUISequence 직접 생성 (PROTO_UI_SEQUENCE 미등록 정책 §10.3)
-	m_pSequence = CUISequence::Create(m_pDevice, m_pContext);
-	if (nullptr != m_pSequence)
-		m_pSequence->Initialize(nullptr);
-
-	if (m_pSequence)
+	// timeline step 빌드
+	for (const UISEQ_STEP_NODE& sn : tDoc.vSteps)
 	{
-		m_pSequence->Clear_Timeline();   // 멱등성 보장
+		CUISequence::UISEQ_STEP s{};
+		s.eKind = sn.eKind;
+		s.pTarget = Find_Runtime(sn.strTargetId);
+		s.strAnimName = sn.strAnimName;
+		s.fWaitSec = sn.fWaitSec;
+		s.bVisible = sn.bVisible;
+		s.bJoinPrev = sn.bJoinPrev;
 
-		for (const UISEQ_STEP_NODE& sn : tDoc.vSteps)
+		if (sn.eKind == UI_SEQ_STEP_KIND::USE_CALLBACK && !sn.strCallbackId.empty())
 		{
-			CUISequence::UISEQ_STEP s{};
-			s.eKind = sn.eKind;
-			s.pTarget = Find_Runtime(sn.strTargetId);  // 없으면 nullptr (engine 측에서 null-guard함)
-			s.strAnimName = sn.strAnimName;
-			s.fWaitSec = sn.fWaitSec;
-			s.bVisible = sn.bVisible;
-			s.bJoinPrev = sn.bJoinPrev;
-
-			// USE_CALLBACK은 현 단계에서 미구현 — 디버그용 stub
-			if (sn.eKind == UI_SEQ_STEP_KIND::USE_CALLBACK && !sn.strCallbackId.empty())
-			{
-				const _string strId = sn.strCallbackId;
-				s.fnCallback = [strId]() { /* TODO: callback registry */ };
-			}
-
-			if (sn.bJoinPrev) m_pSequence->Join(s);
-			else              m_pSequence->Append(s);
+			const _string strId = sn.strCallbackId;
+			s.fnCallback = [strId]() { /* TODO: callback registry */ };
 		}
+
+		if (sn.bJoinPrev) m_pSequence->Join(s);
+		else              m_pSequence->Append(s);
 	}
 
 	Sort_ZOrder();
@@ -277,9 +270,12 @@ void CUIPreviewHost::Resume()
 
 void CUIPreviewHost::Stop()
 {
-	for (CUIObject* p : m_vWidgets)
-		if (p && p->Get_Animator()) p->Get_Animator()->Stop_All();
-	if (m_pSequence) m_pSequence->Stop();
+	if (m_pSequence)
+	{
+		for (CUIObject* p : m_pSequence->Get_Children())
+			if (p && p->Get_Animator()) p->Get_Animator()->Stop_All();
+		m_pSequence->Stop();
+	}
 	m_eState = UI_PREVIEW_STATE::IDLE;
 }
 
@@ -297,20 +293,21 @@ CUIObject* CUIPreviewHost::Find_Runtime(const _string& strId) const
 
 _string CUIPreviewHost::Hit_Test_TopMost(const ImVec2& vDocXY) const
 {
-	// m_vZOrderIdx는 z-order 오름차순 → 위에서부터 hit-test하려면 역순 순회
+	if (nullptr == m_pSequence) return {};
+	const auto& vChildren = m_pSequence->Get_Children();
+
+	// m_vZOrderIdx는 z-order 오름차순 -> 위에서부터 hit-test하려면 역순 순회
 	for (auto it = m_vZOrderIdx.rbegin(); it != m_vZOrderIdx.rend(); ++it)
 	{
-		CUIObject* pUI = m_vWidgets[*it];
+		if (*it < 0 || *it >= (_int)vChildren.size()) continue;
+		CUIObject* pUI = vChildren[*it];
 		if (nullptr == pUI) continue;
+		if (!pUI->Get_Visible()) continue;
 
-		// visible == false인 widget은 hit 제외
-		if (!pUI->Get_Visible()) continue;     // getter가 없다면 추가 필요
-
-		const _float4 rc = pUI->Get_ScreenRect(); // (l, t, w, h)
+		const _float4 rc = pUI->Get_ScreenRect();
 		if (vDocXY.x >= rc.x && vDocXY.x <= rc.x + rc.z &&
 			vDocXY.y >= rc.y && vDocXY.y <= rc.y + rc.w)
 		{
-			// m_id2Widget 역방향 검색
 			for (const auto& kv : m_id2Widget)
 				if (kv.second == pUI) return kv.first;
 		}
@@ -320,13 +317,10 @@ _string CUIPreviewHost::Hit_Test_TopMost(const ImVec2& vDocXY) const
 
 void CUIPreviewHost::Release_All()
 {
-	for (auto* p : m_vWidgets)
-		Safe_Release(p);
-
-	m_vWidgets.clear();
+	// sequence가 자식 owner이므로 자식은 sequence Free에서 자동 release
+	Safe_Release(m_pSequence);
 	m_id2Widget.clear();
 	m_vZOrderIdx.clear();
-	Safe_Release(m_pSequence);
 }
 
 void CUIPreviewHost::Apply_Fallback_Image(CUIImage::UIIMAGE_DESC& d) const
@@ -374,13 +368,15 @@ void CUIPreviewHost::Apply_Fallback_ProgressBar(CUIProgressBar::UIPROGRESSBAR_DE
 
 void CUIPreviewHost::Sort_ZOrder()
 {
-	m_vZOrderIdx.resize(m_vWidgets.size());
+	m_vZOrderIdx.clear();
+	if (nullptr == m_pSequence) return;
+
+	const auto& vChildren = m_pSequence->Get_Children();
+	m_vZOrderIdx.resize(vChildren.size());
 	std::iota(m_vZOrderIdx.begin(), m_vZOrderIdx.end(), 0);
 	std::stable_sort(m_vZOrderIdx.begin(), m_vZOrderIdx.end(),
-		[this](_int a, _int b) {
-			// CUIObject는 z-order getter가 없으면 추가하거나 Get_BaseDesc 활용 어려움
-			// → CUIObject에 _int Get_ZOrder() const { return m_iZOrder; } 추가 권장
-			return m_vWidgets[a]->Get_ZOrder() < m_vWidgets[b]->Get_ZOrder();
+		[&vChildren](_int a, _int b) {
+			return vChildren[a]->Get_ZOrder() < vChildren[b]->Get_ZOrder();
 		});
 }
 

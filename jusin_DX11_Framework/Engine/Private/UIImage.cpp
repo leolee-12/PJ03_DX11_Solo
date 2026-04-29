@@ -167,7 +167,7 @@ HRESULT CUIImage::Bind_ShaderResources()
 			return E_FAIL;
 	}
 
-	// 틴트 색상 — UI 전용 셰이더 도입 시 자동 반영
+	// 틴트 색상 - UI 전용 셰이더 도입 시 자동 반영
 	m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4));
 
 	if (!m_SharedTextureBindings.empty())

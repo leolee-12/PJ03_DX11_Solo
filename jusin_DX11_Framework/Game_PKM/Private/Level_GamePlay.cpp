@@ -1,9 +1,9 @@
 #include "Level_GamePlay.h"
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
-#include "UI_RTSequence.h"
 
 #include "GameInstance.h"
+#include "UISequence.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
@@ -50,9 +50,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_F4))
 		m_pGameInstance->Toggle_CameraFollow();
-
-	if (m_pRuntimeUI)
-		m_pRuntimeUI->Update(fTimeDelta);
 
 	if (m_pGameInstance->Key_Down(DIK_F2) && m_pRuntimeUI)
 		m_pRuntimeUI->Play();
@@ -151,15 +148,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 {
-	m_pRuntimeUI = CUI_RTSequence::Create(
-		m_pDevice, m_pContext,
-		"../../DataFiles/UI/UI_Title.uiseq",
-		CURRENT_LEVEL,
-		strLayerTag);
+	CUISequence::UISEQUENCE_DESC tDesc{};
+	tDesc.strPath = "../../DataFiles/UI/UI_Title.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 
-	if (nullptr == m_pRuntimeUI)
+	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (nullptr == pSeq)
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
+
+	m_pRuntimeUI = pSeq;  // weak
 	return S_OK;
 }
 
@@ -180,5 +184,5 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pRuntimeUI);
+	m_pRuntimeUI = nullptr;
 }

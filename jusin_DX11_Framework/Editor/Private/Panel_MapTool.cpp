@@ -68,7 +68,7 @@ HRESULT CPanel_MapTool::Render()
 		return S_OK;
 	}
 
-	// ── Nav 편집 모드 헤더 ──
+	// -- Nav 편집 모드 헤더 --
 	ImGui::Checkbox("Nav Edit Mode", &m_bNavEditMode);
 
 	if (m_bNavEditMode)
@@ -98,7 +98,7 @@ HRESULT CPanel_MapTool::Render()
 			ImGui::Text("Selected Cell: %d", m_iSelectedCell);
 			const auto& c = m_NavCells[m_iSelectedCell];
 
-			// ── 꼭짓점별 Y 조정 (공유 꼭짓점 자동 동기화) ──
+			// -- 꼭짓점별 Y 조정 (공유 꼭짓점 자동 동기화) --
 			const char* szLabel[3] = { "Y [A]##selY0", "Y [B]##selY1", "Y [C]##selY2" };
 			for (_int v = 0; v < 3; ++v)
 			{
@@ -111,7 +111,7 @@ HRESULT CPanel_MapTool::Render()
 				}
 			}
 
-			// ── 셀 단위 Y 오프셋 (세 꼭짓점 동시 ± delta) ──
+			// -- 셀 단위 Y 오프셋 (세 꼭짓점 동시 ± delta) --
 			static _float fDeltaY = 0.05f;
 			ImGui::DragFloat("Delta Y", &fDeltaY, 0.01f, 0.f, 10.f, "%.3f");
 			if (ImGui::Button("Cell Y -"))
@@ -194,11 +194,11 @@ HRESULT CPanel_MapTool::Render()
 			ImGui::TreePop();
 		}
 
-		// ── 뷰포트 오버레이 렌더링 ──
+		// -- 뷰포트 오버레이 렌더링 --
 		Render_NavOverlay();
 	}
 
-	// ── 저장 확인 모달 ──
+	// -- 저장 확인 모달 --
 	if (ImGui::BeginPopupModal("Confirm Save", nullptr,
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings))
 	{
@@ -223,7 +223,7 @@ HRESULT CPanel_MapTool::Render()
 		ImGui::EndPopup();
 	}
 
-	// ── 로드 확인 모달 ──
+	// -- 로드 확인 모달 --
 	if (ImGui::BeginPopupModal("Confirm Load", nullptr,
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings))
 	{
@@ -429,7 +429,7 @@ void CPanel_MapTool::Render_NavOverlay()
 	ImVec2 vViewPos = m_pEditInstance->Get_ViewportScreenPos();
 	ImVec2 vViewSize = m_pEditInstance->Get_ViewportScreenSize();
 
-	// ── 뷰포트 영역으로 클립 ──
+	// -- 뷰포트 영역으로 클립 --
 	ImVec2 vMin = vViewPos;
 	ImVec2 vMax = ImVec2(vViewPos.x + vViewSize.x, vViewPos.y + vViewSize.y);
 	pDraw->PushClipRect(vMin, vMax, true);   // true = 현재 클립과 교집합
@@ -441,7 +441,7 @@ void CPanel_MapTool::Render_NavOverlay()
 				&& p.y >= vViewPos.y && p.y <= vViewPos.y + vViewSize.y;
 		};
 
-	// 확정 셀 — 초록 와이어프레임
+	// 확정 셀 - 초록 와이어프레임
 	for (const auto& cell : m_NavCells)
 	{
 		ImVec2 p0 = Project_To_Screen(cell[0]);
@@ -451,7 +451,7 @@ void CPanel_MapTool::Render_NavOverlay()
 		pDraw->AddTriangle(p0, p1, p2, IM_COL32(0, 220, 60, 200), 1.5f);
 	}
 
-	// 선택 셀 — 노란색 하이라이트 + 꼭짓점 표시
+	// 선택 셀 - 노란색 하이라이트 + 꼭짓점 표시
 	if (m_iSelectedCell >= 0 && m_iSelectedCell < static_cast<_int>(m_NavCells.size()))
 	{
 		const auto& sel = m_NavCells[m_iSelectedCell];
@@ -474,7 +474,7 @@ void CPanel_MapTool::Render_NavOverlay()
 		pDraw->AddText(ImVec2(s2.x + 8, s2.y - 8), IM_COL32(255, 255, 255, 255), "C");
 	}
 
-	// 대기 중인 점 — 빨간 점 + 연결선
+	// 대기 중인 점 - 빨간 점 + 연결선
 	for (_int i = 0; i < static_cast<_int>(m_PendingPoints.size()); ++i)
 	{
 		ImVec2 p = Project_To_Screen(m_PendingPoints[i]);
@@ -525,7 +525,7 @@ void CPanel_MapTool::Save_NavMesh()
 	if (m_NavCells.empty() || m_szNavSavePath[0] == '\0')
 		return;
 
-	// char → wstring 변환
+	// char -> wstring 변환
 	int iLen = MultiByteToWideChar(CP_ACP, 0, m_szNavSavePath, -1, nullptr, 0);
 	std::wstring wPath(iLen, L'\0');
 	MultiByteToWideChar(CP_ACP, 0, m_szNavSavePath, -1, wPath.data(), iLen);

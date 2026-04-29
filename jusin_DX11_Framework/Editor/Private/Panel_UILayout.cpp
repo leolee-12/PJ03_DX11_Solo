@@ -61,7 +61,7 @@ void CPanel_UILayout::Draw_Toolbar()
 	namespace fs = std::filesystem;
 	const _string strDir = "../../DataFiles/UI/";
 
-	// ── Row 1: 파일 콤보 (좌측 라벨 + 남은 폭 가득) ──
+	// -- Row 1: 파일 콤보 (좌측 라벨 + 남은 폭 가득) --
 	{
 		Label_Left("File");
 		ImGui::SetNextItemWidth(-FLT_MIN);
@@ -85,7 +85,7 @@ void CPanel_UILayout::Draw_Toolbar()
 		}
 	}
 
-	// ── Row 2: 경로 편집 ──
+	// -- Row 2: 경로 편집 --
 	{
 		Label_Left("Path");
 		ImGui::SetNextItemWidth(-FLT_MIN);
@@ -94,7 +94,7 @@ void CPanel_UILayout::Draw_Toolbar()
 			m_pSession->Set_DocPath(strDocPath);
 	}
 
-	// ── Row 3: 액션 버튼 ──
+	// -- Row 3: 액션 버튼 --
 	if (ImGui::Button("New"))
 	{
 		if (m_pSession->Is_Dirty())
@@ -120,7 +120,7 @@ void CPanel_UILayout::Draw_Toolbar()
 	if (ImGui::Button("Save"))
 		m_pSession->Save(m_pSession->Get_DocPath());
 
-	// ── Modal (액션 버튼 직후로 이동, 가독성) ──
+	// -- Modal (액션 버튼 직후로 이동, 가독성) --
 	if (ImGui::BeginPopupModal("Discard Changes?", nullptr,
 		ImGuiWindowFlags_AlwaysAutoResize))
 	{
@@ -165,7 +165,7 @@ void CPanel_UILayout::Draw_Toolbar()
 		ImGui::EndPopup();
 	}
 
-	// ── Row 4: 상태 (별도 줄) ──
+	// -- Row 4: 상태 (별도 줄) --
 	ImGui::TextColored(
 		m_pSession->Is_Dirty() ? ImVec4(1.f, 0.7f, 0.2f, 1.f) : ImVec4(0.7f, 0.7f, 0.7f, 1.f),
 		"%s%s",
@@ -339,7 +339,7 @@ void CPanel_UILayout::Draw_Inspector()
 
 				if (ImGui::ColorEdit4("Color", reinterpret_cast<float*>(&tDesc.vColor))) MarkWidgetUpdated();
 
-				// ── Sprite Animation ──
+				// -- Sprite Animation --
 				ImGui::Separator();
 				if (ImGui::CollapsingHeader("Sprite Animation", ImGuiTreeNodeFlags_DefaultOpen))
 				{
@@ -360,12 +360,12 @@ void CPanel_UILayout::Draw_Inspector()
 					}
 
 					if (tDesc.fSpriteFrameDuration > 0.f)
-						ImGui::Text("≈ %.2f FPS", 1.f / tDesc.fSpriteFrameDuration);
+						ImGui::Text("= %.2f FPS", 1.f / tDesc.fSpriteFrameDuration);
 					else
 						ImGui::TextDisabled("(disabled)");
 				}
 
-				// ── Shared Textures ──
+				// -- Shared Textures --
 				ImGui::Separator();
 				if (ImGui::CollapsingHeader("Shared Textures", ImGuiTreeNodeFlags_DefaultOpen))
 				{
@@ -383,15 +383,14 @@ void CPanel_UILayout::Draw_Inspector()
 						ImGui::Text("[%zu]", i);
 
 						// Group combo
-						namespace G = Game_PKM;
-						const _uint iCount = ETOUI(G::SHARED_TEXTURE_TYPE::END);
+						const _uint iCount = ETOUI(SHARED_TEXTURE_TYPE::END);
 
 						const char* pszPreview = b.strSharedTexName.empty() ? "(none)" : b.strSharedTexName.c_str();
 						if (ImGui::BeginCombo("Group", pszPreview))
 						{
 							for (_uint k = 0; k < iCount; ++k)
 							{
-								const char* psz = G::To_String(static_cast<G::SHARED_TEXTURE_TYPE>(k));
+								const char* psz = To_String(static_cast<SHARED_TEXTURE_TYPE>(k));
 								const bool bSel = (b.strSharedTexName == psz);
 								if (ImGui::Selectable(psz, bSel) && !bSel)
 								{
@@ -417,7 +416,7 @@ void CPanel_UILayout::Draw_Inspector()
 							tDesc.SharedTextureBindings.erase(tDesc.SharedTextureBindings.begin() + i);
 							MarkWidgetUpdated();
 							ImGui::PopID();
-							continue;          // i 유지 — 다음 원소가 같은 위치로 당겨짐
+							continue;          // i 유지 - 다음 원소가 같은 위치로 당겨짐
 						}
 
 						ImGui::Separator();

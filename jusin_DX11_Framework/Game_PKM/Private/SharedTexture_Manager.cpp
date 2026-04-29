@@ -4,33 +4,6 @@
 
 NS_BEGIN(Game_PKM)
 
-namespace
-{
-	struct SharedTexEntry { SHARED_TEXTURE_TYPE e; const _char* s; };
-
-	constexpr SharedTexEntry kSharedTexTable[] = {
-			{ SHARED_TEXTURE_TYPE::MASK,            "MASK"            },
-			{ SHARED_TEXTURE_TYPE::NOISE,           "NOISE"           },
-			{ SHARED_TEXTURE_TYPE::GRADIENT,        "GRADIENT"        },
-			{ SHARED_TEXTURE_TYPE::HIGHLIGHT,       "HIGHLIGHT"       },
-	};
-}
-
-const _char* To_String(SHARED_TEXTURE_TYPE eType)
-{
-	for (const auto& entry : kSharedTexTable)
-		if (entry.e == eType) return entry.s;
-	return "END";
-}
-
-SHARED_TEXTURE_TYPE SHARED_TEXTURE_From_String(const _char* psz)
-{
-	if (nullptr == psz) return SHARED_TEXTURE_TYPE::END;
-	for (const auto& entry : kSharedTexTable)
-		if (0 == std::strcmp(entry.s, psz)) return entry.e;
-	return SHARED_TEXTURE_TYPE::END;
-}
-
 IMPLEMENT_SINGLETON(CSharedTexture_Manager)
 
 CSharedTexture_Manager::CSharedTexture_Manager()

@@ -25,7 +25,7 @@ HRESULT CPanel_Model::Render()
 {
     if (!Begin_Panel()) { End_Panel(); return S_OK; }
 
-	/* ── 1. FBX 파일 선택 ───────────────────────── */
+	/* -- 1. FBX 파일 선택 ------------------------- */
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 36.f);
 	ImGui::InputText("##fbx_path", m_szFbxPath, MAX_PATH, ImGuiInputTextFlags_ReadOnly);
 	ImGui::SameLine(0.f, 4.f);
@@ -51,7 +51,7 @@ HRESULT CPanel_Model::Render()
 		strcpy_s(m_szPrevFbxPath, m_szFbxPath);
 	}
 
-	/* ── 2. 모델 타입 선택 ──────────────────────── */
+	/* -- 2. 모델 타입 선택 ------------------------ */
 	_int iType = ETOI(m_eType);
 	ImGui::Text("Type :");
 	ImGui::SameLine();
@@ -60,12 +60,12 @@ HRESULT CPanel_Model::Render()
 	ImGui::RadioButton("ANIM", &iType, ETOI(MODEL::ANIM));
 	m_eType = static_cast<MODEL>(iType);
 
-	/* ── 3. PreTransform 파라미터 ───────────────── */
+	/* -- 3. PreTransform 파라미터 ----------------- */
 	ImGui::InputFloat("Scale", &m_fScale, 0.001f, 0.01f, "%.4f");
 	ImGui::InputFloat("Rotation X", &m_fRotationX, 1.f, 10.f, "%.1f deg");
 	ImGui::InputFloat("Rotation Y", &m_fRotationY, 1.f, 10.f, "%.1f deg");
 	ImGui::InputFloat("Rotation Z", &m_fRotationZ, 1.f, 10.f, "%.1f deg");
-	/* ── 4. Load 버튼 ───────────────────────────── */
+	/* -- 4. Load 버튼 ----------------------------- */
 	ImGui::BeginDisabled(m_szFbxPath[0] == '\0');
 	if (ImGui::Button("[Load FBX]"))
 	{
@@ -80,7 +80,7 @@ HRESULT CPanel_Model::Render()
 
 	ImGui::Separator();
 
-	/* ── 5. Loaded Info ─────────────────────────── */
+	/* -- 5. Loaded Info --------------------------- */
 	if (!m_pEditInstance->Is_ModelLoaded())
 	{
 		ImGui::TextDisabled("No model loaded.");
@@ -97,7 +97,7 @@ HRESULT CPanel_Model::Render()
 
 	ImGui::Spacing();
 
-	/* ── 6. 본 목록 (스크롤) ────────────────────── */
+	/* -- 6. 본 목록 (스크롤) ---------------------- */
 	ImGui::Text("Bone List");
 	if (ImGui::BeginChild("##Bone List", ImVec2(0, 160), ImGuiChildFlags_Borders))
 	{
@@ -112,7 +112,7 @@ HRESULT CPanel_Model::Render()
 
 	ImGui::EndChild();
 
-	/* ── 7. 머테리얼 수정 ──────────────────────────────── */
+	/* -- 7. 머테리얼 수정 -------------------------------- */
 	ImGui::SeparatorText("Material Mapping");
 
 	// 텍스처 디렉토리
@@ -161,7 +161,7 @@ HRESULT CPanel_Model::Render()
 	if (m_bMappingGenerated)
 		ImGui::TextColored(ImVec4(0.2f, 0.8f, 0.2f, 1.f), "Mapping JSON generated.");
 
-	/* ── 8. Export ──────────────────────────────── */
+	/* -- 8. Export -------------------------------- */
 	ImGui::SeparatorText("Export");
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 36.f);
 	ImGui::InputText("##out_dir", m_szOutputDir, MAX_PATH);

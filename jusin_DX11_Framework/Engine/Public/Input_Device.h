@@ -16,7 +16,7 @@ public:
 	void Set_InputState(INPUT_STATE eState) { m_eInputState = eState; }
 	INPUT_STATE Get_InputState() const { return m_eInputState; }
 
-	// 절대 커서 좌표 — 매 Update에서 1회 캐시
+	// 절대 커서 좌표 - 매 Update에서 1회 캐시
 	_float2 Get_CursorClientF()  const;	// 윈도우 클라이언트 좌표 (px)
 	_bool   Is_Cursor_InClient() const { return m_bCursorInClient; }
 
@@ -53,7 +53,7 @@ private:
 
 	// 상태 필터
 	INPUT_STATE m_eInputState = INPUT_STATE::GAMEPLAY;
-	_uint m_iKeyGroupMap[256] = {};  // 키그룹 매핑 테이블 : 각 DIK_* → KeyGroup 비트
+	_uint m_iKeyGroupMap[256] = {};  // 키그룹 매핑 테이블 : 각 DIK_* -> KeyGroup 비트
 
 	// 커서 캐시
 	HWND m_hWnd = { nullptr };

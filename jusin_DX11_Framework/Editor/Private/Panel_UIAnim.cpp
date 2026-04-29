@@ -81,7 +81,7 @@ void CPanel_UIAnim::Draw_PreviewBar()
 	CUIPreviewHost* pHost = m_pEditInstance->Get_UIPreviewHost();
 	if (!pHost) return;
 
-	// ── Row 1: Preview mode + State ──
+	// -- Row 1: Preview mode + State --
 	{
 		UI_PREVIEW_MODE eMode = pHost->Get_Mode();
 		static const std::pair<UI_PREVIEW_MODE, const char*> kPreviewModes[] = {
@@ -116,7 +116,7 @@ void CPanel_UIAnim::Draw_PreviewBar()
 		ImGui::TextDisabled("[%s]", pszState);
 	}
 
-	// ── Row 2: Transport buttons ──
+	// -- Row 2: Transport buttons --
 	{
 		const UI_PREVIEW_STATE eState = pHost->Get_State();
 		const _bool bPlaying = (eState == UI_PREVIEW_STATE::PLAYING);
@@ -231,7 +231,7 @@ void CPanel_UIAnim::Draw_AnimationList(UISEQ_WIDGET_NODE& tWidget)
 	}
 	ImGui::EndChild();
 
-	// Animation rename — step rewrite 로직은 세션으로 이전하는 편이 깔끔
+	// Animation rename - step rewrite 로직은 세션으로 이전하는 편이 깔끔
 	if (iAnim >= 0)
 	{
 		auto& tAnim = tWidget.vAnimations[iAnim];
@@ -368,7 +368,7 @@ void CPanel_UIAnim::Draw_Timeline()
 			const auto& s = tDoc.vSteps[i];
 			char szLabel[256];
 			sprintf_s(szLabel, "%s%d %s %s %s##step_%d",
-				s.bJoinPrev ? "└─ " : "",
+				s.bJoinPrev ? "└- " : "",
 				i,
 				Engine::To_String(s.eKind),
 				s.strTargetId.c_str(),

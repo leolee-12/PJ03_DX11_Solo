@@ -3,7 +3,7 @@
 
 namespace Helper
 {
-	// ── enum 변환: Engine_UI.h의 To_String / *_From_String 래핑 ──
+	// -- enum 변환: Engine_UI.h의 To_String / *_From_String 래핑 --
 	inline _string EnumToStr(UI_TYPE			e) { return Engine::To_String(e); }
 	inline _string EnumToStr(UI_LAYOUT			e) { return Engine::To_String(e); }
 	inline _string EnumToStr(UI_PROGRESS_DIR	e) { return Engine::To_String(e); }
@@ -14,7 +14,7 @@ namespace Helper
 	inline _string EnumToStr(UI_ANCHOR			e) { return Engine::To_String(e); }
 	inline _string EnumToStr(UI_TEXT_ALIGN		e) { return Engine::To_String(e); }
 
-	// ── WNameID ↔ UTF-8 ──
+	// -- WNameID <-> UTF-8 --
 #ifdef _DEBUG
 	inline _string TagToS(WNameID id)
 	{
@@ -23,7 +23,7 @@ namespace Helper
 		return WtoS(_wstring(w));
 	}
 #else
-// Release: registry 미동작 → 해시 정수를 문자열화해 폴백
+// Release: registry 미동작 -> 해시 정수를 문자열화해 폴백
 	inline _string TagToS(WNameID id)
 	{
 		return (INVALID_TAG == id) ? _string{} : std::to_string(static_cast<_uint32>(id));
@@ -44,7 +44,7 @@ namespace Helper
 		return WNAME(StoW(s));   // DEBUG: registry 등록 + 해시, RELEASE: 해시
 	}
 
-	// ───────────────────── 기초 DESC ─────────────────────
+	// --------------------- 기초 DESC ---------------------
 
 	json To_Json(const UIANCHOR_DESC& d)
 	{
@@ -79,7 +79,7 @@ namespace Helper
 		d.fDesiredSizeY = j.value("desiredY", 0.f);
 	}
 
-	// UIOBJECT_DESC 공통 필드 직렬화 — 각 leaf DESC가 이걸 재사용
+	// UIOBJECT_DESC 공통 필드 직렬화 - 각 leaf DESC가 이걸 재사용
 	json Base_To_Json(const CUIObject::UIOBJECT_DESC& d)
 	{
 		return {
@@ -93,7 +93,7 @@ namespace Helper
 			}},
 			{ "anchor",     To_Json(d.tAnchorDesc) },
 			{ "layoutSlot", To_Json(d.tLayoutSlot) },
-			// d.pParentUI — 런타임 포인터. 직렬화 안 함.
+			// d.pParentUI - 런타임 포인터. 직렬화 안 함.
 		};
 	}
 	void Base_From_Json(const json& j, CUIObject::UIOBJECT_DESC& d)
@@ -112,7 +112,7 @@ namespace Helper
 		if (j.contains("layoutSlot")) From_Json(j["layoutSlot"], d.tLayoutSlot);
 	}
 
-	// ───────────────────── leaf DESC 5종 ─────────────────────
+	// --------------------- leaf DESC 5종 ---------------------
 
 	// 공통 shader/viBuffer 기본 태그·레벨(temp §6.2)
 	constexpr const _char* kDefaultShader = "Prototype_Component_Shader_UI";
@@ -182,13 +182,13 @@ namespace Helper
 			if (b.strSharedTexName.empty()
 				|| b.strShaderVarName.empty()
 				|| b.iTextureIndex == static_cast<unsigned int>(-1))
-				continue;       // 결손 entry는 묵음 skip — 사용자 편집 중간 상태 보호
+				continue;       // 결손 entry는 묵음 skip - 사용자 편집 중간 상태 보호
 
 			d.SharedTextureBindings.push_back(std::move(b));
 		}
 	}
 
-	// UIBUTTON_DESC — Image와 유사 + hover/pressed/disabled/interactable
+	// UIBUTTON_DESC - Image와 유사 + hover/pressed/disabled/interactable
 	json To_Json(const CUIButton::UIBUTTON_DESC& d)
 	{
 		json j = Base_To_Json(d);
@@ -297,7 +297,7 @@ namespace Helper
 		d.vColor = { c[0], c[1], c[2], c[3] };
 	}
 
-	// UICONTAINER_DESC — layout 필드 추가 (O28-6 Phase A 범위에 포함)
+	// UICONTAINER_DESC - layout 필드 추가 (O28-6 Phase A 범위에 포함)
 	json To_Json(const CUIContainer::UICONTAINER_DESC& d)
 	{
 		json j = Base_To_Json(d);
@@ -318,7 +318,7 @@ namespace Helper
 		d.tLayoutDesc.fSpacing = lo.value("spacing", 0.f);
 	}
 
-	// ───────────────────── UITween ─────────────────────
+	// --------------------- UITween ---------------------
 
 	json To_Json(const CUITween::UITWEEN_DESC& t)
 	{
@@ -341,7 +341,7 @@ namespace Helper
 		t.eLoop = UI_TWEEN_LOOP_From_String(j.value("loop", "NONE").c_str());
 	}
 
-	// ───────────────────── Editor 노드 ─────────────────────
+	// --------------------- Editor 노드 ---------------------
 
 	json To_Json(const UISEQ_ANIMATION_NODE& a)
 	{

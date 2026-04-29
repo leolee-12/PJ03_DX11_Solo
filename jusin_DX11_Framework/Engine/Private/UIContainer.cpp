@@ -1,4 +1,5 @@
 #include "UIContainer.h"
+#include "UISequence.h"
 
 CUIContainer::CUIContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUIObject{ pDevice, pContext }
@@ -39,19 +40,41 @@ HRESULT CUIContainer::Initialize(void* pArg)
 
 void CUIContainer::Priority_Update(_float fTimeDelta)
 {
+	if (!m_bVisible) return;
+
+	for (auto pChild : m_Children)
+		if (nullptr != pChild)
+			pChild->Priority_Update(fTimeDelta);
 }
 
 void CUIContainer::Update(_float fTimeDelta)
 {
+	if (!m_bVisible) return;
+
 	__super::Update(fTimeDelta);
+
+	for (auto pChild : m_Children)
+		if (nullptr != pChild)
+			pChild->Update(fTimeDelta);
 }
 
 void CUIContainer::Late_Update(_float fTimeDelta)
 {
+	if (!m_bVisible) return;
+
+	for (auto pChild : m_Children)
+		if (nullptr != pChild)
+			pChild->Late_Update(fTimeDelta);
 }
 
 HRESULT CUIContainer::Render()
 {
+	if (!m_bVisible) return S_OK;
+
+	for (auto pChild : m_Children)
+		if (nullptr != pChild)
+			pChild->Render();
+
 	return S_OK;
 }
 
@@ -68,6 +91,7 @@ void CUIContainer::Add_Child(CUIObject* pChild)
 		return;
 
 	pChild->Set_ParentUI(this);
+	Safe_AddRef(pChild);
 	m_Children.push_back(pChild);
 	Arrange_Children();
 }
@@ -81,8 +105,9 @@ void CUIContainer::Remove_Child(CUIObject* pChild)
 	if (*iter)
 		(*iter)->Set_ParentUI(nullptr);
 
+	CUIObject* pUI = *iter;
 	m_Children.erase(iter);
-
+	Safe_Release(pUI);
 	Arrange_Children();
 }
 
@@ -94,6 +119,7 @@ _bool CUIContainer::Insert_Child(_int iIndex, CUIObject* pChild)
 	if (!Prepare_Adopt_Child(pChild))
 		return false;
 
+	Safe_AddRef(pChild);
 	pChild->Set_ParentUI(this);
 	m_Children.insert(m_Children.begin() + iIndex, pChild);
 	Arrange_Children();
@@ -223,6 +249,9 @@ _bool CUIContainer::Prepare_Adopt_Child(CUIObject* pChild)
 	if (nullptr == pChild || this == pChild)
 		return false;
 
+	if (dynamic_cast<CUISequence*>(pChild)) // Sequence 다른 컨테이너의 자식 불가(Sequence는 항상 root)
+		return false;
+
 	if (m_Children.end() != find(m_Children.begin(), m_Children.end(), pChild))
 		return false;
 
@@ -261,6 +290,9 @@ CGameObject* CUIContainer::Clone(void* pArg)
 void CUIContainer::Free()
 {
 	__super::Free();
+
+	for (auto pChild : m_Children)
+		Safe_Release(pChild);
 
 	m_Children.clear();
 }

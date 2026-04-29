@@ -33,7 +33,7 @@ public:
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
 private:
-	class CUI_RTSequence* m_pRuntimeUI = { nullptr };
+	CUISequence* m_pRuntimeUI = { nullptr };
 
 private:
 

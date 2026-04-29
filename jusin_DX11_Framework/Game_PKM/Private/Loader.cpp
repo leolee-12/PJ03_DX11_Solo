@@ -265,26 +265,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01,
 		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_ROAD01)); });
 
-	/* Prototype_UIContainer */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_CONTAINER,
-		CUIContainer::Create(m_pDevice, m_pContext)); });
-
-	/* Prototype_UIImage */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_IMAGE,
-		CUIImage::Create(m_pDevice, m_pContext)); });
-
-	/* Prototype_UIText */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_TEXT,
-		CUIText::Create(m_pDevice, m_pContext)); });
-
-	/* Prototype_UIButton */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_BUTTON,
-		CUIButton::Create(m_pDevice, m_pContext)); });
-
-	/* Prototype_UIProgressBar */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_UI_PROGRESSBAR,
-		CUIProgressBar::Create(m_pDevice, m_pContext)); });
-
 #pragma region STUDY
 	// Texture
 	/* Prototype_Component_Texture_Terrain_Diff */
