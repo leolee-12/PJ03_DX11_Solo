@@ -14,7 +14,7 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CRenderer::Initialize()
 {
-	_float2 vViewportDesc = m_pGameInstance->Get_ViewportDesc();
+	_float2 vViewportDesc = m_pGameInstance->Get_OriginRefSize();
 
 	// RT »ý¼º
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DIFFUSE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
@@ -134,8 +134,6 @@ HRESULT CRenderer::Render_NonBlend()
 
 	ID3D11ShaderResourceView* nullSRV[] = {nullptr, nullptr};
 
-	m_pContext->PSSetShaderResources(0, 2, nullSRV);
-
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
 
@@ -163,9 +161,6 @@ HRESULT CRenderer::Render_Lights()
 		return E_FAIL;
 
 	ID3D11ShaderResourceView* nullSRV = { nullptr };
-
-	m_pContext->PSSetShaderResources(0, 1, &nullSRV);
-
 
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
@@ -231,7 +226,14 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
-	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::UI)])
+	auto& UIList = m_RenderObjects[ETOUI(RENDERID::UI)];
+
+	UIList.sort([](CGameObject* pL, CGameObject* pR)
+		{
+			return pL->Get_RenderOrder() < pR->Get_RenderOrder();
+		});
+
+	for (auto& pRenderObject : UIList)
 	{
 		if (nullptr != pRenderObject)
 			pRenderObject->Render();
@@ -239,8 +241,7 @@ HRESULT CRenderer::Render_UI()
 		Safe_Release(pRenderObject);
 	}
 
-	m_RenderObjects[ETOUI(RENDERID::UI)].clear();
-
+	UIList.clear();
 	return S_OK;
 }
 

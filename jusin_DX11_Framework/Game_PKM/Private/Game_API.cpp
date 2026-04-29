@@ -1,7 +1,9 @@
 #include "Game_API.h"
-#include "GameInstance.h"
 #include "Level_Loading.h"
-#include "UIContainer.h"
+#include "SharedTexture_Manager.h"
+
+#include "GameInstance.h"
+#include "UISequence.h"
 #include "UIImage.h"
 #include "UIText.h"
 #include "UIButton.h"
@@ -9,7 +11,7 @@
 
 NS_BEGIN(Game_PKM)
 
-HRESULT Ready_Prototype_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
 
@@ -43,15 +45,13 @@ HRESULT Ready_Prototype_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* p
 		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements))))
 		return E_FAIL;
 
-	return S_OK;
-}
-
-HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
-
+	/* UI Objects */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_CONTAINER,
 		CUIContainer::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE,
+		CUISequence::Create(pDevice, pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_IMAGE,
@@ -70,6 +70,55 @@ HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CUIProgressBar::Create(pDevice, pContext))))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_CONTAINER,
+		CUIContainer::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE,
+		CUISequence::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_IMAGE,
+		CUIImage::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_TEXT,
+		CUIText::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_BUTTON,
+		CUIButton::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_PROGRESSBAR,
+		CUIProgressBar::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT Ready_SharedTextures(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	auto* pManager = CSharedTexture_Manager::GetInstance();
+	if (FAILED(pManager->Initialize(pDevice, pContext))) return E_FAIL;
+
+	//pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::MASK,
+	//     TEXT("../../Resources/Shared/mask/mask_%02d.png"), 1);
+	 pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::NOISE,
+		 TEXT("../../Resources/Shared/noise/noise_%02d.png"), 1);
+	 pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::GRADIENT,
+		 TEXT("../../Resources/Shared/gradient/gradient_%02d.png"), 1);
+	 //pManager->Register_TextureGroup(SHARED_TEXTURE_TYPE::HIGHLIGHT,
+		// TEXT("../../Resources/Shared/highlight/highlight_%02d.png"), 1);
+
+	CGameInstance::GetInstance()->Set_SharedTextureBinder(pManager);
 	return S_OK;
 }
 

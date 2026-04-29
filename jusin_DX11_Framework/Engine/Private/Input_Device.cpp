@@ -5,8 +5,16 @@ CInput_Device::CInput_Device(void)
 	ZeroMemory(m_byKeyState, sizeof(m_byKeyState));
 }
 
+_float2 CInput_Device::Get_CursorClientF() const
+{
+	return _float2(	static_cast<_float>(m_ptCursorClient.x),
+					static_cast<_float>(m_ptCursorClient.y));
+}
+
 HRESULT CInput_Device::Initialize(HINSTANCE hInst, HWND hWnd)
 {
+	m_hWnd = hWnd;
+
 	// DInput 컴객체를 생성하는 함수
 	if (FAILED(DirectInput8Create(	hInst,
 									DIRECTINPUT_VERSION,
@@ -117,8 +125,33 @@ _long CInput_Device::Mouse_Move(DIMM eMouseState)
 	return Get_DIMouseMove(eMouseState);
 }
 
-void CInput_Device::Update(void)
+void CInput_Device::Update()
 {
+	// 0. 절대 커서 좌표 캐시 (Key/Mouse 갱신 전)
+	{
+		POINT pt{};
+		if (m_hWnd && GetCursorPos(&pt) && ScreenToClient(m_hWnd, &pt))
+		{
+			m_ptCursorClient = pt;
+
+			RECT rcClient{};
+			if (GetClientRect(m_hWnd, &rcClient))
+			{
+				m_bCursorInClient =
+					(pt.x >= rcClient.left && pt.x < rcClient.right &&
+						pt.y >= rcClient.top && pt.y < rcClient.bottom);
+			}
+			else
+			{
+				m_bCursorInClient = false;
+			}
+		}
+		else
+		{
+			m_bCursorInClient = false;
+		}
+	}
+
 	// 1. 이전 상태 저장
 	memcpy(m_byPrevKeyState, m_byKeyState, sizeof(m_byKeyState));
 	memcpy(m_byPrevMouseButtons, m_tMouseState.rgbButtons, sizeof(m_byPrevMouseButtons));

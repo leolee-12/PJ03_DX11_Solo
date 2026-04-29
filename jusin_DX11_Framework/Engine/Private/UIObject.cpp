@@ -77,18 +77,14 @@ HRESULT CUIObject::Initialize(void* pArg)
 	if (FAILED(Ready_Animator()))
 		return E_FAIL;
 
-	_uint iNumViewport = { 1 };
-	D3D11_VIEWPORT ViewportDesc = {};
-	m_pContext->RSGetViewports(&iNumViewport, &ViewportDesc);
-	m_fViewWidth = ViewportDesc.Width;
-	m_fViewHeight = ViewportDesc.Height;
+	m_vRefSize = m_pGameInstance->Get_OriginRefSize();
 
 	// View 행렬 세팅
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::VIEW)], XMMatrixIdentity());
 
 	// Proj 행렬 세팅
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::PROJ)],
-		XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.f, 1.f));
+		XMMatrixOrthographicLH(m_vRefSize.x, m_vRefSize.y, 0.f, 1.f));
 
 	Refresh_Layout();
 
@@ -200,7 +196,7 @@ _float4 CUIObject::Get_ReferenceRect() const
 	if (m_pParentUI)
 		return m_pParentUI->Get_ScreenRect();
 
-	return _float4(0.f, 0.f, m_fViewWidth, m_fViewHeight);
+	return _float4(0.f, 0.f, m_vRefSize.x, m_vRefSize.y);
 }
 
 _float2 CUIObject::Resolve_AnchorCenter() const
@@ -243,8 +239,8 @@ void CUIObject::Update_UI_Transform()
 {
 	m_pTransformCom->ScaleTo(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_fRotation);
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fResolvedCenterX - m_fViewWidth * 0.5f,
-															-m_fResolvedCenterY + m_fViewHeight * 0.5f,
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fResolvedCenterX - m_vRefSize.x * 0.5f,
+															-m_fResolvedCenterY + m_vRefSize.y * 0.5f,
 															0.f,
 															1.f));
 }

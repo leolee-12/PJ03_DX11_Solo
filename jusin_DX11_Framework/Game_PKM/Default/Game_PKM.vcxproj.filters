@@ -73,6 +73,9 @@
     <Filter Include="80. Study\03. Particles">
       <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Manager">
+      <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="..\Public\Explosion.h">
       <Filter>80. Study\03. Particles</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SharedTexture_Manager.h">
+      <Filter>05. Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -220,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Explosion.cpp">
       <Filter>80. Study\03. Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SharedTexture_Manager.cpp">
+      <Filter>05. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,10 +16,9 @@ WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
 WNAME_TAG(PROTO_COM_TEXTURE_SNOW, L"Prototype_Component_Texture_Snow");
 
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_NOISE, L"Prototype_Component_Texture_Title_pbgf_Noise");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_BG_GRAD, L"Prototype_Component_Texture_Title_BG_Grad");
-WNAME_TAG(PROTO_COM_TEXTURE_PIKA_MASK, L"Prototype_Component_Texture_Title_Pika_Mask");
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBTN_DIFF, L"Prototype_Component_Texture_Title_pbtn_Diff");
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
 
 WNAME_TAG(PROTO_COM_TEXTURE_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
 WNAME_TAG(PROTO_COM_TEXTURE_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
@@ -91,12 +90,6 @@ WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
 WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
-
-WNAME_TAG(PROTO_UI_CONTAINER, L"Prototype_UIContainer");
-WNAME_TAG(PROTO_UI_IMAGE, L"Prototype_UIImage");
-WNAME_TAG(PROTO_UI_TEXT, L"Prototype_UIText");
-WNAME_TAG(PROTO_UI_BUTTON, L"Prototype_UIButton");
-WNAME_TAG(PROTO_UI_PROGRESSBAR, L"Prototype_UIProgressBar");
 
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");

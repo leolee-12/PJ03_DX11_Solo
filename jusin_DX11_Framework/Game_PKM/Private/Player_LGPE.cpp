@@ -59,7 +59,7 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 				Pair.second->Update(fTimeDelta);
 		});
 	
-	// 2) 입력 → 이동 방향
+	// 2) 입력 -> 이동 방향
 	_vector vMoveDir = Read_MoveInput();
 	_bool bHasInput = (XMVectorGetX(XMVector3LengthSq(vMoveDir)) > 1e-6f);
 	CBody_Hero* pBody = static_cast<CBody_Hero*>(m_PartObjects[PART_BODY]);

@@ -109,7 +109,7 @@ void CPanel_PlaceBrowser::Draw_Category(const _string& strCat)
 
 void CPanel_PlaceBrowser::Place_Object(const CATALOG_ITEM tItem)
 {
-	// EditInstance → Object_Registry -> Clone + Add_Obj_Ex + 추적
+	// EditInstance -> Object_Registry -> Clone + Add_Obj_Ex + 추적
 	m_pEditInstance->Register_Object(
 		tItem.iProtoLevel, tItem.strProtoTag,
 		tItem.iLayerLevel, tItem.strLayerTag, nullptr);

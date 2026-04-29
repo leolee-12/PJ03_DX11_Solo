@@ -178,7 +178,7 @@ void CTransform::Go_Right(_float fTimeDelta)
 
 void CTransform::Move_Delta(_fvector vLocalDelta, CNavigation* pNavigation, _bool bSnapY)
 {
-	// 1) 스케일 분리된 회전행렬로 delta → 월드
+	// 1) 스케일 분리된 회전행렬로 delta -> 월드
 	_vector vRight	= XMVector3Normalize(Get_State(STATE::RIGHT));
 	_vector vUp		= XMVector3Normalize(Get_State(STATE::UP));
 	_vector vLook	= XMVector3Normalize(Get_State(STATE::LOOK));

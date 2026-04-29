@@ -68,12 +68,12 @@ void XM_CALLCONV CContainerObject::Tick_RootMotionMovement(_fvector vMoveDir, _b
 
 	if (!m_MoveState.Pivoting)
 	{
-		if (fDot < m_Tuning.fPivotEnterDot)     // 큰 각도로 회전 시작 → 피벗
+		if (fDot < m_Tuning.fPivotEnterDot)     // 큰 각도로 회전 시작 -> 피벗
 			m_MoveState.Pivoting = true;
 	}
 	else
 	{
-		if (fDot > m_Tuning.fPivotExitDot)      // 거의 정렬 완료 → 해제
+		if (fDot > m_Tuning.fPivotExitDot)      // 거의 정렬 완료 -> 해제
 			m_MoveState.Pivoting = false;
 	}
 

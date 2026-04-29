@@ -115,7 +115,7 @@ HRESULT CBody_Hero::Render()
 			return E_FAIL;
 	}
 
-	m_pGameInstance->Draw_Text(FONT_MALGUN, to_wstring(m_iDummy).c_str(), _float2(10.f, 10.f));
+	m_pGameInstance->Draw_Text(FONT_MALGUN, to_wstring(m_pModelCom->Get_CurrAnimIndex()).c_str(), _float2(10.f, 10.f));
 
 	return S_OK;
 }

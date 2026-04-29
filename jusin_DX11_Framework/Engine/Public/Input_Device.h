@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef InputDev_h__
 #define InputDev_h__
 
@@ -16,16 +16,20 @@ public:
 	void Set_InputState(INPUT_STATE eState) { m_eInputState = eState; }
 	INPUT_STATE Get_InputState() const { return m_eInputState; }
 
+	// ì ˆëŒ€ ì»¤ì„œ ì¢Œí‘œ - ë§¤ Updateì—ì„œ 1íšŒ ìºì‹œ
+	_float2 Get_CursorClientF()  const;	// ìœˆë„ìš° í´ë¼ì´ì–¸íŠ¸ ì¢Œí‘œ (px)
+	_bool   Is_Cursor_InClient() const { return m_bCursorInClient; }
+
 	_byte Get_DIKeyState(_ubyte byKeyID) { return m_byKeyState[byKeyID]; }
 	_byte Get_DIMouseState(DIMB eMouse) { return m_tMouseState.rgbButtons[static_cast<_uint>(eMouse)]; }
 	_long Get_DIMouseMove(DIMM eMouseState) { return *((reinterpret_cast<_long*>(&m_tMouseState)) + static_cast<_uint>(eMouseState)); }
 
-	// ¿§Áö °¨Áö + ÇÊÅÍ Àû¿ë
-	_bool Key_Down(_ubyte byKeyID);     // !prev && cur && ÇÊÅÍ Åë°ú
-	_bool Key_Up(_ubyte byKeyID);       // prev && !cur && ÇÊÅÍ Åë°ú
-	_bool Key_Pressing(_ubyte byKeyID); // cur && ÇÊÅÍ Åë°ú
+	// ì—£ì§€ ê°ì§€ + í•„í„° ì ìš©
+	_bool Key_Down(_ubyte byKeyID);     // !prev && cur && í•„í„° í†µê³¼
+	_bool Key_Up(_ubyte byKeyID);       // prev && !cur && í•„í„° í†µê³¼
+	_bool Key_Pressing(_ubyte byKeyID); // cur && í•„í„° í†µê³¼
 
-	// ¸¶¿ì½º (ÇÊÅÍ Àû¿ë)
+	// ë§ˆìš°ìŠ¤ (í•„í„° ì ìš©)
 	_bool Mouse_Down(DIMB eMouse);
 	_bool Mouse_Up(DIMB eMouse);
 	_bool Mouse_Pressing(DIMB eMouse);
@@ -33,23 +37,28 @@ public:
 
 public:
 	HRESULT Initialize(HINSTANCE hInst, HWND hWnd);
-	void Update(void);
+	void Update();
 
 private:
 	LPDIRECTINPUT8 m_pInputSDK = { nullptr };
 	LPDIRECTINPUTDEVICE8 m_pKeyBoard = { nullptr };
 	LPDIRECTINPUTDEVICE8 m_pMouse = { nullptr };
 
-	_byte m_byKeyState[256] = {};		// Å°º¸µå¿¡ ÀÖ´Â ¸ğµç Å°°ªÀ» ÀúÀåÇÏ±â À§ÇÑ º¯¼ö
+	_byte m_byKeyState[256] = {};		// í‚¤ë³´ë“œì— ìˆëŠ” ëª¨ë“  í‚¤ê°’ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 	DIMOUSESTATE m_tMouseState = {};
 
-	// ¿§Áö °¨Áö
+	// ì—£ì§€ ê°ì§€
 	_byte m_byPrevKeyState[256] = {};
 	_byte m_byPrevMouseButtons[4] = {};
 
-	// »óÅÂ ÇÊÅÍ
+	// ìƒíƒœ í•„í„°
 	INPUT_STATE m_eInputState = INPUT_STATE::GAMEPLAY;
-	_uint m_iKeyGroupMap[256] = {};  // Å°±×·ì ¸ÅÇÎ Å×ÀÌºí : °¢ DIK_* ¡æ KeyGroup ºñÆ®
+	_uint m_iKeyGroupMap[256] = {};  // í‚¤ê·¸ë£¹ ë§¤í•‘ í…Œì´ë¸” : ê° DIK_* -> KeyGroup ë¹„íŠ¸
+
+	// ì»¤ì„œ ìºì‹œ
+	HWND m_hWnd = { nullptr };
+	POINT m_ptCursorClient = { 0, 0 };
+	_bool m_bCursorInClient = { false };
 
 private:
 	void Ready_KeyGroupMap();

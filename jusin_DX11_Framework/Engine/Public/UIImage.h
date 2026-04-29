@@ -17,7 +17,13 @@ public:
 		_uint iTextureLevel = { INVALID_INDEX };
 		
 		_uint iTextureIndex = { INVALID_INDEX };
+		_uint iShaderPass = { 0 };
 		_float4 vColor = { g_kWhite };
+
+		_bool bSpriteAnimEnabled = { false };
+		_float fSpriteFrameDuration = { 0.f };
+
+		vector<UI_SHARED_TEXTURE_BINDING_DESC> SharedTextureBindings;
 	};
 
 protected:
@@ -31,7 +37,13 @@ public:
 
 	void Set_Texture(WNameID strTextureTag, _uint iTextureIndex) { m_strTextureTag = strTextureTag; m_iTextureIndex = iTextureIndex; }
 	void Set_Color(const _float4& vColor) { m_vColor = vColor; }
+	void Set_SharedTextureBindings(const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Bindings) { m_SharedTextureBindings = Bindings; }
 
+	// Sprite anim
+	void Set_SpriteAnim(_bool bEnabled, _float fFrameDuration);
+	virtual void Set_SpriteTickAllowed(_bool bAllowed) override { m_bSpriteTickAllowed = bAllowed; }
+
+	const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Get_SharedTextureBindings() const { return m_SharedTextureBindings; }
 	WNameID Get_TextureTag() const { return m_strTextureTag; }
 	_uint Get_TextureIndex() const { return m_iTextureIndex; }
 	const _float4& Get_Color() const { return m_vColor; }
@@ -60,12 +72,23 @@ protected:
 	_uint m_iVIBufferLevel = { INVALID_INDEX };
 
 	_uint m_iTextureIndex = { INVALID_INDEX };
+	_uint m_iShaderPass = { 0 };
 	_float4 m_vColor = { g_kWhite };
+
+	_bool m_bSpriteAnimEnabled = { false };
+	_float m_fSpriteFrameDuration = { 0.f };
+	_uint  m_iSpriteFrameCount = { 0 };
+	_float m_fSpriteAccumTime = { 0.f };
+	_bool  m_bSpriteTickAllowed = { true };
+
+	vector<UI_SHARED_TEXTURE_BINDING_DESC> m_SharedTextureBindings;
 
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 	_bool Has_ValidData() const;
+
+	void Refresh_SpriteAnimState();
 
 public:
 	static CUIImage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

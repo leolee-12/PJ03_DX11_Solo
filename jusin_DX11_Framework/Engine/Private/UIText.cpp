@@ -56,7 +56,6 @@ HRESULT CUIText::Render()
 		return S_OK;
 
 	const _float4 vRect = Get_ScreenRect();
-
 	_float fAnchorX = vRect.x;
 	switch (m_eAlign)
 	{
@@ -78,7 +77,6 @@ HRESULT CUIText::Render()
 
 	const _float fAnchorY = vRect.y + vRect.w * 0.5f;
 	const _float2 vTextSize = m_pGameInstance->Measure_Text(m_strFontTag, m_strText.c_str());
-
 	_float2 vOrigin{ 0.f, vTextSize.y * 0.5f };
 	switch (m_eAlign)
 	{
@@ -99,16 +97,20 @@ HRESULT CUIText::Render()
 	}
 
 	const XMVECTOR vColor = XMLoadFloat4(&m_vColor);
-	const _float2 vPosition{ fAnchorX, fAnchorY };
-	const _float2 vScale{ 1.f, 1.f };
+
+	const _float2 vActualSize = m_pGameInstance->Get_CurrentRefSize();
+	const _float2 vScaleToRT = { vActualSize.x / m_vRefSize.x, vActualSize.y / m_vRefSize.y };
+
+	const _float2 vDrawPos = { fAnchorX * vScaleToRT.x, fAnchorY * vScaleToRT.y };
+	const _float2 vDrawScale = vScaleToRT;
 
 	if (FAILED(m_pGameInstance->Draw_Text(m_strFontTag,
 		m_strText.c_str(),
-		vPosition,
+		vDrawPos,
 		vColor,
 		m_fRotation,
 		vOrigin,
-		vScale)))
+		vDrawScale)))
 	{
 		return E_FAIL;
 	}

@@ -238,6 +238,17 @@ inline const CUIObject::UIOBJECT_DESC& Get_BaseDesc(const UISEQ_WIDGET_NODE& tWi
 		}, tWidget.tDesc);
 }
 
+
+
+inline void Label_Left(const char* pszLabel)
+{
+	ImGui::AlignTextToFramePadding();
+	ImGui::TextUnformatted(pszLabel);
+	ImGui::SameLine();
+}
+
+void Draw_VPModeRadio(class CUIEditorSession* pSession, const char* pszId);
+
 NS_END
 
 #endif // Editor_UI_h__

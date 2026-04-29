@@ -68,6 +68,9 @@ HRESULT CTarget_Manager::Begin_MRT(WNameID strMRTTag)
 		pRenderTargets[iNumRenderTargets++] = pRenderTarget->Get_RTV();
 	}
 
+	ID3D11ShaderResourceView* nullSRV[8] = {};
+	m_pContext->PSSetShaderResources(0, 8, nullSRV);
+
 	m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargets, m_pOriginalDSV);
 
 	return S_OK;

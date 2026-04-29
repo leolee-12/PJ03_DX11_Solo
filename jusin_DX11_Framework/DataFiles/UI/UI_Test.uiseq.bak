@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "name": "HUD_Layout",
+    "version": 1
+  },
+  "widgets": [
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Dummy_White"
+        },
+        "transform": {
+          "centerX": 625.0468139648438,
+          "centerY": 746.6112670898438,
+          "sizeX": 200.0,
+          "sizeY": 200.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Image",
+      "id": "widget_001",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Dummy_White"
+        },
+        "transform": {
+          "centerX": 814.2056884765625,
+          "centerY": 823.9036865234375,
+          "sizeX": 200.0,
+          "sizeY": 200.0,
+          "visible": true,
+          "zOrder": 5
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Image1",
+      "id": "widget_002",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Dummy_White"
+        },
+        "transform": {
+          "centerX": 664.5233764648438,
+          "centerY": 837.0597534179688,
+          "sizeX": 200.0,
+          "sizeY": 200.0,
+          "visible": true,
+          "zOrder": 10
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Image2",
+      "id": "widget_003",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Dummy_White"
+        },
+        "transform": {
+          "centerX": 782.953369140625,
+          "centerY": 697.2757568359375,
+          "sizeX": 200.0,
+          "sizeY": 200.0,
+          "visible": true,
+          "zOrder": 15
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Image3",
+      "id": "widget_004",
+      "type": "IMAGE"
+    }
+  ]
+}

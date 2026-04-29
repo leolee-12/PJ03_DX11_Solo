@@ -185,7 +185,7 @@ ImVec2 CImGui_Manager::Get_ViewportScreenPos() const
 	CPanel_Viewport* pViewport = Get_ViewportPanel();
 	if (nullptr == pViewport)
 		return ImVec2(0.f, 0.f);
-	return pViewport->Get_ViewportPos();
+	return pViewport->Get_DisplayPos();
 }
 
 ImVec2 CImGui_Manager::Get_ViewportScreenSize() const
@@ -193,7 +193,7 @@ ImVec2 CImGui_Manager::Get_ViewportScreenSize() const
 	CPanel_Viewport* pViewport = Get_ViewportPanel();
 	if (nullptr == pViewport)
 		return ImVec2(1.f, 1.f);
-	return pViewport->Get_ViewportSize();
+	return pViewport->Get_DisplaySize();
 }
 
 CPanel_Viewport* CImGui_Manager::Get_ViewportPanel() const

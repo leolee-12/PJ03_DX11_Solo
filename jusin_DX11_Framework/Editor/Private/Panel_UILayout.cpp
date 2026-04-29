@@ -1,7 +1,10 @@
-#include "Panel_UILayout.h"
+﻿#include "Panel_UILayout.h"
 #include "UIEditorSession.h"
-
 #include "EditInstance.h"
+
+#include "SharedTexture_Manager.h"
+
+#include "GameInstance.h"
 
 CPanel_UILayout::CPanel_UILayout()
 	: CPanel_Base()
@@ -32,6 +35,8 @@ HRESULT CPanel_UILayout::Render()
 		return S_OK;
 	}
 
+	ImGui::PushID(m_strTitle.c_str());
+
 	Draw_Toolbar();
 	ImGui::Separator();
 
@@ -46,34 +51,129 @@ HRESULT CPanel_UILayout::Render()
 		Draw_Inspector();
 	ImGui::EndChild();
 
+	ImGui::PopID();
 	End_Panel();
 	return S_OK;
 }
 
 void CPanel_UILayout::Draw_Toolbar()
 {
-	if (ImGui::Button("New"))
-		m_pSession->New_Doc();
+	namespace fs = std::filesystem;
+	const _string strDir = "../../DataFiles/UI/";
 
+	// -- Row 1: 파일 콤보 (좌측 라벨 + 남은 폭 가득) --
+	{
+		Label_Left("File");
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		_string strCurPath = m_pSession->Get_DocPath();
+		if (ImGui::BeginCombo("##file_combo", strCurPath.c_str()))
+		{
+			std::error_code ec;
+			if (fs::exists(strDir, ec))
+			{
+				for (const auto& entry : fs::directory_iterator(strDir, ec))
+				{
+					if (!entry.is_regular_file()) continue;
+					if (entry.path().extension() != ".uiseq") continue;
+					const _string strPath = entry.path().string();
+					const _bool bSel = (strPath == strCurPath);
+					if (ImGui::Selectable(strPath.c_str(), bSel) && !bSel)
+						m_pSession->Set_DocPath(strPath);
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+
+	// -- Row 2: 경로 편집 --
+	{
+		Label_Left("Path");
+		ImGui::SetNextItemWidth(-FLT_MIN);
+		_string strDocPath = m_pSession->Get_DocPath();
+		if (Edit_StringField<512>("##path_edit", strDocPath))
+			m_pSession->Set_DocPath(strDocPath);
+	}
+
+	// -- Row 3: 액션 버튼 --
+	if (ImGui::Button("New"))
+	{
+		if (m_pSession->Is_Dirty())
+		{
+			m_ePendingAction = PENDING_ACTION::NEW_DOC;
+			ImGui::OpenPopup("Discard Changes?");
+		}
+		else m_pSession->New_Doc();
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Load"))
-		m_pSession->Load(m_pSession->Get_DocPath());
-
+	{
+		const _string strPath = m_pSession->Get_DocPath();
+		if (m_pSession->Is_Dirty())
+		{
+			m_ePendingAction = PENDING_ACTION::LOAD;
+			m_strPendingPath = strPath;
+			ImGui::OpenPopup("Discard Changes?");
+		}
+		else m_pSession->Load(strPath);
+	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save"))
 		m_pSession->Save(m_pSession->Get_DocPath());
 
-	ImGui::SameLine();
+	// -- Modal (액션 버튼 직후로 이동, 가독성) --
+	if (ImGui::BeginPopupModal("Discard Changes?", nullptr,
+		ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		_string strPath = m_pSession->Get_DocPath();
-		if (Edit_StringField<260>("##path", strPath))
-			m_pSession->Set_DocPath(strPath);
+		ImGui::TextUnformatted("Unsaved changes will be lost.");
+		ImGui::TextUnformatted("Continue?");
+		ImGui::Separator();
+		if (ImGui::Button("Save and Continue", ImVec2(160, 0)))
+		{
+			if (SUCCEEDED(m_pSession->Save(m_pSession->Get_DocPath())))
+			{
+				switch (m_ePendingAction)
+				{
+				case PENDING_ACTION::NEW_DOC: m_pSession->New_Doc(); break;
+				case PENDING_ACTION::LOAD:    m_pSession->Load(m_strPendingPath); break;
+				default: break;
+				}
+			}
+			m_ePendingAction = PENDING_ACTION::NONE;
+			m_strPendingPath.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Discard", ImVec2(120, 0)))
+		{
+			switch (m_ePendingAction)
+			{
+			case PENDING_ACTION::NEW_DOC: m_pSession->New_Doc(); break;
+			case PENDING_ACTION::LOAD:    m_pSession->Load(m_strPendingPath); break;
+			default: break;
+			}
+			m_ePendingAction = PENDING_ACTION::NONE;
+			m_strPendingPath.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(80, 0)))
+		{
+			m_ePendingAction = PENDING_ACTION::NONE;
+			m_strPendingPath.clear();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 
-	ImGui::Text("[%s]%s  status: %s",
-		m_pSession->Get_DocPath().c_str(),
-		m_pSession->Is_Dirty() ? " *" : "",
+	// -- Row 4: 상태 (별도 줄) --
+	ImGui::TextColored(
+		m_pSession->Is_Dirty() ? ImVec4(1.f, 0.7f, 0.2f, 1.f) : ImVec4(0.7f, 0.7f, 0.7f, 1.f),
+		"%s%s",
+		m_pSession->Is_Dirty() ? "* " : "",
 		m_pSession->Get_Status().c_str());
+
+	ImGui::Separator();
+	Draw_VPModeRadio(m_pSession, "vpmode_layout");
 }
 
 void CPanel_UILayout::Draw_Hierarchy()
@@ -167,10 +267,12 @@ void CPanel_UILayout::Draw_Inspector()
 	if (ImGui::DragInt("Z Order", &tBase.iZOrder, 1.f))
 		MarkWidgetUpdated();
 
-	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, static_cast<_float>(g_iWinSizeX) * 4.f))
+	_float2 vViewportSize = m_pGameInstance->Get_CurrentRefSize();
+
+	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, vViewportSize.x * 4.f))
 		MarkWidgetUpdated();
 
-	if (ImGui::DragFloat("Size Y", &tBase.fSizeY, 1.f, 1.f, static_cast<_float>(g_iWinSizeY) * 4.f))
+	if (ImGui::DragFloat("Size Y", &tBase.fSizeY, 1.f, 1.f, vViewportSize.y * 4.f))
 		MarkWidgetUpdated();
 
 	if (ImGui::Checkbox("Use Anchored Pos", &tBase.tAnchorDesc.bUseAnchoredPos))
@@ -227,11 +329,101 @@ void CPanel_UILayout::Draw_Inspector()
 				if (Edit_TagField<256>("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Level", tDesc.iTextureLevel)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Index", tDesc.iTextureIndex)) MarkWidgetUpdated();
+
 				if (Edit_TagField<256>("Shader Tag", tDesc.strShaderTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Shader Level", tDesc.iShaderLevel)) MarkWidgetUpdated();
+				if (Edit_UIntField("Shader Pass", tDesc.iShaderPass)) MarkWidgetUpdated();
+
 				if (Edit_TagField<256>("VIBuffer Tag", tDesc.strVIBufferTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("VIBuffer Level", tDesc.iVIBufferLevel)) MarkWidgetUpdated();
+
 				if (ImGui::ColorEdit4("Color", reinterpret_cast<float*>(&tDesc.vColor))) MarkWidgetUpdated();
+
+				// -- Sprite Animation --
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Sprite Animation", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					if (ImGui::Checkbox("Enabled", &tDesc.bSpriteAnimEnabled))
+					{
+						// 켰을 때 frameDuration 0이면 12FPS 기본값
+						if (tDesc.bSpriteAnimEnabled && tDesc.fSpriteFrameDuration <= 0.f)
+							tDesc.fSpriteFrameDuration = 1.f / 12.f;
+						MarkWidgetUpdated();
+					}
+
+					if (ImGui::DragFloat("Frame Duration (s)", &tDesc.fSpriteFrameDuration,
+						0.001f, 0.f, 10.f, "%.4f"))
+					{
+						if (tDesc.fSpriteFrameDuration < 0.f)
+							tDesc.fSpriteFrameDuration = 0.f;
+						MarkWidgetUpdated();
+					}
+
+					if (tDesc.fSpriteFrameDuration > 0.f)
+						ImGui::Text("= %.2f FPS", 1.f / tDesc.fSpriteFrameDuration);
+					else
+						ImGui::TextDisabled("(disabled)");
+				}
+
+				// -- Shared Textures --
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Shared Textures", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					if (ImGui::Button("Add Binding"))
+					{
+						tDesc.SharedTextureBindings.emplace_back();
+						MarkWidgetUpdated();
+					}
+
+					for (size_t i = 0; i < tDesc.SharedTextureBindings.size(); )
+					{
+						ImGui::PushID(static_cast<int>(i));
+						auto& b = tDesc.SharedTextureBindings[i];
+
+						ImGui::Text("[%zu]", i);
+
+						// Group combo
+						const _uint iCount = ETOUI(SHARED_TEXTURE_TYPE::END);
+
+						const char* pszPreview = b.strSharedTexName.empty() ? "(none)" : b.strSharedTexName.c_str();
+						if (ImGui::BeginCombo("Group", pszPreview))
+						{
+							for (_uint k = 0; k < iCount; ++k)
+							{
+								const char* psz = To_String(static_cast<SHARED_TEXTURE_TYPE>(k));
+								const bool bSel = (b.strSharedTexName == psz);
+								if (ImGui::Selectable(psz, bSel) && !bSel)
+								{
+									b.strSharedTexName = psz;
+									MarkWidgetUpdated();
+								}
+							}
+							ImGui::EndCombo();
+						}
+
+						if (Edit_StringField<128>("Shader Var", b.strShaderVarName))
+							MarkWidgetUpdated();
+
+						int iIdx = static_cast<int>(b.iTextureIndex);
+						if (ImGui::InputInt("Index", &iIdx))
+						{
+							b.iTextureIndex = (iIdx < 0) ? 0u : static_cast<unsigned int>(iIdx);
+							MarkWidgetUpdated();
+						}
+
+						if (ImGui::Button("Remove"))
+						{
+							tDesc.SharedTextureBindings.erase(tDesc.SharedTextureBindings.begin() + i);
+							MarkWidgetUpdated();
+							ImGui::PopID();
+							continue;          // i 유지 - 다음 원소가 같은 위치로 당겨짐
+						}
+
+						ImGui::Separator();
+						ImGui::PopID();
+						++i;
+					}
+				}
 			}
 			else if constexpr (std::is_same_v<T, CUIButton::UIBUTTON_DESC>)
 			{
@@ -279,149 +471,6 @@ void CPanel_UILayout::Draw_Inspector()
 				if (ImGui::DragFloat("Spacing", &tDesc.tLayoutDesc.fSpacing, 1.f)) MarkWidgetUpdated();
 			}
 		}, w.tDesc);
-
-	ImGui::Separator();
-	//ImGui::TextUnformatted("Animations");
-	//
-	//if (ImGui::Button("Add Anim"))
-	//{
-	//	_wstring strName;
-	//	for (_int iAnim = 1;; ++iAnim)
-	//	{
-	//		wchar_t szBuffer[32] = {};
-	//		swprintf_s(szBuffer, L"Anim_%03d", iAnim);
-	//		strName = Make_UniqueAnimationName(*pWidget, szBuffer);
-	//		if (strName == szBuffer)
-	//			break;
-	//	}
-	//
-	//	pWidget->vAnimations.push_back({ strName, {} });
-	//	m_iSelectedAnimation = static_cast<_int>(pWidget->vAnimations.size()) - 1;
-	//	m_iSelectedTrack = -1;
-	//	Mark_Dirty("Animation added");
-	//}
-	//
-	//ImGui::SameLine();
-	//if (ImGui::Button("Delete Anim") && m_iSelectedAnimation >= 0)
-	//{
-	//	pWidget->vAnimations.erase(pWidget->vAnimations.begin() + m_iSelectedAnimation);
-	//	Normalize_Selection();
-	//	Sanitize_DocReferences();
-	//	Mark_Dirty("Animation deleted");
-	//}
-	//
-	//if (ImGui::BeginChild("AnimationList", ImVec2(0.f, 90.f), true))
-	//{
-	//	for (_int iAnim = 0; iAnim < static_cast<_int>(pWidget->vAnimations.size()); ++iAnim)
-	//	{
-	//		const _string strLabel = WtoS(pWidget->vAnimations[iAnim].strName) + "##anim_" + std::to_string(iAnim);
-	//		if (ImGui::Selectable(strLabel.c_str(), m_iSelectedAnimation == iAnim))
-	//		{
-	//			m_iSelectedAnimation = iAnim;
-	//			m_iSelectedTrack = -1;
-	//			Normalize_Selection();
-	//		}
-	//	}
-	//}
-	//ImGui::EndChild();
-	//
-	//UISEQ_ANIMATION_NODE* pAnimation = Get_SelectedAnimation();
-	//if (nullptr != pAnimation)
-	//{
-	//	const _wstring strOldName = pAnimation->strName;
-	//	if (Edit_WStringField<256>("Animation Name", pAnimation->strName))
-	//	{
-	//		pAnimation->strName = Make_UniqueAnimationName(*pWidget, pAnimation->strName, m_iSelectedAnimation);
-	//		if (strOldName != pAnimation->strName)
-	//		{
-	//			for (auto& tStep : m_Doc.vSteps)
-	//			{
-	//				if (tStep.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM
-	//					&& tStep.strTargetId == pWidget->strId
-	//					&& tStep.strAnimName == strOldName)
-	//				{
-	//					tStep.strAnimName = pAnimation->strName;
-	//				}
-	//			}
-	//		}
-	//		Mark_Dirty("Animation renamed");
-	//	}
-	//
-	//	if (ImGui::Button("Add Track"))
-	//	{
-	//		pAnimation->vTracks.push_back(Make_DefaultTrack(*pWidget));
-	//		m_iSelectedTrack = static_cast<_int>(pAnimation->vTracks.size()) - 1;
-	//		Mark_Dirty("Track added");
-	//	}
-	//
-	//	ImGui::SameLine();
-	//	if (ImGui::Button("Delete Track") && m_iSelectedTrack >= 0)
-	//	{
-	//		pAnimation->vTracks.erase(pAnimation->vTracks.begin() + m_iSelectedTrack);
-	//		Normalize_Selection();
-	//		Mark_Dirty("Track deleted");
-	//	}
-	//
-	//	if (ImGui::BeginChild("TrackList", ImVec2(0.f, 90.f), true))
-	//	{
-	//		for (_int iTrack = 0; iTrack < static_cast<_int>(pAnimation->vTracks.size()); ++iTrack)
-	//		{
-	//			const _string strLabel = std::to_string(iTrack) + " " + To_String(pAnimation->vTracks[iTrack].eTarget) + "##track_" + std::to_string(iTrack);
-	//			if (ImGui::Selectable(strLabel.c_str(), m_iSelectedTrack == iTrack))
-	//				m_iSelectedTrack = iTrack;
-	//		}
-	//	}
-	//	ImGui::EndChild();
-	//
-	//	CUITween::UITWEEN_DESC* pTrack = Get_SelectedTrack();
-	//	if (nullptr != pTrack)
-	//	{
-	//		CUIObject* pSentinel = Resolve_Sentinel(pWidget->Get_Type());
-	//		if (nullptr != pSentinel)
-	//		{
-	//			const char* pszPreview = To_String(pTrack->eTarget);
-	//			if (ImGui::BeginCombo("Target", pszPreview))
-	//			{
-	//				for (_int iTarget = 0; iTarget < static_cast<_int>(UI_TWEEN_TARGET::END); ++iTarget)
-	//				{
-	//					const UI_TWEEN_TARGET eTarget = static_cast<UI_TWEEN_TARGET>(iTarget);
-	//					if (!pSentinel->Can_Apply_Tween_Target(eTarget))
-	//						continue;
-	//
-	//					const _bool bSelected = (pTrack->eTarget == eTarget);
-	//					if (ImGui::Selectable(To_String(eTarget), bSelected))
-	//					{
-	//						pTrack->eTarget = eTarget;
-	//						Mark_Dirty("Track updated");
-	//					}
-	//				}
-	//				ImGui::EndCombo();
-	//			}
-	//		}
-	//
-	//		if (ImGui::DragFloat("Start", &pTrack->fStart, 0.01f)) Mark_Dirty("Track updated");
-	//		if (ImGui::DragFloat("End", &pTrack->fEnd, 0.01f)) Mark_Dirty("Track updated");
-	//		if (ImGui::DragFloat("Duration", &pTrack->fDuration, 0.01f, 0.f, 60.f)) Mark_Dirty("Track updated");
-	//
-	//		_int iEase = static_cast<_int>(pTrack->eEase);
-	//		if (iEase < 0 || iEase >= IM_ARRAYSIZE(g_ppEaseNames))
-	//			iEase = 0;
-	//		if (ImGui::Combo("Ease", &iEase, g_ppEaseNames, IM_ARRAYSIZE(g_ppEaseNames)))
-	//		{
-	//			pTrack->eEase = static_cast<UI_EASE>(iEase);
-	//			Mark_Dirty("Track updated");
-	//		}
-	//
-	//		_int iLoop = static_cast<_int>(pTrack->eLoop);
-	//		if (iLoop < 0 || iLoop >= IM_ARRAYSIZE(g_ppLoopNames))
-	//			iLoop = 0;
-	//		if (ImGui::Combo("Loop", &iLoop, g_ppLoopNames, IM_ARRAYSIZE(g_ppLoopNames)))
-	//		{
-	//			pTrack->eLoop = static_cast<UI_TWEEN_LOOP>(iLoop);
-	//			Mark_Dirty("Track updated");
-	//		}
-	//	}
-	//}
 }
 
 CPanel_UILayout* CPanel_UILayout::Create()

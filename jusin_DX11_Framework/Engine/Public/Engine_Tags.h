@@ -26,6 +26,15 @@ namespace Engine
 
 	WNAME_TAG(MRT_GAMEOBJECTS, L"MRT_GameObjects");
 	WNAME_TAG(MRT_LIGHTACC, L"MRT_LightAcc");
+
+
+
+	WNAME_TAG(PROTO_UI_CONTAINER, L"Prototype_UIContainer");
+	WNAME_TAG(PROTO_UI_SEQUENCE, L"Prototype_UISequence");
+	WNAME_TAG(PROTO_UI_IMAGE, L"Prototype_UIImage");
+	WNAME_TAG(PROTO_UI_TEXT, L"Prototype_UIText");
+	WNAME_TAG(PROTO_UI_BUTTON, L"Prototype_UIButton");
+	WNAME_TAG(PROTO_UI_PROGRESSBAR, L"Prototype_UIProgressBar");
 }
 
 #endif // Engine_Tags_h__

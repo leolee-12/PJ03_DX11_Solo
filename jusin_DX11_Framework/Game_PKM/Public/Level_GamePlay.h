@@ -33,14 +33,10 @@ public:
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
 private:
-	void Reset_TestUIState();
+	CUISequence* m_pRuntimeUI = { nullptr };
 
 private:
-	CUIImage* m_pTestImage{ nullptr };
-	CUIButton* m_pTestButton{ nullptr };
-	CUIProgressBar* m_pTestProgressBar{ nullptr };
-	CUIText* m_pTestText{ nullptr };
-	CUISequence* m_pTestSequence{ nullptr };
+
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

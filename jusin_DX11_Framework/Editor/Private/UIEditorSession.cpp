@@ -1,13 +1,16 @@
-#include "UIEditorSession.h"
+﻿#include "UIEditorSession.h"
 #include "UIPreviewHost.h"
 
+#include "GameInstance.h"
 #include "EditInstance.h"
 
 CUIEditorSession::CUIEditorSession(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
+	, m_pGameInstance(CGameInstance::GetInstance())
 	, m_pEditInstance(CEditInstance::GetInstance())
 {
+	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pEditInstance);
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -24,6 +27,65 @@ HRESULT CUIEditorSession::Initialize()
 
 void CUIEditorSession::Update(_float fTimeDelta)
 {
+}
+
+_int CUIEditorSession::Find_WidgetIndexById(const _string& strId) const
+{
+	for (_int i = 0; i < (_int)m_Doc.vWidgets.size(); ++i)
+		if (m_Doc.vWidgets[i].strId == strId) return i;
+	return -1;
+}
+
+_wstring CUIEditorSession::Make_UniqueAnimationName(const UISEQ_WIDGET_NODE& tWidget, const _wstring& strBase, _int iSkipIndex) const
+{
+	_wstring strCandidate = strBase.empty() ? L"Anim" : strBase;
+
+	auto IsDuplicate = [&](const _wstring& strName) -> _bool
+		{
+			for (_int i = 0; i < static_cast<_int>(tWidget.vAnimations.size()); ++i)
+			{
+				if (i == iSkipIndex)
+					continue;
+
+				if (tWidget.vAnimations[i].strName == strName)
+					return true;
+			}
+
+			return false;
+		};
+
+	if (!IsDuplicate(strCandidate))
+		return strCandidate;
+
+	for (_int iSuffix = 1;; ++iSuffix)
+	{
+		wchar_t szBuffer[64] = {};
+		swprintf_s(szBuffer, L"%s_%03d", strCandidate.c_str(), iSuffix);
+		if (!IsDuplicate(szBuffer))
+			return szBuffer;
+	}
+}
+
+void CUIEditorSession::Rename_Animation(UISEQ_WIDGET_NODE& w, _int iAnimIdx, const _wstring& strOldName, const _wstring& strNewName)
+{
+	if (iAnimIdx < 0 || iAnimIdx >= (_int)w.vAnimations.size()) return;
+
+	const _wstring strNew = Make_UniqueAnimationName(w, strNewName, iAnimIdx);
+	w.vAnimations[iAnimIdx].strName = strNew;
+
+	if (strOldName != strNew)
+	{
+		for (auto& tStep : m_Doc.vSteps)
+		{
+			if (tStep.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM
+				&& tStep.strTargetId == w.strId
+				&& tStep.strAnimName == strOldName)
+			{
+				tStep.strAnimName = strNew;
+			}
+		}
+	}
+	Mark_Dirty("Animation renamed");
 }
 
 HRESULT CUIEditorSession::Initialize_Sentinels()
@@ -86,36 +148,6 @@ _string CUIEditorSession::Make_NextWidgetId() const
 	}
 }
 
-_wstring CUIEditorSession::Make_UniqueAnimationName(const UISEQ_WIDGET_NODE& tWidget, const _wstring& strBase, _int iSkipIndex) const
-{
-	_wstring strCandidate = strBase.empty() ? L"Anim" : strBase;
-
-	auto IsDuplicate = [&](const _wstring& strName) -> _bool
-		{
-			for (_int i = 0; i < static_cast<_int>(tWidget.vAnimations.size()); ++i)
-			{
-				if (i == iSkipIndex)
-					continue;
-
-				if (tWidget.vAnimations[i].strName == strName)
-					return true;
-			}
-
-			return false;
-		};
-
-	if (!IsDuplicate(strCandidate))
-		return strCandidate;
-
-	for (_int iSuffix = 1;; ++iSuffix)
-	{
-		wchar_t szBuffer[64] = {};
-		swprintf_s(szBuffer, L"%s_%03d", strCandidate.c_str(), iSuffix);
-		if (!IsDuplicate(szBuffer))
-			return szBuffer;
-	}
-}
-
 _string CUIEditorSession::Make_NextCallbackId() const
 {
 	for (_int iNumber = 1;; ++iNumber)
@@ -140,10 +172,12 @@ _string CUIEditorSession::Make_NextCallbackId() const
 
 UISEQ_WIDGET_NODE CUIEditorSession::Make_DefaultWidget(UI_TYPE eType) const
 {
-	auto InitializeBase = [](auto& tDesc, _float fSizeX, _float fSizeY)
+	_float2 vRefSize = m_pGameInstance->Get_CurrentRefSize();
+
+	auto InitializeBase = [vRefSize](auto& tDesc, _float fSizeX, _float fSizeY)
 		{
-			tDesc.fCenterX = static_cast<_float>(g_iWinSizeX) * 0.5f;
-			tDesc.fCenterY = static_cast<_float>(g_iWinSizeY) * 0.5f;
+			tDesc.fCenterX = vRefSize.x * 0.5f;
+			tDesc.fCenterY = vRefSize.y * 0.5f;
 			tDesc.fSizeX = fSizeX;
 			tDesc.fSizeY = fSizeY;
 			tDesc.iZOrder = 0;
@@ -356,65 +390,6 @@ void CUIEditorSession::Erase_Widget(_int iWidgetIndex)
 	Mark_Dirty("Widget deleted");
 }
 
-const UISEQ_WIDGET_NODE* CUIEditorSession::Find_WidgetById(const _string& strId) const
-{
-	if (strId.empty())
-		return nullptr;
-
-	for (const auto& tWidget : m_Doc.vWidgets)
-	{
-		if (tWidget.strId == strId)
-			return &tWidget;
-	}
-
-	return nullptr;
-}
-
-_bool CUIEditorSession::Apply_StepTargetFallback(UISEQ_STEP_NODE& tStep) const
-{
-	_bool bChanged = false;
-
-	if (UI_SEQ_STEP_KIND::PLAY_ANIM != tStep.eKind)
-	{
-		if (UI_SEQ_STEP_KIND::SET_VISIBLE == tStep.eKind && nullptr == Find_WidgetById(tStep.strTargetId))
-		{
-			if (!tStep.strTargetId.empty())
-			{
-				tStep.strTargetId.clear();
-				bChanged = true;
-			}
-		}
-
-		return bChanged;
-	}
-
-	const UISEQ_WIDGET_NODE* pWidget = Find_WidgetById(tStep.strTargetId);
-	if (nullptr == pWidget)
-	{
-		if (!tStep.strTargetId.empty() || !tStep.strAnimName.empty())
-			bChanged = true;
-
-		tStep.strTargetId.clear();
-		tStep.strAnimName.clear();
-		return bChanged;
-	}
-
-	for (const auto& tAnimation : pWidget->vAnimations)
-	{
-		if (tAnimation.strName == tStep.strAnimName)
-			return bChanged;
-	}
-
-	const _wstring strFallback = pWidget->vAnimations.empty() ? L"" : pWidget->vAnimations.front().strName;
-	if (tStep.strAnimName != strFallback)
-	{
-		tStep.strAnimName = strFallback;
-		bChanged = true;
-	}
-
-	return bChanged;
-}
-
 _bool CUIEditorSession::Sanitize_DocReferences()
 {
 	_bool bChanged = false;
@@ -549,13 +524,88 @@ void CUIEditorSession::Mark_Dirty(const char* pszReason)
 	m_bDirty = true;
 	m_strStatus = (nullptr != pszReason && '\0' != pszReason[0]) ? pszReason : "Modified";
 
-	// host�� rebuild ��ȣ
+	// host에 rebuild 신호
 	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
 		pHost->Mark_Rebuild_Pending();
 }
 
+void CUIEditorSession::Mark_Dirty_Property(const char* pszReason)
+{
+	m_bDirty = true;
+	m_strStatus = (pszReason && pszReason[0]) ? pszReason : "Modified";
+	// host->Mark_Rebuild_Pending() 호출하지 않음
+}
+
+const UISEQ_WIDGET_NODE* CUIEditorSession::Find_WidgetById(const _string& strId) const
+{
+	if (strId.empty())
+		return nullptr;
+
+	for (const auto& tWidget : m_Doc.vWidgets)
+	{
+		if (tWidget.strId == strId)
+			return &tWidget;
+	}
+
+	return nullptr;
+}
+
+_bool CUIEditorSession::Apply_StepTargetFallback(UISEQ_STEP_NODE& tStep) const
+{
+	_bool bChanged = false;
+
+	if (UI_SEQ_STEP_KIND::PLAY_ANIM != tStep.eKind)
+	{
+		if (UI_SEQ_STEP_KIND::SET_VISIBLE == tStep.eKind && nullptr == Find_WidgetById(tStep.strTargetId))
+		{
+			if (!tStep.strTargetId.empty())
+			{
+				tStep.strTargetId.clear();
+				bChanged = true;
+			}
+		}
+
+		return bChanged;
+	}
+
+	const UISEQ_WIDGET_NODE* pWidget = Find_WidgetById(tStep.strTargetId);
+	if (nullptr == pWidget)
+	{
+		if (!tStep.strTargetId.empty() || !tStep.strAnimName.empty())
+			bChanged = true;
+
+		tStep.strTargetId.clear();
+		tStep.strAnimName.clear();
+		return bChanged;
+	}
+
+	for (const auto& tAnimation : pWidget->vAnimations)
+	{
+		if (tAnimation.strName == tStep.strAnimName)
+			return bChanged;
+	}
+
+	const _wstring strFallback = pWidget->vAnimations.empty() ? L"" : pWidget->vAnimations.front().strName;
+	if (tStep.strAnimName != strFallback)
+	{
+		tStep.strAnimName = strFallback;
+		bChanged = true;
+	}
+
+	return bChanged;
+}
+
 HRESULT CUIEditorSession::Save(const _string& strPath)
 {
+	std::error_code ec;
+	if (std::filesystem::exists(strPath, ec))
+	{
+		const _string strBackup = strPath + ".bak";
+		std::filesystem::copy_file(strPath, strBackup,
+			std::filesystem::copy_options::overwrite_existing, ec);
+		// ec 무시 - 권한 문제 등은 status 표시 정도만
+	}
+
 	if (FAILED(m_pEditInstance->Save_UISequence(strPath, m_Doc)))
 	{
 		m_strStatus = "Save failed: " + strPath;
@@ -570,7 +620,7 @@ HRESULT CUIEditorSession::Save(const _string& strPath)
 HRESULT CUIEditorSession::Load(const _string& strPath)
 {
 	UISEQ_DOC tLoaded{};
-	if (FAILED(CEditInstance::GetInstance()->Load_UISequence(strPath, tLoaded)))
+	if (FAILED(m_pEditInstance->Load_UISequence(strPath, tLoaded)))
 	{
 		m_strStatus = "Load failed: " + strPath;
 		return E_FAIL;
@@ -582,6 +632,10 @@ HRESULT CUIEditorSession::Load(const _string& strPath)
 	Normalize_Selection();
 	Clear_Dirty();
 	m_strStatus = "Loaded: " + strPath;
+
+	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
+		pHost->Mark_Rebuild_Pending();
+
 	return S_OK;
 }
 
@@ -589,6 +643,10 @@ HRESULT CUIEditorSession::New_Doc()
 {
 	Reset_Doc();
 	m_strStatus = "New document";
+
+	if (auto* pHost = m_pEditInstance->Get_UIPreviewHost())
+		pHost->Mark_Rebuild_Pending();
+
 	return S_OK;
 }
 
@@ -618,6 +676,7 @@ void CUIEditorSession::Free()
 		Safe_Release(m_pSentinels[i]);
 
 	Safe_Release(m_pEditInstance);
+	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 }

@@ -52,8 +52,17 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F1))
 		m_bCameraEnabled = !m_bCameraEnabled;
 
-	_int iCurrLevel = m_pGameInstance->Get_CurrentLevel();
+	{	// Esc로 SCENE 복귀 (text input 중에는 무시)
+		const ImGuiIO& io = ImGui::GetIO();
+		if (!io.WantCaptureKeyboard
+			&& m_pGameInstance->Key_Down(DIK_ESCAPE))
+		{
+			m_pUIEditorSession->Set_VPMode(
+				CUIEditorSession::VPMODE::SCENE);
+		}
+	}
 
+	_int iCurrLevel = m_pGameInstance->Get_CurrentLevel();
 	if (m_iPrevLevel != iCurrLevel)
 	{
 		Clear();
@@ -67,7 +76,6 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	m_pImGui_Manager->Update(fTimeDelta);
 
 	ImGuiIO& io = ImGui::GetIO();
-
 	if (io.WantTextInput || !m_bCameraEnabled)
 	{
 		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);

@@ -28,7 +28,10 @@ public:
 
 	const HWND Get_HWND() const;
 	_float Random(_float fMin, _float fMax);
-	_float2 Get_ViewportDesc() { return m_vViewportDesc; }
+	void Set_ViewportSize(_float fSizeX, _float fSizeY) { m_vCurrentVPSize = { fSizeX, fSizeY }; }
+	void Reset_ViewportSize() { m_vCurrentVPSize = m_vOriginVPSize; }
+	_float2 Get_CurrentRefSize() { return m_vCurrentVPSize; }
+	_float2 Get_OriginRefSize() { return m_vOriginVPSize; }
 	void Toggle_Debug() { m_bDebug = !m_bDebug; }
 	_bool Is_Debug() { return m_bDebug; }
 #pragma endregion
@@ -76,6 +79,9 @@ public:
 #pragma endregion
 
 #pragma region INPUT_DEVICE
+	_float2 Get_CursorClientF() const;
+	_bool   Is_Cursor_InClient() const;
+
 	void Set_InputState(INPUT_STATE eState);
 	INPUT_STATE Get_InputState() const;
 
@@ -115,6 +121,11 @@ public:
 #endif
 #pragma endregion
 
+#pragma region SHARED_TEXTURE_BINDER
+	void Set_SharedTextureBinder(class ISharedTextureBinder* pBinder) { m_pSharedTextureBinder = pBinder; }
+	class ISharedTextureBinder* Get_SharedTextureBinder() const { return m_pSharedTextureBinder; }
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -129,8 +140,9 @@ private:
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
+	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };
 
-	_float2						m_vViewportDesc{};
+	_float2						m_vOriginVPSize{}, m_vCurrentVPSize{};
 	_bool						m_bDebug = { false };
 
 private:

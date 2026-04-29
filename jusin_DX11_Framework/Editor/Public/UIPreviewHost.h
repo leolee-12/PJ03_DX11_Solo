@@ -27,6 +27,10 @@ public:
 	UI_PREVIEW_MODE Get_Mode() const { return m_eMode; }
 	UI_PREVIEW_STATE Get_State() const { return m_eState; }
 
+	const ImVec2& Get_LastViewportSize() const { return m_vLastViewportSize; }
+	const vector<_int>& Get_ZOrderIdx() const { return m_vZOrderIdx; }
+	const vector<CUIObject*>& Get_Widgets() const;
+
 	HRESULT Initialize();
 	void Tick(_float fTimeDelta);	// Update_Editor 안에서 호출
 	void Render_Queue_Submit();		// Late_Update 호출 (RT active 후)
@@ -42,6 +46,7 @@ public:
 	void Restart();
 
 	CUIObject* Find_Runtime(const _string& strId) const;
+	_string Hit_Test_TopMost(const ImVec2& vDocXY) const;	// z-order 우선, hit widget의 ID 반환, 없으면 빈 문자열
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };
@@ -50,8 +55,7 @@ private:
 	class CEditInstance* m_pEditInstance = { nullptr };
 	class CUIEditorSession* m_pSession = { nullptr };	// weak
 
-	vector<CUIObject*> m_vWidgets;					// owned
-	unordered_map<_string, CUIObject*> m_id2Widget;	// weak refs into m_vWidgets
+	unordered_map<_string, CUIObject*> m_id2Widget;	// weak refs into sequence children
 	CUISequence* m_pSequence = { nullptr };			// owned
 
 	UI_PREVIEW_MODE m_eMode = UI_PREVIEW_MODE::LAYOUT;
@@ -61,6 +65,9 @@ private:
 	ImVec2 m_vLastViewportSize = { 0.f, 0.f };
 
 	vector<_int> m_vZOrderIdx;	// tick 시 사용
+
+	_int m_iLastSelWidget = { -2 };
+	_int m_iLastSelAnim = { -2 };
 
 private:
 	void Release_All();

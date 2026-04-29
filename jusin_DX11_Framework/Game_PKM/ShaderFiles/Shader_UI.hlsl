@@ -1,7 +1,7 @@
 #include "Engine_Shader_Defines.hlsli"
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D g_Texture;
+texture2D g_Texture, g_NoiseTexture;
 float4 g_vColor = float4(1.f, 1.f, 1.f, 1.f);
 
 struct VS_IN
@@ -51,6 +51,19 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_DEBUG(PS_IN In)
+{
+	PS_OUT Out;
+	Out.vCol = g_Texture.Sample(LinearSampler, In.vTex) * g_vColor;
+
+	if (Out.vCol.a < 0.01f)
+		discard;
+
+	float4 vNoise = g_NoiseTexture.Sample(LinearSampler, In.vTex);
+	Out.vCol = Out.vCol * vNoise;
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass DefaultPass
@@ -61,5 +74,15 @@ technique11 DefaultTechnique
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass DebugPass
+	{
+		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
 	}
 };
