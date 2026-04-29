@@ -58,7 +58,6 @@ public:
 	const UICANVAS_TRANSFORM& Get_CanvasTransform() const { return m_tCanvasTransform; }
 	_float2 Get_ActualViewportSize() const { return m_vActualViewportSize; }
 
-	_float4 Get_ScreenRect() const;
 	_float4 Get_DesignRect() const;
 	_float4 Get_RenderRect() const;
 

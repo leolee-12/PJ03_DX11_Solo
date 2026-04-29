@@ -1,5 +1,6 @@
 ﻿#include "UIObject.h"
 #include "UIAnimator.h"
+#include "UICanvasMath.h"
 #include "GameInstance.h"
 
 CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -36,11 +37,6 @@ void CUIObject::Set_Size(_float fSizeX, _float fSizeY)
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	Refresh_Layout();
-}
-
-_float4 CUIObject::Get_ScreenRect() const
-{
-	return Get_DesignRect();
 }
 
 _float4 CUIObject::Get_DesignRect() const
@@ -219,66 +215,29 @@ void CUIObject::Recalculate_RenderTransform()
 	const _float fActualWidth = (m_vActualViewportSize.x > 0.f) ? m_vActualViewportSize.x : fDesignWidth;
 	const _float fActualHeight = (m_vActualViewportSize.y > 0.f) ? m_vActualViewportSize.y : fDesignHeight;
 
-	const _float fScaleX = fActualWidth / fDesignWidth;
-	const _float fScaleY = fActualHeight / fDesignHeight;
-	const _float fUniformScale = (fScaleX < fScaleY) ? fScaleX : fScaleY;
+	const UI_SCALE_POLICY ePolicy = m_tCanvasDesc.eScalePolicy;
 
-	m_tCanvasTransform = {};
-	m_tCanvasTransform.fScaleX = fScaleX;
-	m_tCanvasTransform.fScaleY = fScaleY;
-	m_tCanvasTransform.fUniformScale = fUniformScale;
+	// canvas scale / offset / render extent 계산
+	m_tCanvasTransform = UICanvasMath::Build_UITransform(
+		fDesignWidth, fDesignHeight,
+		fActualWidth, fActualHeight,
+		ePolicy);
 
-	switch (m_tCanvasDesc.eScalePolicy)
-	{
-	case UI_SCALE_POLICY::STRETCH:
-		m_tCanvasTransform.fCanvasOffsetX = 0.f;
-		m_tCanvasTransform.fCanvasOffsetY = 0.f;
-		m_tCanvasTransform.fRenderWidth = fActualWidth;
-		m_tCanvasTransform.fRenderHeight = fActualHeight;
+	// resolved center(design) → render center
+	const _float2 vRenderCenter = UICanvasMath::Design_To_RenderPoint(
+		_float2(m_fResolvedCenterX, m_fResolvedCenterY),
+		m_tCanvasTransform,
+		ePolicy);
+	m_fRenderCenterX = vRenderCenter.x;
+	m_fRenderCenterY = vRenderCenter.y;
 
-		m_fRenderCenterX = m_fResolvedCenterX * fScaleX;
-		m_fRenderCenterY = m_fResolvedCenterY * fScaleY;
-		m_fRenderSizeX = m_fSizeX * fScaleX;
-		m_fRenderSizeY = m_fSizeY * fScaleY;
-		break;
-
-	case UI_SCALE_POLICY::MATCH_WIDTH:
-		m_tCanvasTransform.fCanvasOffsetX = 0.f;
-		m_tCanvasTransform.fCanvasOffsetY = (fActualHeight - fDesignHeight * fScaleX) * 0.5f;
-		m_tCanvasTransform.fRenderWidth = fActualWidth;
-		m_tCanvasTransform.fRenderHeight = fDesignHeight * fScaleX;
-
-		m_fRenderCenterX = m_tCanvasTransform.fCanvasOffsetX + m_fResolvedCenterX * fScaleX;
-		m_fRenderCenterY = m_tCanvasTransform.fCanvasOffsetY + m_fResolvedCenterY * fScaleX;
-		m_fRenderSizeX = m_fSizeX * fScaleX;
-		m_fRenderSizeY = m_fSizeY * fScaleX;
-		break;
-
-	case UI_SCALE_POLICY::MATCH_HEIGHT:
-		m_tCanvasTransform.fCanvasOffsetX = (fActualWidth - fDesignWidth * fScaleY) * 0.5f;
-		m_tCanvasTransform.fCanvasOffsetY = 0.f;
-		m_tCanvasTransform.fRenderWidth = fDesignWidth * fScaleY;
-		m_tCanvasTransform.fRenderHeight = fActualHeight;
-
-		m_fRenderCenterX = m_tCanvasTransform.fCanvasOffsetX + m_fResolvedCenterX * fScaleY;
-		m_fRenderCenterY = m_tCanvasTransform.fCanvasOffsetY + m_fResolvedCenterY * fScaleY;
-		m_fRenderSizeX = m_fSizeX * fScaleY;
-		m_fRenderSizeY = m_fSizeY * fScaleY;
-		break;
-
-	case UI_SCALE_POLICY::UNIFORM_FIT:
-	default:
-		m_tCanvasTransform.fCanvasOffsetX = (fActualWidth - fDesignWidth * fUniformScale) * 0.5f;
-		m_tCanvasTransform.fCanvasOffsetY = (fActualHeight - fDesignHeight * fUniformScale) * 0.5f;
-		m_tCanvasTransform.fRenderWidth = fDesignWidth * fUniformScale;
-		m_tCanvasTransform.fRenderHeight = fDesignHeight * fUniformScale;
-
-		m_fRenderCenterX = m_tCanvasTransform.fCanvasOffsetX + m_fResolvedCenterX * fUniformScale;
-		m_fRenderCenterY = m_tCanvasTransform.fCanvasOffsetY + m_fResolvedCenterY * fUniformScale;
-		m_fRenderSizeX = m_fSizeX * fUniformScale;
-		m_fRenderSizeY = m_fSizeY * fUniformScale;
-		break;
-	}
+	// size(design) → render size (offset 미적용, scale만 반영)
+	const _float4 vRenderRect = UICanvasMath::Design_To_RenderRect(
+		_float4(0.f, 0.f, m_fSizeX, m_fSizeY),
+		m_tCanvasTransform,
+		ePolicy);
+	m_fRenderSizeX = vRenderRect.z;
+	m_fRenderSizeY = vRenderRect.w;
 
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::PROJ)],
 		XMMatrixOrthographicLH(fActualWidth, fActualHeight, 0.f, 1.f));

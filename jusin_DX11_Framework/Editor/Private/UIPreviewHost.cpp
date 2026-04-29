@@ -326,7 +326,7 @@ _string CUIPreviewHost::Hit_Test_TopMost(const ImVec2& vDocXY) const
 		if (nullptr == pUI) continue;
 		if (!pUI->Get_Visible()) continue;
 
-		const _float4 rc = pUI->Get_ScreenRect();
+		const _float4 rc = pUI->Get_DesignRect();
 		if (vDocXY.x >= rc.x && vDocXY.x <= rc.x + rc.z &&
 			vDocXY.y >= rc.y && vDocXY.y <= rc.y + rc.w)
 		{

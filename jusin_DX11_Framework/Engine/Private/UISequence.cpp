@@ -422,14 +422,11 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 	Set_DesignCanvasSize(tCanvasDesc.fDesignWidth, tCanvasDesc.fDesignHeight);
 	Set_ScalePolicy(tCanvasDesc.eScalePolicy);
 
-	if (m_fSizeX <= 0.f || m_fSizeY <= 0.f)
-	{
-		m_fSizeX = tCanvasDesc.fDesignWidth;
-		m_fSizeY = tCanvasDesc.fDesignHeight;
-		m_fCenterX = tCanvasDesc.fDesignWidth * 0.5f;
-		m_fCenterY = tCanvasDesc.fDesignHeight * 0.5f;
-		Refresh_Layout();
-	}
+	m_fSizeX = tCanvasDesc.fDesignWidth;
+	m_fSizeY = tCanvasDesc.fDesignHeight;
+	m_fCenterX = tCanvasDesc.fDesignWidth * 0.5f;
+	m_fCenterY = tCanvasDesc.fDesignHeight * 0.5f;
+	Refresh_Layout();
 
 	// 2) loader 임시 수집
 	vector<LoaderWidget> vLoadedWidgets;

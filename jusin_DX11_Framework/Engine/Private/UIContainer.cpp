@@ -188,7 +188,7 @@ void CUIContainer::Arrange_Children()
 
 void CUIContainer::Arrange_Overlay()
 {
-	const _float4 rc = Get_ScreenRect();
+	const _float4 rc = Get_DesignRect();
 	const _float fCenterX = rc.x + rc.z * 0.5f;
 	const _float fCenterY = rc.y + rc.w * 0.5f;
 
@@ -201,7 +201,7 @@ void CUIContainer::Arrange_Overlay()
 
 void CUIContainer::Arrange_Horizontal()
 {
-	const _float4 rc = Get_ScreenRect();
+	const _float4 rc = Get_DesignRect();
 	_float fCursor = rc.x + m_tLayoutDesc.fPadding;
 
 	for (auto pChild : m_Children)
@@ -229,7 +229,7 @@ void CUIContainer::Arrange_Horizontal()
 
 void CUIContainer::Arrange_Vertical()
 {
-	const _float4 rc = Get_ScreenRect();
+	const _float4 rc = Get_DesignRect();
 	_float fCursor = rc.y + m_tLayoutDesc.fPadding;
 
 	for (auto pChild : m_Children)

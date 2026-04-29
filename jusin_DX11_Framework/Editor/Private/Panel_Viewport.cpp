@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "Model.h"
 #include "Mesh.h"
+#include "UICanvasMath.h"
 
 namespace
 {
@@ -40,146 +41,56 @@ namespace
 
 	struct CanvasMapping
 	{
-		ImVec2 vDocSize{ 1.f, 1.f };
-		ImVec2 vRTSize{ 1.f, 1.f };
+		UICANVAS_TRANSFORM tTransform{};
 		UI_SCALE_POLICY ePolicy{ UI_SCALE_POLICY::UNIFORM_FIT };
-
-		_float fScaleX{ 1.f };
-		_float fScaleY{ 1.f };
-		_float fUniformScale{ 1.f };
-		_float fOffsetX{ 0.f };
-		_float fOffsetY{ 0.f };
+		ImVec2 vRTSize{ 1.f, 1.f };  // display↔RT 변환에 필요
 	};
 
-	inline CanvasMapping BuildCanvasMapping(const ImVec2& vDocSize, const ImVec2& vRTSize,
-		UI_SCALE_POLICY ePolicy)
+	inline CanvasMapping BuildCanvasMapping(const ImVec2& vDocSize, const ImVec2& vRTSize, UI_SCALE_POLICY ePolicy)
 	{
 		CanvasMapping m{};
-		m.vDocSize = ImVec2(max(vDocSize.x, 1.f), max(vDocSize.y, 1.f));
 		m.vRTSize = ImVec2(max(vRTSize.x, 1.f), max(vRTSize.y, 1.f));
 		m.ePolicy = ePolicy;
 
-		m.fScaleX = m.vRTSize.x / m.vDocSize.x;
-		m.fScaleY = m.vRTSize.y / m.vDocSize.y;
-		m.fUniformScale = min(m.fScaleX, m.fScaleY);
+		const _float fSafeDocW = max(vDocSize.x, 1.f);
+		const _float fSafeDocH = max(vDocSize.y, 1.f);
 
-		switch (ePolicy)
-		{
-		case UI_SCALE_POLICY::STRETCH:
-			m.fOffsetX = 0.f;
-			m.fOffsetY = 0.f;
-			break;
-
-		case UI_SCALE_POLICY::MATCH_WIDTH:
-			m.fOffsetX = 0.f;
-			m.fOffsetY = (m.vRTSize.y - m.vDocSize.y * m.fScaleX) * 0.5f;
-			break;
-
-		case UI_SCALE_POLICY::MATCH_HEIGHT:
-			m.fOffsetX = (m.vRTSize.x - m.vDocSize.x * m.fScaleY) * 0.5f;
-			m.fOffsetY = 0.f;
-			break;
-
-		case UI_SCALE_POLICY::UNIFORM_FIT:
-		default:
-			m.fOffsetX = (m.vRTSize.x - m.vDocSize.x * m.fUniformScale) * 0.5f;
-			m.fOffsetY = (m.vRTSize.y - m.vDocSize.y * m.fUniformScale) * 0.5f;
-			break;
-		}
+		m.tTransform = UICanvasMath::Build_UITransform(
+			fSafeDocW, fSafeDocH,
+			m.vRTSize.x, m.vRTSize.y,
+			ePolicy);
 
 		return m;
 	}
 
-	inline ImVec2 ScreenToDoc(const ImVec2& vScreen,
-		const ImVec2& vDispPos,
-		const ImVec2& vDispSize,
-		const CanvasMapping& m)
+	inline ImVec2 ScreenToDoc(const ImVec2& vScreen, const ImVec2& vDispPos, const ImVec2& vDispSize, const CanvasMapping& m)
 	{
-		const _float rtX = (vDispSize.x > 0.f) ? (vScreen.x - vDispPos.x) * (m.vRTSize.x / vDispSize.x) :
-			0.f;
-		const _float rtY = (vDispSize.y > 0.f) ? (vScreen.y - vDispPos.y) * (m.vRTSize.y / vDispSize.y) :
-			0.f;
+		// screen → RT (display↔RT 비율)
+		const _float fRTx = (vDispSize.x > 0.f) ?
+			(vScreen.x - vDispPos.x) * (m.vRTSize.x / vDispSize.x) : 0.f;
+		const _float fRTy = (vDispSize.y > 0.f) ?
+			(vScreen.y - vDispPos.y) * (m.vRTSize.y / vDispSize.y) : 0.f;
 
-		_float docX = rtX;
-		_float docY = rtY;
+		// RT → Doc (canvas 변환)
+		const _float2 vDoc = UICanvasMath::Render_To_DesignPoint(_float2(fRTx, fRTy), m.tTransform, m.ePolicy);
 
-		switch (m.ePolicy)
-		{
-		case UI_SCALE_POLICY::STRETCH:
-			docX = rtX / m.fScaleX;
-			docY = rtY / m.fScaleY;
-			break;
-
-		case UI_SCALE_POLICY::MATCH_WIDTH:
-			docX = rtX / m.fScaleX;
-			docY = (rtY - m.fOffsetY) / m.fScaleX;
-			break;
-
-		case UI_SCALE_POLICY::MATCH_HEIGHT:
-			docX = (rtX - m.fOffsetX) / m.fScaleY;
-			docY = rtY / m.fScaleY;
-			break;
-
-		case UI_SCALE_POLICY::UNIFORM_FIT:
-		default:
-			docX = (rtX - m.fOffsetX) / m.fUniformScale;
-			docY = (rtY - m.fOffsetY) / m.fUniformScale;
-			break;
-		}
-
-		return ImVec2(docX, docY);
+		return ImVec2(vDoc.x, vDoc.y);
 	}
 
-	inline void DocRectToScreen(const _float4& rcDoc,
-		const ImVec2& vDispPos,
-		const ImVec2& vDispSize,
-		const CanvasMapping& m,
-		ImVec2* pOutMin, ImVec2* pOutMax)
+	inline void DocRectToScreen(const _float4& rcDoc, const ImVec2& vDispPos, const ImVec2& vDispSize, const CanvasMapping& m, ImVec2* pOutMin, ImVec2* pOutMax)
 	{
-		_float rtLeft = rcDoc.x;
-		_float rtTop = rcDoc.y;
-		_float rtWidth = rcDoc.z;
-		_float rtHeight = rcDoc.w;
+		// Doc → RT rect
+		const _float4 vRT = UICanvasMath::Design_To_RenderRect(
+			rcDoc, m.tTransform, m.ePolicy);
 
-		switch (m.ePolicy)
-		{
-		case UI_SCALE_POLICY::STRETCH:
-			rtLeft = rcDoc.x * m.fScaleX;
-			rtTop = rcDoc.y * m.fScaleY;
-			rtWidth = rcDoc.z * m.fScaleX;
-			rtHeight = rcDoc.w * m.fScaleY;
-			break;
+		// RT → Screen (display↔RT 비율)
+		const _float fSx = (m.vRTSize.x > 0.f) ? vDispSize.x / m.vRTSize.x : 1.f;
+		const _float fSy = (m.vRTSize.y > 0.f) ? vDispSize.y / m.vRTSize.y : 1.f;
 
-		case UI_SCALE_POLICY::MATCH_WIDTH:
-			rtLeft = rcDoc.x * m.fScaleX;
-			rtTop = m.fOffsetY + rcDoc.y * m.fScaleX;
-			rtWidth = rcDoc.z * m.fScaleX;
-			rtHeight = rcDoc.w * m.fScaleX;
-			break;
-
-		case UI_SCALE_POLICY::MATCH_HEIGHT:
-			rtLeft = m.fOffsetX + rcDoc.x * m.fScaleY;
-			rtTop = rcDoc.y * m.fScaleY;
-			rtWidth = rcDoc.z * m.fScaleY;
-			rtHeight = rcDoc.w * m.fScaleY;
-			break;
-
-		case UI_SCALE_POLICY::UNIFORM_FIT:
-		default:
-			rtLeft = m.fOffsetX + rcDoc.x * m.fUniformScale;
-			rtTop = m.fOffsetY + rcDoc.y * m.fUniformScale;
-			rtWidth = rcDoc.z * m.fUniformScale;
-			rtHeight = rcDoc.w * m.fUniformScale;
-			break;
-		}
-
-		const _float sx = (m.vRTSize.x > 0.f) ? vDispSize.x / m.vRTSize.x : 1.f;
-		const _float sy = (m.vRTSize.y > 0.f) ? vDispSize.y / m.vRTSize.y : 1.f;
-
-		pOutMin->x = vDispPos.x + rtLeft * sx;
-		pOutMin->y = vDispPos.y + rtTop * sy;
-		pOutMax->x = pOutMin->x + rtWidth * sx;
-		pOutMax->y = pOutMin->y + rtHeight * sy;
+		pOutMin->x = vDispPos.x + vRT.x * fSx;
+		pOutMin->y = vDispPos.y + vRT.y * fSy;
+		pOutMax->x = pOutMin->x + vRT.z * fSx;
+		pOutMax->y = pOutMin->y + vRT.w * fSy;
 	}
 }
 
@@ -916,7 +827,7 @@ void CPanel_Viewport::Draw_UIOverlay()
 		if (!p)
 			continue;
 
-		const _float4 rc = p->Get_ScreenRect();
+		const _float4 rc = p->Get_DesignRect();
 		ImVec2 vMin, vMax;
 		DocRectToScreen(rc, m_vDisplayPos, m_vDisplaySize, tMap, &vMin, &vMax);
 
@@ -941,7 +852,7 @@ void CPanel_Viewport::Draw_UIOverlay()
 	{
 		if (CUIObject* pSelected = vWidgets[iSelected])
 		{
-			const _float4 rc = pSelected->Get_ScreenRect();
+			const _float4 rc = pSelected->Get_DesignRect();
 			ImVec2 vMin, vMax;
 			DocRectToScreen(rc, m_vDisplayPos, m_vDisplaySize, tMap, &vMin, &vMax);
 

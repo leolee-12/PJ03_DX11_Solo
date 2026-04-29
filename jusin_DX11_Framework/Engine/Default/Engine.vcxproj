@@ -202,6 +202,7 @@ call PreBuild.bat</Command>
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\UIAnimator.h" />
     <ClInclude Include="..\Public\UIButton.h" />
+    <ClInclude Include="..\Public\UICanvasMath.h" />
     <ClInclude Include="..\Public\UIContainer.h" />
     <ClInclude Include="..\Public\UIImage.h" />
     <ClInclude Include="..\Public\UIObject.h" />
@@ -267,6 +268,7 @@ call PreBuild.bat</Command>
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\UIAnimator.cpp" />
     <ClCompile Include="..\Private\UIButton.cpp" />
+    <ClCompile Include="..\Private\UICanvasMath.cpp" />
     <ClCompile Include="..\Private\UIContainer.cpp" />
     <ClCompile Include="..\Private\UIImage.cpp" />
     <ClCompile Include="..\Private\UIObject.cpp" />
