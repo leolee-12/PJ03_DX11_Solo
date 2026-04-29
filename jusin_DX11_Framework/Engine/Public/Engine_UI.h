@@ -19,6 +19,8 @@ namespace Engine
 
 	enum class UI_PROGRESS_DIR { LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP, END };
 
+	enum class UI_SCALE_POLICY { STRETCH, UNIFORM_FIT, MATCH_WIDTH, MATCH_HEIGHT, END };
+
 	enum class UI_EASE : unsigned int
 	{
 		LINEAR,
@@ -139,6 +141,13 @@ namespace Engine
 			{ UI_TEXT_ALIGN::RIGHT,  "RIGHT"  },
 		};
 
+		inline constexpr EnumStringPair<UI_SCALE_POLICY> kScalePolicy[] = {
+			{ UI_SCALE_POLICY::STRETCH,      "STRETCH"      },
+			{ UI_SCALE_POLICY::UNIFORM_FIT,  "UNIFORM_FIT"  },
+			{ UI_SCALE_POLICY::MATCH_WIDTH,  "MATCH_WIDTH"  },
+			{ UI_SCALE_POLICY::MATCH_HEIGHT, "MATCH_HEIGHT" },
+		};
+
 		template <typename E, size_t N>
 		inline const char* Enum_To_String(E e, const EnumStringPair<E>(&table)[N])
 		{
@@ -166,6 +175,7 @@ namespace Engine
 	inline const char* To_String(UI_SEQ_STEP_KIND e) { return detail::Enum_To_String(e, detail::kStepKind); }
 	inline const char* To_String(UI_ANCHOR e) { return detail::Enum_To_String(e, detail::kAnchor); }
 	inline const char* To_String(UI_TEXT_ALIGN e) { return detail::Enum_To_String(e, detail::kTextAlign); }
+	inline const char* To_String(UI_SCALE_POLICY e) { return detail::Enum_To_String(e, detail::kScalePolicy); }
 
 	inline UI_TYPE			UI_TYPE_From_String(const char* s) { return detail::Enum_From_String(s, detail::kUIType, UI_TYPE::END); }
 	inline UI_LAYOUT		UI_LAYOUT_From_String(const char* s) { return detail::Enum_From_String(s, detail::kUILayout, UI_LAYOUT::END); }
@@ -176,8 +186,7 @@ namespace Engine
 	inline UI_SEQ_STEP_KIND UI_SEQ_STEP_KIND_From_String(const char* s) { return detail::Enum_From_String(s, detail::kStepKind, UI_SEQ_STEP_KIND::END); }
 	inline UI_ANCHOR        UI_ANCHOR_From_String(const char* s) { return detail::Enum_From_String(s, detail::kAnchor, UI_ANCHOR::END); }
 	inline UI_TEXT_ALIGN    UI_TEXT_ALIGN_From_String(const char* s) { return detail::Enum_From_String(s, detail::kTextAlign, UI_TEXT_ALIGN::END); }
-
-
+	inline UI_SCALE_POLICY UI_SCALE_POLICY_From_String(const char* s) { return detail::Enum_From_String(s, detail::kScalePolicy, UI_SCALE_POLICY::END); }
 
 	struct UIANCHOR_DESC
 	{
@@ -199,6 +208,26 @@ namespace Engine
 		XMFLOAT4 vMargin = {};	// (left, top, right, bottom)
 		float fDesiredSizeX = {};
 		float fDesiredSizeY = {};
+	};
+
+	struct UICANVAS_DESC
+	{
+		float fDesignWidth = { 1920.f };
+		float fDesignHeight = { 1080.f };
+		UI_SCALE_POLICY eScalePolicy = { UI_SCALE_POLICY::UNIFORM_FIT };
+	};
+
+	struct UICANVAS_TRANSFORM
+	{
+		float fScaleX = { 1.f };
+		float fScaleY = { 1.f };
+		float fUniformScale = { 1.f };
+
+		float fCanvasOffsetX = { 0.f };
+		float fCanvasOffsetY = { 0.f };
+
+		float fRenderWidth = {};
+		float fRenderHeight = {};
 	};
 
 	struct UI_SHARED_TEXTURE_BINDING_DESC

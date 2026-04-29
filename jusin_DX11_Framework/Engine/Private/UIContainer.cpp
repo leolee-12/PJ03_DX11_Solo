@@ -17,6 +17,17 @@ void CUIContainer::Set_Layout(const UILAYOUT_DESC& tLayoutDesc)
 	Arrange_Children();
 }
 
+void CUIContainer::On_ViewportResized(_float2 vNewViewport)
+{
+	__super::On_ViewportResized(vNewViewport);
+
+	for (auto* pChild : m_Children)
+	{	// 자식들에게 resize 재귀 전파
+		if (pChild)
+			pChild->On_ViewportResized(vNewViewport);
+	}
+}
+
 HRESULT CUIContainer::Initialize_Prototype()
 {
 	return S_OK;

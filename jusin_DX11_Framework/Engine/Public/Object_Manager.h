@@ -27,6 +27,7 @@ public:
 	void	Priority_Update(_float fTimeDelta);
 	void	Update(_float fTimeDelta);
 	void	Late_Update(_float fTimeDelta);
+	void	Notify_ViewportResized(_float2 vNewViewport);
 	void	Clear(_uint iLevelIndex);
 
 private:

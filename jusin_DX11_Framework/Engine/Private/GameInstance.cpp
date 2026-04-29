@@ -155,7 +155,9 @@ HRESULT CGameInstance::Resize_Engine(_uint iNewWidth, _uint iNewHeight)
 	if (m_vViewportSize.x == static_cast<_float>(iNewWidth) && m_vViewportSize.y == static_cast<_float>(iNewHeight))
 		return S_FALSE;
 
-	m_pGraphic_Device->Resize_Backbuffer(iNewWidth, iNewHeight);
+	if (FAILED(m_pGraphic_Device->Resize_Backbuffer(iNewWidth, iNewHeight)))
+		return E_FAIL;
+
 	m_vViewportSize = { static_cast<_float>(iNewWidth), static_cast<_float>(iNewHeight) };
 	
 	m_pTarget_Manager->Reset();
@@ -164,6 +166,9 @@ HRESULT CGameInstance::Resize_Engine(_uint iNewWidth, _uint iNewHeight)
 
 	if (m_pMainCamera)
 		m_pMainCamera->On_ViewportResize(m_vViewportSize);
+
+	if (m_pObject_Manager)
+		m_pObject_Manager->Notify_ViewportResized(m_vViewportSize);
 
 	return S_OK;
 }

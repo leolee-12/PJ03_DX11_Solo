@@ -12,6 +12,18 @@ CUIObject::CUIObject(const CUIObject& Prototype)
 {
 }
 
+void CUIObject::On_ViewportResized(_float2 vNewViewport)
+{
+	if (vNewViewport.x <= 0.f || vNewViewport.y <= 0.f)
+		return;
+
+	m_vActualViewportSize = vNewViewport;
+	// resize 시 actual만 갱신 (desing, layout은 그대로)
+
+	Recalculate_RenderTransform();
+	Update_UI_Transform();
+}
+
 void CUIObject::Set_Center(_float fCenterX, _float fCenterY)
 {
 	m_fCenterX = fCenterX;
@@ -28,10 +40,23 @@ void CUIObject::Set_Size(_float fSizeX, _float fSizeY)
 
 _float4 CUIObject::Get_ScreenRect() const
 {
+	return Get_DesignRect();
+}
+
+_float4 CUIObject::Get_DesignRect() const
+{
 	return _float4(	m_fResolvedCenterX - m_fSizeX * 0.5f,
 					m_fResolvedCenterY - m_fSizeY * 0.5f,
 					m_fSizeX,
 					m_fSizeY);
+}
+
+_float4 CUIObject::Get_RenderRect() const
+{
+	return _float4(	m_fRenderCenterX - m_fRenderSizeX * 0.5f,
+					m_fRenderCenterY - m_fRenderSizeY * 0.5f,
+					m_fRenderSizeX,
+					m_fRenderSizeY);
 }
 
 void CUIObject::Set_Anchor(UI_ANCHOR eAnchor, _float fOffsetX, _float fOffsetY, _bool bUseAnchoredPos)
@@ -48,6 +73,41 @@ void CUIObject::Set_AnchorOffset(_float fOffsetX, _float fOffsetY)
 	m_tAnchorDesc.fOffsetX = fOffsetX;
 	m_tAnchorDesc.fOffsetY = fOffsetY;
 	Refresh_Layout();
+}
+
+void CUIObject::Set_DesignCanvasSize(_float fWidth, _float fHeight)
+{
+	if (fWidth <= 0.f || fHeight <= 0.f)
+		return;
+
+	m_tCanvasDesc.fDesignWidth = fWidth;
+	m_tCanvasDesc.fDesignHeight = fHeight;
+	m_vRefSize = { fWidth, fHeight };
+
+	Refresh_Layout();
+}
+
+void CUIObject::Set_ActualViewportSize(_float fWidth, _float fHeight)
+{
+	if (fWidth <= 0.f || fHeight <= 0.f)
+		return;
+
+	m_bUseExplicitViewportSize = true;
+	m_vActualViewportSize = { fWidth, fHeight };
+
+	Recalculate_RenderTransform();
+	Update_UI_Transform();
+}
+
+void CUIObject::Set_ScalePolicy(UI_SCALE_POLICY ePolicy)
+{
+	if (ePolicy == UI_SCALE_POLICY::END)
+		return;
+
+	m_tCanvasDesc.eScalePolicy = ePolicy;
+
+	Recalculate_RenderTransform();
+	Update_UI_Transform();
 }
 
 HRESULT CUIObject::Initialize_Prototype()
@@ -69,6 +129,9 @@ HRESULT CUIObject::Initialize(void* pArg)
 		m_tAnchorDesc = pDesc->tAnchorDesc;
 		m_tLayoutSlot = pDesc->tLayoutSlot;
 		m_pParentUI = pDesc->pParentUI;
+		m_tCanvasDesc = pDesc->tCanvasDesc;
+		m_fPivotX = pDesc->fPivotX;
+		m_fPivotY = pDesc->fPivotY;
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -77,16 +140,25 @@ HRESULT CUIObject::Initialize(void* pArg)
 	if (FAILED(Ready_Animator()))
 		return E_FAIL;
 
-	m_vRefSize = m_pGameInstance->Get_ViewportSize();
+	m_fPivotX = max(0.f, min(1.f, m_fPivotX));
+	m_fPivotY = max(0.f, min(1.f, m_fPivotY));
+
+	if (m_tCanvasDesc.fDesignWidth <= 0.f)
+		m_tCanvasDesc.fDesignWidth = 1920.f;
+	if (m_tCanvasDesc.fDesignHeight <= 0.f)
+		m_tCanvasDesc.fDesignHeight = 1080.f;
+	if (m_tCanvasDesc.eScalePolicy == UI_SCALE_POLICY::END)
+		m_tCanvasDesc.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+
+	m_vRefSize = { m_tCanvasDesc.fDesignWidth, m_tCanvasDesc.fDesignHeight };
+	m_vActualViewportSize = m_pGameInstance->Get_ViewportSize();
 
 	// View 행렬 세팅
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::VIEW)], XMMatrixIdentity());
 
-	// Proj 행렬 세팅
-	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::PROJ)],
-		XMMatrixOrthographicLH(m_vRefSize.x, m_vRefSize.y, 0.f, 1.f));
-
-	Refresh_Layout();
+	Recalculate_Layout();
+	Recalculate_RenderTransform();
+	Update_UI_Transform();
 
 	return S_OK;
 }
@@ -112,6 +184,13 @@ HRESULT CUIObject::Render()
 
 void CUIObject::Refresh_Layout()
 {
+	Recalculate_Layout();
+	Recalculate_RenderTransform();
+	Update_UI_Transform();
+}
+
+void CUIObject::Recalculate_Layout()
+{
 	if (m_tAnchorDesc.bUseAnchoredPos)
 	{
 		const _float2 vResolved = Resolve_AnchorCenter();
@@ -123,14 +202,94 @@ void CUIObject::Refresh_Layout()
 		m_fResolvedCenterX = m_fCenterX;
 		m_fResolvedCenterY = m_fCenterY;
 	}
+}
 
-	Update_UI_Transform();
+void CUIObject::Recalculate_RenderTransform()
+{
+	if (!m_bUseExplicitViewportSize)
+	{
+		const _float2 vViewport = m_pGameInstance->Get_ViewportSize();
+		if (vViewport.x > 0.f && vViewport.y > 0.f)
+			m_vActualViewportSize = vViewport;
+	}
+
+	const _float fDesignWidth = (m_vRefSize.x > 0.f) ? m_vRefSize.x : 1.f;
+	const _float fDesignHeight = (m_vRefSize.y > 0.f) ? m_vRefSize.y : 1.f;
+
+	const _float fActualWidth = (m_vActualViewportSize.x > 0.f) ? m_vActualViewportSize.x : fDesignWidth;
+	const _float fActualHeight = (m_vActualViewportSize.y > 0.f) ? m_vActualViewportSize.y : fDesignHeight;
+
+	const _float fScaleX = fActualWidth / fDesignWidth;
+	const _float fScaleY = fActualHeight / fDesignHeight;
+	const _float fUniformScale = (fScaleX < fScaleY) ? fScaleX : fScaleY;
+
+	m_tCanvasTransform = {};
+	m_tCanvasTransform.fScaleX = fScaleX;
+	m_tCanvasTransform.fScaleY = fScaleY;
+	m_tCanvasTransform.fUniformScale = fUniformScale;
+
+	switch (m_tCanvasDesc.eScalePolicy)
+	{
+	case UI_SCALE_POLICY::STRETCH:
+		m_tCanvasTransform.fCanvasOffsetX = 0.f;
+		m_tCanvasTransform.fCanvasOffsetY = 0.f;
+		m_tCanvasTransform.fRenderWidth = fActualWidth;
+		m_tCanvasTransform.fRenderHeight = fActualHeight;
+
+		m_fRenderCenterX = m_fResolvedCenterX * fScaleX;
+		m_fRenderCenterY = m_fResolvedCenterY * fScaleY;
+		m_fRenderSizeX = m_fSizeX * fScaleX;
+		m_fRenderSizeY = m_fSizeY * fScaleY;
+		break;
+
+	case UI_SCALE_POLICY::MATCH_WIDTH:
+		m_tCanvasTransform.fCanvasOffsetX = 0.f;
+		m_tCanvasTransform.fCanvasOffsetY = (fActualHeight - fDesignHeight * fScaleX) * 0.5f;
+		m_tCanvasTransform.fRenderWidth = fActualWidth;
+		m_tCanvasTransform.fRenderHeight = fDesignHeight * fScaleX;
+
+		m_fRenderCenterX = m_tCanvasTransform.fCanvasOffsetX + m_fResolvedCenterX * fScaleX;
+		m_fRenderCenterY = m_tCanvasTransform.fCanvasOffsetY + m_fResolvedCenterY * fScaleX;
+		m_fRenderSizeX = m_fSizeX * fScaleX;
+		m_fRenderSizeY = m_fSizeY * fScaleX;
+		break;
+
+	case UI_SCALE_POLICY::MATCH_HEIGHT:
+		m_tCanvasTransform.fCanvasOffsetX = (fActualWidth - fDesignWidth * fScaleY) * 0.5f;
+		m_tCanvasTransform.fCanvasOffsetY = 0.f;
+		m_tCanvasTransform.fRenderWidth = fDesignWidth * fScaleY;
+		m_tCanvasTransform.fRenderHeight = fActualHeight;
+
+		m_fRenderCenterX = m_tCanvasTransform.fCanvasOffsetX + m_fResolvedCenterX * fScaleY;
+		m_fRenderCenterY = m_tCanvasTransform.fCanvasOffsetY + m_fResolvedCenterY * fScaleY;
+		m_fRenderSizeX = m_fSizeX * fScaleY;
+		m_fRenderSizeY = m_fSizeY * fScaleY;
+		break;
+
+	case UI_SCALE_POLICY::UNIFORM_FIT:
+	default:
+		m_tCanvasTransform.fCanvasOffsetX = (fActualWidth - fDesignWidth * fUniformScale) * 0.5f;
+		m_tCanvasTransform.fCanvasOffsetY = (fActualHeight - fDesignHeight * fUniformScale) * 0.5f;
+		m_tCanvasTransform.fRenderWidth = fDesignWidth * fUniformScale;
+		m_tCanvasTransform.fRenderHeight = fDesignHeight * fUniformScale;
+
+		m_fRenderCenterX = m_tCanvasTransform.fCanvasOffsetX + m_fResolvedCenterX * fUniformScale;
+		m_fRenderCenterY = m_tCanvasTransform.fCanvasOffsetY + m_fResolvedCenterY * fUniformScale;
+		m_fRenderSizeX = m_fSizeX * fUniformScale;
+		m_fRenderSizeY = m_fSizeY * fUniformScale;
+		break;
+	}
+
+	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::PROJ)],
+		XMMatrixOrthographicLH(fActualWidth, fActualHeight, 0.f, 1.f));
 }
 
 void CUIObject::Apply_LayoutCenter(_float fCenterX, _float fCenterY)
 {
 	m_fResolvedCenterX = fCenterX;
 	m_fResolvedCenterY = fCenterY;
+
+	Recalculate_RenderTransform();
 	Update_UI_Transform();
 }
 
@@ -194,7 +353,7 @@ HRESULT CUIObject::Bind_ShaderResource(CShader* pShader, const _char* pConstantN
 _float4 CUIObject::Get_ReferenceRect() const
 {
 	if (m_pParentUI)
-		return m_pParentUI->Get_ScreenRect();
+		return m_pParentUI->Get_DesignRect();
 
 	return _float4(0.f, 0.f, m_vRefSize.x, m_vRefSize.y);
 }
@@ -230,17 +389,24 @@ _float2 CUIObject::Resolve_AnchorCenter() const
 	default: break;
 	}
 
-	return _float2(
-		fAnchorX + m_tAnchorDesc.fOffsetX,
-		fAnchorY + m_tAnchorDesc.fOffsetY);
+	const _float fDesignLeft = fAnchorX + m_tAnchorDesc.fOffsetX - m_fSizeX * m_fPivotX;
+	const _float fDesignTop = fAnchorY + m_tAnchorDesc.fOffsetY - m_fSizeY * m_fPivotY;
+
+	const _float fDesignCenterX = fDesignLeft + m_fSizeX * 0.5f;
+	const _float fDesignCenterY = fDesignTop + m_fSizeY * 0.5f;
+
+	return _float2(fDesignCenterX, fDesignCenterY);
 }
 
 void CUIObject::Update_UI_Transform()
 {
-	m_pTransformCom->ScaleTo(m_fSizeX, m_fSizeY, 1.f);
+	const _float fActualWidth = (m_vActualViewportSize.x > 0.f) ? m_vActualViewportSize.x : m_vRefSize.x;
+	const _float fActualHeight = (m_vActualViewportSize.y > 0.f) ? m_vActualViewportSize.y : m_vRefSize.y;
+
+	m_pTransformCom->ScaleTo(m_fRenderSizeX, m_fRenderSizeY, 1.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_fRotation);
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fResolvedCenterX - m_vRefSize.x * 0.5f,
-															-m_fResolvedCenterY + m_vRefSize.y * 0.5f,
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fRenderCenterX - fActualWidth * 0.5f,
+															-m_fRenderCenterY + fActualHeight * 0.5f,
 															0.f,
 															1.f));
 }

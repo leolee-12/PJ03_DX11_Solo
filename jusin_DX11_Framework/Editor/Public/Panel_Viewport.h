@@ -19,9 +19,10 @@ public:
 	ID3D11DepthStencilView* Get_DepthStencilView() const { return m_pDSV; }
 	ID3D11ShaderResourceView* Get_ShaderResourceView() const { return m_pSRV; }
 
-	const ImVec2& Get_CanvasSize()  const { return m_vCanvasSize; }
+	const ImVec2& Get_CanvasSize() const { return m_vDocCanvasSize; }
+	const ImVec2& Get_RenderTargetSize() const { return m_vRTSize; }
 	const ImVec2& Get_DisplaySize() const { return m_vDisplaySize; }
-	const ImVec2& Get_DisplayPos()  const { return m_vDisplayPos; }
+	const ImVec2& Get_DisplayPos() const { return m_vDisplayPos; }
 
 	HRESULT Initialize() override;
 	void Update(_float fTimeDelta) override;
@@ -45,9 +46,10 @@ private:
 	D3D11_VIEWPORT m_tPrevViewport = {};
 	_uint m_iPrevViewportCount = { 1 };
 
-	ImVec2 m_vCanvasSize = {};	// Game RT/DSV 크기(클라이언트와 동일)
-	ImVec2 m_vDisplaySize = {};	// 패널 내부에 그려지는 사각형 크기
-	ImVec2 m_vDisplayPos = {};	// 위 사각형의 좌상단 좌표
+	ImVec2 m_vDocCanvasSize = {};	// 문서 design canvas 크기
+	ImVec2 m_vRTSize = {};			// 실제 preview render target 크기
+	ImVec2 m_vDisplaySize = {};		// 패널 내부 표시 크기
+	ImVec2 m_vDisplayPos = {};		// 표시 사각형 좌상단
 
 	// UI 픽킹/드래그 상태 (VPMODE::UI_LAYOUT, UI_ANIM 한정)
 	_bool   m_bUIDragging = { false };

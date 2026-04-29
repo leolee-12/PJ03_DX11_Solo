@@ -16,6 +16,30 @@ CUIEditorSession::CUIEditorSession(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	Safe_AddRef(m_pContext);
 }
 
+void CUIEditorSession::Set_DocCanvas(_float fWidth, _float fHeight, UI_SCALE_POLICY eScalePolicy)
+{
+	if (fWidth < 1.f)
+		fWidth = 1.f;
+	if (fHeight < 1.f)
+		fHeight = 1.f;
+	if (eScalePolicy == UI_SCALE_POLICY::END)
+		eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+
+	const _bool bChanged =
+		(m_Doc.fDesignWidth != fWidth) ||
+		(m_Doc.fDesignHeight != fHeight) ||
+		(m_Doc.eScalePolicy != eScalePolicy);
+
+	m_Doc.fDesignWidth = fWidth;
+	m_Doc.fDesignHeight = fHeight;
+	m_Doc.eScalePolicy = eScalePolicy;
+
+	Propagate_DocCanvasToWidgets();
+
+	if (bChanged)
+		Mark_Dirty("Canvas updated");
+}
+
 HRESULT CUIEditorSession::Initialize()
 {
 	if (FAILED(Initialize_Sentinels()))
@@ -116,8 +140,11 @@ HRESULT CUIEditorSession::Initialize_Sentinels()
 void CUIEditorSession::Reset_Doc()
 {
 	m_Doc = {};
-	m_Doc.iVersion = 1;
+	m_Doc.iVersion = 2;
 	m_Doc.strName = "HUD_Layout";
+	m_Doc.fDesignWidth = 1280.f;
+	m_Doc.fDesignHeight = 720.f;
+	m_Doc.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
 
 	m_iSelectedWidget = -1;
 	m_iSelectedAnimation = -1;
@@ -172,9 +199,14 @@ _string CUIEditorSession::Make_NextCallbackId() const
 
 UISEQ_WIDGET_NODE CUIEditorSession::Make_DefaultWidget(UI_TYPE eType) const
 {
-	_float2 vRefSize = m_pGameInstance->Get_ViewportSize();
+	const _float2 vRefSize = { m_Doc.fDesignWidth, m_Doc.fDesignHeight };
 
-	auto InitializeBase = [vRefSize](auto& tDesc, _float fSizeX, _float fSizeY)
+	UICANVAS_DESC tCanvasDesc{};
+	tCanvasDesc.fDesignWidth = m_Doc.fDesignWidth;
+	tCanvasDesc.fDesignHeight = m_Doc.fDesignHeight;
+	tCanvasDesc.eScalePolicy = m_Doc.eScalePolicy;
+
+	auto InitializeBase = [vRefSize, tCanvasDesc](auto& tDesc, _float fSizeX, _float fSizeY)
 		{
 			tDesc.fCenterX = vRefSize.x * 0.5f;
 			tDesc.fCenterY = vRefSize.y * 0.5f;
@@ -187,6 +219,10 @@ UISEQ_WIDGET_NODE CUIEditorSession::Make_DefaultWidget(UI_TYPE eType) const
 			tDesc.tAnchorDesc.bUseAnchoredPos = false;
 			tDesc.tLayoutSlot = {};
 			tDesc.pParentUI = nullptr;
+
+			tDesc.tCanvasDesc = tCanvasDesc;
+			tDesc.fPivotX = 0.5f;
+			tDesc.fPivotY = 0.5f;
 		};
 
 	UISEQ_WIDGET_NODE tWidget{};
@@ -361,6 +397,11 @@ void CUIEditorSession::Duplicate_Widget(_int iWidgetIndex)
 	UISEQ_WIDGET_NODE tCopy = m_Doc.vWidgets[iWidgetIndex];
 	tCopy.strId = Make_NextWidgetId();
 	tCopy.strDisplayName += " Copy";
+
+	auto& tBaseCopy = Get_BaseDesc(tCopy);
+	tBaseCopy.tCanvasDesc.fDesignWidth = m_Doc.fDesignWidth;
+	tBaseCopy.tCanvasDesc.fDesignHeight = m_Doc.fDesignHeight;
+	tBaseCopy.tCanvasDesc.eScalePolicy = m_Doc.eScalePolicy;
 
 	m_Doc.vWidgets.insert(m_Doc.vWidgets.begin() + iWidgetIndex + 1, std::move(tCopy));
 	m_iSelectedWidget = iWidgetIndex + 1;
@@ -626,6 +667,7 @@ HRESULT CUIEditorSession::Load(const _string& strPath)
 		return E_FAIL;
 	}
 	m_Doc = std::move(tLoaded);
+	Propagate_DocCanvasToWidgets();
 	m_strDocPath = strPath;
 	m_iSelectedWidget = m_iSelectedAnimation = m_iSelectedTrack = m_iSelectedStep = -1;
 	Sanitize_DocReferences();
@@ -653,6 +695,17 @@ HRESULT CUIEditorSession::New_Doc()
 void CUIEditorSession::Clear_Dirty()
 {
 	m_bDirty = false;
+}
+
+void CUIEditorSession::Propagate_DocCanvasToWidgets()
+{
+	for (auto& w : m_Doc.vWidgets)
+	{
+		auto& tBase = Get_BaseDesc(w);
+		tBase.tCanvasDesc.fDesignWidth = m_Doc.fDesignWidth;
+		tBase.tCanvasDesc.fDesignHeight = m_Doc.fDesignHeight;
+		tBase.tCanvasDesc.eScalePolicy = m_Doc.eScalePolicy;
+	}
 }
 
 CUIEditorSession* CUIEditorSession::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

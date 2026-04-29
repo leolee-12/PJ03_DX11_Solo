@@ -70,10 +70,16 @@ void CUIProgressBar::Late_Update(_float fTimeDelta)
 HRESULT CUIProgressBar::Render()
 {
 	if (Has_ValidBack())
-		Render_Rect(Get_ScreenRect(), m_pBackTextureCom, m_iBackTextureIndex, m_vBackColor);
+	{
+		if (FAILED(Render_Rect(Get_RenderRect(), m_pBackTextureCom, m_iBackTextureIndex, m_vBackColor)))
+			return E_FAIL;
+	}
 
 	if (m_fFillAmount > 0.f && Has_ValidFill())
-		Render_Rect(Get_FillRect(), m_pFillTextureCom, m_iFillTextureIndex, m_vFillColor);
+	{
+		if (FAILED(Render_Rect(Get_FillRect(), m_pFillTextureCom, m_iFillTextureIndex, m_vFillColor)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -138,12 +144,16 @@ HRESULT CUIProgressBar::Render_Rect(const _float4& rc, CTexture* pTexture, _uint
 	const _float fCenterX = rc.x + rc.z * 0.5f;
 	const _float fCenterY = rc.y + rc.w * 0.5f;
 
+	const _float2 vActualSize = Get_ActualViewportSize();
+	const _float fActualWidth = (vActualSize.x > 0.f) ? vActualSize.x : m_vRefSize.x;
+	const _float fActualHeight = (vActualSize.y > 0.f) ? vActualSize.y : m_vRefSize.y;
+
 	_float4x4 matWorld;
 	XMStoreFloat4x4(&matWorld,
 		XMMatrixScaling(rc.z, rc.w, 1.f) *
 		XMMatrixTranslation(
-			fCenterX - m_vRefSize.x * 0.5f,
-			-fCenterY + m_vRefSize.y * 0.5f,
+			fCenterX - fActualWidth * 0.5f,
+			-fCenterY + fActualHeight * 0.5f,
 			0.f));
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &matWorld)))
@@ -168,28 +178,36 @@ HRESULT CUIProgressBar::Render_Rect(const _float4& rc, CTexture* pTexture, _uint
 
 _float4 CUIProgressBar::Get_FillRect() const
 {
-	const _float4 rc = Get_ScreenRect();   // (left, top, w, h)
+	const _float4 rc = Get_RenderRect();   // (left, top, w, h)
 	const _float fAmount = max(0.f, min(1.f, m_fFillAmount));
 
-	_float fLeft = rc.x, fTop = rc.y, fWidth = rc.z, fHeight = rc.w;
+	_float fLeft = rc.x;
+	_float fTop = rc.y;
+	_float fWidth = rc.z;
+	_float fHeight = rc.w;
 
 	switch (m_eDirection)
 	{
 	case UI_PROGRESS_DIR::LEFT_TO_RIGHT:
 		fWidth = rc.z * fAmount;
 		break;
+
 	case UI_PROGRESS_DIR::RIGHT_TO_LEFT:
 		fWidth = rc.z * fAmount;
 		fLeft = rc.x + (rc.z - fWidth);
 		break;
+
 	case UI_PROGRESS_DIR::TOP_TO_BOTTOM:
 		fHeight = rc.w * fAmount;
 		break;
+
 	case UI_PROGRESS_DIR::BOTTOM_TO_TOP:
 		fHeight = rc.w * fAmount;
 		fTop = rc.y + (rc.w - fHeight);
 		break;
-	default: break;
+
+	default:
+		break;
 	}
 
 	return _float4(fLeft, fTop, fWidth, fHeight);

@@ -120,30 +120,45 @@ HRESULT CUIPreviewHost::Rebuild()
 
 	Release_All();
 
-	// 빈 sequence prototype clone (path 없음 -> doc 기반 manual build)
+	const UISEQ_DOC& tDoc = m_pSession->Get_Doc();
+
 	CUISequence::UISEQUENCE_DESC tSeqDesc{};
+	tSeqDesc.tCanvasDesc.fDesignWidth = tDoc.fDesignWidth;
+	tSeqDesc.tCanvasDesc.fDesignHeight = tDoc.fDesignHeight;
+	tSeqDesc.tCanvasDesc.eScalePolicy = tDoc.eScalePolicy;
+	tSeqDesc.fCenterX = tDoc.fDesignWidth * 0.5f;
+	tSeqDesc.fCenterY = tDoc.fDesignHeight * 0.5f;
+	tSeqDesc.fSizeX = tDoc.fDesignWidth;
+	tSeqDesc.fSizeY = tDoc.fDesignHeight;
+
 	m_pSequence = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tSeqDesc));
-	if (nullptr == m_pSequence) return E_FAIL;
-	m_pSequence->Clear_Timeline();   // 멱등성
+	if (nullptr == m_pSequence)
+		return E_FAIL;
 
-	const UISEQ_DOC& tDoc = m_pSession->Get_Doc();
+	m_pSequence->Clear_Timeline();
 
 	// 자식 widget clone + animator 등록 + sequence Add_Child + id map
 	for (const auto& w : tDoc.vWidgets)
 	{
 		UISEQ_WIDGET_NODE::tDescType tDescCopy = w.tDesc;
 
-		std::visit([&](auto& d) {
-			using T = std::decay_t<decltype(d)>;
-			if      constexpr (std::is_same_v<T, CUIImage::UIIMAGE_DESC>)
-				Apply_Fallback_Image(d);
-			else if constexpr (std::is_same_v<T, CUIButton::UIBUTTON_DESC>)
-				Apply_Fallback_Button(d);
-			else if constexpr (std::is_same_v<T, CUIProgressBar::UIPROGRESSBAR_DESC>)
-				Apply_Fallback_ProgressBar(d);
-			else if constexpr (std::is_same_v<T, CUIText::UITEXT_DESC>)
-				Apply_Fallback_Text(d);
+		std::visit([&](auto& d)
+			{
+				using T = std::decay_t<decltype(d)>;
+
+				if constexpr (std::is_same_v<T, CUIImage::UIIMAGE_DESC>)
+					Apply_Fallback_Image(d);
+				else if constexpr (std::is_same_v<T, CUIButton::UIBUTTON_DESC>)
+					Apply_Fallback_Button(d);
+				else if constexpr (std::is_same_v<T, CUIProgressBar::UIPROGRESSBAR_DESC>)
+					Apply_Fallback_ProgressBar(d);
+				else if constexpr (std::is_same_v<T, CUIText::UITEXT_DESC>)
+					Apply_Fallback_Text(d);
+
+				d.tCanvasDesc.fDesignWidth = tDoc.fDesignWidth;
+				d.tCanvasDesc.fDesignHeight = tDoc.fDesignHeight;
+				d.tCanvasDesc.eScalePolicy = tDoc.eScalePolicy;
 			}, tDescCopy);
 
 		WNameID strProto = INVALID_TAG;
@@ -163,7 +178,8 @@ HRESULT CUIPreviewHost::Rebuild()
 
 		CGameObject* pClone = static_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(
 			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), strProto, pArg));
-		if (nullptr == pClone) continue;
+		if (nullptr == pClone)
+			continue;
 
 		CUIObject* pUI = static_cast<CUIObject*>(pClone);
 
@@ -172,7 +188,9 @@ HRESULT CUIPreviewHost::Rebuild()
 			pAnimator->Clear_Animations();
 			for (const UISEQ_ANIMATION_NODE& a : w.vAnimations)
 			{
-				if (a.strName.empty()) continue;
+				if (a.strName.empty())
+					continue;
+
 				pAnimator->Register_Animation(a.strName, a.vTracks);
 			}
 		}
@@ -199,8 +217,10 @@ HRESULT CUIPreviewHost::Rebuild()
 			s.fnCallback = [strId]() { /* TODO: callback registry */ };
 		}
 
-		if (sn.bJoinPrev) m_pSequence->Join(s);
-		else              m_pSequence->Append(s);
+		if (sn.bJoinPrev)
+			m_pSequence->Join(s);
+		else
+			m_pSequence->Append(s);
 	}
 
 	Sort_ZOrder();

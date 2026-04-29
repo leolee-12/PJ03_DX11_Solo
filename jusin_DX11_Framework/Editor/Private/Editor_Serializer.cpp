@@ -3,6 +3,9 @@
 
 namespace Helper
 {
+	constexpr _float kLegacyDesignWidth = 1280.f;
+	constexpr _float kLegacyDesignHeight = 720.f;
+
 	// -- enum 변환: Engine_UI.h의 To_String / *_From_String 래핑 --
 	inline _string EnumToStr(UI_TYPE			e) { return Engine::To_String(e); }
 	inline _string EnumToStr(UI_LAYOUT			e) { return Engine::To_String(e); }
@@ -83,17 +86,18 @@ namespace Helper
 	json Base_To_Json(const CUIObject::UIOBJECT_DESC& d)
 	{
 		return {
-			{ "transform", {
-				{ "centerX",  d.fCenterX },
-				{ "centerY",  d.fCenterY },
-				{ "sizeX",    d.fSizeX },
-				{ "sizeY",    d.fSizeY },
-				{ "zOrder",   d.iZOrder },
-				{ "visible",  d.bVisible },
-			}},
-			{ "anchor",     To_Json(d.tAnchorDesc) },
-			{ "layoutSlot", To_Json(d.tLayoutSlot) },
-			// d.pParentUI - 런타임 포인터. 직렬화 안 함.
+				{ "transform", {
+						{ "centerX",  d.fCenterX },
+						{ "centerY",  d.fCenterY },
+						{ "sizeX",    d.fSizeX },
+						{ "sizeY",    d.fSizeY },
+						{ "zOrder",   d.iZOrder },
+						{ "visible",  d.bVisible },
+						{ "pivotX",   d.fPivotX },
+						{ "pivotY",   d.fPivotY },
+				}},
+				{ "anchor",     To_Json(d.tAnchorDesc) },
+				{ "layoutSlot", To_Json(d.tLayoutSlot) },
 		};
 	}
 	void Base_From_Json(const json& j, CUIObject::UIOBJECT_DESC& d)
@@ -107,6 +111,8 @@ namespace Helper
 			d.fSizeY = t.value("sizeY", 100.f);
 			d.iZOrder = t.value("zOrder", 0);
 			d.bVisible = t.value("visible", true);
+			d.fPivotX = t.value("pivotX", 0.5f);
+			d.fPivotY = t.value("pivotY", 0.5f);
 		}
 		if (j.contains("anchor"))     From_Json(j["anchor"], d.tAnchorDesc);
 		if (j.contains("layoutSlot")) From_Json(j["layoutSlot"], d.tLayoutSlot);
@@ -567,12 +573,25 @@ HRESULT CEditor_Serializer::Save_UISequence(const _string& strPath, const UISEQ_
 	Helper::Sanitize_DocReferences(tSanitized);
 
 	json root;
-	root["meta"] = { { "version", tSanitized.iVersion }, { "name", tSanitized.strName } };
-	for (const auto& w : tSanitized.vWidgets) root["widgets"].push_back(Helper::To_Json(w));
-	for (const auto& s : tSanitized.vSteps)   root["timeline"].push_back(Helper::To_Json(s));
+	root["meta"] =
+	{
+			{ "version", 2 },
+			{ "name", tSanitized.strName },
+			{ "designWidth", tSanitized.fDesignWidth },
+			{ "designHeight", tSanitized.fDesignHeight },
+			{ "scalePolicy", Engine::To_String(tSanitized.eScalePolicy) },
+	};
+
+	for (const auto& w : tSanitized.vWidgets)
+		root["widgets"].push_back(Helper::To_Json(w));
+
+	for (const auto& s : tSanitized.vSteps)
+		root["timeline"].push_back(Helper::To_Json(s));
 
 	ofstream ofs(strPath);
-	if (!ofs.is_open()) return E_FAIL;
+	if (!ofs.is_open())
+		return E_FAIL;
+
 	ofs << root.dump(2);
 	return S_OK;
 }
@@ -580,23 +599,57 @@ HRESULT CEditor_Serializer::Save_UISequence(const _string& strPath, const UISEQ_
 HRESULT CEditor_Serializer::Load_UISequence(const _string& strPath, UISEQ_DOC& tDoc)
 {
 	ifstream ifs(strPath);
-	if (!ifs.is_open()) return E_FAIL;
+	if (!ifs.is_open())
+		return E_FAIL;
 
 	json root = json::parse(ifs, nullptr, /*allow_exceptions=*/false);
-	if (root.is_discarded()) return E_FAIL;
+	if (root.is_discarded())
+		return E_FAIL;
 
-	// 로컬에 파싱 후 성공 시에만 out 파라미터 치환 (실패 시 tDoc 미변경)
 	UISEQ_DOC tLocal{};
 
 	const auto meta = root.value("meta", json::object());
-	tLocal.iVersion = meta.value("version", 0);
+	const _int iVersion = meta.value("version", 1);
+
+	if (iVersion != 1 && iVersion != 2)
+		return E_FAIL;
+
+	tLocal.iVersion = (iVersion >= 2) ? 2 : 1;
 	tLocal.strName = meta.value("name", _string{});
-	if (tLocal.iVersion != 1) return E_FAIL;
+
+	if (iVersion >= 2)
+	{
+		tLocal.fDesignWidth = meta.value("designWidth", 1920.f);
+		tLocal.fDesignHeight = meta.value("designHeight", 1080.f);
+		tLocal.eScalePolicy = UI_SCALE_POLICY_From_String(
+			meta.value("scalePolicy", _string("UNIFORM_FIT")).c_str());
+
+		if (tLocal.eScalePolicy == UI_SCALE_POLICY::END)
+			tLocal.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+	}
+	else
+	{
+		tLocal.fDesignWidth = Helper::kLegacyDesignWidth;
+		tLocal.fDesignHeight = Helper::kLegacyDesignHeight;
+		tLocal.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+	}
 
 	for (const auto& jw : root.value("widgets", json::array()))
 	{
 		UISEQ_WIDGET_NODE w{};
 		Helper::From_Json(jw, w);
+
+		auto& tBase = Get_BaseDesc(w);
+		tBase.tCanvasDesc.fDesignWidth = tLocal.fDesignWidth;
+		tBase.tCanvasDesc.fDesignHeight = tLocal.fDesignHeight;
+		tBase.tCanvasDesc.eScalePolicy = tLocal.eScalePolicy;
+
+		if (iVersion < 2)
+		{
+			tBase.fPivotX = 0.5f;
+			tBase.fPivotY = 0.5f;
+		}
+
 		tLocal.vWidgets.push_back(std::move(w));
 	}
 

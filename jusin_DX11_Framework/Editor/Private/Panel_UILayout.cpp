@@ -61,7 +61,6 @@ void CPanel_UILayout::Draw_Toolbar()
 	namespace fs = std::filesystem;
 	const _string strDir = "../../DataFiles/UI/";
 
-	// -- Row 1: 파일 콤보 (좌측 라벨 + 남은 폭 가득) --
 	{
 		Label_Left("File");
 		ImGui::SetNextItemWidth(-FLT_MIN);
@@ -73,8 +72,11 @@ void CPanel_UILayout::Draw_Toolbar()
 			{
 				for (const auto& entry : fs::directory_iterator(strDir, ec))
 				{
-					if (!entry.is_regular_file()) continue;
-					if (entry.path().extension() != ".uiseq") continue;
+					if (!entry.is_regular_file())
+						continue;
+					if (entry.path().extension() != ".uiseq")
+						continue;
+
 					const _string strPath = entry.path().string();
 					const _bool bSel = (strPath == strCurPath);
 					if (ImGui::Selectable(strPath.c_str(), bSel) && !bSel)
@@ -85,7 +87,6 @@ void CPanel_UILayout::Draw_Toolbar()
 		}
 	}
 
-	// -- Row 2: 경로 편집 --
 	{
 		Label_Left("Path");
 		ImGui::SetNextItemWidth(-FLT_MIN);
@@ -94,7 +95,6 @@ void CPanel_UILayout::Draw_Toolbar()
 			m_pSession->Set_DocPath(strDocPath);
 	}
 
-	// -- Row 3: 액션 버튼 --
 	if (ImGui::Button("New"))
 	{
 		if (m_pSession->Is_Dirty())
@@ -102,7 +102,10 @@ void CPanel_UILayout::Draw_Toolbar()
 			m_ePendingAction = PENDING_ACTION::NEW_DOC;
 			ImGui::OpenPopup("Discard Changes?");
 		}
-		else m_pSession->New_Doc();
+		else
+		{
+			m_pSession->New_Doc();
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Load"))
@@ -114,19 +117,21 @@ void CPanel_UILayout::Draw_Toolbar()
 			m_strPendingPath = strPath;
 			ImGui::OpenPopup("Discard Changes?");
 		}
-		else m_pSession->Load(strPath);
+		else
+		{
+			m_pSession->Load(strPath);
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Save"))
 		m_pSession->Save(m_pSession->Get_DocPath());
 
-	// -- Modal (액션 버튼 직후로 이동, 가독성) --
-	if (ImGui::BeginPopupModal("Discard Changes?", nullptr,
-		ImGuiWindowFlags_AlwaysAutoResize))
+	if (ImGui::BeginPopupModal("Discard Changes?", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::TextUnformatted("Unsaved changes will be lost.");
 		ImGui::TextUnformatted("Continue?");
 		ImGui::Separator();
+
 		if (ImGui::Button("Save and Continue", ImVec2(160, 0)))
 		{
 			if (SUCCEEDED(m_pSession->Save(m_pSession->Get_DocPath())))
@@ -143,6 +148,7 @@ void CPanel_UILayout::Draw_Toolbar()
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
+
 		if (ImGui::Button("Discard", ImVec2(120, 0)))
 		{
 			switch (m_ePendingAction)
@@ -156,16 +162,42 @@ void CPanel_UILayout::Draw_Toolbar()
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
+
 		if (ImGui::Button("Cancel", ImVec2(80, 0)))
 		{
 			m_ePendingAction = PENDING_ACTION::NONE;
 			m_strPendingPath.clear();
 			ImGui::CloseCurrentPopup();
 		}
+
 		ImGui::EndPopup();
 	}
 
-	// -- Row 4: 상태 (별도 줄) --
+	ImGui::Separator();
+	ImGui::TextUnformatted("Document");
+
+	UISEQ_DOC& tDoc = m_pSession->Get_DocMutable();
+
+	if (Edit_StringField<256>("Name", tDoc.strName))
+		m_pSession->Mark_Dirty("Document updated");
+
+	_float fDesignWidth = tDoc.fDesignWidth;
+	_float fDesignHeight = tDoc.fDesignHeight;
+	UI_SCALE_POLICY eScalePolicy = tDoc.eScalePolicy;
+	_bool bCanvasChanged = false;
+
+	if (ImGui::DragFloat("Design Width", &fDesignWidth, 1.f, 1.f, 16384.f, "%.0f"))
+		bCanvasChanged = true;
+
+	if (ImGui::DragFloat("Design Height", &fDesignHeight, 1.f, 1.f, 16384.f, "%.0f"))
+		bCanvasChanged = true;
+
+	if (Combo_Enum("Scale Policy", eScalePolicy, Engine::detail::kScalePolicy))
+		bCanvasChanged = true;
+
+	if (bCanvasChanged)
+		m_pSession->Set_DocCanvas(fDesignWidth, fDesignHeight, eScalePolicy);
+
 	ImGui::TextColored(
 		m_pSession->Is_Dirty() ? ImVec4(1.f, 0.7f, 0.2f, 1.f) : ImVec4(0.7f, 0.7f, 0.7f, 1.f),
 		"%s%s",
@@ -267,13 +299,27 @@ void CPanel_UILayout::Draw_Inspector()
 	if (ImGui::DragInt("Z Order", &tBase.iZOrder, 1.f))
 		MarkWidgetUpdated();
 
-	_float2 vViewportSize = m_pGameInstance->Get_ViewportSize();
+	ImGui::Text("Canvas : %.0f x %.0f / %s",
+		tDoc.fDesignWidth,
+		tDoc.fDesignHeight,
+		Engine::To_String(tDoc.eScalePolicy));
 
-	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, vViewportSize.x * 4.f))
+	const _float fMaxSizeX = (tDoc.fDesignWidth > 1.f) ? (tDoc.fDesignWidth * 4.f) : 1.f;
+	const _float fMaxSizeY = (tDoc.fDesignHeight > 1.f) ? (tDoc.fDesignHeight * 4.f) : 1.f;
+
+	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, fMaxSizeX))
 		MarkWidgetUpdated();
 
-	if (ImGui::DragFloat("Size Y", &tBase.fSizeY, 1.f, 1.f, vViewportSize.y * 4.f))
+	if (ImGui::DragFloat("Size Y", &tBase.fSizeY, 1.f, 1.f, fMaxSizeY))
 		MarkWidgetUpdated();
+
+	float fPivot[2] = { tBase.fPivotX, tBase.fPivotY };
+	if (ImGui::SliderFloat2("Pivot", fPivot, 0.f, 1.f, "%.2f"))
+	{
+		tBase.fPivotX = fPivot[0];
+		tBase.fPivotY = fPivot[1];
+		MarkWidgetUpdated();
+	}
 
 	if (ImGui::Checkbox("Use Anchored Pos", &tBase.tAnchorDesc.bUseAnchoredPos))
 		MarkWidgetUpdated();

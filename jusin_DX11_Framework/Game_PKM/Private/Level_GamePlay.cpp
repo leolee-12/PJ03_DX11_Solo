@@ -155,6 +155,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	tDesc.strPath = "../../DataFiles/UI/UI_Title.uiseq";
 	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 
+	tDesc.tCanvasDesc.fDesignWidth = 1280.f;
+	tDesc.tCanvasDesc.fDesignHeight = 720.f;
+	tDesc.tCanvasDesc.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+
+	tDesc.fCenterX = tDesc.tCanvasDesc.fDesignWidth * 0.5f;
+	tDesc.fCenterY = tDesc.tCanvasDesc.fDesignHeight * 0.5f;
+	tDesc.fSizeX = tDesc.tCanvasDesc.fDesignWidth;
+	tDesc.fSizeY = tDesc.tCanvasDesc.fDesignHeight;
+
 	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
 	if (nullptr == pSeq)

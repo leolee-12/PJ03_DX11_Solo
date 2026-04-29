@@ -38,31 +38,148 @@ namespace
 		pContext->OMSetBlendState(nullptr, blendFactor, 0xffffffff);
 	}
 
-	// 스크린 픽셀(=display 좌표) -> doc 픽셀(=canvas 좌표)
-	inline ImVec2 ScreenToDoc(const ImVec2& vScreen,
-		const ImVec2& vDispPos,
-		const ImVec2& vCanvasSize,
-		const ImVec2& vDispSize)
+	struct CanvasMapping
 	{
-		const _float sx = (vDispSize.x > 0.f) ? vCanvasSize.x / vDispSize.x : 1.f;
-		const _float sy = (vDispSize.y > 0.f) ? vCanvasSize.y / vDispSize.y : 1.f;
-		return ImVec2((vScreen.x - vDispPos.x) * sx,
-			(vScreen.y - vDispPos.y) * sy);
+		ImVec2 vDocSize{ 1.f, 1.f };
+		ImVec2 vRTSize{ 1.f, 1.f };
+		UI_SCALE_POLICY ePolicy{ UI_SCALE_POLICY::UNIFORM_FIT };
+
+		_float fScaleX{ 1.f };
+		_float fScaleY{ 1.f };
+		_float fUniformScale{ 1.f };
+		_float fOffsetX{ 0.f };
+		_float fOffsetY{ 0.f };
+	};
+
+	inline CanvasMapping BuildCanvasMapping(const ImVec2& vDocSize, const ImVec2& vRTSize,
+		UI_SCALE_POLICY ePolicy)
+	{
+		CanvasMapping m{};
+		m.vDocSize = ImVec2(max(vDocSize.x, 1.f), max(vDocSize.y, 1.f));
+		m.vRTSize = ImVec2(max(vRTSize.x, 1.f), max(vRTSize.y, 1.f));
+		m.ePolicy = ePolicy;
+
+		m.fScaleX = m.vRTSize.x / m.vDocSize.x;
+		m.fScaleY = m.vRTSize.y / m.vDocSize.y;
+		m.fUniformScale = min(m.fScaleX, m.fScaleY);
+
+		switch (ePolicy)
+		{
+		case UI_SCALE_POLICY::STRETCH:
+			m.fOffsetX = 0.f;
+			m.fOffsetY = 0.f;
+			break;
+
+		case UI_SCALE_POLICY::MATCH_WIDTH:
+			m.fOffsetX = 0.f;
+			m.fOffsetY = (m.vRTSize.y - m.vDocSize.y * m.fScaleX) * 0.5f;
+			break;
+
+		case UI_SCALE_POLICY::MATCH_HEIGHT:
+			m.fOffsetX = (m.vRTSize.x - m.vDocSize.x * m.fScaleY) * 0.5f;
+			m.fOffsetY = 0.f;
+			break;
+
+		case UI_SCALE_POLICY::UNIFORM_FIT:
+		default:
+			m.fOffsetX = (m.vRTSize.x - m.vDocSize.x * m.fUniformScale) * 0.5f;
+			m.fOffsetY = (m.vRTSize.y - m.vDocSize.y * m.fUniformScale) * 0.5f;
+			break;
+		}
+
+		return m;
 	}
 
-	// doc 사각형(rect.xy, w, h) -> 스크린 min/max
+	inline ImVec2 ScreenToDoc(const ImVec2& vScreen,
+		const ImVec2& vDispPos,
+		const ImVec2& vDispSize,
+		const CanvasMapping& m)
+	{
+		const _float rtX = (vDispSize.x > 0.f) ? (vScreen.x - vDispPos.x) * (m.vRTSize.x / vDispSize.x) :
+			0.f;
+		const _float rtY = (vDispSize.y > 0.f) ? (vScreen.y - vDispPos.y) * (m.vRTSize.y / vDispSize.y) :
+			0.f;
+
+		_float docX = rtX;
+		_float docY = rtY;
+
+		switch (m.ePolicy)
+		{
+		case UI_SCALE_POLICY::STRETCH:
+			docX = rtX / m.fScaleX;
+			docY = rtY / m.fScaleY;
+			break;
+
+		case UI_SCALE_POLICY::MATCH_WIDTH:
+			docX = rtX / m.fScaleX;
+			docY = (rtY - m.fOffsetY) / m.fScaleX;
+			break;
+
+		case UI_SCALE_POLICY::MATCH_HEIGHT:
+			docX = (rtX - m.fOffsetX) / m.fScaleY;
+			docY = rtY / m.fScaleY;
+			break;
+
+		case UI_SCALE_POLICY::UNIFORM_FIT:
+		default:
+			docX = (rtX - m.fOffsetX) / m.fUniformScale;
+			docY = (rtY - m.fOffsetY) / m.fUniformScale;
+			break;
+		}
+
+		return ImVec2(docX, docY);
+	}
+
 	inline void DocRectToScreen(const _float4& rcDoc,
 		const ImVec2& vDispPos,
-		const ImVec2& vCanvasSize,
 		const ImVec2& vDispSize,
+		const CanvasMapping& m,
 		ImVec2* pOutMin, ImVec2* pOutMax)
 	{
-		const _float sx = (vCanvasSize.x > 0.f) ? vDispSize.x / vCanvasSize.x : 1.f;
-		const _float sy = (vCanvasSize.y > 0.f) ? vDispSize.y / vCanvasSize.y : 1.f;
-		pOutMin->x = vDispPos.x + rcDoc.x * sx;
-		pOutMin->y = vDispPos.y + rcDoc.y * sy;
-		pOutMax->x = pOutMin->x + rcDoc.z * sx;
-		pOutMax->y = pOutMin->y + rcDoc.w * sy;
+		_float rtLeft = rcDoc.x;
+		_float rtTop = rcDoc.y;
+		_float rtWidth = rcDoc.z;
+		_float rtHeight = rcDoc.w;
+
+		switch (m.ePolicy)
+		{
+		case UI_SCALE_POLICY::STRETCH:
+			rtLeft = rcDoc.x * m.fScaleX;
+			rtTop = rcDoc.y * m.fScaleY;
+			rtWidth = rcDoc.z * m.fScaleX;
+			rtHeight = rcDoc.w * m.fScaleY;
+			break;
+
+		case UI_SCALE_POLICY::MATCH_WIDTH:
+			rtLeft = rcDoc.x * m.fScaleX;
+			rtTop = m.fOffsetY + rcDoc.y * m.fScaleX;
+			rtWidth = rcDoc.z * m.fScaleX;
+			rtHeight = rcDoc.w * m.fScaleX;
+			break;
+
+		case UI_SCALE_POLICY::MATCH_HEIGHT:
+			rtLeft = m.fOffsetX + rcDoc.x * m.fScaleY;
+			rtTop = rcDoc.y * m.fScaleY;
+			rtWidth = rcDoc.z * m.fScaleY;
+			rtHeight = rcDoc.w * m.fScaleY;
+			break;
+
+		case UI_SCALE_POLICY::UNIFORM_FIT:
+		default:
+			rtLeft = m.fOffsetX + rcDoc.x * m.fUniformScale;
+			rtTop = m.fOffsetY + rcDoc.y * m.fUniformScale;
+			rtWidth = rcDoc.z * m.fUniformScale;
+			rtHeight = rcDoc.w * m.fUniformScale;
+			break;
+		}
+
+		const _float sx = (m.vRTSize.x > 0.f) ? vDispSize.x / m.vRTSize.x : 1.f;
+		const _float sy = (m.vRTSize.y > 0.f) ? vDispSize.y / m.vRTSize.y : 1.f;
+
+		pOutMin->x = vDispPos.x + rtLeft * sx;
+		pOutMin->y = vDispPos.y + rtTop * sy;
+		pOutMax->x = pOutMin->x + rtWidth * sx;
+		pOutMax->y = pOutMin->y + rtHeight * sy;
 	}
 }
 
@@ -83,8 +200,18 @@ HRESULT CPanel_Viewport::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
-	m_vCanvasSize = ImVec2(vCanvas.x, vCanvas.y);
+	const _float2 vRT = m_pGameInstance->Get_ViewportSize();
+	m_vRTSize = ImVec2(vRT.x, vRT.y);
+
+	if (auto* pSess = m_pEditInstance->Get_UISession())
+	{
+		const auto& tDoc = pSess->Get_Doc();
+		m_vDocCanvasSize = ImVec2(tDoc.fDesignWidth, tDoc.fDesignHeight);
+	}
+	else
+	{
+		m_vDocCanvasSize = m_vRTSize;
+	}
 
 	if (FAILED(Create_RenderTarget()))
 		return E_FAIL;
@@ -94,13 +221,19 @@ HRESULT CPanel_Viewport::Initialize()
 
 void CPanel_Viewport::Update(_float fTimeDelta)
 {
-	const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
-	ImVec2 vNewSize = ImVec2(vCanvas.x, vCanvas.y);
-	
-	if (m_vCanvasSize == vNewSize)
+	const _float2 vRT = m_pGameInstance->Get_ViewportSize();
+	const ImVec2 vNewRT(vRT.x, vRT.y);
+
+	if (auto* pSess = m_pEditInstance->Get_UISession())
+	{
+		const auto& tDoc = pSess->Get_Doc();
+		m_vDocCanvasSize = ImVec2(tDoc.fDesignWidth, tDoc.fDesignHeight);
+	}
+
+	if (m_vRTSize == vNewRT)
 		return;
 
-	m_vCanvasSize = vNewSize;
+	m_vRTSize = vNewRT;
 	Release_RenderTarget();
 	Create_RenderTarget();
 }
@@ -117,16 +250,14 @@ HRESULT CPanel_Viewport::Render()
 
 	// 패널 안에 그릴 이미지 사각형(letterbox)을 캔버스 종횡비 기준으로 계산
 	ImVec2 vAvail = ImGui::GetContentRegionAvail();
-	const _float fTargetAspect = m_vCanvasSize.y > 0.f
-		? (m_vCanvasSize.x / m_vCanvasSize.y) : 1.f;
+	const _float fTargetAspect = m_vRTSize.y > 0.f ? (m_vRTSize.x / m_vRTSize.y) : 1.f;
 	const ImVec2 vRenderSize = Fit_Size_To_Aspect(vAvail, fTargetAspect);
 
 	m_vDisplaySize = vRenderSize;
 
 	const ImVec2 vCursorPos = ImGui::GetCursorPos();
 	const ImVec2 vOffset((vAvail.x - vRenderSize.x) * 0.5f, (vAvail.y - vRenderSize.y) * 0.5f);
-	ImGui::SetCursorPos(ImVec2(vCursorPos.x + max(vOffset.x, 0.f), vCursorPos.y + max(vOffset.y,
-		0.f)));
+	ImGui::SetCursorPos(ImVec2(vCursorPos.x + max(vOffset.x, 0.f), vCursorPos.y + max(vOffset.y, 0.f)));
 	m_vDisplayPos = ImGui::GetCursorScreenPos();
 
 	if (nullptr != m_pSRV)
@@ -136,13 +267,12 @@ HRESULT CPanel_Viewport::Render()
 		ImGui::Image(m_pSRV, m_vDisplaySize);
 		dl->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
 
-		// Image() 후에 실제 렌더된 위치로 갱신 → GetMousePos()와 좌표계 일치
+		// Image() 후에 실제 렌더된 위치/hover 상태를 먼저 확정
 		m_vDisplayPos = ImGui::GetItemRectMin();
-
-		Draw_UIOverlay();   // 갱신된 m_vDisplayPos 기준으로 widget 박스/hover 라벨 그림
-
 		m_bHovered = ImGui::IsItemHovered();
 		m_bFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+
+		Draw_UIOverlay();
 
 		const auto eMode = m_pEditInstance->Get_UISession()->Get_VPMode();
 
@@ -275,7 +405,7 @@ HRESULT CPanel_Viewport::Begin_SceneRender()
 	if (nullptr == m_pContext || nullptr == m_pRTV || nullptr == m_pDSV)
 		return E_FAIL;
 
-	if (m_vCanvasSize.x <= 0.f || m_vCanvasSize.y <= 0.f)
+	if (m_vRTSize.x <= 0.f || m_vRTSize.y <= 0.f)
 		return E_FAIL;
 
 	Safe_Release(m_pPrevRTV);
@@ -294,8 +424,8 @@ HRESULT CPanel_Viewport::Begin_SceneRender()
 	D3D11_VIEWPORT tViewport{};
 	tViewport.TopLeftX = 0.f;
 	tViewport.TopLeftY = 0.f;
-	tViewport.Width = m_vCanvasSize.x;
-	tViewport.Height = m_vCanvasSize.y;
+	tViewport.Width = m_vRTSize.x;
+	tViewport.Height = m_vRTSize.y;
 	tViewport.MinDepth = 0.f;
 	tViewport.MaxDepth = 1.f;
 	m_pContext->RSSetViewports(1, &tViewport);
@@ -332,8 +462,8 @@ HRESULT CPanel_Viewport::Create_RenderTarget()
 
 	Release_RenderTarget();
 
-	const _uint iWidth = max(static_cast<_uint>(m_vCanvasSize.x), 1u);
-	const _uint iHeight = max(static_cast<_uint>(m_vCanvasSize.y), 1u);
+	const _uint iWidth = max(static_cast<_uint>(m_vRTSize.x), 1u);
+	const _uint iHeight = max(static_cast<_uint>(m_vRTSize.y), 1u);
 
 	D3D11_TEXTURE2D_DESC tTextureDesc{};
 	tTextureDesc.Width = iWidth;
@@ -651,9 +781,14 @@ void CPanel_Viewport::Handle_UIPick()
 	auto* pSess = m_pEditInstance->Get_UISession();
 	if (!pHost || !pSess) return;
 
+	const auto& tDoc = pSess->Get_Doc();
+	const CanvasMapping tMap = BuildCanvasMapping(
+		m_vDocCanvasSize,
+		m_vRTSize,
+		tDoc.eScalePolicy);
+
 	const ImVec2 vMouse = ImGui::GetMousePos();
-	const ImVec2 vDoc = ScreenToDoc(vMouse,
-		m_vDisplayPos, m_vCanvasSize, m_vDisplaySize);
+	const ImVec2 vDoc = ScreenToDoc(vMouse, m_vDisplayPos, m_vDisplaySize, tMap);
 
 	const _string strHit = pHost->Hit_Test_TopMost(vDoc);
 	if (strHit.empty())
@@ -705,11 +840,15 @@ void CPanel_Viewport::Handle_UIDrag()
 	if (iIdx < 0) { m_bUIDragging = false; return; }
 
 	// doc 좌표계 델타 계산
+	const auto& tDoc = pSess->Get_Doc();
+	const CanvasMapping tMap = BuildCanvasMapping(
+		m_vDocCanvasSize,
+		m_vRTSize,
+		tDoc.eScalePolicy);
+
 	const ImVec2 vMouse = ImGui::GetMousePos();
-	const ImVec2 vNow = ScreenToDoc(vMouse,
-		m_vDisplayPos, m_vCanvasSize, m_vDisplaySize);
-	const ImVec2 vSt = ScreenToDoc(m_vDragStartMouse,
-		m_vDisplayPos, m_vCanvasSize, m_vDisplaySize);
+	const ImVec2 vNow = ScreenToDoc(vMouse, m_vDisplayPos, m_vDisplaySize, tMap);
+	const ImVec2 vSt = ScreenToDoc(m_vDragStartMouse, m_vDisplayPos, m_vDisplaySize, tMap);
 	const _float dx = vNow.x - vSt.x;
 	const _float dy = vNow.y - vSt.y;
 
@@ -744,30 +883,42 @@ void CPanel_Viewport::Draw_UIOverlay()
 {
 	auto* pHost = m_pEditInstance->Get_UIPreviewHost();
 	auto* pSess = m_pEditInstance->Get_UISession();
-	if (nullptr == pHost || nullptr == pSess) return;
+	if (nullptr == pHost || nullptr == pSess)
+		return;
 
 	const auto& vWidgets = pHost->Get_Widgets();
 	const auto& vZIdx = pHost->Get_ZOrderIdx();
-	if (vWidgets.empty()) return;
+	if (vWidgets.empty())
+		return;
+
+	const auto& tDoc = pSess->Get_Doc();
+	const auto& vDocW = tDoc.vWidgets;
+	const CanvasMapping tMap = BuildCanvasMapping(
+		m_vDocCanvasSize,
+		m_vRTSize,
+		tDoc.eScalePolicy);
 
 	ImDrawList* dl = ImGui::GetWindowDrawList();
-	dl->PushClipRect(m_vDisplayPos,
-		ImVec2(m_vDisplayPos.x + m_vDisplaySize.x,
-			m_vDisplayPos.y + m_vDisplaySize.y),
+	dl->PushClipRect(
+		m_vDisplayPos,
+		ImVec2(m_vDisplayPos.x + m_vDisplaySize.x, m_vDisplayPos.y + m_vDisplaySize.y),
 		true);
 
 	const _int iSelected = pSess->Get_SelectedWidget();
-	const auto& vDocW = pSess->Get_Doc().vWidgets;
 
-	// 1. 모든 widget bounding (z-order 오름차순)
+	// 1. 모든 widget bounding
 	for (_int idx : vZIdx)
 	{
+		if (idx < 0 || idx >= (_int)vWidgets.size())
+			continue;
+
 		CUIObject* p = vWidgets[idx];
-		if (!p) continue;
+		if (!p)
+			continue;
 
 		const _float4 rc = p->Get_ScreenRect();
 		ImVec2 vMin, vMax;
-		DocRectToScreen(rc, m_vDisplayPos, m_vCanvasSize, m_vDisplaySize, &vMin, &vMax);
+		DocRectToScreen(rc, m_vDisplayPos, m_vDisplaySize, tMap, &vMin, &vMax);
 
 		ImU32 col = IM_COL32(180, 180, 180, 180);
 		if (idx < (_int)vDocW.size())
@@ -781,18 +932,20 @@ void CPanel_Viewport::Draw_UIOverlay()
 			case UI_TYPE::PROGRESSBAR: col = IM_COL32(255, 180, 180, 200); break;
 			}
 		}
+
 		dl->AddRect(vMin, vMax, col, 0.f, 0, 1.f);
 	}
 
-	// 2. selected outline (가장 위)
+	// 2. selected outline
 	if (iSelected >= 0 && iSelected < (_int)vWidgets.size())
 	{
-		if (CUIObject* p = vWidgets[iSelected])
+		if (CUIObject* pSelected = vWidgets[iSelected])
 		{
-			const _float4 rc = p->Get_ScreenRect();
+			const _float4 rc = pSelected->Get_ScreenRect();
 			ImVec2 vMin, vMax;
-			DocRectToScreen(rc, m_vDisplayPos, m_vCanvasSize, m_vDisplaySize, &vMin, &vMax);
-			dl->AddRect(vMin, vMax, IM_COL32(255, 220, 0, 255), 0.f, 0, 2.5f);
+			DocRectToScreen(rc, m_vDisplayPos, m_vDisplaySize, tMap, &vMin, &vMax);
+
+			dl->AddRect(vMin, vMax, IM_COL32(255, 255, 0, 255), 0.f, 0, 2.f);
 		}
 	}
 
@@ -800,20 +953,22 @@ void CPanel_Viewport::Draw_UIOverlay()
 	if (m_bHovered)
 	{
 		const ImVec2 vMouse = ImGui::GetMousePos();
-		const ImVec2 vDoc = ScreenToDoc(vMouse,
-			m_vDisplayPos, m_vCanvasSize, m_vDisplaySize);
+		const ImVec2 vDoc = ScreenToDoc(vMouse, m_vDisplayPos, m_vDisplaySize, tMap);
 		const _string strHit = pHost->Hit_Test_TopMost(vDoc);
 		if (!strHit.empty())
 		{
 			const _int iIdx = pSess->Find_WidgetIndexById(strHit);
-			if (iIdx >= 0)
+			if (iIdx >= 0 && iIdx < (_int)vDocW.size())
 			{
-				char szBuf[128];
+				char szBuf[128] = {};
 				sprintf_s(szBuf, "[%s] %s",
 					Engine::To_String(vDocW[iIdx].Get_Type()),
 					vDocW[iIdx].strDisplayName.c_str());
-				dl->AddText(ImVec2(vMouse.x + 12.f, vMouse.y + 12.f),
-					IM_COL32(255, 255, 255, 240), szBuf);
+
+				dl->AddText(
+					ImVec2(vMouse.x + 12.f, vMouse.y + 12.f),
+					IM_COL32(255, 255, 255, 240),
+					szBuf);
 			}
 		}
 	}

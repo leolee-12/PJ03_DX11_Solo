@@ -10,6 +10,9 @@
 
 namespace
 {
+	constexpr _float kLegacyDesignWidth = 1280.f;
+	constexpr _float kLegacyDesignHeight = 720.f;
+
 #ifdef _DEBUG
 	inline void Log_Loader(const char* fmt, ...)
 	{
@@ -395,6 +398,39 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 	if (FAILED(Parse_File(strPath, root)))
 		return E_FAIL;
 
+	const auto meta = root.value("meta", json::object());
+	const _int iVersion = meta.value("version", 1);
+
+	UICANVAS_DESC tCanvasDesc{};
+	if (iVersion >= 2)
+	{
+		tCanvasDesc.fDesignWidth = meta.value("designWidth", 1920.f);
+		tCanvasDesc.fDesignHeight = meta.value("designHeight", 1080.f);
+		tCanvasDesc.eScalePolicy = UI_SCALE_POLICY_From_String(
+			meta.value("scalePolicy", _string("UNIFORM_FIT")).c_str());
+
+		if (tCanvasDesc.eScalePolicy == UI_SCALE_POLICY::END)
+			tCanvasDesc.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+	}
+	else
+	{
+		tCanvasDesc.fDesignWidth = kLegacyDesignWidth;
+		tCanvasDesc.fDesignHeight = kLegacyDesignHeight;
+		tCanvasDesc.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
+	}
+
+	Set_DesignCanvasSize(tCanvasDesc.fDesignWidth, tCanvasDesc.fDesignHeight);
+	Set_ScalePolicy(tCanvasDesc.eScalePolicy);
+
+	if (m_fSizeX <= 0.f || m_fSizeY <= 0.f)
+	{
+		m_fSizeX = tCanvasDesc.fDesignWidth;
+		m_fSizeY = tCanvasDesc.fDesignHeight;
+		m_fCenterX = tCanvasDesc.fDesignWidth * 0.5f;
+		m_fCenterY = tCanvasDesc.fDesignHeight * 0.5f;
+		Refresh_Layout();
+	}
+
 	// 2) loader 임시 수집
 	vector<LoaderWidget> vLoadedWidgets;
 	vector<LoaderStep> vLoadedSteps;
@@ -452,6 +488,12 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 	{
 		const WNameID strProto = Map_PrototypeTag(w.eType);
 		if (strProto == INVALID_TAG) { Cleanup_Tmp(); return E_FAIL; }
+
+		std::visit([this](auto& d)
+			{
+				auto& tBase = static_cast<CUIObject::UIOBJECT_DESC&>(d);
+				tBase.tCanvasDesc = m_tCanvasDesc;
+			}, w.tDesc);
 
 		void* pCArg = std::visit([](auto& d) -> void* {
 			return static_cast<void*>(&d); }, w.tDesc);
@@ -583,11 +625,11 @@ namespace
 		}
 
 		const auto meta = jOut.value("meta", json::object());
-		const _int iVersion = meta.value("version", 0);
+		const _int iVersion = meta.value("version", 1);
 
-		if (iVersion != 1)
+		if (iVersion != 1 && iVersion != 2)
 		{
-			Log_Loader("version mismatch: expected 1, got %d (%s)", iVersion, strPath.c_str());
+			Log_Loader("version mismatch: unsupported version %d (%s)", iVersion, strPath.c_str());
 			return E_FAIL;
 		}
 
@@ -605,6 +647,8 @@ namespace
 			d.fSizeY = t.value("sizeY", 100.f);
 			d.iZOrder = t.value("zOrder", 0);
 			d.bVisible = t.value("visible", true);
+			d.fPivotX = t.value("pivotX", 0.5f);
+			d.fPivotY = t.value("pivotY", 0.5f);
 		}
 		if (j.contains("anchor"))
 		{

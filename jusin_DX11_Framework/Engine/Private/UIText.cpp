@@ -52,70 +52,90 @@ void CUIText::Late_Update(_float fTimeDelta)
 
 HRESULT CUIText::Render()
 {
-	if (m_strText.empty() || INVALID_TAG == m_strFontTag)
-		return S_OK;
+    if (m_strText.empty() || INVALID_TAG == m_strFontTag)
+        return S_OK;
 
-	const _float4 vRect = Get_ScreenRect();
-	_float fAnchorX = vRect.x;
-	switch (m_eAlign)
-	{
-	case UI_TEXT_ALIGN::LEFT:
-		fAnchorX = vRect.x;
-		break;
+    const _float4 vRect = Get_RenderRect();
 
-	case UI_TEXT_ALIGN::CENTER:
-		fAnchorX = vRect.x + vRect.z * 0.5f;
-		break;
+    _float fAnchorX = vRect.x;
+    switch (m_eAlign)
+    {
+    case UI_TEXT_ALIGN::LEFT:
+        fAnchorX = vRect.x;
+        break;
 
-	case UI_TEXT_ALIGN::RIGHT:
-		fAnchorX = vRect.x + vRect.z;
-		break;
+    case UI_TEXT_ALIGN::CENTER:
+        fAnchorX = vRect.x + vRect.z * 0.5f;
+        break;
 
-	default:
-		break;
-	}
+    case UI_TEXT_ALIGN::RIGHT:
+        fAnchorX = vRect.x + vRect.z;
+        break;
 
-	const _float fAnchorY = vRect.y + vRect.w * 0.5f;
-	const _float2 vTextSize = m_pGameInstance->Measure_Text(m_strFontTag, m_strText.c_str());
-	_float2 vOrigin{ 0.f, vTextSize.y * 0.5f };
-	switch (m_eAlign)
-	{
-	case UI_TEXT_ALIGN::LEFT:
-		vOrigin.x = 0.f;
-		break;
+    default:
+        break;
+    }
 
-	case UI_TEXT_ALIGN::CENTER:
-		vOrigin.x = vTextSize.x * 0.5f;
-		break;
+    const _float fAnchorY = vRect.y + vRect.w * 0.5f;
+    const _float2 vTextSize = m_pGameInstance->Measure_Text(m_strFontTag, m_strText.c_str());
 
-	case UI_TEXT_ALIGN::RIGHT:
-		vOrigin.x = vTextSize.x;
-		break;
+    _float2 vOrigin{ 0.f, vTextSize.y * 0.5f };
+    switch (m_eAlign)
+    {
+    case UI_TEXT_ALIGN::LEFT:
+        vOrigin.x = 0.f;
+        break;
 
-	default:
-		break;
-	}
+    case UI_TEXT_ALIGN::CENTER:
+        vOrigin.x = vTextSize.x * 0.5f;
+        break;
 
-	const XMVECTOR vColor = XMLoadFloat4(&m_vColor);
+    case UI_TEXT_ALIGN::RIGHT:
+        vOrigin.x = vTextSize.x;
+        break;
 
-	const _float2 vActualSize = m_pGameInstance->Get_ViewportSize();
-	const _float2 vScaleToRT = { vActualSize.x / m_vRefSize.x, vActualSize.y / m_vRefSize.y };
+    default:
+        break;
+    }
 
-	const _float2 vDrawPos = { fAnchorX * vScaleToRT.x, fAnchorY * vScaleToRT.y };
-	const _float2 vDrawScale = vScaleToRT;
+    const UICANVAS_TRANSFORM& tCanvas = Get_CanvasTransform();
 
-	if (FAILED(m_pGameInstance->Draw_Text(m_strFontTag,
-		m_strText.c_str(),
-		vDrawPos,
-		vColor,
-		m_fRotation,
-		vOrigin,
-		vDrawScale)))
-	{
-		return E_FAIL;
-	}
+    _float2 vDrawScale{ 1.f, 1.f };
+    switch (Get_CanvasDesc().eScalePolicy)
+    {
+    case UI_SCALE_POLICY::STRETCH:
+        vDrawScale = { tCanvas.fScaleX, tCanvas.fScaleY };
+        break;
 
-	return S_OK;
+    case UI_SCALE_POLICY::MATCH_WIDTH:
+        vDrawScale = { tCanvas.fScaleX, tCanvas.fScaleX };
+        break;
+
+    case UI_SCALE_POLICY::MATCH_HEIGHT:
+        vDrawScale = { tCanvas.fScaleY, tCanvas.fScaleY };
+        break;
+
+    case UI_SCALE_POLICY::UNIFORM_FIT:
+    default:
+        vDrawScale = { tCanvas.fUniformScale, tCanvas.fUniformScale };
+        break;
+    }
+
+    const XMVECTOR vColor = XMLoadFloat4(&m_vColor);
+    const _float2 vDrawPos = { fAnchorX, fAnchorY };
+
+    if (FAILED(m_pGameInstance->Draw_Text(m_strFontTag,
+        m_strText.c_str(),
+        vDrawPos,
+        vColor,
+        m_fRotation,
+        vOrigin,
+        vDrawScale)))
+    {
+        return E_FAIL;
+    }
+
+    return S_OK;
 }
 
 _bool CUIText::Can_Apply_Tween_Target(UI_TWEEN_TARGET eTarget) const
