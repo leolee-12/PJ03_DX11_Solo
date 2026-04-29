@@ -15,6 +15,8 @@ public:
 	HRESULT Begin_MRT(WNameID strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_ShaderResource(WNameID strTargetTag, class CShader* pShader, const _char* pConstName);
+	
+	void Reset();
 
 #ifdef _DEBUG
 public:

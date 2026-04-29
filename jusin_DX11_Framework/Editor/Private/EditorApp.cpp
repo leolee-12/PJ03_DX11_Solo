@@ -56,6 +56,8 @@ HRESULT CEditorApp::Initialize()
 
 void CEditorApp::Update(_float fTimeDelta)
 {
+	Apply_Resize();
+
 	m_pEditInstance->Update_Editor(fTimeDelta);
 	m_pGameInstance->Update_Engine(fTimeDelta);
 }
@@ -81,6 +83,29 @@ HRESULT CEditorApp::Render()
 	m_pGameInstance->Draw_Text(FONT_MALGUN, TEXT("한글 이다"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 
 	if (FAILED(m_pGameInstance->End_Draw()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CEditorApp::Request_Resize(_uint iNewWidth, _uint iNewHeight)
+{
+	if(0 == iNewWidth || 0 == iNewHeight)
+		return;
+
+	m_bResizePending = true;
+	m_iPendingWidth = iNewWidth;
+	m_iPendingHeight = iNewHeight;
+}
+
+HRESULT CEditorApp::Apply_Resize()
+{
+	if (!m_bResizePending)
+		return S_OK;
+
+	m_bResizePending = false;
+
+	if (FAILED(m_pGameInstance->Resize_Engine(m_iPendingWidth, m_iPendingHeight)))
 		return E_FAIL;
 
 	return S_OK;

@@ -3,6 +3,11 @@
 
 namespace Engine
 {
+	struct UINT2
+	{
+		unsigned int x{}, y{};
+	};
+
 	struct ENGINE_DESC
 	{
 		HINSTANCE hInstance;

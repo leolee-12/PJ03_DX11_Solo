@@ -115,6 +115,35 @@ HRESULT CGraphic_Device::Present()
 	return m_pSwapChain->Present(0, 0);
 }
 
+HRESULT CGraphic_Device::Resize_Backbuffer(_uint iNewWidth, _uint iNewHeight)
+{
+	// 1. 정리(바인딩, RTV, DSV)
+	m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+	Safe_Release(m_pBackBufferRTV);
+	Safe_Release(m_pDepthStencilView);
+
+	// 2. 스왑체인 크기 변경 & RTV, DSV 재생성 후 바인딩
+	m_pSwapChain->ResizeBuffers(0, iNewWidth, iNewHeight, DXGI_FORMAT_UNKNOWN, 0);
+	if (FAILED(Ready_BackBufferRenderTargetView()))
+		return E_FAIL;
+	if (FAILED(Ready_DepthStencilView(iNewWidth, iNewHeight)))
+		return E_FAIL;
+	m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+	
+	// 3. 뷰포트 크기 정보 재생성 & 바인딩
+	D3D11_VIEWPORT tNewVPDesc;
+	ZeroMemory(&tNewVPDesc, sizeof(D3D11_VIEWPORT));
+	tNewVPDesc.TopLeftX = 0;
+	tNewVPDesc.TopLeftY = 0;
+	tNewVPDesc.Width = static_cast<_float>(iNewWidth);
+	tNewVPDesc.Height = static_cast<_float>(iNewHeight);
+	tNewVPDesc.MinDepth = 0.f;
+	tNewVPDesc.MaxDepth = 1.f;
+	m_pContext->RSSetViewports(1, &tNewVPDesc);
+
+	return S_OK;
+}
+
 HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, WINMODE isWindowed, _uint iWinCX, _uint iWinCY)
 {
 	IDXGIDevice* pDevice = nullptr;

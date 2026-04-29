@@ -20,11 +20,18 @@ public:
 	void Update(_float fTimeDelta);
 	HRESULT Render();
 
+	void Request_Resize(_uint iNewWidth, _uint iNewHeight);
+	HRESULT Apply_Resize();
+
 private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	CGameInstance* m_pGameInstance = { nullptr };
 	CEditInstance* m_pEditInstance = { nullptr };
+
+	_bool m_bResizePending = { false };
+	_uint m_iPendingWidth = {};
+	_uint m_iPendingHeight = {};
 
 public:
 	static CEditorApp* Create();

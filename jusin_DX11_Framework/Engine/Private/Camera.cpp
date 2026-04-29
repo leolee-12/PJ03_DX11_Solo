@@ -75,6 +75,13 @@ HRESULT CCamera::Render()
 	return S_OK;
 }
 
+void CCamera::On_ViewportResize(_float2 vNewSize)
+{
+	m_fAspect = vNewSize.x / vNewSize.y;
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	m_bProjDirty = true;
+}
+
 void CCamera::Update_PipeLine()
 {
 	m_pGameInstance->Set_CameraWorld(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));

@@ -172,7 +172,7 @@ _string CUIEditorSession::Make_NextCallbackId() const
 
 UISEQ_WIDGET_NODE CUIEditorSession::Make_DefaultWidget(UI_TYPE eType) const
 {
-	_float2 vRefSize = m_pGameInstance->Get_CurrentRefSize();
+	_float2 vRefSize = m_pGameInstance->Get_ViewportSize();
 
 	auto InitializeBase = [vRefSize](auto& tDesc, _float fSizeX, _float fSizeY)
 		{

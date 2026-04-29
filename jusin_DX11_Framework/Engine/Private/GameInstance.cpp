@@ -24,7 +24,7 @@ CGameInstance::CGameInstance()
 
 HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext)
 {
-	m_vCurrentVPSize = m_vOriginVPSize = _float2(	static_cast<_float>(EngineDesc.iViewportWidth),
+	m_vViewportSize = _float2(	static_cast<_float>(EngineDesc.iViewportWidth),
 													static_cast<_float>(EngineDesc.iViewportHeight));
 
 	m_pGraphic_Device = CGraphic_Device::Create(EngineDesc.hWnd,
@@ -145,6 +145,27 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pGraphic_Device);
 
 	DestroyInstance();
+}
+
+HRESULT CGameInstance::Resize_Engine(_uint iNewWidth, _uint iNewHeight)
+{
+	if (0 == iNewWidth || 0 == iNewHeight)
+		return S_FALSE;
+
+	if (m_vViewportSize.x == static_cast<_float>(iNewWidth) && m_vViewportSize.y == static_cast<_float>(iNewHeight))
+		return S_FALSE;
+
+	m_pGraphic_Device->Resize_Backbuffer(iNewWidth, iNewHeight);
+	m_vViewportSize = { static_cast<_float>(iNewWidth), static_cast<_float>(iNewHeight) };
+	
+	m_pTarget_Manager->Reset();
+	if(FAILED(m_pRenderer->Resize()))
+		return E_FAIL;
+
+	if (m_pMainCamera)
+		m_pMainCamera->On_ViewportResize(m_vViewportSize);
+
+	return S_OK;
 }
 
 const HWND CGameInstance::Get_HWND() const

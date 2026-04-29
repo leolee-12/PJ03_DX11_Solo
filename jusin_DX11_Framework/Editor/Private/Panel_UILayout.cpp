@@ -267,7 +267,7 @@ void CPanel_UILayout::Draw_Inspector()
 	if (ImGui::DragInt("Z Order", &tBase.iZOrder, 1.f))
 		MarkWidgetUpdated();
 
-	_float2 vViewportSize = m_pGameInstance->Get_CurrentRefSize();
+	_float2 vViewportSize = m_pGameInstance->Get_ViewportSize();
 
 	if (ImGui::DragFloat("Size X", &tBase.fSizeX, 1.f, 1.f, vViewportSize.x * 4.f))
 		MarkWidgetUpdated();

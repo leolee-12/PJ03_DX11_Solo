@@ -20,6 +20,7 @@ public:
 	HRESULT		Initialize();
 	void		Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
 	HRESULT		Draw();
+	HRESULT		Resize();
 
 #ifdef _DEBUG
 	void Add_DebugComponent(class CComponent* pComponent);

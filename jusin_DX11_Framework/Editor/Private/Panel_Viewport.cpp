@@ -83,7 +83,7 @@ HRESULT CPanel_Viewport::Initialize()
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
-	const _float2 vCanvas = m_pGameInstance->Get_OriginRefSize();
+	const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
 	m_vCanvasSize = ImVec2(vCanvas.x, vCanvas.y);
 
 	if (FAILED(Create_RenderTarget()))
@@ -94,6 +94,15 @@ HRESULT CPanel_Viewport::Initialize()
 
 void CPanel_Viewport::Update(_float fTimeDelta)
 {
+	const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
+	ImVec2 vNewSize = ImVec2(vCanvas.x, vCanvas.y);
+	
+	if (m_vCanvasSize == vNewSize)
+		return;
+
+	m_vCanvasSize = vNewSize;
+	Release_RenderTarget();
+	Create_RenderTarget();
 }
 
 HRESULT CPanel_Viewport::Render()

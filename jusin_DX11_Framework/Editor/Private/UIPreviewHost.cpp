@@ -34,7 +34,7 @@ HRESULT CUIPreviewHost::Initialize()
 void CUIPreviewHost::Tick(_float fTimeDelta)
 {
 	// 캔버스(게임 RT) 크기 변경 감지 - UI 레이아웃은 캔버스 기준이므로 패널 표시 크기는 트리거 대상 아님.
-	const _float2 vCanvas = m_pGameInstance->Get_OriginRefSize();
+	const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
 	const ImVec2 vNow(vCanvas.x, vCanvas.y);
 	if (vNow.x != m_vLastViewportSize.x || vNow.y != m_vLastViewportSize.y)
 	{
@@ -111,7 +111,7 @@ HRESULT CUIPreviewHost::Rebuild()
 	// 캔버스 크기가 아직 0이면 rebuild 보류(다음 프레임 재시도)
 	if (m_vLastViewportSize.x < 1.f || m_vLastViewportSize.y < 1.f)
 	{
-		const _float2 vCanvas = m_pGameInstance->Get_OriginRefSize();
+		const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
 		const ImVec2 vNow(vCanvas.x, vCanvas.y);
 		if (vNow.x < 1.f || vNow.y < 1.f)
 			return S_OK;

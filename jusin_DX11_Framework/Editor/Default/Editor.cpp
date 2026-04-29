@@ -13,6 +13,7 @@ HINSTANCE g_hInstance;					// 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];			// 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];	// 기본 창 클래스 이름입니다.
 HWND g_hWnd;
+CEditorApp* g_pEditorApp = { nullptr };
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM MyRegisterClass(HINSTANCE hInstance);
@@ -35,8 +36,6 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 	// TODO: 여기에 코드를 입력합니다.
 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
-	CEditorApp* pEditorApp = { nullptr };
-
 	// 전역 문자열을 초기화합니다.
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_TOOL, szWindowClass, MAX_LOADSTRING);
@@ -55,13 +54,17 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
-	pEditorApp = CEditorApp::Create();
+	g_pEditorApp = CEditorApp::Create();
 
-	if (nullptr == pEditorApp)
+	if (nullptr == g_pEditorApp)
 		return FALSE;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
+	RECT rc{};
+	GetClientRect(g_hWnd, &rc);
+	pGameInstance->Resize_Engine(rc.right - rc.left, rc.bottom - rc.top);
 
 	if (FAILED(pGameInstance->Add_Timer(TIMER_DEFAULT)))
 		return E_FAIL;
@@ -93,15 +96,15 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 		{
 			_float fTimeDelta = { pGameInstance->Compute_Timer(TIMER_FPS60) };
 
-			pEditorApp->Update(fTimeDelta);
-			pEditorApp->Render();
+			g_pEditorApp->Update(fTimeDelta);
+			g_pEditorApp->Render();
 
 			fTimeAcc -= fFrameRate;
 		}
 	}
 
 	Safe_Release(pGameInstance);
-	Safe_Release(pEditorApp);
+	Safe_Release(g_pEditorApp);
 
 	return (int)msg.wParam;
 }
@@ -203,6 +206,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
+
+	case WM_SIZE:
+	{
+		if (wParam != SIZE_MINIMIZED && g_pEditorApp)
+			g_pEditorApp->Request_Resize(LOWORD(lParam), HIWORD(lParam));
+	}
+	break;
+
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
@@ -211,6 +222,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 	}
 	break;
+	
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;

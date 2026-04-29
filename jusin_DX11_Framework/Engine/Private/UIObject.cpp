@@ -77,7 +77,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 	if (FAILED(Ready_Animator()))
 		return E_FAIL;
 
-	m_vRefSize = m_pGameInstance->Get_OriginRefSize();
+	m_vRefSize = m_pGameInstance->Get_ViewportSize();
 
 	// View 행렬 세팅
 	XMStoreFloat4x4(&m_TransformMatrices[ETOUI(D3DTS::VIEW)], XMMatrixIdentity());

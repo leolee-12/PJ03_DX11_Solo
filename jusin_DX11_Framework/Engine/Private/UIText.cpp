@@ -98,7 +98,7 @@ HRESULT CUIText::Render()
 
 	const XMVECTOR vColor = XMLoadFloat4(&m_vColor);
 
-	const _float2 vActualSize = m_pGameInstance->Get_CurrentRefSize();
+	const _float2 vActualSize = m_pGameInstance->Get_ViewportSize();
 	const _float2 vScaleToRT = { vActualSize.x / m_vRefSize.x, vActualSize.y / m_vRefSize.y };
 
 	const _float2 vDrawPos = { fAnchorX * vScaleToRT.x, fAnchorY * vScaleToRT.y };
