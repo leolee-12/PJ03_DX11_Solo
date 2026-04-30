@@ -139,6 +139,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../Bin\</OutDir>
+    <MultiProcFXC>true</MultiProcFXC>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../Bin\</OutDir>
+    <MultiProcFXC>true</MultiProcFXC>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -195,8 +200,7 @@
       <AdditionalIncludeDirectories>../../ShaderFiles\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
     <PostBuildEvent>
-      <Command>cd /d $(SolutionDir)
-call UpdateLib.bat</Command>
+      <Command>cd /d $(SolutionDir)&amp;&amp;call UpdateLib.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -208,6 +212,8 @@ call UpdateLib.bat</Command>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>../Public\;../../EngineSDK/inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -219,7 +225,15 @@ call UpdateLib.bat</Command>
     </FxCompile>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
+      <AdditionalIncludeDirectories>../../ShaderFiles\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../EngineSDK/lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <PostBuildEvent>
+      <Command>cd /d $(SolutionDir)&amp;&amp;call UpdateLib.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
