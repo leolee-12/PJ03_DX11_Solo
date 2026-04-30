@@ -23,11 +23,19 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SHADE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SPECULAR, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
 
 	// MRT·Î ¹­±â
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DIFFUSE)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_NORMAL)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DEPTH)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SPECULAR)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SHADE)))
 		return E_FAIL;
@@ -50,6 +58,8 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_NORMAL, 150.f, 450.f, 300.f, 300.f)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SHADE, 450.f, 150.f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SPECULAR, 450.f, 450.f, 300.f, 300.f)))
 		return E_FAIL;
 #endif
 
@@ -147,6 +157,8 @@ HRESULT CRenderer::Render_Lights()
 
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_NORMAL, m_pShader, "g_TexNorm")))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DEPTH, m_pShader, "g_TexDepth")))
+		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -154,13 +166,20 @@ HRESULT CRenderer::Render_Lights()
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewInvMatrix", m_pGameInstance->Get_Transform_Inverse(D3DTS::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjInvMatrix", m_pGameInstance->Get_Transform_Inverse(D3DTS::PROJ))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_RawValue("g_vCamPos", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_RawValue("g_fFarZ", m_pGameInstance->Get_FarZPtr(), sizeof(_float))))
+		return E_FAIL;
+
 	if (FAILED(m_pVIBuffer->Bind_Resources()))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Render_Light(m_pShader, m_pVIBuffer)))
 		return E_FAIL;
-
-	ID3D11ShaderResourceView* nullSRV = { nullptr };
 
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
@@ -172,8 +191,9 @@ HRESULT CRenderer::Render_Combined()
 {
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DIFFUSE, m_pShader, "g_TexDiff")))
 		return E_FAIL;
-
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_SHADE, m_pShader, "g_TexShade")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_SPECULAR, m_pShader, "g_TexSpec")))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))

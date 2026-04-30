@@ -271,6 +271,12 @@ CCamera* CGameInstance::Get_MainCamera() const
 {
 	return m_pMainCamera;
 }
+
+const _float* CGameInstance::Get_FarZPtr() const
+{
+	return (m_pMainCamera ? m_pMainCamera->Get_FarZPtr() : &m_fDummy);
+}
+
 void CGameInstance::Toggle_CameraFollow()
 {
 	m_pMainCamera->Toggle_Following();

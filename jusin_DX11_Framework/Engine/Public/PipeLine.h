@@ -32,7 +32,6 @@ private:
 	_float4x4 m_TransformStateInverseMatrices[ETOUI(D3DTS::END)] = {};
 	_float4 m_vCamPosition = {};
 
-
 public:
 	static CPipeLine* Create();
 

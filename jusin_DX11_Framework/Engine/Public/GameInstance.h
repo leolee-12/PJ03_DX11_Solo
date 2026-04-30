@@ -70,11 +70,13 @@ public:
 	const _float4x4* Get_Transform(D3DTS eState) const;
 	const _float4x4* Get_Transform_Inverse(D3DTS eState) const;
 	const _float4* Get_CamPosition() const;
+
 	void Set_CameraWorld(_fmatrix StateMatrix);
 	void Set_Projection(_fmatrix StateMatrix);
 
 	void Set_MainCamera(class CCamera* pCamera);
 	class CCamera* Get_MainCamera() const;
+	const _float* Get_FarZPtr() const;
 	void Toggle_CameraFollow();
 #pragma endregion
 
@@ -144,6 +146,7 @@ private:
 
 	_float2						m_vOriginVPSize{}, m_vCurrentVPSize{};
 	_bool						m_bDebug = { false };
+	float						m_fDummy = { 500.f };
 
 private:
 	virtual void Free() override;

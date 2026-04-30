@@ -26,6 +26,8 @@ public:
 	void Toggle_Following() { m_bFollow = !m_bFollow; }
 
 	virtual _string Get_TypeName() const { return "Camera"; }
+	const _float* Get_FarZPtr() const { return &m_fFar; }
+
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);

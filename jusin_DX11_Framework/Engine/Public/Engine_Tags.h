@@ -20,6 +20,8 @@ namespace Engine
 
 	WNAME_TAG(TARGET_DIFFUSE, L"Target_Diffuse");
 	WNAME_TAG(TARGET_NORMAL, L"Target_Normal");
+	WNAME_TAG(TARGET_DEPTH, L"Target_Depth");
+	WNAME_TAG(TARGET_SPECULAR, L"Target_Specular");
 	WNAME_TAG(TARGET_SHADE, L"Target_Shade");
 
 

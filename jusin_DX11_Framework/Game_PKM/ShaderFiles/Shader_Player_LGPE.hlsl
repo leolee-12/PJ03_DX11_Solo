@@ -3,6 +3,7 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_WITMatrix;
 vector g_vCamPos;
+float g_fFarZ;
 
 // 재질
 texture2D g_TexDiff;
@@ -34,6 +35,7 @@ struct VS_OUT
 	float4 vNorm : NORMAL;
 	float2 vTex : TEXCOORD0;
 	float4 vWorldPos : TEXCOORD1;
+	float4 vProjPos : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -58,8 +60,11 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vNorm = float4(normalize(mul(vNormal, (float3x3)g_WITMatrix)), 0.f);
 	Out.vTex = In.vTex;
 	Out.vWorldPos = mul(vPosition, g_WorldMatrix);
+	Out.vProjPos = Out.vPos;
 	return Out;
 }
+
+
 
 struct PS_IN
 {
@@ -67,22 +72,27 @@ struct PS_IN
 	float4 vNorm : NORMAL;
 	float2 vTex : TEXCOORD0;
 	float4 vWorldPos : TEXCOORD1;
+	float4 vProjPos : TEXCOORD2;
 };
 
 struct PS_OUT
 {
 	float4 vDiff : SV_TARGET0;
 	float4 vNorm : SV_TARGET1;
+	float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_DS(PS_IN In)	// 0번 패스
 {
 	PS_OUT Out;
 	
-	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);	
+	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
+	if (vMtrlDiff.a < 0.1f)
+		discard;
 	
-	Out.vDiff = vMtrlDiff;
+	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	return Out;
 
 	//vector vMtrlSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
@@ -113,9 +123,10 @@ PS_OUT PS_DSEL(PS_IN In)	// 1번 패스
 		vMtrlDiff = g_TexLycl.Sample(LinearSampler, vTexEyes);
 		vMtrlEmit = g_TexEmit.Sample(LinearSampler, vTexEyes);
 	}
-	
-	Out.vDiff = vMtrlDiff + vMtrlEmit;
+
+	Out.vDiff = vector((vMtrlDiff + vMtrlEmit).rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	return Out;
 
 	//vector Normal = normalize(In.vNorm);
@@ -142,8 +153,9 @@ PS_OUT PS_DSAAA(PS_IN In)	// 2번 패스
 	//							g_TexAmbt_B.Sample(LinearSampler, In.vTex).r, 
 	//							1.f);
 
-	Out.vDiff = vMtrlDiff;
+	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	return Out;
 
 	//vector Normal = normalize(In.vNorm);
