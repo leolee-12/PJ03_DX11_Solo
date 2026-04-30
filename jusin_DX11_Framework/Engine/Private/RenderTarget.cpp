@@ -19,20 +19,20 @@ HRESULT CRenderTarget::Initialize(_uint iWidth, _uint iHeight, DXGI_FORMAT ePixe
 	TextureDesc.MipLevels = 1;
 	TextureDesc.ArraySize = 1;
 	TextureDesc.Format = ePixelFormat;
-	TextureDesc.SampleDesc.Quality = 0;
 	TextureDesc.SampleDesc.Count = 1;
+	TextureDesc.SampleDesc.Quality = 0;
 	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
 	TextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture2D)))
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pRTTexture)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture2D, nullptr, &m_pRTV)))
+	if (FAILED(m_pDevice->CreateRenderTargetView(m_pRTTexture, nullptr, &m_pRTV)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, nullptr, &m_pSRV)))
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pRTTexture, nullptr, &m_pSRV)))
 		return E_FAIL;
 
 	m_vClearColor = vClearColor;
@@ -102,7 +102,7 @@ void CRenderTarget::Free()
 
 	Safe_Release(m_pSRV);
 	Safe_Release(m_pRTV);
-	Safe_Release(m_pTexture2D);
+	Safe_Release(m_pRTTexture);
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
