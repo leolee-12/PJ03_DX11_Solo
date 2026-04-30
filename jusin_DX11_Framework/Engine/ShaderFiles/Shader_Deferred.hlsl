@@ -137,9 +137,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 
 	vector vLightDir = vWorldPos - g_vLightPos;
-	float fAtt = (saturate(g_fLightRange - length(vLightDir)) / g_fLightRange);
+	float fAtt = saturate((g_fLightRange - length(vLightDir)) / g_fLightRange);
 
-	vector vReflect = reflect(normalize(g_vLightDir), normalize(vNormal));
+	vector vReflect = reflect(normalize(vLightDir), normalize(vNormal));
 	vector vLook = vWorldPos - g_vCamPos;
 	Out.vSpec = (g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 50.f) * fAtt;
 

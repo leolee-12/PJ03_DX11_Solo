@@ -23,9 +23,9 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SHADE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SPECULAR, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
-		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SPECULAR, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	// MRT·Î ¹­±â
@@ -35,9 +35,9 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DEPTH)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SPECULAR)))
-		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SHADE)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SPECULAR)))
 		return E_FAIL;
 
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Deferred.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements);
