@@ -35,6 +35,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	void On_ViewportResize(_float2 vNewSize);
+
 private:
 	_float m_fFovy, m_fAspect, m_fNear, m_fFar;
 	_float4x4 m_ProjMatrix = {};

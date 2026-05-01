@@ -14,30 +14,7 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CRenderer::Initialize()
 {
-	_float2 vViewportDesc = m_pGameInstance->Get_OriginRefSize();
-
-	// RT 积己
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DIFFUSE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_NORMAL, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SHADE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SPECULAR, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
-		return E_FAIL;
-
-	// MRT肺 弓扁
-	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DIFFUSE)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_NORMAL)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DEPTH)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SHADE)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SPECULAR)))
+	if(FAILED(Resize()))
 		return E_FAIL;
 
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Deferred.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements);
@@ -47,21 +24,6 @@ HRESULT CRenderer::Initialize()
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
-
-	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(vViewportDesc.x, vViewportDesc.y, 1.f));
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(vViewportDesc.x, vViewportDesc.y, 0.f, 1.f));
-
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_DIFFUSE, 150.f, 150.f, 300.f, 300.f)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_NORMAL, 150.f, 450.f, 300.f, 300.f)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SHADE, 450.f, 150.f, 300.f, 300.f)))
-		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SPECULAR, 450.f, 450.f, 300.f, 300.f)))
-		return E_FAIL;
-#endif
 
 	return S_OK;
 }
@@ -98,6 +60,52 @@ HRESULT CRenderer::Draw()
 
 #ifdef _DEBUG
 	if (FAILED(Render_Debug()))
+		return E_FAIL;
+#endif
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Resize()
+{
+	_float2 vViewportDesc = m_pGameInstance->Get_ViewportSize();
+
+	// RT 积己
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DIFFUSE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_NORMAL, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SHADE, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SPECULAR, vViewportDesc.x, vViewportDesc.y, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	// MRT肺 弓扁
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DIFFUSE)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_NORMAL)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DEPTH)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SHADE)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SPECULAR)))
+		return E_FAIL;
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(vViewportDesc.x, vViewportDesc.y, 1.f));
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(vViewportDesc.x, vViewportDesc.y, 0.f, 1.f));
+
+#ifdef _DEBUG
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_DIFFUSE, 150.f, 150.f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_NORMAL, 150.f, 450.f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SHADE, 450.f, 150.f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SPECULAR, 450.f, 450.f, 300.f, 300.f)))
 		return E_FAIL;
 #endif
 

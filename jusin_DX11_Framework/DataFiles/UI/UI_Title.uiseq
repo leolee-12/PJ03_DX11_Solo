@@ -1,7 +1,10 @@
 {
   "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
     "name": "HUD_Layout",
-    "version": 1
+    "scalePolicy": "STRETCH",
+    "version": 2
   },
   "timeline": [
     {
@@ -102,10 +105,12 @@
         "transform": {
           "centerX": 640.0,
           "centerY": 356.7109680175781,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 900.0,
           "sizeY": 150.0,
           "visible": true,
-          "zOrder": 0
+          "zOrder": 1
         },
         "viBuffer": {
           "level": 0,
@@ -173,10 +178,12 @@
         "transform": {
           "centerX": 934.2803955078125,
           "centerY": 496.6446533203125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 800.0,
           "sizeY": 214.0,
           "visible": true,
-          "zOrder": 0
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,
@@ -244,6 +251,8 @@
         "transform": {
           "centerX": 169.42059326171875,
           "centerY": 496.64447021484375,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 425.0,
           "sizeY": 320.0,
           "visible": true,
@@ -300,6 +309,8 @@
         "transform": {
           "centerX": 848.7476196289063,
           "centerY": 860.0830688476563,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 445.0,
           "sizeY": 66.0,
           "visible": true,
@@ -323,9 +334,9 @@
           "useAnchoredPos": false
         },
         "color": [
-          1.0,
-          1.0,
-          1.0,
+          0.0,
+          0.0,
+          0.0,
           1.0
         ],
         "layoutSlot": {
@@ -356,6 +367,8 @@
         "transform": {
           "centerX": 640.0,
           "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 1280.0,
           "sizeY": 720.0,
           "visible": true,
@@ -369,6 +382,113 @@
       "displayName": "white",
       "id": "widget_005",
       "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "New Text",
+        "transform": {
+          "centerX": 1116.8349609375,
+          "centerY": 70.9876708984375,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 240.0,
+          "sizeY": 48.0,
+          "visible": true,
+          "zOrder": 5
+        }
+      },
+      "displayName": "Text",
+      "id": "widget_006",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "back": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Title_Logo_Diff"
+        },
+        "backColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "direction": "LEFT_TO_RIGHT",
+        "fill": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Title_Logo_Diff"
+        },
+        "fillAmount": 1.0,
+        "fillColor": [
+          1.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "transform": {
+          "centerX": 1079.3851318359375,
+          "centerY": 557.4000244140625,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 305.0,
+          "sizeY": 82.0,
+          "visible": true,
+          "zOrder": 5
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "ProgressBar",
+      "id": "widget_007",
+      "type": "PROGRESSBAR"
     }
   ]
 }

@@ -150,6 +150,21 @@
     <ClInclude Include="..\Public\UIPreviewHost.h">
       <Filter>04. Panels\04. UITool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VP_RenderTarget.h">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VP_CoordMapper.h">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VP_PickingCtrl.h">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VP_UIEditCtrl.h">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VP_OverlayDrawer.h">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -243,6 +258,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Editor_UI.cpp">
       <Filter>99. Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VP_RenderTarget.cpp">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VP_CoordMapper.cpp">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VP_PickingCtrl.cpp">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VP_UIEditCtrl.cpp">
+      <Filter>04. Panels\06. Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VP_OverlayDrawer.cpp">
+      <Filter>04. Panels\06. Viewport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

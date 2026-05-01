@@ -25,6 +25,7 @@ public:
 	const _string& Get_Status()  const { return m_strStatus; }
 	void  Set_DocPath(const _string& s) { m_strDocPath = s; }
 	_bool Is_Dirty() const { return m_bDirty; }
+	void Set_DocCanvas(_float fWidth, _float fHeight, UI_SCALE_POLICY eScalePolicy);
 
 	// selection accessors
 	_int Get_SelectedWidget()    const { return m_iSelectedWidget; }
@@ -87,6 +88,7 @@ private:
 	_string Make_NextCallbackId() const;
 	void Normalize_Selection();
 	void Clear_Dirty();
+	void Propagate_DocCanvasToWidgets();
 
 public:
 	static CUIEditorSession* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

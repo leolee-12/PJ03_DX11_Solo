@@ -57,8 +57,13 @@ struct UISEQ_WIDGET_NODE
 // 파일 단위 문서
 struct UISEQ_DOC
 {
-	_int iVersion{ 1 };
+	_int iVersion{ 2 };
 	_string strName;
+
+	_float fDesignWidth{ 1280.f };
+	_float fDesignHeight{ 720.f };
+	UI_SCALE_POLICY eScalePolicy{ UI_SCALE_POLICY::UNIFORM_FIT };
+
 	vector<UISEQ_WIDGET_NODE> vWidgets;
 	vector<UISEQ_STEP_NODE> vSteps;
 };

@@ -115,9 +115,6 @@
     <Filter Include="05. GameObject\UIObject\04. ProgressBar">
       <UniqueIdentifier>{2cd6a07f-61e2-4bd3-95f3-ae58966160c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. GameObject\UIObject\99. Tween">
-      <UniqueIdentifier>{91719731-bc7d-488d-9d1f-ff169571f254}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07. Component\UIAnimator">
       <UniqueIdentifier>{1687a60c-8a1d-4ce3-9d2a-b99da95702e2}</UniqueIdentifier>
     </Filter>
@@ -141,6 +138,12 @@
     </Filter>
     <Filter Include="81. Interface">
       <UniqueIdentifier>{1b484866-4655-4cb9-a270-4a3e31398876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\99. UICanvasMath">
+      <UniqueIdentifier>{fbff5979-8465-47c3-8693-46c365e380aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. GameObject\UIObject\90. Tween">
+      <UniqueIdentifier>{91719731-bc7d-488d-9d1f-ff169571f254}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,7 +325,7 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UITween.h">
-      <Filter>05. GameObject\UIObject\99. Tween</Filter>
+      <Filter>05. GameObject\UIObject\90. Tween</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIAnimator.h">
       <Filter>07. Component\UIAnimator</Filter>
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\SharedTextureBinder.h">
       <Filter>81. Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UICanvasMath.h">
+      <Filter>05. GameObject\UIObject\99. UICanvasMath</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -507,7 +513,7 @@
       <Filter>05. GameObject\UIObject\04. ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UITween.cpp">
-      <Filter>05. GameObject\UIObject\99. Tween</Filter>
+      <Filter>05. GameObject\UIObject\90. Tween</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIAnimator.cpp">
       <Filter>07. Component\UIAnimator</Filter>
@@ -529,6 +535,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\RenderTarget.cpp">
       <Filter>11. RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UICanvasMath.cpp">
+      <Filter>05. GameObject\UIObject\99. UICanvasMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

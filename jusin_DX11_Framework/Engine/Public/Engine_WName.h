@@ -268,7 +268,7 @@ namespace Engine
 #else
 	inline WNameID WNameRT(const wstring& wStr) noexcept { return WName(wStr.c_str(), wStr.size()); }
 
-#define WNAME(wStr) ::Engine::WName(wStr)
+#define WNAME(wStr) ::Engine::WNameRT(wStr)
 
 #define WNAME_TAG(name, wStr)							\
 	inline constexpr WNameID name = WName(wStr);

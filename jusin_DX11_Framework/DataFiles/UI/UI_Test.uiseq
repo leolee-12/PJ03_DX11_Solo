@@ -1,7 +1,10 @@
 {
   "meta": {
-    "name": "HUD_Layout",
-    "version": 1
+      "version": 2,
+      "name": "HUD_Layout",
+      "designWidth": 1280,
+      "designHeight": 720,
+      "scalePolicy": "UNIFORM_FIT"
   },
   "widgets": [
     {

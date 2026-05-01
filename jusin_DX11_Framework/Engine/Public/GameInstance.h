@@ -25,13 +25,11 @@ public:
 	HRESULT End_Draw();
 	void Clear_Resources(_int iLevelIndex);
 	void Release_Engine();
+	HRESULT Resize_Engine(_uint iNewWidth, _uint iNewHeight);
 
 	const HWND Get_HWND() const;
 	_float Random(_float fMin, _float fMax);
-	void Set_ViewportSize(_float fSizeX, _float fSizeY) { m_vCurrentVPSize = { fSizeX, fSizeY }; }
-	void Reset_ViewportSize() { m_vCurrentVPSize = m_vOriginVPSize; }
-	_float2 Get_CurrentRefSize() { return m_vCurrentVPSize; }
-	_float2 Get_OriginRefSize() { return m_vOriginVPSize; }
+	_float2 Get_ViewportSize() { return m_vViewportSize; }
 	void Toggle_Debug() { m_bDebug = !m_bDebug; }
 	_bool Is_Debug() { return m_bDebug; }
 #pragma endregion
@@ -144,7 +142,7 @@ private:
 	class CCamera*				m_pMainCamera = { nullptr };
 	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };
 
-	_float2						m_vOriginVPSize{}, m_vCurrentVPSize{};
+	_float2						m_vViewportSize{};
 	_bool						m_bDebug = { false };
 	float						m_fDummy = { 500.f };
 

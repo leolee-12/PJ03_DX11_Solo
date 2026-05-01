@@ -21,7 +21,7 @@ public:
 	virtual UI_TYPE Get_UIType() const override { return UI_TYPE::CONTAINER; }
 	void Set_Layout(const UILAYOUT_DESC& tLayoutDesc);
 	const vector<CUIObject*>& Get_Children() const { return m_Children; }
-
+	virtual void On_ViewportResized(_float2 vNewViewport) override;
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

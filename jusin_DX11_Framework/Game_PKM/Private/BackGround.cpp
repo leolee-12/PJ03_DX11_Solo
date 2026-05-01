@@ -19,7 +19,7 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	_float2 vViewportSize = m_pGameInstance->Get_CurrentRefSize();
+	_float2 vViewportSize = m_pGameInstance->Get_ViewportSize();
 	_float fViewWidth = vViewportSize.x;
 	_float fViewHeight = vViewportSize.y;
 

@@ -95,6 +95,23 @@ HRESULT CTarget_Manager::Bind_ShaderResource(WNameID strTargetTag, CShader* pSha
 	return pRenderTarget->Bind_ShaderResource(pShader, pConstName);
 }
 
+void CTarget_Manager::Reset()
+{
+	m_MRTs.for_each([](auto& Pair)
+		{
+			for (auto& pRenderTarget : Pair.second)
+				Safe_Release(pRenderTarget);
+			Pair.second.clear();
+		});
+	m_MRTs.clear();
+
+	m_RenderTargets.for_each([](auto& Pair)
+		{
+			Safe_Release(Pair.second);
+		});
+	m_RenderTargets.clear();
+}
+
 #ifdef _DEBUG
 
 HRESULT CTarget_Manager::Ready_Debug(WNameID strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
@@ -140,19 +157,7 @@ void CTarget_Manager::Free()
 {
 	__super::Free();
 
-	m_MRTs.for_each([](auto& Pair)
-		{
-			for (auto& pRenderTarget : Pair.second)
-				Safe_Release(pRenderTarget);
-			Pair.second.clear();
-		});
-	m_MRTs.clear();
-
-	m_RenderTargets.for_each([](auto& Pair)
-		{
-			Safe_Release(Pair.second);
-		});
-	m_RenderTargets.clear();
+	Reset();
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
