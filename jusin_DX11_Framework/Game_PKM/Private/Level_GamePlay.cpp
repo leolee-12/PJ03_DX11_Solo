@@ -43,6 +43,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	pCamera->Set_FollowOffset({ 0.f, 6.5f, -7.5f });
 	m_pGameInstance->Set_MainCamera(pCamera);
 
+	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.5f);
+
 	return S_OK;
 }
 

@@ -126,6 +126,20 @@ public:
 	class ISharedTextureBinder* Get_SharedTextureBinder() const { return m_pSharedTextureBinder; }
 #pragma endregion
 
+#pragma region SOUND_MANAGER
+	HRESULT Play(const _tchar* pSoundKey, CHANNELID eChannelID = CHANNELID::SFX, _float fVolume = 1.f, _bool bLoop = false);
+	HRESULT Play_BGM(const _tchar* pSoundKey, _float fVolume = 1.f);
+	HRESULT Play_3D(const _tchar* pSoundKey, const _float3& vPosition, CHANNELID eChannelID = CHANNELID::SFX,
+		_float fVolume = 1.f, _float fMinDistance = 1.f, _float fMaxDistance = 100.f, _bool bLoop = false);
+
+	void Stop_Sound(CHANNELID eChannelID);
+	void Stop_Group(CHANNELID eChannelID);
+	void Stop_All();
+
+	void Set_ChannelVolume(CHANNELID eChannelID, _float fVolume);
+	void Set_GroupVolume(CHANNELID eChannelID, _float fVolume);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -138,6 +152,7 @@ private:
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
+	class CSound_Manager*		m_pSound_Manager = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
 	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };

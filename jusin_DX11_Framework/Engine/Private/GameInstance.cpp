@@ -9,6 +9,7 @@
 #include "Light_Manager.h"
 #include "Font_Manager.h"
 #include "Target_Manager.h"
+#include "Sound_Manager.h"
 
 #include "SharedTextureBinder.h"
 
@@ -75,6 +76,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
+	m_pSound_Manager = CSound_Manager::Create();
+	if (nullptr == m_pSound_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -87,6 +92,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pLevel_Manager->Update(fTimeDelta);
+
+	m_pSound_Manager->Update();
 }
 
 HRESULT CGameInstance::Begin_Draw()
@@ -132,6 +139,7 @@ void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pMainCamera);
 
+	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pInput_Device);
@@ -438,6 +446,49 @@ HRESULT CGameInstance::Render_RT_Debug(WNameID strMRTTag, CShader* pShader, CVIB
 	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
 }
 #endif
+#pragma endregion
+
+#pragma region SOUND_MANAGER
+HRESULT CGameInstance::Play(const _tchar* pSoundKey, CHANNELID eChannelID, _float fVolume, _bool bLoop)
+{
+	return m_pSound_Manager->Play(pSoundKey, eChannelID, fVolume, bLoop);
+}
+
+HRESULT CGameInstance::Play_BGM(const _tchar* pSoundKey, _float fVolume)
+{
+	return m_pSound_Manager->Play_BGM(pSoundKey, fVolume);
+}
+
+HRESULT CGameInstance::Play_3D(const _tchar* pSoundKey, const _float3& vPosition, CHANNELID eChannelID,
+	_float fVolume, _float fMinDistance, _float fMaxDistance, _bool bLoop)
+{
+	return m_pSound_Manager->Play_3D(pSoundKey, vPosition, eChannelID, fVolume, fMinDistance, fMaxDistance, bLoop);
+}
+
+void CGameInstance::Stop_Sound(CHANNELID eChannelID)
+{
+	m_pSound_Manager->Stop_Sound(eChannelID);
+}
+
+void CGameInstance::Stop_Group(CHANNELID eChannelID)
+{
+	m_pSound_Manager->Stop_Group(eChannelID);
+}
+
+void CGameInstance::Stop_All()
+{
+	m_pSound_Manager->Stop_All();
+}
+
+void CGameInstance::Set_ChannelVolume(CHANNELID eChannelID, _float fVolume)
+{
+	m_pSound_Manager->Set_ChannelVolume(eChannelID, fVolume);
+}
+
+void CGameInstance::Set_GroupVolume(CHANNELID eChannelID, _float fVolume)
+{
+	m_pSound_Manager->Set_GroupVolume(eChannelID, fVolume);
+}
 #pragma endregion
 
 void CGameInstance::Free()
