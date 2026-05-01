@@ -8,7 +8,7 @@
 #include "Engine_Defines.h"
 #include "Game_PKM_Enum.h"
 #include "Game_PKM_Tags.h"
-#include "Game_PKM_Types.h"
+#include "Game_PKM_Struct.h"
 
 NS_BEGIN(Game_PKM)
 

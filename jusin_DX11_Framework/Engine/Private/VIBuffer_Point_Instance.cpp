@@ -29,7 +29,8 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype()
 	m_ePrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 	m_iInstanceStride = sizeof(VTXPARTICLE_INSTANCE);
-	m_iNumInstances = m_tInitDesc.iNumInstance;
+	m_iMaxInstances = m_tInitDesc.iNumInstance;
+	m_iNumInstances = m_iMaxInstances;
 	m_iVertexCountPerInstance = 1;
 
 
@@ -58,16 +59,16 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype()
 
 
 
-	m_InstanceBufferDesc.ByteWidth = m_iNumInstances * m_iInstanceStride;
+	m_InstanceBufferDesc.ByteWidth = m_iMaxInstances * m_iInstanceStride;
 	m_InstanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	m_InstanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_InstanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	m_InstanceBufferDesc.MiscFlags = 0;
 	m_InstanceBufferDesc.StructureByteStride = 0;
 
-	m_pInstanceVertices = new VTXPARTICLE_INSTANCE[m_iNumInstances];
-	ZeroMemory(m_pInstanceVertices, sizeof(VTXPARTICLE_INSTANCE) * m_iNumInstances);
-	m_pSpeeds = new _float[m_iNumInstances];
+	m_pInstanceVertices = new VTXPARTICLE_INSTANCE[m_iMaxInstances];
+	ZeroMemory(m_pInstanceVertices, sizeof(VTXPARTICLE_INSTANCE) * m_iMaxInstances);
+	m_pSpeeds = new _float[m_iMaxInstances];
 	m_isLoop = m_tInitDesc.isLoop;
 	m_vPivot = m_tInitDesc.vPivot;
 
@@ -78,7 +79,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype()
 	XMStoreFloat3(&vMinPos, vCenter - vHalfRange);
 	XMStoreFloat3(&vMaxPos, vCenter + vHalfRange);
 
-	for (size_t i = 0; i < m_iNumInstances; i++)
+	for (size_t i = 0; i < m_iMaxInstances; i++)
 	{
 		m_pSpeeds[i] = m_pGameInstance->Random(m_tInitDesc.vSpeedRange.x, m_tInitDesc.vSpeedRange.y);
 
@@ -141,6 +142,9 @@ HRESULT CVIBuffer_Point_Instance::Bind_Resources()
 
 HRESULT CVIBuffer_Point_Instance::Render()
 {
+	if (0 == m_iNumInstances)
+		return S_OK;
+
 	m_pContext->DrawInstanced(m_iVertexCountPerInstance, m_iNumInstances, 0, 0);
 
 	return S_OK;

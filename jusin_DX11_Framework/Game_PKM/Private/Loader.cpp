@@ -14,6 +14,8 @@
 #include "Body_Hero.h"
 #include "Snow.h"
 #include "Explosion.h"
+#include "VIBuffer_UI_Instance.h"
+#include "Effect_Star.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -123,25 +125,6 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 			++m_iTotalCount;
 		};
 	
-	/* Prototype_Component_Texture_BackGround */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2)); });
-
-	/* Prototype_GameObject_BackGround */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_BACKGROUND,
-		CBackGround::Create(m_pDevice, m_pContext)); });
-
-	return S_OK;
-}
-
-HRESULT CLoader::Ready_Resources_For_GamePlay()
-{
-	auto Enqueue = [this](TaskFunc fn)
-		{
-			m_TaskQueue.push(move(fn));
-			++m_iTotalCount;
-		};
-
 	// ---------- Texture ----------
 	/* Prototype_Component_Texture_Title_pbgf_Diff */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_DIFF,
@@ -158,6 +141,44 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_Component_Texture_Title_Pika */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PIKA,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/pber_pika_%02d.png"), 11)); });
+
+	/* Prototype_Component_Texture_Star */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_STAR,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Star/Star_%02d.png"), 3)); });
+
+	// ---------- VIBuffer ----------
+	/* Prototype_Component_VIBuffer_Instance_Star */
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC StarDesc{};
+	StarDesc.iNumInstance = 64;
+
+	Enqueue([this, StarDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_STAR,
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &StarDesc)); });
+
+	/* Prototype_Component_Texture_BackGround */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2)); });
+
+	// ---------- GameObject ----------
+	/* Prototype_GameObject_BackGround */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_BACKGROUND,
+		CBackGround::Create(m_pDevice, m_pContext)); });
+
+	/* Prototype_GameObject_Effect_Star */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFT_STAR,
+		CEffect_Star::Create(m_pDevice, m_pContext)); });
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Resources_For_GamePlay()
+{
+	auto Enqueue = [this](TaskFunc fn)
+		{
+			m_TaskQueue.push(move(fn));
+			++m_iTotalCount;
+		};
+
+	// ---------- Texture ----------
 
 	// ---------- Shader ----------
 	/* Prototype_Component_Shader_VtxNorTex */
@@ -183,7 +204,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_Component_Shader_VtxPointInstance */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXPOINTINST,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxPointInstance.hlsl"), VTXPOINT_INSTANCE_DESC::Elements, VTXPOINT_INSTANCE_DESC::iNumElements)); });
-
 
 	/* Prototype_Component_Shader_Player_LGPE */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,

@@ -76,6 +76,15 @@
     <Filter Include="05. Manager">
       <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Components">
+      <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Effects">
+      <UniqueIdentifier>{911aec86-4d94-417b-a60f-60175478b046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Components\UI_Instance">
+      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -123,7 +132,7 @@
     <ClInclude Include="..\Public\Ability.h">
       <Filter>03. GameLogic\01. Ability</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Game_PKM_Types.h">
+    <ClInclude Include="..\Public\Game_PKM_Struct.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ForkLift.h">
@@ -158,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\SharedTexture_Manager.h">
       <Filter>05. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Star.h">
+      <Filter>06. Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
+      <Filter>04. Components\UI_Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +244,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\SharedTexture_Manager.cpp">
       <Filter>05. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Star.cpp">
+      <Filter>06. Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
+      <Filter>04. Components\UI_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

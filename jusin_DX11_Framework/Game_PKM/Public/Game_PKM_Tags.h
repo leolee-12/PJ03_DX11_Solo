@@ -19,6 +19,8 @@ WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBTN_DIFF, L"Prototype_Component_Texture_Title_pbtn_Diff");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
+WNAME_TAG(PROTO_COM_TEXTURE_STAR, L"Prototype_Component_Texture_Star");
+
 
 WNAME_TAG(PROTO_COM_TEXTURE_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
 WNAME_TAG(PROTO_COM_TEXTURE_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
@@ -45,6 +47,7 @@ WNAME_TAG(PROTO_COM_VIBUFFER_TERRAIN, L"Prototype_Component_VIBuffer_Terrain");
 WNAME_TAG(PROTO_COM_VIBUFFER_CUBE, L"Prototype_Component_VIBuffer_Cube");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_SNOW, L"Prototype_Component_VIBuffer_Instance_Snow");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_EXPLOSION, L"Prototype_Component_VIBuffer_Instance_Explosion");
+WNAME_TAG(PROTO_COM_VIBUFFER_INST_STAR, L"Prototype_Component_VIBuffer_Instance_Star");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
@@ -85,6 +88,7 @@ WNAME_TAG(PROTO_OBJ_WEAPON, L"Prototype_GameObject_Weapon");
 WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
+WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");

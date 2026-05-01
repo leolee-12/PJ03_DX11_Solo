@@ -1,6 +1,7 @@
 #include "Level_GamePlay.h"
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
+#include "Effect_Star.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -34,8 +35,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_UI(LAYER_UI)))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_UI(LAYER_UI)))
+		return E_FAIL;
 
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
@@ -116,7 +117,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 20.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	CameraDesc.fMouseSensor = 0.05f;
+	CameraDesc.fMouseSensor = 0.03f;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
 		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &CameraDesc)))
@@ -136,9 +137,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
-		ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
+	//	ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -173,22 +174,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 {
-	CUISequence::UISEQUENCE_DESC tDesc{};
-	tDesc.strPath = "../../DataFiles/UI/UI_Title.uiseq";
-	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+	//CUISequence::UISEQUENCE_DESC tDesc{};
+	//tDesc.strPath = "../../DataFiles/UI/UI_Title.uiseq";
+	//tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+	//
+	//CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+	//	PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	//if (nullptr == pSeq)
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	//{
+	//	Safe_Release(pSeq);
+	//	return E_FAIL;
+	//}
+	//
+	//m_pRuntimeUI = pSeq;  // weak
 
-	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
-		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
-	if (nullptr == pSeq)
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
-	{
-		Safe_Release(pSeq);
-		return E_FAIL;
-	}
-
-	m_pRuntimeUI = pSeq;  // weak
 	return S_OK;
 }
 

@@ -24,13 +24,14 @@
     <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\Effect_Star.h" />
     <ClInclude Include="..\Public\Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Game_API.h" />
     <ClInclude Include="..\Public\Game_PKM_Defines.h" />
     <ClInclude Include="..\Public\Game_PKM_Enum.h" />
     <ClInclude Include="..\Public\Game_PKM_Tags.h" />
-    <ClInclude Include="..\Public\Game_PKM_Types.h" />
+    <ClInclude Include="..\Public\Game_PKM_Struct.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -45,6 +46,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Snow.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +55,7 @@
     <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Effect_Star.cpp" />
     <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Game_API.cpp" />
@@ -70,6 +73,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Snow.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ CVIBuffer_Instance::CVIBuffer_Instance(const CVIBuffer_Instance& Prototype)
 	: CVIBuffer{ Prototype }
 	, m_pVBInstance{ Prototype.m_pVBInstance }
 	, m_iNumInstances{ Prototype.m_iNumInstances }
+	, m_iMaxInstances{ Prototype.m_iMaxInstances }
 	, m_iInstanceStride{ Prototype.m_iInstanceStride }
 	, m_iIndexCountPerInstance{ Prototype.m_iIndexCountPerInstance }
 	, m_InstanceBufferDesc{ Prototype.m_InstanceBufferDesc }
@@ -55,7 +56,37 @@ HRESULT CVIBuffer_Instance::Bind_Resources()
 
 HRESULT CVIBuffer_Instance::Render()
 {
+	if (0 == m_iNumInstances)
+		return S_OK;
+
 	m_pContext->DrawIndexedInstanced(m_iIndexCountPerInstance, m_iNumInstances, 0, 0, 0);
+
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Instance::Update_Instances(const VTXPARTICLE_INSTANCE* pInstances, _uint iNumInstances)
+{
+	if (iNumInstances > m_iMaxInstances)
+		return E_FAIL;
+
+	if (0 == iNumInstances)
+	{
+		m_iNumInstances = 0;
+		return S_OK;
+	}
+
+	if (nullptr == pInstances || nullptr == m_pVBInstance || 0 == m_iInstanceStride)
+		return E_FAIL;
+
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+	if (FAILED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
+		return E_FAIL;
+
+	memcpy(SubResource.pData, pInstances, m_iInstanceStride * iNumInstances);
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+
+	m_iNumInstances = iNumInstances;
 
 	return S_OK;
 }
