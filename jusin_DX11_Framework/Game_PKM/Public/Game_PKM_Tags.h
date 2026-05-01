@@ -40,6 +40,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXPOINTINST, L"Prototype_Component_Shader_VtxPointIn
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
 WNAME_TAG(PROTO_COM_SHADER_UI, L"Prototype_Component_Shader_UI");
+WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance");
 
 // VIBuffer & Model
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");

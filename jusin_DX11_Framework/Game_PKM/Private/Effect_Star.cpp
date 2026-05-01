@@ -116,7 +116,7 @@ HRESULT CEffect_Star::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXRECTINST,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXUIINST,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -136,7 +136,11 @@ HRESULT CEffect_Star::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(__super::Bind_ShaderResource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ)))	// UI¿ë
 		return E_FAIL;
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_tDesc.iStarTextureIndex)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexDiff", m_tDesc.iStarTextureIndex)))
+		return E_FAIL;
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexMask", m_tDesc.iMaskTextureIndex)))
+		return E_FAIL;
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexSub", m_tDesc.iDiamondTextureIndex)))
 		return E_FAIL;
 
 	return S_OK;
@@ -160,8 +164,21 @@ void CEffect_Star::Initialize_Particle(_uint iParticleIndex)
 	Particle.fLifeTime = m_pGameInstance->Random(m_tDesc.vLifeRange.x, m_tDesc.vLifeRange.y);
 	Particle.fRotation = m_pGameInstance->Random(0.f, XM_2PI);
 	Particle.fRotationSpeed = m_pGameInstance->Random(m_tDesc.vRotationSpeedRange.x, m_tDesc.vRotationSpeedRange.y);
+	Particle.fMaskRotation = m_pGameInstance->Random(0.f, XM_2PI);
+	Particle.fMaskRotationSpeed = m_pGameInstance->Random(m_tDesc.vMaskRotationSpeedRange.x, m_tDesc.vMaskRotationSpeedRange.y);
 	Particle.fAlpha = 1.f;
+
 	Particle.iTextureIndex = m_tDesc.iStarTextureIndex;
+	Particle.iFrameIndex = 0;
+	Particle.eAtlasLayout = TEXTURE_SAMPLE_MODE::SINGLE;
+
+	if (0 != m_tDesc.iDiamondTextureIndex && 0 == (iParticleIndex % 5))
+	{
+		Particle.iTextureIndex = m_tDesc.iDiamondTextureIndex;
+		Particle.iFrameIndex = iParticleIndex % 4;
+		Particle.eAtlasLayout = TEXTURE_SAMPLE_MODE::QUAD;
+	}
+
 	Particle.isAlive = true;
 }
 
@@ -200,10 +217,10 @@ void CEffect_Star::Update_Particles(_float fTimeDelta)
 		Particle.vOffset.x += Particle.vVelocity.x * fTimeDelta;
 		Particle.vOffset.y += Particle.vVelocity.y * fTimeDelta;
 		Particle.fRotation += Particle.fRotationSpeed * fTimeDelta;
+		Particle.fMaskRotation += Particle.fMaskRotationSpeed * fTimeDelta;
 		Particle.fAge += fTimeDelta;
 
-		const _float fRatio = (Particle.fLifeTime > 0.f) ? min(Particle.fAge / Particle.fLifeTime, 1.f) :
-			1.f;
+		const _float fRatio = (Particle.fLifeTime > 0.f) ? min(Particle.fAge / Particle.fLifeTime, 1.f) : 1.f;
 		Particle.fAlpha = 1.f - fRatio;
 
 		if (Particle.fAge >= Particle.fLifeTime)
@@ -237,15 +254,29 @@ void CEffect_Star::Build_RenderInstances()
 		const _float c = cosf(Particle.fRotation);
 		const _float s = sinf(Particle.fRotation);
 
-		VTXPARTICLE_UI_INSTANCE Instance{};
+		VTXUI_INSTANCE Instance{};
 		Instance.vRight = _float4(c * Particle.vSize.x, s * Particle.vSize.x, 0.f, 0.f);
 		Instance.vUp = _float4(-s * Particle.vSize.y, c * Particle.vSize.y, 0.f, 0.f);
 		Instance.vTranslation = _float4(Particle.vOffset.x, -Particle.vOffset.y, 0.f, 1.f);
 		Instance.vColor = _float4(m_tDesc.vColor.x, m_tDesc.vColor.y, m_tDesc.vColor.z, m_tDesc.vColor.w * Particle.fAlpha);
+
+		const _float fMaskC = cosf(Particle.fMaskRotation);
+		const _float fMaskS = sinf(Particle.fMaskRotation);
 		Instance.vUVTransform = _float4(1.f, 1.f, 0.f, 0.f);
-		Instance.vMaskUVTransform = _float4(1.f, 1.f, 0.f, 0.f);
-		Instance.vParams = _float4(0.f, static_cast<_float>(ETOUI(Particle.eAtlasLayout)),
-			static_cast<_float>(Particle.iFrameIndex), 0.f);
+		Instance.vMaskUVTransform = _float4(fMaskC, fMaskS, -fMaskS, fMaskC);
+
+		const _bool bUseSub = (TEXTURE_SAMPLE_MODE::QUAD == Particle.eAtlasLayout);
+		const _bool bUseMask = true;
+
+		const _float fBaseSampleMode = bUseSub ? 2.f : 0.f;
+		const _float fMaskSampleMode = static_cast<_float>(ETOUI(m_tDesc.eMaskSampleMode));
+		const _float fRenderMode = bUseSub ? 3.f : 1.f;
+
+		Instance.vParams = _float4(
+			m_tDesc.fMaskStrength,
+			fBaseSampleMode,
+			fMaskSampleMode,
+			fRenderMode);
 
 		m_RenderInstances.emplace_back(Instance);
 	}
@@ -254,7 +285,7 @@ void CEffect_Star::Build_RenderInstances()
 HRESULT CEffect_Star::Upload_RenderInstances()
 {
 	const _uint iNumRenderInstances = static_cast<_uint>(m_RenderInstances.size());
-	const VTXPARTICLE_UI_INSTANCE* pInstances = (0 == iNumRenderInstances ? nullptr : m_RenderInstances.data());
+	const VTXUI_INSTANCE* pInstances = (0 == iNumRenderInstances ? nullptr : m_RenderInstances.data());
 	return m_pVIBufferCom->Update_UIInstances(pInstances, iNumRenderInstances);
 }
 

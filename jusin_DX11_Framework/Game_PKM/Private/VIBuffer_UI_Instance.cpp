@@ -25,7 +25,7 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype()
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
 	m_ePrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	m_iInstanceStride = sizeof(VTXPARTICLE_UI_INSTANCE);
+	m_iInstanceStride = sizeof(VTXUI_INSTANCE);
 	if(0 == m_tInitDesc.iNumInstance)
 		return E_FAIL;
 
@@ -121,7 +121,7 @@ HRESULT CVIBuffer_UI_Instance::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_UI_Instance::Update_UIInstances(const VTXPARTICLE_UI_INSTANCE* pInstances, _uint iNumInstances)
+HRESULT CVIBuffer_UI_Instance::Update_UIInstances(const VTXUI_INSTANCE* pInstances, _uint iNumInstances)
 {
 	if (iNumInstances > m_iMaxInstances)
 		return E_FAIL;
@@ -139,7 +139,7 @@ HRESULT CVIBuffer_UI_Instance::Update_UIInstances(const VTXPARTICLE_UI_INSTANCE*
 	if (FAILED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
 		return E_FAIL;
 
-	memcpy(SubResource.pData, pInstances, sizeof(VTXPARTICLE_UI_INSTANCE) * iNumInstances);
+	memcpy(SubResource.pData, pInstances, sizeof(VTXUI_INSTANCE) * iNumInstances);
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 

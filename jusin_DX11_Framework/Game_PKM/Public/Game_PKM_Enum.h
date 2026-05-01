@@ -18,7 +18,7 @@ namespace Navigation
 	};
 }
 
-enum class TEXTURE_ATLAS_LAYOUT : _uint { SINGLE, BI_HORIZONTAL, BI_VERTICAL, QUAD, END };
+enum class TEXTURE_SAMPLE_MODE : _uint { SINGLE, BI_HORIZONTAL, BI_VERTICAL, QUAD, END };
 
 // 포켓몬 타입
 enum class TYPE : _uint32

@@ -20,7 +20,7 @@ struct PARTICLE_UI_STATE final
 
 	_uint iTextureIndex = {};
 	_uint iFrameIndex = {};
-	TEXTURE_ATLAS_LAYOUT eAtlasLayout = { TEXTURE_ATLAS_LAYOUT::SINGLE };
+	TEXTURE_SAMPLE_MODE eAtlasLayout = { TEXTURE_SAMPLE_MODE::SINGLE };
 
 	_bool isAlive = { false };
 };
@@ -38,7 +38,7 @@ struct PARTICLE_3D_STATE final
 	_bool isAlive{ false };
 };
 
-struct VTXPARTICLE_UI_INSTANCE
+struct VTXUI_INSTANCE
 {
 	XMFLOAT4 vRight;
 	XMFLOAT4 vUp;
@@ -51,10 +51,16 @@ struct VTXPARTICLE_UI_INSTANCE
 	// vParams.x = mask strength
 	// vParams.y = atlas layout
 	// vParams.z = frame index
-	// vParams.w = use mask
+	// vParams.w = render mode
+
+	// vParams.w:
+	// 0 = diff only
+	// 1 = diff + mask
+	// 2 = sub only
+	// 3 = sub + mask
 };
 
-struct VTXUI_PARTICLE_INSTANCE_DESC
+struct VTXUI_INSTANCE_DESC
 {
 	static constexpr unsigned int iNumElements = { 9 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =

@@ -23,7 +23,10 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
+private:
+	CUISequence* m_pRuntimeUI = { nullptr };
+
+private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
@@ -31,12 +34,6 @@ public:
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
-
-private:
-	CUISequence* m_pRuntimeUI = { nullptr };
-
-private:
-
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

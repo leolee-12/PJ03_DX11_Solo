@@ -21,7 +21,7 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-	HRESULT Update_UIInstances(const VTXPARTICLE_UI_INSTANCE* pInstances, _uint iNumInstances);
+	HRESULT Update_UIInstances(const VTXUI_INSTANCE* pInstances, _uint iNumInstances);
 
 private:
 	UI_INSTANCE_DESC m_tInitDesc = {};

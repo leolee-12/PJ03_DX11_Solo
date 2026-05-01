@@ -280,5 +280,8 @@
     <FxCompile Include="..\ShaderFiles\Shader_VtxPointInstance.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxUIInstance.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

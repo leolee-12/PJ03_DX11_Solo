@@ -25,10 +25,14 @@ public:
 		_float2 vSpeedRange = {};
 		_float2 vLifeRange = {};
 		_float2 vRotationSpeedRange = {};
+		_float fMaskStrength{ 1.f };
+		_float2 vMaskRotationSpeedRange = {};
+		TEXTURE_SAMPLE_MODE eMaskSampleMode{ TEXTURE_SAMPLE_MODE::SINGLE };
+		TEXTURE_SAMPLE_MODE eSubSampleMode{ TEXTURE_SAMPLE_MODE::SINGLE };
 
 		_float4 vColor = {};
-		_bool bStartActive = { false };
-		_bool bLoop = { false };
+		_bool bStartActive{ false };
+		_bool bLoop{ false };
 
 		_uint iStarTextureIndex = {};
 		_uint iMaskTextureIndex = {};
@@ -58,7 +62,7 @@ private:
 
 	EFFECT_STAR_DESC m_tDesc = {};
 	vector<PARTICLE_UI_STATE> m_Particles;
-	vector<VTXPARTICLE_UI_INSTANCE> m_RenderInstances;
+	vector<VTXUI_INSTANCE> m_RenderInstances;
 
 	CUIObject* m_pFollowTarget = { nullptr };
 	_float2 m_vFollowOffset = {};
