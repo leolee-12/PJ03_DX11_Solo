@@ -69,7 +69,7 @@ HRESULT CSnow::Render()
 HRESULT CSnow::Ready_Components()
 {
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_SNOW,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_SNOW,
 		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 

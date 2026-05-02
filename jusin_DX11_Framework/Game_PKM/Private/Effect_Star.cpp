@@ -108,7 +108,7 @@ void CEffect_Star::Stop()
 HRESULT CEffect_Star::Ready_Components()
 {
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_STAR,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_STAR,
 		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 

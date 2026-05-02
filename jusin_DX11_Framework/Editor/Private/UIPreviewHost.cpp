@@ -352,7 +352,7 @@ void CUIPreviewHost::Apply_Fallback_Image(CUIImage::UIIMAGE_DESC& d) const
 {
 	if (INVALID_TAG == d.strTextureTag)
 	{
-		d.strTextureTag = PROTO_COM_TEXTURE_DUMMY_WHITE;
+		d.strTextureTag = PROTO_COM_TEX_DUMMY_WHITE;
 		d.iTextureLevel = ETOUI(LEVEL::STATIC);
 		d.iTextureIndex = 0;
 	}
@@ -368,7 +368,7 @@ void CUIPreviewHost::Apply_Fallback_Button(CUIButton::UIBUTTON_DESC& d) const
 {
 	if (INVALID_TAG == d.strTextureTag)
 	{
-		d.strTextureTag = PROTO_COM_TEXTURE_DUMMY_WHITE;
+		d.strTextureTag = PROTO_COM_TEX_DUMMY_WHITE;
 		d.iTextureLevel = ETOUI(LEVEL::STATIC);
 		d.iNormalTextureIndex = d.iHoverTextureIndex
 			= d.iPressedTextureIndex = d.iDisabledTextureIndex = 0;
@@ -379,13 +379,13 @@ void CUIPreviewHost::Apply_Fallback_ProgressBar(CUIProgressBar::UIPROGRESSBAR_DE
 {
 	if (INVALID_TAG == d.strBackTextureTag)
 	{
-		d.strBackTextureTag = PROTO_COM_TEXTURE_DUMMY_WHITE;
+		d.strBackTextureTag = PROTO_COM_TEX_DUMMY_WHITE;
 		d.iBackTextureLevel = ETOUI(LEVEL::STATIC);
 		d.iBackTextureIndex = 0;
 	}
 	if (INVALID_TAG == d.strFillTextureTag)
 	{
-		d.strFillTextureTag = PROTO_COM_TEXTURE_DUMMY_WHITE;
+		d.strFillTextureTag = PROTO_COM_TEX_DUMMY_WHITE;
 		d.iFillTextureLevel = ETOUI(LEVEL::STATIC);
 		d.iFillTextureIndex = 0;
 	}

@@ -73,17 +73,17 @@ HRESULT CTerrain::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture_Diff*/
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_DIFF,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_DIFF,
 		COM_TEXTURE_DIFF, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::DIFFUSE]))))
 		return E_FAIL;
 
 	/* For.Com_Texture_Mask*/
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_MASK,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_MASK,
 		COM_TEXTURE_MASK, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::MASK]))))
 		return E_FAIL;
 
 	/* For.Com_Texture_Brush*/
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TERRAIN_BRUSH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_BRUSH,
 		COM_TEXTURE_BRUSH, reinterpret_cast<CComponent**>(&m_TextureCom[TEXTURETYPE::BRUSH]))))
 		return E_FAIL;
 

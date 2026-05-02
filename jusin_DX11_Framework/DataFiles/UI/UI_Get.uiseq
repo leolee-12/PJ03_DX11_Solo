@@ -1,0 +1,547 @@
+{
+  "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
+    "name": "HUD_Layout",
+    "scalePolicy": "UNIFORM_FIT",
+    "version": 2
+  },
+  "widgets": [
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -105.0,
+          "offsetY": 117.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Info"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 300.0,
+          "sizeY": 200.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "info",
+      "id": "widget_001",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 105.0,
+          "offsetY": -155.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Info2"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 300.0,
+          "sizeY": 273.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "info2",
+      "id": "widget_002",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -195.0,
+          "offsetY": 140.0,
+          "useAnchoredPos": true
+        },
+        "back": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Line_Back"
+        },
+        "backColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "direction": "LEFT_TO_RIGHT",
+        "fill": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Line_Fill"
+        },
+        "fillAmount": 1.0,
+        "fillColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 262.0,
+          "visible": true,
+          "zOrder": 1
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Line",
+      "id": "widget_003",
+      "type": "PROGRESSBAR"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 170.0,
+          "offsetY": -180.0,
+          "useAnchoredPos": true
+        },
+        "back": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Line2_Back"
+        },
+        "backColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "direction": "LEFT_TO_RIGHT",
+        "fill": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Line2_Fill"
+        },
+        "fillAmount": 1.0,
+        "fillColor": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 320.0,
+          "visible": true,
+          "zOrder": 1
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Line2",
+      "id": "widget_004",
+      "type": "PROGRESSBAR"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Icon"
+        },
+        "transform": {
+          "centerX": 1073.0,
+          "centerY": 77.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 50.0,
+          "sizeY": 50.0,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Icon",
+      "id": "widget_005",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -205.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button1",
+      "id": "widget_006",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -150.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button2",
+      "id": "widget_007",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -95.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button3",
+      "id": "widget_008",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -40.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button4",
+      "id": "widget_009",
+      "type": "BUTTON"
+    }
+  ]
+}

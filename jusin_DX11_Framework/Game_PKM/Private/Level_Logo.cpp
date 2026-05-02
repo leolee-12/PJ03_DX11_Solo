@@ -51,7 +51,7 @@ HRESULT CLevel_Logo::Render()
 HRESULT CLevel_Logo::Ready_Layer_BackGround(WNameID strLayerTag)
 {
 	CBackGround::BACKGROUND_DESC tDesc{};
-	tDesc.m_strTextureTag = PROTO_COM_TEXTURE_TITLE_BG;
+	tDesc.m_strTextureTag = PROTO_COM_TEX_TITLE_BG;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(CURRENT_LEVEL, PROTO_OBJ_TITLE_BG, CURRENT_LEVEL, strLayerTag, &tDesc)))
 		return E_FAIL;
@@ -85,7 +85,7 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 	StarDesc.iNumParticles = 16;
 	StarDesc.vSpawnRange = _float2(5.f, 10.f);
 	StarDesc.vSizeRange = _float2(64.f, 128.f);
-	StarDesc.vSpeedRange = _float2(100.f, 180.f);
+	StarDesc.vSpeedRange = _float2(180.f, 320.f);
 	StarDesc.vEmitDir = _float2(-1.f, 0.f);
 	StarDesc.fEmitSpreadAngle = XMConvertToRadians(90.f);
 	StarDesc.vLifeRange = _float2(0.5f, 2.5f);
@@ -128,7 +128,7 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 			CUITween::UITWEEN_DESC tween{};
 			tween.eTarget = UI_TWEEN_TARGET::POSITION_X;
 			tween.fStart = -100.f;
-			tween.fEnd = 2500.f;
+			tween.fEnd = 2600.f;
 			tween.fDuration = 4.25f;
 			tween.fDelay = 0.75f;
 			tween.eEase = UI_EASE::EASE_OUT_SINE;
@@ -138,7 +138,7 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 				pAnim->Play_Tween(tween);
 			
 			tween.fStart = -200.f;
-			tween.fEnd = 2400.f;
+			tween.fEnd = 2500.f;
 			if (auto* pAnim = pStarEffect2->Get_Animator())
 				pAnim->Play_Tween(tween);
 		},

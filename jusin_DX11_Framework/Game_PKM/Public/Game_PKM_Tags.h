@@ -4,30 +4,42 @@
 NS_BEGIN(Game_PKM)
 
 // Texture
-WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_BLACK, L"Prototype_Component_Texture_Dummy_Black");
-WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_MAGENTA, L"Prototype_Component_Texture_Dummy_Magenta");
-WNAME_TAG(PROTO_COM_TEXTURE_DUMMY_WHITE, L"Prototype_Component_Texture_Dummy_White");
+WNAME_TAG(PROTO_COM_TEX_DUMMY_BLACK, L"Prototype_Component_Texture_Dummy_Black");
+WNAME_TAG(PROTO_COM_TEX_DUMMY_MAGENTA, L"Prototype_Component_Texture_Dummy_Magenta");
+WNAME_TAG(PROTO_COM_TEX_DUMMY_WHITE, L"Prototype_Component_Texture_Dummy_White");
 
-WNAME_TAG(PROTO_COM_TEXTURE_BACKGROUND, L"Prototype_Component_Texture_BackGround");
-WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_Diffuse");
-WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");
-WNAME_TAG(PROTO_COM_TEXTURE_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain_Brush");
-WNAME_TAG(PROTO_COM_TEXTURE_SKY, L"Prototype_Component_Texture_Sky");
-WNAME_TAG(PROTO_COM_TEXTURE_SNOW, L"Prototype_Component_Texture_Snow");
+WNAME_TAG(PROTO_COM_TEX_BACKGROUND, L"Prototype_Component_Texture_BackGround");
+WNAME_TAG(PROTO_COM_TEX_TERRAIN_DIFF, L"Prototype_Component_Texture_Terrain_Diffuse");
+WNAME_TAG(PROTO_COM_TEX_TERRAIN_MASK, L"Prototype_Component_Texture_Terrain_Mask");
+WNAME_TAG(PROTO_COM_TEX_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain_Brush");
+WNAME_TAG(PROTO_COM_TEX_SKY, L"Prototype_Component_Texture_Sky");
+WNAME_TAG(PROTO_COM_TEX_SNOW, L"Prototype_Component_Texture_Snow");
 
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBTN_DIFF, L"Prototype_Component_Texture_Title_pbtn_Diff");
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
-WNAME_TAG(PROTO_COM_TEXTURE_STAR, L"Prototype_Component_Texture_Star");
-WNAME_TAG(PROTO_COM_TEXTURE_TITLE_BG, L"Prototype_Component_Texture_Title_BackGround");
+WNAME_TAG(PROTO_COM_TEX_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
+WNAME_TAG(PROTO_COM_TEX_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
+WNAME_TAG(PROTO_COM_TEX_TITLE_PBTN_DIFF, L"Prototype_Component_Texture_Title_pbtn_Diff");
+WNAME_TAG(PROTO_COM_TEX_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
+WNAME_TAG(PROTO_COM_TEX_STAR, L"Prototype_Component_Texture_Star");
+WNAME_TAG(PROTO_COM_TEX_TITLE_BG, L"Prototype_Component_Texture_Title_BackGround");
 
-WNAME_TAG(PROTO_COM_TEXTURE_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
-WNAME_TAG(PROTO_COM_TEXTURE_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
-WNAME_TAG(PROTO_COM_TEXTURE_MENU_BAG, L"Prototype_Component_Texture_Menu_Bag");
-WNAME_TAG(PROTO_COM_TEXTURE_MENU_ENTRY, L"Prototype_Component_Texture_Menu_Entry");
-WNAME_TAG(PROTO_COM_TEXTURE_MENU_LINK, L"Prototype_Component_Texture_Menu_Link");
-WNAME_TAG(PROTO_COM_TEXTURE_MENU_REPORT, L"Prototype_Component_Texture_Menu_Report");
+WNAME_TAG(PROTO_COM_TEX_MENU_BALL, L"Prototype_Component_Texture_Menu_Ball");
+WNAME_TAG(PROTO_COM_TEX_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
+WNAME_TAG(PROTO_COM_TEX_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
+WNAME_TAG(PROTO_COM_TEX_MENU_BAG, L"Prototype_Component_Texture_Menu_Bag");
+WNAME_TAG(PROTO_COM_TEX_MENU_ENTRY, L"Prototype_Component_Texture_Menu_Entry");
+WNAME_TAG(PROTO_COM_TEX_MENU_LINK, L"Prototype_Component_Texture_Menu_Link");
+WNAME_TAG(PROTO_COM_TEX_MENU_REPORT, L"Prototype_Component_Texture_Menu_Report");
+
+WNAME_TAG(PROTO_COM_TEX_GET_BUTTON, L"Prototype_Component_Texture_Get_Button");
+WNAME_TAG(PROTO_COM_TEX_GET_ICON, L"Prototype_Component_Texture_Get_Icon");
+WNAME_TAG(PROTO_COM_TEX_GET_INFO, L"Prototype_Component_Texture_Get_Info");
+WNAME_TAG(PROTO_COM_TEX_GET_INFO2, L"Prototype_Component_Texture_Get_Info2");
+WNAME_TAG(PROTO_COM_TEX_GET_LINE_FILL, L"Prototype_Component_Texture_Get_Line_Fill");
+WNAME_TAG(PROTO_COM_TEX_GET_LINE_BACK, L"Prototype_Component_Texture_Get_Line_Back");
+WNAME_TAG(PROTO_COM_TEX_GET_LINE2_FILL, L"Prototype_Component_Texture_Get_Line2_Fill");
+WNAME_TAG(PROTO_COM_TEX_GET_LINE2_BACK, L"Prototype_Component_Texture_Get_Line2_Back");
+WNAME_TAG(PROTO_COM_TEX_GET_TEXT_LV, L"Prototype_Component_Texture_Get_Text_LV");
+WNAME_TAG(PROTO_COM_TEX_GET_TEXT_NUM, L"Prototype_Component_Texture_Get_Text_Number");
 
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");

@@ -175,7 +175,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 {
 	CUISequence::UISEQUENCE_DESC tDesc{};
-	tDesc.strPath = "../../DataFiles/UI/UI_Test.uiseq";
+	tDesc.strPath = "../../DataFiles/UI/UI_Get.uiseq";
 	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 	
 	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
@@ -188,35 +188,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 		Safe_Release(pSeq);
 		return E_FAIL;
 	}
-
-	pSeq->Bind_Effect(
-		"eff_001",
-		[](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
-		{
-			OutputDebugStringA("[TEST] EFFECT_PLAY\n");
-		},
-		[](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
-		{
-			OutputDebugStringA("[TEST] EFFECT_STOP\n");
-		});
-
-	pSeq->Bind_BGM(
-		"bgm_title",
-		[](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
-		{
-			OutputDebugStringA("[TEST] BGM_PLAY\n");
-		},
-		[](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
-		{
-			OutputDebugStringA("[TEST] BGM_STOP\n");
-		});
-
-	pSeq->Bind_SFX(
-		"sfx_001",
-		[](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
-		{
-			OutputDebugStringA("[TEST] SFX_PLAY\n");
-		});
 	
 	m_pRuntimeUI = pSeq;  // weak
 

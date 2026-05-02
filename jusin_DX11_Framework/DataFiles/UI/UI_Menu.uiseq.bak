@@ -1,0 +1,669 @@
+{
+  "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
+    "name": "HUD_Layout",
+    "scalePolicy": "UNIFORM_FIT",
+    "version": 2
+  },
+  "widgets": [
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": -150.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Ball"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 100.0,
+          "sizeY": 100.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Image",
+      "id": "widget_001",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": -137.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Partner"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 256.0,
+          "sizeY": 256.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Partner",
+      "id": "widget_002",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": -440.0,
+          "offsetY": 120.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Dex"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 128.0,
+          "sizeY": 128.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Dex",
+      "id": "widget_007",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": -220.0,
+          "offsetY": 120.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Bag"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 128.0,
+          "sizeY": 128.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Bag",
+      "id": "widget_003",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 120.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Entry"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 128.0,
+          "sizeY": 128.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Entry",
+      "id": "widget_004",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 220.0,
+          "offsetY": 120.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Link"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 128.0,
+          "sizeY": 128.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Link",
+      "id": "widget_005",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 440.0,
+          "offsetY": 120.0,
+          "useAnchoredPos": true
+        },
+        "buttonIndices": {
+          "disabled": 0,
+          "hover": 0,
+          "normal": 0,
+          "pressed": 0
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Menu_Report"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 455.9297180175781,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 128.0,
+          "sizeY": 128.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Report",
+      "id": "widget_006",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": -16.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_NotoSansKR",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "파트너와 놀기",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 240.0,
+          "sizeY": 48.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text_Partner",
+      "id": "widget_008",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": -440.0,
+          "offsetY": 210.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_NotoSansKR",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "도감",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 140.0,
+          "sizeY": 30.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text_Dex",
+      "id": "widget_009",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": -220.0,
+          "offsetY": 210.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_NotoSansKR",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "가방",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 140.0,
+          "sizeY": 30.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text_Bag",
+      "id": "widget_010",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 210.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_NotoSansKR",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "지닌 포켓몬",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 140.0,
+          "sizeY": 30.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text_Entry",
+      "id": "widget_011",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 220.0,
+          "offsetY": 210.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_NotoSansKR",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "통신",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 140.0,
+          "sizeY": 30.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text_Link",
+      "id": "widget_012",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 440.0,
+          "offsetY": 210.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_NotoSansKR",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "리포트",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 140.0,
+          "sizeY": 30.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "Text_Report",
+      "id": "widget_013",
+      "type": "TEXT"
+    }
+  ]
+}

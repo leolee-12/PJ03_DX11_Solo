@@ -16,17 +16,17 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
 
 	/* Prototype_Component_Texture_Dummy_Black */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEXTURE_DUMMY_BLACK,
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_DUMMY_BLACK,
 		CTexture::Create(pDevice, pContext, TEXT("../../Resources/dummy/dummy_black.png"), 1))))
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Dummy_Magenta */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEXTURE_DUMMY_MAGENTA,
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_DUMMY_MAGENTA,
 		CTexture::Create(pDevice, pContext, TEXT("../../Resources/dummy/dummy_magenta.png"), 1))))
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Dummy_White */
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEXTURE_DUMMY_WHITE,
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_DUMMY_WHITE,
 		CTexture::Create(pDevice, pContext, TEXT("../../Resources/dummy/dummy_white.png"), 1))))
 		return E_FAIL;
 
