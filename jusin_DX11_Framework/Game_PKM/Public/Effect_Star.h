@@ -23,6 +23,8 @@ public:
 		_float2 vSpawnRange = {};
 		_float2 vSizeRange = {};
 		_float2 vSpeedRange = {};
+		_float2 vEmitDir = {};
+		_float fEmitSpreadAngle = {};
 		_float2 vLifeRange = {};
 		_float2 vRotationSpeedRange = {};
 		_float fMaskStrength{ 1.f };

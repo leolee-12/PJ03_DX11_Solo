@@ -157,7 +157,18 @@ void CEffect_Star::Initialize_Particle(_uint iParticleIndex)
 	Particle.vSize = _float2(fSize, fSize);
 
 	const _float fSpeed = m_pGameInstance->Random(m_tDesc.vSpeedRange.x, m_tDesc.vSpeedRange.y);
-	const _float fAngle = m_pGameInstance->Random(0.f, XM_2PI);
+	_float fAngle = m_pGameInstance->Random(0.f, XM_2PI);
+	const _float fDirLengthSq =
+		m_tDesc.vEmitDir.x * m_tDesc.vEmitDir.x +
+		m_tDesc.vEmitDir.y * m_tDesc.vEmitDir.y;
+
+	if (fDirLengthSq > 0.0001f)
+	{
+		const _float fBaseAngle = atan2f(m_tDesc.vEmitDir.y, m_tDesc.vEmitDir.x);
+		const _float fHalfSpread = m_tDesc.fEmitSpreadAngle * 0.5f;
+		fAngle = fBaseAngle + m_pGameInstance->Random(-fHalfSpread, fHalfSpread);
+	}
+
 	Particle.vVelocity = _float2(cosf(fAngle) * fSpeed, sinf(fAngle) * fSpeed);
 
 	Particle.fAge = 0.f;
@@ -169,14 +180,15 @@ void CEffect_Star::Initialize_Particle(_uint iParticleIndex)
 	Particle.fAlpha = 1.f;
 
 	Particle.iTextureIndex = m_tDesc.iStarTextureIndex;
-	Particle.iFrameIndex = 0;
 	Particle.eAtlasLayout = TEXTURE_SAMPLE_MODE::SINGLE;
+	const _bool bUseSub =
+		(m_tDesc.iDiamondTextureIndex != m_tDesc.iStarTextureIndex) &&
+		(0 == (iParticleIndex % 5));
 
-	if (0 != m_tDesc.iDiamondTextureIndex && 0 == (iParticleIndex % 5))
+	if (bUseSub)
 	{
 		Particle.iTextureIndex = m_tDesc.iDiamondTextureIndex;
-		Particle.iFrameIndex = iParticleIndex % 4;
-		Particle.eAtlasLayout = TEXTURE_SAMPLE_MODE::QUAD;
+		Particle.eAtlasLayout = m_tDesc.eSubSampleMode;
 	}
 
 	Particle.isAlive = true;
@@ -221,7 +233,13 @@ void CEffect_Star::Update_Particles(_float fTimeDelta)
 		Particle.fAge += fTimeDelta;
 
 		const _float fRatio = (Particle.fLifeTime > 0.f) ? min(Particle.fAge / Particle.fLifeTime, 1.f) : 1.f;
-		Particle.fAlpha = 1.f - fRatio;
+		constexpr _float fFadeStartRatio = 0.75f;
+		if (fRatio > fFadeStartRatio)
+		{
+			const _float fFadeRatio = min((fRatio - fFadeStartRatio) / (1.f - fFadeStartRatio), 1.f);
+			Particle.fAlpha = 1.f - fFadeRatio;
+		}
+
 
 		if (Particle.fAge >= Particle.fLifeTime)
 		{
@@ -254,9 +272,14 @@ void CEffect_Star::Build_RenderInstances()
 		const _float c = cosf(Particle.fRotation);
 		const _float s = sinf(Particle.fRotation);
 
+		const _float fLifeRatio = (Particle.fLifeTime > 0.f) ? min(Particle.fAge / Particle.fLifeTime, 1.f) : 1.f;
+		const _float fPulse = sinf(fLifeRatio * XM_PI);
+		const _float fPulseScale = 0.5f + 0.3f * fPulse;
+		const _float2 vRenderSize = _float2(Particle.vSize.x * fPulseScale, Particle.vSize.y * fPulseScale);
+
 		VTXUI_INSTANCE Instance{};
-		Instance.vRight = _float4(c * Particle.vSize.x, s * Particle.vSize.x, 0.f, 0.f);
-		Instance.vUp = _float4(-s * Particle.vSize.y, c * Particle.vSize.y, 0.f, 0.f);
+		Instance.vRight = _float4(c * vRenderSize.x, s * vRenderSize.x, 0.f, 0.f);
+		Instance.vUp = _float4(-s * vRenderSize.y, c * vRenderSize.y, 0.f, 0.f);
 		Instance.vTranslation = _float4(Particle.vOffset.x, -Particle.vOffset.y, 0.f, 1.f);
 		Instance.vColor = _float4(m_tDesc.vColor.x, m_tDesc.vColor.y, m_tDesc.vColor.z, m_tDesc.vColor.w * Particle.fAlpha);
 
@@ -265,11 +288,14 @@ void CEffect_Star::Build_RenderInstances()
 		Instance.vUVTransform = _float4(1.f, 1.f, 0.f, 0.f);
 		Instance.vMaskUVTransform = _float4(fMaskC, fMaskS, -fMaskS, fMaskC);
 
-		const _bool bUseSub = (TEXTURE_SAMPLE_MODE::QUAD == Particle.eAtlasLayout);
+		const _bool bUseSub =
+			(Particle.iTextureIndex == m_tDesc.iDiamondTextureIndex) &&
+			(m_tDesc.iDiamondTextureIndex != m_tDesc.iStarTextureIndex);
+
 		const _bool bUseMask = true;
 
-		const _float fBaseSampleMode = bUseSub ? 2.f : 0.f;
-		const _float fMaskSampleMode = static_cast<_float>(ETOUI(m_tDesc.eMaskSampleMode));
+		const _float fBaseSampleMode = static_cast<_float>(Particle.eAtlasLayout);
+		const _float fMaskSampleMode = static_cast<_float>(m_tDesc.eMaskSampleMode);
 		const _float fRenderMode = bUseSub ? 3.f : 1.f;
 
 		Instance.vParams = _float4(

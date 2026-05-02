@@ -19,7 +19,6 @@ struct PARTICLE_UI_STATE final
 	_float fMaskRotationSpeed = {};
 
 	_uint iTextureIndex = {};
-	_uint iFrameIndex = {};
 	TEXTURE_SAMPLE_MODE eAtlasLayout = { TEXTURE_SAMPLE_MODE::SINGLE };
 
 	_bool isAlive = { false };
@@ -49,8 +48,8 @@ struct VTXUI_INSTANCE
 	XMFLOAT4 vParams;
 
 	// vParams.x = mask strength
-	// vParams.y = atlas layout
-	// vParams.z = frame index
+	// vParams.y = base sample mode
+	// vParams.z = mask sample mode
 	// vParams.w = render mode
 
 	// vParams.w:

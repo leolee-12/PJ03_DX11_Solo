@@ -23,6 +23,8 @@ public:
 private:
 	CUIImage* m_pTestTargetUI = { nullptr };
 	CEffect_Star* m_pTestStarEffect = { nullptr };
+	_bool m_isTestLogoMove = { false };
+	_float m_fTestLogoMoveTime = { 0.f };
 
 private:
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);

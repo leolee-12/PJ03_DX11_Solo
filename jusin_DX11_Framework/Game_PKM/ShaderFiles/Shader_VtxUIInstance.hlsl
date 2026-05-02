@@ -78,16 +78,21 @@ float2 ResolveSampleUV(float2 vTex, float fSampleMode)
 {
 	float2 vResolved;
 
-	if (fSampleMode < 0.5f)	// Single
+	if (fSampleMode < 0.5f) // SINGLE = 0
 	{
 		vResolved = vTex;
 	}
-	else if (fSampleMode < 1.5f)	// Bi_Vertical
+	else if (fSampleMode < 1.5f) // BI_HORIZONTAL = 1
+	{
+		float fFoldX = 1.f - abs(vTex.x * 2.f - 1.f);
+		vResolved = float2(fFoldX, vTex.y);
+	}
+	else if (fSampleMode < 2.5f) // BI_VERTICAL = 2
 	{
 		float fFoldY = 1.f - abs(vTex.y * 2.f - 1.f);
 		vResolved = float2(vTex.x, fFoldY);
 	}
-	else if (fSampleMode < 2.5f)	// Quad
+	else // QUAD = 3
 	{
 		float fFoldX = 1.f - abs(vTex.x * 2.f - 1.f);
 		float fFoldY = 1.f - abs(vTex.y * 2.f - 1.f);

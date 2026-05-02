@@ -1,9 +1,10 @@
 #include "Level_Logo.h"
 #include "Level_Loading.h"
-
-#include "UIImage.h"
 #include "Effect_Star.h"
 
+#include "UIImage.h"
+#include "UITween.h"
+#include "UIAnimator.h"
 #include "GameInstance.h"
 
 NS_BEGIN(Game_PKM)
@@ -37,9 +38,52 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 	}
 
+	constexpr _float fMoveDuration = 3.f;
+	constexpr _float fStartX = 640.f;
+	constexpr _float fEndX = 1280.f;
+	constexpr _float fCenterY = 540.f;
+
 	if (m_pGameInstance->Key_Down(DIK_F5) && m_pTestStarEffect && m_pTestTargetUI)
 	{
+		m_isTestLogoMove = true;
+		m_fTestLogoMoveTime = 0.f;
+
+		m_pTestTargetUI->Set_Visible(true);
+		m_pTestTargetUI->Set_Center(fStartX, fCenterY);
+
+		if (CUIAnimator* pAnimator = m_pTestTargetUI->Get_Animator())
+		{
+			pAnimator->Stop_All();
+
+			CUITween::UITWEEN_DESC MoveX{};
+			MoveX.eTarget = UI_TWEEN_TARGET::POSITION_X;
+			MoveX.fStart = fStartX;
+			MoveX.fEnd = fEndX;
+			MoveX.fDuration = fMoveDuration;
+			MoveX.fDelay = 0.f;
+			MoveX.eEase = UI_EASE::EASE_OUT_SINE;
+			MoveX.eLoop = UI_TWEEN_LOOP::NONE;
+
+			pAnimator->Play_Tween(MoveX);
+		}
+
 		m_pTestStarEffect->Play(m_pTestTargetUI, _float2(0.f, 0.f));
+	}
+
+	if (m_isTestLogoMove)
+	{
+		m_fTestLogoMoveTime += fTimeDelta;
+
+		if (m_fTestLogoMoveTime >= fMoveDuration)
+		{
+			m_isTestLogoMove = false;
+
+			if (m_pTestTargetUI)
+				m_pTestTargetUI->Set_Visible(false);
+
+			if (m_pTestStarEffect)
+				m_pTestStarEffect->Stop();
+		}
 	}
 }
 
@@ -94,12 +138,12 @@ HRESULT CLevel_Logo::Ready_Layer_Monster(WNameID strLayerTag)
 HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 {
 	CUIImage::UIIMAGE_DESC TargetDesc{};
-	TargetDesc.fCenterX = 960.f;
+	TargetDesc.fCenterX = 640.f;
 	TargetDesc.fCenterY = 540.f;
 	TargetDesc.fSizeX = 220.f;
 	TargetDesc.fSizeY = 120.f;
 	TargetDesc.iZOrder = 10;
-	TargetDesc.bVisible = true;
+	TargetDesc.bVisible = false;
 	TargetDesc.strTextureTag = PROTO_COM_TEXTURE_TITLE_LOGO_DIFF;
 	TargetDesc.iTextureLevel = ETOUI(LEVEL::GAMEPLAY);
 	TargetDesc.iTextureIndex = 0;
@@ -133,17 +177,19 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 	StarDesc.bVisible = false;
 	StarDesc.pFollowTarget = m_pTestTargetUI;
 	StarDesc.vFollowOffset = _float2(0.f, 0.f);
-	StarDesc.iNumParticles = 32;
+	StarDesc.iNumParticles = 16;
 	StarDesc.vSpawnRange = _float2(160.f, 90.f);
 	StarDesc.vSizeRange = _float2(64.f, 128.f);
-	StarDesc.vSpeedRange = _float2(20.f, 80.f);
+	StarDesc.vSpeedRange = _float2(60.f, 80.f);
+	StarDesc.vEmitDir = _float2(-1.f, 0.f);
+	StarDesc.fEmitSpreadAngle = XMConvertToRadians(70.f);
 	StarDesc.vLifeRange = _float2(0.35f, 0.8f);
 	StarDesc.vRotationSpeedRange = _float2(-1.f, 1.f);
 	StarDesc.vMaskRotationSpeedRange = _float2(-0.5f, 0.5f);
 	StarDesc.fMaskStrength = 0.5f;
 	StarDesc.vColor = _float4(0.835f, 0.741f, 0.310f, 1.f);
 	StarDesc.bStartActive = false;
-	StarDesc.bLoop = false;
+	StarDesc.bLoop = true;
 	StarDesc.iStarTextureIndex = 0;
 	StarDesc.iMaskTextureIndex = 1;
 	StarDesc.iDiamondTextureIndex = 2;
