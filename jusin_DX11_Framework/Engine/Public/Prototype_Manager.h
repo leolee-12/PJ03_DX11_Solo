@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Collider.h"
 #include "Navigation.h"
+#include "UIAnimator.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Terrain.h"

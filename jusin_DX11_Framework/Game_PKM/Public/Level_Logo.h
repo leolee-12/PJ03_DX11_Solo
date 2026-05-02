@@ -19,8 +19,6 @@ private:
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
-	HRESULT Ready_Event();
-
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 

@@ -180,7 +180,7 @@ void CEffect_Star::Initialize_Particle(_uint iParticleIndex)
 	Particle.eAtlasLayout = TEXTURE_SAMPLE_MODE::SINGLE;
 	const _bool bUseSub =
 		(m_tDesc.iDiamondTextureIndex != m_tDesc.iStarTextureIndex) &&
-		(0 == (iParticleIndex % 5));
+		(0 == (iParticleIndex % 2));
 
 	if (bUseSub)
 	{
@@ -211,13 +211,14 @@ void CEffect_Star::Update_Particles(_float fTimeDelta)
 		if (false == Particle.isAlive)
 			continue;
 
-		Particle.vOffset.x += Particle.vVelocity.x * fTimeDelta;
-		Particle.vOffset.y += Particle.vVelocity.y * fTimeDelta;
+		const _float fRatio = (Particle.fLifeTime > 0.f) ? min(Particle.fAge / Particle.fLifeTime, 1.f) : 1.f;
+
+		Particle.vOffset.x += Particle.vVelocity.x * (1.f - fRatio * fRatio) * fTimeDelta;
+		Particle.vOffset.y += Particle.vVelocity.y * (1.f - fRatio * fRatio) * fTimeDelta;
 		Particle.fRotation += Particle.fRotationSpeed * fTimeDelta;
 		Particle.fMaskRotation += Particle.fMaskRotationSpeed * fTimeDelta;
 		Particle.fAge += fTimeDelta;
 
-		const _float fRatio = (Particle.fLifeTime > 0.f) ? min(Particle.fAge / Particle.fLifeTime, 1.f) : 1.f;
 		constexpr _float fFadeStartRatio = 0.75f;
 		if (fRatio > fFadeStartRatio)
 		{

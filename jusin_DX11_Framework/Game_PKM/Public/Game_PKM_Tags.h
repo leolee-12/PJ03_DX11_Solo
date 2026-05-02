@@ -20,7 +20,7 @@ WNAME_TAG(PROTO_COM_TEXTURE_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PBTN_DIFF, L"Prototype_Component_Texture_Title_pbtn_Diff");
 WNAME_TAG(PROTO_COM_TEXTURE_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
 WNAME_TAG(PROTO_COM_TEXTURE_STAR, L"Prototype_Component_Texture_Star");
-
+WNAME_TAG(PROTO_COM_TEXTURE_TITLE_BG, L"Prototype_Component_Texture_Title_BackGround");
 
 WNAME_TAG(PROTO_COM_TEXTURE_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
 WNAME_TAG(PROTO_COM_TEXTURE_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
@@ -79,6 +79,7 @@ WNAME_TAG(LAYER_UI, L"Layer_UI");
 
 // Object
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
+WNAME_TAG(PROTO_OBJ_TITLE_BG, L"Prototype_GameObject_Title_BG");
 WNAME_TAG(PROTO_OBJ_TERRAIN, L"Prototype_GameObject_Terrain");
 WNAME_TAG(PROTO_OBJ_CAMERA_FREE, L"Prototype_GameObject_Camera_Free");
 WNAME_TAG(PROTO_OBJ_MONSTER, L"Prototype_GameObject_Monster");

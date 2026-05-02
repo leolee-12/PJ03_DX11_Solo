@@ -31,9 +31,6 @@
     <Filter Include="80. Study">
       <UniqueIdentifier>{2167fda7-f196-44e9-b60b-39aea4afdf71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80. Study\00. BackGround">
-      <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="80. Study\02. Monster">
       <UniqueIdentifier>{b50c0748-6208-4528-99ee-2a9933a6e431}</UniqueIdentifier>
     </Filter>
@@ -51,18 +48,6 @@
     </Filter>
     <Filter Include="03. GameLogic\01. Ability">
       <UniqueIdentifier>{30c1c900-668d-4e89-a118-52c27fd12500}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Environment\00. Camera">
-      <UniqueIdentifier>{2019e1f5-e2bf-4370-93e1-99488c316b3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Environment\00. Camera\Free">
-      <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Environment\01. MapObject">
-      <UniqueIdentifier>{6c413437-f2b5-484b-bfce-c4486387ad32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Environment\02. Sky">
-      <UniqueIdentifier>{629b5f95-f0dc-443b-bcdb-166a54a38379}</UniqueIdentifier>
     </Filter>
     <Filter Include="80. Study\00. Player">
       <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
@@ -85,6 +70,21 @@
     <Filter Include="04. Components\UI_Instance">
       <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Environment\00. BackGround">
+      <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\01. Camera">
+      <UniqueIdentifier>{2019e1f5-e2bf-4370-93e1-99488c316b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\01. Camera\Free">
+      <UniqueIdentifier>{3a92af31-b970-45ac-b5a7-df0ae05e449f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\02. MapObject">
+      <UniqueIdentifier>{6c413437-f2b5-484b-bfce-c4486387ad32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Environment\03. Sky">
+      <UniqueIdentifier>{629b5f95-f0dc-443b-bcdb-166a54a38379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -94,7 +94,7 @@
       <Filter>80. Study\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>80. Study\00. BackGround</Filter>
+      <Filter>01. Environment\00. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>80. Study\01. Terrain</Filter>
@@ -115,7 +115,7 @@
       <Filter>97. Game_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Free.h">
-      <Filter>01. Environment\00. Camera\Free</Filter>
+      <Filter>01. Environment\01. Camera\Free</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>80. Study\02. Monster</Filter>
@@ -142,13 +142,13 @@
       <Filter>80. Study\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MapObject.h">
-      <Filter>01. Environment\01. MapObject</Filter>
+      <Filter>01. Environment\02. MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>80. Study\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
-      <Filter>01. Environment\02. Sky</Filter>
+      <Filter>01. Environment\03. Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_LGPE.h">
       <Filter>02. GameActor\00. Player_LGPE</Filter>
@@ -180,7 +180,7 @@
       <Filter>80. Study\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>80. Study\00. BackGround</Filter>
+      <Filter>01. Environment\00. BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>80. Study\01. Terrain</Filter>
@@ -201,7 +201,7 @@
       <Filter>97. Game_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Free.cpp">
-      <Filter>01. Environment\00. Camera\Free</Filter>
+      <Filter>01. Environment\01. Camera\Free</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>80. Study\02. Monster</Filter>
@@ -222,13 +222,13 @@
       <Filter>80. Study\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
-      <Filter>01. Environment\01. MapObject</Filter>
+      <Filter>01. Environment\02. MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>80. Study\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Sky.cpp">
-      <Filter>01. Environment\02. Sky</Filter>
+      <Filter>01. Environment\03. Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_LGPE.cpp">
       <Filter>02. GameActor\00. Player_LGPE</Filter>

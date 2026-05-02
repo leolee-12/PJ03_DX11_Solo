@@ -37,7 +37,7 @@
     {
       "joinPrev": false,
       "kind": "WAIT",
-      "waitSec": 0.5
+      "waitSec": 1.0
     },
     {
       "animName": "logo_t1",
@@ -52,18 +52,13 @@
     },
     {
       "joinPrev": false,
-      "kind": "EFFECT_STOP",
-      "slotId": "eff_star"
-    },
-    {
-      "joinPrev": false,
       "kind": "BGM_PLAY",
       "slotId": "bgm_title"
     },
     {
       "joinPrev": false,
       "kind": "WAIT",
-      "waitSec": 2.0
+      "waitSec": 3.0
     },
     {
       "animName": "logo_t2",
@@ -73,8 +68,13 @@
     },
     {
       "joinPrev": false,
+      "kind": "EFFECT_STOP",
+      "slotId": "eff_star"
+    },
+    {
+      "joinPrev": false,
       "kind": "WAIT",
-      "waitSec": 1.0
+      "waitSec": 1.25
     },
     {
       "animName": "bg",
@@ -93,6 +93,11 @@
       "kind": "SET_VISIBLE",
       "targetId": "widget_006",
       "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SFX_PLAY",
+      "slotId": "voice_pika"
     },
     {
       "animName": "logo_b2",
@@ -347,7 +352,7 @@
           "tracks": [
             {
               "duration": 0.25,
-              "ease": "EASE_IN_SINE",
+              "ease": "EASE_OUT_QUAD",
               "end": -0.15000000596046448,
               "loop": "NONE",
               "start": 0.0,
@@ -355,8 +360,8 @@
             },
             {
               "duration": 0.25,
-              "ease": "EASE_IN_SINE",
-              "end": -306.0,
+              "ease": "EASE_OUT_QUAD",
+              "end": -316.0,
               "loop": "NONE",
               "start": -256.0,
               "target": "ANCHOR_OFFSET_Y"
@@ -368,7 +373,7 @@
           "tracks": [
             {
               "duration": 0.25,
-              "ease": "EASE_OUT_SINE",
+              "ease": "EASE_IN_QUAD",
               "end": 0.0,
               "loop": "NONE",
               "start": -0.15000000596046448,
@@ -376,10 +381,10 @@
             },
             {
               "duration": 0.25,
-              "ease": "EASE_OUT_SINE",
+              "ease": "EASE_IN_QUAD",
               "end": -256.0,
               "loop": "NONE",
-              "start": -306.0,
+              "start": -316.0,
               "target": "ANCHOR_OFFSET_Y"
             }
           ]
@@ -476,7 +481,7 @@
             },
             {
               "duration": 0.10000000149011612,
-              "ease": "EASE_IN_SINE",
+              "ease": "EASE_OUT_SINE",
               "end": 1.0,
               "loop": "NONE",
               "start": 0.0,
@@ -502,7 +507,7 @@
           "tracks": [
             {
               "duration": 0.25,
-              "ease": "EASE_OUT_SINE",
+              "ease": "EASE_IN_SINE",
               "end": 0.0,
               "loop": "NONE",
               "start": 0.20000000298023224,
@@ -693,7 +698,7 @@
               "ease": "LINEAR",
               "end": 1960.0,
               "loop": "NONE",
-              "start": -140.0,
+              "start": -210.0,
               "target": "ANCHOR_OFFSET_X"
             }
           ]
@@ -702,7 +707,7 @@
       "desc": {
         "anchor": {
           "kind": "ML",
-          "offsetX": -200.0,
+          "offsetX": -210.0,
           "offsetY": 0.0,
           "useAnchoredPos": true
         },
@@ -730,7 +735,7 @@
         "sharedTextures": [],
         "spriteAnim": {
           "enabled": true,
-          "frameDuration": 0.0833333358168602
+          "frameDuration": 0.05000000074505806
         },
         "texture": {
           "index": 0,
@@ -815,8 +820,8 @@
           "centerY": 860.0830688476563,
           "pivotX": 0.5,
           "pivotY": 0.5,
-          "sizeX": 445.0,
-          "sizeY": 66.0,
+          "sizeX": 330.0,
+          "sizeY": 44.0,
           "visible": true,
           "zOrder": 0
         },

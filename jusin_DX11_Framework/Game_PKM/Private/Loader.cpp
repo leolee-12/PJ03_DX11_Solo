@@ -146,6 +146,10 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_STAR,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Star/Star_%02d.png"), 3)); });
 
+	/* Prototype_Component_Texture_Title_BackGround */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_TITLE_BG,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/title/Title_BG.png"), 1)); });
+
 	// ---------- VIBuffer ----------
 	/* Prototype_Component_VIBuffer_Instance_Star */
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC StarDesc{};
@@ -165,7 +169,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 
 	// ---------- GameObject ----------
 	/* Prototype_GameObject_BackGround */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_BACKGROUND,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_TITLE_BG,
 		CBackGround::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Effect_Star */

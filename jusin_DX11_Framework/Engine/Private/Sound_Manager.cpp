@@ -351,6 +351,9 @@ HRESULT CSound_Manager::Play_3D(const _tchar* pSoundKey, const _float3& vPositio
 
 void CSound_Manager::Stop_Sound(CHANNELID eChannelID)
 {
+	if (nullptr == m_pSystem)
+		return;
+
 	if (false == Is_ValidChannelID(eChannelID))
 		return;
 
@@ -363,6 +366,7 @@ void CSound_Manager::Stop_Sound(CHANNELID eChannelID)
 	bool bPlaying = false;
 	FMOD_RESULT eResult = pChannel->isPlaying(&bPlaying);
 
+	// invalid handle / 이미 정지 → 조용히 정리만
 	if (FMOD_OK == eResult && bPlaying)
 	{
 		eResult = pChannel->stop();
@@ -375,6 +379,9 @@ void CSound_Manager::Stop_Sound(CHANNELID eChannelID)
 
 void CSound_Manager::Stop_Group(CHANNELID eChannelID)
 {
+	if (nullptr == m_pSystem)
+		return;
+
 	if (false == Is_ValidChannelID(eChannelID))
 		return;
 
@@ -391,6 +398,9 @@ void CSound_Manager::Stop_Group(CHANNELID eChannelID)
 
 void CSound_Manager::Stop_All()
 {
+	if (nullptr == m_pSystem)
+		return;
+
 	for (_uint i = 0; i < CHANNEL_COUNT; ++i)
 	{
 		if (nullptr == m_ChannelGroups[i])
@@ -576,9 +586,9 @@ void CSound_Manager::Update_Listener()
 	XMStoreFloat3(&m_vListenerLook, CamWorld.r[2]);
 	XMStoreFloat3(&m_vListenerUp, CamWorld.r[1]);
 
-	FMOD_VECTOR vListenerPos	= { m_vListenerPos.x, m_vListenerPos.y, m_vListenerPos.z };
-	FMOD_VECTOR	vListenerLook	= { m_vListenerLook.x, m_vListenerLook.y, m_vListenerLook.z };
-	FMOD_VECTOR vListenerUp		= { m_vListenerUp.x, m_vListenerUp.y, m_vListenerUp.z };
+	FMOD_VECTOR vListenerPos = { m_vListenerPos.x, m_vListenerPos.y, m_vListenerPos.z };
+	FMOD_VECTOR	vListenerLook = { m_vListenerLook.x, m_vListenerLook.y, m_vListenerLook.z };
+	FMOD_VECTOR vListenerUp = { m_vListenerUp.x, m_vListenerUp.y, m_vListenerUp.z };
 
 	FMOD_RESULT eResult = m_pSystem->set3DListenerAttributes(0, &vListenerPos, nullptr, &vListenerLook, &vListenerUp);
 

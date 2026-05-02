@@ -19,17 +19,22 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	_float2 vViewportSize = m_pGameInstance->Get_ViewportSize();
-	_float fViewWidth = vViewportSize.x;
-	_float fViewHeight = vViewportSize.y;
+	if (nullptr != pArg)
+	{
+		BACKGROUND_DESC tDesc = *static_cast<BACKGROUND_DESC*>(pArg);
+		m_strTextureTag = tDesc.m_strTextureTag;
+	}
+
+	_float fRefSizeX = 1920.f;
+	_float fRefSizeY = 1080.f;
 
 	BACKGROUND_DESC Desc{};
 	Desc.fSpeedPerSec = 30.f;
 	Desc.fRotationPerSec = 1.f;
-	Desc.fCenterX = fViewWidth * 0.5f;
-	Desc.fCenterY = fViewHeight * 0.5f;
-	Desc.fSizeX = fViewWidth;
-	Desc.fSizeY = fViewHeight;
+	Desc.fCenterX = fRefSizeX * 0.5f;
+	Desc.fCenterY = fRefSizeY * 0.5f;
+	Desc.fSizeX = fRefSizeX;
+	Desc.fSizeY = fRefSizeY;
 	Desc.iZOrder = 0;
 
 	if (FAILED(__super::Initialize(&Desc)))
@@ -47,15 +52,11 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 
 void CBackGround::Update(_float fTimeDelta)
 {
-	// Test
-	//XMVECTOR vLook = { 0.f, 0.f, 1.f };
-	//m_pTransformCom->Turn(vLook, fTimeDelta);
-	//m_pTransformCom->Go_Right(fTimeDelta);
 }
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERID::UI, this);
+	m_pGameInstance->Add_RenderGroup(RENDERID::PRIORITY, this);
 }
 
 HRESULT CBackGround::Render()
@@ -88,7 +89,7 @@ HRESULT CBackGround::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture*/
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_BACKGROUND,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), m_strTextureTag,
 		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 

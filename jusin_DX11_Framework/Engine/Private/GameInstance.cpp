@@ -48,6 +48,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pPrototype_Manager)
 		return E_FAIL;
 
+	m_pSound_Manager = CSound_Manager::Create();
+	if (nullptr == m_pSound_Manager)
+		return E_FAIL;
+
 	m_pObject_Manager = CObject_Manager::Create(EngineDesc.iNumLevels);
 	if (nullptr == m_pObject_Manager)
 		return E_FAIL;
@@ -74,10 +78,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pFont_Manager)
-		return E_FAIL;
-
-	m_pSound_Manager = CSound_Manager::Create();
-	if (nullptr == m_pSound_Manager)
 		return E_FAIL;
 
 	return S_OK;
@@ -139,7 +139,6 @@ void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pMainCamera);
 
-	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pInput_Device);
@@ -147,6 +146,7 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pObject_Manager);
+	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pPrototype_Manager);
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pTimer_Manager);
