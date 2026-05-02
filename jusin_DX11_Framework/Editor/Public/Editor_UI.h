@@ -19,11 +19,13 @@ struct UISEQ_STEP_NODE
 {
 	UI_SEQ_STEP_KIND eKind{ UI_SEQ_STEP_KIND::WAIT };
 	_string strTargetId;             // UTF-8 (UISEQ_WIDGET_NODE::strId 참조)
+	_string strSlotId;               // 외부 슬롯 ID
 	_wstring strAnimName;
 	_float fWaitSec{ 0.f };
 	_bool bVisible{ true };
 	_string strCallbackId;           // 예약
 	_bool bJoinPrev{ false };
+	_bool bRequired{ false };
 };
 
 struct UISEQ_WIDGET_NODE

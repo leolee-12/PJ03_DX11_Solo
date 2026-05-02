@@ -8,10 +8,68 @@
   },
   "timeline": [
     {
-      "animName": "Anim_001",
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.5
+    },
+    {
+      "animName": "pbgf",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 2.5
+    },
+    {
+      "animName": "pika",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
       "targetId": "widget_004"
+    },
+    {
+      "joinPrev": false,
+      "kind": "EFFECT_PLAY",
+      "slotId": "eff_star"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.5
+    },
+    {
+      "animName": "logo_t1",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 2.0
+    },
+    {
+      "joinPrev": false,
+      "kind": "EFFECT_STOP",
+      "slotId": "eff_star"
+    },
+    {
+      "joinPrev": false,
+      "kind": "BGM_PLAY",
+      "slotId": "bgm_title"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 2.0
+    },
+    {
+      "animName": "logo_t2",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
     },
     {
       "joinPrev": false,
@@ -19,47 +77,179 @@
       "waitSec": 1.0
     },
     {
-      "animName": "Anim_001",
+      "animName": "bg",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_005"
+    },
+    {
+      "animName": "logo_b1",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_006"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_006",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SFX_PLAY",
+      "slotId": "voice_pika"
+    },
+    {
+      "animName": "logo_b2",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_006"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.5
+    },
+    {
+      "animName": "logo_t3",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
       "targetId": "widget_003"
     },
     {
-      "animName": "Anim_001",
+      "animName": "logo_b3",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
-      "targetId": "widget_001"
+      "targetId": "widget_006"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.25
+    },
+    {
+      "animName": "logo_t4",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "logo_b4",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_006"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.25
+    },
+    {
+      "animName": "logo8",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_007"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.25
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_006",
+      "visible": false
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_003",
+      "visible": false
+    },
+    {
+      "animName": "logo9",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_007"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.25
+    },
+    {
+      "animName": "logo10",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_007"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_002",
+      "visible": true
+    },
+    {
+      "animName": "pbtn",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
     }
   ],
   "widgets": [
     {
       "animations": [
         {
-          "name": "Anim_001",
+          "name": "pbgf",
           "tracks": [
             {
-              "duration": 1.0,
-              "ease": "EASE_IN_OUT_SINE",
-              "end": 1.0,
-              "loop": "LOOP",
+              "duration": 0.5,
+              "ease": "EASE_IN_SINE",
+              "end": 0.8349999785423279,
+              "loop": "NONE",
               "start": 0.0,
               "target": "COLOR_R"
             },
             {
-              "duration": 0.25,
-              "ease": "EASE_IN_OUT_QUAD",
-              "end": 1.0,
+              "duration": 0.5,
+              "ease": "EASE_IN_SINE",
+              "end": 0.7409999966621399,
               "loop": "LOOP",
               "start": 0.0,
               "target": "COLOR_G"
             },
             {
               "duration": 0.5,
-              "ease": "EASE_IN_OUT_CUBIC",
-              "end": 1.0,
-              "loop": "PINGPONG",
+              "ease": "EASE_IN_SINE",
+              "end": 0.3100000023841858,
+              "loop": "NONE",
               "start": 0.0,
               "target": "COLOR_B"
+            },
+            {
+              "duration": 0.5,
+              "ease": "EASE_IN_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.5,
+              "ease": "EASE_IN_SINE",
+              "end": 990.0,
+              "loop": "NONE",
+              "start": 900.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.5,
+              "ease": "EASE_IN_SINE",
+              "end": 165.0,
+              "loop": "NONE",
+              "start": 150.0,
+              "target": "SIZE_Y"
             }
           ]
         }
@@ -72,9 +262,9 @@
           "useAnchoredPos": true
         },
         "color": [
-          1.0,
-          1.0,
-          1.0,
+          0.0,
+          0.0,
+          0.0,
           1.0
         ],
         "layoutSlot": {
@@ -99,7 +289,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 3,
+          "level": 2,
           "tag": "Prototype_Component_Texture_Title_pbgf_Diff"
         },
         "transform": {
@@ -124,15 +314,78 @@
     {
       "animations": [
         {
-          "name": "Anim_001",
+          "name": "logo_t1",
           "tracks": [
             {
-              "duration": 1.0,
-              "ease": "EASE_IN_SINE",
+              "duration": 2.0,
+              "ease": "LINEAR",
               "end": 1.0,
               "loop": "NONE",
               "start": 0.0,
               "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "logo_t2",
+          "tracks": [
+            {
+              "duration": 1.25,
+              "ease": "EASE_IN_OUT_QUAD",
+              "end": -225.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            },
+            {
+              "duration": 1.25,
+              "ease": "EASE_IN_OUT_QUAD",
+              "end": -256.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "logo_t3",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": -0.15000000596046448,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ROTATION"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": -306.0,
+              "loop": "NONE",
+              "start": -256.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "logo_t4",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": -0.15000000596046448,
+              "target": "ROTATION"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -256.0,
+              "loop": "NONE",
+              "start": -306.0,
+              "target": "ANCHOR_OFFSET_Y"
             }
           ]
         }
@@ -147,7 +400,248 @@
         "color": [
           1.0,
           1.0,
-          0.9725490212440491,
+          1.0,
+          0.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 2,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [
+          {
+            "group": "GRADIENT",
+            "index": 0,
+            "shaderVar": "g_TexGrad"
+          }
+        ],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 2,
+          "tag": "Prototype_Component_Texture_Title_Logo_Diff"
+        },
+        "transform": {
+          "centerX": 934.2803955078125,
+          "centerY": 496.6446533203125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 800.0,
+          "sizeY": 214.0,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "logo_top",
+      "id": "widget_003",
+      "type": "IMAGE"
+    },
+    {
+      "animations": [
+        {
+          "name": "logo_b1",
+          "tracks": [
+            {
+              "duration": 0.0010000000474974513,
+              "ease": "LINEAR",
+              "end": -0.44999998807907104,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ROTATION"
+            }
+          ]
+        },
+        {
+          "name": "logo_b2",
+          "tracks": [
+            {
+              "duration": 0.5,
+              "ease": "EASE_IN_CUBIC",
+              "end": -135.0,
+              "loop": "NONE",
+              "start": 60.0,
+              "target": "ANCHOR_OFFSET_Y"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "EASE_IN_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "logo_b3",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_QUAD",
+              "end": 0.20000000298023224,
+              "loop": "NONE",
+              "start": -0.44999998807907104,
+              "target": "ROTATION"
+            }
+          ]
+        },
+        {
+          "name": "logo_b4",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.20000000298023224,
+              "target": "ROTATION"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "ML",
+          "offsetX": 415.0,
+          "offsetY": 30.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 2,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 1,
+          "level": 2,
+          "tag": "Prototype_Component_Texture_Title_Logo_Diff"
+        },
+        "transform": {
+          "centerX": 934.2803955078125,
+          "centerY": 496.6446533203125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 830.0,
+          "sizeY": 290.0,
+          "visible": true,
+          "zOrder": 7
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "logo_bottom",
+      "id": "widget_006",
+      "type": "IMAGE"
+    },
+    {
+      "animations": [
+        {
+          "name": "logo8",
+          "tracks": [
+            {
+              "duration": 0.20000000298023224,
+              "ease": "EASE_IN_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "logo9",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": 871.5,
+              "loop": "NONE",
+              "start": 830.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": 420.0,
+              "loop": "NONE",
+              "start": 400.0,
+              "target": "SIZE_Y"
+            }
+          ]
+        },
+        {
+          "name": "logo10",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 830.0,
+              "loop": "NONE",
+              "start": 871.5,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 400.0,
+              "loop": "NONE",
+              "start": 420.0,
+              "target": "SIZE_Y"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "TL",
+          "offsetX": 415.0,
+          "offsetY": 200.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
           0.0
         ],
         "layoutSlot": {
@@ -171,8 +665,8 @@
           "frameDuration": 0.0
         },
         "texture": {
-          "index": 0,
-          "level": 3,
+          "index": 2,
+          "level": 2,
           "tag": "Prototype_Component_Texture_Title_Logo_Diff"
         },
         "transform": {
@@ -180,27 +674,27 @@
           "centerY": 496.6446533203125,
           "pivotX": 0.5,
           "pivotY": 0.5,
-          "sizeX": 800.0,
-          "sizeY": 214.0,
+          "sizeX": 830.0,
+          "sizeY": 400.0,
           "visible": true,
-          "zOrder": 3
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
           "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "logo1",
-      "id": "widget_003",
+      "displayName": "logo_full",
+      "id": "widget_007",
       "type": "IMAGE"
     },
     {
       "animations": [
         {
-          "name": "Anim_001",
+          "name": "pika",
           "tracks": [
             {
-              "duration": 3.0,
+              "duration": 4.0,
               "ease": "LINEAR",
               "end": 1960.0,
               "loop": "NONE",
@@ -245,7 +739,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 3,
+          "level": 2,
           "tag": "Prototype_Component_Texture_Title_Pika"
         },
         "transform": {
@@ -256,7 +750,7 @@
           "sizeX": 425.0,
           "sizeY": 320.0,
           "visible": true,
-          "zOrder": 2
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,
@@ -268,11 +762,26 @@
       "type": "IMAGE"
     },
     {
+      "animations": [
+        {
+          "name": "pbtn",
+          "tracks": [
+            {
+              "duration": 1.0,
+              "ease": "EASE_IN_OUT_SINE",
+              "end": 0.20000000298023224,
+              "loop": "PINGPONG",
+              "start": 1.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "BC",
           "offsetX": 0.0,
-          "offsetY": -100.0,
+          "offsetY": -40.0,
           "useAnchoredPos": true
         },
         "color": [
@@ -303,7 +812,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 3,
+          "level": 2,
           "tag": "Prototype_Component_Texture_Title_pbtn_Diff"
         },
         "transform": {
@@ -326,6 +835,21 @@
       "type": "IMAGE"
     },
     {
+      "animations": [
+        {
+          "name": "bg",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -334,9 +858,9 @@
           "useAnchoredPos": false
         },
         "color": [
-          0.0,
-          0.0,
-          0.0,
+          1.0,
+          1.0,
+          1.0,
           1.0
         ],
         "layoutSlot": {
@@ -382,113 +906,6 @@
       "displayName": "white",
       "id": "widget_005",
       "type": "IMAGE"
-    },
-    {
-      "desc": {
-        "align": "LEFT",
-        "anchor": {
-          "kind": "MC",
-          "offsetX": 0.0,
-          "offsetY": 0.0,
-          "useAnchoredPos": false
-        },
-        "color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "font": "Font_Malgun",
-        "layoutSlot": {
-          "desiredX": 0.0,
-          "desiredY": 0.0,
-          "margin": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "text": "New Text",
-        "transform": {
-          "centerX": 1116.8349609375,
-          "centerY": 70.9876708984375,
-          "pivotX": 0.5,
-          "pivotY": 0.5,
-          "sizeX": 240.0,
-          "sizeY": 48.0,
-          "visible": true,
-          "zOrder": 5
-        }
-      },
-      "displayName": "Text",
-      "id": "widget_006",
-      "type": "TEXT"
-    },
-    {
-      "desc": {
-        "anchor": {
-          "kind": "MC",
-          "offsetX": 0.0,
-          "offsetY": 0.0,
-          "useAnchoredPos": false
-        },
-        "back": {
-          "index": 0,
-          "level": 3,
-          "tag": "Prototype_Component_Texture_Title_Logo_Diff"
-        },
-        "backColor": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "direction": "LEFT_TO_RIGHT",
-        "fill": {
-          "index": 0,
-          "level": 3,
-          "tag": "Prototype_Component_Texture_Title_Logo_Diff"
-        },
-        "fillAmount": 1.0,
-        "fillColor": [
-          1.0,
-          0.0,
-          0.0,
-          1.0
-        ],
-        "layoutSlot": {
-          "desiredX": 0.0,
-          "desiredY": 0.0,
-          "margin": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
-        },
-        "transform": {
-          "centerX": 1079.3851318359375,
-          "centerY": 557.4000244140625,
-          "pivotX": 0.5,
-          "pivotY": 0.5,
-          "sizeX": 305.0,
-          "sizeY": 82.0,
-          "visible": true,
-          "zOrder": 5
-        },
-        "viBuffer": {
-          "level": 0,
-          "tag": "Prototype_Component_VIBuffer_Rect"
-        }
-      },
-      "displayName": "ProgressBar",
-      "id": "widget_007",
-      "type": "PROGRESSBAR"
     }
   ]
 }

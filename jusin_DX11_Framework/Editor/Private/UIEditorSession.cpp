@@ -197,6 +197,30 @@ _string CUIEditorSession::Make_NextCallbackId() const
 	}
 }
 
+_string CUIEditorSession::Make_NextSlotId(const char* pszPrefix) const
+{
+	const char* pszSafePrefix = (nullptr != pszPrefix && '\0' != pszPrefix[0]) ? pszPrefix : "slot";
+
+	for (_int iNumber = 1;; ++iNumber)
+	{
+		char szBuffer[32] = {};
+		sprintf_s(szBuffer, "%s_%03d", pszSafePrefix, iNumber);
+
+		_bool bUsed = false;
+		for (const auto& tStep : m_Doc.vSteps)
+		{
+			if (tStep.strSlotId == szBuffer)
+			{
+				bUsed = true;
+				break;
+			}
+		}
+
+		if (!bUsed)
+			return szBuffer;
+	}
+}
+
 UISEQ_WIDGET_NODE CUIEditorSession::Make_DefaultWidget(UI_TYPE eType) const
 {
 	const _float2 vRefSize = { m_Doc.fDesignWidth, m_Doc.fDesignHeight };
@@ -382,6 +406,30 @@ UISEQ_STEP_NODE CUIEditorSession::Make_DefaultStep(UI_SEQ_STEP_KIND eKind, _bool
 		tStep.strCallbackId = Make_NextCallbackId();
 		break;
 
+	case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+		tStep.strSlotId = Make_NextSlotId("eff");
+		if (nullptr != pWidget)
+			tStep.strTargetId = pWidget->strId;
+		break;
+
+	case UI_SEQ_STEP_KIND::EFFECT_STOP:
+		tStep.strSlotId = "eff_001";
+		break;
+
+	case UI_SEQ_STEP_KIND::BGM_PLAY:
+		tStep.strSlotId = "bgm_title";
+		break;
+
+	case UI_SEQ_STEP_KIND::BGM_STOP:
+		tStep.strSlotId = "bgm_title";
+		break;
+
+	case UI_SEQ_STEP_KIND::SFX_PLAY:
+		tStep.strSlotId = Make_NextSlotId("sfx");
+		if (nullptr != pWidget)
+			tStep.strTargetId = pWidget->strId;
+		break;
+
 	default:
 		break;
 	}
@@ -480,6 +528,25 @@ _bool CUIEditorSession::Sanitize_DocReferences()
 
 		case UI_SEQ_STEP_KIND::SET_VISIBLE:
 			if (nullptr == Find_WidgetById(tStep.strTargetId) && !tStep.strTargetId.empty())
+			{
+				tStep.strTargetId.clear();
+				bChanged = true;
+			}
+			break;
+
+		case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+		case UI_SEQ_STEP_KIND::SFX_PLAY:
+			if (!tStep.strTargetId.empty() && nullptr == Find_WidgetById(tStep.strTargetId))
+			{
+				tStep.strTargetId.clear();
+				bChanged = true;
+			}
+			break;
+
+		case UI_SEQ_STEP_KIND::EFFECT_STOP:
+		case UI_SEQ_STEP_KIND::BGM_PLAY:
+		case UI_SEQ_STEP_KIND::BGM_STOP:
+			if (!tStep.strTargetId.empty())
 			{
 				tStep.strTargetId.clear();
 				bChanged = true;
@@ -594,6 +661,31 @@ const UISEQ_WIDGET_NODE* CUIEditorSession::Find_WidgetById(const _string& strId)
 _bool CUIEditorSession::Apply_StepTargetFallback(UISEQ_STEP_NODE& tStep) const
 {
 	_bool bChanged = false;
+
+	if (tStep.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
+		tStep.eKind == UI_SEQ_STEP_KIND::SFX_PLAY)
+	{
+		if (!tStep.strTargetId.empty() && nullptr == Find_WidgetById(tStep.strTargetId))
+		{
+			tStep.strTargetId.clear();
+			bChanged = true;
+		}
+
+		return bChanged;
+	}
+
+	if (tStep.eKind == UI_SEQ_STEP_KIND::EFFECT_STOP ||
+		tStep.eKind == UI_SEQ_STEP_KIND::BGM_PLAY ||
+		tStep.eKind == UI_SEQ_STEP_KIND::BGM_STOP)
+	{
+		if (!tStep.strTargetId.empty())
+		{
+			tStep.strTargetId.clear();
+			bChanged = true;
+		}
+
+		return bChanged;
+	}
 
 	if (UI_SEQ_STEP_KIND::PLAY_ANIM != tStep.eKind)
 	{

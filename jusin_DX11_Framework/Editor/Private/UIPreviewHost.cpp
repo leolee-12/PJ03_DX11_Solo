@@ -206,10 +206,13 @@ HRESULT CUIPreviewHost::Rebuild()
 		CUISequence::UISEQ_STEP s{};
 		s.eKind = sn.eKind;
 		s.pTarget = Find_Runtime(sn.strTargetId);
+		s.strTargetId = sn.strTargetId;
+		s.strSlotId = sn.strSlotId;
 		s.strAnimName = sn.strAnimName;
 		s.fWaitSec = sn.fWaitSec;
 		s.bVisible = sn.bVisible;
 		s.bJoinPrev = sn.bJoinPrev;
+		s.bRequired = sn.bRequired;
 
 		if (sn.eKind == UI_SEQ_STEP_KIND::USE_CALLBACK && !sn.strCallbackId.empty())
 		{

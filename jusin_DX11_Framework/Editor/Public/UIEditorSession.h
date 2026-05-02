@@ -86,6 +86,7 @@ private:
 	void Reset_Doc();
 	_string Make_NextWidgetId() const;
 	_string Make_NextCallbackId() const;
+	_string Make_NextSlotId(const char* pszPrefix) const;
 	void Normalize_Selection();
 	void Clear_Dirty();
 	void Propagate_DocCanvasToWidgets();

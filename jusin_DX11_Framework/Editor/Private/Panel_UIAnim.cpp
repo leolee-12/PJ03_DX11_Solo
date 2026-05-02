@@ -333,6 +333,16 @@ void CPanel_UIAnim::Draw_Timeline()
 	ImGui::SameLine();
 	if (ImGui::Button("+ CALLBACK"))     AddStep(UI_SEQ_STEP_KIND::USE_CALLBACK, false);
 
+	if (ImGui::Button("+ EFFECT_PLAY"))  AddStep(UI_SEQ_STEP_KIND::EFFECT_PLAY, false);
+	ImGui::SameLine();
+	if (ImGui::Button("+ EFFECT_STOP"))  AddStep(UI_SEQ_STEP_KIND::EFFECT_STOP, false);
+
+	if (ImGui::Button("+ BGM_PLAY"))     AddStep(UI_SEQ_STEP_KIND::BGM_PLAY, false);
+	ImGui::SameLine();
+	if (ImGui::Button("+ BGM_STOP"))     AddStep(UI_SEQ_STEP_KIND::BGM_STOP, false);
+
+	if (ImGui::Button("+ SFX_PLAY"))     AddStep(UI_SEQ_STEP_KIND::SFX_PLAY, false);
+
 	const _int iStep = m_pSession->Get_SelectedStep();
 	const _bool bHasSel = (iStep >= 0 && iStep < static_cast<_int>(tDoc.vSteps.size()));
 
@@ -367,13 +377,34 @@ void CPanel_UIAnim::Draw_Timeline()
 		{
 			const auto& s = tDoc.vSteps[i];
 			char szLabel[256];
-			sprintf_s(szLabel, "%s%d %s %s %s##step_%d",
-				s.bJoinPrev ? "└- " : "",
-				i,
-				Engine::To_String(s.eKind),
-				s.strTargetId.c_str(),
-				WtoS(s.strAnimName).c_str(),
-				i);
+			const _bool bSlotStep =
+				s.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
+				s.eKind == UI_SEQ_STEP_KIND::EFFECT_STOP ||
+				s.eKind == UI_SEQ_STEP_KIND::BGM_PLAY ||
+				s.eKind == UI_SEQ_STEP_KIND::BGM_STOP ||
+				s.eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+
+			if (bSlotStep)
+			{
+				sprintf_s(szLabel, "%s%d %s slot=%s target=%s##step_%d",
+					s.bJoinPrev ? "└- " : "",
+					i,
+					Engine::To_String(s.eKind),
+					s.strSlotId.c_str(),
+					s.strTargetId.c_str(),
+					i);
+			}
+			else
+			{
+				sprintf_s(szLabel, "%s%d %s %s %s##step_%d",
+					s.bJoinPrev ? "└- " : "",
+					i,
+					Engine::To_String(s.eKind),
+					s.strTargetId.c_str(),
+					WtoS(s.strAnimName).c_str(),
+					i);
+			}
+
 			if (ImGui::Selectable(szLabel, iStep == i))
 				m_pSession->Set_SelectedStep(i);
 		}
@@ -489,6 +520,55 @@ void CPanel_UIAnim::Draw_StepInspector(UISEQ_STEP_NODE& tStep)
 			MarkUpdated();
 		ImGui::TextDisabled("(callback execution is not implemented in this phase)");
 		break;
+
+	case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+	case UI_SEQ_STEP_KIND::SFX_PLAY:
+	{
+		if (Edit_StringField<256>("Slot Id", tStep.strSlotId))
+			MarkUpdated();
+
+		const auto& vW = m_pSession->Get_Doc().vWidgets;
+		const char* pszPrev = tStep.strTargetId.empty() ? "<none>" : tStep.strTargetId.c_str();
+
+		if (ImGui::BeginCombo("Target Widget", pszPrev))
+		{
+			const _bool bNone = tStep.strTargetId.empty();
+			if (ImGui::Selectable("<none>", bNone) && !bNone)
+			{ 
+				tStep.strTargetId.clear();
+				MarkUpdated();
+			}
+
+			for (const auto& w : vW)
+			{
+				const _bool bSel = (tStep.strTargetId == w.strId);
+				if (ImGui::Selectable(w.strId.c_str(), bSel) && !bSel)
+				{
+					tStep.strTargetId = w.strId;
+					MarkUpdated();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		if (ImGui::Checkbox("Required", &tStep.bRequired))
+			MarkUpdated();
+
+		break;
+	}
+
+	case UI_SEQ_STEP_KIND::EFFECT_STOP:
+	case UI_SEQ_STEP_KIND::BGM_PLAY:
+	case UI_SEQ_STEP_KIND::BGM_STOP:
+	{
+		if (Edit_StringField<256>("Slot Id", tStep.strSlotId))
+			MarkUpdated();
+
+		if (ImGui::Checkbox("Required", &tStep.bRequired))
+			MarkUpdated();
+
+		break;
+	}
 	}
 }
 

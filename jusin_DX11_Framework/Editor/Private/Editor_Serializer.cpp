@@ -389,7 +389,36 @@ namespace Helper
 		case UI_SEQ_STEP_KIND::USE_CALLBACK:
 			j["callbackId"] = s.strCallbackId;
 			break;
-		default: break;
+		case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+			j["slotId"] = s.strSlotId;
+			if (!s.strTargetId.empty())
+				j["targetId"] = s.strTargetId;
+			if (s.bRequired)
+				j["required"] = s.bRequired;
+			break;
+
+		case UI_SEQ_STEP_KIND::EFFECT_STOP:
+			j["slotId"] = s.strSlotId;
+			if (s.bRequired)
+				j["required"] = s.bRequired;
+			break;
+
+		case UI_SEQ_STEP_KIND::BGM_PLAY:
+		case UI_SEQ_STEP_KIND::BGM_STOP:
+			j["slotId"] = s.strSlotId;
+			if (s.bRequired)
+				j["required"] = s.bRequired;
+			break;
+
+		case UI_SEQ_STEP_KIND::SFX_PLAY:
+			j["slotId"] = s.strSlotId;
+			if (!s.strTargetId.empty())
+				j["targetId"] = s.strTargetId;
+			if (s.bRequired)
+				j["required"] = s.bRequired;
+			break;
+		default:
+			break;
 		}
 		return j;
 	}
@@ -398,10 +427,12 @@ namespace Helper
 		s.eKind = UI_SEQ_STEP_KIND_From_String(j.value("kind", "WAIT").c_str());
 		s.bJoinPrev = j.value("joinPrev", false);
 		s.strTargetId = j.value("targetId", _string{});
+		s.strSlotId = j.value("slotId", _string{});
 		s.strAnimName = StoW(j.value("animName", _string{}));
 		s.fWaitSec = j.value("waitSec", 0.f);
 		s.bVisible = j.value("visible", true);
 		s.strCallbackId = j.value("callbackId", _string{});
+		s.bRequired = j.value("required", false);
 	}
 
 	json To_Json(const UISEQ_WIDGET_NODE& w)
@@ -499,6 +530,19 @@ namespace Helper
 
 			case UI_SEQ_STEP_KIND::SET_VISIBLE:
 				if (nullptr == Find_Widget_ById(tDoc, step.strTargetId))
+					step.strTargetId.clear();
+				break;
+
+			case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+			case UI_SEQ_STEP_KIND::SFX_PLAY:
+				if (!step.strTargetId.empty() && nullptr == Find_Widget_ById(tDoc, step.strTargetId))
+					step.strTargetId.clear();
+				break;
+
+			case UI_SEQ_STEP_KIND::EFFECT_STOP:
+			case UI_SEQ_STEP_KIND::BGM_PLAY:
+			case UI_SEQ_STEP_KIND::BGM_STOP:
+				if (!step.strTargetId.empty())
 					step.strTargetId.clear();
 				break;
 

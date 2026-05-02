@@ -1,8 +1,40 @@
 {
   "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
     "name": "HUD_Layout",
-    "version": 1
+    "scalePolicy": "UNIFORM_FIT",
+    "version": 2
   },
+  "timeline": [
+    {
+      "joinPrev": false,
+      "kind": "EFFECT_PLAY",
+      "slotId": "eff_001",
+      "targetId": "widget_001"
+    },
+    {
+      "joinPrev": false,
+      "kind": "EFFECT_STOP",
+      "slotId": "eff_001"
+    },
+    {
+      "joinPrev": false,
+      "kind": "BGM_PLAY",
+      "slotId": "bgm_title"
+    },
+    {
+      "joinPrev": false,
+      "kind": "BGM_STOP",
+      "slotId": "bgm_title"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SFX_PLAY",
+      "slotId": "sfx_001",
+      "targetId": "widget_003"
+    }
+  ],
   "widgets": [
     {
       "desc": {
@@ -30,7 +62,13 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
         },
         "texture": {
           "index": 0,
@@ -38,8 +76,10 @@
           "tag": "Prototype_Component_Texture_Dummy_White"
         },
         "transform": {
-          "centerX": 625.0468139648438,
-          "centerY": 746.6112670898438,
+          "centerX": 529.328369140625,
+          "centerY": 196.69924926757813,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 200.0,
           "sizeY": 200.0,
           "visible": true,
@@ -80,7 +120,13 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
         },
         "texture": {
           "index": 0,
@@ -88,8 +134,10 @@
           "tag": "Prototype_Component_Texture_Dummy_White"
         },
         "transform": {
-          "centerX": 814.2056884765625,
-          "centerY": 823.9036865234375,
+          "centerX": 585.2320556640625,
+          "centerY": 332.6722717285156,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 200.0,
           "sizeY": 200.0,
           "visible": true,
@@ -130,7 +178,13 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
         },
         "texture": {
           "index": 0,
@@ -138,8 +192,10 @@
           "tag": "Prototype_Component_Texture_Dummy_White"
         },
         "transform": {
-          "centerX": 664.5233764648438,
-          "centerY": 837.0597534179688,
+          "centerX": 489.9779357910156,
+          "centerY": 291.8782043457031,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 200.0,
           "sizeY": 200.0,
           "visible": true,
@@ -180,7 +236,13 @@
         },
         "shader": {
           "level": 0,
+          "pass": 0,
           "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
         },
         "texture": {
           "index": 0,
@@ -188,8 +250,10 @@
           "tag": "Prototype_Component_Texture_Dummy_White"
         },
         "transform": {
-          "centerX": 782.953369140625,
-          "centerY": 697.2757568359375,
+          "centerX": 623.422607421875,
+          "centerY": 235.5748748779297,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
           "sizeX": 200.0,
           "sizeY": 200.0,
           "visible": true,

@@ -50,6 +50,11 @@ namespace Engine
 		SET_VISIBLE,	// target->Set_Visible(bVisible)
 		WAIT,			// fWaitSec 경과 대기
 		USE_CALLBACK,	// fnCallback 호출
+		EFFECT_PLAY,	// bound effect slot fire
+		EFFECT_STOP,	// bound effect slot release
+		BGM_PLAY,		// bound BGM slot fire
+		BGM_STOP,		// bound BGM slot release
+		SFX_PLAY,		// bound SFX slot fire
 		END
 	};
 
@@ -127,6 +132,11 @@ namespace Engine
 			{ UI_SEQ_STEP_KIND::SET_VISIBLE,  "SET_VISIBLE"  },
 			{ UI_SEQ_STEP_KIND::WAIT,         "WAIT"         },
 			{ UI_SEQ_STEP_KIND::USE_CALLBACK, "USE_CALLBACK" },
+			{ UI_SEQ_STEP_KIND::EFFECT_PLAY,  "EFFECT_PLAY"  },
+			{ UI_SEQ_STEP_KIND::EFFECT_STOP,  "EFFECT_STOP"  },
+			{ UI_SEQ_STEP_KIND::BGM_PLAY,     "BGM_PLAY"     },
+			{ UI_SEQ_STEP_KIND::BGM_STOP,     "BGM_STOP"     },
+			{ UI_SEQ_STEP_KIND::SFX_PLAY,     "SFX_PLAY"     },
 		};
 
 		inline constexpr EnumStringPair<UI_ANCHOR> kAnchor[] = {

@@ -127,23 +127,23 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 	
 	// ---------- Texture ----------
 	/* Prototype_Component_Texture_Title_pbgf_Diff */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBGF_DIFF,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_TITLE_PBGF_DIFF,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbgf_00.png"), 1)); });
 
 	/* Prototype_Component_Texture_Title_Logo_Diff */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_LOGO_DIFF,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_TITLE_LOGO_DIFF,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_logo_%02d.png"), 3)); });
 
 	/* Prototype_Component_Texture_Title_pbtn_Diff */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PBTN_DIFF,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_TITLE_PBTN_DIFF,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbtn_%02d.png"), 1)); });
 
 	/* Prototype_Component_Texture_Title_Pika */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_TITLE_PIKA,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_TITLE_PIKA,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/pber_pika_%02d.png"), 11)); });
 
 	/* Prototype_Component_Texture_Star */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_STAR,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_STAR,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Star/Star_%02d.png"), 3)); });
 
 	// ---------- VIBuffer ----------
@@ -151,7 +151,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC StarDesc{};
 	StarDesc.iNumInstance = 64;
 
-	Enqueue([this, StarDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_STAR,
+	Enqueue([this, StarDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_VIBUFFER_INST_STAR,
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &StarDesc)); });
 
 	/* Prototype_Component_Texture_BackGround */
@@ -160,7 +160,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 
 	// ---------- Shader ----------
 	/* Prototype_Component_Shader_VtxUIInstance */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXUIINST,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_SHADER_VTXUIINST,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxUIInstance.hlsl"), VTXUI_INSTANCE_DESC::Elements, VTXUI_INSTANCE_DESC::iNumElements)); });
 
 	// ---------- GameObject ----------
@@ -169,7 +169,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 		CBackGround::Create(m_pDevice, m_pContext)); });
 
 	/* Prototype_GameObject_Effect_Star */
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFT_STAR,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_EFT_STAR,
 		CEffect_Star::Create(m_pDevice, m_pContext)); });
 
 	return S_OK;

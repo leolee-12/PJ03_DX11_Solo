@@ -57,7 +57,6 @@ void CEffect_Star::Update(_float fTimeDelta)
 	if (false == m_isActive)
 		return;
 
-	Update_FollowTarget();
 	Update_Particles(fTimeDelta);
 	Build_RenderInstances();
 	Upload_RenderInstances();
@@ -88,10 +87,8 @@ HRESULT CEffect_Star::Render()
 
 }
 
-void CEffect_Star::Play(CUIObject* pFollowTarget, const _float2& vFollowOffset)
+void CEffect_Star::Play()
 {
-	m_tDesc.pFollowTarget = pFollowTarget;
-	m_tDesc.vFollowOffset = vFollowOffset;
 	m_isActive = true;
 	m_bVisible = true;
 
@@ -111,17 +108,17 @@ void CEffect_Star::Stop()
 HRESULT CEffect_Star::Ready_Components()
 {
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEXTURE_STAR,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_TEXTURE_STAR,
 		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXUIINST,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_SHADER_VTXUIINST,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_INST_STAR,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::LOGO), PROTO_COM_VIBUFFER_INST_STAR,
 		COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
@@ -201,18 +198,6 @@ void CEffect_Star::Reset_AllParticles()
 		Initialize_Particle(i);
 
 	Build_RenderInstances();
-}
-
-void CEffect_Star::Update_FollowTarget()
-{
-	if (nullptr == m_tDesc.pFollowTarget)
-		return;
-
-	const _float2 vTargetCenter = m_tDesc.pFollowTarget->Get_Center();
-
-	Set_Center(
-		vTargetCenter.x + m_tDesc.vFollowOffset.x,
-		vTargetCenter.y + m_tDesc.vFollowOffset.y);
 }
 
 void CEffect_Star::Update_Particles(_float fTimeDelta)

@@ -57,11 +57,13 @@ namespace
 	{
 		UI_SEQ_STEP_KIND eKind{ UI_SEQ_STEP_KIND::WAIT };
 		_string strTargetId;
+		_string strSlotId;
 		_wstring strAnimName;
 		_float fWaitSec{ 0.f };
 		_bool bVisible{ true };
 		_string strCallbackId;
 		_bool bJoinPrev{ false };
+		_bool bRequired{ false };
 	};
 
 	// 함수 전방 선언
@@ -146,6 +148,17 @@ namespace
 			case UI_SEQ_STEP_KIND::SET_VISIBLE:
 				if (mapWidgetAnims.find(s.strTargetId) == mapWidgetAnims.end())
 					s.strTargetId.clear();
+				break;
+			case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+			case UI_SEQ_STEP_KIND::SFX_PLAY:
+				if (!s.strTargetId.empty() && mapWidgetAnims.find(s.strTargetId) == mapWidgetAnims.end())
+					s.strTargetId.clear();
+				break;
+
+			case UI_SEQ_STEP_KIND::EFFECT_STOP:
+			case UI_SEQ_STEP_KIND::BGM_PLAY:
+			case UI_SEQ_STEP_KIND::BGM_STOP:
+				s.strTargetId.clear();
 				break;
 			default:
 				break;
@@ -268,6 +281,8 @@ void CUISequence::Update(_float fTimeDelta)
 		return;
 	}
 
+	m_fSequenceTime += fTimeDelta;
+
 	while (true)
 	{
 		const UISEQ_STEP& s = m_Steps[m_iCursor];
@@ -294,6 +309,17 @@ void CUISequence::Update(_float fTimeDelta)
 				m_fTimer = 0.f;
 				break;
 
+			case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+			case UI_SEQ_STEP_KIND::BGM_PLAY:
+			case UI_SEQ_STEP_KIND::SFX_PLAY:
+				Fire_Slot(s);
+				break;
+
+			case UI_SEQ_STEP_KIND::EFFECT_STOP:
+			case UI_SEQ_STEP_KIND::BGM_STOP:
+				Release_Slot(s);
+				break;
+
 			default: break;
 			}
 			m_bStepStarted = true;
@@ -311,6 +337,11 @@ void CUISequence::Update(_float fTimeDelta)
 		case UI_SEQ_STEP_KIND::PLAY_ANIM:
 		case UI_SEQ_STEP_KIND::SET_VISIBLE:
 		case UI_SEQ_STEP_KIND::USE_CALLBACK:
+		case UI_SEQ_STEP_KIND::EFFECT_PLAY:
+		case UI_SEQ_STEP_KIND::EFFECT_STOP:
+		case UI_SEQ_STEP_KIND::BGM_PLAY:
+		case UI_SEQ_STEP_KIND::BGM_STOP:
+		case UI_SEQ_STEP_KIND::SFX_PLAY:
 			bStepDone = true;   // 즉발형
 			break;
 
@@ -361,26 +392,87 @@ _bool CUISequence::Join(const UISEQ_STEP& step)
 void CUISequence::Play()
 {
 	if (m_Steps.empty()) return;
+
+	Release_All_ActiveSlots();
+
 	m_iCursor = 0;
 	m_fTimer = 0.f;
+	m_fSequenceTime = 0.f;
 	m_bStepStarted = false;
 	m_bPlaying = true;
 }
 
 void CUISequence::Stop()
 {
+	Release_All_ActiveSlots();
+
 	m_bPlaying = false;
 	m_iCursor = -1;
 	m_fTimer = 0.f;
+	m_fSequenceTime = 0.f;
 	m_bStepStarted = false;
 }
 
 _bool CUISequence::Clear_Timeline()
 {
 	if (m_bPlaying) return false;
-	
+
+	Release_All_ActiveSlots();
+
 	m_Steps.clear();
 	return true;
+}
+
+void CUISequence::Bind_Slot(const _string& strSlotId, UISEQ_SLOT_CATEGORY eCategory, UISEQ_SLOT_FUNC fnFire, UISEQ_SLOT_FUNC fnRelease)
+{
+	if (strSlotId.empty())
+		return;
+
+	UISEQ_SLOT_BINDING tBinding{};
+	tBinding.eCategory = eCategory;
+	tBinding.fnFire = fnFire;
+	tBinding.fnRelease = fnRelease;
+
+	m_SlotBindings[strSlotId] = tBinding;
+}
+
+void CUISequence::Bind_Effect(const _string& strSlotId, UISEQ_SLOT_FUNC fnFire, UISEQ_SLOT_FUNC fnRelease)
+{
+	Bind_Slot(strSlotId, UISEQ_SLOT_CATEGORY::EFFECT, fnFire, fnRelease);
+}
+
+void CUISequence::Bind_BGM(const _string& strSlotId, UISEQ_SLOT_FUNC fnFire, UISEQ_SLOT_FUNC fnRelease)
+{
+	Bind_Slot(strSlotId, UISEQ_SLOT_CATEGORY::BGM, fnFire, fnRelease);
+}
+
+void CUISequence::Bind_SFX(const _string& strSlotId, UISEQ_SLOT_FUNC fnFire)
+{
+	Bind_Slot(strSlotId, UISEQ_SLOT_CATEGORY::SFX, fnFire, nullptr);
+}
+
+void CUISequence::Unbind_Slot(const _string& strSlotId)
+{
+	if (strSlotId.empty())
+		return;
+
+	if (m_ActiveReleaseSlots.find(strSlotId) != m_ActiveReleaseSlots.end())
+	{
+		UISEQ_STEP s{};
+		s.strSlotId = strSlotId;
+		Release_Slot(s);
+	}
+
+	m_SlotBindings.erase(strSlotId);
+	m_ActiveReleaseSlots.erase(strSlotId);
+}
+
+void CUISequence::Clear_Bindings()
+{
+	Release_All_ActiveSlots();
+
+	m_SlotBindings.clear();
+	m_ActiveReleaseSlots.clear();
 }
 
 HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
@@ -522,24 +614,52 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 	Clear_Timeline();
 	for (const auto& sn : vLoadedSteps)
 	{
-		const _bool bNeedTarget = (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM ||
-			sn.eKind == UI_SEQ_STEP_KIND::SET_VISIBLE);
+		const _bool bNeedTarget =
+			sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM ||
+			sn.eKind == UI_SEQ_STEP_KIND::SET_VISIBLE;
+
+		const _bool bOptionalTarget =
+			sn.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
+			sn.eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+
+		const _bool bSlotStep =
+			sn.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
+			sn.eKind == UI_SEQ_STEP_KIND::EFFECT_STOP ||
+			sn.eKind == UI_SEQ_STEP_KIND::BGM_PLAY ||
+			sn.eKind == UI_SEQ_STEP_KIND::BGM_STOP ||
+			sn.eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+
 		if (bNeedTarget && sn.strTargetId.empty()) continue;
 		if (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM && sn.strAnimName.empty()) continue;
 
+		if (bSlotStep && sn.strSlotId.empty())
+		{
+			Log_Loader("%sslot step skipped: empty slotId",
+				sn.bRequired ? "required " : "");
+			continue;
+		}
+
 		UISEQ_STEP s{};
 		s.eKind = sn.eKind;
+		s.strTargetId = sn.strTargetId;
+		s.strSlotId = sn.strSlotId;
 		s.strAnimName = sn.strAnimName;
 		s.fWaitSec = sn.fWaitSec;
 		s.bVisible = sn.bVisible;
 		s.bJoinPrev = sn.bJoinPrev;
+		s.bRequired = sn.bRequired;
 		s.pTarget = nullptr;
 
-		if (bNeedTarget)
+		if (bNeedTarget || bOptionalTarget)
 		{
-			auto it = mapTmpById.find(sn.strTargetId);
-			if (it == mapTmpById.end()) continue;
-			s.pTarget = it->second;
+			if (!sn.strTargetId.empty())
+			{
+				auto it = mapTmpById.find(sn.strTargetId);
+				if (it != mapTmpById.end())
+					s.pTarget = it->second;
+				else if (bNeedTarget)
+					continue;
+			}
 		}
 		if (sn.eKind == UI_SEQ_STEP_KIND::USE_CALLBACK && !sn.strCallbackId.empty())
 		{
@@ -566,6 +686,101 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 	m_mapById = std::move(mapTmpById);
 
 	return S_OK;
+}
+
+void CUISequence::Fire_Slot(const UISEQ_STEP& s)
+{
+	if (s.strSlotId.empty())
+	{
+		Log_Loader("slot fire skipped: empty slotId");
+		return;
+	}
+
+	auto it = m_SlotBindings.find(s.strSlotId);
+	if (it == m_SlotBindings.end() || !it->second.fnFire)
+	{
+		Log_Loader("%sslot fire skipped: unbound slotId=%s",
+			s.bRequired ? "required " : "",
+			s.strSlotId.c_str());
+		return;
+	}
+
+	UISEQ_EVENT_CONTEXT ctx{};
+	ctx.pTarget = s.pTarget;
+	ctx.strSlotId = s.strSlotId;
+	ctx.strTargetId = s.strTargetId;
+	ctx.fSequenceTime = m_fSequenceTime;
+
+	it->second.fnFire(ctx);
+
+	if (it->second.fnRelease)
+		m_ActiveReleaseSlots.insert(s.strSlotId);
+}
+
+void CUISequence::Release_Slot(const UISEQ_STEP& s)
+{
+	if (s.strSlotId.empty())
+	{
+		Log_Loader("slot release skipped: empty slotId");
+		return;
+	}
+
+	auto it = m_SlotBindings.find(s.strSlotId);
+	if (it == m_SlotBindings.end() || !it->second.fnRelease)
+	{
+		Log_Loader("%sslot release skipped: unbound/no-release slotId=%s",
+			s.bRequired ? "required " : "",
+			s.strSlotId.c_str());
+
+		m_ActiveReleaseSlots.erase(s.strSlotId);
+		return;
+	}
+
+	UISEQ_EVENT_CONTEXT ctx{};
+	ctx.pTarget = s.pTarget;
+	ctx.strSlotId = s.strSlotId;
+	ctx.strTargetId = s.strTargetId;
+	ctx.fSequenceTime = m_fSequenceTime;
+
+	it->second.fnRelease(ctx);
+	m_ActiveReleaseSlots.erase(s.strSlotId);
+}
+
+void CUISequence::Release_All_ActiveSlots()
+{
+	vector<_string> vSlots;
+	vSlots.reserve(m_ActiveReleaseSlots.size());
+
+	for (const auto& strSlotId : m_ActiveReleaseSlots)
+		vSlots.push_back(strSlotId);
+
+	for (const auto& strSlotId : vSlots)
+	{
+		auto it = m_SlotBindings.find(strSlotId);
+		if (it == m_SlotBindings.end() || !it->second.fnRelease)
+			continue;
+
+		UISEQ_EVENT_CONTEXT ctx{};
+		ctx.strSlotId = strSlotId;
+		ctx.fSequenceTime = m_fSequenceTime;
+
+		it->second.fnRelease(ctx);
+	}
+
+	m_ActiveReleaseSlots.clear();
+}
+
+_bool CUISequence::Is_SlotPlayKind(UI_SEQ_STEP_KIND eKind) const
+{
+	return eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY
+		|| eKind == UI_SEQ_STEP_KIND::BGM_PLAY
+		|| eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+}
+
+_bool CUISequence::Is_SlotStopKind(UI_SEQ_STEP_KIND eKind) const
+{
+	return eKind == UI_SEQ_STEP_KIND::EFFECT_STOP
+		|| eKind == UI_SEQ_STEP_KIND::BGM_STOP;
 }
 
 CUISequence* CUISequence::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -596,6 +811,9 @@ CGameObject* CUISequence::Clone(void* pArg)
 
 void CUISequence::Free()
 {
+	Release_All_ActiveSlots();
+	Clear_Bindings();
+
 	__super::Free();
 
 	m_Steps.clear();
@@ -844,12 +1062,16 @@ namespace
 	{
 		s.eKind = StrToStepKind(j.value("kind", _string("WAIT")));
 		if (s.eKind == UI_SEQ_STEP_KIND::END) return E_FAIL;
+
 		s.bJoinPrev = j.value("joinPrev", false);
 		s.strTargetId = j.value("targetId", _string{});
+		s.strSlotId = j.value("slotId", _string{});
 		s.strAnimName = StoW(j.value("animName", _string{}));
 		s.fWaitSec = j.value("waitSec", 0.f);
 		s.bVisible = j.value("visible", true);
 		s.strCallbackId = j.value("callbackId", _string{});
+		s.bRequired = j.value("required", false);
+
 		return S_OK;
 	}
 
