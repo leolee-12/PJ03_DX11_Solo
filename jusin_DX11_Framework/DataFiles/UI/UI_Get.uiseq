@@ -319,12 +319,6 @@
           "offsetY": -205.0,
           "useAnchoredPos": true
         },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
-        },
         "color": [
           1.0,
           1.0,
@@ -344,7 +338,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 3,
@@ -367,6 +361,7 @@
       },
       "displayName": "Button1",
       "id": "widget_006",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
       "type": "BUTTON"
     },
     {
@@ -376,12 +371,6 @@
           "offsetX": 100.0,
           "offsetY": -150.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -402,7 +391,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 3,
@@ -425,6 +414,7 @@
       },
       "displayName": "Button2",
       "id": "widget_007",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
       "type": "BUTTON"
     },
     {
@@ -434,12 +424,6 @@
           "offsetX": 100.0,
           "offsetY": -95.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -460,7 +444,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 3,
@@ -483,6 +467,7 @@
       },
       "displayName": "Button3",
       "id": "widget_008",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
       "type": "BUTTON"
     },
     {
@@ -492,12 +477,6 @@
           "offsetX": 100.0,
           "offsetY": -40.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -518,7 +497,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 3,
@@ -541,6 +520,7 @@
       },
       "displayName": "Button4",
       "id": "widget_009",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
       "type": "BUTTON"
     }
   ]

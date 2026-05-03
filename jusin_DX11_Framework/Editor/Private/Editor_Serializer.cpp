@@ -194,53 +194,61 @@ namespace Helper
 		}
 	}
 
-	// UIBUTTON_DESC - Image와 유사 + hover/pressed/disabled/interactable
+	// UIBUTTON_DESC - shader/viBuffer/texture/interactable/color.
 	json To_Json(const CUIButton::UIBUTTON_DESC& d)
 	{
 		json j = Base_To_Json(d);
-		j["shader"] = { { "tag", TagToS(d.strShaderTag) },   { "level", d.iShaderLevel } };
-		j["viBuffer"] = { { "tag", TagToS(d.strVIBufferTag) }, { "level", d.iVIBufferLevel } };
-		j["texture"] = { { "tag", TagToS(d.strTextureTag) },  { "level", d.iTextureLevel } };
-		j["buttonIndices"] = {
-			{ "normal",   d.iNormalTextureIndex },
-			{ "hover",    d.iHoverTextureIndex },
-			{ "pressed",  d.iPressedTextureIndex },
-			{ "disabled", d.iDisabledTextureIndex },
+
+		j["shader"] = {
+			{ "tag", TagToS(d.strShaderTag) },
+			{ "level", d.iShaderLevel }
 		};
+
+		j["viBuffer"] = {
+			{ "tag", TagToS(d.strVIBufferTag) },
+			{ "level", d.iVIBufferLevel }
+		};
+
+		j["texture"] = {
+			{ "tag", TagToS(d.strTextureTag) },
+			{ "level", d.iTextureLevel }
+		};
+
 		j["interactable"] = d.bInteractable;
 		j["color"] = { d.vColor.x, d.vColor.y, d.vColor.z, d.vColor.w };
+
 		return j;
 	}
 	void From_Json(const json& j, CUIButton::UIBUTTON_DESC& d)
 	{
 		Base_From_Json(j, d);
+
 		const auto sh = j.value("shader", json::object());
 		const auto vb = j.value("viBuffer", json::object());
 		const auto tx = j.value("texture", json::object());
-		const auto bi = j.value("buttonIndices", json::object());
 
 		d.strShaderTag = SToTag(sh.value("tag", _string(kDefaultShader)));
 		d.iShaderLevel = sh.value("level", 0u);
+
 		d.strVIBufferTag = SToTag(vb.value("tag", _string(kDefaultVIBuffer)));
 		d.iVIBufferLevel = vb.value("level", 0u);
+
 		d.strTextureTag = SToTag(tx.value("tag", _string{}));
 		d.iTextureLevel = tx.value("level", 0u);
 
-		d.iNormalTextureIndex = bi.value("normal", 0u);
-		d.iHoverTextureIndex = bi.value("hover", 0u);
-		d.iPressedTextureIndex = bi.value("pressed", 0u);
-		d.iDisabledTextureIndex = bi.value("disabled", static_cast<_uint>(-1));
 		d.bInteractable = j.value("interactable", true);
 
 		auto c = j.value("color", json::array({ 1.f,1.f,1.f,1.f }));
 		d.vColor = { c[0], c[1], c[2], c[3] };
+
+		// Legacy buttonIndices are intentionally ignored on load.
 	}
 
 	// UIPROGRESSBAR_DESC
 	json To_Json(const CUIProgressBar::UIPROGRESSBAR_DESC& d)
 	{
 		json j = Base_To_Json(d);
-		j["shader"] = { { "tag", TagToS(d.strShaderTag) },   { "level", d.iShaderLevel } };
+		j["shader"] = { { "tag", TagToS(d.strShaderTag) }, { "level", d.iShaderLevel } };
 		j["viBuffer"] = { { "tag", TagToS(d.strVIBufferTag) }, { "level", d.iVIBufferLevel } };
 		j["back"] = { { "tag", TagToS(d.strBackTextureTag) }, { "level", d.iBackTextureLevel }, { "index", d.iBackTextureIndex } };
 		j["fill"] = { { "tag", TagToS(d.strFillTextureTag) }, { "level", d.iFillTextureLevel }, { "index", d.iFillTextureIndex } };
@@ -442,6 +450,9 @@ namespace Helper
 		j["displayName"] = w.strDisplayName;
 		j["type"] = EnumToStr(w.Get_Type());
 
+		if (INVALID_TAG != w.strPrototypeTag)
+			j["prototypeTag"] = TagToS(w.strPrototypeTag);
+
 		std::visit([&](const auto& desc) { j["desc"] = To_Json(desc); }, w.tDesc);
 
 		for (const auto& anim : w.vAnimations) j["animations"].push_back(To_Json(anim));
@@ -451,6 +462,7 @@ namespace Helper
 	{
 		w.strId = j.value("id", _string{});
 		w.strDisplayName = j.value("displayName", _string{});
+		w.strPrototypeTag = SToTag(j.value("prototypeTag", _string{}));
 
 		const UI_TYPE eType = UI_TYPE_From_String(j.value("type", "IMAGE").c_str());
 		const auto& jd = j.value("desc", json::object());

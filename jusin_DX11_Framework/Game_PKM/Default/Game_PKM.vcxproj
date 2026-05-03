@@ -32,6 +32,7 @@
     <ClInclude Include="..\Public\Game_PKM_Enum.h" />
     <ClInclude Include="..\Public\Game_PKM_Tags.h" />
     <ClInclude Include="..\Public\Game_PKM_Struct.h" />
+    <ClInclude Include="..\Public\Game_PresetTable.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -62,6 +63,7 @@
     <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Game_API.cpp" />
+    <ClCompile Include="..\Private\Game_PresetTable.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />

@@ -2,10 +2,6 @@
 #include "Game_PKM_Defines.h"
 #include "UIButton.h"
 
-NS_BEGIN(Engine)
-class CTexture;
-NS_END
-
 NS_BEGIN(Game_PKM)
 
 class CUIButton_Layered final : public CUIButton
@@ -13,18 +9,10 @@ class CUIButton_Layered final : public CUIButton
 public:
 	struct LAYEREDBUTTON_DESC : public CUIButton::UIBUTTON_DESC
 	{
-		WNameID strLineTextureTag{ INVALID_TAG };
-		WNameID strGlowTextureTag{ INVALID_TAG };
-
-		_uint iLineTextureLevel{ INVALID_INDEX };
-		_uint iGlowTextureLevel{ INVALID_INDEX };
-		_uint iLineTextureIndex{ INVALID_INDEX };
-		_uint iGlowTextureIndex{ INVALID_INDEX };
-
-		_float4 vColorBG_Normal{ g_kWhite };
-		_float4 vColorLine_Normal{ g_kWhite };
-		_float4 vColorBG_Hover{ g_kWhite };
-		_float4 vColorLine_Hover{ g_kWhite };
+		_float4 vColBase_Normal{ g_kWhite };
+		_float4 vColLine_Normal{ g_kWhite };
+		_float4 vColBase_Hover{ g_kWhite };
+		_float4 vColLine_Hover{ g_kWhite };
 
 		_bool bUseGlow{ false };
 		_bool bUseMirrorUV{ false };
@@ -34,7 +22,7 @@ public:
 	};
 
 protected:
-	CUIButton_Layered(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUIButton_Layered(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LAYEREDBUTTON_DESC& tDesc);
 	CUIButton_Layered(const CUIButton_Layered& Prototype);
 	virtual ~CUIButton_Layered() = default;
 
@@ -47,20 +35,16 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CTexture* m_pLineTextureCom{ nullptr };
-	CTexture* m_pGlowTextureCom{ nullptr };
+	enum class IMAGE_SLOT : _uint
+	{
+		BASE = 0,
+		LINE = 1,
+		GLOW = 2,
+	};
 
-	WNameID m_strTexLineTag{ INVALID_TAG };
-	WNameID m_strTexGlowTag{ INVALID_TAG };
-
-	_uint m_iLineTextureLevel{ INVALID_INDEX };
-	_uint m_iGlowTextureLevel{ INVALID_INDEX };
-	_uint m_iLineTextureIndex{ INVALID_INDEX };
-	_uint m_iGlowTextureIndex{ INVALID_INDEX };
-
-	_float4 m_vColDiff_Normal{ g_kWhite };
+	_float4 m_vColBase_Normal{ g_kWhite };
 	_float4 m_vColLine_Normal{ g_kWhite };
-	_float4 m_vColDiff_Hover{ g_kWhite };
+	_float4 m_vColBase_Hover{ g_kWhite };
 	_float4 m_vColLine_Hover{ g_kWhite };
 	_float4 m_vColorLine{ g_kWhite };
 
@@ -72,15 +56,14 @@ private:
 	_float m_fGlowPhase{ 0.f };
 	_float m_fGlowAmount{ 0.f };
 
-	UI_BUTTON_STATE m_eLastAppliedState{ UI_BUTTON_STATE::END };
-
 private:
-	HRESULT Ready_Components_Layered();
+	virtual HRESULT Ready_Components() override;
+	virtual void On_State_Changed(UI_BUTTON_STATE eOld, UI_BUTTON_STATE eNew) override;
 	HRESULT Bind_LayeredResources();
 	void Apply_StateColors(UI_BUTTON_STATE eState);
 
 public:
-	static CUIButton_Layered* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUIButton_Layered* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LAYEREDBUTTON_DESC& tDesc);
 	virtual CGameObject* Clone(void* pArg) override;
 
 protected:

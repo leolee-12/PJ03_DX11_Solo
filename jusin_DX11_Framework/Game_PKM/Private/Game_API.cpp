@@ -83,14 +83,6 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CUIProgressBar::Create(pDevice, pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UIBUTTON_GLOW,
-		CUIButton_Glow::Create(pDevice, pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UIBUTTON_LAYERED,
-		CUIButton_Layered::Create(pDevice, pContext))))
-		return E_FAIL;
-
 	return S_OK;
 }
 

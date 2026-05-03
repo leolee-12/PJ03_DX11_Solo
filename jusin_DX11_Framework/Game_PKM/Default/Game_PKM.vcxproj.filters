@@ -189,6 +189,9 @@
     <ClInclude Include="..\Public\UIButton_Group.h">
       <Filter>07. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Game_PresetTable.h">
+      <Filter>97. Game_API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIButton_Group.cpp">
       <Filter>07. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Game_PresetTable.cpp">
+      <Filter>97. Game_API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

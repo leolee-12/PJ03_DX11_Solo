@@ -110,7 +110,7 @@
           "pivotX": 0.5,
           "pivotY": 0.5,
           "sizeX": 300.0,
-          "sizeY": 220.0,
+          "sizeY": 273.0,
           "visible": true,
           "zOrder": 0
         },
@@ -192,8 +192,8 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 175.0,
-          "offsetY": -160.0,
+          "offsetX": 170.0,
+          "offsetY": -180.0,
           "useAnchoredPos": true
         },
         "back": {
@@ -240,7 +240,7 @@
           "pivotX": 0.5,
           "pivotY": 0.5,
           "sizeX": 200.0,
-          "sizeY": 262.0,
+          "sizeY": 320.0,
           "visible": true,
           "zOrder": 1
         },
@@ -310,6 +310,218 @@
       "displayName": "Icon",
       "id": "widget_005",
       "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -205.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button1",
+      "id": "widget_006",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -150.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button2",
+      "id": "widget_007",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -95.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button3",
+      "id": "widget_008",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 100.0,
+          "offsetY": -40.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Get_Button"
+        },
+        "transform": {
+          "centerX": 112.9136962890625,
+          "centerY": 534.99267578125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 39.599998474121094,
+          "visible": true,
+          "zOrder": 2
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button4",
+      "id": "widget_009",
+      "prototypeTag": "Prototype_UIButton_Layered_Get",
+      "type": "BUTTON"
     }
   ]
 }

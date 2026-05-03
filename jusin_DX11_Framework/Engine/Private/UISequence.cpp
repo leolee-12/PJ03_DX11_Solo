@@ -49,6 +49,7 @@ namespace
 	{
 		_string strId;
 		UI_TYPE eType{ UI_TYPE::END };
+		WNameID strPrototypeTag{ INVALID_TAG };
 		DescVariant tDesc;
 		vector<LoaderAnim> vAnimations;
 	};
@@ -109,7 +110,7 @@ namespace
 	HRESULT Validate_RequiredResources(const DescVariant& tDesc, UI_TYPE eType);
 
 	// -- prototype 매핑 --
-	WNameID Map_PrototypeTag(UI_TYPE eType)
+	WNameID Map_DefaultPrototypeTag(UI_TYPE eType)
 	{
 		switch (eType)
 		{
@@ -120,6 +121,14 @@ namespace
 		case UI_TYPE::PROGRESSBAR: return PROTO_UI_PROGRESSBAR;
 		default:                   return INVALID_TAG;
 		}
+	}
+
+	WNameID Resolve_PrototypeTag(const LoaderWidget& w)
+	{
+		if (INVALID_TAG != w.strPrototypeTag)
+			return w.strPrototypeTag;
+
+		return Map_DefaultPrototypeTag(w.eType);
 	}
 
 	// -- sanitize (editor Sanitize_DocReferences와 동일 정책) --
@@ -575,8 +584,8 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 
 	for (auto& w : vLoadedWidgets)
 	{
-		const WNameID strProto = Map_PrototypeTag(w.eType);
-		if (strProto == INVALID_TAG) { Cleanup_Tmp(); return E_FAIL; }
+		const WNameID strPrimary = Resolve_PrototypeTag(w);
+		if (strPrimary == INVALID_TAG) { Cleanup_Tmp(); return E_FAIL; }
 
 		std::visit([this](auto& d)
 			{
@@ -588,14 +597,35 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 			return static_cast<void*>(&d); }, w.tDesc);
 
 		CGameObject* pClone = static_cast<CGameObject*>(
-			m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iProtoLevel, strProto, pCArg));
+			m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iProtoLevel, strPrimary, pCArg));
+
+		if (nullptr == pClone && INVALID_TAG != w.strPrototypeTag)
+		{
+			const WNameID strFallback = Map_DefaultPrototypeTag(w.eType);
+			if (INVALID_TAG != strFallback && strFallback != strPrimary)
+			{
+				Log_Loader("prototypeTag '%u' clone failed, falling back to default (id=%s)",
+					w.strPrototypeTag, w.strId.c_str());
+
+				pClone = static_cast<CGameObject*>(
+					m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iProtoLevel, strFallback, pCArg));
+			}
+		}
+
 		if (nullptr == pClone)
 		{
 			Log_Loader("Clone failed (id=%s)", w.strId.c_str());
 			Cleanup_Tmp(); return E_FAIL;
 		}
 
-		CUIObject* pUI = static_cast<CUIObject*>(pClone);
+		CUIObject* pUI = dynamic_cast<CUIObject*>(pClone);
+		if (nullptr == pUI)
+		{
+			Log_Loader("Clone result is not CUIObject (id=%s)", w.strId.c_str());
+			Safe_Release(pClone);
+			Cleanup_Tmp(); return E_FAIL;
+		}
+
 		vTmp.push_back(pUI);
 		mapTmpById[w.strId] = pUI;
 
@@ -956,22 +986,20 @@ namespace
 	HRESULT Build_ButtonDesc(const json& j, CUIButton::UIBUTTON_DESC& d)
 	{
 		Build_BaseDesc(j, d);
+
 		const auto sh = j.value("shader", json::object());
 		const auto vb = j.value("viBuffer", json::object());
 		const auto tx = j.value("texture", json::object());
-		const auto bi = j.value("buttonIndices", json::object());
 
 		d.strShaderTag = SToTag(sh.value("tag", _string(kDefaultShader)));
 		d.iShaderLevel = sh.value("level", 0u);
+
 		d.strVIBufferTag = SToTag(vb.value("tag", _string(kDefaultVIBuffer)));
 		d.iVIBufferLevel = vb.value("level", 0u);
+
 		d.strTextureTag = SToTag(tx.value("tag", _string{}));
 		d.iTextureLevel = tx.value("level", 0u);
 
-		d.iNormalTextureIndex = bi.value("normal", 0u);
-		d.iHoverTextureIndex = bi.value("hover", 0u);
-		d.iPressedTextureIndex = bi.value("pressed", 0u);
-		d.iDisabledTextureIndex = bi.value("disabled", static_cast<_uint>(-1));
 		d.bInteractable = j.value("interactable", true);
 
 		auto c = j.value("color", json::array({ 1.f,1.f,1.f,1.f }));
@@ -1078,6 +1106,8 @@ namespace
 	HRESULT Build_LoaderWidget(const json& j, LoaderWidget& w)
 	{
 		w.strId = j.value("id", _string{});
+		w.strPrototypeTag = SToTag(j.value("prototypeTag", _string{}));
+
 		const _string strType = j.value("type", _string{});
 		w.eType = StrToUIType(strType);
 		if (w.eType == UI_TYPE::END || w.eType == UI_TYPE::WIDGET)

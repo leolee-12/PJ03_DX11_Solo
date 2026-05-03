@@ -1,4 +1,5 @@
 #include "Loader.h"
+#include "Game_PresetTable.h"
 #include "BackGround.h"
 #include "Terrain.h"
 #include "Camera_Free.h"
@@ -362,6 +363,16 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	/* Prototype_MapObject_Road01 */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01,
 		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_ROAD01)); });
+
+	/* Prototype_Button_Glow_Menu */
+	auto tGlowDesc = Get_GlowButtonPreset(GLOW_BUTTON_PRESET::MENU);
+	Enqueue([this, tGlowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BTN_GLOW_MENU,
+		CUIButton_Glow::Create(m_pDevice, m_pContext, tGlowDesc)); });
+
+	/* Prototype_Button_Layered_Get */
+	auto tLayeredDesc = Get_LayeredButtonPreset(LAYERED_BUTTON_PRESET::GET_COMMAND);
+	Enqueue([this, tLayeredDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BTN_LAYERED_GET,
+		CUIButton_Layered::Create(m_pDevice, m_pContext, tLayeredDesc)); });
 
 #pragma region STUDY
 	// Texture

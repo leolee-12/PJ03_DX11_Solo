@@ -294,10 +294,6 @@ UISEQ_WIDGET_NODE CUIEditorSession::Make_DefaultWidget(UI_TYPE eType) const
 		tDesc.iVIBufferLevel = ETOUI(LEVEL::STATIC);
 		tDesc.strTextureTag = INVALID_TAG;
 		tDesc.iTextureLevel = ETOUI(LEVEL::STATIC);
-		tDesc.iNormalTextureIndex = 0;
-		tDesc.iHoverTextureIndex = 0;
-		tDesc.iPressedTextureIndex = 0;
-		tDesc.iDisabledTextureIndex = 0;
 		tDesc.bInteractable = true;
 		tDesc.vColor = g_kWhite;
 		tWidget.strDisplayName = "Button";

@@ -11,9 +11,6 @@ class CUISequence;
 NS_END
 
 NS_BEGIN(Game_PKM)
-class CUIButton_Glow;
-class CUIButton_Layered;
-class CUIButton_Group;
 
 class CLevel_GamePlay : public CLevel
 {
@@ -29,10 +26,6 @@ public:
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
 
-	CUIButton_Group* m_pTestButtonGroup{ nullptr };
-	vector<CUIButton*> m_TestButtons;
-	_uint m_iTestStateStep{ 0 };
-
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
@@ -41,9 +34,6 @@ private:
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
-
-	HRESULT Ready_Test_UIButtons(WNameID strLayerTag);
-	void Update_Test_UIButtons(_float fTimeDelta);
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

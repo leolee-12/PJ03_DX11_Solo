@@ -73,12 +73,6 @@
           "offsetY": -137.0,
           "useAnchoredPos": true
         },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
-        },
         "color": [
           1.0,
           1.0,
@@ -98,7 +92,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -121,6 +115,7 @@
       },
       "displayName": "Partner",
       "id": "widget_002",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu",
       "type": "BUTTON"
     },
     {
@@ -130,12 +125,6 @@
           "offsetX": -440.0,
           "offsetY": 120.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -156,7 +145,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -179,6 +168,7 @@
       },
       "displayName": "Dex",
       "id": "widget_007",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu",
       "type": "BUTTON"
     },
     {
@@ -188,12 +178,6 @@
           "offsetX": -220.0,
           "offsetY": 120.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -214,7 +198,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -237,6 +221,7 @@
       },
       "displayName": "Bag",
       "id": "widget_003",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu",
       "type": "BUTTON"
     },
     {
@@ -246,12 +231,6 @@
           "offsetX": 0.0,
           "offsetY": 120.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -272,7 +251,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -295,6 +274,7 @@
       },
       "displayName": "Entry",
       "id": "widget_004",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu",
       "type": "BUTTON"
     },
     {
@@ -304,12 +284,6 @@
           "offsetX": 220.0,
           "offsetY": 120.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -330,7 +304,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -353,6 +327,7 @@
       },
       "displayName": "Link",
       "id": "widget_005",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu",
       "type": "BUTTON"
     },
     {
@@ -362,12 +337,6 @@
           "offsetX": 440.0,
           "offsetY": 120.0,
           "useAnchoredPos": true
-        },
-        "buttonIndices": {
-          "disabled": 0,
-          "hover": 0,
-          "normal": 0,
-          "pressed": 0
         },
         "color": [
           1.0,
@@ -388,7 +357,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -411,6 +380,7 @@
       },
       "displayName": "Report",
       "id": "widget_006",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu",
       "type": "BUTTON"
     },
     {

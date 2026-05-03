@@ -293,6 +293,16 @@ void CPanel_UILayout::Draw_Inspector()
 	if (Edit_StringField<256>("Display Name", w.strDisplayName))
 		MarkWidgetUpdated();
 
+	if (Edit_TagField<256>("Prototype Tag", w.strPrototypeTag))
+		MarkWidgetUpdated();
+
+	if (w.Get_Type() == UI_TYPE::BUTTON)
+	{
+		ImGui::TextDisabled("Use actual tag string, e.g. Prototype_UIButton_Layered");
+		ImGui::TextDisabled("Layered shader: Prototype_Component_Shader_UI_Button_Layered");
+		ImGui::TextDisabled("Glow shader: Prototype_Component_Shader_UI_Button_Glow");
+	}
+
 	if (ImGui::Checkbox("Visible", &tBase.bVisible))
 		MarkWidgetUpdated();
 
@@ -475,14 +485,13 @@ void CPanel_UILayout::Draw_Inspector()
 			{
 				if (Edit_TagField<256>("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Level", tDesc.iTextureLevel)) MarkWidgetUpdated();
+
 				if (Edit_TagField<256>("Shader Tag", tDesc.strShaderTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Shader Level", tDesc.iShaderLevel)) MarkWidgetUpdated();
+
 				if (Edit_TagField<256>("VIBuffer Tag", tDesc.strVIBufferTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("VIBuffer Level", tDesc.iVIBufferLevel)) MarkWidgetUpdated();
-				if (Edit_UIntField("Normal Index", tDesc.iNormalTextureIndex)) MarkWidgetUpdated();
-				if (Edit_UIntField("Hover Index", tDesc.iHoverTextureIndex)) MarkWidgetUpdated();
-				if (Edit_UIntField("Pressed Index", tDesc.iPressedTextureIndex)) MarkWidgetUpdated();
-				if (Edit_UIntField("Disabled Index", tDesc.iDisabledTextureIndex)) MarkWidgetUpdated();
+
 				if (ImGui::Checkbox("Interactable", &tDesc.bInteractable)) MarkWidgetUpdated();
 				if (ImGui::ColorEdit4("Color", reinterpret_cast<float*>(&tDesc.vColor))) MarkWidgetUpdated();
 			}

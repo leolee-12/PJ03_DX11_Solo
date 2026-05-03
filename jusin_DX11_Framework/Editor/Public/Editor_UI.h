@@ -40,6 +40,7 @@ struct UISEQ_WIDGET_NODE
 
 	_string strId;
 	_string strDisplayName;
+	WNameID strPrototypeTag{ INVALID_TAG };
 	tDescType tDesc;
 	vector<UISEQ_ANIMATION_NODE> vAnimations;
 

@@ -172,12 +172,23 @@ HRESULT CUIPreviewHost::Rebuild()
 		default: continue;
 		}
 
+		const WNameID strFallbackProto = strProto;
+		if (INVALID_TAG != w.strPrototypeTag)
+			strProto = w.strPrototypeTag;
+
 		void* pArg = std::visit([](auto& d) -> void* {
 			return static_cast<void*>(&d);
 			}, tDescCopy);
 
 		CGameObject* pClone = static_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(
 			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), strProto, pArg));
+
+		if (nullptr == pClone && INVALID_TAG != w.strPrototypeTag && strFallbackProto != strProto)
+		{
+			pClone = static_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(
+				PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), strFallbackProto, pArg));
+		}
+
 		if (nullptr == pClone)
 			continue;
 
@@ -366,12 +377,22 @@ void CUIPreviewHost::Apply_Fallback_Text(CUIText::UITEXT_DESC& d) const
 
 void CUIPreviewHost::Apply_Fallback_Button(CUIButton::UIBUTTON_DESC& d) const
 {
+	if (INVALID_TAG == d.strShaderTag)
+	{
+		d.strShaderTag = PROTO_COM_SHADER_UI;
+		d.iShaderLevel = ETOUI(LEVEL::STATIC);
+	}
+
+	if (INVALID_TAG == d.strVIBufferTag)
+	{
+		d.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
+		d.iVIBufferLevel = ETOUI(LEVEL::STATIC);
+	}
+
 	if (INVALID_TAG == d.strTextureTag)
 	{
 		d.strTextureTag = PROTO_COM_TEX_DUMMY_WHITE;
 		d.iTextureLevel = ETOUI(LEVEL::STATIC);
-		d.iNormalTextureIndex = d.iHoverTextureIndex
-			= d.iPressedTextureIndex = d.iDisabledTextureIndex = 0;
 	}
 }
 

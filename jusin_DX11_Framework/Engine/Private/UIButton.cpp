@@ -9,6 +9,14 @@ CUIButton::CUIButton(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CUIButton::CUIButton(const CUIButton& Prototype)
 	: CUIObject{ Prototype }
+	, m_strTextureTag{ Prototype.m_strTextureTag }
+	, m_strShaderTag{ Prototype.m_strShaderTag }
+	, m_strVIBufferTag{ Prototype.m_strVIBufferTag }
+	, m_iTextureLevel{ Prototype.m_iTextureLevel }
+	, m_iShaderLevel{ Prototype.m_iShaderLevel }
+	, m_iVIBufferLevel{ Prototype.m_iVIBufferLevel }
+	, m_bInteractable{ Prototype.m_bInteractable }
+	, m_vColor{ Prototype.m_vColor }
 {
 }
 
@@ -20,47 +28,29 @@ void CUIButton::Set_State(UI_BUTTON_STATE eState)
 	if (false == m_bInteractable && UI_BUTTON_STATE::DISABLED != eState)
 		return;
 
+	const UI_BUTTON_STATE eOld = m_eState;
+	if (eOld == eState)
+		return;
+
 	m_eState = eState;
+	On_State_Changed(eOld, eState);
 }
 
 void CUIButton::Set_Interactable(_bool bInteractable)
 {
+	if (m_bInteractable == bInteractable)
+		return;
+
 	m_bInteractable = bInteractable;
 
 	if (false == m_bInteractable)
 	{
-		m_eState = UI_BUTTON_STATE::DISABLED;
+		Set_State(UI_BUTTON_STATE::DISABLED);
 		return;
 	}
 
 	if (UI_BUTTON_STATE::DISABLED == m_eState)
-		m_eState = UI_BUTTON_STATE::NORMAL;
-}
-
-void CUIButton::Set_TextureIndex(UI_BUTTON_STATE eState, _uint iTextureIndex)
-{
-	if (ETOUI(UI_BUTTON_STATE::END) <= ETOUI(eState))
-		return;
-
-	m_iTextureIndices[ETOUI(eState)] = iTextureIndex;
-}
-
-_uint CUIButton::Get_TextureIndex(UI_BUTTON_STATE eState) const
-{
-	if (ETOUI(UI_BUTTON_STATE::END) <= ETOUI(eState))
-		return INVALID_INDEX;
-
-	return m_iTextureIndices[ETOUI(eState)];
-}
-
-_uint CUIButton::Get_CurrentTextureIndex() const
-{
-	_uint iIndex = m_iTextureIndices[ETOUI(m_eState)];
-
-	if (INVALID_INDEX != iIndex)
-		return iIndex;
-
-	return m_iTextureIndices[ETOUI(UI_BUTTON_STATE::NORMAL)];
+		Set_State(UI_BUTTON_STATE::NORMAL);
 }
 
 HRESULT CUIButton::Initialize_Prototype()
@@ -80,12 +70,7 @@ HRESULT CUIButton::Initialize(void* pArg)
 		m_iTextureLevel = pDesc->iTextureLevel;
 		m_iShaderLevel = pDesc->iShaderLevel;
 		m_iVIBufferLevel = pDesc->iVIBufferLevel;
-
-		m_iTextureIndices[ETOUI(UI_BUTTON_STATE::NORMAL)]	= pDesc->iNormalTextureIndex;
-		m_iTextureIndices[ETOUI(UI_BUTTON_STATE::HOVER)]	= pDesc->iHoverTextureIndex;
-		m_iTextureIndices[ETOUI(UI_BUTTON_STATE::PRESSED)]	= pDesc->iPressedTextureIndex;
-		m_iTextureIndices[ETOUI(UI_BUTTON_STATE::DISABLED)]	= pDesc->iDisabledTextureIndex;
-		
+	
 		Set_Interactable(pDesc->bInteractable);
 		m_vColor = pDesc->vColor;
 	}
@@ -117,13 +102,27 @@ void CUIButton::Late_Update(_float fTimeDelta)
 
 HRESULT CUIButton::Render()
 {
-	const _uint iIndex = Get_CurrentTextureIndex();
-	if (!Has_ValidData(iIndex)) return S_OK;
+	if (nullptr == m_pShaderCom || nullptr == m_pTextureCom || nullptr == m_pVIBufferCom)
+		return S_OK;
 
-	if (FAILED(Bind_ShaderResources(iIndex))) return E_FAIL;
-	if (FAILED(m_pShaderCom->Begin(0))) return E_FAIL;
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) return E_FAIL;
-	if (FAILED(m_pVIBufferCom->Render())) return E_FAIL;
+	if (FAILED(Bind_BaseMatrices(m_pShaderCom)))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBufferCom->Bind_Resources()))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBufferCom->Render()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -154,40 +153,34 @@ HRESULT CUIButton::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
 
 HRESULT CUIButton::Ready_Components()
 {
-	if (FAILED(__super::Add_Component(m_iShaderLevel, m_strShaderTag, COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	if (FAILED(__super::Add_Component(m_iShaderLevel, m_strShaderTag,
+		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_iVIBufferLevel, m_strVIBufferTag, COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+	if (FAILED(__super::Add_Component(m_iTextureLevel, m_strTextureTag,
+		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_iTextureLevel, m_strTextureTag, COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CUIButton::Bind_ShaderResources(_uint iTextureIndex)
-{
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(__super::Bind_ShaderResource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW)))
-		return E_FAIL;
-	if (FAILED(__super::Bind_ShaderResource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ)))
-		return E_FAIL;
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", iTextureIndex)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
+	if (FAILED(__super::Add_Component(m_iVIBufferLevel, m_strVIBufferTag,
+		COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-_bool CUIButton::Has_ValidData(_uint iTextureIndex) const
+HRESULT CUIButton::Bind_BaseMatrices(CShader* pShader)
 {
-	return (nullptr != m_pShaderCom)
-		&& (nullptr != m_pVIBufferCom)
-		&& (nullptr != m_pTextureCom)
-		&& (INVALID_INDEX != iTextureIndex);
+	if (nullptr == pShader)
+		return E_FAIL;
+
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(pShader, "g_WorldMatrix")))
+		return E_FAIL;
+	if (FAILED(__super::Bind_ShaderResource(pShader, "g_ViewMatrix", D3DTS::VIEW)))
+		return E_FAIL;
+	if (FAILED(__super::Bind_ShaderResource(pShader, "g_ProjMatrix", D3DTS::PROJ)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 CUIButton* CUIButton::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -220,7 +213,7 @@ void CUIButton::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pTextureCom);
 }
