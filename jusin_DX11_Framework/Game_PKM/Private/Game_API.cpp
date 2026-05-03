@@ -1,12 +1,13 @@
 #include "Game_API.h"
 #include "Level_Loading.h"
 #include "SharedTexture_Manager.h"
+#include "UIButton_Glow.h"
+#include "UIButton_Layered.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
 #include "UIImage.h"
 #include "UIText.h"
-#include "UIButton.h"
 #include "UIProgressBar.h"
 
 NS_BEGIN(Game_PKM)
@@ -45,6 +46,18 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements))))
 		return E_FAIL;
 
+	/* Prototype_Component_Shader_UI_Button_Glow */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIBUTTON_GLOW,
+		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UIButton_Glow.hlsl"),
+			VTXTEX::Elements, VTXTEX::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_UI_Button_Layered */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIBUTTON_LAYERED,
+		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UIButton_Layered.hlsl"),
+			VTXTEX::Elements, VTXTEX::iNumElements))))
+		return E_FAIL;
+
 	/* UI Objects */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_CONTAINER,
 		CUIContainer::Create(pDevice, pContext))))
@@ -70,35 +83,12 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CUIProgressBar::Create(pDevice, pContext))))
 		return E_FAIL;
 
-	return S_OK;
-}
-
-HRESULT Ready_Prototypes_For_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_CONTAINER,
-		CUIContainer::Create(pDevice, pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UIBUTTON_GLOW,
+		CUIButton_Glow::Create(pDevice, pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE,
-		CUISequence::Create(pDevice, pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_IMAGE,
-		CUIImage::Create(pDevice, pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_TEXT,
-		CUIText::Create(pDevice, pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_BUTTON,
-		CUIButton::Create(pDevice, pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_PROGRESSBAR,
-		CUIProgressBar::Create(pDevice, pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UIBUTTON_LAYERED,
+		CUIButton_Layered::Create(pDevice, pContext))))
 		return E_FAIL;
 
 	return S_OK;

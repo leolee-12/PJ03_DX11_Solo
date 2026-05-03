@@ -594,7 +594,7 @@
             {
               "duration": 0.25,
               "ease": "EASE_IN_SINE",
-              "end": 871.5,
+              "end": 913.0,
               "loop": "NONE",
               "start": 830.0,
               "target": "SIZE_X"
@@ -602,7 +602,7 @@
             {
               "duration": 0.25,
               "ease": "EASE_IN_SINE",
-              "end": 420.0,
+              "end": 440.0,
               "loop": "NONE",
               "start": 400.0,
               "target": "SIZE_Y"
@@ -617,7 +617,7 @@
               "ease": "EASE_OUT_SINE",
               "end": 830.0,
               "loop": "NONE",
-              "start": 871.5,
+              "start": 913.0,
               "target": "SIZE_X"
             },
             {
@@ -625,7 +625,7 @@
               "ease": "EASE_OUT_SINE",
               "end": 400.0,
               "loop": "NONE",
-              "start": 420.0,
+              "start": 440.0,
               "target": "SIZE_Y"
             }
           ]
@@ -735,7 +735,7 @@
         "sharedTextures": [],
         "spriteAnim": {
           "enabled": true,
-          "frameDuration": 0.05000000074505806
+          "frameDuration": 0.033330000936985016
         },
         "texture": {
           "index": 0,

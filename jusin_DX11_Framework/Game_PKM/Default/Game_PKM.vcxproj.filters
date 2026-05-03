@@ -85,6 +85,12 @@
     <Filter Include="01. Environment\03. Sky">
       <UniqueIdentifier>{629b5f95-f0dc-443b-bcdb-166a54a38379}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. ShaderFiles\UI">
+      <UniqueIdentifier>{eb3ed17d-22b4-460f-9b7f-c0492c7f36ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. UI">
+      <UniqueIdentifier>{95cb7b9c-7bb3-4c80-b8fd-b4ad2f74e72c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -174,6 +180,15 @@
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
       <Filter>04. Components\UI_Instance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Glow.h">
+      <Filter>07. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Layered.h">
+      <Filter>07. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Group.h">
+      <Filter>07. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -251,6 +266,15 @@
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
       <Filter>04. Components\UI_Instance</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Glow.cpp">
+      <Filter>07. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Layered.cpp">
+      <Filter>07. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Group.cpp">
+      <Filter>07. UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
@@ -271,9 +295,6 @@
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
@@ -282,6 +303,15 @@
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxUIInstance.hlsl">
       <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl">
+      <Filter>98. ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl">
+      <Filter>98. ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl">
+      <Filter>98. ShaderFiles\UI</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

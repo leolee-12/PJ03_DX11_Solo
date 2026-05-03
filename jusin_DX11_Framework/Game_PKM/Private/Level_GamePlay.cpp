@@ -2,6 +2,9 @@
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
 #include "Effect_Star.h"
+#include "UIButton_Glow.h"
+#include "UIButton_Layered.h"
+#include "UIButton_Group.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -38,6 +41,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Test_UIButtons(LAYER_UI)))
+		return E_FAIL;
+
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
 	pCamera->Set_FollowTarget(pPlayer->Get_Transform());
@@ -59,6 +65,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_F4) && m_pRuntimeUI)
 		m_pRuntimeUI->Play();
+
+	Update_Test_UIButtons(fTimeDelta);
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -194,6 +202,144 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Test_UIButtons(WNameID strLayerTag)
+{
+	m_pTestButtonGroup = CUIButton_Group::Create();
+	if (nullptr == m_pTestButtonGroup)
+		return E_FAIL;
+
+	if (FAILED(m_pTestButtonGroup->Initialize_Linear(true)))
+		return E_FAIL;
+
+	CUIButton_Glow::GLOWBUTTON_DESC GlowDesc{};
+	GlowDesc.fCenterX = 360.f;
+	GlowDesc.fCenterY = 160.f;
+	GlowDesc.fSizeX = 260.f;
+	GlowDesc.fSizeY = 90.f;
+	GlowDesc.iZOrder = 50;
+	GlowDesc.bVisible = true;
+
+	GlowDesc.strShaderTag = PROTO_COM_SHADER_UIBUTTON_GLOW;
+	GlowDesc.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
+	GlowDesc.strTextureTag = PROTO_COM_TEX_GET_BUTTON;
+	GlowDesc.strGlowTextureTag = PROTO_COM_TEX_GET_BUTTON;
+
+	GlowDesc.iShaderLevel = ETOUI(LEVEL::STATIC);
+	GlowDesc.iVIBufferLevel = ETOUI(LEVEL::STATIC);
+	GlowDesc.iTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	GlowDesc.iGlowTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+
+	GlowDesc.iNormalTextureIndex = 0;
+	GlowDesc.iHoverTextureIndex = 1;
+	GlowDesc.iPressedTextureIndex = 2;
+	GlowDesc.iDisabledTextureIndex = 0;
+	GlowDesc.iGlowTextureIndex = 2;
+
+	GlowDesc.vColor = _float4(1.f, 1.f, 1.f, 1.f);
+	GlowDesc.fGlowPulseSpeed = 6.f;
+	GlowDesc.fGlowFadeSpeed = 8.f;
+
+	auto* pGlow = static_cast<CUIButton_Glow*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UIBUTTON_GLOW, &GlowDesc));
+
+	if (nullptr == pGlow)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pGlow)))
+		return E_FAIL;
+
+	m_TestButtons.push_back(pGlow);
+	m_pTestButtonGroup->Add_Button(pGlow);
+
+	CUIButton_Layered::LAYEREDBUTTON_DESC LayeredDesc{};
+	LayeredDesc.fCenterX = 360.f;
+	LayeredDesc.fCenterY = 280.f;
+	LayeredDesc.fSizeX = 300.f;
+	LayeredDesc.fSizeY = 90.f;
+	LayeredDesc.iZOrder = 51;
+	LayeredDesc.bVisible = true;
+
+	LayeredDesc.strShaderTag = PROTO_COM_SHADER_UIBUTTON_LAYERED;
+	LayeredDesc.strVIBufferTag = PROTO_COM_VIBUFFER_RECT;
+	LayeredDesc.strTextureTag = PROTO_COM_TEX_GET_LINE_BACK;
+	LayeredDesc.strLineTextureTag = PROTO_COM_TEX_GET_LINE_FILL;
+	LayeredDesc.strGlowTextureTag = PROTO_COM_TEX_GET_BUTTON;
+
+	LayeredDesc.iShaderLevel = ETOUI(LEVEL::STATIC);
+	LayeredDesc.iVIBufferLevel = ETOUI(LEVEL::STATIC);
+	LayeredDesc.iTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	LayeredDesc.iLineTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+	LayeredDesc.iGlowTextureLevel = ETOUI(LEVEL::GAMEPLAY);
+
+	LayeredDesc.iNormalTextureIndex = 0;
+	LayeredDesc.iHoverTextureIndex = 0;
+	LayeredDesc.iPressedTextureIndex = 0;
+	LayeredDesc.iDisabledTextureIndex = 0;
+	LayeredDesc.iLineTextureIndex = 0;
+	LayeredDesc.iGlowTextureIndex = 2;
+
+	LayeredDesc.vColorBG_Normal = _float4(0.15f, 0.25f, 0.95f, 1.f);
+	LayeredDesc.vColorLine_Normal = _float4(1.f, 1.f, 1.f, 1.f);
+	LayeredDesc.vColorBG_Hover = _float4(1.f, 1.f, 1.f, 1.f);
+	LayeredDesc.vColorLine_Hover = _float4(0.15f, 0.25f, 0.95f, 1.f);
+
+	LayeredDesc.bUseGlow = true;
+	LayeredDesc.bUseMirrorUV = false;
+	LayeredDesc.fGlowPulseSpeed = 6.f;
+	LayeredDesc.fGlowFadeSpeed = 8.f;
+
+	auto* pLayered = static_cast<CUIButton_Layered*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UIBUTTON_LAYERED, &LayeredDesc));
+
+	if (nullptr == pLayered)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pLayered)))
+		return E_FAIL;
+
+	m_TestButtons.push_back(pLayered);
+	m_pTestButtonGroup->Add_Button(pLayered);
+
+	return S_OK;
+}
+
+void CLevel_GamePlay::Update_Test_UIButtons(_float fTimeDelta)
+{
+	if (nullptr == m_pTestButtonGroup)
+		return;
+
+	m_pTestButtonGroup->Update(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_F5))
+	{
+		++m_iTestStateStep;
+
+		const CUIButton::UI_BUTTON_STATE eState =
+			(0 == m_iTestStateStep % 3) ? CUIButton::UI_BUTTON_STATE::NORMAL :
+			(1 == m_iTestStateStep % 3) ? CUIButton::UI_BUTTON_STATE::HOVER :
+			CUIButton::UI_BUTTON_STATE::PRESSED;
+
+		for (auto* pButton : m_TestButtons)
+		{
+			if (nullptr != pButton)
+				pButton->Set_State(eState);
+		}
+	}
+
+	if (m_pTestButtonGroup->Was_Activated_This_Frame())
+	{
+		const _int iIndex = m_pTestButtonGroup->Get_Activated_Index();
+		wstring strMsg = L"UIButton test activated index: " + to_wstring(iIndex);
+		OutputDebugStringW(strMsg.c_str());
+		OutputDebugStringW(L"\n");
+	}
+
+	if (m_pTestButtonGroup->Was_Cancelled_This_Frame())
+	{
+		OutputDebugStringW(L"UIButton test cancelled\n");
+	}
+}
+
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CLevel_GamePlay* pInstance = new CLevel_GamePlay(pDevice, pContext);
@@ -212,4 +358,6 @@ void CLevel_GamePlay::Free()
 	__super::Free();
 
 	m_pRuntimeUI = nullptr;
+	Safe_Release(m_pTestButtonGroup);
+	m_TestButtons.clear();
 }

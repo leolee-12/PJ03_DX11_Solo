@@ -53,6 +53,8 @@ WNAME_TAG(PROTO_COM_SHADER_VTXPOINTINST, L"Prototype_Component_Shader_VtxPointIn
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
 WNAME_TAG(PROTO_COM_SHADER_UI, L"Prototype_Component_Shader_UI");
 WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance");
+WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_GLOW, L"Prototype_Component_Shader_UI_Button_Glow");
+WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_LAYERED, L"Prototype_Component_Shader_UI_Button_Layered");
 
 // VIBuffer & Model
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");
@@ -103,6 +105,8 @@ WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
+WNAME_TAG(PROTO_UIBUTTON_GLOW, L"Prototype_UIButton_Glow");
+WNAME_TAG(PROTO_UIBUTTON_LAYERED, L"Prototype_UIButton_Layered");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
@@ -113,7 +117,8 @@ WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
 WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
 WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
-
+WNAME_TAG(COM_TEXTURE_GLOW, L"Com_Texture_Glow");
+WNAME_TAG(COM_TEXTURE_LINE, L"Com_Texture_Line");
 
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");
