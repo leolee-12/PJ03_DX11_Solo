@@ -95,11 +95,6 @@
       "visible": true
     },
     {
-      "joinPrev": false,
-      "kind": "SFX_PLAY",
-      "slotId": "voice_pika"
-    },
-    {
       "animName": "logo_b2",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
@@ -109,6 +104,11 @@
       "joinPrev": false,
       "kind": "WAIT",
       "waitSec": 0.5
+    },
+    {
+      "joinPrev": false,
+      "kind": "SFX_PLAY",
+      "slotId": "voice_pika"
     },
     {
       "animName": "logo_t3",

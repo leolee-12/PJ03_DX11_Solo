@@ -66,14 +66,6 @@ HRESULT CLevel_Logo::Ready_Layer_Monster(WNameID strLayerTag)
 
 HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 {
-	CUISequence::UISEQUENCE_DESC SeqDesc{};
-	SeqDesc.strPath = "../../DataFiles/UI/UI_Title.uiseq";
-	SeqDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
-
-	CUISequence* pTitleUI = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &SeqDesc));
-	if (nullptr == pTitleUI)
-		return E_FAIL;
-
 	CEffect_Star::EFFECT_STAR_DESC StarDesc{};
 	StarDesc.fCenterX = -100.f;
 	StarDesc.fCenterY = 580.f;
@@ -85,9 +77,9 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 	StarDesc.iNumParticles = 16;
 	StarDesc.vSpawnRange = _float2(5.f, 10.f);
 	StarDesc.vSizeRange = _float2(64.f, 128.f);
-	StarDesc.vSpeedRange = _float2(180.f, 320.f);
+	StarDesc.vSpeedRange = _float2(180.f, 300.f);
 	StarDesc.vEmitDir = _float2(-1.f, 0.f);
-	StarDesc.fEmitSpreadAngle = XMConvertToRadians(90.f);
+	StarDesc.fEmitSpreadAngle = XMConvertToRadians(120.f);
 	StarDesc.vLifeRange = _float2(0.5f, 2.5f);
 	StarDesc.vRotationSpeedRange = _float2(-1.f, 1.f);
 	StarDesc.vMaskRotationSpeedRange = _float2(-0.5f, 0.5f);
@@ -101,73 +93,25 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 	StarDesc.eMaskSampleMode = TEXTURE_SAMPLE_MODE::BI_VERTICAL;
 	StarDesc.eSubSampleMode = TEXTURE_SAMPLE_MODE::QUAD;
 
-	CEffect_Star* pStarEffect1 = static_cast<CEffect_Star*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, CURRENT_LEVEL, PROTO_OBJ_EFT_STAR, &StarDesc));
-	if (nullptr == pStarEffect1)
-	{
-		Safe_Release(pTitleUI);
-		return E_FAIL;
-	}
+	CUISequence* pTitleUI = Create_TitleSequence();
+
+	CEffect_Star* pStarEffect1 = Create_StarEffect(&StarDesc);
 
 	StarDesc.fCenterX = -150.f;
 	StarDesc.fCenterY = 590.f;
 	StarDesc.iZOrder = 11;
-	CEffect_Star* pStarEffect2 = static_cast<CEffect_Star*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, CURRENT_LEVEL, PROTO_OBJ_EFT_STAR, &StarDesc));
-	if (nullptr == pStarEffect2)
+	CEffect_Star* pStarEffect2 = Create_StarEffect(&StarDesc);
+
+	if (nullptr == pTitleUI || nullptr == pStarEffect1 || nullptr == pStarEffect2)
 	{
 		Safe_Release(pTitleUI);
 		Safe_Release(pStarEffect1);
+		Safe_Release(pStarEffect2);
 		return E_FAIL;
 	}
 
-	pTitleUI->Bind_Effect("eff_star",
-		[pStarEffect1, pStarEffect2](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
-		{
-			pStarEffect1->Play();
-			pStarEffect2->Play();
-
-			CUITween::UITWEEN_DESC tween{};
-			tween.eTarget = UI_TWEEN_TARGET::POSITION_X;
-			tween.fStart = -100.f;
-			tween.fEnd = 2600.f;
-			tween.fDuration = 4.25f;
-			tween.fDelay = 0.75f;
-			tween.eEase = UI_EASE::EASE_OUT_SINE;
-			tween.eLoop = UI_TWEEN_LOOP::NONE;
-
-			if (auto* pAnim = pStarEffect1->Get_Animator())
-				pAnim->Play_Tween(tween);
-			
-			tween.fStart = -200.f;
-			tween.fEnd = 2500.f;
-			if (auto* pAnim = pStarEffect2->Get_Animator())
-				pAnim->Play_Tween(tween);
-		},
-		[pStarEffect1, pStarEffect2](const CUISequence::UISEQ_EVENT_CONTEXT&)
-		{
-			pStarEffect1->Stop();
-			pStarEffect2->Stop();
-		});
-
-	pTitleUI->Bind_BGM(
-		"bgm_title",
-		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
-		{
-			pGI->Play_BGM(L"BGM/1-03. Title Screen.mp3", 0.5f);
-		},
-		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
-		{
-			pGI->Stop_Sound(CHANNELID::BGM);
-		});
-
-	pTitleUI->Bind_SFX(
-		"voice_pika",
-		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
-		{
-			pGI->Play(
-				L"SFX/025 - Pikachu (01).wav",
-				CHANNELID::SFX,
-				0.7f);
-		});
+	vector<CEffect_Star*> Effects{ pStarEffect1, pStarEffect2 };
+	Bind_TitleSlots(pTitleUI, Effects);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pTitleUI)))
 	{
@@ -193,6 +137,74 @@ HRESULT CLevel_Logo::Ready_Layer_UI(WNameID strLayerTag)
 	pTitleUI->Play();
 
 	return S_OK;
+}
+
+CUISequence* CLevel_Logo::Create_TitleSequence()
+{
+	CUISequence::UISEQUENCE_DESC SeqDesc{};
+	SeqDesc.strPath = "../../DataFiles/UI/UI_Title.uiseq";
+	SeqDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+	return static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &SeqDesc));
+}
+
+CEffect_Star* CLevel_Logo::Create_StarEffect(void* pStarDesc)
+{
+	return static_cast<CEffect_Star*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, CURRENT_LEVEL, PROTO_OBJ_EFT_STAR, pStarDesc));
+}
+
+void CLevel_Logo::Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& Effects)
+{
+	pTitleUI->Bind_Effect("eff_star",
+		[Effects](const CUISequence::UISEQ_EVENT_CONTEXT& ctx)
+		{
+			CUITween::UITWEEN_DESC tween{};
+			tween.eTarget = UI_TWEEN_TARGET::POSITION_X;
+			tween.fStart = -100.f;
+			tween.fEnd = 2600.f;
+			tween.fDuration = 4.25f;
+			tween.fDelay = 0.75f;
+			tween.eEase = UI_EASE::EASE_OUT_SINE;
+			tween.eLoop = UI_TWEEN_LOOP::NONE;
+
+			for (size_t i = 0; i < Effects.size(); ++i)
+			{
+				Effects[i]->Play();
+				tween.fStart -= 100.f * i;
+				tween.fEnd -= 50.f * i;
+
+				if (auto* pAnim = Effects[i]->Get_Animator())
+					pAnim->Play_Tween(tween);
+			}
+		},
+		[Effects](const CUISequence::UISEQ_EVENT_CONTEXT&)
+		{
+			for (auto* pEffect : Effects)
+				pEffect->Stop();
+		});
+
+	pTitleUI->Bind_BGM(
+		"bgm_title",
+		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
+		{
+			pGI->Play_BGM(L"BGM/1-03. Title Screen.mp3", 0.5f);
+		},
+		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
+		{
+			pGI->Stop_Sound(CHANNELID::BGM);
+		});
+
+	pTitleUI->Bind_SFX(
+		"voice_pika",
+		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
+		{
+			pGI->Play(
+				L"SFX/025 - Pikachu (01).wav",
+				CHANNELID::SFX,
+				0.7f);
+		});
 }
 
 CLevel_Logo* CLevel_Logo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

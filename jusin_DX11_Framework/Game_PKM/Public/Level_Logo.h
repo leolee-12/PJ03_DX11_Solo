@@ -2,7 +2,13 @@
 #include "Game_PKM_Defines.h"
 #include "Level.h"
 
+NS_BEGIN(Engine)
+class CUISequence;
+NS_END
+
 NS_BEGIN(Game_PKM)
+class CEffect_Star;
+
 class CLevel_Logo : public CLevel
 {
 private:
@@ -18,6 +24,10 @@ private:
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
+
+	CUISequence* Create_TitleSequence();
+	CEffect_Star* Create_StarEffect(void* pStarDesc);
+	void Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& Effects);
 
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
