@@ -278,9 +278,9 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "pass": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "pass": 3,
+          "tag": "Prototype_Component_Shader_UIImage"
         },
         "sharedTextures": [],
         "spriteAnim": {
@@ -337,7 +337,7 @@
           ]
         },
         "shader": {
-          "level": 0,
+          "level": 3,
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
@@ -390,7 +390,7 @@
           ]
         },
         "shader": {
-          "level": 0,
+          "level": 3,
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
@@ -443,7 +443,7 @@
           ]
         },
         "shader": {
-          "level": 0,
+          "level": 3,
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
@@ -496,7 +496,7 @@
           ]
         },
         "shader": {
-          "level": 0,
+          "level": 3,
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {

@@ -84,6 +84,8 @@ void CMainApp::Free()
 	m_pGameInstance->Set_SharedTextureBinder(nullptr);
 	CSharedTexture_Manager::DestroyInstance();
 
+	UI_Cleanup();
+
 	m_pGameInstance->Release_Engine();
 	Safe_Release(m_pGameInstance);
 }

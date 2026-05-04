@@ -6,13 +6,298 @@
     "scalePolicy": "UNIFORM_FIT",
     "version": 2
   },
+  "timeline": [
+    {
+      "animName": "Init_Partner",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Init_Dex",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_007"
+    },
+    {
+      "animName": "Init_Bag",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "Init_Entry",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_004"
+    },
+    {
+      "animName": "Init_Link",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_005"
+    },
+    {
+      "animName": "Init_Report",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_006"
+    },
+    {
+      "animName": "Init_Text_Partner",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_008"
+    },
+    {
+      "animName": "Init_Text_Dex",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_009"
+    },
+    {
+      "animName": "Init_Text_Bag",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_010"
+    },
+    {
+      "animName": "Init_Text_Link",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_012"
+    },
+    {
+      "animName": "Init_Text_Report",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_013"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": true
+    },
+    {
+      "animName": "ball",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.15000000596046448
+    },
+    {
+      "animName": "OpenMenu_Partner",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "OpenMenu_Dex",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_007"
+    },
+    {
+      "animName": "OpenMenu_Bag",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "OpenMenu_Entry",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_004"
+    },
+    {
+      "animName": "OpenMenu_Link",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_005"
+    },
+    {
+      "animName": "OpenMenu_Report",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_006"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": false
+    },
+    {
+      "animName": "ball_Init",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_002",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_007",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_003",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_004",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_005",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_006",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_008",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_009",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_010",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_011",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_012",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_013",
+      "visible": true
+    },
+    {
+      "animName": "OpenMenu_Text_Partner",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_008"
+    },
+    {
+      "animName": "OpenMenu_Text_Dex",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_009"
+    },
+    {
+      "animName": "OpenMenu_Text_Bag",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_010"
+    },
+    {
+      "animName": "OpenMenu_Text_Entry",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_011"
+    },
+    {
+      "animName": "OpenMenu_Text_Link",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_012"
+    },
+    {
+      "animName": "OpenMenu_Text_Report",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_013"
+    }
+  ],
   "widgets": [
     {
+      "animations": [
+        {
+          "name": "ball",
+          "tracks": [
+            {
+              "duration": 0.20000000298023224,
+              "ease": "EASE_OUT_CUBIC",
+              "end": 120.0,
+              "loop": "NONE",
+              "start": -200.0,
+              "target": "ANCHOR_OFFSET_Y"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "ball_Init",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": -200.0,
+              "loop": "NONE",
+              "start": -200.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
           "offsetX": 0.0,
-          "offsetY": -114.0,
+          "offsetY": -200.0,
           "useAnchoredPos": true
         },
         "color": [
@@ -53,7 +338,7 @@
           "pivotY": 0.5,
           "sizeX": 100.0,
           "sizeY": 100.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -61,11 +346,87 @@
           "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "Image",
+      "displayName": "Ball",
       "id": "widget_001",
       "type": "IMAGE"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Partner",
+          "tracks": [
+            {
+              "duration": 0.20000000298023224,
+              "ease": "EASE_IN_SINE",
+              "end": -140.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": 256.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_SINE",
+              "end": 256.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_Y"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Init_Partner",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            },
+            {
+              "duration": 0.25,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "SIZE_Y"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -91,8 +452,8 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -105,7 +466,7 @@
           "pivotY": 0.5,
           "sizeX": 256.0,
           "sizeY": 256.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -115,10 +476,54 @@
       },
       "displayName": "Partner",
       "id": "widget_002",
-      "prototypeTag": "Prototype_UIButton_Glow_Menu",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu_Partner",
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Dex",
+          "tracks": [
+            {
+              "duration": 0.15000000596046448,
+              "ease": "EASE_OUT_SINE",
+              "end": 128.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -440.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Init_Dex",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -144,8 +549,8 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -158,7 +563,7 @@
           "pivotY": 0.5,
           "sizeX": 128.0,
           "sizeY": 128.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -168,10 +573,54 @@
       },
       "displayName": "Dex",
       "id": "widget_007",
-      "prototypeTag": "Prototype_UIButton_Glow_Menu",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu_Square",
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Bag",
+          "tracks": [
+            {
+              "duration": 0.15000000596046448,
+              "ease": "EASE_OUT_SINE",
+              "end": 128.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -220.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Init_Bag",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -197,8 +646,8 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -211,7 +660,7 @@
           "pivotY": 0.5,
           "sizeX": 128.0,
           "sizeY": 128.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -221,10 +670,46 @@
       },
       "displayName": "Bag",
       "id": "widget_003",
-      "prototypeTag": "Prototype_UIButton_Glow_Menu",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu_Square",
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Entry",
+          "tracks": [
+            {
+              "duration": 0.15000000596046448,
+              "ease": "EASE_OUT_SINE",
+              "end": 128.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Init_Entry",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -250,8 +735,8 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -264,7 +749,7 @@
           "pivotY": 0.5,
           "sizeX": 128.0,
           "sizeY": 128.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -274,10 +759,54 @@
       },
       "displayName": "Entry",
       "id": "widget_004",
-      "prototypeTag": "Prototype_UIButton_Glow_Menu",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu_Square",
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Link",
+          "tracks": [
+            {
+              "duration": 0.15000000596046448,
+              "ease": "LINEAR",
+              "end": 128.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 220.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Init_Link",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -303,8 +832,8 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -317,7 +846,7 @@
           "pivotY": 0.5,
           "sizeX": 128.0,
           "sizeY": 128.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -327,10 +856,54 @@
       },
       "displayName": "Link",
       "id": "widget_005",
-      "prototypeTag": "Prototype_UIButton_Glow_Menu",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu_Square",
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Report",
+          "tracks": [
+            {
+              "duration": 0.15000000596046448,
+              "ease": "LINEAR",
+              "end": 128.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "SIZE_X"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 440.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            },
+            {
+              "duration": 0.10000000149011612,
+              "ease": "LINEAR",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Init_Report",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "MC",
@@ -356,8 +929,8 @@
           ]
         },
         "shader": {
-          "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "level": 3,
+          "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
           "level": 3,
@@ -370,7 +943,7 @@
           "pivotY": 0.5,
           "sizeX": 128.0,
           "sizeY": 128.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         },
         "viBuffer": {
@@ -380,16 +953,44 @@
       },
       "displayName": "Report",
       "id": "widget_006",
-      "prototypeTag": "Prototype_UIButton_Glow_Menu",
+      "prototypeTag": "Prototype_UIButton_Glow_Menu_Square",
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Text_Partner",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -16.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Init_Text_Partner",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
       "desc": {
         "align": "CENTER",
         "anchor": {
           "kind": "MC",
           "offsetX": 0.0,
-          "offsetY": -16.0,
+          "offsetY": 0.0,
           "useAnchoredPos": true
         },
         "color": [
@@ -417,7 +1018,7 @@
           "pivotY": 0.5,
           "sizeX": 240.0,
           "sizeY": 48.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         }
       },
@@ -426,11 +1027,39 @@
       "type": "TEXT"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Text_Dex",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -440.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        },
+        {
+          "name": "Init_Text_Dex",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        }
+      ],
       "desc": {
         "align": "CENTER",
         "anchor": {
           "kind": "MC",
-          "offsetX": -440.0,
+          "offsetX": 0.0,
           "offsetY": 210.0,
           "useAnchoredPos": true
         },
@@ -459,7 +1088,7 @@
           "pivotY": 0.5,
           "sizeX": 140.0,
           "sizeY": 30.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         }
       },
@@ -468,11 +1097,39 @@
       "type": "TEXT"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Text_Bag",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -220.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        },
+        {
+          "name": "Init_Text_Bag",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        }
+      ],
       "desc": {
         "align": "CENTER",
         "anchor": {
           "kind": "MC",
-          "offsetX": -220.0,
+          "offsetX": 0.0,
           "offsetY": 210.0,
           "useAnchoredPos": true
         },
@@ -501,7 +1158,7 @@
           "pivotY": 0.5,
           "sizeX": 140.0,
           "sizeY": 30.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         }
       },
@@ -510,6 +1167,11 @@
       "type": "TEXT"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Text_Entry"
+        }
+      ],
       "desc": {
         "align": "CENTER",
         "anchor": {
@@ -543,7 +1205,7 @@
           "pivotY": 0.5,
           "sizeX": 140.0,
           "sizeY": 30.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         }
       },
@@ -552,11 +1214,39 @@
       "type": "TEXT"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Text_Link",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 220.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        },
+        {
+          "name": "Init_Text_Link",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        }
+      ],
       "desc": {
         "align": "CENTER",
         "anchor": {
           "kind": "MC",
-          "offsetX": 220.0,
+          "offsetX": 0.0,
           "offsetY": 210.0,
           "useAnchoredPos": true
         },
@@ -585,7 +1275,7 @@
           "pivotY": 0.5,
           "sizeX": 140.0,
           "sizeY": 30.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         }
       },
@@ -594,11 +1284,39 @@
       "type": "TEXT"
     },
     {
+      "animations": [
+        {
+          "name": "OpenMenu_Text_Report",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_OUT_SINE",
+              "end": 440.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        },
+        {
+          "name": "Init_Text_Report",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        }
+      ],
       "desc": {
         "align": "CENTER",
         "anchor": {
           "kind": "MC",
-          "offsetX": 440.0,
+          "offsetX": 0.0,
           "offsetY": 210.0,
           "useAnchoredPos": true
         },
@@ -627,7 +1345,7 @@
           "pivotY": 0.5,
           "sizeX": 140.0,
           "sizeY": 30.0,
-          "visible": true,
+          "visible": false,
           "zOrder": 0
         }
       },

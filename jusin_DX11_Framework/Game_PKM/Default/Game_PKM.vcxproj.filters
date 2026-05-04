@@ -91,6 +91,15 @@
     <Filter Include="07. UI">
       <UniqueIdentifier>{95cb7b9c-7bb3-4c80-b8fd-b4ad2f74e72c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. UI\Controller">
+      <UniqueIdentifier>{a2aef8e3-0ab8-4d10-aaf9-e36c9a2e63b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. UI\Button_Custom">
+      <UniqueIdentifier>{72f9e33e-5c26-4b29-bf2f-e135ac21628c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. UI\KeyNavi">
+      <UniqueIdentifier>{51bf51c4-8b8d-40dc-9142-162fabb24461}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -180,17 +189,26 @@
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
       <Filter>04. Components\UI_Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UIButton_Glow.h">
-      <Filter>07. UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UIButton_Layered.h">
-      <Filter>07. UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UIButton_Group.h">
-      <Filter>07. UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Game_PresetTable.h">
       <Filter>97. Game_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIController.h">
+      <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Menu.h">
+      <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Layered.h">
+      <Filter>07. UI\Button_Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Glow.h">
+      <Filter>07. UI\Button_Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Group.h">
+      <Filter>07. UI\KeyNavi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIController_Hub.h">
+      <Filter>07. UI\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -269,17 +287,26 @@
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
       <Filter>04. Components\UI_Instance</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UIButton_Glow.cpp">
-      <Filter>07. UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UIButton_Layered.cpp">
-      <Filter>07. UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UIButton_Group.cpp">
-      <Filter>07. UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Game_PresetTable.cpp">
       <Filter>97. Game_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIController.cpp">
+      <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Menu.cpp">
+      <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Glow.cpp">
+      <Filter>07. UI\Button_Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Layered.cpp">
+      <Filter>07. UI\Button_Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Group.cpp">
+      <Filter>07. UI\KeyNavi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIController_Hub.cpp">
+      <Filter>07. UI\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -317,6 +344,9 @@
       <Filter>98. ShaderFiles\UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl">
+      <Filter>98. ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_UIImage.hlsl">
       <Filter>98. ShaderFiles\UI</Filter>
     </FxCompile>
   </ItemGroup>

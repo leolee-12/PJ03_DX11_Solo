@@ -1,10 +1,12 @@
-#include "Level_GamePlay.h"
+﻿#include "Level_GamePlay.h"
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
 #include "Effect_Star.h"
 #include "UIButton_Glow.h"
 #include "UIButton_Layered.h"
 #include "UIButton_Group.h"
+#include "Menu.h"
+#include "Game_API.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -60,14 +62,23 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F3))
 		m_pGameInstance->Toggle_Debug();
 
-	if (m_pGameInstance->Key_Down(DIK_F4) && m_pRuntimeUI)
-		m_pRuntimeUI->Play();
+	/* F4 — 메뉴 열기/닫기 토글. Open() 이 시퀀스 Play 도 같이 트리거. */
+	if (m_pGameInstance->Key_Down(DIK_F4) && nullptr != m_pMenu)
+	{
+		if (m_pMenu->Is_Open())
+			m_pMenu->Close();
+		else
+			m_pMenu->Open();
+	}
+
+	/* 등록된 모든 UI 컨트롤러에 Update 전파. 닫혀 있으면 베이스가 즉시 return. */
+	UI_Update_All(fTimeDelta);
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("�����÷��̷����Դϴ�."));
+	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("게임플레이레벨입니다."));
 #endif
 
 	return S_OK;
@@ -194,6 +205,52 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	
 	m_pRuntimeUI = pSeq;  // weak
 
+	/* ===== 메뉴 컨트롤러 테스트 등록 ===== */
+	CMenu* pMenu = CMenu::Create();
+	if (nullptr == pMenu)
+		return E_FAIL;
+
+	if (FAILED(pMenu->Initialize(pSeq)))
+	{
+		Safe_Release(pMenu);
+		return E_FAIL;
+	}
+
+	/* 활성화 콜백 — 어떤 항목이 선택됐는지 OutputDebugString 으로 확인 */
+	pMenu->Set_OnActivate([](_int iIndex)
+		{
+			static constexpr const _char* s_Names[] =
+			{
+					"PARTNER", "DEX", "BAG", "ENTRY", "LINK", "REPORT"
+			};
+			if (iIndex >= 0 && iIndex < static_cast<_int>(CMenu::MENU_ENTRY::END))
+			{
+				OutputDebugStringA("[Menu] Activated: ");
+				OutputDebugStringA(s_Names[iIndex]);
+				OutputDebugStringA("\n");
+			}
+			else
+			{
+				OutputDebugStringA("[Menu] Activated: index out of range\n");
+			}
+		});
+
+	/* 취소 콜백 — 베이스가 콜백 후 Close() 자동 호출 */
+	pMenu->Set_OnCancel([]()
+		{
+			OutputDebugStringA("[Menu] Cancelled\n");
+		});
+
+	/* Hub 등록 — 내부 AddRef. 이후 local 레퍼런스 해제. */
+	if (FAILED(UI_Register(pMenu)))
+	{
+		Safe_Release(pMenu);
+		return E_FAIL;
+	}
+
+	m_pMenu = pMenu;        // weak — Hub 가 owner
+	Safe_Release(pMenu);    // local ref-- (Hub 가 ref 보유 중이라 안전)
+
 	return S_OK;
 }
 
@@ -214,5 +271,8 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
+	UI_Close_All();
+
+	m_pMenu = nullptr;
 	m_pRuntimeUI = nullptr;
 }

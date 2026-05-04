@@ -55,7 +55,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	float2 uv = In.vTex;
 
 	if (g_bMirrorUV > 0.5f)
-		uv = abs(uv * 2.f - 1.f);
+		uv = 1.f - abs(uv * 2.f - 1.f);
 
 	float fBG_A = g_TexDiff.Sample(LinearSampler, uv).a;
 	float fLine_A = g_TexLine.Sample(LinearSampler, uv).a;

@@ -12,6 +12,13 @@ sampler PointSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler MirrorSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = mirror;
+    AddressV = mirror;
+};
+
 RasterizerState RS_Wireframe
 {
     FillMode = WIREFRAME;

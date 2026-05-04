@@ -3,6 +3,8 @@
 #include "SharedTexture_Manager.h"
 #include "UIButton_Glow.h"
 #include "UIButton_Layered.h"
+#include "UIController.h"
+#include "UIController_Hub.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -11,6 +13,18 @@
 #include "UIProgressBar.h"
 
 NS_BEGIN(Game_PKM)
+
+namespace
+{
+	CUIController_Hub* g_pUIHub = { nullptr };
+
+	CUIController_Hub* Get_UIHub()
+	{
+		if (nullptr == g_pUIHub)
+			g_pUIHub = CUIController_Hub::Create();
+		return g_pUIHub;
+	}
+}
 
 HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -132,5 +146,42 @@ HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL 
 
 	return S_OK;
 }
+
+#pragma region UI 컨트롤러 Hub 래퍼
+HRESULT UI_Register(CUIController* pCtrl)
+{
+	auto* pHub = Get_UIHub();
+	if (nullptr == pHub)
+		return E_FAIL;
+	return pHub->Register(pCtrl);
+}
+
+void UI_Unregister(CUIController* pCtrl)
+{
+	if (nullptr == g_pUIHub)
+		return;
+	g_pUIHub->Unregister(pCtrl);
+}
+
+void UI_Update_All(_float fTimeDelta)
+{
+	if (nullptr == g_pUIHub)
+		return;
+	g_pUIHub->Update_All(fTimeDelta);
+}
+
+void UI_Close_All()
+{
+	if (nullptr == g_pUIHub)
+		return;
+	g_pUIHub->Close_All();
+}
+
+void UI_Cleanup()
+{
+	Safe_Release(g_pUIHub);
+	g_pUIHub = nullptr;
+}
+#pragma endregion
 
 NS_END

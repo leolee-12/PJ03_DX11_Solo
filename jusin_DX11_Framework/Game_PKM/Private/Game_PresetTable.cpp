@@ -5,12 +5,25 @@ NS_BEGIN(Game_PKM)
 CUIButton_Glow::GLOWBUTTON_DESC Get_GlowButtonPreset(GLOW_BUTTON_PRESET ePreset)
 {
 	CUIButton_Glow::GLOWBUTTON_DESC tDesc{};
+	tDesc.fGlowPulseSpeed = 6.f;
+	tDesc.fGlowFadeSpeed = 8.f;
 
 	switch (ePreset)
 	{
-	case GLOW_BUTTON_PRESET::MENU:
-		tDesc.fGlowPulseSpeed = 6.f;
-		tDesc.fGlowFadeSpeed = 8.f;
+	case GLOW_BUTTON_PRESET::MENU_PARTNER:
+		tDesc.iBaseTextureIndex = 0;
+		tDesc.iHoverTextureIndex = 0;
+		tDesc.iGlowTextureIndex = 1;
+		tDesc.iDisabledTextureIndex = 2;
+		tDesc.iMaskTextureIndex = 1;
+		break;
+
+	case GLOW_BUTTON_PRESET::MENU_SQUARE:
+		tDesc.iBaseTextureIndex = 0;
+		tDesc.iHoverTextureIndex = 1;
+		tDesc.iGlowTextureIndex = 2;
+		tDesc.iDisabledTextureIndex = 3;
+		tDesc.iMaskTextureIndex = 4;
 		break;
 
 	default:

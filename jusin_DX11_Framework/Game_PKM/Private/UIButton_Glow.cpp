@@ -6,6 +6,11 @@
 
 CUIButton_Glow::CUIButton_Glow(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const GLOWBUTTON_DESC& tDesc)
 	: CUIButton{ pDevice, pContext }
+	, m_iBaseTextureIndex{ tDesc.iBaseTextureIndex }
+	, m_iHoverTextureIndex{ tDesc.iHoverTextureIndex }
+	, m_iGlowTextureIndex{ tDesc.iGlowTextureIndex }
+	, m_iDisabledTextureIndex{ tDesc.iDisabledTextureIndex }
+	, m_iMaskTextureIndex{ tDesc.iMaskTextureIndex }
 	, m_fGlowPulseSpeed{ tDesc.fGlowPulseSpeed }
 	, m_fGlowFadeSpeed{ tDesc.fGlowFadeSpeed }
 {
@@ -13,6 +18,11 @@ CUIButton_Glow::CUIButton_Glow(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 CUIButton_Glow::CUIButton_Glow(const CUIButton_Glow& Prototype)
 	: CUIButton{ Prototype }
+	, m_iBaseTextureIndex{ Prototype.m_iBaseTextureIndex }
+	, m_iHoverTextureIndex{ Prototype.m_iHoverTextureIndex }
+	, m_iGlowTextureIndex{ Prototype.m_iGlowTextureIndex }
+	, m_iDisabledTextureIndex{ Prototype.m_iDisabledTextureIndex }
+	, m_iMaskTextureIndex{ Prototype.m_iMaskTextureIndex }
 	, m_fGlowPulseSpeed{ Prototype.m_fGlowPulseSpeed }
 	, m_fGlowFadeSpeed{ Prototype.m_fGlowFadeSpeed }
 {
@@ -43,7 +53,7 @@ void CUIButton_Glow::Update(_float fTimeDelta)
 		(UI_BUTTON_STATE::HOVER == Get_State() ||
 			UI_BUTTON_STATE::PRESSED == Get_State());
 
-	const _float fTarget = bHoverLike ? 1.f : 0.f;
+	const _float fTarget = bHoverLike ? 0.5f : 0.f;
 
 	m_fGlowAmount += (fTarget - m_fGlowAmount) * min(1.f, m_fGlowFadeSpeed * fTimeDelta);
 
@@ -101,29 +111,17 @@ HRESULT CUIButton_Glow::Bind_GlowResources()
 	if (FAILED(__super::Bind_BaseMatrices(m_pShaderCom)))
 		return E_FAIL;
 
-	_uint iDiffSlot = ETOUI(IMAGE_SLOT::BASE);
-
-	switch (Get_State())
-	{
-	case UI_BUTTON_STATE::HOVER:
-	case UI_BUTTON_STATE::PRESSED:
-		iDiffSlot = ETOUI(IMAGE_SLOT::HOVERED);
-		break;
-
-	case UI_BUTTON_STATE::DISABLED:
-		iDiffSlot = ETOUI(IMAGE_SLOT::DISABLED);
-		break;
-
-	default:
-		iDiffSlot = ETOUI(IMAGE_SLOT::BASE);
-		break;
-	}
+	const _uint iDiffSlot = Resolve_DiffuseTextureIndex();
+	if (INVALID_INDEX == iDiffSlot)
+		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexDiff", iDiffSlot)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexGlow",
-		ETOUI(IMAGE_SLOT::GLOW))))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexGlow", m_iGlowTextureIndex)))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_TexMask", m_iMaskTextureIndex)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
@@ -136,6 +134,26 @@ HRESULT CUIButton_Glow::Bind_GlowResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_uint CUIButton_Glow::Resolve_DiffuseTextureIndex() const
+{
+	switch (Get_State())
+	{
+	case UI_BUTTON_STATE::HOVER:
+	case UI_BUTTON_STATE::PRESSED:
+		if (INVALID_INDEX != m_iHoverTextureIndex)
+			return m_iHoverTextureIndex;
+		return m_iBaseTextureIndex;
+
+	case UI_BUTTON_STATE::DISABLED:
+		if (INVALID_INDEX != m_iDisabledTextureIndex)
+			return m_iDisabledTextureIndex;
+		return m_iBaseTextureIndex;
+
+	default:
+		return m_iBaseTextureIndex;
+	}
 }
 
 CUIButton_Glow* CUIButton_Glow::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const GLOWBUTTON_DESC& tDesc)

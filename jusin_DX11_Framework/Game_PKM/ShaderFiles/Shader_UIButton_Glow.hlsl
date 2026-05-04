@@ -3,10 +3,12 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_TexDiff;
 texture2D g_TexGlow;
+texture2D g_TexMask;
 
 float4 g_vColor = float4(1.f, 1.f, 1.f, 1.f);
 float g_fGlowPhase = 0.f;
 float g_fGlowAmount = 0.f;
+float g_fBaseScale = 0.85f;
 
 struct VS_IN
 {
@@ -48,14 +50,19 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
 
-	float4 vBase = g_TexDiff.Sample(LinearSampler, In.vTex) * g_vColor;
+	float2 vBaseUV = (In.vTex - 0.5f) / g_fBaseScale + 0.5f;
+	float fBaseInside = (vBaseUV.x >= 0.f && vBaseUV.x <= 1.f && vBaseUV.y >= 0.f && vBaseUV.y <= 1.f) ? 1.f : 0.f;
+
+	float4 vBase = g_TexDiff.Sample(LinearSampler, vBaseUV) * g_vColor;
+	float fMask = g_TexMask.Sample(LinearSampler, saturate(vBaseUV)).a * fBaseInside;
 	float4 vGlow = g_TexGlow.Sample(LinearSampler, In.vTex);
 
 	float fPulse = 0.5f + 0.5f * sin(g_fGlowPhase);
 	float fGlowK = saturate(g_fGlowAmount) * fPulse;
+	float fGlowAlpha = vGlow.a * fGlowK;
 
-	Out.vCol.rgb = vBase.rgb + vGlow.rgb * vGlow.a * fGlowK;
-	Out.vCol.a = vBase.a;
+	Out.vCol.rgb = vBase.rgb * fMask + vGlow.rgb * fGlowAlpha;
+	Out.vCol.a = saturate(vBase.a * fMask + fGlowAlpha);
 
 	if (Out.vCol.a < 0.01f)
 		discard;

@@ -7,7 +7,8 @@ NS_BEGIN(Game_PKM)
 
 enum class GLOW_BUTTON_PRESET
 {
-	MENU,
+	MENU_PARTNER,
+	MENU_SQUARE,
 	END
 };
 

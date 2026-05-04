@@ -9,6 +9,12 @@ class CUIButton_Glow final : public CUIButton
 public:
 	struct GLOWBUTTON_DESC : public CUIButton::UIBUTTON_DESC
 	{
+		_uint iBaseTextureIndex{ 0 };
+		_uint iHoverTextureIndex{ 1 };
+		_uint iGlowTextureIndex{ 2 };
+		_uint iDisabledTextureIndex{ 3 };
+		_uint iMaskTextureIndex{ 4 };
+
 		_float fGlowPulseSpeed{ 6.f };
 		_float fGlowFadeSpeed{ 8.f };
 	};
@@ -27,13 +33,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	enum class IMAGE_SLOT : _uint
-	{
-		BASE = 0,
-		HOVERED = 1,
-		GLOW = 2,
-		DISABLED = 3,
-	};
+	_uint m_iBaseTextureIndex{ 0 };
+	_uint m_iHoverTextureIndex{ 1 };
+	_uint m_iGlowTextureIndex{ 2 };
+	_uint m_iDisabledTextureIndex{ 3 };
+	_uint m_iMaskTextureIndex{ 3 };
 
 	_float m_fGlowPulseSpeed{ 6.f };
 	_float m_fGlowFadeSpeed{ 8.f };
@@ -44,6 +48,7 @@ private:
 	virtual HRESULT Ready_Components() override;
 	virtual void On_State_Changed(UI_BUTTON_STATE eOld, UI_BUTTON_STATE eNew) override;
 	HRESULT Bind_GlowResources();
+	_uint Resolve_DiffuseTextureIndex() const;
 
 public:
 	static CUIButton_Glow* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const GLOWBUTTON_DESC& tDesc);

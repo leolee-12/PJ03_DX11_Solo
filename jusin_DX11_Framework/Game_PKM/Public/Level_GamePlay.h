@@ -11,6 +11,7 @@ class CUISequence;
 NS_END
 
 NS_BEGIN(Game_PKM)
+class CMenu;
 
 class CLevel_GamePlay : public CLevel
 {
@@ -25,6 +26,7 @@ public:
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
+	CMenu* m_pMenu = { nullptr };
 
 private:
 	HRESULT Ready_Lights();

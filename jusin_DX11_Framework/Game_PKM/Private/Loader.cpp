@@ -195,27 +195,27 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	/* Prototype_Component_Texture_Menu_Partner */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_PARTNER,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_partner_%02d.png"), 4)); });
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_partner_%02d.png"), 3)); });
 
 	/* Prototype_Component_Texture_Menu_Dex */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_DEX,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_dex_%02d.png"), 4)); });
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_dex_%02d.png"), 5)); });
 
 	/* Prototype_Component_Texture_Menu_Bag */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_BAG,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_bag_%02d.png"), 4)); });
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_bag_%02d.png"), 5)); });
 
 	/* Prototype_Component_Texture_Menu_Entry */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_ENTRY,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_entry_%02d.png"), 4)); });
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_entry_%02d.png"), 5)); });
 
 	/* Prototype_Component_Texture_Menu_Link */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_LINK,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_link_%02d.png"), 4)); });
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_link_%02d.png"), 5)); });
 
 	/* Prototype_Component_Texture_Menu_Report */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_REPORT,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_report_%02d.png"), 4)); });
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_report_%02d.png"), 5)); });
 
 
 
@@ -292,6 +292,18 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_UI,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); });
 
+	/* Prototype_Component_Shader_UIImage */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_UIIMAGE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIImage.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); });
+
+	/* Prototype_Component_Shader_UI_Button_Glow */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_UIBUTTON_GLOW,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIButton_Glow.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); });
+
+	/* Prototype_Component_Shader_UI_Button_Layered */
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_UIBUTTON_LAYERED,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIButton_Layered.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); });
+
 	// ---------- VIBuffer ----------
 	/* Prototype_Component_VIBuffer_Cube */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_VIBUFFER_CUBE,
@@ -364,14 +376,19 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01,
 		CMapObject::Create(m_pDevice, m_pContext, PROTO_COM_MODEL_ROAD01)); });
 
-	/* Prototype_Button_Glow_Menu */
-	auto tGlowDesc = Get_GlowButtonPreset(GLOW_BUTTON_PRESET::MENU);
-	Enqueue([this, tGlowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BTN_GLOW_MENU,
+	/* Prototype_Button_Glow_Menu_Partner */
+	auto tGlowDesc = Get_GlowButtonPreset(GLOW_BUTTON_PRESET::MENU_PARTNER);
+	Enqueue([this, tGlowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_GLOW_MENU_PARTNER,
+		CUIButton_Glow::Create(m_pDevice, m_pContext, tGlowDesc)); });
+
+	/* Prototype_Button_Glow_Menu_Square */
+	tGlowDesc = Get_GlowButtonPreset(GLOW_BUTTON_PRESET::MENU_SQUARE);
+	Enqueue([this, tGlowDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_GLOW_MENU_SQUARE,
 		CUIButton_Glow::Create(m_pDevice, m_pContext, tGlowDesc)); });
 
 	/* Prototype_Button_Layered_Get */
 	auto tLayeredDesc = Get_LayeredButtonPreset(LAYERED_BUTTON_PRESET::GET_COMMAND);
-	Enqueue([this, tLayeredDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BTN_LAYERED_GET,
+	Enqueue([this, tLayeredDesc]() mutable { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_LAYERED_GET,
 		CUIButton_Layered::Create(m_pDevice, m_pContext, tLayeredDesc)); });
 
 #pragma region STUDY
@@ -384,7 +401,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_MASK,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.dds"), 1)); });
 
-	/* Prototype_Component_Texture_Terrain_BRUSH */
+	/* Prototype_Component_Texture_Terrain_Brush */
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_BRUSH,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Brush.png"), 1)); });
 
