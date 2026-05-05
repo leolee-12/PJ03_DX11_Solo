@@ -197,7 +197,9 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 	{
 		CBattle_Trainer::BATTLE_TRAINER_DESC tDesc{};
 		tDesc.iSide = iSide;
+		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_BATTLE_HERO_LGPE;
 		tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
+		tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(
 			ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,

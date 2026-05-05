@@ -23,8 +23,8 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 	if (PROTO_COM_MODEL_MAP_TOWN02 == m_tDesc.strModelTag)
 	{
-		_float3 vPos = { -0.95f, 2.f, 80.75f };
-		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&vPos));
+		_vector vPos = { -0.95f, 2.f, 80.75f, 1.f };
+		m_pTransformCom->Set_State(STATE::POSITION, vPos);
 	}
 
 	return S_OK;

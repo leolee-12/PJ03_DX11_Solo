@@ -111,6 +111,8 @@ WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
 WNAME_TAG(PROTO_OBJ_BATTLE_TRAINER, L"Prototype_GameObject_Battle_Trainer");
+WNAME_TAG(PROTO_OBJ_BODY_BATTLE_BASIC_ANIM, L"Prototype_GameObject_Body_Battle_BasicAnim");
+WNAME_TAG(PROTO_OBJ_BODY_BATTLE_HERO_LGPE, L"Prototype_GameObject_Body_Battle_HeroLGPE");
 
 WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");

@@ -18,6 +18,8 @@
 #include "VIBuffer_UI_Instance.h"
 #include "Effect_Star.h"
 #include "Battle_Trainer.h"
+#include "Body_BattleBasicAnim.h"
+#include "Body_BattleHeroLGPE.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -372,7 +374,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_Model_Town01"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN02,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town_02.wmodel")); },
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area03/town_02.wmodel")); },
 		TEXT("Prototype_Component_Model_Road01"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_ROAD01,
@@ -560,7 +562,7 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 		};
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_MODEL_BMAP_TOWN,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town_battle.wmodel")); },
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/battle_town/battle_town.wmodel")); },
 		TEXT("Prototype_Component_Model_Town01"));
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
@@ -573,6 +575,14 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
 		CBattle_Trainer::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Battle_Trainer"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_BATTLE_BASIC_ANIM,
+		CBody_BattleBasicAnim::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Body_Battle_BasicAnim"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_BATTLE_HERO_LGPE,
+		CBody_BattleHeroLGPE::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Body_Battle_HeroLGPE"));
 
 	return S_OK;
 }

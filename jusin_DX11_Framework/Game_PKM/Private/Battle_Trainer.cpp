@@ -1,14 +1,14 @@
 #include "Battle_Trainer.h"
-#include "GameInstance.h"
+#include "Body_BattleBase.h"
 
 CBattle_Trainer::CBattle_Trainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject{ pDevice, pContext }
+	: CContainerObject{ pDevice, pContext }
 {
 	m_strName = L"Battle_Trainer";
 }
 
 CBattle_Trainer::CBattle_Trainer(const CBattle_Trainer& Prototype)
-	: CGameObject{ Prototype }
+	: CContainerObject{ Prototype }
 {
 }
 
@@ -28,6 +28,9 @@ HRESULT CBattle_Trainer::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_iSide = pDesc->iSide;
+	m_strBodyProtoTag = (0 != pDesc->strBodyProtoTag)
+		? pDesc->strBodyProtoTag
+		: PROTO_OBJ_BODY_BATTLE_BASIC_ANIM;
 	m_strModelProtoTag = pDesc->strModelProtoTag;
 
 	if (m_iSide >= g_kBattleSideCount)
@@ -36,10 +39,8 @@ HRESULT CBattle_Trainer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_PartObjects(pDesc)))
 		return E_FAIL;
-
-	m_pModelCom->Set_AnimationIndex(17, true);
 
 	const _float3& vPos = BattleSlotPose::vTrainerPos[m_iSide];
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
@@ -54,68 +55,48 @@ void CBattle_Trainer::Priority_Update(_float fTimeDelta)
 
 void CBattle_Trainer::Update(_float fTimeDelta)
 {
-	if (nullptr != m_pModelCom)
-		m_pModelCom->Play_Animation(fTimeDelta);
+	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Update(fTimeDelta);
+		});
 }
 
 void CBattle_Trainer::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
+		{
+			if (nullptr != Pair.second)
+				Pair.second->Late_Update(fTimeDelta);
+		});
 }
 
 HRESULT CBattle_Trainer::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
-
-	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, 0)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Render(i)))
-			return E_FAIL;
-	}
-
 	return S_OK;
 }
 
-HRESULT CBattle_Trainer::Ready_Components()
+HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 {
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXANIMMESH,
-		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	CBody_BattleBase::BODY_BATTLE_DESC BodyDesc{};
+	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	BodyDesc.strModelProtoTag = pDesc->strModelProtoTag;
+	BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
+		? pDesc->strShaderProtoTag
+		: PROTO_COM_SHADER_VTXANIMMESH;
+	BodyDesc.iDefaultAnim = pDesc->iDefaultAnim;
+	BodyDesc.bLoop = pDesc->bLoop;
+	BodyDesc.fScale = pDesc->fScale;
+	BodyDesc.bEnableRootMotion = false;
+	BodyDesc.iRootMotionBoneIndex = 0;
 
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), m_strModelProtoTag,
-		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CBattle_Trainer::Bind_ShaderResources()
-{
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pTransformCom->Bind_ShaderResourceWIT(m_pShaderCom, "g_WITMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFarZ", m_pGameInstance->Get_FarZPtr(), sizeof(_float))))
+	if (FAILED(__super::Add_PartObject(
+		ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
+
 
 CBattle_Trainer* CBattle_Trainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -146,7 +127,4 @@ CGameObject* CBattle_Trainer::Clone(void* pArg)
 void CBattle_Trainer::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pShaderCom);
 }

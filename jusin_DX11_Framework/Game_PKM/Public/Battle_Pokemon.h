@@ -2,56 +2,53 @@
 #include "Game_PKM_Defines.h"
 #include "Battle_Session.h"
 
-#include "GameObject.h"
-
-NS_BEGIN(Engine)
-class CShader;
-class CModel;
-NS_END
+#include "ContainerObject.h"
 
 NS_BEGIN(Game_PKM)
 
-class CBattle_Pokemon final : public CGameObject
+class CBattle_Pokemon final : public CContainerObject
 {
 public:
-	struct POKEMON_DESC : public CGameObject::GAMEOBJECT_DESC
-	{
-		POKEMON_INSTANCE* pInstance = { nullptr };
-		_uint iSide = { g_kBattleSide_Player };
-	};
+    struct POKEMON_DESC : public CGameObject::GAMEOBJECT_DESC
+    {
+        POKEMON_INSTANCE* pInstance = { nullptr };
+        _uint iSide = { g_kBattleSide_Player };
+        WNameID strBodyProtoTag = {};
+        WNameID strShaderProtoTag = {};
+        _uint iDefaultAnim = { 0 };
+        _bool bLoop = { true };
+        _float fScale = { 1.f };
+    };
 
 protected:
-	CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBattle_Pokemon(const CBattle_Pokemon& Prototype);
-	virtual ~CBattle_Pokemon() = default;
+    CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    CBattle_Pokemon(const CBattle_Pokemon& Prototype);
+    virtual ~CBattle_Pokemon() = default;
 
 public:
-	virtual _string Get_TypeName() const { return "Pokemon"; }
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
+    virtual _string Get_TypeName() const override { return "Pokemon"; }
+    virtual HRESULT Initialize_Prototype() override;
+    virtual HRESULT Initialize(void* pArg) override;
+    virtual void Priority_Update(_float fTimeDelta) override;
+    virtual void Update(_float fTimeDelta) override;
+    virtual void Late_Update(_float fTimeDelta) override;
+    virtual HRESULT Render() override;
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-
-	POKEMON_INSTANCE* m_pInstance = { nullptr };
-	_uint m_iSide = { g_kBattleSide_Player };
-	WNameID m_strSpeciesModelTag = {};
+    POKEMON_INSTANCE* m_pInstance = { nullptr };
+    _uint m_iSide = { g_kBattleSide_Player };
+    WNameID m_strBodyProtoTag = {};
+    WNameID m_strSpeciesModelTag = {};
 
 private:
-	HRESULT Ready_Components();
-	HRESULT Bind_ShaderResources();
+    HRESULT Ready_PartObjects(const POKEMON_DESC* pDesc);
 
 public:
-	static CBattle_Pokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg) override;
+    static CBattle_Pokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    virtual CGameObject* Clone(void* pArg) override;
 
 private:
-	virtual void Free();
+    virtual void Free() override;
 };
 
 NS_END
