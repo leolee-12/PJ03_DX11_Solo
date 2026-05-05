@@ -74,8 +74,11 @@ WNAME_TAG(PROTO_COM_MODEL_PM0025_00, L"Prototype_Component_Model_ÇÇÄ«Ãò");
 
 WNAME_TAG(PROTO_COM_MODEL_HERO, L"Prototype_Component_Model_Hero");
 
-WNAME_TAG(PROTO_COM_MODEL_TOWN01, L"Prototype_Component_Model_Town01");
-WNAME_TAG(PROTO_COM_MODEL_ROAD01, L"Prototype_Component_Model_Road01");
+WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN01, L"Prototype_Component_Model_Map_Town01");
+WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN02, L"Prototype_Component_Model_Map_Town02");
+WNAME_TAG(PROTO_COM_MODEL_MAP_ROAD01, L"Prototype_Component_Model_Map_Road01");
+
+WNAME_TAG(PROTO_COM_MODEL_BMAP_TOWN, L"Prototype_Component_Model_BMap_Town");
 
 // Navigation & Collider
 WNAME_TAG(PROTO_COM_NAVIGATION_TERRAIN, L"Prototype_Component_Navigation_Terrain");
@@ -85,6 +88,7 @@ WNAME_TAG(PROTO_COM_COLLIDER_OBB, L"Prototype_Component_Collider_OBB");
 WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
 
 // Layer
+WNAME_TAG(LAYER_PERSISTENT, L"Layer_Persistent");
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
 WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
 WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
@@ -111,9 +115,14 @@ WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
 WNAME_TAG(PROTO_BTN_LAYERED_GET, L"Prototype_UIButton_Layered_Get");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
+WNAME_TAG(PROTO_OBJ_PLAYER_STATE, L"Prototype_GameObject_PlayerState");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
-WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
-WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
+
+WNAME_TAG(PROTO_MAP_TOWN01, L"Prototype_MapObject_Town01");
+WNAME_TAG(PROTO_MAP_TOWN02, L"Prototype_MapObject_Town02");
+WNAME_TAG(PROTO_MAP_ROAD01, L"Prototype_MapObject_Road01");
+
+WNAME_TAG(PROTO_BMAP_TOWN, L"Prototype_BattleMap_Town");
 
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");

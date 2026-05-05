@@ -3,6 +3,7 @@
 
 NS_BEGIN(Game_PKM)
 
+#pragma region VERTEX & PARTICLE
 struct PARTICLE_UI_STATE final
 {
 	_float2 vOffset = {};
@@ -39,13 +40,13 @@ struct PARTICLE_3D_STATE final
 
 struct VTXUI_INSTANCE
 {
-	XMFLOAT4 vRight;
-	XMFLOAT4 vUp;
-	XMFLOAT4 vTranslation;
-	XMFLOAT4 vColor;
-	XMFLOAT4 vUVTransform;
-	XMFLOAT4 vMaskUVTransform;
-	XMFLOAT4 vParams;
+	_float4 vRight;
+	_float4 vUp;
+	_float4 vTranslation;
+	_float4 vColor;
+	_float4 vUVTransform;
+	_float4 vMaskUVTransform;
+	_float4 vParams;
 
 	// vParams.x = mask strength
 	// vParams.y = base sample mode
@@ -76,6 +77,7 @@ struct VTXUI_INSTANCE_DESC
 		{"TEXCOORD", 7, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 96, D3D11_INPUT_PER_INSTANCE_DATA, 1}
 	};
 };
+#pragma endregion
 
 NS_END
 

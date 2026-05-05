@@ -11,13 +11,15 @@ NS_BEGIN(Game_PKM)
 
 class CMapObject final : public CGameObject
 {
+public:
 	struct MAPOBJECT_DESC : public CGameObject::GAMEOBJECT_DESC
 	{
-
+		WNameID strModelTag = {};
+		_uint	iModelLevelIndex = {};
 	};
 
 protected:
-	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag);
+	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const MAPOBJECT_DESC& tDesc);
 	virtual ~CMapObject() = default;
 
 public:
@@ -32,7 +34,7 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	WNameID m_strMapModelTag = {};
+	MAPOBJECT_DESC m_tDesc = {};
 
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
@@ -42,7 +44,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CMapObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag);
+	static CMapObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const MAPOBJECT_DESC& tDesc);
 	virtual CGameObject* Clone(void* pArg) override;
 
 private:

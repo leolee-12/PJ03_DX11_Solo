@@ -1,6 +1,7 @@
 #include "MainApp.h"
 
 #include "Game_API.h"
+#include "Game_BattleData.h"
 #include "SharedTexture_Manager.h"
 
 #include "GameInstance.h"
@@ -34,6 +35,12 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_SharedTextures(m_pDevice, m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(Ready_StaticTables()))
+		return E_FAIL;
+
+	if (FAILED(Ready_PersistentObjects(m_pDevice, m_pContext)))
 		return E_FAIL;
 
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
@@ -81,9 +88,11 @@ void CMainApp::Free()
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
+
 	m_pGameInstance->Set_SharedTextureBinder(nullptr);
 	CSharedTexture_Manager::DestroyInstance();
 
+	Cleanup_StaticTables();
 	UI_Cleanup();
 
 	m_pGameInstance->Release_Engine();

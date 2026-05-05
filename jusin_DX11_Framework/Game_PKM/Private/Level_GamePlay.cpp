@@ -7,6 +7,9 @@
 #include "UIButton_Group.h"
 #include "Menu.h"
 #include "Game_API.h"
+#include "Level_Loading.h"
+#include "Game_LevelEntry.h"
+#include "Game_BattleSession.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -69,6 +72,30 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			m_pMenu->Close();
 		else
 			m_pMenu->Open();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F9))
+	{
+		BATTLE_ENV tEnv = {};
+		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
+		tEnv.eRule = BATTLE_RULE::WILD_SINGLE;
+		tEnv.iBGResourceID = 0;
+		tEnv.iZoneID = 0;
+
+		LEVEL_ENTRY_DESC tEntryDesc = {};
+		tEntryDesc.Clear();
+		tEntryDesc.eNextLevelID = LEVEL::BATTLE;
+
+		if (FAILED(tEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv, sizeof(BATTLE_ENV))))
+			return;
+
+		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.5f);
+
+		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE, &tEntryDesc))))
+		{
+			return;
+		}
 	}
 
 	/* 등록된 모든 UI 컨트롤러에 Update 전파. 닫혀 있으면 베이스가 즉시 return. */
@@ -145,10 +172,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TOWN01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ROAD01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN02, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,

@@ -49,6 +49,10 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
+#ifdef _DEBUG
+	OpenDebugConsole();
+#endif
+
 	pMainApp = CMainApp::Create();
 
 	if (nullptr == pMainApp)
@@ -96,6 +100,10 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 
 	Safe_Release(pGameInstance);
 	Safe_Release(pMainApp);
+
+#ifdef _DEBUG
+	CloseDebugConsole();
+#endif
 
 	return (int)msg.wParam;
 }

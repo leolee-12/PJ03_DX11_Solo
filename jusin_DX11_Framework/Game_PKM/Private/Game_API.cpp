@@ -5,6 +5,9 @@
 #include "UIButton_Layered.h"
 #include "UIController.h"
 #include "UIController_Hub.h"
+#include "PokemonData_Manager.h"
+#include "PlayerState.h"
+#include "Game_PresetTable.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -14,18 +17,36 @@
 
 NS_BEGIN(Game_PKM)
 
-namespace
+#pragma region 공용 로직
+HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eStartLevelID)
 {
-	CUIController_Hub* g_pUIHub = { nullptr };
+	CLevel* pPreLevel = CLevel_Loading::Create(pDevice, pContext, eStartLevelID);
 
-	CUIController_Hub* Get_UIHub()
-	{
-		if (nullptr == g_pUIHub)
-			g_pUIHub = CUIController_Hub::Create();
-		return g_pUIHub;
-	}
+	if (nullptr == pPreLevel)
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->Change_Level(ETOI(LEVEL::LOADING), pPreLevel)))
+		return E_FAIL;
+
+	return S_OK;
 }
+HRESULT Ready_PersistentObjects(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	auto* pGameInstance = CGameInstance::GetInstance();
 
+	if (FAILED(pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_PLAYER_STATE,
+		CPlayerState::Create(pDevice, pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->Add_GameObject(ETOUI(LEVEL::STATIC), PROTO_OBJ_PLAYER_STATE,
+		ETOUI(LEVEL::STATIC), LAYER_PERSISTENT)))
+		return E_FAIL;
+
+	return S_OK;
+}
+#pragma endregion
+
+#pragma region Resources
 HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGameInstance* m_pGameInstance = CGameInstance::GetInstance();
@@ -97,6 +118,24 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CUIProgressBar::Create(pDevice, pContext))))
 		return E_FAIL;
 
+	/* Prototype_Button_Glow_Menu_Partner */
+	auto tGlowDesc = Get_GlowButtonPreset(GLOW_BUTTON_PRESET::MENU_PARTNER);
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_GLOW_MENU_PARTNER,
+		CUIButton_Glow::Create(pDevice, pContext, tGlowDesc))))
+		return E_FAIL;
+
+	/* Prototype_Button_Glow_Menu_Square */
+	tGlowDesc = Get_GlowButtonPreset(GLOW_BUTTON_PRESET::MENU_SQUARE);
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_GLOW_MENU_SQUARE,
+		CUIButton_Glow::Create(pDevice, pContext, tGlowDesc))))
+		return E_FAIL;
+
+	/* Prototype_Button_Layered_Get */
+	auto tLayeredDesc = Get_LayeredButtonPreset(LAYERED_BUTTON_PRESET::GET_COMMAND);
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_LAYERED_GET,
+		CUIButton_Layered::Create(pDevice, pContext, tLayeredDesc))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -133,21 +172,22 @@ HRESULT Ready_Fonts()
 
 	return S_OK;
 }
-
-HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eStartLevelID)
-{
-	CLevel* pPreLevel = CLevel_Loading::Create(pDevice, pContext, eStartLevelID);
-
-	if (nullptr == pPreLevel)
-		return E_FAIL;
-
-	if (FAILED(CGameInstance::GetInstance()->Change_Level(ETOI(LEVEL::LOADING), pPreLevel)))
-		return E_FAIL;
-
-	return S_OK;
-}
+#pragma endregion
 
 #pragma region UI 컨트롤러 Hub 래퍼
+
+namespace
+{
+	CUIController_Hub* g_pUIHub = { nullptr };
+
+	CUIController_Hub* Get_UIHub()
+	{
+		if (nullptr == g_pUIHub)
+			g_pUIHub = CUIController_Hub::Create();
+		return g_pUIHub;
+	}
+}
+
 HRESULT UI_Register(CUIController* pCtrl)
 {
 	auto* pHub = Get_UIHub();
@@ -181,6 +221,22 @@ void UI_Cleanup()
 {
 	Safe_Release(g_pUIHub);
 	g_pUIHub = nullptr;
+}
+#pragma endregion
+
+#pragma region PokemonData_Manager
+HRESULT Ready_StaticTables()
+{
+	auto* pManager = CPokemonData_Manager::GetInstance();
+
+	if (nullptr == pManager)
+		return E_FAIL;
+
+	return pManager->Initialize();
+}
+void Cleanup_StaticTables()
+{
+	CPokemonData_Manager::DestroyInstance();
 }
 #pragma endregion
 
