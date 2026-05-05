@@ -1,70 +1,76 @@
-#include "Pokemon.h"
+#include "Battle_Trainer.h"
 #include "GameInstance.h"
 
-CPokemon::CPokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBattle_Trainer::CBattle_Trainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
-	m_strName = { L"Pokemon_Default" };
+	m_strName = L"Battle_Trainer";
 }
 
-CPokemon::CPokemon(const CPokemon& Prototype)
+CBattle_Trainer::CBattle_Trainer(const CBattle_Trainer& Prototype)
 	: CGameObject{ Prototype }
 {
-
 }
 
-HRESULT CPokemon::Initialize_Prototype()
+HRESULT CBattle_Trainer::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPokemon::Initialize(void* pArg)
+HRESULT CBattle_Trainer::Initialize(void* pArg)
 {
+	if (nullptr == pArg)
+		return E_FAIL;
+
+	const BATTLE_TRAINER_DESC* pDesc = static_cast<const BATTLE_TRAINER_DESC*>(pArg);
+
+	if (0 == pDesc->strModelProtoTag)
+		return E_FAIL;
+
+	m_iSide = pDesc->iSide;
+	m_strModelProtoTag = pDesc->strModelProtoTag;
+
+	if (m_iSide >= g_kBattleSideCount)
+		return E_FAIL;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//m_pModelCom->Set_AnimationIndex(rand() % 20, true);
-	m_pModelCom->Set_AnimationIndex(m_iDummy, true);
+	m_pModelCom->Set_AnimationIndex(17, true);
 
-	m_pTransformCom->Set_State(STATE::POSITION,
-		XMVectorSet(
-			m_pGameInstance->Random(10.f, 30.f),
-			0.f,
-			m_pGameInstance->Random(-20.f, 0.f),
-			1.f
-		));
+	const _float3& vPos = BattleSlotPose::vTrainerPos[m_iSide];
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), BattleSlotPose::fYawTrainer[m_iSide]);
 
 	return S_OK;
 }
 
-void CPokemon::Priority_Update(_float fTimeDelta)
+void CBattle_Trainer::Priority_Update(_float fTimeDelta)
 {
-
 }
 
-void CPokemon::Update(_float fTimeDelta)
+void CBattle_Trainer::Update(_float fTimeDelta)
 {
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10; // 중단점용 임시 코드
+	if (nullptr != m_pModelCom)
+		m_pModelCom->Play_Animation(fTimeDelta);
 }
 
-void CPokemon::Late_Update(_float fTimeDelta)
+void CBattle_Trainer::Late_Update(_float fTimeDelta)
 {
-
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 }
 
-HRESULT CPokemon::Render()
+HRESULT CBattle_Trainer::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	for (_uint i = 0; i < iNumMeshes; i++)
+	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, 0)))
 			return E_FAIL;
@@ -82,31 +88,20 @@ HRESULT CPokemon::Render()
 	return S_OK;
 }
 
-HRESULT CPokemon::Ready_Components()
+HRESULT CBattle_Trainer::Ready_Components()
 {
-	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXANIMMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	/* For.Com_Model */
-	WNameID strProtoModelTag{};
-	_uint iRand = rand() % 4;
-	if (iRand == 0)			strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
-	else if (iRand == 1)	strProtoModelTag = PROTO_COM_MODEL_PM0004_00;
-	else if (iRand == 2)	strProtoModelTag = PROTO_COM_MODEL_PM0007_00;
-	else if (iRand == 3)	strProtoModelTag = PROTO_COM_MODEL_PM0025_00;
-
-	//strProtoModelTag = PROTO_COM_MODEL_PM0001_00;
-
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), strProtoModelTag,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), m_strModelProtoTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CPokemon::Bind_ShaderResources()
+HRESULT CBattle_Trainer::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -116,41 +111,39 @@ HRESULT CPokemon::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFarZ", m_pGameInstance->Get_FarZPtr(), sizeof(_float))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-
-CPokemon* CPokemon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBattle_Trainer* CBattle_Trainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPokemon* pInstance = new CPokemon(pDevice, pContext);
+	CBattle_Trainer* pInstance = new CBattle_Trainer(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CPokemon");
+		MSG_BOX("Failed to Created : CBattle_Trainer");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CPokemon::Clone(void* pArg)
+CGameObject* CBattle_Trainer::Clone(void* pArg)
 {
-	CPokemon* pInstance = new CPokemon(*this);
+	CBattle_Trainer* pInstance = new CBattle_Trainer(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CPokemon");
+		MSG_BOX("Failed to Cloned : CBattle_Trainer");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPokemon::Free()
+void CBattle_Trainer::Free()
 {
 	__super::Free();
 

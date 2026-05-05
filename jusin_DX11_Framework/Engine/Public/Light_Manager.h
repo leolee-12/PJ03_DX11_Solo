@@ -14,6 +14,7 @@ public:
 
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	void Clear();
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };

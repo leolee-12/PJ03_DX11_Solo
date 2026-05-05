@@ -1,6 +1,6 @@
 #pragma once
 #include "Game_PKM_Defines.h"
-#include "Game_BattleSession.h"
+#include "Battle_Session.h"
 #include "Game_LevelEntry.h"
 
 #include "Level.h"

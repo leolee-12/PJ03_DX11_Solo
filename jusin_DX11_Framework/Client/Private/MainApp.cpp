@@ -1,7 +1,7 @@
 #include "MainApp.h"
 
 #include "Game_API.h"
-#include "Game_BattleData.h"
+#include "Battle_Data.h"
 #include "SharedTexture_Manager.h"
 
 #include "GameInstance.h"

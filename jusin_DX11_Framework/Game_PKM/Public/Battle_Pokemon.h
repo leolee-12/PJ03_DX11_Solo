@@ -1,5 +1,7 @@
 #pragma once
 #include "Game_PKM_Defines.h"
+#include "Battle_Session.h"
+
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
@@ -9,23 +11,19 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 
-class CPokemon final : public CGameObject
+class CBattle_Pokemon final : public CGameObject
 {
 public:
 	struct POKEMON_DESC : public CGameObject::GAMEOBJECT_DESC
 	{
-		//_uint iDexNum;								// 도감 번호
-		//_tchar szName[32];							// 이름
-		//_ubyte eType1, eType2;						// 타입, 타입2는 단일 타입인 경우 TYPE_END
-		//_ushort iBaseHP, iBaseAtk, iBaseDef, iBaseSpAtk, iBaseSpDef, iBaseSpd;	// 종족값
-		//_uint iAbility1, iAbility2, iHiddenAbility;	// 특성, 특성2는 단일 특성인 경우 ABILITY_END
-		//_uint iLearnset[g_kMaxLearnSet];				// 기술 습득 정보
+		POKEMON_INSTANCE* pInstance = { nullptr };
+		_uint iSide = { g_kBattleSide_Player };
 	};
 
 protected:
-	CPokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPokemon(const CPokemon& Prototype);
-	virtual ~CPokemon() = default;
+	CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBattle_Pokemon(const CBattle_Pokemon& Prototype);
+	virtual ~CBattle_Pokemon() = default;
 
 public:
 	virtual _string Get_TypeName() const { return "Pokemon"; }
@@ -39,14 +37,17 @@ public:
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
-	_uint m_iDummy = { 0 };
+
+	POKEMON_INSTANCE* m_pInstance = { nullptr };
+	_uint m_iSide = { g_kBattleSide_Player };
+	WNameID m_strSpeciesModelTag = {};
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CPokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBattle_Pokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 
 private:

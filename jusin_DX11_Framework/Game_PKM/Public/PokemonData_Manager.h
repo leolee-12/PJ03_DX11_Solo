@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Game_PKM_Defines.h"
-#include "Game_BattleData.h"
+#include "Battle_Data.h"
 
 NS_BEGIN(Game_PKM)
 

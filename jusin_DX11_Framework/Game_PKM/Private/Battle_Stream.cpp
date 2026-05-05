@@ -1,4 +1,4 @@
-#include "Game_BattleStream.h"
+#include "Battle_Stream.h"
 
 NS_BEGIN(Game_PKM)
 

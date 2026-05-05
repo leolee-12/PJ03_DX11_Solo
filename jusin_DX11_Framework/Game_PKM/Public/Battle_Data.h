@@ -1,5 +1,5 @@
-#ifndef Game_BattleData_h__
-#define Game_BattleData_h__
+#ifndef Battle_Data_h__
+#define Battle_Data_h__
 #include "Game_PKM_Defines.h"
 
 NS_BEGIN(Game_PKM)
@@ -61,6 +61,7 @@ struct SPECIES_DATA
 	_uint   iHiddenAbility = {};
 
 	_uint   iLearnset[g_kMaxLearnSet] = {};
+	WNameID strModelTag = {};
 };
 
 struct MOVE_DATA
@@ -168,4 +169,4 @@ namespace PartyOps
 
 NS_END
 
-#endif // Game_BattleData_h__
+#endif // Battle_Data_h__

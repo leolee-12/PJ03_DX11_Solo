@@ -4,7 +4,7 @@
 #include "Terrain.h"
 #include "Camera_Free.h"
 #include "Monster.h"
-#include "Pokemon.h"
+#include "Battle_Pokemon.h"
 #include "ForkLift.h"
 #include "Player.h"
 #include "Body_Player.h"
@@ -17,6 +17,7 @@
 #include "Explosion.h"
 #include "VIBuffer_UI_Instance.h"
 #include "Effect_Star.h"
+#include "Battle_Trainer.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -346,23 +347,23 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_VIBuffer_Cube"));
 
 	// ---------- Model ----------
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0001_00,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0001_00,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0001_00"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0004_00,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0004_00,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0004_00"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0007_00,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0007_00,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0007_00"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_PM0025_00,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0025_00,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0025_00"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel")); },
 		TEXT("Prototype_Component_Model_Hero"));
 
@@ -396,7 +397,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_Collider_Sphere"));
 
 	// ---------- Objects ----------
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
 		CCamera_Free::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Camera_Free"));
 
@@ -506,13 +507,13 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_Navigation_Terrain"));
 
 	// Object
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_MONSTER,
+		CBattle_Pokemon::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Monster"));
+
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN,
 		CTerrain::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Terrain"));
-
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER,
-		CPokemon::Create(m_pDevice, m_pContext)); },
-		TEXT("Prototype_GameObject_Monster"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
 		CForkLift::Create(m_pDevice, m_pContext)); },
@@ -568,6 +569,10 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_BMAP_TOWN,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
 		TEXT("Prototype_BattleMap_Town"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
+		CBattle_Trainer::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Battle_Trainer"));
 
 	return S_OK;
 }

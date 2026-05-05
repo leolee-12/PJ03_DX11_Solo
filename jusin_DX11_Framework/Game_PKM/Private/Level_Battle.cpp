@@ -3,6 +3,9 @@
 #include "Battle_Manager.h"
 #include "PlayerState.h"
 #include "PokemonData_Manager.h"
+#include "Battle_Pokemon.h"
+#include "Battle_Trainer.h"
+#include "Camera_Free.h"
 
 #include "GameInstance.h"
 
@@ -139,12 +142,40 @@ HRESULT CLevel_Battle::Bind_Battle_Sources()
 
 HRESULT CLevel_Battle::Ready_Lights()
 {
+	m_pGameInstance->Clear_Lights();
+
+	LIGHT_DESC LightDesc{};
+
+	LightDesc.eType = LIGHT::DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(0.9f, 0.9f, 0.9f, 1.f);
+	LightDesc.vAmbient = _float4(0.35f, 0.35f, 0.35f, 1.f);
+	LightDesc.vSpecular = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vDirection = _float4(-0.3f, -1.f, 0.5f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 {
-	(void)strLayerTag;
+	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
+
+	CameraDesc.vEye = _float3(0.f, 7.f, -12.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.fFovy = XMConvertToRadians(35.f);
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 500.f;
+	CameraDesc.fSpeedPerSec = 20.f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	CameraDesc.fMouseSensor = 0.03f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(
+		ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
+		ETOUI(LEVEL::BATTLE), strLayerTag,
+		&CameraDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -159,7 +190,55 @@ HRESULT CLevel_Battle::Ready_Layer_BackGround(WNameID strLayerTag)
 
 HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 {
-	(void)strLayerTag;
+	if (nullptr == m_pBattleManager)
+		return E_FAIL;
+
+	for (_uint iSide = 0; iSide < g_kBattleSideCount; ++iSide)
+	{
+		CBattle_Trainer::BATTLE_TRAINER_DESC tDesc{};
+		tDesc.iSide = iSide;
+		tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
+			ETOUI(LEVEL::BATTLE), strLayerTag,
+			&tDesc)))
+			return E_FAIL;
+
+		const list<CGameObject*>* pList =
+			m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::BATTLE), strLayerTag);
+
+		if (nullptr == pList || pList->empty())
+			return E_FAIL;
+
+		m_pBattleManager->Register_TrainerObj(iSide, pList->back());
+	}
+
+	for (_uint iSide = 0; iSide < g_kBattleSideCount; ++iSide)
+	{
+		const BATTLE_SLOT& tSlot = m_pBattleManager->Get_Slot(iSide);
+
+		if (nullptr == tSlot.pPokemon)
+			return E_FAIL;
+
+		CBattle_Pokemon::POKEMON_DESC tDesc{};
+		tDesc.pInstance = tSlot.pPokemon;
+		tDesc.iSide = iSide;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			ETOUI(LEVEL::STATIC), PROTO_OBJ_MONSTER,
+			ETOUI(LEVEL::BATTLE), strLayerTag,
+			&tDesc)))
+			return E_FAIL;
+
+		const list<CGameObject*>* pList =
+			m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::BATTLE), strLayerTag);
+
+		if (nullptr == pList || pList->empty())
+			return E_FAIL;
+
+		m_pBattleManager->Register_BattlerObj(iSide, pList->back());
+	}
 
 	return S_OK;
 }

@@ -75,7 +75,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 	{
 		SPECIES_DATA tData{};
 		tData.iDexNo = 1;
-		wcscpy_s(tData.szName, L"Bulbasaur");
+		wcscpy_s(tData.szName, L"ÀÌ»óÇØ¾¾");
 		tData.eType1 = TYPE::GRASS;
 		tData.eType2 = TYPE::POISON;
 		tData.iBaseHP = 45; tData.iBaseAtk = 49; tData.iBaseDef = 49;
@@ -83,13 +83,14 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iAbility1 = 1;
 		tData.iLearnset[0] = 33;
 		tData.iLearnset[1] = 22;
+		tData.strModelTag = PROTO_COM_MODEL_PM0001_00;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
 
 	{
 		SPECIES_DATA tData{};
 		tData.iDexNo = 4;
-		wcscpy_s(tData.szName, L"Charmander");
+		wcscpy_s(tData.szName, L"ÆÄÀÌ¸®");
 		tData.eType1 = TYPE::FIRE;
 		tData.eType2 = TYPE::NONE;
 		tData.iBaseHP = 39; tData.iBaseAtk = 52; tData.iBaseDef = 43;
@@ -97,13 +98,14 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iAbility1 = 2;
 		tData.iLearnset[0] = 10;
 		tData.iLearnset[1] = 52;
+		tData.strModelTag = PROTO_COM_MODEL_PM0004_00;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
 
 	{
 		SPECIES_DATA tData{};
 		tData.iDexNo = 7;
-		wcscpy_s(tData.szName, L"Squirtle");
+		wcscpy_s(tData.szName, L"²¿ºÎ±â");
 		tData.eType1 = TYPE::WATER;
 		tData.eType2 = TYPE::NONE;
 		tData.iBaseHP = 44; tData.iBaseAtk = 48; tData.iBaseDef = 65;
@@ -111,6 +113,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iAbility1 = 3;
 		tData.iLearnset[0] = 33;
 		tData.iLearnset[1] = 55;
+		tData.strModelTag = PROTO_COM_MODEL_PM0007_00;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
 
@@ -125,6 +128,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iAbility1 = 9;
 		tData.iLearnset[0] = 84;
 		tData.iLearnset[1] = 33;
+		tData.strModelTag = PROTO_COM_MODEL_PM0025_00;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
 

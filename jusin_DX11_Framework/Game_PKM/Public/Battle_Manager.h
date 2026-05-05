@@ -1,6 +1,10 @@
 #pragma once
 #include "Base.h"
-#include "Game_BattleSession.h"
+#include "Battle_Session.h"
+
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
 
 NS_BEGIN(Game_PKM)
 class CPlayerState;
@@ -28,15 +32,11 @@ public:
 	const TURN_CONTEXT&	Get_Turn() const { return m_tTurn; }
 	BATTLE_PHASE		Get_Phase() const { return m_ePhase; }
 
-private:
-	void Phase_Intro(_float fTimeDelta);
-	void Phase_Input_Player(_float fTimeDelta);
-	void Phase_Input_Opponent(_float fTimeDelta);
-	void Phase_Resolve_Order(_float fTimeDelta);
-	void Phase_Resolve_Action(_float fTimeDelta, _uint iOrderIndex);
-	void Phase_Resolve_End(_float fTimeDelta);
-	void Phase_Check_End(_float fTimeDelta);
-	void Phase_Outro(_float fTimeDelta);
+	void Register_BattlerObj(_uint iSide, CGameObject* pObj);
+	void Register_TrainerObj(_uint iSide, CGameObject* pObj);
+
+	CGameObject* Get_BattlerObj(_uint iSide) const;
+	CGameObject* Get_TrainerObj(_uint iSide) const;
 
 private:
 	BATTLE_ENV		m_tEnv = {};
@@ -48,6 +48,19 @@ private:
 	CPlayerState*		m_pPlayerState = { nullptr };
 	POKEMON_INSTANCE*	m_pOpponentSingle = { nullptr };
 	TRAINER_DATA*		m_pOpponentTrainer = { nullptr };
+
+	CGameObject* m_pBattlerObj[g_kBattleSideCount] = {};
+	CGameObject* m_pTrainerObj[g_kBattleSideCount] = {};
+
+private:
+	void Phase_Intro(_float fTimeDelta);
+	void Phase_Input_Player(_float fTimeDelta);
+	void Phase_Input_Opponent(_float fTimeDelta);
+	void Phase_Resolve_Order(_float fTimeDelta);
+	void Phase_Resolve_Action(_float fTimeDelta, _uint iOrderIndex);
+	void Phase_Resolve_End(_float fTimeDelta);
+	void Phase_Check_End(_float fTimeDelta);
+	void Phase_Outro(_float fTimeDelta);
 
 public:
 	static CBattle_Manager* Create(const BATTLE_ENV& tEnv);

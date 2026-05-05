@@ -2,7 +2,7 @@
 #define Game_PKM_BattleSession_h__
 
 #include "Game_PKM_Defines.h"
-#include "Game_BattleData.h"
+#include "Battle_Data.h"
 
 NS_BEGIN(Game_PKM)
 
@@ -14,6 +14,33 @@ enum class STAGE_INDEX : _ubyte
 {
 	ATK, DEF, SPATK, SPDEF, SPD, ACC, EVA, COUNT
 };
+
+namespace BattleSlotPose
+{
+	inline constexpr _float3 vTrainerPos[g_kBattleSideCount] =
+	{
+		/* PLAYER   */ { -3.5f, 0.f, -5.0f },
+		/* OPPONENT */ {  3.5f, 0.f,  5.0f },
+	};
+
+	inline constexpr _float3 vPokemonPos[g_kBattleSideCount] =
+	{
+		/* PLAYER   */ { -2.0f, 0.f, -2.5f },
+		/* OPPONENT */ {  2.0f, 0.f,  2.5f },
+	};
+
+	inline constexpr _float fYawTrainer[g_kBattleSideCount] =
+	{
+		/* PLAYER   */  0.0f,
+		/* OPPONENT */  XM_PI,
+	};
+
+	inline constexpr _float fYawPokemon[g_kBattleSideCount] =
+	{
+		/* PLAYER   */  0.0f,
+		/* OPPONENT */  XM_PI,
+	};
+}
 
 namespace VolatileFlag
 {
@@ -93,4 +120,4 @@ struct TURN_CONTEXT
 
 NS_END
 
-#endif // Game_PKM_BattleSession_h__
+#endif // Battle_Session_h__

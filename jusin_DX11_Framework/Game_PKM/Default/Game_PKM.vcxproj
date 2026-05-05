@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\Battle_Manager.h" />
+    <ClInclude Include="..\Public\Battle_Trainer.h" />
     <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
@@ -28,9 +29,9 @@
     <ClInclude Include="..\Public\Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Game_API.h" />
-    <ClInclude Include="..\Public\Game_BattleData.h" />
-    <ClInclude Include="..\Public\Game_BattleSession.h" />
-    <ClInclude Include="..\Public\Game_BattleStream.h" />
+    <ClInclude Include="..\Public\Battle_Data.h" />
+    <ClInclude Include="..\Public\Battle_Session.h" />
+    <ClInclude Include="..\Public\Battle_Stream.h" />
     <ClInclude Include="..\Public\Game_LevelEntry.h" />
     <ClInclude Include="..\Public\Game_PKM_Defines.h" />
     <ClInclude Include="..\Public\Game_PKM_Enum.h" />
@@ -48,7 +49,7 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerState.h" />
     <ClInclude Include="..\Public\Player_LGPE.h" />
-    <ClInclude Include="..\Public\Pokemon.h" />
+    <ClInclude Include="..\Public\Battle_Pokemon.h" />
     <ClInclude Include="..\Public\PokemonData_Manager.h" />
     <ClInclude Include="..\Public\SharedTexture_Manager.h" />
     <ClInclude Include="..\Public\Sky.h" />
@@ -65,6 +66,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\Battle_Manager.cpp" />
+    <ClCompile Include="..\Private\Battle_Trainer.cpp" />
     <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
@@ -72,9 +74,9 @@
     <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Game_API.cpp" />
-    <ClCompile Include="..\Private\Game_BattleData.cpp" />
-    <ClCompile Include="..\Private\Game_BattleSession.cpp" />
-    <ClCompile Include="..\Private\Game_BattleStream.cpp" />
+    <ClCompile Include="..\Private\Battle_Data.cpp" />
+    <ClCompile Include="..\Private\Battle_Session.cpp" />
+    <ClCompile Include="..\Private\Battle_Stream.cpp" />
     <ClCompile Include="..\Private\Game_PresetTable.cpp" />
     <ClCompile Include="..\Private\Level_Battle.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -87,7 +89,7 @@
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerState.cpp" />
     <ClCompile Include="..\Private\Player_LGPE.cpp" />
-    <ClCompile Include="..\Private\Pokemon.cpp" />
+    <ClCompile Include="..\Private\Battle_Pokemon.cpp" />
     <ClCompile Include="..\Private\PokemonData_Manager.cpp" />
     <ClCompile Include="..\Private\SharedTexture_Manager.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />

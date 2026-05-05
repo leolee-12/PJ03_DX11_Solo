@@ -390,6 +390,11 @@ HRESULT CGameInstance::Render_Light(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
 }
+
+void CGameInstance::Clear_Lights()
+{
+	m_pLight_Manager->Clear();
+}
 #pragma endregion
 
 #pragma region FONT_MANAGER

@@ -110,6 +110,8 @@ WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
+WNAME_TAG(PROTO_OBJ_BATTLE_TRAINER, L"Prototype_GameObject_Battle_Trainer");
+
 WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
 WNAME_TAG(PROTO_BTN_LAYERED_GET, L"Prototype_UIButton_Layered_Get");

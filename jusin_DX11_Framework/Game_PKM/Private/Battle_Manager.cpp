@@ -132,6 +132,38 @@ const BATTLE_SLOT& CBattle_Manager::Get_Slot(_uint iSide) const
 	return m_tSlot[iSide < g_kBattleSideCount ? iSide : g_kBattleSide_Player];
 }
 
+void CBattle_Manager::Register_BattlerObj(_uint iSide, CGameObject* pObj)
+{
+	if (iSide >= g_kBattleSideCount)
+		return;
+
+	m_pBattlerObj[iSide] = pObj;
+}
+
+void CBattle_Manager::Register_TrainerObj(_uint iSide, CGameObject* pObj)
+{
+	if (iSide >= g_kBattleSideCount)
+		return;
+
+	m_pTrainerObj[iSide] = pObj;
+}
+
+CGameObject* CBattle_Manager::Get_BattlerObj(_uint iSide) const
+{
+	if (iSide >= g_kBattleSideCount)
+		return nullptr;
+
+	return m_pBattlerObj[iSide];
+}
+
+CGameObject* CBattle_Manager::Get_TrainerObj(_uint iSide) const
+{
+	if (iSide >= g_kBattleSideCount)
+		return nullptr;
+
+	return m_pTrainerObj[iSide];
+}
+
 void CBattle_Manager::Phase_Intro(_float fTimeDelta)
 {
 	(void)fTimeDelta;
@@ -225,4 +257,10 @@ CBattle_Manager* CBattle_Manager::Create(const BATTLE_ENV& tEnv)
 void CBattle_Manager::Free()
 {
 	__super::Free();
+
+	for (auto& pObj : m_pBattlerObj)
+		pObj = nullptr;
+
+	for (auto& pObj : m_pTrainerObj)
+		pObj = nullptr;
 }

@@ -39,6 +39,14 @@ HRESULT CLight_Manager::Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 	return S_OK;
 }
 
+void CLight_Manager::Clear()
+{
+	for (auto& pLight : m_Lights)
+		Safe_Release(pLight);
+
+	m_Lights.clear();
+}
+
 CLight_Manager* CLight_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	return new CLight_Manager(pDevice, pContext);
@@ -48,10 +56,7 @@ void CLight_Manager::Free()
 {
 	__super::Free();
 
-	for (auto& pLight : m_Lights)
-		Safe_Release(pLight);
-
-	m_Lights.clear();
+	Clear();
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);

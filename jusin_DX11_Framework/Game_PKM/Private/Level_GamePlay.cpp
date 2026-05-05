@@ -9,7 +9,7 @@
 #include "Game_API.h"
 #include "Level_Loading.h"
 #include "Game_LevelEntry.h"
-#include "Game_BattleSession.h"
+#include "Battle_Session.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -113,6 +113,8 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
+	m_pGameInstance->Clear_Lights();
+
 	LIGHT_DESC      LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
@@ -160,7 +162,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(WNameID strLayerTag)
 	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	CameraDesc.fMouseSensor = 0.03f;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAMERA_FREE,
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
 		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &CameraDesc)))
 		return E_FAIL;
 
@@ -198,11 +200,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 {
-	for (size_t i = 0; i < 20; i++)
-	{
-		if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-			return E_FAIL;
-	}
+	//for (size_t i = 0; i < 20; i++)
+	//{
+	//	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	//		return E_FAIL;
+	//}
 
 	return S_OK;
 }

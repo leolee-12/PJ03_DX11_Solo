@@ -2,7 +2,7 @@
 #include "Level_Loading.h"
 #include "BackGround.h"
 #include "Effect_Star.h"
-#include "Game_BattleData.h"
+#include "Battle_Data.h"
 
 #include "UITween.h"
 #include "UISequence.h"
