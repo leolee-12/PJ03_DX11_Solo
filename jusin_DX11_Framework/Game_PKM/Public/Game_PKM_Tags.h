@@ -41,6 +41,14 @@ WNAME_TAG(PROTO_COM_TEX_GET_LINE2_BACK, L"Prototype_Component_Texture_Get_Line2_
 WNAME_TAG(PROTO_COM_TEX_GET_TEXT_LV, L"Prototype_Component_Texture_Get_Text_LV");
 WNAME_TAG(PROTO_COM_TEX_GET_TEXT_NUM, L"Prototype_Component_Texture_Get_Text_Number");
 
+WNAME_TAG(PROTO_COM_TEX_BTL_BTN_FIGHT, L"Prototype_Component_Texture_Battle_Button_Fight");
+WNAME_TAG(PROTO_COM_TEX_BTL_BTN_POKE, L"Prototype_Component_Texture_Battle_Button_Poke");
+WNAME_TAG(PROTO_COM_TEX_BTL_BTN_BAG, L"Prototype_Component_Texture_Battle_Button_Bag");
+WNAME_TAG(PROTO_COM_TEX_BTL_PLAYERPLATE, L"Prototype_Component_Texture_Battle_PlayerPlate");
+WNAME_TAG(PROTO_COM_TEX_BTL_ENEMYPLATE, L"Prototype_Component_Texture_Battle_EnemyPlate");
+WNAME_TAG(PROTO_COM_TEX_BTL_BALLPLATE, L"Prototype_Component_Texture_Battle_BallPlate");
+WNAME_TAG(PROTO_COM_TEX_BTL_BALLICON, L"Prototype_Component_Texture_Battle_BallIcon");
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
@@ -117,6 +125,7 @@ WNAME_TAG(PROTO_OBJ_BODY_BATTLE_HERO_LGPE, L"Prototype_GameObject_Body_Battle_He
 WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
 WNAME_TAG(PROTO_BTN_LAYERED_GET, L"Prototype_UIButton_Layered_Get");
+WNAME_TAG(PROTO_BTN_LAYERED_BTL_COMMAND, L"Prototype_UIButton_Layered_Battle_Command");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_PLAYER_STATE, L"Prototype_GameObject_PlayerState");

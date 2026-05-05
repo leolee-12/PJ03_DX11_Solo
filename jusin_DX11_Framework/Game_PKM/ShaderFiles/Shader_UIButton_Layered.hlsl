@@ -81,6 +81,31 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_MAIN_01(PS_IN In)
+{
+	PS_OUT Out;
+
+	float2 uv = In.vTex;
+
+	vector vBG = g_TexDiff.Sample(LinearSampler, In.vTex);
+	vector vLine = g_TexLine.Sample(LinearSampler, In.vTex);
+	vector vMask = g_TexGlow.Sample(LinearSampler, In.vTex);
+
+	if (vBG.a < 0.01f)
+		discard;
+
+	float brightness = max(vMask.r, max(vMask.g, vMask.b));
+
+	//vBG.rgb = 1.f - vBG.rgb;
+	vBG *= saturate(vMask * 3.f);
+
+	if (vMask.a < 0.01f)
+		vBG += vLine;
+
+	Out.vCol = vBG;
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 pass DefaultPass
@@ -91,5 +116,15 @@ pass DefaultPass
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+
+	pass Pass_01
+	{
+		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_01();
 	}
 };

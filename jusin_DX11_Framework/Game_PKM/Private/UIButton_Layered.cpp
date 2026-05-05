@@ -14,6 +14,7 @@ CUIButton_Layered::CUIButton_Layered(ID3D11Device* pDevice, ID3D11DeviceContext*
 	, m_bUseMirrorUV{ tDesc.bUseMirrorUV }
 	, m_fGlowPulseSpeed{ tDesc.fGlowPulseSpeed }
 	, m_fGlowFadeSpeed{ tDesc.fGlowFadeSpeed }
+	, m_iShaderPass { tDesc.iShaderPass }
 {
 }
 
@@ -27,6 +28,7 @@ CUIButton_Layered::CUIButton_Layered(const CUIButton_Layered& Prototype)
 	, m_bUseMirrorUV{ Prototype.m_bUseMirrorUV }
 	, m_fGlowPulseSpeed{ Prototype.m_fGlowPulseSpeed }
 	, m_fGlowFadeSpeed{ Prototype.m_fGlowFadeSpeed }
+	, m_iShaderPass{ Prototype.m_iShaderPass }
 {
 }
 
@@ -83,7 +85,7 @@ HRESULT CUIButton_Layered::Render()
 	if (FAILED(Bind_LayeredResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(0)))
+	if (FAILED(m_pShaderCom->Begin(m_iShaderPass)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources()))

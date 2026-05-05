@@ -136,6 +136,12 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CUIButton_Layered::Create(pDevice, pContext, tLayeredDesc))))
 		return E_FAIL;
 
+	/* Prototype_Button_Layered_Battle_Command */
+	tLayeredDesc = Get_LayeredButtonPreset(LAYERED_BUTTON_PRESET::BATTLE_COMMAND);
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_LAYERED_BTL_COMMAND,
+		CUIButton_Layered::Create(pDevice, pContext, tLayeredDesc))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

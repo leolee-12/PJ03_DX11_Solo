@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
+    "name": "HUD_Layout",
+    "scalePolicy": "UNIFORM_FIT",
+    "version": 2
+  },
+  "widgets": [
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -340.0,
+          "offsetY": -80.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Button_Fight"
+        },
+        "transform": {
+          "centerX": 998.7879028320313,
+          "centerY": 629.0909423828125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 150.0,
+          "sizeY": 150.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Fight",
+      "id": "widget_001",
+      "prototypeTag": "Prototype_UIButton_Layered_Battle_Command",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -188.0,
+          "offsetY": -80.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Button_Poke"
+        },
+        "transform": {
+          "centerX": 998.7879028320313,
+          "centerY": 629.0909423828125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 150.0,
+          "sizeY": 150.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Poke",
+      "id": "widget_002",
+      "prototypeTag": "Prototype_UIButton_Layered_Battle_Command",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -36.0,
+          "offsetY": -80.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Button_Bag"
+        },
+        "transform": {
+          "centerX": 998.7879028320313,
+          "centerY": 629.0909423828125,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 150.0,
+          "sizeY": 150.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Bag",
+      "id": "widget_003",
+      "prototypeTag": "Prototype_UIButton_Layered_Battle_Command",
+      "type": "BUTTON"
+    }
+  ]
+}

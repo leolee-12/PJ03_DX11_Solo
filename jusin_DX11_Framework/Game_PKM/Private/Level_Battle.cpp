@@ -8,6 +8,7 @@
 #include "Camera_Free.h"
 
 #include "GameInstance.h"
+#include "UISequence.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::BATTLE);
@@ -254,7 +255,27 @@ HRESULT CLevel_Battle::Ready_Layer_Effect(WNameID strLayerTag)
 
 HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 {
-	(void)strLayerTag;
+	CUISequence::UISEQUENCE_DESC tDesc{};
+	tDesc.strPath = "../../DataFiles/UI/UI_BattlePlate.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
+
+	tDesc.strPath = "../../DataFiles/UI/UI_BattleCommand.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
