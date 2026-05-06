@@ -9,10 +9,10 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 
-class CBody_BattleBase abstract : public CPartObject
+class CBody abstract : public CPartObject
 {
 public:
-	struct BODY_BATTLE_DESC : public CPartObject::PARTOBJECT_DESC
+	struct BODY_DESC : public CPartObject::PARTOBJECT_DESC
 	{
 		WNameID strModelProtoTag = {};
 		WNameID strShaderProtoTag = {};
@@ -25,9 +25,9 @@ public:
 	};
 
 protected:
-	CBody_BattleBase(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBody_BattleBase(const CBody_BattleBase& Prototype);
-	virtual ~CBody_BattleBase() = default;
+	CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CBody(const CBody& Prototype);
+	virtual ~CBody() = default;
 
 public:
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;

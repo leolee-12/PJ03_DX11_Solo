@@ -1,9 +1,9 @@
 #pragma once
-#include "Body_BattleBase.h"
+#include "Body.h"
 
 NS_BEGIN(Game_PKM)
 
-class CBody_BattleHeroLGPE final : public CBody_BattleBase
+class CBody_BattleHeroLGPE final : public CBody
 {
 public:
 	enum MATERIAL_NAME { BAG, BOTTOMS, CAP, R_EYE, L_EYE, SKIN, HAIR, SHOES, TOPS, END };

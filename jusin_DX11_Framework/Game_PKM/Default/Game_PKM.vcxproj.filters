@@ -34,9 +34,6 @@
     <Filter Include="80. Study\01. Terrain">
       <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. GameLogic">
-      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
-    </Filter>
     <Filter Include="80. Study\00. Player">
       <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
     </Filter>
@@ -49,14 +46,8 @@
     <Filter Include="05. Manager">
       <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Components">
-      <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Effects">
       <UniqueIdentifier>{911aec86-4d94-417b-a60f-60175478b046}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Components\UI_Instance">
-      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Environment\00. BackGround">
       <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
@@ -108,6 +99,18 @@
     </Filter>
     <Filter Include="08. Battle\Battle_Pokemon">
       <UniqueIdentifier>{ec2004a2-41ec-4d18-9d9d-95af020f02d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components">
+      <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\UI_Instance">
+      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. PartObject">
+      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. PartObject\Body">
+      <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +190,7 @@
       <Filter>06. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
-      <Filter>04. Components\UI_Instance</Filter>
+      <Filter>03. Components\UI_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController.h">
       <Filter>07. UI\Controller</Filter>
@@ -240,9 +243,6 @@
     <ClInclude Include="..\Public\Battle_Trainer.h">
       <Filter>08. Battle\Battle_Trainer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_BattleBase.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Body_BattleBasicAnim.h">
       <Filter>08. Battle</Filter>
     </ClInclude>
@@ -251,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Layout.h">
       <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body.h">
+      <Filter>04. PartObject\Body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -318,7 +321,7 @@
       <Filter>06. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
-      <Filter>04. Components\UI_Instance</Filter>
+      <Filter>03. Components\UI_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Game_PresetTable.cpp">
       <Filter>97. Game_API</Filter>
@@ -368,14 +371,14 @@
     <ClCompile Include="..\Private\Battle_Trainer.cpp">
       <Filter>08. Battle\Battle_Trainer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Body_BattleBase.cpp">
-      <Filter>08. Battle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Body_BattleBasicAnim.cpp">
       <Filter>08. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_BattleHeroLGPE.cpp">
       <Filter>08. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body.cpp">
+      <Filter>04. PartObject\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

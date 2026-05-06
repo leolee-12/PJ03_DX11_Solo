@@ -23,7 +23,7 @@
     <ClInclude Include="..\Public\Battle_Layout.h" />
     <ClInclude Include="..\Public\Battle_Manager.h" />
     <ClInclude Include="..\Public\Battle_Trainer.h" />
-    <ClInclude Include="..\Public\Body_BattleBase.h" />
+    <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\Body_BattleBasicAnim.h" />
     <ClInclude Include="..\Public\Body_BattleHeroLGPE.h" />
     <ClInclude Include="..\Public\Body_Hero.h" />
@@ -71,7 +71,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\Battle_Manager.cpp" />
     <ClCompile Include="..\Private\Battle_Trainer.cpp" />
-    <ClCompile Include="..\Private\Body_BattleBase.cpp" />
+    <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\Private\Body_BattleBasicAnim.cpp" />
     <ClCompile Include="..\Private\Body_BattleHeroLGPE.cpp" />
     <ClCompile Include="..\Private\Body_Hero.cpp" />

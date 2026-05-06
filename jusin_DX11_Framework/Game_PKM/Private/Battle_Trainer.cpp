@@ -1,5 +1,5 @@
 #include "Battle_Trainer.h"
-#include "Body_BattleBase.h"
+#include "Body.h"
 
 CBattle_Trainer::CBattle_Trainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CContainerObject{ pDevice, pContext }
@@ -78,7 +78,7 @@ HRESULT CBattle_Trainer::Render()
 
 HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 {
-	CBody_BattleBase::BODY_BATTLE_DESC BodyDesc{};
+	CBody::BODY_DESC BodyDesc{};
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	BodyDesc.strModelProtoTag = pDesc->strModelProtoTag;
 	BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)

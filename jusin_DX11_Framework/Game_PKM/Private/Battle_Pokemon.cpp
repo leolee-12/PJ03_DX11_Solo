@@ -1,5 +1,5 @@
 #include "Battle_Pokemon.h"
-#include "Body_BattleBase.h"
+#include "Body.h"
 #include "PokemonData_Manager.h"
 
 CBattle_Pokemon::CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -89,7 +89,7 @@ HRESULT CBattle_Pokemon::Render()
 
 HRESULT CBattle_Pokemon::Ready_PartObjects(const POKEMON_DESC* pDesc)
 {
-    CBody_BattleBase::BODY_BATTLE_DESC BodyDesc{};
+    CBody::BODY_DESC BodyDesc{};
     BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
     BodyDesc.strModelProtoTag = m_strSpeciesModelTag;
     BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)

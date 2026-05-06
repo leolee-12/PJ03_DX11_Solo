@@ -4,13 +4,13 @@
 #include "Shader.h"
 
 CBody_BattleBasicAnim::CBody_BattleBasicAnim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CBody_BattleBase{ pDevice, pContext }
+	: CBody{ pDevice, pContext }
 {
 	m_strName = L"Body_BattleBasicAnim";
 }
 
 CBody_BattleBasicAnim::CBody_BattleBasicAnim(const CBody_BattleBasicAnim& Prototype)
-	: CBody_BattleBase{ Prototype }
+	: CBody{ Prototype }
 {
 }
 

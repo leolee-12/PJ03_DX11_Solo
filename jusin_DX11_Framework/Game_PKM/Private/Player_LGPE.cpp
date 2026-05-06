@@ -106,6 +106,13 @@ HRESULT CPlayer_LGPE::Ready_PartObjects()
 {
 	CBody_Hero::BODY_HERO_DESC BodyDesc{};
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	BodyDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
+	BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+	BodyDesc.iDefaultAnim = 0;
+	BodyDesc.bLoop = true;
+	BodyDesc.fScale = 0.4f;
+	BodyDesc.bEnableRootMotion = true;
+	BodyDesc.iRootMotionBoneIndex = 3;
 	BodyDesc.pParentState = &m_iState;
 
 	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO, PART_BODY, &BodyDesc)))

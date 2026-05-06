@@ -4,13 +4,13 @@
 #include "Shader.h"
 
 CBody_BattleHeroLGPE::CBody_BattleHeroLGPE(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CBody_BattleBase{ pDevice, pContext }
+	: CBody{ pDevice, pContext }
 {
 	m_strName = L"Body_BattleHeroLGPE";
 }
 
 CBody_BattleHeroLGPE::CBody_BattleHeroLGPE(const CBody_BattleHeroLGPE& Prototype)
-	: CBody_BattleBase{ Prototype }
+	: CBody{ Prototype }
 	, m_RenderTable{ Prototype.m_RenderTable }
 {
 }

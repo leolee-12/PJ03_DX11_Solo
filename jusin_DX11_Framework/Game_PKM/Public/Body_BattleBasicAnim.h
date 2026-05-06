@@ -1,9 +1,9 @@
 #pragma once
-#include "Body_BattleBase.h"
+#include "Body.h"
 
 NS_BEGIN(Game_PKM)
 
-class CBody_BattleBasicAnim final : public CBody_BattleBase
+class CBody_BattleBasicAnim final : public CBody
 {
 private:
 	CBody_BattleBasicAnim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
