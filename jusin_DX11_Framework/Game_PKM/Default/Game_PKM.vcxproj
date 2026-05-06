@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\Battle_Layout.h" />
     <ClInclude Include="..\Public\Battle_Manager.h" />
     <ClInclude Include="..\Public\Battle_Trainer.h" />
     <ClInclude Include="..\Public\Body_BattleBase.h" />

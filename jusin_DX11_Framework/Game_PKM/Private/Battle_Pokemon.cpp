@@ -53,9 +53,9 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
     if (FAILED(Ready_PartObjects(pDesc)))
         return E_FAIL;
 
-    const _float3& vPos = BattleSlotPose::vPokemonPos[m_iSide];
+    const _float3& vPos = pDesc->vPos;
     m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
-    m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), BattleSlotPose::fYawPokemon[m_iSide]);
+    m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), pDesc->fYaw);
 
     return S_OK;
 }

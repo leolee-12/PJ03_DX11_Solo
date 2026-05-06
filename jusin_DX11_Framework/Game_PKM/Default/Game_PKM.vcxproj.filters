@@ -249,6 +249,9 @@
     <ClInclude Include="..\Public\Body_BattleHeroLGPE.h">
       <Filter>08. Battle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Battle_Layout.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">

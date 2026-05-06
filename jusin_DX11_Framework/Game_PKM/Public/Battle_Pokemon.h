@@ -18,6 +18,9 @@ public:
         _uint iDefaultAnim = { 0 };
         _bool bLoop = { true };
         _float fScale = { 1.f };
+
+        _float3 vPos = { 0.f, 0.f, 0.f };
+        _float fYaw = { 0.f };
     };
 
 protected:

@@ -201,6 +201,8 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_BATTLE_HERO_LGPE;
 		tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
 		tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+		tDesc.vPos = m_pBattleManager->Get_TrainerPos(iSide);
+		tDesc.fYaw = m_pBattleManager->Get_TrainerYaw(iSide);
 
 		if (FAILED(m_pGameInstance->Add_GameObject(
 			ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
@@ -227,6 +229,8 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		CBattle_Pokemon::POKEMON_DESC tDesc{};
 		tDesc.pInstance = tSlot.pPokemon;
 		tDesc.iSide = iSide;
+		tDesc.vPos = m_pBattleManager->Get_PokemonPos(iSide);
+		tDesc.fYaw = m_pBattleManager->Get_PokemonYaw(iSide);
 
 		if (FAILED(m_pGameInstance->Add_GameObject(
 			ETOUI(LEVEL::STATIC), PROTO_OBJ_MONSTER,

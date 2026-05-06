@@ -42,9 +42,9 @@ HRESULT CBattle_Trainer::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects(pDesc)))
 		return E_FAIL;
 
-	const _float3& vPos = BattleSlotPose::vTrainerPos[m_iSide];
+	const _float3& vPos = pDesc->vPos;
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), BattleSlotPose::fYawTrainer[m_iSide]);
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), pDesc->fYaw);
 
 	return S_OK;
 }

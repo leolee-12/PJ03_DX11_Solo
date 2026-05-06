@@ -1,6 +1,7 @@
 #include "Battle_Manager.h"
 #include "PlayerState.h"
 #include "PokemonData_Manager.h"
+#include "Battle_Layout.h"
 
 #include "GameInstance.h"
 
@@ -11,15 +12,12 @@ CBattle_Manager::CBattle_Manager()
 HRESULT CBattle_Manager::Initialize(const BATTLE_ENV& tEnv)
 {
 	m_tEnv = tEnv;
-	m_tField = {};
-	m_tTurn = {};
-	m_tTurn.iTurnNumber = 1;
+
+	Reset_FieldState(m_tField);
+	Reset_TurnContext(m_tTurn);
 
 	for (auto& tSlot : m_tSlot)
-	{
-		tSlot = {};
-		tSlot.iLastMoveUsed = 0;
-	}
+		Reset_BattleSlot(tSlot);
 
 	auto* pDataMgr = CPokemonData_Manager::GetInstance();
 	if (nullptr != pDataMgr)
@@ -162,6 +160,26 @@ CGameObject* CBattle_Manager::Get_TrainerObj(_uint iSide) const
 		return nullptr;
 
 	return m_pTrainerObj[iSide];
+}
+
+_float3 CBattle_Manager::Get_TrainerPos(_uint iSide, _uint iSlotIndex) const
+{
+	return BattleLayout::Get_TrainerPos(m_tEnv.eRule, iSide, iSlotIndex);
+}
+
+_float CBattle_Manager::Get_TrainerYaw(_uint iSide, _uint iSlotIndex) const
+{
+	return BattleLayout::Get_TrainerYaw(m_tEnv.eRule, iSide, iSlotIndex);
+}
+
+_float3 CBattle_Manager::Get_PokemonPos(_uint iSide, _uint iSlotIndex) const
+{
+	return BattleLayout::Get_PokemonPos(m_tEnv.eRule, iSide, iSlotIndex);
+}
+
+_float CBattle_Manager::Get_PokemonYaw(_uint iSide, _uint iSlotIndex) const
+{
+	return BattleLayout::Get_PokemonYaw(m_tEnv.eRule, iSide, iSlotIndex);
 }
 
 void CBattle_Manager::Phase_Intro(_float fTimeDelta)

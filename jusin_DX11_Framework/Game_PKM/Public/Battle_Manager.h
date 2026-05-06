@@ -2,6 +2,21 @@
 #include "Base.h"
 #include "Battle_Session.h"
 
+/* -------------------------------------------------- */
+// CBattle_Manager : 배틀(세션)의 진행을 책임지는 매니저 클래스
+//  1) 한 판의 도메인 상태 보유
+//	(BATTLE_ENV / BATTLE_SLOT[] / FIELD_STATE / TURN_CONTEXT / BATTLE_PHASE).
+//  2) 외부 데이터 핸들 보유 :  소유 X
+//	(CPlayerState*, 상대 POKEMON_INSTANCE*, 상대 TRAINER_DATA*).
+//  3) 배틀 시각 객체 핸들 보유 : 소유 X
+//	(m_pBattlerObj[], m_pTrainerObj[])
+//     - Level_Battle이 객체 생성 후 Register_*로 등록
+//     - 페이즈 진행 중 턴 결과를 객체에 반영할 때 Get_*로 접근
+//  4) 페이즈 머신 진행 (Update / Phase_*).
+//  5) 객체 배치 좌표 조회 노출 (Get_TrainerPos/Yaw, Get_PokemonPos/Yaw)
+//     - 내부적으로 BattleLayout에 위임. 룰 정보는 매니저 내부에 캡슐화
+/* -------------------------------------------------- */
+
 NS_BEGIN(Engine)
 class CGameObject;
 NS_END
@@ -37,6 +52,11 @@ public:
 
 	CGameObject* Get_BattlerObj(_uint iSide) const;
 	CGameObject* Get_TrainerObj(_uint iSide) const;
+
+	_float3 Get_TrainerPos(_uint iSide, _uint iSlotIndex = 0) const;
+	_float  Get_TrainerYaw(_uint iSide, _uint iSlotIndex = 0) const;
+	_float3 Get_PokemonPos(_uint iSide, _uint iSlotIndex = 0) const;
+	_float  Get_PokemonYaw(_uint iSide, _uint iSlotIndex = 0) const;
 
 private:
 	BATTLE_ENV		m_tEnv = {};
