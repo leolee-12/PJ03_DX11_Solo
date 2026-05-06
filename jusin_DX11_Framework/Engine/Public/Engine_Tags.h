@@ -23,6 +23,7 @@ namespace Engine
 	WNAME_TAG(TARGET_DEPTH, L"Target_Depth");
 	WNAME_TAG(TARGET_SPECULAR, L"Target_Specular");
 	WNAME_TAG(TARGET_SHADE, L"Target_Shade");
+	WNAME_TAG(TARGET_PICKPOS, L"Target_PickPos");
 
 
 

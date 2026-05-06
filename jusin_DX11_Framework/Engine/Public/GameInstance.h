@@ -114,11 +114,16 @@ public:
 	HRESULT Begin_MRT(WNameID strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RT_ShaderResource(WNameID strTargetTag, class CShader* pShader, const _char* pConstantName);
-
+	HRESULT Copy_RT_Resource(WNameID strTargetTag, ID3D11Texture2D* pOut);
+	HRESULT Copy_RT_SubResource(WNameID strTargetTag, ID3D11Texture2D* pOut, D3D11_BOX* pSrcBox);
 #ifdef _DEBUG
 	HRESULT Ready_RT_Debug(WNameID strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT Render_RT_Debug(WNameID strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 #endif
+#pragma endregion
+
+#pragma region PICKING
+	_bool Picking(_float4& Out);
 #pragma endregion
 
 #pragma region SHARED_TEXTURE_BINDER
@@ -152,10 +157,11 @@ private:
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
-	class CSound_Manager*		m_pSound_Manager = { nullptr };
+	class CPicking*				m_pPicking = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
 	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };
+	class CSound_Manager*		m_pSound_Manager = { nullptr };
 
 	_float2						m_vViewportSize{};
 	_bool						m_bDebug = { false };

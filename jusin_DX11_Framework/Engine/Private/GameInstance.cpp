@@ -10,6 +10,7 @@
 #include "Font_Manager.h"
 #include "Target_Manager.h"
 #include "Sound_Manager.h"
+#include "Picking.h"
 
 #include "SharedTextureBinder.h"
 
@@ -80,12 +81,17 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
+	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd);
+	if (nullptr == m_pPicking)
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
 	m_pInput_Device->Update();
+	//m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pObject_Manager->Update(fTimeDelta);
@@ -139,6 +145,7 @@ void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pMainCamera);
 
+	Safe_Release(m_pPicking);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pInput_Device);
@@ -435,6 +442,16 @@ HRESULT CGameInstance::Bind_RT_ShaderResource(WNameID strTargetTag, CShader* pSh
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
 }
 
+HRESULT CGameInstance::Copy_RT_Resource(WNameID strTargetTag, ID3D11Texture2D* pOut)
+{
+	return m_pTarget_Manager->Copy_Resource(strTargetTag, pOut);
+}
+
+HRESULT CGameInstance::Copy_RT_SubResource(WNameID strTargetTag, ID3D11Texture2D* pOut, D3D11_BOX* pSrcBox)
+{
+	return m_pTarget_Manager->Copy_SubResource(strTargetTag, pOut, pSrcBox);
+}
+
 #ifdef _DEBUG
 HRESULT CGameInstance::Ready_RT_Debug(WNameID strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
@@ -446,6 +463,13 @@ HRESULT CGameInstance::Render_RT_Debug(WNameID strMRTTag, CShader* pShader, CVIB
 	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
 }
 #endif
+#pragma endregion
+
+#pragma region PICKING
+_bool CGameInstance::Picking(_float4& Out)
+{
+	return m_pPicking->Picking(Out);
+}
 #pragma endregion
 
 #pragma region SOUND_MANAGER

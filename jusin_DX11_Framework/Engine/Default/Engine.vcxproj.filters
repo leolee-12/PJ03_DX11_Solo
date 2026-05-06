@@ -148,6 +148,9 @@
     <Filter Include="07. Component\UIAnimator">
       <UniqueIdentifier>{1687a60c-8a1d-4ce3-9d2a-b99da95702e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="12. Picking">
+      <UniqueIdentifier>{2f22d88a-fc08-4eee-bf8b-10e9c12b8359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="..\Public\Sound_Manager.h">
       <Filter>82. Sound</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>12. Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -547,6 +553,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sound_Manager.cpp">
       <Filter>82. Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>12. Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

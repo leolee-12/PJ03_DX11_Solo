@@ -95,6 +95,23 @@ HRESULT CTarget_Manager::Bind_ShaderResource(WNameID strTargetTag, CShader* pSha
 	return pRenderTarget->Bind_ShaderResource(pShader, pConstName);
 }
 
+HRESULT CTarget_Manager::Copy_Resource(WNameID strTargetTag, ID3D11Texture2D* pOut)
+{
+	auto		pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->Copy_Resource(pOut);
+}
+
+HRESULT CTarget_Manager::Copy_SubResource(WNameID strTargetTag, ID3D11Texture2D* pOut, const D3D11_BOX* pSrcBox)
+{
+	auto pRenderTarget = Find_RenderTarget(strTargetTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+	return pRenderTarget->Copy_SubResource(pOut, pSrcBox);
+}
+
 void CTarget_Manager::Reset()
 {
 	m_MRTs.for_each([](auto& Pair)

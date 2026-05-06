@@ -57,6 +57,7 @@ struct PS_OUT
 	float4 vDiff : SV_TARGET0;
 	float4 vNorm : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
+	float4 vPickPos : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -67,6 +68,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
 
 	return Out;
 }

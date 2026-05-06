@@ -15,7 +15,9 @@ public:
 	HRESULT Begin_MRT(WNameID strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_ShaderResource(WNameID strTargetTag, class CShader* pShader, const _char* pConstName);
-	
+	HRESULT Copy_Resource(WNameID strTargetTag, ID3D11Texture2D* pOut);
+	HRESULT Copy_SubResource(WNameID strTargetTag, ID3D11Texture2D* pOut, const D3D11_BOX* pSrcBox);
+
 	void Reset();
 
 #ifdef _DEBUG

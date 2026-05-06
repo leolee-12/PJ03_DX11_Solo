@@ -50,6 +50,20 @@ void CRenderTarget::Clear()
 	m_pContext->ClearRenderTargetView(m_pRTV, reinterpret_cast<_float*>(&m_vClearColor));
 }
 
+HRESULT CRenderTarget::Copy_Resource(ID3D11Texture2D* pOut)
+{
+	m_pContext->CopyResource(pOut, m_pRTTexture);
+
+	return S_OK;
+}
+
+HRESULT CRenderTarget::Copy_SubResource(ID3D11Texture2D* pOut, const D3D11_BOX* pSrcBox)
+{
+	m_pContext->CopySubresourceRegion(pOut, 0, 0, 0, 0, m_pRTTexture, 0, pSrcBox);
+
+	return S_OK;
+}
+
 #ifdef _DEBUG
 
 HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)

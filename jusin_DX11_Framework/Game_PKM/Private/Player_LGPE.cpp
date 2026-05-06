@@ -52,6 +52,13 @@ void CPlayer_LGPE::Priority_Update(_float fTimeDelta)
 
 void CPlayer_LGPE::Update(_float fTimeDelta)
 {
+	//if (GetKeyState(VK_LBUTTON) & 0x8000)
+	//{
+	//	_float4 vOut;
+	//	if (true == m_pGameInstance->Picking(vOut))
+	//		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&vOut));
+	//}
+
 	// 1) 파츠 애니메이션 진행 : 이전 프레임에 애님 결정 -> RootMotionDelta 생성
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
