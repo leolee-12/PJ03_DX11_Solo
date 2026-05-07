@@ -24,10 +24,9 @@
     <ClInclude Include="..\Public\Battle_Manager.h" />
     <ClInclude Include="..\Public\Battle_Trainer.h" />
     <ClInclude Include="..\Public\Body.h" />
-    <ClInclude Include="..\Public\Body_BattleBasicAnim.h" />
-    <ClInclude Include="..\Public\Body_BattleHeroLGPE.h" />
     <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
+    <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
     <ClInclude Include="..\Public\Explosion.h" />
@@ -72,10 +71,9 @@
     <ClCompile Include="..\Private\Battle_Manager.cpp" />
     <ClCompile Include="..\Private\Battle_Trainer.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
-    <ClCompile Include="..\Private\Body_BattleBasicAnim.cpp" />
-    <ClCompile Include="..\Private\Body_BattleHeroLGPE.cpp" />
     <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
+    <ClCompile Include="..\Private\Body_Pokemon.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
     <ClCompile Include="..\Private\Explosion.cpp" />

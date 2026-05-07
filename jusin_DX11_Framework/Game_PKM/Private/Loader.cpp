@@ -18,8 +18,7 @@
 #include "VIBuffer_UI_Instance.h"
 #include "Effect_Star.h"
 #include "Battle_Trainer.h"
-#include "Body_BattleBasicAnim.h"
-#include "Body_BattleHeroLGPE.h"
+#include "Body_Pokemon.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -409,7 +408,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CPlayer_LGPE::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Player_LGPE"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HERO,
 		CBody_Hero::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Body_Hero"));
 
@@ -608,13 +607,9 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 		CBattle_Trainer::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Battle_Trainer"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_BATTLE_BASIC_ANIM,
-		CBody_BattleBasicAnim::Create(m_pDevice, m_pContext)); },
-		TEXT("Prototype_GameObject_Body_Battle_BasicAnim"));
-
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_BATTLE_HERO_LGPE,
-		CBody_BattleHeroLGPE::Create(m_pDevice, m_pContext)); },
-		TEXT("Prototype_GameObject_Body_Battle_HeroLGPE"));
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_POKEMON,
+		CBody_Pokemon::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Body_Pokemon"));
 
 	return S_OK;
 }

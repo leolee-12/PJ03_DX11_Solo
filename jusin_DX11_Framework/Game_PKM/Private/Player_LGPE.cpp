@@ -115,7 +115,7 @@ HRESULT CPlayer_LGPE::Ready_PartObjects()
 	BodyDesc.iRootMotionBoneIndex = 3;
 	BodyDesc.pParentState = &m_iState;
 
-	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_HERO, PART_BODY, &BodyDesc)))
+	if (FAILED(__super::Add_PartObject(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HERO, PART_BODY, &BodyDesc)))
 		return E_FAIL;
 
 	return S_OK;

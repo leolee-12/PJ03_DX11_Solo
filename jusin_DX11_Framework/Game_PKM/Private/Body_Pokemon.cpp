@@ -1,20 +1,20 @@
-#include "Body_BattleBasicAnim.h"
+#include "Body_Pokemon.h"
 
 #include "Model.h"
 #include "Shader.h"
 
-CBody_BattleBasicAnim::CBody_BattleBasicAnim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBody_Pokemon::CBody_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBody{ pDevice, pContext }
 {
-	m_strName = L"Body_BattleBasicAnim";
+	m_strName = L"Body_Pokemon";
 }
 
-CBody_BattleBasicAnim::CBody_BattleBasicAnim(const CBody_BattleBasicAnim& Prototype)
+CBody_Pokemon::CBody_Pokemon(const CBody_Pokemon& Prototype)
 	: CBody{ Prototype }
 {
 }
 
-HRESULT CBody_BattleBasicAnim::Render()
+HRESULT CBody_Pokemon::Render()
 {
 	if (FAILED(Bind_ShaderResources_Common()))
 		return E_FAIL;
@@ -39,33 +39,33 @@ HRESULT CBody_BattleBasicAnim::Render()
 	return S_OK;
 }
 
-CBody_BattleBasicAnim * CBody_BattleBasicAnim::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBody_Pokemon* CBody_Pokemon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBody_BattleBasicAnim* pInstance = new CBody_BattleBasicAnim(pDevice, pContext);
+	CBody_Pokemon* pInstance = new CBody_Pokemon(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CBody_BattleBasicAnim");
+		MSG_BOX("Failed to Created : CBody_Pokemon");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBody_BattleBasicAnim::Clone(void* pArg)
+CGameObject* CBody_Pokemon::Clone(void* pArg)
 {
-	CBody_BattleBasicAnim* pInstance = new CBody_BattleBasicAnim(*this);
+	CBody_Pokemon* pInstance = new CBody_Pokemon(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBody_BattleBasicAnim");
+		MSG_BOX("Failed to Cloned : CBody_Pokemon");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBody_BattleBasicAnim::Free()
+void CBody_Pokemon::Free()
 {
 	__super::Free();
 }

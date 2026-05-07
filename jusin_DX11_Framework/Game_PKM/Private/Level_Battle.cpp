@@ -198,9 +198,12 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 	{
 		CBattle_Trainer::BATTLE_TRAINER_DESC tDesc{};
 		tDesc.iSide = iSide;
-		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_BATTLE_HERO_LGPE;
+		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_HERO;
 		tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
 		tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+		tDesc.iDefaultAnim = 0;
+		tDesc.bLoop = true;
+		tDesc.fScale = 0.4f;
 		tDesc.vPos = m_pBattleManager->Get_TrainerPos(iSide);
 		tDesc.fYaw = m_pBattleManager->Get_TrainerYaw(iSide);
 
@@ -229,6 +232,11 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		CBattle_Pokemon::POKEMON_DESC tDesc{};
 		tDesc.pInstance = tSlot.pPokemon;
 		tDesc.iSide = iSide;
+		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+		tDesc.strShaderProtoTag = PROTO_COM_SHADER_VTXANIMMESH;
+		tDesc.iDefaultAnim = 0;
+		tDesc.bLoop = true;
+		tDesc.fScale = 1.f;
 		tDesc.vPos = m_pBattleManager->Get_PokemonPos(iSide);
 		tDesc.fYaw = m_pBattleManager->Get_PokemonYaw(iSide);
 

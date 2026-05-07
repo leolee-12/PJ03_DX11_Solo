@@ -32,7 +32,7 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
     m_iSide = pDesc->iSide;
     m_strBodyProtoTag = (0 != pDesc->strBodyProtoTag)
         ? pDesc->strBodyProtoTag
-        : PROTO_OBJ_BODY_BATTLE_BASIC_ANIM;
+        : PROTO_OBJ_BODY_POKEMON;
 
     if (m_iSide >= g_kBattleSideCount)
         return E_FAIL;

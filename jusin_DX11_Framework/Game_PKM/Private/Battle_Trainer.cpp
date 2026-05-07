@@ -30,7 +30,8 @@ HRESULT CBattle_Trainer::Initialize(void* pArg)
 	m_iSide = pDesc->iSide;
 	m_strBodyProtoTag = (0 != pDesc->strBodyProtoTag)
 		? pDesc->strBodyProtoTag
-		: PROTO_OBJ_BODY_BATTLE_BASIC_ANIM;
+		: PROTO_OBJ_BODY_HERO;
+
 	m_strModelProtoTag = pDesc->strModelProtoTag;
 
 	if (m_iSide >= g_kBattleSideCount)

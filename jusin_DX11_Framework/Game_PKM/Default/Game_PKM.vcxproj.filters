@@ -243,16 +243,13 @@
     <ClInclude Include="..\Public\Battle_Trainer.h">
       <Filter>08. Battle\Battle_Trainer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_BattleBasicAnim.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_BattleHeroLGPE.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Battle_Layout.h">
       <Filter>08. Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body.h">
+      <Filter>04. PartObject\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Pokemon.h">
       <Filter>04. PartObject\Body</Filter>
     </ClInclude>
   </ItemGroup>
@@ -371,13 +368,10 @@
     <ClCompile Include="..\Private\Battle_Trainer.cpp">
       <Filter>08. Battle\Battle_Trainer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Body_BattleBasicAnim.cpp">
-      <Filter>08. Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Body_BattleHeroLGPE.cpp">
-      <Filter>08. Battle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
+      <Filter>04. PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Pokemon.cpp">
       <Filter>04. PartObject\Body</Filter>
     </ClCompile>
   </ItemGroup>
