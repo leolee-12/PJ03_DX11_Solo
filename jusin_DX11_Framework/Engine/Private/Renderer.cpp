@@ -181,7 +181,7 @@ HRESULT CRenderer::Render_Shadow()
 
 
 	_float2 vViewportSize = m_pGameInstance->Get_ViewportSize();
-	Change_ViewportDesc(vViewportSize.x, vViewportSize.y);
+	Change_ViewportDesc(static_cast<_uint>(vViewportSize.x), static_cast<_uint>(vViewportSize.y));
 
 	return S_OK;
 }

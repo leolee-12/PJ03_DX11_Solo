@@ -21,6 +21,8 @@ public:
 	void Set_Pass(_uint iMatIdx, _uint iPassIdx) { m_RenderTable.passes[iMatIdx] = iPassIdx; }
 
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Update(_float fTimeDelta) override;
+	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
@@ -30,6 +32,7 @@ private:
 
 private:
 	void Ready_DefaultVariant();
+	HRESULT Bind_ShaderResources();
 
 public:
 	static CBody_Hero* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

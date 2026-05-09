@@ -24,11 +24,6 @@ HRESULT CBody_Hero::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBody_Hero::Priority_Update(_float fTimeDelta)
-{
-
-}
-
 void CBody_Hero::Update(_float fTimeDelta)
 {
 	//if (m_pGameInstance->Key_Down(DIK_Z))
@@ -38,16 +33,15 @@ void CBody_Hero::Update(_float fTimeDelta)
 	//	m_pModelCom->Set_AnimationIndex(m_iDummy, false, 0.2f);
 	//}
 
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10;
+	__super::Update(fTimeDelta);
+
 
 }
 
 void CBody_Hero::Late_Update(_float fTimeDelta)
 {
-	__super::Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+	__super::Late_Update(fTimeDelta);
 
-	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDERID::SHADOW, this);
 }
 
@@ -109,25 +103,6 @@ HRESULT CBody_Hero::Render_Shadow()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-
-	return S_OK;
-}
-
-HRESULT CBody_Hero::Ready_Components()
-{
-
-	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_PLAYER_LGPE,
-		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
-
-	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_HERO,
-		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
-
-
-
 
 	return S_OK;
 }
