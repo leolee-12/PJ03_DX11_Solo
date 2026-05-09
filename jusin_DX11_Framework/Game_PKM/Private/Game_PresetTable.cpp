@@ -51,6 +51,14 @@ CUIButton_Layered::LAYEREDBUTTON_DESC Get_LayeredButtonPreset(LAYERED_BUTTON_PRE
 		tDesc.fGlowFadeSpeed = 8.f;
 		break;
 
+	case LAYERED_BUTTON_PRESET::BATTLE_COMMAND:
+		tDesc.bUseGlow = true;
+		tDesc.bUseMirrorUV = false;
+		tDesc.fGlowPulseSpeed = 6.f;
+		tDesc.fGlowFadeSpeed = 8.f;
+		tDesc.iShaderPass = 1u;
+		break;
+
 	default:
 		break;
 	}

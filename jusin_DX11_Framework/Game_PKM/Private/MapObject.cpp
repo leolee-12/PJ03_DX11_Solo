@@ -1,11 +1,11 @@
 #include "MapObject.h"
 #include "GameInstance.h"
 
-CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag)
+CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const MAPOBJECT_DESC& tDesc)
 	: CGameObject{ pDevice, pContext }
-	, m_strMapModelTag{ strMapModelTag }
+	, m_tDesc{ tDesc }
 {
-	m_strName = L"Map_" + to_wstring(m_strMapModelTag);
+	m_strName = L"Map_" + to_wstring(tDesc.strModelTag);
 }
 
 HRESULT CMapObject::Initialize_Prototype()
@@ -20,6 +20,12 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+	if (PROTO_COM_MODEL_MAP_TOWN02 == m_tDesc.strModelTag)
+	{
+		_vector vPos = { -0.95f, 2.f, 80.75f, 1.f };
+		m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	}
 
 	return S_OK;
 }
@@ -64,12 +70,12 @@ HRESULT CMapObject::Render()
 HRESULT CMapObject::Ready_Components()
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_SHADER_VTXMESH,
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), m_strMapModelTag,
+	if (FAILED(__super::Add_Component(m_tDesc.iModelLevelIndex, m_tDesc.strModelTag,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -95,9 +101,9 @@ HRESULT CMapObject::Bind_ShaderResources()
 }
 
 
-CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WNameID strMapModelTag)
+CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const MAPOBJECT_DESC& tDesc)
 {
-	CMapObject* pInstance = new CMapObject(pDevice, pContext, strMapModelTag);
+	CMapObject* pInstance = new CMapObject(pDevice, pContext, tDesc);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

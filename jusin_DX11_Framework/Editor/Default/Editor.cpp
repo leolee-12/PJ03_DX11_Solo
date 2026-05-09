@@ -54,6 +54,10 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 
 	MSG msg;
 
+#ifdef _DEBUG
+	OpenDebugConsole();
+#endif
+
 	g_pEditorApp = CEditorApp::Create();
 
 	if (nullptr == g_pEditorApp)
@@ -105,6 +109,10 @@ int APIENTRY wWinMain(	_In_ HINSTANCE hInstance,
 
 	Safe_Release(pGameInstance);
 	Safe_Release(g_pEditorApp);
+
+#ifdef _DEBUG
+	CloseDebugConsole();
+#endif
 
 	return (int)msg.wParam;
 }

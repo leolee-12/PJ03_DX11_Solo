@@ -19,9 +19,6 @@
     <Filter Include="00. Levels\00. Loading">
       <UniqueIdentifier>{205b1acc-cebf-4559-8130-4f9e02979b07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Levels\01. Logo">
-      <UniqueIdentifier>{fd463d1a-a634-4065-ba6b-42fa67af8b38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Levels\02. GamePlay">
       <UniqueIdentifier>{86f8bf21-e9a4-41c4-9202-a4ca4450888d}</UniqueIdentifier>
     </Filter>
@@ -37,18 +34,6 @@
     <Filter Include="80. Study\01. Terrain">
       <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameActor\01. Pokemon">
-      <UniqueIdentifier>{ec2004a2-41ec-4d18-9d9d-95af020f02d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. GameLogic">
-      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. GameLogic\00. Move">
-      <UniqueIdentifier>{8c408519-5991-41e3-9ac4-7472a2857829}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. GameLogic\01. Ability">
-      <UniqueIdentifier>{30c1c900-668d-4e89-a118-52c27fd12500}</UniqueIdentifier>
-    </Filter>
     <Filter Include="80. Study\00. Player">
       <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
     </Filter>
@@ -61,14 +46,8 @@
     <Filter Include="05. Manager">
       <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Components">
-      <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Effects">
       <UniqueIdentifier>{911aec86-4d94-417b-a60f-60175478b046}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Components\UI_Instance">
-      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Environment\00. BackGround">
       <UniqueIdentifier>{c67e43a1-9b2c-4f9e-b84a-d6c2ddf9fa3e}</UniqueIdentifier>
@@ -99,6 +78,39 @@
     </Filter>
     <Filter Include="07. UI\KeyNavi">
       <UniqueIdentifier>{51bf51c4-8b8d-40dc-9142-162fabb24461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Manager\00. SharedTexture">
+      <UniqueIdentifier>{a62c7091-9edc-43af-b350-b5d5a0492f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Manager\01. PokemonData">
+      <UniqueIdentifier>{49e65149-9a89-4cf7-b5ab-50fbe302651d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle">
+      <UniqueIdentifier>{da002d15-2ba0-4999-b1c8-58bda8233ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Levels\03. Battle">
+      <UniqueIdentifier>{a1b486c3-6811-4b22-be00-ff1df523ef66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Levels\01. Logo">
+      <UniqueIdentifier>{fd463d1a-a634-4065-ba6b-42fa67af8b38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\Battle_Trainer">
+      <UniqueIdentifier>{d9d01ded-b9a8-491b-a067-6f514750bb23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\Battle_Pokemon">
+      <UniqueIdentifier>{ec2004a2-41ec-4d18-9d9d-95af020f02d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components">
+      <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\UI_Instance">
+      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. PartObject">
+      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. PartObject\Body">
+      <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,14 +150,8 @@
     <ClInclude Include="..\Public\Game_PKM_Tags.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Pokemon.h">
-      <Filter>02. GameActor\01. Pokemon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Move.h">
-      <Filter>03. GameLogic\00. Move</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Ability.h">
-      <Filter>03. GameLogic\01. Ability</Filter>
+    <ClInclude Include="..\Public\Battle_Pokemon.h">
+      <Filter>08. Battle\Battle_Pokemon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Struct.h">
       <Filter>99. Defines</Filter>
@@ -180,17 +186,11 @@
     <ClInclude Include="..\Public\Explosion.h">
       <Filter>80. Study\03. Particles</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SharedTexture_Manager.h">
-      <Filter>05. Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect_Star.h">
       <Filter>06. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
-      <Filter>04. Components\UI_Instance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Game_PresetTable.h">
-      <Filter>97. Game_API</Filter>
+      <Filter>03. Components\UI_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController.h">
       <Filter>07. UI\Controller</Filter>
@@ -209,6 +209,48 @@
     </ClInclude>
     <ClInclude Include="..\Public\UIController_Hub.h">
       <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SharedTexture_Manager.h">
+      <Filter>05. Manager\00. SharedTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PokemonData_Manager.h">
+      <Filter>05. Manager\01. PokemonData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Game_PresetTable.h">
+      <Filter>97. Game_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState.h">
+      <Filter>02. GameActor\00. Player_LGPE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Data.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Stream.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Session.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Manager.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Battle.h">
+      <Filter>00. Levels\03. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Game_LevelEntry.h">
+      <Filter>97. Game_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Trainer.h">
+      <Filter>08. Battle\Battle_Trainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Layout.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body.h">
+      <Filter>04. PartObject\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Pokemon.h">
+      <Filter>04. PartObject\Body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -242,14 +284,8 @@
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>80. Study\02. Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Pokemon.cpp">
-      <Filter>02. GameActor\01. Pokemon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Move.cpp">
-      <Filter>03. GameLogic\00. Move</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Ability.cpp">
-      <Filter>03. GameLogic\01. Ability</Filter>
+    <ClCompile Include="..\Private\Battle_Pokemon.cpp">
+      <Filter>08. Battle\Battle_Pokemon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
       <Filter>80. Study\02. Monster</Filter>
@@ -278,14 +314,11 @@
     <ClCompile Include="..\Private\Explosion.cpp">
       <Filter>80. Study\03. Particles</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SharedTexture_Manager.cpp">
-      <Filter>05. Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Effect_Star.cpp">
       <Filter>06. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
-      <Filter>04. Components\UI_Instance</Filter>
+      <Filter>03. Components\UI_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Game_PresetTable.cpp">
       <Filter>97. Game_API</Filter>
@@ -307,6 +340,39 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIController_Hub.cpp">
       <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SharedTexture_Manager.cpp">
+      <Filter>05. Manager\00. SharedTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PokemonData_Manager.cpp">
+      <Filter>05. Manager\01. PokemonData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState.cpp">
+      <Filter>02. GameActor\00. Player_LGPE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Data.cpp">
+      <Filter>08. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Stream.cpp">
+      <Filter>08. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Session.cpp">
+      <Filter>08. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Manager.cpp">
+      <Filter>08. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Battle.cpp">
+      <Filter>00. Levels\03. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Trainer.cpp">
+      <Filter>08. Battle\Battle_Trainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body.cpp">
+      <Filter>04. PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Pokemon.cpp">
+      <Filter>04. PartObject\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

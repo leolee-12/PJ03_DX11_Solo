@@ -2,6 +2,7 @@
 #include "EditInstance.h"
 
 #include "Game_API.h"
+#include "Battle_Data.h"
 #include "SharedTexture_Manager.h"
 
 #include "GameInstance.h"
@@ -43,6 +44,12 @@ HRESULT CEditorApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_SharedTextures(m_pDevice, m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(Ready_StaticTables()))
+		return E_FAIL;
+
+	if (FAILED(Ready_PersistentObjects(m_pDevice, m_pContext)))
 		return E_FAIL;
 
 	if (FAILED(Start_Level(m_pDevice, m_pContext, LEVEL::LOGO)))
@@ -134,6 +141,7 @@ void CEditorApp::Free()
 	m_pGameInstance->Set_SharedTextureBinder(nullptr);
 	CSharedTexture_Manager::DestroyInstance();
 
+	Cleanup_StaticTables();
 	UI_Cleanup();
 
 	m_pGameInstance->Release_Engine();

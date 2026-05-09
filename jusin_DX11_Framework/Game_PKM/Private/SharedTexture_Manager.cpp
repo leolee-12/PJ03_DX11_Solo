@@ -2,8 +2,6 @@
 #include "Texture.h"
 #include "Shader.h"
 
-NS_BEGIN(Game_PKM)
-
 IMPLEMENT_SINGLETON(CSharedTexture_Manager)
 
 CSharedTexture_Manager::CSharedTexture_Manager()
@@ -98,5 +96,3 @@ void CSharedTexture_Manager::Free()
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 }
-
-NS_END

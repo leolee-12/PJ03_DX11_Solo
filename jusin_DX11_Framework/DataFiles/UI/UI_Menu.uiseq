@@ -452,7 +452,7 @@
           ]
         },
         "shader": {
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
@@ -549,7 +549,7 @@
           ]
         },
         "shader": {
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
@@ -646,7 +646,7 @@
           ]
         },
         "shader": {
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
@@ -735,7 +735,7 @@
           ]
         },
         "shader": {
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
@@ -832,7 +832,7 @@
           ]
         },
         "shader": {
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {
@@ -929,7 +929,7 @@
           ]
         },
         "shader": {
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Shader_UI_Button_Glow"
         },
         "texture": {

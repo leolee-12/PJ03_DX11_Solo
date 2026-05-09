@@ -105,6 +105,59 @@ namespace ObjFlag
 #pragma warning(disable : 4251)
 
 #ifdef _DEBUG
+#include <iostream>
+#include <io.h>
+#include <fcntl.h>
+
+inline void OpenDebugConsole()
+{
+	AllocConsole();
+
+	FILE* fp = nullptr;
+
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONOUT$", "w", stderr);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+
+	_setmode(_fileno(stdout), _O_U16TEXT);
+	_setmode(_fileno(stderr), _O_U16TEXT);
+
+	std::ios::sync_with_stdio();
+
+	SetConsoleTitle(L"Debug Console");
+
+	std::wcout << L"[Debug Console Opened]\n";
+}
+
+inline void DebugPrintW(const wchar_t* text)
+{
+	DWORD written = 0;
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	if (hConsole != INVALID_HANDLE_VALUE && hConsole != nullptr)
+	{
+		WriteConsoleW(
+			hConsole,
+			text,
+			static_cast<DWORD>(wcslen(text)),
+			&written,
+			nullptr
+		);
+	}
+
+	wcout << '\n';
+}
+
+inline void CloseDebugConsole()
+{
+	FreeConsole();
+}
+
+#define DBG_LOG(msg) std::wcout << msg << std::endl
+#else
+inline void OpenDebugConsole() {}
+inline void CloseDebugConsole() {}
+#define DBG_LOG(msg)
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>

@@ -86,6 +86,32 @@ inline constexpr TYPE RemoveFlag(TYPE value, TYPE flag) noexcept
 	return static_cast<TYPE>(static_cast<uint32_t>(value) & ~static_cast<uint32_t>(flag));
 }
 
+enum class MOVE_CATEGORY : _ubyte { PHYSICAL, SPECIAL, STATUS, END };
+
+enum class STATUS_CONDITION : _ubyte { NONE, POISON, PARALYSIS, BURN, SLEEP, FROZEN, BAD_POISON, END };
+
+enum class BATTLE_RULE : _ubyte { WILD_SINGLE, TRAINER_SINGLE, TRAINER_DOUBLE, CUTSCENE, TUTORIAL, END };
+
+enum class STAT : _ubyte { HP, ATK, DEF, SPATK, SPDEF, SPD, END };
+
+enum class NATURE : _ubyte {HARDY,		LONELY,		BRAVE,		ADAMANT,	NAUGHTY,
+							BOLD,		DOCILE,		RELAXED,	IMPISH,		LAX,
+							TIMID,		HASTY,		SERIOUS,	JOLLY,		NAIVE,
+							MODEST,		MILD,		QUIET,		BASHFUL,	RASH,
+							CALM,		GENTLE,		SASSY,		CAREFUL,	QUIRKY,		END };
+
+enum class TRAINER_AI : _ubyte { RANDOM, BASIC, STRATEGIC, SCRIPTED, END };
+
+enum class ENVIRONMENT_TYPE : _ubyte { PLAIN, GRASS, FOREST, CAVE, WATER, DESERT, SNOW, URBAN, END };
+
+enum class WEATHER_TYPE : _ubyte { NONE, SUNNY, RAIN, SAND, HAIL, FOG, END };
+
+enum class TERRAIN_TYPE : _ubyte { NONE, GRASS_FIELD, ELECTRIC_FIELD, PSYCHIC_FIELD, MISTY_FIELD, END };
+
+enum class ACTION_TYPE : _ubyte { NONE, USE_MOVE, SWITCH, USE_ITEM, RUN, END };
+
+enum class BATTLE_PHASE : _ubyte { INTRO, INPUT_PLAYER, INPUT_OPPONENT, RESOLVE_ORDER, RESOLVE_ACTION_1, RESOLVE_ACTION_2, RESOLVE_END_TURN, CHECK_END, OUTRO, DONE, END };
+
 NS_END
 
 #endif // Game_PKM_Enum_h__

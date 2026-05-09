@@ -22,10 +22,16 @@ HRESULT CPrototype_Manager::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag
 {
 	lock_guard<mutex> lock(m_Mutex);
 
-	if (nullptr == m_pPrototypes ||
-		iLevelIndex >= m_iNumLevels ||
-		nullptr != Find_Prototype_NoLock(iLevelIndex, strProtoTag))
+	if (nullptr == pPrototype ||
+		nullptr == m_pPrototypes ||
+		iLevelIndex >= m_iNumLevels)
 		return E_FAIL;
+		
+	if (nullptr != Find_Prototype_NoLock(iLevelIndex, strProtoTag))
+	{
+		Safe_Release(pPrototype);
+		return S_FALSE;
+	}
 
 	m_pPrototypes[iLevelIndex].emplace(strProtoTag, pPrototype);
 

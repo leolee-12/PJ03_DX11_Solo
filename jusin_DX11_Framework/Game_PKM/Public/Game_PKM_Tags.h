@@ -41,6 +41,14 @@ WNAME_TAG(PROTO_COM_TEX_GET_LINE2_BACK, L"Prototype_Component_Texture_Get_Line2_
 WNAME_TAG(PROTO_COM_TEX_GET_TEXT_LV, L"Prototype_Component_Texture_Get_Text_LV");
 WNAME_TAG(PROTO_COM_TEX_GET_TEXT_NUM, L"Prototype_Component_Texture_Get_Text_Number");
 
+WNAME_TAG(PROTO_COM_TEX_BTL_BTN_FIGHT, L"Prototype_Component_Texture_Battle_Button_Fight");
+WNAME_TAG(PROTO_COM_TEX_BTL_BTN_POKE, L"Prototype_Component_Texture_Battle_Button_Poke");
+WNAME_TAG(PROTO_COM_TEX_BTL_BTN_BAG, L"Prototype_Component_Texture_Battle_Button_Bag");
+WNAME_TAG(PROTO_COM_TEX_BTL_PLAYERPLATE, L"Prototype_Component_Texture_Battle_PlayerPlate");
+WNAME_TAG(PROTO_COM_TEX_BTL_ENEMYPLATE, L"Prototype_Component_Texture_Battle_EnemyPlate");
+WNAME_TAG(PROTO_COM_TEX_BTL_BALLPLATE, L"Prototype_Component_Texture_Battle_BallPlate");
+WNAME_TAG(PROTO_COM_TEX_BTL_BALLICON, L"Prototype_Component_Texture_Battle_BallIcon");
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
@@ -74,8 +82,11 @@ WNAME_TAG(PROTO_COM_MODEL_PM0025_00, L"Prototype_Component_Model_ÇÇÄ«Ãò");
 
 WNAME_TAG(PROTO_COM_MODEL_HERO, L"Prototype_Component_Model_Hero");
 
-WNAME_TAG(PROTO_COM_MODEL_TOWN01, L"Prototype_Component_Model_Town01");
-WNAME_TAG(PROTO_COM_MODEL_ROAD01, L"Prototype_Component_Model_Road01");
+WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN01, L"Prototype_Component_Model_Map_Town01");
+WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN02, L"Prototype_Component_Model_Map_Town02");
+WNAME_TAG(PROTO_COM_MODEL_MAP_ROAD01, L"Prototype_Component_Model_Map_Road01");
+
+WNAME_TAG(PROTO_COM_MODEL_BMAP_TOWN, L"Prototype_Component_Model_BMap_Town");
 
 // Navigation & Collider
 WNAME_TAG(PROTO_COM_NAVIGATION_TERRAIN, L"Prototype_Component_Navigation_Terrain");
@@ -85,6 +96,7 @@ WNAME_TAG(PROTO_COM_COLLIDER_OBB, L"Prototype_Component_Collider_OBB");
 WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
 
 // Layer
+WNAME_TAG(LAYER_PERSISTENT, L"Layer_Persistent");
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
 WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
 WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
@@ -106,14 +118,23 @@ WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
+WNAME_TAG(PROTO_OBJ_BATTLE_TRAINER, L"Prototype_GameObject_Battle_Trainer");
+
 WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
 WNAME_TAG(PROTO_BTN_LAYERED_GET, L"Prototype_UIButton_Layered_Get");
+WNAME_TAG(PROTO_BTN_LAYERED_BTL_COMMAND, L"Prototype_UIButton_Layered_Battle_Command");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
+WNAME_TAG(PROTO_OBJ_PLAYER_STATE, L"Prototype_GameObject_PlayerState");
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
-WNAME_TAG(PROTO_OBJ_TOWN01, L"Prototype_MapObject_Town01");
-WNAME_TAG(PROTO_OBJ_ROAD01, L"Prototype_MapObject_Road01");
+WNAME_TAG(PROTO_OBJ_BODY_POKEMON, L"Prototype_GameObject_Body_Pokemon");
+
+WNAME_TAG(PROTO_MAP_TOWN01, L"Prototype_MapObject_Town01");
+WNAME_TAG(PROTO_MAP_TOWN02, L"Prototype_MapObject_Town02");
+WNAME_TAG(PROTO_MAP_ROAD01, L"Prototype_MapObject_Road01");
+
+WNAME_TAG(PROTO_BMAP_TOWN, L"Prototype_BattleMap_Town");
 
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");

@@ -4,20 +4,26 @@
 
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
+#include "Level_Battle.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOADING);
 NS_END
 
-CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
+CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID, const LEVEL_ENTRY_DESC* pEntryDesc)
 	: CLevel{ pDevice, pContext }
-	, m_eNextLevelID{ eNextLevelID }
 {
+	if (nullptr != pEntryDesc)
+		m_tEntryDesc = *pEntryDesc;
+	else
+		m_tEntryDesc.Clear();
+
+	m_tEntryDesc.eNextLevelID = eNextLevelID;
 }
 
 HRESULT CLevel_Loading::Initialize()
 {
-	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_eNextLevelID);
+	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_tEntryDesc.eNextLevelID);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
@@ -26,49 +32,53 @@ HRESULT CLevel_Loading::Initialize()
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->Key_Down(DIK_SPACE) && m_pLoader->Is_Finished())
-    {
-        if (m_pLoader->Has_Error())
-        {
-            MSG_BOX("Loading failed");
-            return;
-        }
+	if (m_pGameInstance->Key_Down(DIK_SPACE) && m_pLoader->Is_Finished())
+	{
+		if (m_pLoader->Has_Error())
+		{
+			MSG_BOX("Loading failed");
+			return;
+		}
 
-        CLevel* pNextLevel = { nullptr };
+		CLevel* pNextLevel = { nullptr };
 
-        switch (m_eNextLevelID)
-        {
-        case LEVEL::LOGO:
-            pNextLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
-            break;
-        case LEVEL::GAMEPLAY:
-            pNextLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
-            break;
-        }
+		switch (m_tEntryDesc.eNextLevelID)
+		{
+		case LEVEL::LOGO:
+			pNextLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL::GAMEPLAY:
+			pNextLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL::BATTLE:
+			pNextLevel = CLevel_Battle::Create(m_pDevice, m_pContext, &m_tEntryDesc);
+			break;
+		}
 
-        if (nullptr == pNextLevel)
-        {
-            MSG_BOX("Failed to Changed");
-            return;
-        }
+		if (nullptr == pNextLevel)
+		{
+			MSG_BOX("Failed to Changed");
+			return;
+		}
 
-        if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(m_eNextLevelID), pNextLevel)))
-            return;
-    }
+		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(m_tEntryDesc.eNextLevelID), pNextLevel)))
+			return;
+	}
 }
 
 HRESULT CLevel_Loading::Render()
 {
 #ifdef _DEBUG
-    m_pLoader->Show();
+	m_pLoader->Show();
 #endif
 
 	return S_OK;
 }
 
-CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
+CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
+	LEVEL eNextLevelID, const LEVEL_ENTRY_DESC* pEntryDesc)
 {
-	CLevel_Loading* pInstance = new CLevel_Loading(pDevice, pContext, eNextLevelID);
+	CLevel_Loading* pInstance = new CLevel_Loading(pDevice, pContext, eNextLevelID, pEntryDesc);
 
 	if (FAILED(pInstance->Initialize()))
 	{
@@ -83,5 +93,5 @@ void CLevel_Loading::Free()
 {
 	__super::Free();
 
-    Safe_Release(m_pLoader);
+	Safe_Release(m_pLoader);
 }

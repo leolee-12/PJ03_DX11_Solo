@@ -19,20 +19,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Public\Ability.h" />
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\Battle_Layout.h" />
+    <ClInclude Include="..\Public\Battle_Manager.h" />
+    <ClInclude Include="..\Public\Battle_Trainer.h" />
+    <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
+    <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
     <ClInclude Include="..\Public\Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\Game_API.h" />
+    <ClInclude Include="..\Public\Battle_Data.h" />
+    <ClInclude Include="..\Public\Battle_Session.h" />
+    <ClInclude Include="..\Public\Battle_Stream.h" />
+    <ClInclude Include="..\Public\Game_LevelEntry.h" />
     <ClInclude Include="..\Public\Game_PKM_Defines.h" />
     <ClInclude Include="..\Public\Game_PKM_Enum.h" />
     <ClInclude Include="..\Public\Game_PKM_Tags.h" />
     <ClInclude Include="..\Public\Game_PKM_Struct.h" />
     <ClInclude Include="..\Public\Game_PresetTable.h" />
+    <ClInclude Include="..\Public\Level_Battle.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -40,10 +49,11 @@
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Menu.h" />
     <ClInclude Include="..\Public\Monster.h" />
-    <ClInclude Include="..\Public\Move.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\PlayerState.h" />
     <ClInclude Include="..\Public\Player_LGPE.h" />
-    <ClInclude Include="..\Public\Pokemon.h" />
+    <ClInclude Include="..\Public\Battle_Pokemon.h" />
+    <ClInclude Include="..\Public\PokemonData_Manager.h" />
     <ClInclude Include="..\Public\SharedTexture_Manager.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Snow.h" />
@@ -57,16 +67,23 @@
     <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\Ability.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\Battle_Manager.cpp" />
+    <ClCompile Include="..\Private\Battle_Trainer.cpp" />
+    <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
+    <ClCompile Include="..\Private\Body_Pokemon.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
     <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\Game_API.cpp" />
+    <ClCompile Include="..\Private\Battle_Data.cpp" />
+    <ClCompile Include="..\Private\Battle_Session.cpp" />
+    <ClCompile Include="..\Private\Battle_Stream.cpp" />
     <ClCompile Include="..\Private\Game_PresetTable.cpp" />
+    <ClCompile Include="..\Private\Level_Battle.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
@@ -74,10 +91,11 @@
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Menu.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
-    <ClCompile Include="..\Private\Move.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\PlayerState.cpp" />
     <ClCompile Include="..\Private\Player_LGPE.cpp" />
-    <ClCompile Include="..\Private\Pokemon.cpp" />
+    <ClCompile Include="..\Private\Battle_Pokemon.cpp" />
+    <ClCompile Include="..\Private\PokemonData_Manager.cpp" />
     <ClCompile Include="..\Private\SharedTexture_Manager.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Snow.cpp" />

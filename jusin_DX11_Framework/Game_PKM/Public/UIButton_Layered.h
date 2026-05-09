@@ -19,6 +19,8 @@ public:
 
 		_float fGlowPulseSpeed{ 6.f };
 		_float fGlowFadeSpeed{ 8.f };
+		
+		_uint iShaderPass{ 0u };
 	};
 
 protected:
@@ -55,6 +57,8 @@ private:
 	_float m_fGlowFadeSpeed{ 8.f };
 	_float m_fGlowPhase{ 0.f };
 	_float m_fGlowAmount{ 0.f };
+
+	_uint m_iShaderPass{ 0u };
 
 private:
 	virtual HRESULT Ready_Components() override;

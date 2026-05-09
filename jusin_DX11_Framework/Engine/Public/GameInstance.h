@@ -99,6 +99,7 @@ public:
 	const LIGHT_DESC* Get_LightDesc(_uint iIndex);
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT Render_Light(CShader* pShader, CVIBuffer_Rect* pVIBuffer);
+	void Clear_Lights();
 #pragma endregion
 
 #pragma region FONT_MANAGER
