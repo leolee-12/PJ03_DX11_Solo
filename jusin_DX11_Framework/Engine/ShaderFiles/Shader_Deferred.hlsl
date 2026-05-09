@@ -2,6 +2,7 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_ViewInvMatrix, g_ProjInvMatrix;
+float4x4 g_SLViewMatrix, g_SLProjMatrix;
 
 texture2D g_Texture;
 texture2D g_TexNorm;
@@ -9,6 +10,7 @@ texture2D g_TexDepth;
 texture2D g_TexDiff;
 texture2D g_TexSpec;
 texture2D g_TexShade;
+texture2D g_TexLightDepth;
 
 float g_fFarZ;
 vector g_vCamPos;
@@ -23,6 +25,8 @@ vector g_vLightSpec;
 
 vector g_vMtrlAmbt = 1.f;
 vector g_vMtrlSpec = 1.f;
+
+float g_fShadowFarZ;
 
 
 
@@ -152,14 +156,68 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
 	PS_OUT_BACKBUFFER Out;
 
+	// Diffuse + Shade -> 최종 색상 결정
 	vector vDiffuse = g_TexDiff.Sample(LinearSampler, In.vTex);
 	if (0.5f > vDiffuse.a)
 		discard;
 
 	vector vShade = g_TexShade.Sample(LinearSampler, In.vTex);
 	vector vSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
-
 	Out.vBackBuffer = vDiffuse * vShade + vSpec;
+
+	// 그림자 반영
+	vector vDepthDesc = g_TexDepth.Sample(LinearSampler, In.vTex);
+	float fViewZ = vDepthDesc.y * g_fFarZ;
+
+	vector vWorldPos;
+
+	// - 투영 스페이스 위치
+	vWorldPos.x = In.vTex.x * 2.f - 1.f;
+	vWorldPos.y = In.vTex.y * -2.f + 1.f;
+	vWorldPos.z = vDepthDesc.x;
+	vWorldPos.w = 1.f;
+
+	// - 뷰 스페이스 위치
+	vWorldPos *= fViewZ;
+	vWorldPos = mul(vWorldPos, g_ProjInvMatrix);
+	
+	// - 월드 스페이스 위치 -> 광원 시점 Clip 스페이스
+	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
+	vWorldPos = mul(vWorldPos, g_SLViewMatrix);
+	vWorldPos = mul(vWorldPos, g_SLProjMatrix);
+
+	// 직교투영: w=1, NDC z 그대로 사용
+	float fLightNDCZ = vWorldPos.z / vWorldPos.w;
+
+	float2 vTexcoord;
+	vTexcoord.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;	/* -1 ~ 1 => 0 ~ 1 */
+	vTexcoord.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;   /* 1 ~ -1 => 0 ~ 1 */
+
+	// 그림자 맵 텍셀 크기
+	float fW, fH;
+	g_TexLightDepth.GetDimensions(fW, fH);
+	float2 vTexelSize = float2(1.f / fW, 1.f / fH);
+
+	// 3x3 PCF (각 탭은 하드웨어 2x2 PCF → 실효 4x4)
+	float fLitFactor = 0.f;
+	[unroll]
+		for (int y = -1; y <= 1; ++y)
+		{
+			[unroll]
+			for (int x = -1; x <= 1; ++x)
+			{
+				float2 vOffset = float2(x, y) * vTexelSize;
+				fLitFactor += g_TexLightDepth.SampleCmpLevelZero(
+					ShadowCompareSampler, vTexcoord + vOffset, fLightNDCZ - 0.001f).r;
+			}
+		}
+	fLitFactor /= 9.f;
+
+	// Contrast remap: 깊은 그림자/완전 빛은 클램프, 경계만 S-커브로 부드럽게
+	fLitFactor = smoothstep(0.2f, 0.8f, fLitFactor);
+
+	Out.vBackBuffer = Out.vBackBuffer * lerp(0.5f, 1.0f, fLitFactor);
+
 	return Out;
 }
 

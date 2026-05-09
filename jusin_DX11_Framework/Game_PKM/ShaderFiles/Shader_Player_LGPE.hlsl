@@ -4,6 +4,7 @@ float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_WITMatrix;
 vector g_vCamPos;
 float g_fFarZ;
+float g_fShadowFarZ;
 
 // 재질
 texture2D g_TexDiff;
@@ -172,9 +173,23 @@ PS_OUT PS_DSAAA(PS_IN In)	// 2번 패스
 	//return Out;
 }
 
+struct PS_OUT_SHADOW
+{
+	float4 vLightDepth : SV_TARGET0;
+};
+
+PS_OUT_SHADOW PS_SHADOW(PS_IN In)
+{
+	PS_OUT_SHADOW Out;
+
+	Out.vLightDepth = vector(In.vProjPos.z / In.vProjPos.w, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
-	pass Pass_DS	// 0. BAG, BOTTOMS, CAP
+	pass Pass_DS		// 0. BAG, BOTTOMS, CAP
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -184,7 +199,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DS();
 	}
-	pass Pass_DSEL	// 1. R_EYE, L_EYE
+	pass Pass_DSEL		// 1. R_EYE, L_EYE
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -194,7 +209,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DSEL();
 	}
-	pass Pass_DSAAA	// 2. SKIN, HAIR, SHOES, TOPS
+	pass Pass_DSAAA		// 2. SKIN, HAIR, SHOES, TOPS
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -204,5 +219,14 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DSAAA();
 	}
+	pass Pass_Shadow	// 3. Shadow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SHADOW();
+	}
 };

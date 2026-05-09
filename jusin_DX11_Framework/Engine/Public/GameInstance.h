@@ -111,7 +111,7 @@ public:
 #pragma region TARGET_MANAGER
 	HRESULT Add_RenderTarget(WNameID strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(WNameID strMRTTag, WNameID strTargetTag);
-	HRESULT Begin_MRT(WNameID strMRTTag);
+	HRESULT Begin_MRT(WNameID strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT End_MRT();
 	HRESULT Bind_RT_ShaderResource(WNameID strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RT_Resource(WNameID strTargetTag, ID3D11Texture2D* pOut);
@@ -124,6 +124,12 @@ public:
 
 #pragma region PICKING
 	_bool Picking(_float4& Out);
+#pragma endregion
+
+#pragma region SHADOW
+	const _float4x4* Get_Shadow_Transform(D3DTS eState) const;
+	HRESULT Set_ShadowLight(const SHADOW_LIGHT_DESC& ShadowDesc);
+	HRESULT Bind_Shadow_FarZ(CShader* pShader);
 #pragma endregion
 
 #pragma region SHARED_TEXTURE_BINDER
@@ -158,6 +164,7 @@ private:
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 	class CPicking*				m_pPicking = { nullptr };
+	class CShadow*				m_pShadow = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
 	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };

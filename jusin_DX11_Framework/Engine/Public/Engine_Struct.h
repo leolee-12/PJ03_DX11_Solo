@@ -27,6 +27,12 @@ namespace Engine
 		float fRange;
 	};
 
+	struct SHADOW_LIGHT_DESC
+	{
+		XMFLOAT4 vEye, vAt;
+		float fFovy, fNear, fFar;
+	};
+
 	struct SCALING_KEY
 	{
 		XMFLOAT3 vScale;

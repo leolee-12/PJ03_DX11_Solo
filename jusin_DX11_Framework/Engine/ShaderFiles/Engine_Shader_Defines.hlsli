@@ -1,3 +1,10 @@
+sampler ClampSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = clamp;
+    AddressV = clamp;
+};
+
 sampler LinearSampler = sampler_state
 {
     filter = min_mag_mip_linear;
@@ -17,6 +24,14 @@ sampler MirrorSampler = sampler_state
     filter = min_mag_mip_linear;
     AddressU = mirror;
     AddressV = mirror;
+};
+
+SamplerComparisonState ShadowCompareSampler
+{
+    Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+    ComparisonFunc = LESS_EQUAL; // refDepth <= storedDepth ¡æ "±×¸²ÀÚ ¾Æ´Ô(=ºû ¹ÞÀ½)"
 };
 
 RasterizerState RS_Wireframe

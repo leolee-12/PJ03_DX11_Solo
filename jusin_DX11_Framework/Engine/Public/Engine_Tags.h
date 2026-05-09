@@ -24,11 +24,13 @@ namespace Engine
 	WNAME_TAG(TARGET_SPECULAR, L"Target_Specular");
 	WNAME_TAG(TARGET_SHADE, L"Target_Shade");
 	WNAME_TAG(TARGET_PICKPOS, L"Target_PickPos");
+	WNAME_TAG(TARGET_LIGHTDEPTH, L"Target_LightDepth");
 
 
 
 	WNAME_TAG(MRT_GAMEOBJECTS, L"MRT_GameObjects");
 	WNAME_TAG(MRT_LIGHTACC, L"MRT_LightAcc");
+	WNAME_TAG(MRT_SHADOWOBJECTS, L"MRT_ShadowObjects");
 
 
 

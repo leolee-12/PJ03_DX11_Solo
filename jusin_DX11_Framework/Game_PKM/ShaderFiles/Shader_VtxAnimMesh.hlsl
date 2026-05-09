@@ -18,7 +18,6 @@ struct VS_IN
 	float3 vPos : POSITION;
 	float3 vNorm : NORMAL;
 	float2 vTex : TEXCOORD0;
-
 	float3 vTangent : TANGENT;
 	float3 vBinormal : BINORMAL;
 
@@ -33,6 +32,8 @@ struct VS_OUT
 	float2 vTex : TEXCOORD0;
 	float4 vWorldPos : TEXCOORD1;
 	float4 vProjPos : TEXCOORD2;
+	float4 vTangent : TANGENT;
+	float4 vBinormal : BINORMAL;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -48,16 +49,21 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	float4 vPosition = mul(float4(In.vPos, 1.f), BoneMatrix);
 	float3 vNormal = mul(float4(In.vNorm, 0.f), BoneMatrix).xyz;
+	float3 vTangent = mul(float4(In.vTangent, 0.f), BoneMatrix).xyz;
+	float3 vBinormal = mul(float4(In.vBinormal, 0.f), BoneMatrix).xyz;
 
 	float4x4 matWV, matWVP;
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 	
 	Out.vPos = mul(vPosition, matWVP);
-	Out.vNorm = float4(normalize(mul(vNormal, (float3x3)g_WITMatrix)), 0.f);
 	Out.vTex = In.vTex;
 	Out.vWorldPos = mul(vPosition, g_WorldMatrix);
 	Out.vProjPos = Out.vPos;
+
+	Out.vNorm = float4(normalize(mul(vNormal, (float3x3)g_WITMatrix)), 0.f);
+	Out.vTangent = float4(normalize(mul(vNormal, (float3x3)g_WITMatrix)), 0.f);
+	Out.vBinormal = float4(normalize(mul(vNormal, (float3x3)g_WITMatrix)), 0.f);
 	return Out;
 }
 
@@ -68,6 +74,8 @@ struct PS_IN
 	float2 vTex : TEXCOORD0;
 	float4 vWorldPos : TEXCOORD1;
 	float4 vProjPos : TEXCOORD2;
+	float4 vTangent : TANGENT;
+	float4 vBinormal : BINORMAL;
 };
 
 struct PS_OUT
@@ -85,9 +93,17 @@ PS_OUT PS_MAIN(PS_IN In)
 		discard;
 
 	vector vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex);
+	float3 vNormal = vNormDesc.xyz * 2.f - 1.f;
+
+	float3 T = normalize(In.vTangent.xyz);
+	float3 B = normalize(In.vBinormal.xyz) * -1.f;
+	float3 N = normalize(In.vNorm.xyz);
+	float3x3 WorldMatrix = float3x3(T, B, N);
+
+	vNormal = normalize(mul(vNormal, WorldMatrix));
 
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
-	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vNorm = vector(vNormal.xyz * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	return Out;
 }

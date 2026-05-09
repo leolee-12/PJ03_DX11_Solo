@@ -151,6 +151,9 @@
     <Filter Include="12. Picking">
       <UniqueIdentifier>{2f22d88a-fc08-4eee-bf8b-10e9c12b8359}</UniqueIdentifier>
     </Filter>
+    <Filter Include="13. Shadow">
+      <UniqueIdentifier>{ba50ce59-4fd3-43bc-9c27-489ab42354fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -369,6 +372,9 @@
     <ClInclude Include="..\Public\Picking.h">
       <Filter>12. Picking</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shadow.h">
+      <Filter>13. Shadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -556,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Picking.cpp">
       <Filter>12. Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shadow.cpp">
+      <Filter>13. Shadow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

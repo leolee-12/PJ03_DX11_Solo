@@ -58,6 +58,9 @@ using namespace std;
 
 namespace Engine
 {
+	inline constexpr _uint g_iMaxWidth = 8192;
+	inline constexpr _uint g_iMaxHeight = 4608;
+
 	inline constexpr _uint INVALID_INDEX = static_cast<_uint>(-1);
 
 	inline constexpr _float4 g_kBlack	= { 0.f, 0.f, 0.f, 1.f };

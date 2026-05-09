@@ -36,6 +36,7 @@ private:
 	class CShader*				m_pShader = { nullptr };
 	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
 	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
+	ID3D11DepthStencilView*		m_pMaxDSV = { nullptr };
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponents;
@@ -43,12 +44,17 @@ private:
 
 private:
 	HRESULT Render_Priority();
+	HRESULT Render_Shadow();
 	HRESULT Render_NonBlend();
 	HRESULT Render_Lights();
 	HRESULT Render_Combined();
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
+
+private:
+	HRESULT Ready_DepthStencil_Buffer();
+	HRESULT Change_ViewportDesc(_uint iWidth, _uint iHeight);
 
 #ifdef _DEBUG
 private:

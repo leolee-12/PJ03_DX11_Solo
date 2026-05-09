@@ -11,6 +11,7 @@
 #include "Target_Manager.h"
 #include "Sound_Manager.h"
 #include "Picking.h"
+#include "Shadow.h"
 
 #include "SharedTextureBinder.h"
 
@@ -85,6 +86,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pPicking)
 		return E_FAIL;
 
+	m_pShadow = CShadow::Create();
+	if (nullptr == m_pShadow)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -145,6 +150,7 @@ void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pMainCamera);
 
+	Safe_Release(m_pShadow);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pLight_Manager);
@@ -427,9 +433,9 @@ HRESULT CGameInstance::Add_MRT(WNameID strMRTTag, WNameID strTargetTag)
 	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
 }
 
-HRESULT CGameInstance::Begin_MRT(WNameID strMRTTag)
+HRESULT CGameInstance::Begin_MRT(WNameID strMRTTag, ID3D11DepthStencilView* pDSV)
 {
-	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV);
 }
 
 HRESULT CGameInstance::End_MRT()
@@ -469,6 +475,23 @@ HRESULT CGameInstance::Render_RT_Debug(WNameID strMRTTag, CShader* pShader, CVIB
 _bool CGameInstance::Picking(_float4& Out)
 {
 	return m_pPicking->Picking(Out);
+}
+#pragma endregion
+
+#pragma region SHADOW
+const _float4x4* CGameInstance::Get_Shadow_Transform(D3DTS eState) const
+{
+	return m_pShadow->Get_Transform(eState);
+}
+
+HRESULT CGameInstance::Set_ShadowLight(const SHADOW_LIGHT_DESC& ShadowDesc)
+{
+	return m_pShadow->Set_ShadowLight(ShadowDesc);
+}
+
+HRESULT CGameInstance::Bind_Shadow_FarZ(CShader* pShader)
+{
+	return m_pShadow->Bind_FarZ(pShader);
 }
 #pragma endregion
 

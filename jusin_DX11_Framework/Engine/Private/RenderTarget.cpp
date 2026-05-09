@@ -70,7 +70,7 @@ HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float f
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(fSizeX, fSizeY, 1.f));
 
-	_float2		vViewportDesc = CGameInstance::GetInstance()->Get_ViewportSize();
+	_float2 vViewportDesc = CGameInstance::GetInstance()->Get_ViewportSize();
 
 	m_WorldMatrix._41 = fX - vViewportDesc.x * 0.5f;
 	m_WorldMatrix._42 = -fY + vViewportDesc.y * 0.5f;

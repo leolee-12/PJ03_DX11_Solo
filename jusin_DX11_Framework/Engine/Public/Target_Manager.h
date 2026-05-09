@@ -12,7 +12,7 @@ private:
 public:
 	HRESULT Add_RenderTarget(WNameID strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(WNameID strMRTTag, WNameID strTargetTag);
-	HRESULT Begin_MRT(WNameID strMRTTag);
+	HRESULT Begin_MRT(WNameID strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT End_MRT();
 	HRESULT Bind_ShaderResource(WNameID strTargetTag, class CShader* pShader, const _char* pConstName);
 	HRESULT Copy_Resource(WNameID strTargetTag, ID3D11Texture2D* pOut);
