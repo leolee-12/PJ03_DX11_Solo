@@ -43,7 +43,7 @@ public:
 	void Set_ParentUI(CUIObject* pParent) { m_pParentUI = pParent; }
 	void Set_Visible(_bool b) { m_bVisible = b; }
 	void Set_DesignCanvasSize(_float fWidth, _float fHeight);
-	void Set_ActualViewportSize(_float fWidth, _float fHeight);
+	void Set_FixedViewportSize(_float fWidth, _float fHeight);
 	void Set_ScalePolicy(UI_SCALE_POLICY ePolicy);
 
 	_float2 Get_Center() const { return _float2(m_fResolvedCenterX, m_fResolvedCenterY); }
@@ -77,11 +77,10 @@ public:
 	virtual HRESULT Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue);
 	
 protected:
-	_float2 m_vRefSize{};
 	_float2 m_vActualViewportSize{};
 	UICANVAS_DESC m_tCanvasDesc{};
 	UICANVAS_TRANSFORM m_tCanvasTransform{};
-	_bool m_bUseExplicitViewportSize = { false };
+	_bool m_bUseFixedViewport = { false };
 	_float4x4 m_TransformMatrices[ETOUI(D3DTS::END)] = {};
 
 	_float m_fCenterX{}, m_fCenterY{};					// 로컬

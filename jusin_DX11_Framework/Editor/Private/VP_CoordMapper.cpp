@@ -31,9 +31,9 @@ ImVec2 CVP_CoordMapper::ScreenToDoc(const ImVec2& vScreen) const
 		? (vScreen.y - m_vDisplayPos.y) * (m_vRTSize.y / m_vDisplaySize.y)
 		: 0.f;
 
-	// RT → Doc (canvas 변환)
-	const _float2 vDoc = UICanvasMath::Render_To_DesignPoint(
-		_float2(fRTx, fRTy), m_tTransform, m_ePolicy);
+	// Viewport → Doc(canvas 변환)
+		const _float2 vDoc = UICanvasMath::Viewport_To_DesignPoint(
+			_float2(fRTx, fRTy), m_tTransform, m_ePolicy);
 
 	return ImVec2(vDoc.x, vDoc.y);
 }

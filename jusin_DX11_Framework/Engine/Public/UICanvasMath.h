@@ -24,9 +24,9 @@ namespace UICanvasMath
 		const UICANVAS_TRANSFORM& tTransform,
 		UI_SCALE_POLICY ePolicy);
 
-	// Render(actual viewport) ÁÂÇ¥ -> Design ÁÂÇ¥
-	ENGINE_DLL _float2 Render_To_DesignPoint(
-		const _float2& vRenderPoint,
+	// Viewport(actual viewport) ÁÂÇ¥ -> Design ÁÂÇ¥
+	ENGINE_DLL _float2 Viewport_To_DesignPoint(
+		const _float2& vViewportPoint,
 		const UICANVAS_TRANSFORM& tTransform,
 		UI_SCALE_POLICY ePolicy);
 

@@ -145,8 +145,8 @@ HRESULT CUIProgressBar::Render_Rect(const _float4& rc, CTexture* pTexture, _uint
 	const _float fCenterY = rc.y + rc.w * 0.5f;
 
 	const _float2 vActualSize = Get_ActualViewportSize();
-	const _float fActualWidth = (vActualSize.x > 0.f) ? vActualSize.x : m_vRefSize.x;
-	const _float fActualHeight = (vActualSize.y > 0.f) ? vActualSize.y : m_vRefSize.y;
+	const _float fActualWidth = (vActualSize.x > 0.f) ? vActualSize.x : m_tCanvasDesc.fDesignWidth;
+	const _float fActualHeight = (vActualSize.y > 0.f) ? vActualSize.y : m_tCanvasDesc.fDesignHeight;
 
 	_float4x4 matWorld;
 	XMStoreFloat4x4(&matWorld,

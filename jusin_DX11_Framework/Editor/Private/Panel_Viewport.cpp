@@ -74,7 +74,12 @@ HRESULT CPanel_Viewport::Initialize()
 		m_vDocCanvasSize = vRTSize;
 	}
 
-	m_pRenderTarget = CVP_RenderTarget::Create(m_pDevice, m_pContext, vRTSize);
+	// Panel RT 는 design 크기로 고정. (클라이언트 실행 시의 게임 화면과 동일하게 맞추기 위함)
+	// doc 이 비정상이면 GameInstance viewport 크기로 fallback.
+	const ImVec2 vRTInit =
+		(m_vDocCanvasSize.x >= 1.f && m_vDocCanvasSize.y >= 1.f) ? m_vDocCanvasSize : vRTSize;
+
+	m_pRenderTarget = CVP_RenderTarget::Create(m_pDevice, m_pContext, vRTInit);
 	if (nullptr == m_pRenderTarget)
 		return E_FAIL;
 
@@ -111,6 +116,11 @@ void CPanel_Viewport::Update(_float fTimeDelta)
 	if (m_pRenderTarget)
 	{
 		const ImVec2& vCur = m_pRenderTarget->Get_Size();
+
+		// RT 는 design 크기로 유지. doc 이 비정상이면 현재 RT 크기를 그대로 둔다.
+		const _bool bDocValid = (m_vDocCanvasSize.x >= 1.f && m_vDocCanvasSize.y >= 1.f);
+		const ImVec2 vTarget = bDocValid ? m_vDocCanvasSize : vCur;
+
 		if (vCur.x != vNewRT.x || vCur.y != vNewRT.y)
 		{
 			Safe_Release(m_pRenderTarget);

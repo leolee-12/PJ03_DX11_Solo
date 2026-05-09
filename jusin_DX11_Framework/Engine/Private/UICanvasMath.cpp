@@ -96,7 +96,7 @@ namespace UICanvasMath
 			tTransform.fCanvasOffsetY + vDesignPoint.y * fSy);
 	}
 
-	_float2 Render_To_DesignPoint(const _float2& vRenderPoint, const UICANVAS_TRANSFORM& tTransform, UI_SCALE_POLICY ePolicy)
+	_float2 Viewport_To_DesignPoint(const _float2& vViewportPoint, const UICANVAS_TRANSFORM& tTransform, UI_SCALE_POLICY ePolicy)
 	{
 		_float fSx = 1.f, fSy = 1.f;
 		Get_PolicyScale(ePolicy, tTransform, fSx, fSy);
@@ -105,8 +105,8 @@ namespace UICanvasMath
 		const _float fInvY = (fSy != 0.f) ? 1.f / fSy : 0.f;
 
 		return _float2(
-			(vRenderPoint.x - tTransform.fCanvasOffsetX) * fInvX,
-			(vRenderPoint.y - tTransform.fCanvasOffsetY) * fInvY);
+			(vViewportPoint.x - tTransform.fCanvasOffsetX) * fInvX,
+			(vViewportPoint.y - tTransform.fCanvasOffsetY) * fInvY);
 	}
 
 	_float4 Design_To_RenderRect(const _float4& vDesignRect, const UICANVAS_TRANSFORM& tTransform, UI_SCALE_POLICY ePolicy)

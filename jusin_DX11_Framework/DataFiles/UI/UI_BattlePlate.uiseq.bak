@@ -11,7 +11,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 145.0,
+          "offsetX": 184.0,
           "offsetY": -58.0,
           "useAnchoredPos": true
         },
@@ -69,7 +69,7 @@
       "desc": {
         "anchor": {
           "kind": "TR",
-          "offsetX": -145.0,
+          "offsetX": -184.0,
           "offsetY": 100.0,
           "useAnchoredPos": true
         },
@@ -127,7 +127,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 41.0,
+          "offsetX": 80.0,
           "offsetY": -130.0,
           "useAnchoredPos": true
         },
@@ -185,7 +185,7 @@
       "desc": {
         "anchor": {
           "kind": "MC",
-          "offsetX": 600.0,
+          "offsetX": 560.0,
           "offsetY": -325.0,
           "useAnchoredPos": true
         },
@@ -243,7 +243,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 145.0,
+          "offsetX": 184.0,
           "offsetY": -45.0,
           "useAnchoredPos": true
         },
@@ -308,7 +308,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 202.0,
+          "offsetX": 242.0,
           "offsetY": -32.0,
           "useAnchoredPos": true
         },
@@ -373,7 +373,7 @@
       "desc": {
         "anchor": {
           "kind": "TR",
-          "offsetX": -145.0,
+          "offsetX": -185.0,
           "offsetY": 120.0,
           "useAnchoredPos": true
         },

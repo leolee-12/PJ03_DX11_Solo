@@ -116,9 +116,9 @@ CVP_RenderTarget* CVP_RenderTarget::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 
 void CVP_RenderTarget::Free()
 {
-	__super::Free();
-
     Safe_Release(m_pPrevRTV);  m_pPrevRTV = nullptr;
     Safe_Release(m_pPrevDSV);  m_pPrevDSV = nullptr;
     Release_Resources();
+
+    __super::Free();
 }

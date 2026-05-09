@@ -26,6 +26,7 @@ public:
 	void Clear_Resources(_int iLevelIndex);
 	void Release_Engine();
 	HRESULT Resize_Engine(_uint iNewWidth, _uint iNewHeight);
+	HRESULT Resize_Surface(_uint iNewWidth, _uint iNewHeight);
 
 	const HWND Get_HWND() const;
 	_float Random(_float fMin, _float fMax);

@@ -34,7 +34,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 4,
@@ -87,7 +87,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 4,
@@ -140,7 +140,7 @@
         },
         "shader": {
           "level": 0,
-          "tag": "Prototype_Component_Shader_UI"
+          "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
           "level": 4,

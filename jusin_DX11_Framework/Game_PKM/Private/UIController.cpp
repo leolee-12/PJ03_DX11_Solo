@@ -15,17 +15,22 @@ HRESULT CUIController::Initialize(CUISequence* pSequence)
 
 	m_pSequence = pSequence;  // weak
 
+	if (FAILED(Resolve_Widgets()))
+		return E_FAIL;
+
 	if (FAILED(Resolve_Buttons()))
 		return E_FAIL;
 
 	if (FAILED(Build_Group()))
 		return E_FAIL;
 
-	if (nullptr == m_pGroup)
+	if (FAILED(Bind_Sequence_Slots()))
 		return E_FAIL;
 
-	/* 시작은 닫힘. Open() 호출 전까지 입력 무시 */
-	m_pGroup->Set_Active(false);
+	// 닫힌 채로 시작 (Open 전까지 입력 무시)
+	if (nullptr != m_pGroup)
+		m_pGroup->Set_Active(false);
+
 	m_bOpen = false;
 
 	return S_OK;
@@ -35,6 +40,8 @@ void CUIController::Update(_float fTimeDelta)
 {
 	if (false == m_bOpen)
 		return;
+
+	On_Update(fTimeDelta);
 
 	if (nullptr == m_pGroup)
 		return;
@@ -60,19 +67,19 @@ void CUIController::Update(_float fTimeDelta)
 
 void CUIController::Open()
 {
-	if (nullptr == m_pGroup)
-		return;
-
-	switch (m_eFocusPolicy)
+	if (nullptr != m_pGroup)
 	{
-	case FOCUS_POLICY::RESET_ON_OPEN:
-		m_pGroup->Set_FocusedIndex(0);
-		break;
-	case FOCUS_POLICY::REMEMBER_LAST:
-		m_pGroup->Set_FocusedIndex(m_iLastFocusedIndex);
-		break;
-	default:
-		break;
+		switch (m_eFocusPolicy)
+		{
+		case FOCUS_POLICY::RESET_ON_OPEN:
+			m_pGroup->Set_FocusedIndex(0);
+			break;
+		case FOCUS_POLICY::REMEMBER_LAST:
+			m_pGroup->Set_FocusedIndex(m_iLastFocusedIndex);
+			break;
+		default:
+			break;
+		}
 	}
 
 	if (nullptr != m_pSequence)
@@ -81,20 +88,21 @@ void CUIController::Open()
 		m_pSequence->Play();
 	}
 
-	m_pGroup->Set_Active(true);
+	if (nullptr != m_pGroup)
+		m_pGroup->Set_Active(true);
+
 	m_bOpen = true;
 }
 
 void CUIController::Open(_bool bForceReset)
 {
-	if (nullptr == m_pGroup)
-		return;
-
-
-	if (bForceReset)
-		m_pGroup->Set_FocusedIndex(0);
-	else
-		m_pGroup->Set_FocusedIndex(m_iLastFocusedIndex);
+	if (nullptr != m_pGroup)
+	{
+		if (bForceReset)
+			m_pGroup->Set_FocusedIndex(0);
+		else
+			m_pGroup->Set_FocusedIndex(m_iLastFocusedIndex);
+	}
 
 	if (nullptr != m_pSequence)
 	{
@@ -102,18 +110,16 @@ void CUIController::Open(_bool bForceReset)
 		m_pSequence->Play();
 	}
 
-	m_pGroup->Set_Active(true);
+	if (nullptr != m_pGroup)
+		m_pGroup->Set_Active(true);
+
 	m_bOpen = true;
 }
 
 void CUIController::Close()
 {
-	if (nullptr == m_pGroup)
-		return;
-
-
-	/* 정책 무관 — 마지막 포커스는 항상 저장 */
-	m_iLastFocusedIndex = m_pGroup->Get_FocusedIndex();
+	if (nullptr != m_pGroup)
+		m_iLastFocusedIndex = m_pGroup->Get_FocusedIndex();
 
 	if (nullptr != m_pSequence)
 	{
@@ -124,7 +130,9 @@ void CUIController::Close()
 		m_pSequence->Stop();
 	}
 
-	m_pGroup->Set_Active(false);
+	if (nullptr != m_pGroup)
+		m_pGroup->Set_Active(false);
+
 	m_bOpen = false;
 }
 
@@ -142,7 +150,7 @@ void CUIController::Set_OnCancel(CANCEL_CALLBACK fn)
 {
 	m_fnOnCancel = fn;
 }
-
+ 
 void CUIController::Set_KeyBinding(CUIButton_Group::NAVKEY eNav, _ubyte byDIK)
 {
 	if (nullptr == m_pGroup)

@@ -260,10 +260,10 @@ HRESULT CUISequence::Initialize(void* pArg)
 
 	if (m_fSizeX <= 0.f || m_fSizeY <= 0.f)
 	{
-		m_fSizeX = m_vRefSize.x;
-		m_fSizeY = m_vRefSize.y;
-		m_fCenterX = m_vRefSize.x * 0.5f;
-		m_fCenterY = m_vRefSize.y * 0.5f;
+		m_fSizeX = m_tCanvasDesc.fDesignWidth;
+		m_fSizeY = m_tCanvasDesc.fDesignHeight;
+		m_fCenterX = m_tCanvasDesc.fDesignWidth * 0.5f;
+		m_fCenterY = m_tCanvasDesc.fDesignHeight * 0.5f;
 		Refresh_Layout();
 	}
 

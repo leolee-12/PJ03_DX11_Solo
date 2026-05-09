@@ -11,7 +11,7 @@
       "desc": {
         "anchor": {
           "kind": "BR",
-          "offsetX": -340.0,
+          "offsetX": -380.0,
           "offsetY": -80.0,
           "useAnchoredPos": true
         },
@@ -64,7 +64,7 @@
       "desc": {
         "anchor": {
           "kind": "BR",
-          "offsetX": -188.0,
+          "offsetX": -228.0,
           "offsetY": -80.0,
           "useAnchoredPos": true
         },
@@ -117,7 +117,7 @@
       "desc": {
         "anchor": {
           "kind": "BR",
-          "offsetX": -36.0,
+          "offsetX": -76.0,
           "offsetY": -80.0,
           "useAnchoredPos": true
         },

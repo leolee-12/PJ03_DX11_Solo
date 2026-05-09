@@ -109,7 +109,7 @@ HRESULT CEditorApp::Apply_Resize()
 
 	m_bResizePending = false;
 
-	if (FAILED(m_pGameInstance->Resize_Engine(m_iPendingWidth, m_iPendingHeight)))
+	if (FAILED(m_pGameInstance->Resize_Surface(m_iPendingWidth, m_iPendingHeight)))
 		return E_FAIL;
 
 	return S_OK;

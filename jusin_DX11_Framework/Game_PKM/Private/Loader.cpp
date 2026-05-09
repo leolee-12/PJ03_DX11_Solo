@@ -296,8 +296,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_get/poke_get_itm_number_%02d.png"), 10)); },
 		TEXT("Prototype_Component_Texture_Get_Text_Number"));
 
-
-
 	// ---------- Shader ----------
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXNORTEX,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements)); },
@@ -376,7 +374,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN02,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area03/town_02.wmodel")); },
-		TEXT("Prototype_Component_Model_Road01"));
+		TEXT("Prototype_Component_Model_Town02"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_ROAD01,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/road01.wmodel")); },
@@ -589,6 +587,14 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_BALLICON,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_battle/ball_icon_%02d.png"), 4)); },
 		TEXT("Prototype_Component_Texture_Battle_BallIcon"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_MSGBOX,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_battleMsg/Battle_MsgBox.png"), 1)); },
+		TEXT("Prototype_Component_Texture_Battle_MsgBox"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_MSGICON,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_battleMsg/Battle_MsgIcon.png"), 1)); },
+		TEXT("Prototype_Component_Texture_Battle_MsgIcon"));
 
 
 

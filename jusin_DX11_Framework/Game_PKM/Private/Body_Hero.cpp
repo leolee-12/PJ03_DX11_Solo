@@ -92,7 +92,7 @@ HRESULT CBody_Hero::Render_Shadow()
 
 	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	for (size_t i = 0; i < iNumMeshes; i++)
+	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;

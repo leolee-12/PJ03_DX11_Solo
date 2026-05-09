@@ -194,6 +194,18 @@ HRESULT CGameInstance::Resize_Engine(_uint iNewWidth, _uint iNewHeight)
 	return S_OK;
 }
 
+HRESULT CGameInstance::Resize_Surface(_uint iNewWidth, _uint iNewHeight)
+{
+	if (0 == iNewWidth || 0 == iNewHeight)
+		return S_FALSE;
+
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+
+	// Swap chain backbuffer 만 갱신. m_vViewportSize 는 손대지 않는다.
+	return m_pGraphic_Device->Resize_Backbuffer(iNewWidth, iNewHeight);
+}
+
 const HWND CGameInstance::Get_HWND() const
 {
 	return m_pGraphic_Device->Get_HWND();

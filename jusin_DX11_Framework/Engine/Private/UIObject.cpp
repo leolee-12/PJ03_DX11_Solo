@@ -78,17 +78,16 @@ void CUIObject::Set_DesignCanvasSize(_float fWidth, _float fHeight)
 
 	m_tCanvasDesc.fDesignWidth = fWidth;
 	m_tCanvasDesc.fDesignHeight = fHeight;
-	m_vRefSize = { fWidth, fHeight };
 
 	Refresh_Layout();
 }
 
-void CUIObject::Set_ActualViewportSize(_float fWidth, _float fHeight)
+void CUIObject::Set_FixedViewportSize(_float fWidth, _float fHeight)
 {
 	if (fWidth <= 0.f || fHeight <= 0.f)
 		return;
 
-	m_bUseExplicitViewportSize = true;
+	m_bUseFixedViewport = true;
 	m_vActualViewportSize = { fWidth, fHeight };
 
 	Recalculate_RenderTransform();
@@ -146,7 +145,6 @@ HRESULT CUIObject::Initialize(void* pArg)
 	if (m_tCanvasDesc.eScalePolicy == UI_SCALE_POLICY::END)
 		m_tCanvasDesc.eScalePolicy = UI_SCALE_POLICY::UNIFORM_FIT;
 
-	m_vRefSize = { m_tCanvasDesc.fDesignWidth, m_tCanvasDesc.fDesignHeight };
 	m_vActualViewportSize = m_pGameInstance->Get_ViewportSize();
 
 	// View 행렬 세팅
@@ -202,15 +200,15 @@ void CUIObject::Recalculate_Layout()
 
 void CUIObject::Recalculate_RenderTransform()
 {
-	if (!m_bUseExplicitViewportSize)
+	if (!m_bUseFixedViewport)
 	{
 		const _float2 vViewport = m_pGameInstance->Get_ViewportSize();
 		if (vViewport.x > 0.f && vViewport.y > 0.f)
 			m_vActualViewportSize = vViewport;
 	}
 
-	const _float fDesignWidth = (m_vRefSize.x > 0.f) ? m_vRefSize.x : 1.f;
-	const _float fDesignHeight = (m_vRefSize.y > 0.f) ? m_vRefSize.y : 1.f;
+	const _float fDesignWidth = (m_tCanvasDesc.fDesignWidth > 0.f) ? m_tCanvasDesc.fDesignWidth : 1.f;
+	const _float fDesignHeight = (m_tCanvasDesc.fDesignHeight > 0.f) ? m_tCanvasDesc.fDesignHeight : 1.f;
 
 	const _float fActualWidth = (m_vActualViewportSize.x > 0.f) ? m_vActualViewportSize.x : fDesignWidth;
 	const _float fActualHeight = (m_vActualViewportSize.y > 0.f) ? m_vActualViewportSize.y : fDesignHeight;
@@ -274,13 +272,13 @@ HRESULT CUIObject::Apply_Tween_Target(UI_TWEEN_TARGET eTarget, _float fValue)
 {
 	switch (eTarget)
 	{
-	case UI_TWEEN_TARGET::SIZE_X:			m_fSizeX = fValue;					Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::SIZE_Y:			m_fSizeY = fValue;					Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::ROTATION:			m_fRotation = fValue;				Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::POSITION_X:		m_fCenterX = fValue;				Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::POSITION_Y:		m_fCenterY = fValue;				Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X:	m_tAnchorDesc.fOffsetX = fValue;	Refresh_Layout(); return S_OK;
-	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y:	m_tAnchorDesc.fOffsetY = fValue;	Refresh_Layout(); return S_OK;
+	case UI_TWEEN_TARGET::SIZE_X:			m_fSizeX = fValue;					Refresh_Layout();		return S_OK;
+	case UI_TWEEN_TARGET::SIZE_Y:			m_fSizeY = fValue;					Refresh_Layout();		return S_OK;
+	case UI_TWEEN_TARGET::ROTATION:			m_fRotation = fValue;				Update_UI_Transform();	return S_OK;
+	case UI_TWEEN_TARGET::POSITION_X:		m_fCenterX = fValue;				Refresh_Layout();		return S_OK;
+	case UI_TWEEN_TARGET::POSITION_Y:		m_fCenterY = fValue;				Refresh_Layout();		return S_OK;
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_X:	m_tAnchorDesc.fOffsetX = fValue;	Refresh_Layout();		return S_OK;
+	case UI_TWEEN_TARGET::ANCHOR_OFFSET_Y:	m_tAnchorDesc.fOffsetY = fValue;	Refresh_Layout();		return S_OK;
 	default: return E_FAIL;
 	}
 }
@@ -314,7 +312,7 @@ _float4 CUIObject::Get_ReferenceRect() const
 	if (m_pParentUI)
 		return m_pParentUI->Get_DesignRect();
 
-	return _float4(0.f, 0.f, m_vRefSize.x, m_vRefSize.y);
+	return _float4(0.f, 0.f, m_tCanvasDesc.fDesignWidth, m_tCanvasDesc.fDesignHeight);
 }
 
 _float2 CUIObject::Resolve_AnchorCenter() const
@@ -359,8 +357,8 @@ _float2 CUIObject::Resolve_AnchorCenter() const
 
 void CUIObject::Update_UI_Transform()
 {
-	const _float fActualWidth = (m_vActualViewportSize.x > 0.f) ? m_vActualViewportSize.x : m_vRefSize.x;
-	const _float fActualHeight = (m_vActualViewportSize.y > 0.f) ? m_vActualViewportSize.y : m_vRefSize.y;
+	const _float fActualWidth = (m_vActualViewportSize.x > 0.f) ? m_vActualViewportSize.x : m_tCanvasDesc.fDesignWidth;
+	const _float fActualHeight = (m_vActualViewportSize.y > 0.f) ? m_vActualViewportSize.y : m_tCanvasDesc.fDesignHeight;
 
 	m_pTransformCom->ScaleTo(m_fRenderSizeX, m_fRenderSizeY, 1.f);
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), m_fRotation);

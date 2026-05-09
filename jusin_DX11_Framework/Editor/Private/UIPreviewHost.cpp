@@ -33,13 +33,15 @@ HRESULT CUIPreviewHost::Initialize()
 
 void CUIPreviewHost::Tick(_float fTimeDelta)
 {
-	// 캔버스(게임 RT) 크기 변경 감지 - UI 레이아웃은 캔버스 기준이므로 패널 표시 크기는 트리거 대상 아님.
-	const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
-	const ImVec2 vNow(vCanvas.x, vCanvas.y);
-	if (vNow.x != m_vLastViewportSize.x || vNow.y != m_vLastViewportSize.y)
+	if (nullptr != m_pSession)
 	{
-		m_vLastViewportSize = vNow;
-		m_bRebuildPending = true;
+		const auto& tDoc = m_pSession->Get_Doc();
+		const ImVec2 vNow(tDoc.fDesignWidth, tDoc.fDesignHeight);
+		if (vNow.x != m_vLastViewportSize.x || vNow.y != m_vLastViewportSize.y)
+		{
+			m_vLastViewportSize = vNow;
+			m_bRebuildPending = true;
+		}
 	}
 
 	if (m_eMode == UI_PREVIEW_MODE::SELECTED_ANIM)
@@ -108,11 +110,15 @@ void CUIPreviewHost::Render_Queue_Submit()
 
 HRESULT CUIPreviewHost::Rebuild()
 {
-	// 캔버스 크기가 아직 0이면 rebuild 보류(다음 프레임 재시도)
+	// design canvas 가 아직 0 이면 rebuild 보류(다음 프레임 재시도).
+	  // 기준은 doc 의 designWidth/Height (Tick 의 트리거 기준과 동일).
 	if (m_vLastViewportSize.x < 1.f || m_vLastViewportSize.y < 1.f)
 	{
-		const _float2 vCanvas = m_pGameInstance->Get_ViewportSize();
-		const ImVec2 vNow(vCanvas.x, vCanvas.y);
+		if (nullptr == m_pSession)
+			return S_OK;
+
+		const auto& tDoc = m_pSession->Get_Doc();
+		const ImVec2 vNow(tDoc.fDesignWidth, tDoc.fDesignHeight);
 		if (vNow.x < 1.f || vNow.y < 1.f)
 			return S_OK;
 		m_vLastViewportSize = vNow;
@@ -135,6 +141,10 @@ HRESULT CUIPreviewHost::Rebuild()
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tSeqDesc));
 	if (nullptr == m_pSequence)
 		return E_FAIL;
+
+	// [UI Preview] viewport(=윈도우 크기) 변동과 무관하게 design 좌표 1:1 로 그리도록 강제.
+	//              클라이언트(viewport == 1280x720 고정) 와 동일한 결과를 보장하기 위함.
+	m_pSequence->Set_FixedViewportSize(tDoc.fDesignWidth, tDoc.fDesignHeight);
 
 	m_pSequence->Clear_Timeline();
 
@@ -193,6 +203,10 @@ HRESULT CUIPreviewHost::Rebuild()
 			continue;
 
 		CUIObject* pUI = static_cast<CUIObject*>(pClone);
+
+		// [UI Preview] sequence 와 동일하게 actual viewport 를 design 크기로 강제.
+		//              GameInstance viewport(=editor 윈도우 크기) 변동의 영향을 차단한다.
+		pUI->Set_FixedViewportSize(tDoc.fDesignWidth, tDoc.fDesignHeight);
 
 		if (CUIAnimator* pAnimator = pUI->Get_Animator())
 		{

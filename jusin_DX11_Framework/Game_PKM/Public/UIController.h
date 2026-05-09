@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "Base.h"
 #include "UIButton_Group.h"
+#include "UISequence.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;
-class CUISequence;
 NS_END
 
 NS_BEGIN(Game_PKM)
@@ -45,12 +45,27 @@ public:
 	CUISequence* Get_Sequence() const { return m_pSequence; }
 
 protected:
-	/* 서브클래스 책임 — 순서:
-	   Initialize() 가 Resolve_Buttons() → Build_Group() 순으로 호출.
-	   Resolve_Buttons() 에서 sequence->Find_Widget 으로 CUIButton* 모으고,
-	   Build_Group() 에서 Group::Create + Initialize_Linear/Grid + Add_Button x N */
-	virtual HRESULT Resolve_Buttons() PURE;
-	virtual HRESULT Build_Group() PURE;
+	/* 서브클래스 옵션 훅 — Initialize() 에서 순서대로 호출.
+			   Resolve_Widgets()        : 이미지/텍스트/프로그레스바 등 비-버튼 위젯 핸들 보관
+			   Resolve_Buttons()        : 버튼 위젯 핸들 보관
+			   Build_Group()            : CUIButton_Group 구성
+			   Bind_Sequence_Slots()    : UISequence 슬롯 콜백 바인딩 */
+	virtual HRESULT Resolve_Widgets() { return S_OK; }
+	virtual HRESULT Resolve_Buttons() { return S_OK; }
+	virtual HRESULT Build_Group() { return S_OK; }
+	virtual HRESULT Bind_Sequence_Slots() { return S_OK; }
+
+	virtual void On_Refresh() {}
+	virtual void On_Update(_float) {}
+
+	template<class T>
+	T* Find_Widget_As(const _string& strId) const
+	{
+		if (nullptr == m_pSequence)
+			return nullptr;
+
+		return dynamic_cast<T*>(m_pSequence->Find_Widget(strId));
+	}
 
 protected:
 	CGameInstance* m_pGameInstance{ nullptr };  // AddRef
