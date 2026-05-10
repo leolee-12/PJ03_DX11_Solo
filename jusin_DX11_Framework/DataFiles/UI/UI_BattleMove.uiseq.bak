@@ -1,0 +1,1013 @@
+{
+  "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
+    "name": "HUD_Layout",
+    "scalePolicy": "UNIFORM_FIT",
+    "version": 2
+  },
+  "timeline": [
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_004"
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_004"
+    }
+  ],
+  "widgets": [
+    {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -175.0,
+              "loop": "NONE",
+              "start": -150.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": -150.0,
+              "loop": "NONE",
+              "start": -150.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -200.0,
+          "offsetY": -175.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Move"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 400.0,
+          "sizeY": 51.20000076293945,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button1",
+      "id": "widget_001",
+      "type": "BUTTON"
+    },
+    {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -125.0,
+              "loop": "NONE",
+              "start": -100.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": -100.0,
+              "loop": "NONE",
+              "start": -100.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -200.0,
+          "offsetY": -125.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Move"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 400.0,
+          "sizeY": 51.20000076293945,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button2",
+      "id": "widget_002",
+      "type": "BUTTON"
+    },
+    {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -75.0,
+              "loop": "NONE",
+              "start": -50.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": -50.0,
+              "loop": "NONE",
+              "start": -50.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -200.0,
+          "offsetY": -75.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Move"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 400.0,
+          "sizeY": 51.20000076293945,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button3",
+      "id": "widget_003",
+      "type": "BUTTON"
+    },
+    {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -25.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -200.0,
+          "offsetY": -25.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "interactable": true,
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "texture": {
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Move"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 400.0,
+          "sizeY": 51.20000076293945,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Button4",
+      "id": "widget_004",
+      "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -256.0,
+          "offsetY": -175.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "Default Move",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "Text1",
+      "id": "widget_005",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -256.0,
+          "offsetY": -125.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "Default Move",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "Text2",
+      "id": "widget_006",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -256.0,
+          "offsetY": -75.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "Default Move",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "Text3",
+      "id": "widget_007",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -256.0,
+          "offsetY": -25.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "Default Move",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "Text4",
+      "id": "widget_008",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "RIGHT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -65.0,
+          "offsetY": -175.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "pp/max",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 96.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "pp1",
+      "id": "widget_009",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "RIGHT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -65.0,
+          "offsetY": -125.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "pp/max",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 96.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "pp2",
+      "id": "widget_010",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "RIGHT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -65.0,
+          "offsetY": -75.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "pp/max",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 96.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "pp3",
+      "id": "widget_011",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "RIGHT",
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -65.0,
+          "offsetY": -25.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "pp/max",
+        "transform": {
+          "centerX": 898.4884033203125,
+          "centerY": 443.7209167480469,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 96.0,
+          "sizeY": 28.0,
+          "visible": true,
+          "zOrder": 4
+        }
+      },
+      "displayName": "pp4",
+      "id": "widget_012",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -370.0,
+          "offsetY": -175.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_MoveIcon"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Icon1",
+      "id": "widget_013",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -370.0,
+          "offsetY": -125.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_MoveIcon"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Icon2",
+      "id": "widget_014",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -370.0,
+          "offsetY": -75.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_MoveIcon"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Icon3",
+      "id": "widget_015",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BR",
+          "offsetX": -370.0,
+          "offsetY": -25.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_MoveIcon"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Icon4",
+      "id": "widget_016",
+      "type": "IMAGE"
+    }
+  ]
+}

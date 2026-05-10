@@ -7,6 +7,7 @@
 
 NS_BEGIN(Game_PKM)
 class CBattle_Manager;
+class CBattleMsg;
 
 class CLevel_Battle final : public CLevel
 {
@@ -34,6 +35,7 @@ private:
 private:
 	BATTLE_ENV m_tEnv = {};
 	CBattle_Manager* m_pBattleManager = { nullptr };
+	CBattleMsg* m_pBattleMsg = { nullptr };
 	POKEMON_INSTANCE m_tDebugWildOpponent = {};
 
 public:

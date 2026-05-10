@@ -38,17 +38,6 @@
       "visible": true
     },
     {
-      "joinPrev": false,
-      "kind": "WAIT",
-      "waitSec": 0.25
-    },
-    {
-      "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_001",
-      "visible": true
-    },
-    {
       "animName": "Anim_001",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
@@ -74,8 +63,8 @@
       ],
       "desc": {
         "anchor": {
-          "kind": "BC",
-          "offsetX": 250.0,
+          "kind": "BL",
+          "offsetX": 940.0,
           "offsetY": -25.0,
           "useAnchoredPos": true
         },
@@ -117,7 +106,7 @@
           "pivotY": 0.5,
           "sizeX": 40.0,
           "sizeY": 40.0,
-          "visible": false,
+          "visible": true,
           "zOrder": 11
         },
         "viBuffer": {
@@ -138,7 +127,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 446.0,
+          "offsetX": 491.0,
           "offsetY": -70.0,
           "useAnchoredPos": true
         },
@@ -180,7 +169,7 @@
           "pivotY": 0.5,
           "sizeX": 980.0,
           "sizeY": 136.0,
-          "visible": false,
+          "visible": true,
           "zOrder": 10
         },
         "viBuffer": {
@@ -195,11 +184,14 @@
     {
       "desc": {
         "align": "LEFT",
+	"verticalAlign": "TOP",
+  	"wordWrap": true,
+  	"clipToRect": true	,
         "anchor": {
-          "kind": "MC",
-          "offsetX": 0.0,
-          "offsetY": 0.0,
-          "useAnchoredPos": false
+          "kind": "BL",
+          "offsetX": 473.0,
+          "offsetY": -65.0,
+          "useAnchoredPos": true
         },
         "color": [
           0.0,
@@ -226,7 +218,7 @@
           "pivotY": 0.5,
           "sizeX": 882.0,
           "sizeY": 122.4000015258789,
-          "visible": false,
+          "visible": true,
           "zOrder": 11
         }
       },

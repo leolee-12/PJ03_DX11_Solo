@@ -252,6 +252,9 @@
     <ClInclude Include="..\Public\Body_Pokemon.h">
       <Filter>04. PartObject\Body</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BattleMsg.h">
+      <Filter>07. UI\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -373,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Pokemon.cpp">
       <Filter>04. PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattleMsg.cpp">
+      <Filter>07. UI\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

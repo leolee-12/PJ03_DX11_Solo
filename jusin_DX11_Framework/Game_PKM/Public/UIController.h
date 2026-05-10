@@ -15,7 +15,7 @@ NS_BEGIN(Game_PKM)
 // - 입력·포커스·활성화 처리는 Group 에 위임, 디스패치만 담당
 // - 위젯 id → 버튼 매핑은 서브클래스 책임 (Resolve_Buttons / Build_Group)
 
-	class CUIController : public CBase
+class CUIController : public CBase
 {
 public:
 	using ACTIVATE_CALLBACK = function<void(_int)>;

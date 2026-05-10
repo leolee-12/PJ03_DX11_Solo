@@ -93,6 +93,7 @@ namespace
 	UI_SEQ_STEP_KIND	StrToStepKind(const _string& s) { return detail::Enum_From_String(s.c_str(), detail::kStepKind, UI_SEQ_STEP_KIND::END); }
 	UI_ANCHOR			StrToAnchor(const _string& s) { return detail::Enum_From_String(s.c_str(), detail::kAnchor, UI_ANCHOR::END); }
 	UI_TEXT_ALIGN		StrToTextAlign(const _string& s) { return detail::Enum_From_String(s.c_str(), detail::kTextAlign, UI_TEXT_ALIGN::END); }
+	UI_TEXT_VALIGN		StrToTextVAlign(const _string& s) { return detail::Enum_From_String(s.c_str(), detail::kTextVAlign, UI_TEXT_VALIGN::END); }
 
 	// -- tag 변환 (editor SToTag와 동일 정책) --
 	inline WNameID SToTag(const _string& s)
@@ -1044,7 +1045,12 @@ namespace
 		d.strText = StoW(j.value("text", _string{}));
 		d.strFontTag = SToTag(j.value("font", _string{}));
 		d.eAlign = StrToTextAlign(j.value("align", _string("LEFT")));
+		d.eVAlign = StrToTextVAlign(j.value("verticalAlign", _string("CENTER")));
+		if (UI_TEXT_VALIGN::END == d.eVAlign)
+			d.eVAlign = UI_TEXT_VALIGN::CENTER;
 
+		d.bWordWrap = j.value("wordWrap", false);
+		d.bClipToRect = j.value("clipToRect", false);
 		auto c = j.value("color", json::array({ 1.f,1.f,1.f,1.f }));
 		d.vColor = { c[0], c[1], c[2], c[3] };
 		return S_OK;

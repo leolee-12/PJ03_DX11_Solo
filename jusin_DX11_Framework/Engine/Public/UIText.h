@@ -11,7 +11,10 @@ public:
 		_wstring strText = {};
 		WNameID strFontTag = { INVALID_TAG };
 		_float4 vColor = { g_kWhite };
-		UI_TEXT_ALIGN eAlign = UI_TEXT_ALIGN::LEFT;
+		UI_TEXT_ALIGN eAlign{ UI_TEXT_ALIGN::LEFT };
+		UI_TEXT_VALIGN eVAlign{ UI_TEXT_VALIGN::CENTER };
+		_bool bWordWrap{ false };
+		_bool bClipToRect{ false };
 	};
 
 protected:
@@ -47,6 +50,9 @@ private:
 	WNameID m_strFontTag = { INVALID_TAG };
 	_float4 m_vColor = { g_kWhite };
 	UI_TEXT_ALIGN m_eAlign = { UI_TEXT_ALIGN::LEFT };
+	UI_TEXT_VALIGN m_eVAlign = { UI_TEXT_VALIGN::CENTER };
+	_bool m_bWordWrap = { false };
+	_bool m_bClipToRect = { false };
 
 public:
 	static CUIText* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

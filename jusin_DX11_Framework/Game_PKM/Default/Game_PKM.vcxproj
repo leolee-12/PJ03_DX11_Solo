@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\Public\BattleMsg.h" />
     <ClInclude Include="..\Public\Battle_Layout.h" />
     <ClInclude Include="..\Public\Battle_Manager.h" />
     <ClInclude Include="..\Public\Battle_Trainer.h" />
@@ -68,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\Private\BattleMsg.cpp" />
     <ClCompile Include="..\Private\Battle_Manager.cpp" />
     <ClCompile Include="..\Private\Battle_Trainer.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />

@@ -17,6 +17,8 @@ namespace Engine
 
 	enum class UI_TEXT_ALIGN { LEFT, CENTER, RIGHT, END };
 
+	enum class UI_TEXT_VALIGN { TOP, CENTER, BOTTOM, END };
+
 	enum class UI_PROGRESS_DIR { LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP, END };
 
 	enum class UI_SCALE_POLICY { STRETCH, UNIFORM_FIT, MATCH_WIDTH, MATCH_HEIGHT, END };
@@ -65,7 +67,8 @@ namespace Engine
 		template <typename E>
 		struct EnumStringPair { E e; const char* s; };
 
-		inline constexpr EnumStringPair<UI_LAYOUT> kUILayout[] = {
+		inline constexpr EnumStringPair<UI_LAYOUT> kUILayout[] =
+		{
 			{ UI_LAYOUT::NONE,			"NONE"			},
 			{ UI_LAYOUT::CANVAS,		"CANVAS"		},
 			{ UI_LAYOUT::HORIZONTAL,	"HORIZONTAL"	},
@@ -73,7 +76,8 @@ namespace Engine
 			{ UI_LAYOUT::OVERLAY,		"OVERLAY"		},
 		};
 
-		inline constexpr EnumStringPair<UI_TYPE> kUIType[] = {
+		inline constexpr EnumStringPair<UI_TYPE> kUIType[] =
+		{
 			{ UI_TYPE::WIDGET,		"WIDGET"		},
 			{ UI_TYPE::CONTAINER,	"CONTAINER"		},
 			{ UI_TYPE::IMAGE,		"IMAGE"			},
@@ -82,14 +86,16 @@ namespace Engine
 			{ UI_TYPE::PROGRESSBAR,	"PROGRESSBAR"	},
 		};
 
-		inline constexpr EnumStringPair<UI_PROGRESS_DIR> kProgressDir[] = {
+		inline constexpr EnumStringPair<UI_PROGRESS_DIR> kProgressDir[] =
+		{
 			{ UI_PROGRESS_DIR::LEFT_TO_RIGHT, "LEFT_TO_RIGHT" },
 			{ UI_PROGRESS_DIR::RIGHT_TO_LEFT, "RIGHT_TO_LEFT" },
 			{ UI_PROGRESS_DIR::TOP_TO_BOTTOM, "TOP_TO_BOTTOM" },
 			{ UI_PROGRESS_DIR::BOTTOM_TO_TOP, "BOTTOM_TO_TOP" },
 		};
 
-		inline constexpr EnumStringPair<UI_TWEEN_TARGET> kTweenTarget[] = {
+		inline constexpr EnumStringPair<UI_TWEEN_TARGET> kTweenTarget[] =
+		{
 			{ UI_TWEEN_TARGET::SIZE_X,          "SIZE_X"          },
 			{ UI_TWEEN_TARGET::SIZE_Y,          "SIZE_Y"          },
 			{ UI_TWEEN_TARGET::ROTATION,        "ROTATION"        },
@@ -108,7 +114,8 @@ namespace Engine
 			{ UI_TWEEN_TARGET::BACK_COLOR_A,    "BACK_COLOR_A"    },
 		};
 
-		inline constexpr EnumStringPair<UI_EASE> kEase[] = {
+		inline constexpr EnumStringPair<UI_EASE> kEase[] =
+		{
 			{ UI_EASE::LINEAR,            "LINEAR"            },
 			{ UI_EASE::EASE_IN_SINE,      "EASE_IN_SINE"      },
 			{ UI_EASE::EASE_OUT_SINE,     "EASE_OUT_SINE"     },
@@ -121,13 +128,15 @@ namespace Engine
 			{ UI_EASE::EASE_IN_OUT_CUBIC, "EASE_IN_OUT_CUBIC" },
 		};
 
-		inline constexpr EnumStringPair<UI_TWEEN_LOOP> kTweenLoop[] = {
+		inline constexpr EnumStringPair<UI_TWEEN_LOOP> kTweenLoop[] =
+		{
 			{ UI_TWEEN_LOOP::NONE,     "NONE"     },
 			{ UI_TWEEN_LOOP::LOOP,     "LOOP"     },
 			{ UI_TWEEN_LOOP::PINGPONG, "PINGPONG" },
 		};
 
-		inline constexpr EnumStringPair<UI_SEQ_STEP_KIND> kStepKind[] = {
+		inline constexpr EnumStringPair<UI_SEQ_STEP_KIND> kStepKind[] =
+		{
 			{ UI_SEQ_STEP_KIND::PLAY_ANIM,    "PLAY_ANIM"    },
 			{ UI_SEQ_STEP_KIND::SET_VISIBLE,  "SET_VISIBLE"  },
 			{ UI_SEQ_STEP_KIND::WAIT,         "WAIT"         },
@@ -139,19 +148,29 @@ namespace Engine
 			{ UI_SEQ_STEP_KIND::SFX_PLAY,     "SFX_PLAY"     },
 		};
 
-		inline constexpr EnumStringPair<UI_ANCHOR> kAnchor[] = {
+		inline constexpr EnumStringPair<UI_ANCHOR> kAnchor[] =
+		{
 			{ UI_ANCHOR::TL, "TL" }, { UI_ANCHOR::TC, "TC" }, { UI_ANCHOR::TR, "TR" },
 			{ UI_ANCHOR::ML, "ML" }, { UI_ANCHOR::MC, "MC" }, { UI_ANCHOR::MR, "MR" },
 			{ UI_ANCHOR::BL, "BL" }, { UI_ANCHOR::BC, "BC" }, { UI_ANCHOR::BR, "BR" },
 		};
 
-		inline constexpr EnumStringPair<UI_TEXT_ALIGN> kTextAlign[] = {
+		inline constexpr EnumStringPair<UI_TEXT_ALIGN> kTextAlign[] =
+		{
 			{ UI_TEXT_ALIGN::LEFT,   "LEFT"   },
 			{ UI_TEXT_ALIGN::CENTER, "CENTER" },
 			{ UI_TEXT_ALIGN::RIGHT,  "RIGHT"  },
 		};
 
-		inline constexpr EnumStringPair<UI_SCALE_POLICY> kScalePolicy[] = {
+		inline constexpr EnumStringPair<UI_TEXT_VALIGN> kTextVAlign[] =
+		{
+			{ UI_TEXT_VALIGN::TOP,    "TOP"    },
+			{ UI_TEXT_VALIGN::CENTER, "CENTER" },
+			{ UI_TEXT_VALIGN::BOTTOM, "BOTTOM" },
+		};
+
+		inline constexpr EnumStringPair<UI_SCALE_POLICY> kScalePolicy[] =
+		{
 			{ UI_SCALE_POLICY::STRETCH,      "STRETCH"      },
 			{ UI_SCALE_POLICY::UNIFORM_FIT,  "UNIFORM_FIT"  },
 			{ UI_SCALE_POLICY::MATCH_WIDTH,  "MATCH_WIDTH"  },
@@ -185,6 +204,7 @@ namespace Engine
 	inline const char* To_String(UI_SEQ_STEP_KIND e) { return detail::Enum_To_String(e, detail::kStepKind); }
 	inline const char* To_String(UI_ANCHOR e) { return detail::Enum_To_String(e, detail::kAnchor); }
 	inline const char* To_String(UI_TEXT_ALIGN e) { return detail::Enum_To_String(e, detail::kTextAlign); }
+	inline const char* To_String(UI_TEXT_VALIGN e) { return detail::Enum_To_String(e, detail::kTextVAlign); }
 	inline const char* To_String(UI_SCALE_POLICY e) { return detail::Enum_To_String(e, detail::kScalePolicy); }
 
 	inline UI_TYPE			UI_TYPE_From_String(const char* s) { return detail::Enum_From_String(s, detail::kUIType, UI_TYPE::END); }
@@ -196,7 +216,8 @@ namespace Engine
 	inline UI_SEQ_STEP_KIND UI_SEQ_STEP_KIND_From_String(const char* s) { return detail::Enum_From_String(s, detail::kStepKind, UI_SEQ_STEP_KIND::END); }
 	inline UI_ANCHOR        UI_ANCHOR_From_String(const char* s) { return detail::Enum_From_String(s, detail::kAnchor, UI_ANCHOR::END); }
 	inline UI_TEXT_ALIGN    UI_TEXT_ALIGN_From_String(const char* s) { return detail::Enum_From_String(s, detail::kTextAlign, UI_TEXT_ALIGN::END); }
-	inline UI_SCALE_POLICY UI_SCALE_POLICY_From_String(const char* s) { return detail::Enum_From_String(s, detail::kScalePolicy, UI_SCALE_POLICY::END); }
+	inline UI_TEXT_VALIGN	UI_TEXT_VALIGN_From_String(const char* s) { return detail::Enum_From_String(s, detail::kTextVAlign, UI_TEXT_VALIGN::END); }
+	inline UI_SCALE_POLICY	UI_SCALE_POLICY_From_String(const char* s) { return detail::Enum_From_String(s, detail::kScalePolicy, UI_SCALE_POLICY::END); }
 
 	struct UIANCHOR_DESC
 	{

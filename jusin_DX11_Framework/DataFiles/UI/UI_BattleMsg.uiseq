@@ -38,17 +38,6 @@
       "visible": true
     },
     {
-      "joinPrev": false,
-      "kind": "WAIT",
-      "waitSec": 0.25
-    },
-    {
-      "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_001",
-      "visible": true
-    },
-    {
       "animName": "Anim_001",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
@@ -195,9 +184,12 @@
     {
       "desc": {
         "align": "LEFT",
+	"verticalAlign": "TOP",
+    	"wordWrap": true,
+    	"clipToRect": true,
         "anchor": {
           "kind": "BL",
-          "offsetX": 473.0,
+          "offsetX": 466.0,
           "offsetY": -65.0,
           "useAnchoredPos": true
         },
@@ -225,7 +217,7 @@
           "pivotX": 0.5,
           "pivotY": 0.5,
           "sizeX": 882.0,
-          "sizeY": 122.4000015258789,
+          "sizeY": 96.0,
           "visible": true,
           "zOrder": 11
         }

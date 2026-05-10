@@ -5,6 +5,8 @@
 #include "PokemonData_Manager.h"
 #include "Battle_Pokemon.h"
 #include "Battle_Trainer.h"
+#include "BattleMsg.h"
+#include "Game_API.h"
 #include "Camera_Free.h"
 
 #include "GameInstance.h"
@@ -77,6 +79,29 @@ void CLevel_Battle::Update(_float fTimeDelta)
 		return;
 
 	m_pBattleManager->Update(fTimeDelta);
+
+#ifdef _DEBUG
+	if (nullptr != m_pBattleMsg)
+	{
+		if (m_pGameInstance->Key_Down(DIK_F5))
+		{
+			m_pBattleMsg->Set_Message(L"Pikachu used Thunderbolt!wwwwwqrwgfqegdwgefhqeijeuawus5s1246524yfsdzhsderfhestujs");
+			m_pBattleMsg->Open();
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_F6))
+		{
+			m_pBattleMsg->Close();
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_F7))
+		{
+			m_pBattleMsg->Complete();
+		}
+	}
+#endif
+
+	UI_Update_All(fTimeDelta);
 
 	if (m_pBattleManager->Is_Done())
 	{
@@ -273,6 +298,9 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 
 	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (nullptr == pSeq)
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
 	{
 		Safe_Release(pSeq);
@@ -283,11 +311,51 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (nullptr == pSeq)
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
 	{
 		Safe_Release(pSeq);
 		return E_FAIL;
 	}
+
+	tDesc.strPath = "../../DataFiles/UI/UI_BattleMsg.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (nullptr == pSeq)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
+
+	CBattleMsg* pBattleMsg = CBattleMsg::Create();
+	if (nullptr == pBattleMsg)
+		return E_FAIL;
+
+	if (FAILED(pBattleMsg->Initialize(pSeq)))
+	{
+		Safe_Release(pBattleMsg);
+		return E_FAIL;
+	}
+
+	pBattleMsg->Set_Message(L"A wild Pokemon appeared!");
+
+	if (FAILED(UI_Register(pBattleMsg)))
+	{
+		Safe_Release(pBattleMsg);
+		return E_FAIL;
+	}
+
+	m_pBattleMsg = pBattleMsg;      // weak - Hub owns
+	Safe_Release(pBattleMsg);       // local ref--
+
+	m_pBattleMsg->Open();
 
 	return S_OK;
 }
@@ -366,7 +434,10 @@ CLevel_Battle* CLevel_Battle::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 void CLevel_Battle::Free()
 {
-	__super::Free();
+	UI_Close_All();
+	m_pBattleMsg = nullptr;
 
 	Safe_Release(m_pBattleManager);
+
+	__super::Free();
 }

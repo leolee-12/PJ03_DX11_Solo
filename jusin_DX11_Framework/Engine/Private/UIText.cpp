@@ -25,6 +25,9 @@ HRESULT CUIText::Initialize(void* pArg)
 		m_strFontTag = pDesc->strFontTag;
 		m_vColor = pDesc->vColor;
 		m_eAlign = pDesc->eAlign;
+        m_eVAlign = pDesc->eVAlign;
+        m_bWordWrap = pDesc->bWordWrap;
+        m_bClipToRect = pDesc->bClipToRect;
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -123,6 +126,96 @@ HRESULT CUIText::Render()
 
     const XMVECTOR vColor = XMLoadFloat4(&m_vColor);
     const _float2 vDrawPos = { fAnchorX, fAnchorY };
+
+    if (m_bWordWrap)
+    {
+        vector<_wstring> Lines;
+        _wstring strLine;
+
+        auto PushLine = [&]()
+            {
+                Lines.push_back(strLine);
+                strLine.clear();
+            };
+
+        for (wchar_t ch : m_strText)
+        {
+            if (L'\r' == ch)
+                continue;
+
+            if (L'\n' == ch)
+            {
+                PushLine();
+                continue;
+            }
+
+            _wstring strCandidate = strLine;
+            strCandidate.push_back(ch);
+
+            const _float2 vCandidateSize = m_pGameInstance->Measure_Text(m_strFontTag, strCandidate.c_str());
+            if (false == strLine.empty() && vCandidateSize.x * vDrawScale.x > vRect.z)
+            {
+                PushLine();
+                strLine.push_back(ch);
+            }
+            else
+            {
+                strLine = strCandidate;
+            }
+        }
+
+        if (false == strLine.empty() || Lines.empty())
+            Lines.push_back(strLine);
+
+        const _float2 vLineBase = m_pGameInstance->Measure_Text(m_strFontTag, L"A");
+        const _float fLineHeight = vLineBase.y * vDrawScale.y;
+        if (fLineHeight <= 0.f)
+            return S_OK;
+
+        _uint iDrawableLines = static_cast<_uint>(Lines.size());
+        if (m_bClipToRect)
+        {
+            const _uint iMaxLines = static_cast<_uint>(vRect.w / fLineHeight);
+            if (0 == iMaxLines)
+                return S_OK;
+
+            if (iDrawableLines > iMaxLines)
+                iDrawableLines = iMaxLines;
+        }
+
+        const _float fTotalHeight = fLineHeight * static_cast<_float>(iDrawableLines);
+        _float fStartY = vRect.y + (vRect.w - fTotalHeight) * 0.5f;
+
+        if (UI_TEXT_VALIGN::TOP == m_eVAlign)
+            fStartY = vRect.y;
+        else if (UI_TEXT_VALIGN::BOTTOM == m_eVAlign)
+            fStartY = vRect.y + vRect.w - fTotalHeight;
+
+        for (_uint i = 0; i < iDrawableLines; ++i)
+        {
+            if (Lines[i].empty())
+                continue;
+
+            _float2 vLineOrigin{ 0.f, 0.f };
+            const _float2 vLineSize = m_pGameInstance->Measure_Text(m_strFontTag, Lines[i].c_str());
+
+            if (UI_TEXT_ALIGN::CENTER == m_eAlign)
+                vLineOrigin.x = vLineSize.x * 0.5f;
+            else if (UI_TEXT_ALIGN::RIGHT == m_eAlign)
+                vLineOrigin.x = vLineSize.x;
+
+            if (FAILED(m_pGameInstance->Draw_Text(m_strFontTag,
+                Lines[i].c_str(),
+                { fAnchorX, fStartY + fLineHeight * static_cast<_float>(i) },
+                vColor,
+                m_fRotation,
+                vLineOrigin,
+                vDrawScale)))
+                return E_FAIL;
+        }
+
+        return S_OK;
+    }
 
     if (FAILED(m_pGameInstance->Draw_Text(m_strFontTag,
         m_strText.c_str(),

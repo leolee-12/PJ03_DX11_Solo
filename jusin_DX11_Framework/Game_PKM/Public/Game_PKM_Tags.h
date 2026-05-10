@@ -52,6 +52,10 @@ WNAME_TAG(PROTO_COM_TEX_BTL_BALLICON, L"Prototype_Component_Texture_Battle_BallI
 WNAME_TAG(PROTO_COM_TEX_BTL_MSGBOX, L"Prototype_Component_Texture_Battle_MsgBox");
 WNAME_TAG(PROTO_COM_TEX_BTL_MSGICON, L"Prototype_Component_Texture_Battle_MsgIcon");
 
+WNAME_TAG(PROTO_COM_TEX_BTL_MOVE, L"Prototype_Component_Texture_Battle_Move");
+WNAME_TAG(PROTO_COM_TEX_BTL_MOVEICON, L"Prototype_Component_Texture_Battle_MoveIcon");
+WNAME_TAG(PROTO_COM_TEX_BTL_MOVESHADOW, L"Prototype_Component_Texture_Battle_MoveShadow");
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
