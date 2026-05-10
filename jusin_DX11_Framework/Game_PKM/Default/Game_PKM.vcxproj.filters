@@ -94,12 +94,6 @@
     <Filter Include="00. Levels\01. Logo">
       <UniqueIdentifier>{fd463d1a-a634-4065-ba6b-42fa67af8b38}</UniqueIdentifier>
     </Filter>
-    <Filter Include="08. Battle\Battle_Trainer">
-      <UniqueIdentifier>{d9d01ded-b9a8-491b-a067-6f514750bb23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="08. Battle\Battle_Pokemon">
-      <UniqueIdentifier>{ec2004a2-41ec-4d18-9d9d-95af020f02d9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Components">
       <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
     </Filter>
@@ -111,6 +105,18 @@
     </Filter>
     <Filter Include="04. PartObject\Body">
       <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\00. Battle_API">
+      <UniqueIdentifier>{8b676e14-ca1a-4d68-8065-f0fba4f88635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\01. Battler">
+      <UniqueIdentifier>{8f90f69b-c728-47bd-930e-238f0096d93e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\02. Commands">
+      <UniqueIdentifier>{44e307d2-1dd7-4287-8e68-0b72dd5c211e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\03. States">
+      <UniqueIdentifier>{8a27bcc6-1057-49f1-b19e-5423d0c149fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Tags.h">
       <Filter>99. Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_Pokemon.h">
-      <Filter>08. Battle\Battle_Pokemon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Struct.h">
       <Filter>99. Defines</Filter>
@@ -222,15 +225,6 @@
     <ClInclude Include="..\Public\PlayerState.h">
       <Filter>02. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Battle_Data.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_Stream.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_Session.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Battle_Manager.h">
       <Filter>08. Battle</Filter>
     </ClInclude>
@@ -240,12 +234,6 @@
     <ClInclude Include="..\Public\Game_LevelEntry.h">
       <Filter>97. Game_API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Battle_Trainer.h">
-      <Filter>08. Battle\Battle_Trainer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_Layout.h">
-      <Filter>08. Battle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Body.h">
       <Filter>04. PartObject\Body</Filter>
     </ClInclude>
@@ -254,6 +242,51 @@
     </ClInclude>
     <ClInclude Include="..\Public\BattleMsg.h">
       <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battler.h">
+      <Filter>08. Battle\01. Battler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IBattleCommand.h">
+      <Filter>08. Battle\02. Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CommandQueue.h">
+      <Filter>08. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Context.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Data.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Layout.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Math.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Session.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Stream.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Targeting.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Pokemon.h">
+      <Filter>08. Battle\01. Battler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Trainer.h">
+      <Filter>08. Battle\01. Battler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Commands.h">
+      <Filter>08. Battle\02. Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IBattleState.h">
+      <Filter>08. Battle\03. States</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_States.h">
+      <Filter>08. Battle\03. States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -286,9 +319,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>80. Study\02. Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_Pokemon.cpp">
-      <Filter>08. Battle\Battle_Pokemon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
       <Filter>80. Study\02. Monster</Filter>
@@ -353,23 +383,11 @@
     <ClCompile Include="..\Private\PlayerState.cpp">
       <Filter>02. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Battle_Data.cpp">
-      <Filter>08. Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_Stream.cpp">
-      <Filter>08. Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_Session.cpp">
-      <Filter>08. Battle</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Battle_Manager.cpp">
       <Filter>08. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Battle.cpp">
       <Filter>00. Levels\03. Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_Trainer.cpp">
-      <Filter>08. Battle\Battle_Trainer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
       <Filter>04. PartObject\Body</Filter>
@@ -379,6 +397,39 @@
     </ClCompile>
     <ClCompile Include="..\Private\BattleMsg.cpp">
       <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battler.cpp">
+      <Filter>08. Battle\01. Battler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CommandQueue.cpp">
+      <Filter>08. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Data.cpp">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Math.cpp">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Session.cpp">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Stream.cpp">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Targeting.cpp">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Pokemon.cpp">
+      <Filter>08. Battle\01. Battler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Trainer.cpp">
+      <Filter>08. Battle\01. Battler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Commands.cpp">
+      <Filter>08. Battle\02. Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_States.cpp">
+      <Filter>08. Battle\03. States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -21,14 +21,21 @@
   <ItemGroup>
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\BattleMsg.h" />
+    <ClInclude Include="..\Public\Battler.h" />
+    <ClInclude Include="..\Public\Battle_Commands.h" />
+    <ClInclude Include="..\Public\Battle_Context.h" />
     <ClInclude Include="..\Public\Battle_Layout.h" />
     <ClInclude Include="..\Public\Battle_Manager.h" />
+    <ClInclude Include="..\Public\Battle_Math.h" />
+    <ClInclude Include="..\Public\Battle_States.h" />
+    <ClInclude Include="..\Public\Battle_Targeting.h" />
     <ClInclude Include="..\Public\Battle_Trainer.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\Body_Hero.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\CommandQueue.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
     <ClInclude Include="..\Public\Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
@@ -42,6 +49,8 @@
     <ClInclude Include="..\Public\Game_PKM_Tags.h" />
     <ClInclude Include="..\Public\Game_PKM_Struct.h" />
     <ClInclude Include="..\Public\Game_PresetTable.h" />
+    <ClInclude Include="..\Public\IBattleCommand.h" />
+    <ClInclude Include="..\Public\IBattleState.h" />
     <ClInclude Include="..\Public\Level_Battle.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -70,13 +79,19 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\BattleMsg.cpp" />
+    <ClCompile Include="..\Private\Battler.cpp" />
+    <ClCompile Include="..\Private\Battle_Commands.cpp" />
     <ClCompile Include="..\Private\Battle_Manager.cpp" />
+    <ClCompile Include="..\Private\Battle_Math.cpp" />
+    <ClCompile Include="..\Private\Battle_States.cpp" />
+    <ClCompile Include="..\Private\Battle_Targeting.cpp" />
     <ClCompile Include="..\Private\Battle_Trainer.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\Private\Body_Hero.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Pokemon.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
     <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />

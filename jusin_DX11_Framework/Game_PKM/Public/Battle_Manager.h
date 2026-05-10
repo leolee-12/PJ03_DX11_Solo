@@ -1,6 +1,6 @@
 #pragma once
 #include "Base.h"
-#include "Battle_Session.h"
+#include "Battle_Context.h"
 
 /* -------------------------------------------------- */
 // CBattle_Manager : 배틀(세션)의 진행을 책임지는 매니저 클래스
@@ -23,6 +23,9 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 class CPlayerState;
+class CBattler;
+class IBattleState;
+class CCommandQueue;
 
 class CBattle_Manager : public CBase
 {
@@ -37,15 +40,21 @@ public:
 	HRESULT Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent);
 	HRESULT Bind_OpponentTrainer(TRAINER_DATA* pTrainerData);
 
-	void  Update(_float fTimeDelta);
-	void  Request_Exit();
-	_bool Is_Done() const { return BATTLE_PHASE::DONE == m_ePhase; }
+	void	Begin();
+	void	Update(_float fTimeDelta);
+	void	Request_State(BATTLE_PHASE ePhase);
+	void	Request_Exit();
+	_bool	Is_Done() const { return BATTLE_PHASE::DONE == m_ePhase; }
+	_bool	Has_Pending_Transition() const { return nullptr != m_pNextState; }
 
-	const BATTLE_ENV&	Get_Env() const { return m_tEnv; }
-	const BATTLE_SLOT&	Get_Slot(_uint iSide) const;
-	const FIELD_STATE&	Get_Field() const { return m_tField; }
-	const TURN_CONTEXT&	Get_Turn() const { return m_tTurn; }
-	BATTLE_PHASE		Get_Phase() const { return m_ePhase; }
+	const BATTLE_ENV&		Get_Env() const { return m_tEnv; }
+	const BATTLE_SLOT&		Get_Slot(_uint iSide) const;
+	const FIELD_STATE&		Get_Field() const { return m_tField; }
+	const TURN_CONTEXT&		Get_Turn() const { return m_tTurn; }
+	BATTLE_PHASE			Get_Phase() const { return m_ePhase; }
+
+	CBattler* Get_Battler(_uint iSide) const;
+	CCommandQueue* Get_Queue() const { return m_pQueue; }
 
 	void Register_BattlerObj(_uint iSide, CGameObject* pObj);
 	void Register_TrainerObj(_uint iSide, CGameObject* pObj);
@@ -60,10 +69,14 @@ public:
 
 private:
 	BATTLE_ENV		m_tEnv = {};
-	BATTLE_SLOT		m_tSlot[g_kBattleSideCount] = {};
 	FIELD_STATE		m_tField = {};
 	TURN_CONTEXT	m_tTurn = {};
 	BATTLE_PHASE	m_ePhase = { BATTLE_PHASE::INTRO };
+
+	CBattler* m_pBattlers[g_kBattleSideCount] = {};
+	IBattleState* m_pCurrentState = { nullptr };
+	IBattleState* m_pNextState = { nullptr };
+	CCommandQueue* m_pQueue = { nullptr };
 
 	CPlayerState*		m_pPlayerState = { nullptr };
 	POKEMON_INSTANCE*	m_pOpponentSingle = { nullptr };
@@ -73,6 +86,12 @@ private:
 	CGameObject* m_pTrainerObj[g_kBattleSideCount] = {};
 
 private:
+	BATTLE_CONTEXT Build_Context();
+	HRESULT Initialize_CoreComponents();
+	IBattleState* Create_State(BATTLE_PHASE ePhase);
+	void Apply_Pending_Transition(const BATTLE_CONTEXT& ctx);
+	void Release_State(IBattleState*& pState);
+
 	void Phase_Intro(_float fTimeDelta);
 	void Phase_Input_Player(_float fTimeDelta);
 	void Phase_Input_Opponent(_float fTimeDelta);

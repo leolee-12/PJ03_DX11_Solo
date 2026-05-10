@@ -70,6 +70,8 @@ HRESULT CLevel_Battle::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
+	m_pBattleManager->Begin();
+
 	return S_OK;
 }
 

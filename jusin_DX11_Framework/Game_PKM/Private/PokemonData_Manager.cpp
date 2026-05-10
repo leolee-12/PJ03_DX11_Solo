@@ -49,6 +49,16 @@ const ABILITY_DATA* CPokemonData_Manager::Find_Ability(_uint iAbilityID) const
 	return &iter->second;
 }
 
+const ITEM_DATA* CPokemonData_Manager::Find_Item(_uint iItemID) const
+{
+	auto iter = m_ItemTable.find(iItemID);
+
+	if (iter == m_ItemTable.end())
+		return nullptr;
+
+	return &iter->second;
+}
+
 const BATTLE_RULE_DESC* CPokemonData_Manager::Find_BattleRule(BATTLE_RULE eRule) const
 {
 	const size_t iIndex = static_cast<size_t>(eRule);
@@ -219,13 +229,19 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 	return S_OK;
 }
 
+HRESULT CPokemonData_Manager::Validate_Seed() const
+{
+	return E_NOTIMPL;
+}
+
 void CPokemonData_Manager::Free()
 {
-	__super::Free();
-
 	m_SpeciesTable.clear();
 	m_MoveTable.clear();
 	m_AbilityTable.clear();
+	m_ItemTable.clear();
 
 	m_bInitialized = false;
+
+	__super::Free();
 }
