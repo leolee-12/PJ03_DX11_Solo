@@ -76,7 +76,14 @@ void CBody::Update(_float fTimeDelta)
 void CBody::Late_Update(_float fTimeDelta)
 {
 	__super::Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
-	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+
+
+	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
+	if (true == m_pGameInstance->isIn_Frustum_WorldSpace(vPos, 2.f))
+	{
+		m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDERID::SHADOW, this);
+	}
 }
 
 HRESULT CBody::Ready_Components()

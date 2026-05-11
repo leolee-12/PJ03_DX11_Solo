@@ -70,8 +70,8 @@ public:
 	const _float4x4* Get_Transform_Inverse(D3DTS eState) const;
 	const _float4* Get_CamPosition() const;
 
-	void Set_CameraWorld(_fmatrix StateMatrix);
-	void Set_Projection(_fmatrix StateMatrix);
+	void XM_CALLCONV Set_CameraWorld(_fmatrix StateMatrix);
+	void XM_CALLCONV Set_Projection(_fmatrix StateMatrix);
 
 	void Set_MainCamera(class CCamera* pCamera);
 	class CCamera* Get_MainCamera() const;
@@ -153,6 +153,10 @@ public:
 	void Set_GroupVolume(CHANNELID eChannelID, _float fVolume);
 #pragma endregion
 
+#pragma region FRUSTUM	
+	_bool XM_CALLCONV isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange = 0.f);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -167,6 +171,7 @@ private:
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 	class CPicking*				m_pPicking = { nullptr };
 	class CShadow*				m_pShadow = { nullptr };
+	class CFrustum*				m_pFrustum = { nullptr };
 
 	class CCamera*				m_pMainCamera = { nullptr };
 	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };

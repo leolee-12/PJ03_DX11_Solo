@@ -41,8 +41,6 @@ void CBody_Hero::Update(_float fTimeDelta)
 void CBody_Hero::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-
-	m_pGameInstance->Add_RenderGroup(RENDERID::SHADOW, this);
 }
 
 HRESULT CBody_Hero::Render()

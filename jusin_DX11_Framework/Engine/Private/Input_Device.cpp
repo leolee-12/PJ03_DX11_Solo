@@ -192,6 +192,7 @@ void CInput_Device::Ready_KeyGroupMap()
 	m_iKeyGroupMap[DIK_F11] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_F12] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_ESCAPE] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_P] = KeyGroup::SYSTEM;
 
 	// UI 네비게이션
 	m_iKeyGroupMap[DIK_RETURN] = KeyGroup::UI_NAVIGATE;

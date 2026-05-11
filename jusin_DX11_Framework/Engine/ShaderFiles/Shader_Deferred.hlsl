@@ -197,8 +197,8 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	float fW, fH;
 	g_TexLightDepth.GetDimensions(fW, fH);
 	float2 vTexelSize = float2(1.f / fW, 1.f / fH);
-
-	// 3x3 PCF (각 탭은 하드웨어 2x2 PCF → 실효 4x4)
+	
+	// 3x3 PCF (각 탭은 하드웨어 2x2 PCF -> 실효 4x4)
 	float fLitFactor = 0.f;
 	[unroll]
 		for (int y = -1; y <= 1; ++y)
@@ -208,14 +208,13 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 			{
 				float2 vOffset = float2(x, y) * vTexelSize;
 				fLitFactor += g_TexLightDepth.SampleCmpLevelZero(
-					ShadowCompareSampler, vTexcoord + vOffset, fLightNDCZ - 0.001f).r;
+					ShadowCompareSampler, vTexcoord + vOffset, fLightNDCZ - 0.0005f).r;
 			}
 		}
 	fLitFactor /= 9.f;
-
+	
 	// Contrast remap: 깊은 그림자/완전 빛은 클램프, 경계만 S-커브로 부드럽게
 	fLitFactor = smoothstep(0.2f, 0.8f, fLitFactor);
-
 	Out.vBackBuffer = Out.vBackBuffer * lerp(0.5f, 1.0f, fLitFactor);
 
 	return Out;

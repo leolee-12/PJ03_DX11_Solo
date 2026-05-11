@@ -74,7 +74,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			m_pMenu->Open();
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_F9))
+	if (m_pGameInstance->Key_Down(DIK_P))
 	{
 		BATTLE_ENV tEnv = {};
 		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;

@@ -12,6 +12,7 @@
 #include "Sound_Manager.h"
 #include "Picking.h"
 #include "Shadow.h"
+#include "Frustum.h"
 
 #include "SharedTextureBinder.h"
 
@@ -90,6 +91,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pShadow)
 		return E_FAIL;
 
+	m_pFrustum = CFrustum::Create();
+	if (nullptr == m_pFrustum)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -100,6 +105,10 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pObject_Manager->Update(fTimeDelta);
+
+	m_pShadow->Update();
+	m_pFrustum->Update();
+
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pLevel_Manager->Update(fTimeDelta);
@@ -150,6 +159,7 @@ void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pMainCamera);
 
+	Safe_Release(m_pFrustum);
 	Safe_Release(m_pShadow);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pFont_Manager);
@@ -309,12 +319,12 @@ const _float4* CGameInstance::Get_CamPosition() const
 	return m_pPipeLine->Get_CamPosition();
 }
 
-void CGameInstance::Set_CameraWorld(_fmatrix StateMatrix)
+void XM_CALLCONV CGameInstance::Set_CameraWorld(_fmatrix StateMatrix)
 {
 	m_pPipeLine->Set_CameraWorld(StateMatrix);
 }
 
-void CGameInstance::Set_Projection(_fmatrix StateMatrix)
+void XM_CALLCONV CGameInstance::Set_Projection(_fmatrix StateMatrix)
 {
 	m_pPipeLine->Set_Projection(StateMatrix);
 }
@@ -509,6 +519,13 @@ HRESULT CGameInstance::Set_ShadowLight(const SHADOW_LIGHT_DESC& ShadowDesc)
 HRESULT CGameInstance::Bind_Shadow_FarZ(CShader* pShader)
 {
 	return m_pShadow->Bind_FarZ(pShader);
+}
+#pragma endregion
+
+#pragma region FRUSTUM	
+_bool XM_CALLCONV CGameInstance::isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange)
+{
+	return m_pFrustum->isIn_WorldSpace(vWorldPos, fRange);
 }
 #pragma endregion
 
