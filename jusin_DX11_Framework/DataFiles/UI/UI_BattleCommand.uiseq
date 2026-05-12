@@ -6,8 +6,113 @@
     "scalePolicy": "UNIFORM_FIT",
     "version": 2
   },
+  "timeline": [
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Reset",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.009999999776482582
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_002",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_003",
+      "visible": true
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Play",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    }
+  ],
   "widgets": [
     {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -80.0,
+              "loop": "NONE",
+              "start": 40.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 40.0,
+              "loop": "NONE",
+              "start": 40.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "BR",
@@ -19,7 +124,7 @@
           1.0,
           1.0,
           1.0,
-          1.0
+          0.0
         ],
         "interactable": true,
         "layoutSlot": {
@@ -61,6 +166,50 @@
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_IN_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -80.0,
+              "loop": "NONE",
+              "start": 40.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 40.0,
+              "loop": "NONE",
+              "start": 40.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "BR",
@@ -114,6 +263,50 @@
       "type": "BUTTON"
     },
     {
+      "animations": [
+        {
+          "name": "Play",
+          "tracks": [
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.25,
+              "ease": "EASE_OUT_SINE",
+              "end": -80.0,
+              "loop": "NONE",
+              "start": 40.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Reset",
+          "tracks": [
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.0,
+              "ease": "LINEAR",
+              "end": 40.0,
+              "loop": "NONE",
+              "start": 40.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        }
+      ],
       "desc": {
         "anchor": {
           "kind": "BR",

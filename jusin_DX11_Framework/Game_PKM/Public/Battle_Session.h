@@ -10,6 +10,11 @@ inline constexpr _uint g_kBattleSide_Player = 0;
 inline constexpr _uint g_kBattleSide_Opponent = 1;
 inline constexpr _uint g_kBattleSideCount = 2;
 
+inline constexpr _uint g_kSlotsPerSide_Single = 1;
+inline constexpr _uint g_kSlotsPerSide_Double = 2;
+inline constexpr _uint g_kMaxSlotsPerSide = 2;
+inline constexpr _uint g_kMaxBattlers = g_kBattleSideCount * g_kMaxSlotsPerSide;
+
 enum class STAGE_INDEX : _ubyte
 {
 	ATK, DEF, SPATK, SPDEF, SPD, ACC, EVA, COUNT

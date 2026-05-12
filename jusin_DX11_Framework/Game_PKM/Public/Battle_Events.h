@@ -1,0 +1,158 @@
+#pragma once
+#include "Game_PKM_Defines.h"
+#include "Battle_Data.h"
+#include "Damage_Pipe.h"
+
+NS_BEGIN(Game_PKM)
+
+enum class BATTLE_EVENT_TYPE : _ubyte
+{
+	BATTLE_STARTED,
+	TURN_STARTED,
+	COMMAND_SELECTED,
+	MOVE_USED,
+	MOVE_FAILED,
+	DAMAGE_DEALT,
+	STATUS_APPLIED,
+	STAT_STAGE_CHANGED,
+	POKEMON_FAINTED,
+	POKEMON_SWITCHED,
+	FIELD_CHANGED,
+	RUN_FAILED,
+	RUN_SUCCEEDED,
+	TURN_ENDED,
+	BATTLE_ENDED,
+	END
+};
+
+enum class MOVE_FAIL_REASON : _ubyte
+{
+	NO_PP,
+	MISSED,
+	IMMUNE,
+	FLINCHED,
+	ASLEEP,
+	FROZEN,
+	PARALYZED_FULL,
+	RECHARGING,
+	OTHER,
+	END
+};
+
+enum class RUN_FAIL_REASON : _ubyte
+{
+	FORBIDDEN,
+	CAUGHT,
+	OTHER,
+	END
+};
+
+struct BATTLE_EVENT_BASE
+{
+	BATTLE_EVENT_TYPE eType = { BATTLE_EVENT_TYPE::END };
+};
+
+struct EVENT_BATTLE_STARTED : public BATTLE_EVENT_BASE
+{
+	EVENT_BATTLE_STARTED() { eType = BATTLE_EVENT_TYPE::BATTLE_STARTED; }
+	BATTLE_ENV tEnv = {};
+};
+
+struct EVENT_TURN_STARTED : public BATTLE_EVENT_BASE
+{
+	EVENT_TURN_STARTED() { eType = BATTLE_EVENT_TYPE::TURN_STARTED; }
+	_uint iTurn = { 0 };
+};
+
+struct EVENT_COMMAND_SELECTED : public BATTLE_EVENT_BASE
+{
+	EVENT_COMMAND_SELECTED() { eType = BATTLE_EVENT_TYPE::COMMAND_SELECTED; }
+	_uint iSide = { 0 };
+};
+
+struct EVENT_MOVE_USED : public BATTLE_EVENT_BASE
+{
+	EVENT_MOVE_USED() { eType = BATTLE_EVENT_TYPE::MOVE_USED; }
+	_uint iSide = { 0 };
+	_uint iMoveID = { 0 };
+};
+
+struct EVENT_MOVE_FAILED : public BATTLE_EVENT_BASE
+{
+	EVENT_MOVE_FAILED() { eType = BATTLE_EVENT_TYPE::MOVE_FAILED; }
+	_uint iSide = { 0 };
+	_uint iMoveID = { 0 };
+	MOVE_FAIL_REASON eReason = { MOVE_FAIL_REASON::OTHER };
+};
+
+struct EVENT_DAMAGE_DEALT : public BATTLE_EVENT_BASE
+{
+	EVENT_DAMAGE_DEALT() { eType = BATTLE_EVENT_TYPE::DAMAGE_DEALT; }
+	_uint iTargetSide = { 0 };
+	_ushort iAmount = { 0 };
+	DAMAGE_SOURCE eSource = { DAMAGE_SOURCE::OTHER };
+	_uint iMoveID = { 0 };
+	_float fEffectiveness = { 1.f };
+	_bool bCrit = { false };
+};
+
+struct EVENT_STATUS_APPLIED : public BATTLE_EVENT_BASE
+{
+	EVENT_STATUS_APPLIED() { eType = BATTLE_EVENT_TYPE::STATUS_APPLIED; }
+	_uint iSide = { 0 };
+	STATUS_CONDITION eStatus = { STATUS_CONDITION::NONE };
+};
+
+struct EVENT_STAT_STAGE_CHANGED : public BATTLE_EVENT_BASE
+{
+	EVENT_STAT_STAGE_CHANGED() { eType = BATTLE_EVENT_TYPE::STAT_STAGE_CHANGED; }
+	_uint iSide = { 0 };
+	STAGE_INDEX eIndex = { STAGE_INDEX::ATK };
+	_byte iDelta = { 0 };
+	_byte iNewStage = { 0 };
+};
+
+struct EVENT_POKEMON_FAINTED : public BATTLE_EVENT_BASE
+{
+	EVENT_POKEMON_FAINTED() { eType = BATTLE_EVENT_TYPE::POKEMON_FAINTED; }
+	_uint iSide = { 0 };
+};
+
+struct EVENT_POKEMON_SWITCHED : public BATTLE_EVENT_BASE
+{
+	EVENT_POKEMON_SWITCHED() { eType = BATTLE_EVENT_TYPE::POKEMON_SWITCHED; }
+	_uint iSide = { 0 };
+	_uint iNewPartyIndex = { 0 };
+};
+
+struct EVENT_FIELD_CHANGED : public BATTLE_EVENT_BASE
+{
+	EVENT_FIELD_CHANGED() { eType = BATTLE_EVENT_TYPE::FIELD_CHANGED; }
+};
+
+struct EVENT_RUN_FAILED : public BATTLE_EVENT_BASE
+{
+	EVENT_RUN_FAILED() { eType = BATTLE_EVENT_TYPE::RUN_FAILED; }
+	_uint iSide = { 0 };
+	RUN_FAIL_REASON eReason = { RUN_FAIL_REASON::OTHER };
+};
+
+struct EVENT_RUN_SUCCEEDED : public BATTLE_EVENT_BASE
+{
+	EVENT_RUN_SUCCEEDED() { eType = BATTLE_EVENT_TYPE::RUN_SUCCEEDED; }
+	_uint iSide = { 0 };
+};
+
+struct EVENT_TURN_ENDED : public BATTLE_EVENT_BASE
+{
+	EVENT_TURN_ENDED() { eType = BATTLE_EVENT_TYPE::TURN_ENDED; }
+	_uint iTurn = { 0 };
+};
+
+struct EVENT_BATTLE_ENDED : public BATTLE_EVENT_BASE
+{
+	EVENT_BATTLE_ENDED() { eType = BATTLE_EVENT_TYPE::BATTLE_ENDED; }
+	_uint iWinnerSide = { 0 };
+};
+
+NS_END

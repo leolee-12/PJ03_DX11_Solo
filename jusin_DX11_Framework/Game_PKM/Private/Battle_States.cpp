@@ -1,0 +1,486 @@
+﻿#include "Battle_States.h"
+#include "IBattleCommand.h"
+#include "Battle_Manager.h"
+#include "CommandQueue.h"
+#include "Battle_Commands.h"
+#include "Battler.h"
+#include "IBattleAI.h"
+#include "Battle_EventDispatcher.h"
+
+#include "GameInstance.h"
+
+#pragma region IntroState
+CIntroState::CIntroState()
+{
+}
+
+void CIntroState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    if (nullptr == ctx.pDispatcher || nullptr == ctx.pManager)
+        return;
+
+    EVENT_BATTLE_STARTED tEvent{};
+    tEvent.tEnv = ctx.pManager->Get_Env();
+    ctx.pDispatcher->Publish(tEvent);
+}
+
+void CIntroState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    if (ctx.pManager->Is_Pacing_Busy())
+        return;
+
+    ctx.pManager->Request_State(BATTLE_PHASE::INPUT_PLAYER);
+}
+
+void CIntroState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CIntroState* CIntroState::Create()
+{
+    return new CIntroState();
+}
+
+void CIntroState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region InputPlayerState
+CInputPlayerState::CInputPlayerState()
+{
+}
+
+void CInputPlayerState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    if (nullptr == ctx.pDispatcher)
+        return;
+
+    EVENT_TURN_STARTED tEvent{};
+    tEvent.iTurn = (nullptr != ctx.pTurn) ? ctx.pTurn->iTurnNumber : 0;
+    ctx.pDispatcher->Publish(tEvent);
+}
+
+void CInputPlayerState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    // DIK_ESCAPE 는 Director 의 메뉴 Cancel 콜백이 단독 담당.
+    //  MAIN 에서 Cancel → 도망(CRunCommand)
+    //  MOVE 에서 Cancel → MAIN 복귀
+    // State 는 큐에 명령이 올라온 것만 감지해 다음 단계로 전이한다.
+    CCommandQueue* pQueue = ctx.pManager->Get_Queue();
+    if (nullptr == pQueue || pQueue->Empty())
+        return;
+
+    ctx.pManager->Request_State(BATTLE_PHASE::INPUT_OPPONENT);
+}
+
+void CInputPlayerState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CInputPlayerState* CInputPlayerState::Create()
+{
+    return new CInputPlayerState();
+}
+
+void CInputPlayerState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region InputOpponentState
+CInputOpponentState::CInputOpponentState()
+{
+}
+
+void CInputOpponentState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+void CInputOpponentState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager || nullptr == ctx.pManager->Get_Queue())
+        return;
+
+    IBattleAI* pAI = ctx.pManager->Get_AI(g_kBattleSide_Opponent);
+    if (nullptr == pAI)
+        return;
+
+    IBattleCommand* pCommand = pAI->Decide(ctx, g_kBattleSide_Opponent);
+    if (nullptr == pCommand)
+        return;
+
+    if (FAILED(ctx.pManager->Get_Queue()->Push(pCommand)))
+    {
+        Safe_Release(pCommand);
+        return;
+    }
+
+    Safe_Release(pCommand);
+
+    if (nullptr != ctx.pDispatcher)
+    {
+        EVENT_COMMAND_SELECTED tEvent{};
+        tEvent.iSide = g_kBattleSide_Opponent;
+        ctx.pDispatcher->Publish(tEvent);
+    }
+
+    ctx.pManager->Request_State(BATTLE_PHASE::RESOLVE_ORDER);
+}
+
+void CInputOpponentState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CInputOpponentState* CInputOpponentState::Create()
+{
+    return new CInputOpponentState();
+}
+
+void CInputOpponentState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region ResolveOrderState
+CResolveOrderState::CResolveOrderState()
+{
+}
+
+void CResolveOrderState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    if (nullptr != ctx.pManager && nullptr != ctx.pManager->Get_Queue())
+        ctx.pManager->Get_Queue()->Sort(ctx);
+}
+
+void CResolveOrderState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    ctx.pManager->Request_State(BATTLE_PHASE::RESOLVE_ACTION_1);
+}
+
+void CResolveOrderState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CResolveOrderState* CResolveOrderState::Create()
+{
+    return new CResolveOrderState();
+}
+
+void CResolveOrderState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region ResolveActionState
+CResolveActionState::CResolveActionState()
+{
+}
+
+void CResolveActionState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    if (nullptr == ctx.pManager) return;
+    CCommandQueue* pQueue = ctx.pManager->Get_Queue();
+    if (nullptr == pQueue) return;
+    m_pCommand = pQueue->Pop();
+}
+
+void CResolveActionState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    if (nullptr != m_pCommand)
+    {
+        m_pCommand->Execute(ctx);
+        Safe_Release(m_pCommand);
+    }
+
+    if (ctx.pManager->Has_Pending_Transition())
+        return;
+
+    if (ctx.pManager->Is_Pacing_Busy())
+        return;
+
+    if (nullptr != ctx.pManager->Get_Queue() && false == ctx.pManager->Get_Queue()->Empty())
+    {
+        ctx.pManager->Request_State(BATTLE_PHASE::RESOLVE_ACTION_1);
+        return;
+    }
+
+    ctx.pManager->Request_State(BATTLE_PHASE::RESOLVE_END_TURN);
+}
+
+void CResolveActionState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+    Safe_Release(m_pCommand);
+}
+
+CResolveActionState* CResolveActionState::Create()
+{
+    return new CResolveActionState();
+}
+
+void CResolveActionState::Free()
+{
+    Safe_Release(m_pCommand);
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region ResolveEndTurnState
+CResolveEndTurnState::CResolveEndTurnState()
+{
+}
+
+void CResolveEndTurnState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    for (_uint i = 0; i < g_kBattleSideCount; ++i)
+    {
+        CBattler* pBattler = ctx.pBattlers[i];
+        if (nullptr != pBattler)
+            pBattler->Tick_Volatile_Turns();
+    }
+
+    if (nullptr != ctx.pTurn)
+        ++ctx.pTurn->iTurnNumber;
+}
+
+void CResolveEndTurnState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    if (ctx.pManager->Is_Pacing_Busy())
+        return;
+
+    ctx.pManager->Request_State(BATTLE_PHASE::CHECK_END);
+}
+
+void CResolveEndTurnState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    if (nullptr == ctx.pDispatcher)
+        return;
+
+    EVENT_TURN_ENDED tEvent{};
+    tEvent.iTurn = (nullptr != ctx.pTurn) ? ctx.pTurn->iTurnNumber : 0;
+    ctx.pDispatcher->Publish(tEvent);
+}
+
+CResolveEndTurnState* CResolveEndTurnState::Create()
+{
+    return new CResolveEndTurnState();
+}
+
+void CResolveEndTurnState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region CheckEndState
+CCheckEndState::CCheckEndState()
+{
+}
+
+void CCheckEndState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+void CCheckEndState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    CBattler* pPlayer = ctx.Get_Self(g_kBattleSide_Player);
+    CBattler* pOpponent = ctx.Get_Self(g_kBattleSide_Opponent);
+
+    const _bool bPlayerAlive = (nullptr != pPlayer && pPlayer->Is_Alive());
+    const _bool bOpponentAlive = (nullptr != pOpponent && pOpponent->Is_Alive());
+
+    if (false == bPlayerAlive || false == bOpponentAlive)
+    {
+        ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
+        return;
+    }
+
+    ctx.pManager->Request_State(BATTLE_PHASE::INPUT_PLAYER);
+}
+
+void CCheckEndState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CCheckEndState* CCheckEndState::Create()
+{
+    return new CCheckEndState();
+}
+
+void CCheckEndState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region ForcedSwitchState
+// [미사용] 싱글배틀 기본 흐름에서는 사용하지 않는 상태.
+// KO 후 강제 교체 또는 더블 배틀 도입 시 재활용 예정이므로 클래스만 유지한다.
+// - CBattle_Manager::Create_State 의 switch 에 해당 case 없음 (생성 경로 없음).
+// - CCheckEndState 도 이 상태로의 분기를 가지지 않음.
+// - Get_Phase 가 BATTLE_PHASE::CHECK_END 를 반환하는 것은 임시값이며,
+//   정식 도입 시 별도 phase enum 값(FORCED_SWITCH 등) 추가 후 교체할 것.
+CForcedSwitchState::CForcedSwitchState()
+{
+}
+
+void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+void CForcedSwitchState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)ctx;
+    (void)fTimeDelta;
+}
+
+void CForcedSwitchState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CForcedSwitchState* CForcedSwitchState::Create()
+{
+    return new CForcedSwitchState();
+}
+
+void CForcedSwitchState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region OutroState
+COutroState::COutroState()
+{
+}
+
+void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    if (nullptr == ctx.pDispatcher)
+        return;
+
+    CBattler* pPlayer = ctx.Get_Self(g_kBattleSide_Player);
+    CBattler* pOpponent = ctx.Get_Self(g_kBattleSide_Opponent);
+
+    const _bool bPlayerAlive = (nullptr != pPlayer && pPlayer->Is_Alive());
+    const _bool bOpponentAlive = (nullptr != pOpponent && pOpponent->Is_Alive());
+
+    EVENT_BATTLE_ENDED tEvent{};
+
+    if (bPlayerAlive && false == bOpponentAlive)
+        tEvent.iWinnerSide = g_kBattleSide_Player;
+    else if (false == bPlayerAlive && bOpponentAlive)
+        tEvent.iWinnerSide = g_kBattleSide_Opponent;
+    else
+        tEvent.iWinnerSide = g_kBattleSide_Player;  // 도망/Esc 등 무승부적 종료 - 임시로 Player 표기
+
+    ctx.pDispatcher->Publish(tEvent);
+}
+
+void COutroState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    if (ctx.pManager->Is_Pacing_Busy())
+        if (ctx.pManager->Is_Pacing_Busy())
+            return;
+
+    ctx.pManager->Request_Exit();
+}
+
+void COutroState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+COutroState* COutroState::Create()
+{
+    return new COutroState();
+}
+
+void COutroState::Free()
+{
+    __super::Free();
+}
+#pragma endregion
+
+#pragma region DoneState
+CDoneState::CDoneState()
+{
+}
+
+void CDoneState::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+void CDoneState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+    (void)ctx;
+    (void)fTimeDelta;
+}
+
+void CDoneState::OnExit(const BATTLE_CONTEXT& ctx)
+{
+    (void)ctx;
+}
+
+CDoneState* CDoneState::Create()
+{
+    return new CDoneState();
+}
+
+void CDoneState::Free()
+{
+    __super::Free();
+}
+#pragma endregion

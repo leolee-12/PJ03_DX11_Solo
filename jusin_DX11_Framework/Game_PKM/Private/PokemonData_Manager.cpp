@@ -49,6 +49,16 @@ const ABILITY_DATA* CPokemonData_Manager::Find_Ability(_uint iAbilityID) const
 	return &iter->second;
 }
 
+const ITEM_DATA* CPokemonData_Manager::Find_Item(_uint iItemID) const
+{
+	auto iter = m_ItemTable.find(iItemID);
+
+	if (iter == m_ItemTable.end())
+		return nullptr;
+
+	return &iter->second;
+}
+
 const BATTLE_RULE_DESC* CPokemonData_Manager::Find_BattleRule(BATTLE_RULE eRule) const
 {
 	const size_t iIndex = static_cast<size_t>(eRule);
@@ -127,7 +137,9 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iBaseSpAtk = 50; tData.iBaseSpDef = 50; tData.iBaseSpd = 90;
 		tData.iAbility1 = 9;
 		tData.iLearnset[0] = 84;
-		tData.iLearnset[1] = 33;
+		tData.iLearnset[1] = 201;
+		tData.iLearnset[2] = 202;
+		tData.iLearnset[3] = 203;
 		tData.strModelTag = PROTO_COM_MODEL_PM0025_00;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
@@ -147,12 +159,15 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 			m_MoveTable.emplace(iID, tData);
 		};
 
-	AddMove(10, L"Scratch", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
-	AddMove(22, L"Vine Whip", TYPE::GRASS, MOVE_CATEGORY::PHYSICAL, 45, 100, 25);
-	AddMove(33, L"Tackle", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
-	AddMove(52, L"Ember", TYPE::FIRE, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
-	AddMove(55, L"Water Gun", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
-	AddMove(84, L"Thundershock", TYPE::ELECTRIC, MOVE_CATEGORY::SPECIAL, 40, 100, 30);
+	AddMove(10, L"ÇÒÄû±â", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
+	AddMove(22, L"µ¢ÄðÃ¤Âï", TYPE::GRASS, MOVE_CATEGORY::PHYSICAL, 45, 100, 25);
+	AddMove(33, L"¸öÅë¹ÚÄ¡±â", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
+	AddMove(52, L"ºÒ²É¼¼·Ê", TYPE::FIRE, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
+	AddMove(55, L"¸ô´ëÆ÷", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
+	AddMove(84, L"Àü±â¼îÅ©", TYPE::ELECTRIC, MOVE_CATEGORY::SPECIAL, 40, 100, 30);
+	AddMove(201, L"Âü¹æÂü¹æ¼­ÇÎ", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 90, 100, 15);
+	AddMove(202, L"µÕ½ÇµÕ½ÇÆú", TYPE::FLYING, MOVE_CATEGORY::PHYSICAL, 90, 95, 15);
+	AddMove(203, L"ÆÄÄ¡ÆÄÄ¡¾×¼¿", TYPE::ELECTRIC, MOVE_CATEGORY::PHYSICAL, 50, 100, 15);
 
 	auto AddAbility = [this](_uint iID, const _tchar* pName, _uint iEffectID = 0)
 		{
@@ -219,13 +234,19 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 	return S_OK;
 }
 
+HRESULT CPokemonData_Manager::Validate_Seed() const
+{
+	return E_NOTIMPL;
+}
+
 void CPokemonData_Manager::Free()
 {
-	__super::Free();
-
 	m_SpeciesTable.clear();
 	m_MoveTable.clear();
 	m_AbilityTable.clear();
+	m_ItemTable.clear();
 
 	m_bInitialized = false;
+
+	__super::Free();
 }

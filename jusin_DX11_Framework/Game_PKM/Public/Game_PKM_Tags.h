@@ -48,6 +48,9 @@ WNAME_TAG(PROTO_COM_TEX_BTL_PLAYERPLATE, L"Prototype_Component_Texture_Battle_Pl
 WNAME_TAG(PROTO_COM_TEX_BTL_ENEMYPLATE, L"Prototype_Component_Texture_Battle_EnemyPlate");
 WNAME_TAG(PROTO_COM_TEX_BTL_BALLPLATE, L"Prototype_Component_Texture_Battle_BallPlate");
 WNAME_TAG(PROTO_COM_TEX_BTL_BALLICON, L"Prototype_Component_Texture_Battle_BallIcon");
+WNAME_TAG(PROTO_COM_TEX_BTL_NUM, L"Prototype_Component_Texture_Battle_Number");
+WNAME_TAG(PROTO_COM_TEX_BTL_NUM_SLASH, L"Prototype_Component_Texture_Battle_Number_Slash");
+WNAME_TAG(PROTO_COM_TEX_STATUS_GENDER, L"Prototype_Component_Texture_Status_Gender");
 
 WNAME_TAG(PROTO_COM_TEX_BTL_MSGBOX, L"Prototype_Component_Texture_Battle_MsgBox");
 WNAME_TAG(PROTO_COM_TEX_BTL_MSGICON, L"Prototype_Component_Texture_Battle_MsgIcon");

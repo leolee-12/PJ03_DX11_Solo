@@ -32,6 +32,35 @@
       "targetId": "widget_004"
     },
     {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.009999999776482582
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_002",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_003",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_004",
+      "visible": true
+    },
+    {
       "animName": "Play",
       "joinPrev": false,
       "kind": "PLAY_ANIM",

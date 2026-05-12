@@ -2,6 +2,12 @@
 #include "PlayerState.h"
 #include "PokemonData_Manager.h"
 #include "Battle_Layout.h"
+#include "Battler.h"
+#include "CommandQueue.h"
+#include "Battle_States.h"
+#include "Damage_Calculator.h"
+#include "Battle_EventDispatcher.h"
+#include "Battle_AI.h"
 
 #include "GameInstance.h"
 
@@ -16,9 +22,6 @@ HRESULT CBattle_Manager::Initialize(const BATTLE_ENV& tEnv)
 	Reset_FieldState(m_tField);
 	Reset_TurnContext(m_tTurn);
 
-	for (auto& tSlot : m_tSlot)
-		Reset_BattleSlot(tSlot);
-
 	auto* pDataMgr = CPokemonData_Manager::GetInstance();
 	if (nullptr != pDataMgr)
 	{
@@ -30,6 +33,9 @@ HRESULT CBattle_Manager::Initialize(const BATTLE_ENV& tEnv)
 			m_tEnv.bExpGain = pRule->bExpGain;
 		}
 	}
+
+	if (FAILED(Initialize_CoreComponents()))
+		return E_FAIL;
 
 	m_ePhase = BATTLE_PHASE::INTRO;
 
@@ -48,7 +54,16 @@ HRESULT CBattle_Manager::Bind_PlayerParty(CPlayerState* pPlayerState, _uint iLea
 	if (nullptr == pLead)
 		return E_FAIL;
 
-	m_tSlot[g_kBattleSide_Player].pPokemon = pLead;
+	Safe_Release(m_pBattlers[g_kBattleSide_Player]);
+
+	CBattler::BATTLER_DESC tDesc{};
+	tDesc.iSide = g_kBattleSide_Player;
+	tDesc.iSlotIndex = 0;
+	tDesc.pInstance = pLead;
+
+	m_pBattlers[g_kBattleSide_Player] = CBattler::Create(tDesc);
+	if (nullptr == m_pBattlers[g_kBattleSide_Player])
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -59,7 +74,22 @@ HRESULT CBattle_Manager::Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent)
 		return E_FAIL;
 
 	m_pOpponentSingle = pOpponent;
-	m_tSlot[g_kBattleSide_Opponent].pPokemon = pOpponent;
+
+	Safe_Release(m_pBattlers[g_kBattleSide_Opponent]);
+
+	CBattler::BATTLER_DESC tDesc{};
+	tDesc.iSide = g_kBattleSide_Opponent;
+	tDesc.iSlotIndex = 0;
+	tDesc.pInstance = pOpponent;
+
+	m_pBattlers[g_kBattleSide_Opponent] = CBattler::Create(tDesc);
+	if (nullptr == m_pBattlers[g_kBattleSide_Opponent])
+		return E_FAIL;
+
+	Safe_Release(m_pAI[g_kBattleSide_Opponent]);
+	m_pAI[g_kBattleSide_Opponent] = CRandomAI::Create();
+	if (nullptr == m_pAI[g_kBattleSide_Opponent])
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -76,58 +106,86 @@ HRESULT CBattle_Manager::Bind_OpponentTrainer(TRAINER_DATA* pTrainerData)
 	if (g_kMaxPartySize == iLead)
 		return E_FAIL;
 
-	m_tSlot[g_kBattleSide_Opponent].pPokemon = PartyOps::Get(tParty, iLead);
-	if (nullptr == m_tSlot[g_kBattleSide_Opponent].pPokemon)
+	POKEMON_INSTANCE* pLead = PartyOps::Get(tParty, iLead);
+	if (nullptr == pLead)
+		return E_FAIL;
+
+	Safe_Release(m_pBattlers[g_kBattleSide_Opponent]);
+
+	CBattler::BATTLER_DESC tDesc{};
+	tDesc.iSide = g_kBattleSide_Opponent;
+	tDesc.iSlotIndex = 0;
+	tDesc.pInstance = pLead;
+
+	m_pBattlers[g_kBattleSide_Opponent] = CBattler::Create(tDesc);
+	if (nullptr == m_pBattlers[g_kBattleSide_Opponent])
+		return E_FAIL;
+
+	Safe_Release(m_pAI[g_kBattleSide_Opponent]);
+	m_pAI[g_kBattleSide_Opponent] = CRandomAI::Create();
+	if (nullptr == m_pAI[g_kBattleSide_Opponent])
 		return E_FAIL;
 
 	return S_OK;
 }
 
+void CBattle_Manager::Begin()
+{
+	Request_State(BATTLE_PHASE::INTRO);
+
+	BATTLE_CONTEXT ctx = Build_Context();
+	Apply_Pending_Transition(ctx);
+}
+
 void CBattle_Manager::Update(_float fTimeDelta)
 {
-	switch (m_ePhase)
+	BATTLE_CONTEXT ctx = Build_Context();
+
+	if (nullptr == m_pCurrentState)
 	{
-	case BATTLE_PHASE::INTRO:
-		Phase_Intro(fTimeDelta);
-		break;
-	case BATTLE_PHASE::INPUT_PLAYER:
-		Phase_Input_Player(fTimeDelta);
-		break;
-	case BATTLE_PHASE::INPUT_OPPONENT:
-		Phase_Input_Opponent(fTimeDelta);
-		break;
-	case BATTLE_PHASE::RESOLVE_ORDER:
-		Phase_Resolve_Order(fTimeDelta);
-		break;
-	case BATTLE_PHASE::RESOLVE_ACTION_1:
-		Phase_Resolve_Action(fTimeDelta, 0);
-		break;
-	case BATTLE_PHASE::RESOLVE_ACTION_2:
-		Phase_Resolve_Action(fTimeDelta, 1);
-		break;
-	case BATTLE_PHASE::RESOLVE_END_TURN:
-		Phase_Resolve_End(fTimeDelta);
-		break;
-	case BATTLE_PHASE::CHECK_END:
-		Phase_Check_End(fTimeDelta);
-		break;
-	case BATTLE_PHASE::OUTRO:
-		Phase_Outro(fTimeDelta);
-		break;
-	case BATTLE_PHASE::DONE:
-	default:
-		break;
+		Request_State(BATTLE_PHASE::INTRO);
+		Apply_Pending_Transition(ctx);
 	}
+
+	if (nullptr != m_pCurrentState)
+		m_pCurrentState->Update(ctx, fTimeDelta);
+
+	Apply_Pending_Transition(ctx);
 }
 
 void CBattle_Manager::Request_Exit()
 {
-	m_ePhase = BATTLE_PHASE::DONE;
+	Request_State(BATTLE_PHASE::DONE);
+}
+
+void CBattle_Manager::Add_Pacing_Lock()
+{
+	++m_iPacingLocks;
+}
+
+void CBattle_Manager::Release_Pacing_Lock()
+{
+	if (m_iPacingLocks > 0)
+		--m_iPacingLocks;
 }
 
 const BATTLE_SLOT& CBattle_Manager::Get_Slot(_uint iSide) const
 {
-	return m_tSlot[iSide < g_kBattleSideCount ? iSide : g_kBattleSide_Player];
+	static BATTLE_SLOT s_tEmptySlot{};
+
+	CBattler* pBattler = Get_Battler(iSide);
+	if (nullptr == pBattler)
+		return s_tEmptySlot;
+
+	return pBattler->Get_Slot();
+}
+
+CBattler* CBattle_Manager::Get_Battler(_uint iSide) const
+{
+	if (iSide >= g_kBattleSideCount)
+		return nullptr;
+
+	return m_pBattlers[iSide];
 }
 
 void CBattle_Manager::Register_BattlerObj(_uint iSide, CGameObject* pObj)
@@ -182,81 +240,100 @@ _float CBattle_Manager::Get_PokemonYaw(_uint iSide, _uint iSlotIndex) const
 	return BattleLayout::Get_PokemonYaw(m_tEnv.eRule, iSide, iSlotIndex);
 }
 
-void CBattle_Manager::Phase_Intro(_float fTimeDelta)
+BATTLE_CONTEXT CBattle_Manager::Build_Context()
 {
-	(void)fTimeDelta;
+	BATTLE_CONTEXT ctx{};
+	ctx.pManager = this;
+	ctx.pBattlers[g_kBattleSide_Player] = m_pBattlers[g_kBattleSide_Player];
+	ctx.pBattlers[g_kBattleSide_Opponent] = m_pBattlers[g_kBattleSide_Opponent];
+	ctx.pField = &m_tField;
+	ctx.pTurn = &m_tTurn;
+	ctx.pDispatcher = m_pEventDispatcher;
+	ctx.pDataMgr = CPokemonData_Manager::GetInstance();
 
-	m_ePhase = BATTLE_PHASE::INPUT_PLAYER;
+	return ctx;
 }
 
-void CBattle_Manager::Phase_Input_Player(_float fTimeDelta)
+HRESULT CBattle_Manager::Initialize_CoreComponents()
 {
-	(void)fTimeDelta;
+	m_pQueue = CCommandQueue::Create();
+	if (nullptr == m_pQueue)
+		return E_FAIL;
 
-	auto* pGameInstance = CGameInstance::GetInstance();
+	m_pDamageCalculator = CDamage_Calculator::Create();
+	if (nullptr == m_pDamageCalculator)
+		return E_FAIL;
 
-	if (pGameInstance->Key_Down(DIK_ESCAPE))
+	m_pEventDispatcher = CBattle_EventDispatcher::Create();
+	if (nullptr == m_pEventDispatcher)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+IBattleState* CBattle_Manager::Create_State(BATTLE_PHASE ePhase)
+{
+	switch (ePhase)
 	{
-		Request_Exit();
+	case BATTLE_PHASE::INTRO:
+		return CIntroState::Create();
+
+	case BATTLE_PHASE::INPUT_PLAYER:
+		return CInputPlayerState::Create();
+
+	case BATTLE_PHASE::INPUT_OPPONENT:
+		return CInputOpponentState::Create();
+
+	case BATTLE_PHASE::RESOLVE_ORDER:
+		return CResolveOrderState::Create();
+
+	case BATTLE_PHASE::RESOLVE_ACTION_1:
+	case BATTLE_PHASE::RESOLVE_ACTION_2:
+		return CResolveActionState::Create();
+
+	case BATTLE_PHASE::RESOLVE_END_TURN:
+		return CResolveEndTurnState::Create();
+
+	case BATTLE_PHASE::CHECK_END:
+		return CCheckEndState::Create();
+
+	case BATTLE_PHASE::OUTRO:
+		return COutroState::Create();
+
+	case BATTLE_PHASE::DONE:
+		return CDoneState::Create();
+
+	default:
+		return nullptr;
+	}
+}
+
+void CBattle_Manager::Release_State(IBattleState * &pState)
+{
+	Safe_Release(pState);
+}
+
+void CBattle_Manager::Apply_Pending_Transition(const BATTLE_CONTEXT& ctx)
+{
+	if (nullptr == m_pNextState)
 		return;
-	}
 
-	if (pGameInstance->Key_Down(DIK_RETURN))
-	{
-		m_tTurn.tAction[g_kBattleSide_Player].eType = ACTION_TYPE::USE_MOVE;
-		m_tTurn.tAction[g_kBattleSide_Player].iParam = 0;
-		m_tTurn.tAction[g_kBattleSide_Player].iPriority = 0;
+	if (nullptr != m_pCurrentState)
+		m_pCurrentState->OnExit(ctx);
 
-		m_ePhase = BATTLE_PHASE::INPUT_OPPONENT;
-	}
+	Release_State(m_pCurrentState);
+
+	m_pCurrentState = m_pNextState;
+	m_pNextState = nullptr;
+
+	m_ePhase = m_pCurrentState->Get_Phase();
+	m_pCurrentState->OnEnter(ctx);
 }
 
-void CBattle_Manager::Phase_Input_Opponent(_float fTimeDelta)
+void CBattle_Manager::Request_State(BATTLE_PHASE ePhase)
 {
-	(void)fTimeDelta;
-
-	m_tTurn.tAction[g_kBattleSide_Opponent].eType = ACTION_TYPE::USE_MOVE;
-	m_tTurn.tAction[g_kBattleSide_Opponent].iParam = 0;
-	m_tTurn.tAction[g_kBattleSide_Opponent].iPriority = 0;
-
-	m_ePhase = BATTLE_PHASE::RESOLVE_ORDER;
-}
-
-void CBattle_Manager::Phase_Resolve_Order(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	m_tTurn.iFirstSide = g_kBattleSide_Player;
-	m_ePhase = BATTLE_PHASE::RESOLVE_ACTION_1;
-}
-
-void CBattle_Manager::Phase_Resolve_Action(_float fTimeDelta, _uint iOrderIndex)
-{
-	(void)fTimeDelta;
-
-	m_ePhase = (0 == iOrderIndex) ? BATTLE_PHASE::RESOLVE_ACTION_2 : BATTLE_PHASE::RESOLVE_END_TURN;
-}
-
-void CBattle_Manager::Phase_Resolve_End(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	++m_tTurn.iTurnNumber;
-	m_ePhase = BATTLE_PHASE::CHECK_END;
-}
-
-void CBattle_Manager::Phase_Check_End(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	m_ePhase = BATTLE_PHASE::INPUT_PLAYER;
-}
-
-void CBattle_Manager::Phase_Outro(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	Request_Exit();
+	Release_State(m_pNextState);
+	m_pNextState = Create_State(ePhase);
 }
 
 CBattle_Manager* CBattle_Manager::Create(const BATTLE_ENV& tEnv)
@@ -274,11 +351,23 @@ CBattle_Manager* CBattle_Manager::Create(const BATTLE_ENV& tEnv)
 
 void CBattle_Manager::Free()
 {
-	__super::Free();
-
 	for (auto& pObj : m_pBattlerObj)
 		pObj = nullptr;
 
 	for (auto& pObj : m_pTrainerObj)
 		pObj = nullptr;
+
+	for (auto& pBattler : m_pBattlers)
+		Safe_Release(pBattler);
+
+	for (auto& pAI : m_pAI)
+		Safe_Release(pAI);
+
+	Safe_Release(m_pEventDispatcher);
+	Safe_Release(m_pDamageCalculator);
+	Safe_Release(m_pQueue);
+	Release_State(m_pNextState);
+	Release_State(m_pCurrentState);
+
+	__super::Free();
 }

@@ -88,6 +88,20 @@ inline constexpr TYPE RemoveFlag(TYPE value, TYPE flag) noexcept
 
 enum class MOVE_CATEGORY : _ubyte { PHYSICAL, SPECIAL, STATUS, END };
 
+enum class TARGET_KIND : _ubyte
+{
+	SELF,
+	ALLY,
+	FOE_SINGLE,
+	FOE_BOTH,
+	ALL_OTHERS,
+	ALL,
+	SELF_SIDE,
+	FOE_SIDE,
+	FIELD,
+	END
+};
+
 enum class STATUS_CONDITION : _ubyte { NONE, POISON, PARALYSIS, BURN, SLEEP, FROZEN, BAD_POISON, END };
 
 enum class BATTLE_RULE : _ubyte { WILD_SINGLE, TRAINER_SINGLE, TRAINER_DOUBLE, CUTSCENE, TUTORIAL, END };

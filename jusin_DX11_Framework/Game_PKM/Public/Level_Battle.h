@@ -8,6 +8,11 @@
 NS_BEGIN(Game_PKM)
 class CBattle_Manager;
 class CBattleMsg;
+class CBattle_MsgListener;
+class CBattlePlate;
+class CBattle_CommandMenu;
+class CBattle_MoveMenu;
+class CBattle_InputDirector;
 
 class CLevel_Battle final : public CLevel
 {
@@ -36,6 +41,11 @@ private:
 	BATTLE_ENV m_tEnv = {};
 	CBattle_Manager* m_pBattleManager = { nullptr };
 	CBattleMsg* m_pBattleMsg = { nullptr };
+	CBattle_MsgListener* m_pBattleMsgListener = { nullptr };
+	CBattlePlate* m_pBattlePlate = { nullptr };
+	CBattle_CommandMenu* m_pCommandMenu = { nullptr };
+	CBattle_MoveMenu* m_pMoveMenu = { nullptr };
+	CBattle_InputDirector* m_pInputDirector = { nullptr };
 	POKEMON_INSTANCE m_tDebugWildOpponent = {};
 
 public:

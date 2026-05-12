@@ -14,28 +14,38 @@ inline constexpr _ushort	g_kMaxEVTotal = 510;
 inline constexpr _ubyte		g_kMaxLevel = 100;
 inline constexpr _ubyte		g_kMinLevel = 1;
 
+enum class ITEM_CATEGORY : _ubyte
+{
+	HELD,
+	CONSUMABLE,
+	POKEBALL,
+	BERRY,
+	KEY,
+	END
+};
+
 inline constexpr _float g_TypeChart[g_kTypeCount][g_kTypeCount] =
 {
-	/*           NONE NOR  FIG  FLY  POI  GND  ROK  BUG  GHO  FIR  WAT  GRS  ELE  PSY  ICE  DRG  STL  DRK  FAI  STA  QUE */
+	/*           NONE NOR  FIG  FLY  POI  GND  ROK  BUG  GHO  STL  FIR  WAT  GRS  ELE  PSY  ICE  DRG  DRK  FAI  STA  QUE */
 	/* NONE  */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
-	/* NOR   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f },
-	/* FIG   */{ 1.f, 2.f, 1.f, .5f, .5f, 1.f, 2.f, .5f, 0.f, 1.f, 1.f, 1.f, 1.f, .5f, 2.f, 1.f, 2.f, 2.f, .5f, 1.f, 1.f },
-	/* FLY   */{ 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, .5f, 2.f, 1.f, 1.f, 1.f, 2.f, .5f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f },
-	/* POI   */{ 1.f, 1.f, 1.f, 1.f, .5f, .5f, .5f, 1.f, .5f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 0.f, 1.f, 2.f, 1.f, 1.f },
-	/* GND   */{ 1.f, 1.f, 1.f, 0.f, 2.f, 1.f, 2.f, .5f, 1.f, 2.f, 1.f, .5f, 2.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f },
-	/* ROK   */{ 1.f, 1.f, .5f, 2.f, 1.f, .5f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f },
-	/* BUG   */{ 1.f, 1.f, .5f, .5f, .5f, 1.f, 1.f, 1.f, .5f, .5f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, .5f, 2.f, .5f, 1.f, 1.f },
-	/* GHO   */{ 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f },
-	/* FIR   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 2.f, 1.f, .5f, .5f, 2.f, 1.f, 1.f, 2.f, .5f, 2.f, 1.f, 1.f, 1.f, 1.f },
-	/* WAT   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 2.f, 1.f, 1.f, 2.f, .5f, .5f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f },
-	/* GRS   */{ 1.f, 1.f, 1.f, .5f, .5f, 2.f, 2.f, .5f, 1.f, .5f, 2.f, .5f, 1.f, 1.f, 1.f, .5f, .5f, 1.f, 1.f, 1.f, 1.f },
-	/* ELE   */{ 1.f, 1.f, 1.f, 2.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 2.f, .5f, .5f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f },
-	/* PSY   */{ 1.f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, .5f, 0.f, 1.f, 1.f, 1.f },
-	/* ICE   */{ 1.f, 1.f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, 1.f, .5f, .5f, 2.f, 1.f, 1.f, .5f, 2.f, .5f, 1.f, 1.f, 1.f, 1.f },
-	/* DRG   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, .5f, 1.f, 0.f, 1.f, 1.f },
-	/* STL   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, .5f, .5f, 1.f, .5f, 1.f, 2.f, 1.f, .5f, 1.f, 2.f, 1.f, 1.f },
-	/* DRK   */{ 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, .5f, .5f, 1.f, 1.f },
-	/* FAI   */{ 1.f, 1.f, 2.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, .5f, 2.f, 1.f, 1.f, 1.f },
+	/* NOR   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 0.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
+	/* FIG   */{ 1.f, 2.f, 1.f, .5f, .5f, 1.f, 2.f, .5f, 0.f, 2.f, 1.f, 1.f, 1.f, 1.f, .5f, 2.f, 1.f, 2.f, .5f, 1.f, 1.f },
+	/* FLY   */{ 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, .5f, 2.f, 1.f, .5f, 1.f, 1.f, 2.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
+	/* POI   */{ 1.f, 1.f, 1.f, 1.f, .5f, .5f, .5f, 1.f, .5f, 0.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f },
+	/* GND   */{ 1.f, 1.f, 1.f, 0.f, 2.f, 1.f, 2.f, .5f, 1.f, 2.f, 2.f, 1.f, .5f, 2.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
+	/* ROK   */{ 1.f, 1.f, .5f, 2.f, 1.f, .5f, 1.f, 2.f, 1.f, .5f, 2.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 1.f },
+	/* BUG   */{ 1.f, 1.f, .5f, .5f, .5f, 1.f, 1.f, 1.f, .5f, .5f, .5f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, 2.f, .5f, 1.f, 1.f },
+	/* GHO   */{ 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f },
+	/* STL   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, .5f, .5f, .5f, 1.f, .5f, 1.f, 2.f, 1.f, 1.f, 2.f, 1.f, 1.f },
+	/* FIR   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 2.f, 1.f, 2.f, .5f, .5f, 2.f, 1.f, 1.f, 2.f, .5f, 1.f, 1.f, 1.f, 1.f },
+	/* WAT   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 2.f, 1.f, 1.f, 1.f, 2.f, .5f, .5f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f },
+	/* GRS   */{ 1.f, 1.f, 1.f, .5f, .5f, 2.f, 2.f, .5f, 1.f, .5f, .5f, 2.f, .5f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f },
+	/* ELE   */{ 1.f, 1.f, 1.f, 2.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, .5f, .5f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f },
+	/* PSY   */{ 1.f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f },
+	/* ICE   */{ 1.f, 1.f, 1.f, 2.f, 1.f, 2.f, 1.f, 1.f, 1.f, .5f, .5f, .5f, 2.f, 1.f, 1.f, .5f, 2.f, 1.f, 1.f, 1.f, 1.f },
+	/* DRG   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 0.f, 1.f, 1.f },
+	/* DRK   */{ 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 1.f, 1.f, .5f, .5f, 1.f, 1.f },
+	/* FAI   */{ 1.f, 1.f, 2.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f, .5f, .5f, 1.f, 1.f, 1.f, 1.f, 1.f, 2.f, 2.f, 1.f, 1.f, 1.f },
 	/* STA   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
 	/* QUE   */{ 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f },
 };
@@ -80,6 +90,7 @@ struct MOVE_DATA
 	_uint			iEffectID = {};
 	_ubyte			iEffectChance = {};
 	_uint			iFlags = {};
+	TARGET_KIND		eTarget = { TARGET_KIND::FOE_SINGLE };
 };
 
 struct ABILITY_DATA
@@ -87,6 +98,16 @@ struct ABILITY_DATA
 	_uint	iAbilityID = {};
 	_tchar	szName[32] = {};
 	_uint	iEffectID = {};
+};
+
+struct ITEM_DATA
+{
+	_uint			iItemID = {};
+	_tchar			szName[32] = {};
+	ITEM_CATEGORY	eCategory = { ITEM_CATEGORY::END };
+	_uint			iEffectID = {};
+	_uint			iEffectParam = {};
+	_bool			bConsumeOnUse = {};
 };
 
 struct BATTLE_RULE_DESC

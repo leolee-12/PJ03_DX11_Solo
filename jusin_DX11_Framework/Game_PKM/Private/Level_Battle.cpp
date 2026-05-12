@@ -1,4 +1,4 @@
-#include "Level_Battle.h"
+﻿#include "Level_Battle.h"
 #include "Level_Loading.h"
 #include "Battle_Manager.h"
 #include "PlayerState.h"
@@ -6,6 +6,12 @@
 #include "Battle_Pokemon.h"
 #include "Battle_Trainer.h"
 #include "BattleMsg.h"
+#include "Battle_MsgListener.h"
+#include "Battle_EventDispatcher.h"
+#include "BattlePlate.h"
+#include "Battle_CommandMenu.h"
+#include "Battle_MoveMenu.h"
+#include "Battle_InputDirector.h"
 #include "Game_API.h"
 #include "Camera_Free.h"
 
@@ -70,6 +76,8 @@ HRESULT CLevel_Battle::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
+	m_pBattleManager->Begin();
+
 	return S_OK;
 }
 
@@ -78,30 +86,18 @@ void CLevel_Battle::Update(_float fTimeDelta)
 	if (nullptr == m_pBattleManager)
 		return;
 
+	if (nullptr != m_pBattleMsgListener)
+		m_pBattleMsgListener->Tick(fTimeDelta);
+
 	m_pBattleManager->Update(fTimeDelta);
 
-#ifdef _DEBUG
-	if (nullptr != m_pBattleMsg)
-	{
-		if (m_pGameInstance->Key_Down(DIK_F5))
-		{
-			m_pBattleMsg->Set_Message(L"Pikachu used Thunderbolt!wwwwwqrwgfqegdwgefhqeijeuawus5s1246524yfsdzhsderfhestujs");
-			m_pBattleMsg->Open();
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_F6))
-		{
-			m_pBattleMsg->Close();
-		}
-
-		if (m_pGameInstance->Key_Down(DIK_F7))
-		{
-			m_pBattleMsg->Complete();
-		}
-	}
-#endif
+	if (nullptr != m_pBattleMsgListener)
+		m_pBattleMsgListener->Tick(fTimeDelta);
 
 	UI_Update_All(fTimeDelta);
+
+	if (nullptr != m_pInputDirector)
+		m_pInputDirector->Tick(fTimeDelta);
 
 	if (m_pBattleManager->Is_Done())
 	{
@@ -307,6 +303,31 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 		return E_FAIL;
 	}
 
+	{
+		CBattlePlate* pBattlePlate = CBattlePlate::Create();
+		if (nullptr == pBattlePlate)
+			return E_FAIL;
+
+		if (FAILED(pBattlePlate->Initialize(pSeq)))
+		{
+			Safe_Release(pBattlePlate);
+			return E_FAIL;
+		}
+
+		pBattlePlate->Bind(m_pBattleManager);
+
+		if (FAILED(UI_Register(pBattlePlate)))
+		{
+			Safe_Release(pBattlePlate);
+			return E_FAIL;
+		}
+
+		m_pBattlePlate = pBattlePlate;  // weak — UI Hub owns
+		Safe_Release(pBattlePlate);
+
+		m_pBattlePlate->Open();
+	}
+
 	tDesc.strPath = "../../DataFiles/UI/UI_BattleCommand.uiseq";
 	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
@@ -318,6 +339,63 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	{
 		Safe_Release(pSeq);
 		return E_FAIL;
+	}
+
+	{
+		CBattle_CommandMenu* pCmdMenu = CBattle_CommandMenu::Create();
+		if (nullptr == pCmdMenu)
+			return E_FAIL;
+
+		if (FAILED(pCmdMenu->Initialize(pSeq)))
+		{
+			Safe_Release(pCmdMenu);
+			return E_FAIL;
+		}
+
+		if (FAILED(UI_Register(pCmdMenu)))
+		{
+			Safe_Release(pCmdMenu);
+			return E_FAIL;
+		}
+
+		m_pCommandMenu = pCmdMenu;      // weak — UI Hub owns
+		Safe_Release(pCmdMenu);
+	}
+
+	tDesc.strPath = "../../DataFiles/UI/UI_BattleMove.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (nullptr == pSeq)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
+
+	{
+		CBattle_MoveMenu* pMoveMenu = CBattle_MoveMenu::Create();
+		if (nullptr == pMoveMenu)
+			return E_FAIL;
+
+		if (FAILED(pMoveMenu->Initialize(pSeq)))
+		{
+			Safe_Release(pMoveMenu);
+			return E_FAIL;
+		}
+
+		pMoveMenu->Bind(m_pBattleManager);
+
+		if (FAILED(UI_Register(pMoveMenu)))
+		{
+			Safe_Release(pMoveMenu);
+			return E_FAIL;
+		}
+
+		m_pMoveMenu = pMoveMenu;        // weak — UI Hub owns
+		Safe_Release(pMoveMenu);
 	}
 
 	tDesc.strPath = "../../DataFiles/UI/UI_BattleMsg.uiseq";
@@ -344,8 +422,6 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 		return E_FAIL;
 	}
 
-	pBattleMsg->Set_Message(L"A wild Pokemon appeared!");
-
 	if (FAILED(UI_Register(pBattleMsg)))
 	{
 		Safe_Release(pBattleMsg);
@@ -355,7 +431,27 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	m_pBattleMsg = pBattleMsg;      // weak - Hub owns
 	Safe_Release(pBattleMsg);       // local ref--
 
-	m_pBattleMsg->Open();
+	m_pBattleMsgListener = CBattle_MsgListener::Create();
+	if (nullptr == m_pBattleMsgListener)
+		return E_FAIL;
+
+	m_pBattleMsgListener->Bind(m_pBattleManager, m_pBattleMsg);
+
+	CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+	if (nullptr == pDispatcher)
+		return E_FAIL;
+
+	if (FAILED(pDispatcher->Subscribe(m_pBattleMsgListener)))
+		return E_FAIL;
+
+	m_pInputDirector = CBattle_InputDirector::Create();
+	if (nullptr == m_pInputDirector)
+		return E_FAIL;
+
+	m_pInputDirector->Bind(m_pBattleManager, m_pCommandMenu, m_pMoveMenu);
+
+	if (FAILED(pDispatcher->Subscribe(m_pInputDirector)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -434,8 +530,30 @@ CLevel_Battle* CLevel_Battle::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 void CLevel_Battle::Free()
 {
+	// Director 먼저 정리 (메뉴/Manager 살아있을 때 람다 캡처 안전 + Dispatcher Unsubscribe)
+	if (nullptr != m_pInputDirector && nullptr != m_pBattleManager)
+	{
+		CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+		if (nullptr != pDispatcher)
+			pDispatcher->Unsubscribe(m_pInputDirector);
+	}
+
+	Safe_Release(m_pInputDirector);
+
+	if (nullptr != m_pBattleMsgListener && nullptr != m_pBattleManager)
+	{
+		CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+		if (nullptr != pDispatcher)
+			pDispatcher->Unsubscribe(m_pBattleMsgListener);
+	}
+
+	Safe_Release(m_pBattleMsgListener);
+
 	UI_Close_All();
 	m_pBattleMsg = nullptr;
+	m_pBattlePlate = nullptr;
+	m_pCommandMenu = nullptr;
+	m_pMoveMenu = nullptr;
 
 	Safe_Release(m_pBattleManager);
 
