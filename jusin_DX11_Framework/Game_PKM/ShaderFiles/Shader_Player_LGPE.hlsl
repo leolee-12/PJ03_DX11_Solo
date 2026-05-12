@@ -118,7 +118,7 @@ PS_OUT PS_DSEL(PS_IN In)	// 1¹ø ÆÐ½º
 	//vector vMtrlSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
 	vector vMtrlEmit = float4(0.f, 0.f, 0.f, 1.f);
 	
-	if (vMtrlDiff.a < 0.01f)
+	if (vMtrlDiff.a < 0.1f)
 	{
 		float2 vTexEyes = float2(In.vTex.x * 2.f, In.vTex.y * 4.f);
 		vMtrlDiff = g_TexLycl.Sample(LinearSampler, vTexEyes);

@@ -157,6 +157,9 @@
     <Filter Include="14. Frustum">
       <UniqueIdentifier>{da7a9344-d259-47ff-b85a-9286b36047d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Renderer\RenderRule">
+      <UniqueIdentifier>{c1fd74de-d72d-4e69-a9e2-d25532242368}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -381,6 +384,12 @@
     <ClInclude Include="..\Public\Frustum.h">
       <Filter>14. Frustum</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RenderRule.h">
+      <Filter>06. Renderer\RenderRule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderProfile.h">
+      <Filter>06. Renderer\RenderRule</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -574,6 +583,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Frustum.cpp">
       <Filter>14. Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderProfile.cpp">
+      <Filter>06. Renderer\RenderRule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderRule.cpp">
+      <Filter>06. Renderer\RenderRule</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

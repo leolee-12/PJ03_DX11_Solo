@@ -43,9 +43,6 @@
     <Filter Include="80. Study\03. Particles">
       <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. Manager">
-      <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Effects">
       <UniqueIdentifier>{911aec86-4d94-417b-a60f-60175478b046}</UniqueIdentifier>
     </Filter>
@@ -78,12 +75,6 @@
     </Filter>
     <Filter Include="07. UI\KeyNavi">
       <UniqueIdentifier>{51bf51c4-8b8d-40dc-9142-162fabb24461}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. Manager\00. SharedTexture">
-      <UniqueIdentifier>{a62c7091-9edc-43af-b350-b5d5a0492f72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. Manager\01. PokemonData">
-      <UniqueIdentifier>{49e65149-9a89-4cf7-b5ab-50fbe302651d}</UniqueIdentifier>
     </Filter>
     <Filter Include="08. Battle">
       <UniqueIdentifier>{da002d15-2ba0-4999-b1c8-58bda8233ff3}</UniqueIdentifier>
@@ -126,6 +117,18 @@
     </Filter>
     <Filter Include="08. Battle\06. AI">
       <UniqueIdentifier>{48bdcdfe-73f9-43e0-a2b6-d120f2553d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Manager">
+      <UniqueIdentifier>{ac0a0080-8791-467c-af0d-6df7b8dc4434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Manager\00. SharedTexture">
+      <UniqueIdentifier>{a62c7091-9edc-43af-b350-b5d5a0492f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Manager\01. PokemonData">
+      <UniqueIdentifier>{49e65149-9a89-4cf7-b5ab-50fbe302651d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Manager\02. RenderRule">
+      <UniqueIdentifier>{31b14ad8-a734-4f36-b2c3-9c37628b8154}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +345,9 @@
     <ClInclude Include="..\Public\Battle_InputDirector.h">
       <Filter>08. Battle\05. Events</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RenderRule_Manager.h">
+      <Filter>05. Manager\02. RenderRule</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -512,6 +518,9 @@
     <ClCompile Include="..\Private\Battle_InputDirector.cpp">
       <Filter>08. Battle\05. Events</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\RenderRule_Manager.cpp">
+      <Filter>05. Manager\02. RenderRule</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
@@ -552,6 +561,9 @@
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIImage.hlsl">
       <Filter>98. ShaderFiles\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl">
+      <Filter>98. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

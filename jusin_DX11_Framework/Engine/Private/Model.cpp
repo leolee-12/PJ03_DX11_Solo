@@ -41,6 +41,15 @@ _uint CModel::Get_MeshMaterialIndex(_uint iMeshIdx)
 	return Get_Mesh(iMeshIdx)->Get_MaterialIndex();
 }
 
+const _char* CModel::Get_MeshName(_uint iMeshIdx) const
+{
+	CMesh* pMesh = Get_Mesh(iMeshIdx);
+	if (nullptr == pMesh)
+		return "";
+
+	return pMesh->Get_Name();
+}
+
 _int CModel::Get_BoneIndex(const _char* pBoneName)
 {
 	_int iIndex = { -1 };

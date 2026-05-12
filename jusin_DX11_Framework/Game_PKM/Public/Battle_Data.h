@@ -72,6 +72,8 @@ struct SPECIES_DATA
 
 	_uint   iLearnset[g_kMaxLearnSet] = {};
 	WNameID strModelTag = {};
+	const _char* pRenderMappingPath = { nullptr };
+	RENDER_RULE_KEY eRenderRuleKey = { RENDER_RULE_KEY::POKEMON_DEFAULT };
 };
 
 struct MOVE_DATA

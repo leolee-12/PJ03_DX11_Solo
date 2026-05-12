@@ -62,13 +62,27 @@ namespace Engine
 	{
 		vector<array<unsigned int, ETOUI(MATERIAL_TYPE::END)>> variants;
 		vector<unsigned int> passes;
+		vector<bool> useLayerColors;
+		vector<array<XMFLOAT4, 4>> layerColors;
 
 		void Ready_RenderTable(unsigned int iNumMaterials)
 		{
 			variants.resize(iNumMaterials);
 			for (auto& slots : variants)
 				slots.fill(0);
+
 			passes.assign(iNumMaterials, 0);
+
+			useLayerColors.assign(iNumMaterials, false);
+
+			layerColors.resize(iNumMaterials);
+			for (auto& colors : layerColors)
+			{
+				colors[0] = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
+				colors[1] = XMFLOAT4(0.f, 1.f, 0.f, 1.f);
+				colors[2] = XMFLOAT4(0.f, 0.f, 1.f, 1.f);
+				colors[3] = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+			}
 		}
 	};
 

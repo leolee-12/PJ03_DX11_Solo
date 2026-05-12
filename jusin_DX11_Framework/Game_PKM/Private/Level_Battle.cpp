@@ -83,6 +83,9 @@ HRESULT CLevel_Battle::Initialize()
 
 void CLevel_Battle::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_F3))
+		m_pGameInstance->Toggle_Debug();
+
 	if (nullptr == m_pBattleManager)
 		return;
 
@@ -169,10 +172,50 @@ HRESULT CLevel_Battle::Ready_Lights()
 	LIGHT_DESC LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.9f, 0.9f, 0.9f, 1.f);
+	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 1.f);
 	LightDesc.vAmbient = _float4(0.35f, 0.35f, 0.35f, 1.f);
 	LightDesc.vSpecular = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.vDirection = _float4(-0.3f, -1.f, 0.5f, 0.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vPosition = _float4(-1.f, 1.f, -1.f, 1.f);
+	LightDesc.fRange = 15.f;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vPosition = _float4(1.f, 1.f, -1.f, 1.f);
+	LightDesc.fRange = 15.f;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vPosition = _float4(-1.f, 1.f, 1.f, 1.f);
+	LightDesc.fRange = 15.f;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vPosition = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.fRange = 15.f;
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
@@ -222,7 +265,7 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_HERO;
 		tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
 		tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
-		tDesc.iDefaultAnim = 0;
+		tDesc.iDefaultAnim = 17;
 		tDesc.bLoop = true;
 		tDesc.fScale = 0.4f;
 		tDesc.vPos = m_pBattleManager->Get_TrainerPos(iSide);
@@ -254,7 +297,7 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		tDesc.pInstance = tSlot.pPokemon;
 		tDesc.iSide = iSide;
 		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
-		tDesc.strShaderProtoTag = PROTO_COM_SHADER_VTXANIMMESH;
+		tDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
 		tDesc.iDefaultAnim = 0;
 		tDesc.bLoop = true;
 		tDesc.fScale = 1.f;

@@ -79,6 +79,7 @@
     <ClInclude Include="..\Public\Player_LGPE.h" />
     <ClInclude Include="..\Public\Battle_Pokemon.h" />
     <ClInclude Include="..\Public\PokemonData_Manager.h" />
+    <ClInclude Include="..\Public\RenderRule_Manager.h" />
     <ClInclude Include="..\Public\SharedTexture_Manager.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Snow.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="..\Private\Player_LGPE.cpp" />
     <ClCompile Include="..\Private\Battle_Pokemon.cpp" />
     <ClCompile Include="..\Private\PokemonData_Manager.cpp" />
+    <ClCompile Include="..\Private\RenderRule_Manager.cpp" />
     <ClCompile Include="..\Private\SharedTexture_Manager.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Snow.cpp" />
@@ -151,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl" />

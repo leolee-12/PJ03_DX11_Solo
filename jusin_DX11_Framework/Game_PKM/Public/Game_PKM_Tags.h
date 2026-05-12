@@ -22,6 +22,10 @@ WNAME_TAG(PROTO_COM_TEX_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
 WNAME_TAG(PROTO_COM_TEX_STAR, L"Prototype_Component_Texture_Star");
 WNAME_TAG(PROTO_COM_TEX_TITLE_BG, L"Prototype_Component_Texture_Title_BackGround");
 
+
+
+WNAME_TAG(PROTO_COM_TEX_CURSOR, L"Prototype_Component_Texture_Cursor");
+
 WNAME_TAG(PROTO_COM_TEX_MENU_BALL, L"Prototype_Component_Texture_Menu_Ball");
 WNAME_TAG(PROTO_COM_TEX_MENU_PARTNER, L"Prototype_Component_Texture_Menu_Partner");
 WNAME_TAG(PROTO_COM_TEX_MENU_DEX, L"Prototype_Component_Texture_Menu_Dex");
@@ -69,6 +73,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXRECTINST, L"Prototype_Component_Shader_VtxRectInst
 WNAME_TAG(PROTO_COM_SHADER_VTXPOINTINST, L"Prototype_Component_Shader_VtxPointInstance");
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
+WNAME_TAG(PROTO_COM_SHADER_POKEMON, L"Prototype_Component_Shader_Pokemon");
 WNAME_TAG(PROTO_COM_SHADER_UI, L"Prototype_Component_Shader_UI");
 WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance");
 WNAME_TAG(PROTO_COM_SHADER_UIIMAGE, L"Prototype_Component_Shader_UIImage");

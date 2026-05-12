@@ -154,8 +154,7 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 	}
 
 	// 4) 다음 메시지 시작 — 타이핑 중도 아니고 대기 중도 아니며 큐에 메시지가 있을 때
-	const _bool bCanStartNext = (false == bTyping) && (false == m_bWaiting) && (false ==
-		m_qMessages.empty());
+	const _bool bCanStartNext = (false == bTyping) && (false == m_bWaiting) && (false == m_qMessages.empty());
 	if (bCanStartNext)
 	{
 		_wstring strNext = m_qMessages.front();
@@ -165,6 +164,12 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 		m_pMsg->Open();
 
 		m_bMessageWaitConsumed = false; // 새 메시지 시작 — 대기 플래그 리셋
+	}
+
+	// 5) 현재 메시지의 표시·대기 모두 끝났고 큐가 비면 박스 닫기
+	if (m_bMessageWaitConsumed && m_qMessages.empty() && m_pMsg->Is_Open())
+	{
+		m_pMsg->Close();
 	}
 }
 

@@ -12,6 +12,7 @@ private:
 
 public:
 	size_t Get_NumMeshes() const { return m_iNumMeshes; }
+	_uint Get_NumMaterials() const { return m_iNumMaterials; }
 	class CMesh* Get_Mesh(_uint iIndex) const
 	{
 		if (iIndex >= m_Meshes.size())
@@ -20,6 +21,7 @@ public:
 		return m_Meshes[iIndex];
 	}
 	_uint Get_MeshMaterialIndex(_uint iMeshIdx);
+	const _char* Get_MeshName(_uint iMeshIdx) const;
 
 	_int Get_BoneIndex(const _char* pBoneName);
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;

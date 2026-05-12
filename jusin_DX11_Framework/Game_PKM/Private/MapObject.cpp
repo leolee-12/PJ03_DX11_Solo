@@ -21,6 +21,9 @@ HRESULT CMapObject::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(m_RenderProfile.Build(m_pModelCom, m_tDesc.pRenderRule)))
+		return E_FAIL;
+
 	if (PROTO_COM_MODEL_MAP_TOWN02 == m_tDesc.strModelTag)
 	{
 		_vector vPos = { -0.95f, 2.f, 80.75f, 1.f };
@@ -50,14 +53,39 @@ HRESULT CMapObject::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	vector<CRenderProfile::MATERIAL_SLOT> Slots =
+	{
+			{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff" },
+	};
+
+	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMapObject::Render_Shadow()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;
+	if (FAILED(m_pTransformCom->Bind_ShaderResourceWIT(m_pShaderCom, "g_WITMatrix")))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_Shadow_FarZ(m_pShaderCom)))
+		return E_FAIL;
+
 	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, 0)))
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(1)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))

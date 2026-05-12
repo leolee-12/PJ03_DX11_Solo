@@ -51,6 +51,9 @@ HRESULT CMaterial::Initialize(const WMODEL_MATERIAL& tMat, const _char* pBaseDir
 	if(FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/dummy/dummy_white.png", nullptr, &m_pDefaultMaterial)))
 		return E_FAIL;
 
+	if (FAILED(CreateWICTextureFromFile(m_pDevice, L"../../Resources/dummy/dummy_normal.png", nullptr, &m_pDefaultNormal)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -62,7 +65,10 @@ HRESULT CMaterial::Bind_ShaderResource(CShader* pShader, const _char* pConstantN
 
 	if (iIndex >= m_Materials[ETOUI(eType)].size())
 	{
-		return pShader->Bind_SRV(pConstantName, m_pDefaultMaterial);
+		ID3D11ShaderResourceView* pDefaultSRV =
+			(MATERIAL_TYPE::NORMALS == eType) ? m_pDefaultNormal : m_pDefaultMaterial;
+
+		return pShader->Bind_SRV(pConstantName, pDefaultSRV);
 	}
 
 	return pShader->Bind_SRV(pConstantName, m_Materials[ETOUI(eType)][iIndex]);
@@ -83,8 +89,6 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 void CMaterial::Free()
 {
-	__super::Free();
-
 	for (auto& SRVs : m_Materials)
 	{
 		for (auto& pSRV : SRVs)
@@ -92,7 +96,11 @@ void CMaterial::Free()
 
 		SRVs.clear();
 	}
+
 	Safe_Release(m_pDefaultMaterial);
+	Safe_Release(m_pDefaultNormal);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	__super::Free();
 }

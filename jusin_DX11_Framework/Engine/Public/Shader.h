@@ -15,9 +15,9 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
-	HRESULT Begin(_uint iPassIndex);
+	_uint Get_NumPasses() const { return m_iNumPasses; }
 
-public:
+	HRESULT Begin(_uint iPassIndex);
 	HRESULT Bind_Matrix(const _char* pConstName, const _float4x4* pMatrix);
 	HRESULT Bind_Matrices(const _char* pConstName, const _float4x4* pMatrices, _uint iNumMatrices);
 	HRESULT Bind_SRV(const _char* pConstName, ID3D11ShaderResourceView* pSRV);

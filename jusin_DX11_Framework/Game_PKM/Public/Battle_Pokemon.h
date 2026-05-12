@@ -4,6 +4,10 @@
 
 #include "ContainerObject.h"
 
+NS_BEGIN(Engine)
+class CRenderRule;
+NS_END
+
 NS_BEGIN(Game_PKM)
 
 class CBattle_Pokemon final : public CContainerObject
@@ -15,6 +19,7 @@ public:
         _uint iSide = { g_kBattleSide_Player };
         WNameID strBodyProtoTag = {};
         WNameID strShaderProtoTag = {};
+        const CRenderRule* pRenderRule = { nullptr };
         _uint iDefaultAnim = { 0 };
         _bool bLoop = { true };
         _float fScale = { 1.f };
@@ -42,6 +47,7 @@ private:
     _uint m_iSide = { g_kBattleSide_Player };
     WNameID m_strBodyProtoTag = {};
     WNameID m_strSpeciesModelTag = {};
+    const CRenderRule* m_pRenderRule = { nullptr };
 
 private:
     HRESULT Ready_PartObjects(const POKEMON_DESC* pDesc);

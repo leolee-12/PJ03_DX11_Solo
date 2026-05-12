@@ -13,6 +13,7 @@ private:
 
 public:
 	_uint Get_MaterialIndex() const { return m_iMaterialIndex; }
+	const _char* Get_Name() const { return m_szName; }
 
 	const vector<XMFLOAT3>& Get_Positions() const { return m_vecPositions; }
 	const vector<_uint>& Get_Indices() const { return m_vecIndices; }

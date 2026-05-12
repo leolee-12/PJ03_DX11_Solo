@@ -217,6 +217,8 @@
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Prototype_Manager.h" />
     <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\RenderProfile.h" />
+    <ClInclude Include="..\Public\RenderRule.h" />
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Shadow.h" />
@@ -289,6 +291,8 @@
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\Private\RenderProfile.cpp" />
+    <ClCompile Include="..\Private\RenderRule.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Shadow.cpp" />

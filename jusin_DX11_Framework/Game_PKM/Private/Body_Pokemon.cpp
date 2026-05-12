@@ -14,27 +14,43 @@ CBody_Pokemon::CBody_Pokemon(const CBody_Pokemon& Prototype)
 {
 }
 
+HRESULT CBody_Pokemon::Initialize(void* pArg)
+{
+	const BODY_POKEMON_DESC* pDesc = static_cast<const BODY_POKEMON_DESC*>(pArg);
+	if (nullptr == pDesc)
+		return E_FAIL;
+
+	BODY_POKEMON_DESC Desc = *pDesc;
+
+	if (0 == Desc.strShaderProtoTag)
+		Desc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+
+	if (FAILED(__super::Initialize(&Desc)))
+		return E_FAIL;
+
+	if (FAILED(m_RenderProfile.Build(m_pModelCom, Desc.pRenderRule)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CBody_Pokemon::Render()
 {
 	if (FAILED(Bind_ShaderResources_Common()))
 		return E_FAIL;
 
-	const size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; ++i)
+	vector<CRenderProfile::MATERIAL_SLOT> Slots =
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_TexDiff", i, MATERIAL_TYPE::DIFFUSE, 0)))
-			return E_FAIL;
+		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff" },
+		{ MATERIAL_TYPE::AMBIENT_OCCLUSION, "g_TexAO" },
+		{ MATERIAL_TYPE::NORMALS, "g_TexNorm" },
+		{ MATERIAL_TYPE::SHININESS, "g_TexRough" },
+		{ MATERIAL_TYPE::LAYER_COLOR, "g_TexLycl" },
+		{ MATERIAL_TYPE::LAYER_MASK, "g_TexMask" },
+	};
 
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
-			return E_FAIL;
-
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Render(i)))
-			return E_FAIL;
-	}
+	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots, "g_BoneMatrices")))
+		return E_FAIL;
 
 	return S_OK;
 }

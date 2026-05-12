@@ -1,6 +1,7 @@
 #include "Battle_Pokemon.h"
-#include "Body.h"
+#include "Body_Pokemon.h"
 #include "PokemonData_Manager.h"
+#include "RenderRule_Manager.h"
 
 CBattle_Pokemon::CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CContainerObject{ pDevice, pContext }
@@ -47,6 +48,19 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 
     m_strSpeciesModelTag = pSpecies->strModelTag;
 
+    m_pRenderRule = pDesc->pRenderRule;
+    if (nullptr == m_pRenderRule)
+    {
+        auto* pRuleManager = CRenderRule_Manager::GetInstance();
+        if (nullptr == pRuleManager)
+            return E_FAIL;
+
+        m_pRenderRule = pRuleManager->Find_OrLoadMappingRule(pSpecies->pRenderMappingPath);
+
+        if (nullptr == m_pRenderRule)
+            m_pRenderRule = pRuleManager->Find_Rule(pSpecies->eRenderRuleKey);
+    }
+
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -89,12 +103,13 @@ HRESULT CBattle_Pokemon::Render()
 
 HRESULT CBattle_Pokemon::Ready_PartObjects(const POKEMON_DESC* pDesc)
 {
-    CBody::BODY_DESC BodyDesc{};
+    CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
     BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
     BodyDesc.strModelProtoTag = m_strSpeciesModelTag;
     BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
         ? pDesc->strShaderProtoTag
-        : PROTO_COM_SHADER_VTXANIMMESH;
+        : PROTO_COM_SHADER_POKEMON;
+    BodyDesc.pRenderRule = m_pRenderRule;
     BodyDesc.iDefaultAnim = pDesc->iDefaultAnim;
     BodyDesc.bLoop = pDesc->bLoop;
     BodyDesc.fScale = pDesc->fScale;

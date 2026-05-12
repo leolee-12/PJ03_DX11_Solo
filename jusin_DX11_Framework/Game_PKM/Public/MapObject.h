@@ -1,6 +1,7 @@
 #pragma once
 #include "Game_PKM_Defines.h"
 #include "GameObject.h"
+#include "RenderProfile.h"
 
 NS_BEGIN(Engine)
 class CShader;
@@ -16,6 +17,7 @@ public:
 	{
 		WNameID strModelTag = {};
 		_uint	iModelLevelIndex = {};
+		const CRenderRule* pRenderRule = { nullptr }; // weak
 	};
 
 protected:
@@ -32,12 +34,14 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Shadow() override;
 
 private:
 	MAPOBJECT_DESC m_tDesc = {};
 
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	CRenderProfile m_RenderProfile;
 
 private:
 	HRESULT Ready_Components();

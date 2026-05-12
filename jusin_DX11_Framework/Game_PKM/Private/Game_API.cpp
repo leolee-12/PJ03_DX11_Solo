@@ -8,6 +8,7 @@
 #include "PokemonData_Manager.h"
 #include "PlayerState.h"
 #include "Game_PresetTable.h"
+#include "RenderRule_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -43,6 +44,31 @@ HRESULT Ready_PersistentObjects(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT Ready_StaticTables()
+{
+	auto* pPokemonDataManager = CPokemonData_Manager::GetInstance();
+	if (nullptr == pPokemonDataManager)
+		return E_FAIL;
+
+	if (FAILED(pPokemonDataManager->Initialize()))
+		return E_FAIL;
+
+	auto* pRenderRuleManager = CRenderRule_Manager::GetInstance();
+	if (nullptr == pRenderRuleManager)
+		return E_FAIL;
+
+	if (FAILED(pRenderRuleManager->Initialize()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void Cleanup_StaticTables()
+{
+	CRenderRule_Manager::DestroyInstance();
+	CPokemonData_Manager::DestroyInstance();
 }
 #pragma endregion
 
@@ -227,22 +253,6 @@ void UI_Cleanup()
 {
 	Safe_Release(g_pUIHub);
 	g_pUIHub = nullptr;
-}
-#pragma endregion
-
-#pragma region PokemonData_Manager
-HRESULT Ready_StaticTables()
-{
-	auto* pManager = CPokemonData_Manager::GetInstance();
-
-	if (nullptr == pManager)
-		return E_FAIL;
-
-	return pManager->Initialize();
-}
-void Cleanup_StaticTables()
-{
-	CPokemonData_Manager::DestroyInstance();
 }
 #pragma endregion
 

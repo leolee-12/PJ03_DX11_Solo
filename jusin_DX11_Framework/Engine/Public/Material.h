@@ -18,6 +18,7 @@ private:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	vector<ID3D11ShaderResourceView*> m_Materials[ETOUI(MATERIAL_TYPE::END)];
 	ID3D11ShaderResourceView* m_pDefaultMaterial = { nullptr };
+	ID3D11ShaderResourceView* m_pDefaultNormal = { nullptr };
 
 public:
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const WMODEL_MATERIAL& tMat, const _char* pBaseDir);

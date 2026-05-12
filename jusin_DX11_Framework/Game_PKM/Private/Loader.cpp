@@ -19,6 +19,7 @@
 #include "Effect_Star.h"
 #include "Battle_Trainer.h"
 #include "Body_Pokemon.h"
+#include "RenderRule_Manager.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -226,6 +227,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		};
 
 	// ---------- Texture ----------
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_CURSOR,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/cursor/cursor.png"), 1)); },
+		TEXT("Prototype_Component_Texture_Cursor"));
+
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_BALL,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/mainmenu/main_menu_ball.png"), 1)); },
 		TEXT("Prototype_Component_Texture_Menu_Ball"));
@@ -326,6 +331,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); },
 		TEXT("Prototype_Component_Shader_Player_LGPE"));
 
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_POKEMON,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Pokemon.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); },
+		TEXT("Prototype_Component_Shader_Pokemon"));
+
 	//Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UI,
 	//	CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); },
 	//	TEXT("Prototype_Component_Shader_UI"));
@@ -412,6 +421,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_Rule(RENDER_RULE_KEY::MAP_DEFAULT);
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_TOWN01;
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN01,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
@@ -626,6 +636,7 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::BATTLE);
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_Rule(RENDER_RULE_KEY::MAP_DEFAULT);
 	tMapDesc.strModelTag = PROTO_COM_MODEL_BMAP_TOWN;
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_BMAP_TOWN,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
