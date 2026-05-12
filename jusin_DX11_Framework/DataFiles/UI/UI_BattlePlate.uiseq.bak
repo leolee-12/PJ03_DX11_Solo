@@ -11,7 +11,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 184.0,
+          "offsetX": 185.0,
           "offsetY": -58.0,
           "useAnchoredPos": true
         },
@@ -54,7 +54,7 @@
           "sizeX": 366.0,
           "sizeY": 99.0,
           "visible": true,
-          "zOrder": 1
+          "zOrder": 11
         },
         "viBuffer": {
           "level": 0,
@@ -243,7 +243,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 184.0,
+          "offsetX": 185.0,
           "offsetY": -45.0,
           "useAnchoredPos": true
         },
@@ -293,7 +293,7 @@
           "sizeX": 330.0,
           "sizeY": 10.0,
           "visible": true,
-          "zOrder": 2
+          "zOrder": 12
         },
         "viBuffer": {
           "level": 0,
@@ -358,7 +358,7 @@
           "sizeX": 214.0,
           "sizeY": 6.0,
           "visible": true,
-          "zOrder": 2
+          "zOrder": 12
         },
         "viBuffer": {
           "level": 0,
@@ -433,6 +433,844 @@
       "displayName": "Enemy_HP",
       "id": "widget_006",
       "type": "PROGRESSBAR"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 104.0,
+          "offsetY": -76.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "New Text",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 12
+        }
+      },
+      "displayName": "Player_Name",
+      "id": "widget_008",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "LEFT",
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -265.0,
+          "offsetY": 90.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "New Text",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 12
+        }
+      },
+      "displayName": "Enemy_Name",
+      "id": "widget_009",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 228.9534912109375,
+          "offsetY": -68.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_LV"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 48.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_LV",
+      "id": "widget_010",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -140.0,
+          "offsetY": 97.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_LV"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 48.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Enemy_LV",
+      "id": "widget_011",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 270.0,
+          "offsetY": -74.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 44.0,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_LVNum1",
+      "id": "widget_012",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 299.0,
+          "offsetY": -74.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 44.0,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_LVNum2",
+      "id": "widget_013",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -99.0,
+          "offsetY": 91.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 44.0,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Enemy_LVNum1",
+      "id": "widget_014",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -70.0,
+          "offsetY": 91.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 44.0,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Enemy_LVNum2",
+      "id": "widget_015",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 338.0,
+          "offsetY": -72.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Status_Gender"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 28.799999237060547,
+          "sizeY": 35.20000076293945,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_Gender",
+      "id": "widget_016",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -33.0,
+          "offsetY": 94.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Status_Gender"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 28.799999237060547,
+          "sizeY": 35.20000076293945,
+          "visible": true,
+          "zOrder": 12
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Enemy_Gender",
+      "id": "widget_017",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 43.0,
+          "offsetY": -32.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 18.200000762939453,
+          "sizeY": 20.799999237060547,
+          "visible": true,
+          "zOrder": 13
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_CurHP1",
+      "id": "widget_018",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 60.0,
+          "offsetY": -32.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 18.200000762939453,
+          "sizeY": 20.799999237060547,
+          "visible": true,
+          "zOrder": 13
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_CurHP2",
+      "id": "widget_019",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 78.0,
+          "offsetY": -32.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Number_Slash"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 18.200000762939453,
+          "sizeY": 20.799999237060547,
+          "visible": true,
+          "zOrder": 13
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_HPSlash",
+      "id": "widget_020",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 93.0,
+          "offsetY": -32.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 18.200000762939453,
+          "sizeY": 20.799999237060547,
+          "visible": true,
+          "zOrder": 13
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_MaxHP1",
+      "id": "widget_021",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 110.0,
+          "offsetY": -32.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 4,
+          "tag": "Prototype_Component_Texture_Battle_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 18.200000762939453,
+          "sizeY": 20.799999237060547,
+          "visible": true,
+          "zOrder": 13
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Player_MaxHP2",
+      "id": "widget_022",
+      "type": "IMAGE"
     }
   ]
 }

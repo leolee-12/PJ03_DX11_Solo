@@ -12,7 +12,7 @@
 //	(m_pBattlerObj[], m_pTrainerObj[])
 //     - Level_Battle이 객체 생성 후 Register_*로 등록
 //     - 페이즈 진행 중 턴 결과를 객체에 반영할 때 Get_*로 접근
-//  4) 페이즈 머신 진행 (Update / Phase_*).
+//  4) 페이즈 진행: Update -> 현재 IBattleState 위임
 //  5) 객체 배치 좌표 조회 노출 (Get_TrainerPos/Yaw, Get_PokemonPos/Yaw)
 //     - 내부적으로 BattleLayout에 위임. 룰 정보는 매니저 내부에 캡슐화
 /* -------------------------------------------------- */
@@ -26,6 +26,9 @@ class CPlayerState;
 class CBattler;
 class IBattleState;
 class CCommandQueue;
+class CDamage_Calculator;
+class CBattle_EventDispatcher;
+class IBattleAI;
 
 class CBattle_Manager : public CBase
 {
@@ -47,11 +50,18 @@ public:
 	_bool	Is_Done() const { return BATTLE_PHASE::DONE == m_ePhase; }
 	_bool	Has_Pending_Transition() const { return nullptr != m_pNextState; }
 
+	void    Add_Pacing_Lock();
+	void    Release_Pacing_Lock();
+	_bool   Is_Pacing_Busy() const { return m_iPacingLocks > 0; }
+
 	const BATTLE_ENV&		Get_Env() const { return m_tEnv; }
 	const BATTLE_SLOT&		Get_Slot(_uint iSide) const;
 	const FIELD_STATE&		Get_Field() const { return m_tField; }
 	const TURN_CONTEXT&		Get_Turn() const { return m_tTurn; }
 	BATTLE_PHASE			Get_Phase() const { return m_ePhase; }
+	CDamage_Calculator*		Get_Damage_Calculator() const { return m_pDamageCalculator; }
+	CBattle_EventDispatcher*	Get_EventDispatcher() const { return m_pEventDispatcher; }
+	IBattleAI* Get_AI(_uint iSide) const { return (iSide < g_kBattleSideCount) ? m_pAI[iSide] : nullptr; }
 
 	CBattler* Get_Battler(_uint iSide) const;
 	CCommandQueue* Get_Queue() const { return m_pQueue; }
@@ -77,6 +87,11 @@ private:
 	IBattleState* m_pCurrentState = { nullptr };
 	IBattleState* m_pNextState = { nullptr };
 	CCommandQueue* m_pQueue = { nullptr };
+	CDamage_Calculator* m_pDamageCalculator = { nullptr };
+	CBattle_EventDispatcher* m_pEventDispatcher = { nullptr };
+	IBattleAI* m_pAI[g_kBattleSideCount] = {};
+
+	_int m_iPacingLocks = { 0 };
 
 	CPlayerState*		m_pPlayerState = { nullptr };
 	POKEMON_INSTANCE*	m_pOpponentSingle = { nullptr };
@@ -91,15 +106,6 @@ private:
 	IBattleState* Create_State(BATTLE_PHASE ePhase);
 	void Apply_Pending_Transition(const BATTLE_CONTEXT& ctx);
 	void Release_State(IBattleState*& pState);
-
-	void Phase_Intro(_float fTimeDelta);
-	void Phase_Input_Player(_float fTimeDelta);
-	void Phase_Input_Opponent(_float fTimeDelta);
-	void Phase_Resolve_Order(_float fTimeDelta);
-	void Phase_Resolve_Action(_float fTimeDelta, _uint iOrderIndex);
-	void Phase_Resolve_End(_float fTimeDelta);
-	void Phase_Check_End(_float fTimeDelta);
-	void Phase_Outro(_float fTimeDelta);
 
 public:
 	static CBattle_Manager* Create(const BATTLE_ENV& tEnv);

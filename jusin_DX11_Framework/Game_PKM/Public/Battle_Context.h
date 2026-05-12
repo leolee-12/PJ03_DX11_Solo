@@ -6,7 +6,7 @@ NS_BEGIN(Game_PKM)
 
 class CBattle_Manager;
 class CBattler;
-class CBattleEventDispatcher;
+class CBattle_EventDispatcher;
 class CPokemonData_Manager;
 
 struct BATTLE_CONTEXT
@@ -15,7 +15,7 @@ struct BATTLE_CONTEXT
 	CBattler* pBattlers[g_kBattleSideCount] = { nullptr, nullptr }; // weak
 	FIELD_STATE* pField = { nullptr }; // weak
 	TURN_CONTEXT* pTurn = { nullptr }; // weak
-	CBattleEventDispatcher* pDispatcher = { nullptr }; // weak
+	CBattle_EventDispatcher* pDispatcher = { nullptr }; // weak
 	CPokemonData_Manager* pDataMgr = { nullptr }; // weak
 
 	CBattler* Get_Self(_uint iSide) const

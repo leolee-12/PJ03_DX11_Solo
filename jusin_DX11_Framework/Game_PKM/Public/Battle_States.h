@@ -5,6 +5,7 @@ NS_BEGIN(Game_PKM)
 
 class IBattleCommand;
 
+#pragma region IntroState
 class CIntroState final : public IBattleState
 {
 private:
@@ -24,7 +25,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region InputPlayerState
 class CInputPlayerState final : public IBattleState
 {
 private:
@@ -44,7 +47,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region InputOpponentState
 class CInputOpponentState final : public IBattleState
 {
 private:
@@ -64,7 +69,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region ResolveOrderState
 class CResolveOrderState final : public IBattleState
 {
 private:
@@ -84,7 +91,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region ResolveActionState
 class CResolveActionState final : public IBattleState
 {
 private:
@@ -107,7 +116,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region ResolveEndTurnState
 class CResolveEndTurnState final : public IBattleState
 {
 private:
@@ -127,7 +138,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region CheckEndState
 class CCheckEndState final : public IBattleState
 {
 private:
@@ -147,7 +160,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region ForcedSwitchState
 class CForcedSwitchState final : public IBattleState
 {
 private:
@@ -167,7 +182,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region OutroState
 class COutroState final : public IBattleState
 {
 private:
@@ -187,7 +204,9 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
+#pragma region DoneState
 class CDoneState final : public IBattleState
 {
 private:
@@ -207,5 +226,6 @@ public:
 private:
 	virtual void Free() override;
 };
+#pragma endregion
 
 NS_END

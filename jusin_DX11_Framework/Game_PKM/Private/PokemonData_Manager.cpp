@@ -137,7 +137,9 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iBaseSpAtk = 50; tData.iBaseSpDef = 50; tData.iBaseSpd = 90;
 		tData.iAbility1 = 9;
 		tData.iLearnset[0] = 84;
-		tData.iLearnset[1] = 33;
+		tData.iLearnset[1] = 201;
+		tData.iLearnset[2] = 202;
+		tData.iLearnset[3] = 203;
 		tData.strModelTag = PROTO_COM_MODEL_PM0025_00;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
@@ -157,12 +159,15 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 			m_MoveTable.emplace(iID, tData);
 		};
 
-	AddMove(10, L"Scratch", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
-	AddMove(22, L"Vine Whip", TYPE::GRASS, MOVE_CATEGORY::PHYSICAL, 45, 100, 25);
-	AddMove(33, L"Tackle", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
-	AddMove(52, L"Ember", TYPE::FIRE, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
-	AddMove(55, L"Water Gun", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
-	AddMove(84, L"Thundershock", TYPE::ELECTRIC, MOVE_CATEGORY::SPECIAL, 40, 100, 30);
+	AddMove(10, L"ÇÒÄû±â", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
+	AddMove(22, L"µ¢ÄðÃ¤Âï", TYPE::GRASS, MOVE_CATEGORY::PHYSICAL, 45, 100, 25);
+	AddMove(33, L"¸öÅë¹ÚÄ¡±â", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 35);
+	AddMove(52, L"ºÒ²É¼¼·Ê", TYPE::FIRE, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
+	AddMove(55, L"¸ô´ëÆ÷", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 40, 100, 25);
+	AddMove(84, L"Àü±â¼îÅ©", TYPE::ELECTRIC, MOVE_CATEGORY::SPECIAL, 40, 100, 30);
+	AddMove(201, L"Âü¹æÂü¹æ¼­ÇÎ", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 90, 100, 15);
+	AddMove(202, L"µÕ½ÇµÕ½ÇÆú", TYPE::FLYING, MOVE_CATEGORY::PHYSICAL, 90, 95, 15);
+	AddMove(203, L"ÆÄÄ¡ÆÄÄ¡¾×¼¿", TYPE::ELECTRIC, MOVE_CATEGORY::PHYSICAL, 50, 100, 15);
 
 	auto AddAbility = [this](_uint iID, const _tchar* pName, _uint iEffectID = 0)
 		{

@@ -5,6 +5,9 @@
 #include "Battler.h"
 #include "CommandQueue.h"
 #include "Battle_States.h"
+#include "Damage_Calculator.h"
+#include "Battle_EventDispatcher.h"
+#include "Battle_AI.h"
 
 #include "GameInstance.h"
 
@@ -83,6 +86,11 @@ HRESULT CBattle_Manager::Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent)
 	if (nullptr == m_pBattlers[g_kBattleSide_Opponent])
 		return E_FAIL;
 
+	Safe_Release(m_pAI[g_kBattleSide_Opponent]);
+	m_pAI[g_kBattleSide_Opponent] = CRandomAI::Create();
+	if (nullptr == m_pAI[g_kBattleSide_Opponent])
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -111,6 +119,11 @@ HRESULT CBattle_Manager::Bind_OpponentTrainer(TRAINER_DATA* pTrainerData)
 
 	m_pBattlers[g_kBattleSide_Opponent] = CBattler::Create(tDesc);
 	if (nullptr == m_pBattlers[g_kBattleSide_Opponent])
+		return E_FAIL;
+
+	Safe_Release(m_pAI[g_kBattleSide_Opponent]);
+	m_pAI[g_kBattleSide_Opponent] = CRandomAI::Create();
+	if (nullptr == m_pAI[g_kBattleSide_Opponent])
 		return E_FAIL;
 
 	return S_OK;
@@ -143,6 +156,17 @@ void CBattle_Manager::Update(_float fTimeDelta)
 void CBattle_Manager::Request_Exit()
 {
 	Request_State(BATTLE_PHASE::DONE);
+}
+
+void CBattle_Manager::Add_Pacing_Lock()
+{
+	++m_iPacingLocks;
+}
+
+void CBattle_Manager::Release_Pacing_Lock()
+{
+	if (m_iPacingLocks > 0)
+		--m_iPacingLocks;
 }
 
 const BATTLE_SLOT& CBattle_Manager::Get_Slot(_uint iSide) const
@@ -224,7 +248,7 @@ BATTLE_CONTEXT CBattle_Manager::Build_Context()
 	ctx.pBattlers[g_kBattleSide_Opponent] = m_pBattlers[g_kBattleSide_Opponent];
 	ctx.pField = &m_tField;
 	ctx.pTurn = &m_tTurn;
-	ctx.pDispatcher = nullptr;
+	ctx.pDispatcher = m_pEventDispatcher;
 	ctx.pDataMgr = CPokemonData_Manager::GetInstance();
 
 	return ctx;
@@ -234,6 +258,14 @@ HRESULT CBattle_Manager::Initialize_CoreComponents()
 {
 	m_pQueue = CCommandQueue::Create();
 	if (nullptr == m_pQueue)
+		return E_FAIL;
+
+	m_pDamageCalculator = CDamage_Calculator::Create();
+	if (nullptr == m_pDamageCalculator)
+		return E_FAIL;
+
+	m_pEventDispatcher = CBattle_EventDispatcher::Create();
+	if (nullptr == m_pEventDispatcher)
 		return E_FAIL;
 
 	return S_OK;
@@ -304,83 +336,6 @@ void CBattle_Manager::Request_State(BATTLE_PHASE ePhase)
 	m_pNextState = Create_State(ePhase);
 }
 
-void CBattle_Manager::Phase_Intro(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	m_ePhase = BATTLE_PHASE::INPUT_PLAYER;
-}
-
-void CBattle_Manager::Phase_Input_Player(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	auto* pGameInstance = CGameInstance::GetInstance();
-
-	if (pGameInstance->Key_Down(DIK_ESCAPE))
-	{
-		Request_Exit();
-		return;
-	}
-
-	if (pGameInstance->Key_Down(DIK_RETURN))
-	{
-		m_tTurn.tAction[g_kBattleSide_Player].eType = ACTION_TYPE::USE_MOVE;
-		m_tTurn.tAction[g_kBattleSide_Player].iParam = 0;
-		m_tTurn.tAction[g_kBattleSide_Player].iPriority = 0;
-
-		m_ePhase = BATTLE_PHASE::INPUT_OPPONENT;
-	}
-}
-
-void CBattle_Manager::Phase_Input_Opponent(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	m_tTurn.tAction[g_kBattleSide_Opponent].eType = ACTION_TYPE::USE_MOVE;
-	m_tTurn.tAction[g_kBattleSide_Opponent].iParam = 0;
-	m_tTurn.tAction[g_kBattleSide_Opponent].iPriority = 0;
-
-	m_ePhase = BATTLE_PHASE::RESOLVE_ORDER;
-}
-
-void CBattle_Manager::Phase_Resolve_Order(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	m_tTurn.iFirstSide = g_kBattleSide_Player;
-	m_ePhase = BATTLE_PHASE::RESOLVE_ACTION_1;
-}
-
-void CBattle_Manager::Phase_Resolve_Action(_float fTimeDelta, _uint iOrderIndex)
-{
-	(void)fTimeDelta;
-
-	m_ePhase = (0 == iOrderIndex) ? BATTLE_PHASE::RESOLVE_ACTION_2 : BATTLE_PHASE::RESOLVE_END_TURN;
-}
-
-void CBattle_Manager::Phase_Resolve_End(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	++m_tTurn.iTurnNumber;
-	m_ePhase = BATTLE_PHASE::CHECK_END;
-}
-
-void CBattle_Manager::Phase_Check_End(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	m_ePhase = BATTLE_PHASE::INPUT_PLAYER;
-}
-
-void CBattle_Manager::Phase_Outro(_float fTimeDelta)
-{
-	(void)fTimeDelta;
-
-	Request_Exit();
-}
-
 CBattle_Manager* CBattle_Manager::Create(const BATTLE_ENV& tEnv)
 {
 	CBattle_Manager* pInstance = new CBattle_Manager();
@@ -405,6 +360,11 @@ void CBattle_Manager::Free()
 	for (auto& pBattler : m_pBattlers)
 		Safe_Release(pBattler);
 
+	for (auto& pAI : m_pAI)
+		Safe_Release(pAI);
+
+	Safe_Release(m_pEventDispatcher);
+	Safe_Release(m_pDamageCalculator);
 	Safe_Release(m_pQueue);
 	Release_State(m_pNextState);
 	Release_State(m_pCurrentState);

@@ -118,6 +118,15 @@
     <Filter Include="08. Battle\03. States">
       <UniqueIdentifier>{8a27bcc6-1057-49f1-b19e-5423d0c149fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Battle\04. Damage">
+      <UniqueIdentifier>{9b58264a-6657-4c35-8910-02a3eff1cb0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\05. Events">
+      <UniqueIdentifier>{4743ee90-5fd2-4654-8b6e-d72e25d1589e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Battle\06. AI">
+      <UniqueIdentifier>{48bdcdfe-73f9-43e0-a2b6-d120f2553d33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -288,6 +297,51 @@
     <ClInclude Include="..\Public\Battle_States.h">
       <Filter>08. Battle\03. States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Damage_Pipe.h">
+      <Filter>08. Battle\04. Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IDamageModifier.h">
+      <Filter>08. Battle\04. Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Damage_Calculator.h">
+      <Filter>08. Battle\04. Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Damage_Modifiers.h">
+      <Filter>08. Battle\04. Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Events.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IBattleEventListener.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_EventDispatcher.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_EventListenerBase.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IBattleAI.h">
+      <Filter>08. Battle\06. AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_AI.h">
+      <Filter>08. Battle\06. AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_MsgListener.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattlePlate.h">
+      <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_CommandMenu.h">
+      <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_MoveMenu.h">
+      <Filter>07. UI\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_InputDirector.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -430,6 +484,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battle_States.cpp">
       <Filter>08. Battle\03. States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Damage_Calculator.cpp">
+      <Filter>08. Battle\04. Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Damage_Modifiers.cpp">
+      <Filter>08. Battle\04. Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_EventDispatcher.cpp">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_AI.cpp">
+      <Filter>08. Battle\06. AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_MsgListener.cpp">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattlePlate.cpp">
+      <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_CommandMenu.cpp">
+      <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_MoveMenu.cpp">
+      <Filter>07. UI\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_InputDirector.cpp">
+      <Filter>08. Battle\05. Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

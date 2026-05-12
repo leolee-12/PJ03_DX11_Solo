@@ -4,7 +4,10 @@
 #include "Battle_Targeting.h"
 #include "Battle_Math.h"
 #include "Battle_Manager.h"
+#include "Damage_Calculator.h"
+#include "Battle_EventDispatcher.h"
 
+#pragma region MoveCommand
 CMoveCommand::CMoveCommand()
 {
 }
@@ -53,10 +56,29 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
         return E_FAIL;
 
     if (0 == pAttacker->Get_PP(m_tDesc.iMoveSlot))
+    {
+        if (nullptr != ctx.pDispatcher)
+        {
+            EVENT_MOVE_FAILED tEvent{};
+            tEvent.iSide = m_tDesc.iActorSide;
+            tEvent.iMoveID = iMoveID;
+            tEvent.eReason = MOVE_FAIL_REASON::NO_PP;
+            ctx.pDispatcher->Publish(tEvent);
+        }
+
         return S_OK;
+    }
 
     pAttacker->Consume_PP(m_tDesc.iMoveSlot);
     pAttacker->Set_LastMoveUsed(iMoveID);
+
+    if (nullptr != ctx.pDispatcher)
+    {
+        EVENT_MOVE_USED tEvent{};
+        tEvent.iSide = m_tDesc.iActorSide;
+        tEvent.iMoveID = iMoveID;
+        ctx.pDispatcher->Publish(tEvent);
+    }
 
     BattleTargeting::TARGET_LIST tTargets{};
     BattleTargeting::Resolve(ctx, m_tDesc.iActorSide, m_tDesc.iActorSlot, *pMove, tTargets);
@@ -68,11 +90,77 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
             continue;
 
         if (false == BattleMath::Roll_Accuracy(pMove->iAccuracy, pAttacker, pDefender))
+        {
+            if (nullptr != ctx.pDispatcher)
+            {
+                EVENT_MOVE_FAILED tEvent{};
+                tEvent.iSide = m_tDesc.iActorSide;
+                tEvent.iMoveID = iMoveID;
+                tEvent.eReason = MOVE_FAIL_REASON::MISSED;
+                ctx.pDispatcher->Publish(tEvent);
+            }
+
             continue;
+        }
 
         if (MOVE_CATEGORY::STATUS != pMove->eCategory && pMove->iPower > 0)
         {
-            pDefender->Apply_Damage(10);
+            if (nullptr == ctx.pManager || nullptr == ctx.pManager->Get_Damage_Calculator())
+                return E_FAIL;
+
+            POKEMON_INSTANCE* pAttackerInst = pAttacker->Get_Instance();
+            POKEMON_INSTANCE* pDefenderInst = pDefender->Get_Instance();
+
+            if (nullptr == pAttackerInst || nullptr == pDefenderInst)
+                continue;
+
+            DAMAGE_PIPE_DATA tPipe{};
+            tPipe.pAttacker = pAttacker;
+            tPipe.pDefender = pDefender;
+            tPipe.pMove = pMove;
+            tPipe.pField = ctx.pField;
+            tPipe.iBasePower = pMove->iPower;
+            tPipe.iAttackStat = BattleMath::Pick_AttackStat(*pAttackerInst, pMove->eCategory);
+            tPipe.iDefenseStat = BattleMath::Pick_DefenseStat(*pDefenderInst, pMove->eCategory);
+            tPipe.iAttackerLevel = (0 == pAttackerInst->iLevel) ? 1 : pAttackerInst->iLevel;
+
+            ctx.pManager->Get_Damage_Calculator()->Calculate(ctx, tPipe);
+
+            if (tPipe.fEffectiveness <= 0.f)
+            {
+                if (nullptr != ctx.pDispatcher)
+                {
+                    EVENT_MOVE_FAILED tEvent{};
+                    tEvent.iSide = m_tDesc.iActorSide;
+                    tEvent.iMoveID = iMoveID;
+                    tEvent.eReason = MOVE_FAIL_REASON::IMMUNE;
+                    ctx.pDispatcher->Publish(tEvent);
+                }
+
+                continue;
+            }
+
+            const _bool bWasAlive = pDefender->Is_Alive();
+            const _ushort iAppliedDamage = pDefender->Apply_Damage(tPipe.iFinalDamage);
+
+            if (nullptr != ctx.pDispatcher)
+            {
+                EVENT_DAMAGE_DEALT tEvent{};
+                tEvent.iTargetSide = pDefender->Get_Side();
+                tEvent.iAmount = iAppliedDamage;
+                tEvent.eSource = DAMAGE_SOURCE::MOVE;
+                tEvent.iMoveID = iMoveID;
+                tEvent.fEffectiveness = tPipe.fEffectiveness;
+                tEvent.bCrit = tPipe.bCrit;
+                ctx.pDispatcher->Publish(tEvent);
+            }
+
+            if (bWasAlive && false == pDefender->Is_Alive() && nullptr != ctx.pDispatcher)
+            {
+                EVENT_POKEMON_FAINTED tEvent{};
+                tEvent.iSide = pDefender->Get_Side();
+                ctx.pDispatcher->Publish(tEvent);
+            }
         }
 
         BattleMath::Apply_MoveEffect(ctx, *pMove, pAttacker, pDefender);
@@ -98,7 +186,9 @@ void CMoveCommand::Free()
 {
     __super::Free();
 }
+#pragma endregion
 
+#pragma region SwitchCommand
 CSwitchCommand::CSwitchCommand()
 {
 }
@@ -145,7 +235,9 @@ void CSwitchCommand::Free()
 {
     __super::Free();
 }
+#pragma endregion
 
+#pragma region RunCommand
 CRunCommand::CRunCommand()
 {
 }
@@ -169,7 +261,24 @@ _ushort CRunCommand::Get_ActorSpeed(const BATTLE_CONTEXT& ctx) const
 HRESULT CRunCommand::Execute(const BATTLE_CONTEXT& ctx)
 {
     if (false == BattleMath::Roll_RunSuccess(ctx, m_tDesc.iActorSide))
+    {
+        if (nullptr != ctx.pDispatcher)
+        {
+            EVENT_RUN_FAILED tEvent{};
+            tEvent.iSide = m_tDesc.iActorSide;
+            tEvent.eReason = RUN_FAIL_REASON::OTHER;
+            ctx.pDispatcher->Publish(tEvent);
+        }
+
         return S_OK;
+    }
+
+    if (nullptr != ctx.pDispatcher)
+    {
+        EVENT_RUN_SUCCEEDED tEvent{};
+        tEvent.iSide = m_tDesc.iActorSide;
+        ctx.pDispatcher->Publish(tEvent);
+    }
 
     if (nullptr != ctx.pManager)
         ctx.pManager->Request_Exit();
@@ -194,3 +303,4 @@ void CRunCommand::Free()
 {
     __super::Free();
 }
+#pragma endregion

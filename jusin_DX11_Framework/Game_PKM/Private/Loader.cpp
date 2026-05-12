@@ -288,11 +288,11 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_get/poke_get_info_line2_back.png"), 1)); },
 		TEXT("Prototype_Component_Texture_Get_Line2_Back"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_TEXT_LV,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_LV,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_get/poke_get_text_Lv.png"), 1)); },
 		TEXT("Prototype_Component_Texture_Get_Text_LV"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_TEXT_NUM,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_NUM,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/poke_get/poke_get_itm_number_%02d.png"), 10)); },
 		TEXT("Prototype_Component_Texture_Get_Text_Number"));
 
@@ -587,6 +587,18 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_BALLICON,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/ball_icon_%02d.png"), 4)); },
 		TEXT("Prototype_Component_Texture_Battle_BallIcon"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_NUM,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_Num_%02d.png"), 10)); },
+		TEXT("Prototype_Component_Texture_Battle_Number"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_NUM_SLASH,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_Num_slash.png"), 1)); },
+		TEXT("Prototype_Component_Texture_Battle_Number_Slash"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_STATUS_GENDER,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/status_gender_%02d.png"), 2)); },
+		TEXT("Prototype_Component_Texture_Status_Gender"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_COM_TEX_BTL_MSGBOX,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battleMsg/Battle_MsgBox.png"), 1)); },
