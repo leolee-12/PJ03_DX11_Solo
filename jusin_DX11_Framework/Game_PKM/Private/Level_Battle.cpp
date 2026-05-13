@@ -173,9 +173,9 @@ HRESULT CLevel_Battle::Ready_Lights()
 	LIGHT_DESC LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 1.f);
-	LightDesc.vAmbient = _float4(0.35f, 0.35f, 0.35f, 1.f);
-	LightDesc.vSpecular = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);   // GamePlay와 동일
+	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);   // GamePlay와 동일
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);     // 0.6 -> 0.3 (포켓몬 표면 하이라이트 완화)
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
@@ -183,7 +183,7 @@ HRESULT CLevel_Battle::Ready_Lights()
 
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
 	LightDesc.vPosition = _float4(-1.f, 1.f, -1.f, 1.f);
 	LightDesc.fRange = 15.f;
@@ -193,7 +193,7 @@ HRESULT CLevel_Battle::Ready_Lights()
 
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
 	LightDesc.vPosition = _float4(1.f, 1.f, -1.f, 1.f);
 	LightDesc.fRange = 15.f;
@@ -203,7 +203,7 @@ HRESULT CLevel_Battle::Ready_Lights()
 
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
 	LightDesc.vPosition = _float4(-1.f, 1.f, 1.f, 1.f);
 	LightDesc.fRange = 15.f;
@@ -213,7 +213,7 @@ HRESULT CLevel_Battle::Ready_Lights()
 
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.05f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
 	LightDesc.vPosition = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.fRange = 15.f;

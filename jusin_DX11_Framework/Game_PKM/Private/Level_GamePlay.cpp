@@ -118,9 +118,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	LIGHT_DESC      LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 1.f);
-	LightDesc.vAmbient = _float4(0.35f, 0.35f, 0.35f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);  // 중성 화이트 (RGB 균일), 살짝 감소
+	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);  // 중성 화이트, 강화 → 평평·푸른 끼 제거
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);  // 변화 없음
 	LightDesc.vDirection = _float4(0.5f, -0.5f, 0.5f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
@@ -147,8 +147,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	//	return E_FAIL;
 
 	SHADOW_LIGHT_DESC ShadowDesc{};
-	ShadowDesc.vEye = _float4(-10.f, 15.f, 0.f, 1.f);
-	ShadowDesc.vAt = _float4(1.f, 0.f, 0.f, 1.f);
+	ShadowDesc.vEye = _float4(0.f, 8.f, 0.f, 1.f);
+	ShadowDesc.vAt = _float4(5.f, 0.f, 5.f, 1.f);
 	ShadowDesc.fFovy = XMConvertToRadians(60.f);
 	ShadowDesc.fNear = 0.1f;
 	ShadowDesc.fFar = 200.f;

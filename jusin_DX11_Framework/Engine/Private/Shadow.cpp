@@ -15,7 +15,7 @@ HRESULT CShadow::Set_ShadowLight(const SHADOW_LIGHT_DESC& ShadowDesc)
 		XMMatrixLookAtLH(XMLoadFloat4(&ShadowDesc.vEye), XMLoadFloat4(&ShadowDesc.vAt), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	XMStoreFloat4x4(&m_TransformStateMatrices[ETOUI(D3DTS::PROJ)],
-		XMMatrixOrthographicLH(40.f, 40.f, ShadowDesc.fNear, ShadowDesc.fFar));
+		XMMatrixOrthographicLH(50.f, 50.f, ShadowDesc.fNear, ShadowDesc.fFar));
 
 	// Follow 준비 : 광원 방향+거리 보관, 매 프레임 갱신 시작
 	_float4 vDir;
