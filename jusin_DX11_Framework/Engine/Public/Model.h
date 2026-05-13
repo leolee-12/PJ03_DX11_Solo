@@ -22,6 +22,7 @@ public:
 	}
 	_uint Get_MeshMaterialIndex(_uint iMeshIdx);
 	const _char* Get_MeshName(_uint iMeshIdx) const;
+	_uint Get_NumAnimations() const { return m_iNumAnimations; }
 
 	_int Get_BoneIndex(const _char* pBoneName);
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;

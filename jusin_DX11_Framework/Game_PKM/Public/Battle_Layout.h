@@ -29,14 +29,14 @@ namespace BattleLayout
 
 	inline constexpr _float fSingleTrainerYaw[g_kBattleSideCount] =
 	{
-		/* PLAYER   */ 0.0f,
-		/* OPPONENT */ XM_PI,
+		/* PLAYER   */ XM_PI / 6.f,
+		/* OPPONENT */ 7.f * XM_PI / 6.f,
 	};
 
 	inline constexpr _float fSinglePokemonYaw[g_kBattleSideCount] =
 	{
-		/* PLAYER   */ 0.0f,
-		/* OPPONENT */ XM_PI,
+		/* PLAYER   */ XM_PI / 6.f,
+		/* OPPONENT */ 7.f * XM_PI / 6.f,
 	};
 
 	inline _float3 Get_TrainerPos(BATTLE_RULE eRule, _uint iSide, _uint iSlotIndex = 0)

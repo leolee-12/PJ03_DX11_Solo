@@ -26,6 +26,7 @@ public:
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
+	CUISequence* m_pCursorSeq = { nullptr };
 	CMenu* m_pMenu = { nullptr };
 
 private:

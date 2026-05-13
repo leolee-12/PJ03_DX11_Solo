@@ -34,10 +34,16 @@ public:
 	void Set_State(UI_BUTTON_STATE eState);
 	void Set_Interactable(_bool bInteractable);
 	void Set_Texture(WNameID strTextureTag) { m_strTextureTag = strTextureTag; }
+	void Set_Texture(WNameID strTextureTag, _uint iTextureIndex)
+	{
+		m_strTextureTag = strTextureTag;
+		m_iTextureIndex = iTextureIndex;
+	}
 
 	UI_BUTTON_STATE Get_State() const { return m_eState; }
 	_bool Is_Interactable() const { return m_bInteractable; }
 	WNameID Get_TextureTag() const { return m_strTextureTag; }
+
 
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
@@ -65,6 +71,7 @@ protected:
 	UI_BUTTON_STATE m_eState = { UI_BUTTON_STATE::NORMAL };
 	_bool m_bInteractable = { true };
 	_float4 m_vColor = { g_kWhite };
+	_uint m_iTextureIndex = 0;
 
 protected:
 	virtual HRESULT Ready_Components();

@@ -5,6 +5,10 @@
 
 #include "Level.h"
 
+NS_BEGIN(Engine)
+class CUISequence;
+NS_END
+
 NS_BEGIN(Game_PKM)
 class CBattle_Manager;
 class CBattleMsg;
@@ -13,6 +17,7 @@ class CBattlePlate;
 class CBattle_CommandMenu;
 class CBattle_MoveMenu;
 class CBattle_InputDirector;
+class CBattle_PokemonListener;
 
 class CLevel_Battle final : public CLevel
 {
@@ -46,6 +51,8 @@ private:
 	CBattle_CommandMenu* m_pCommandMenu = { nullptr };
 	CBattle_MoveMenu* m_pMoveMenu = { nullptr };
 	CBattle_InputDirector* m_pInputDirector = { nullptr };
+	CBattle_PokemonListener* m_pPokemonListeners[g_kBattleSideCount] = { nullptr, nullptr };
+	CUISequence* m_pCursorSeq = { nullptr };
 	POKEMON_INSTANCE m_tDebugWildOpponent = {};
 
 public:

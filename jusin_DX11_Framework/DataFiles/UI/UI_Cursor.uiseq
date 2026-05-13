@@ -72,7 +72,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 3,
+          "level": 0,
           "tag": "Prototype_Component_Texture_Cursor"
         },
         "transform": {

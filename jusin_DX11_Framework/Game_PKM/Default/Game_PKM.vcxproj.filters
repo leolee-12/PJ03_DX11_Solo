@@ -130,6 +130,9 @@
     <Filter Include="05. Manager\02. RenderRule">
       <UniqueIdentifier>{31b14ad8-a734-4f36-b2c3-9c37628b8154}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Battle\07. Sequencer">
+      <UniqueIdentifier>{ed0b120f-fc74-4732-965d-62efcb920c4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -348,6 +351,21 @@
     <ClInclude Include="..\Public\RenderRule_Manager.h">
       <Filter>05. Manager\02. RenderRule</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\IBattleAction_Step.h">
+      <Filter>08. Battle\07. Sequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_ActionSequencer.h">
+      <Filter>08. Battle\07. Sequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Action_Steps.h">
+      <Filter>08. Battle\07. Sequencer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_AnimDef.h">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_PokemonListener.h">
+      <Filter>08. Battle\05. Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -520,6 +538,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\RenderRule_Manager.cpp">
       <Filter>05. Manager\02. RenderRule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_ActionSequencer.cpp">
+      <Filter>08. Battle\07. Sequencer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Action_Steps.cpp">
+      <Filter>08. Battle\07. Sequencer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_AnimDef.cpp">
+      <Filter>08. Battle\00. Battle_API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_PokemonListener.cpp">
+      <Filter>08. Battle\05. Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

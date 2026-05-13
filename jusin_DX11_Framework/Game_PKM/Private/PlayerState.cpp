@@ -47,13 +47,15 @@ HRESULT CPlayerState::Initialize(void* pArg)
 			tSeed.eNature = NATURE::JOLLY;
 			tSeed.iAbilityID = pSpecies->iAbility1;
 
-			tSeed.iMoves[0] = pSpecies->iLearnset[0];
+			const _uint iInitialMoves[g_kMaxMovesPerPokemon] =
+			{
+				  pSpecies->iLearnset[0],
+				  pSpecies->iLearnset[1],
+				  pSpecies->iLearnset[2],
+				  pSpecies->iLearnset[3],
+			};
 
-			const MOVE_DATA* pMove = (0 != tSeed.iMoves[0]) ?
-				pDataMgr->Find_Move(tSeed.iMoves[0]) :
-				nullptr;
-
-			tSeed.iCurrentPP[0] = (nullptr != pMove) ? pMove->iMaxPP : 0;
+			Assign_Moves(tSeed, iInitialMoves, g_kMaxMovesPerPokemon, pDataMgr);
 
 			tSeed.eStatus = STATUS_CONDITION::NONE;
 			tSeed.iHeldItemID = 0;

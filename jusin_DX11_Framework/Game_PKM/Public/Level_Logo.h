@@ -21,6 +21,8 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	HRESULT Ready_Lights();
+	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);

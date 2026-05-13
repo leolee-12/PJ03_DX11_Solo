@@ -23,6 +23,18 @@ inline constexpr _float3 g_kDir_UP_RIGHT = { INV_SQRT2, 0.f,  INV_SQRT2 };
 inline constexpr _float3 g_kDir_DOWN_LEFT = { -INV_SQRT2, 0.f, -INV_SQRT2 };
 inline constexpr _float3 g_kDir_DOWN_RIGHT = { INV_SQRT2, 0.f, -INV_SQRT2 };
 
+static _uint Type_ToMoveTextureIndex(TYPE eType)
+{
+    const _uint iType = static_cast<_uint>(eType);
+    const _uint iNormal = static_cast<_uint>(TYPE::NORMAL);
+    const _uint iFairy = static_cast<_uint>(TYPE::FAIRY);
+
+    if (iType < iNormal || iType > iFairy)
+        return 0;
+
+    return iType - iNormal; // NORMAL 0, FIRE 9, FAIRY 17
+}
+
 NS_END
 
 namespace ObjFlag

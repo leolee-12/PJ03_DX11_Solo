@@ -121,7 +121,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	LightDesc.vDiffuse = _float4(0.9f, 0.9f, 0.9f, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDirection = _float4(0.5f, -0.5f, 0.5f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
@@ -247,6 +247,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	
 	m_pRuntimeUI = pSeq;  // weak
 
+	/* ===== 커서 시퀀스 — Hub 가 단일 인스턴스로 공유 ===== */
+	{
+		CUISequence::UISEQUENCE_DESC tCursorDesc{};
+		tCursorDesc.strPath = "../../DataFiles/UI/UI_Cursor.uiseq";
+		tCursorDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pCursorSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tCursorDesc));
+		if (nullptr == pCursorSeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pCursorSeq)))
+		{
+			Safe_Release(pCursorSeq);
+			return E_FAIL;
+		}
+
+		UI_Set_Cursor_Sequence(pCursorSeq);  // Hub 에 weak 주입
+		m_pCursorSeq = pCursorSeq;           // 레벨도 weak (Add_GameObject_Ex 가 owner)
+	}
+
 	/* ===== 메뉴 컨트롤러 테스트 등록 ===== */
 	CMenu* pMenu = CMenu::Create();
 	if (nullptr == pMenu)
@@ -311,10 +332,14 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 
 void CLevel_GamePlay::Free()
 {
-	__super::Free();
-
+	/* Hub 의 cursor weak 를 UI_Close_All 보다 먼저 끊어 안전성 확보.
+	   (Hub::Update_Cursor 가 다음 프레임에 호출되더라도 m_pCursor == nullptr 분기로 빠짐.) */
+	UI_Set_Cursor_Sequence(nullptr);
 	UI_Close_All();
 
+	m_pCursorSeq = nullptr;
 	m_pMenu = nullptr;
 	m_pRuntimeUI = nullptr;
+
+	__super::Free();
 }

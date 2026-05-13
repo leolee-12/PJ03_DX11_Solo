@@ -6,6 +6,7 @@
 #include "Battler.h"
 #include "IBattleAI.h"
 #include "Battle_EventDispatcher.h"
+#include "Battle_ActionSequencer.h"
 
 #include "GameInstance.h"
 
@@ -228,6 +229,11 @@ void CResolveActionState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
         return;
 
     if (ctx.pManager->Is_Pacing_Busy())
+        return;
+
+    // Sequencer 활성 중이면 다음 step 진행 대기
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr != pSeq && pSeq->Is_Active())
         return;
 
     if (nullptr != ctx.pManager->Get_Queue() && false == ctx.pManager->Get_Queue()->Empty())

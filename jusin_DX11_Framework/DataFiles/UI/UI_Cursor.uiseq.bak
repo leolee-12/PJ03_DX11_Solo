@@ -6,6 +6,20 @@
     "scalePolicy": "UNIFORM_FIT",
     "version": 2
   },
+  "timeline": [
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": true
+    },
+    {
+      "animName": "Anim_001",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    }
+  ],
   "widgets": [
     {
       "animations": [

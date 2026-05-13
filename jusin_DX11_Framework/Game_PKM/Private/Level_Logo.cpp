@@ -3,6 +3,8 @@
 #include "BackGround.h"
 #include "Effect_Star.h"
 #include "Battle_Data.h"
+#include "Monster.h"
+#include "Camera_Free.h"
 
 #include "UITween.h"
 #include "UISequence.h"
@@ -19,6 +21,12 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_BackGround(LAYER_BACKGROUND)))
 		return E_FAIL;
 
@@ -60,8 +68,111 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(WNameID strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_Logo::Ready_Lights()
+{
+	m_pGameInstance->Clear_Lights();
+
+	LIGHT_DESC LightDesc{};
+
+	LightDesc.eType = LIGHT::DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(1.0f, 1.0f, 1.0f, 1.f);
+	LightDesc.vAmbient = _float4(0.45f, 0.45f, 0.45f, 1.f);
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vDirection = _float4(0.2f, -0.7f, 0.7f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vPosition = _float4(1.f, 1.2f, -3.f, 1.f);
+	LightDesc.fRange = 10.f;
+	
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vPosition = _float4(0.f, 1.2f, -3.f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vPosition = _float4(0.25f, 0.2f, -3.f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.5f, 1.f);
+	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vPosition = _float4(0.75f, 0.2f, -3.f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_Camera(WNameID strLayerTag)
+{
+	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
+
+	CameraDesc.vEye = _float3(0.f, 0.f, -5.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.fFovy = XMConvertToRadians(35.f);
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 500.f;
+	CameraDesc.fSpeedPerSec = 20.f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	CameraDesc.fMouseSensor = 0.03f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
+		CURRENT_LEVEL, strLayerTag, &CameraDesc)))
+		return E_FAIL;
+
+	const list<CGameObject*>* pList =
+		m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, strLayerTag);
+
+	if (nullptr == pList || pList->empty())
+		return E_FAIL;
+
+	CCamera* pCamera = dynamic_cast<CCamera*>(pList->back());
+	if (nullptr == pCamera)
+		return E_FAIL;
+
+	m_pGameInstance->Set_MainCamera(pCamera);
+
+	return S_OK;
+}
+
 HRESULT CLevel_Logo::Ready_Layer_Monster(WNameID strLayerTag)
 {
+	CMonster::MONSTER_DESC MonsterDesc{};
+	MonsterDesc.iComponentLevel = ETOUI(LEVEL::STATIC);
+	MonsterDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+	MonsterDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
+	MonsterDesc.pRenderMappingPath = "../../Resources/Models/PM0025_00/pm0025_00_mapping.json";
+	MonsterDesc.fScale = 1.f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(
+		CURRENT_LEVEL, PROTO_OBJ_LOGO_MONSTER,
+		CURRENT_LEVEL, strLayerTag,
+		&MonsterDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

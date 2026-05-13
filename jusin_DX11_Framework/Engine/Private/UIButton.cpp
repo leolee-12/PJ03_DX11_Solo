@@ -12,6 +12,7 @@ CUIButton::CUIButton(const CUIButton& Prototype)
 	, m_strTextureTag{ Prototype.m_strTextureTag }
 	, m_strShaderTag{ Prototype.m_strShaderTag }
 	, m_strVIBufferTag{ Prototype.m_strVIBufferTag }
+	, m_iTextureIndex{ Prototype.m_iTextureIndex }
 	, m_iTextureLevel{ Prototype.m_iTextureLevel }
 	, m_iShaderLevel{ Prototype.m_iShaderLevel }
 	, m_iVIBufferLevel{ Prototype.m_iVIBufferLevel }
@@ -66,7 +67,6 @@ HRESULT CUIButton::Initialize(void* pArg)
 		m_strTextureTag = pDesc->strTextureTag;
 		m_strShaderTag = pDesc->strShaderTag;
 		m_strVIBufferTag = pDesc->strVIBufferTag;
-
 		m_iTextureLevel = pDesc->iTextureLevel;
 		m_iShaderLevel = pDesc->iShaderLevel;
 		m_iVIBufferLevel = pDesc->iVIBufferLevel;
@@ -108,7 +108,7 @@ HRESULT CUIButton::Render()
 	if (FAILED(Bind_BaseMatrices(m_pShaderCom)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))

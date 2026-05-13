@@ -1,20 +1,20 @@
-#pragma once
+ï»¿#pragma once
 #include "Base.h"
 #include "Battle_Context.h"
 
 /* -------------------------------------------------- */
-// CBattle_Manager : ¹èÆ²(¼¼¼Ç)ÀÇ ÁøÇàÀ» Ã¥ÀÓÁö´Â ¸Å´ÏÀú Å¬·¡½º
-//  1) ÇÑ ÆÇÀÇ µµ¸ŞÀÎ »óÅÂ º¸À¯
+// CBattle_Manager : ë°°í‹€(ì„¸ì…˜)ì˜ ì§„í–‰ì„ ì±…ì„ì§€ëŠ” ë§¤ë‹ˆì € í´ë˜ìŠ¤
+//  1) í•œ íŒì˜ ë„ë©”ì¸ ìƒíƒœ ë³´ìœ 
 //	(BATTLE_ENV / BATTLE_SLOT[] / FIELD_STATE / TURN_CONTEXT / BATTLE_PHASE).
-//  2) ¿ÜºÎ µ¥ÀÌÅÍ ÇÚµé º¸À¯ :  ¼ÒÀ¯ X
-//	(CPlayerState*, »ó´ë POKEMON_INSTANCE*, »ó´ë TRAINER_DATA*).
-//  3) ¹èÆ² ½Ã°¢ °´Ã¼ ÇÚµé º¸À¯ : ¼ÒÀ¯ X
+//  2) ì™¸ë¶€ ë°ì´í„° í•¸ë“¤ ë³´ìœ  :  ì†Œìœ  X
+//	(CPlayerState*, ìƒëŒ€ POKEMON_INSTANCE*, ìƒëŒ€ TRAINER_DATA*).
+//  3) ë°°í‹€ ì‹œê° ê°ì²´ í•¸ë“¤ ë³´ìœ  : ì†Œìœ  X
 //	(m_pBattlerObj[], m_pTrainerObj[])
-//     - Level_BattleÀÌ °´Ã¼ »ı¼º ÈÄ Register_*·Î µî·Ï
-//     - ÆäÀÌÁî ÁøÇà Áß ÅÏ °á°ú¸¦ °´Ã¼¿¡ ¹İ¿µÇÒ ¶§ Get_*·Î Á¢±Ù
-//  4) ÆäÀÌÁî ÁøÇà: Update -> ÇöÀç IBattleState À§ÀÓ
-//  5) °´Ã¼ ¹èÄ¡ ÁÂÇ¥ Á¶È¸ ³ëÃâ (Get_TrainerPos/Yaw, Get_PokemonPos/Yaw)
-//     - ³»ºÎÀûÀ¸·Î BattleLayout¿¡ À§ÀÓ. ·ê Á¤º¸´Â ¸Å´ÏÀú ³»ºÎ¿¡ Ä¸½¶È­
+//     - Level_Battleì´ ê°ì²´ ìƒì„± í›„ Register_*ë¡œ ë“±ë¡
+//     - í˜ì´ì¦ˆ ì§„í–‰ ì¤‘ í„´ ê²°ê³¼ë¥¼ ê°ì²´ì— ë°˜ì˜í•  ë•Œ Get_*ë¡œ ì ‘ê·¼
+//  4) í˜ì´ì¦ˆ ì§„í–‰: Update -> í˜„ì¬ IBattleState ìœ„ì„
+//  5) ê°ì²´ ë°°ì¹˜ ì¢Œí‘œ ì¡°íšŒ ë…¸ì¶œ (Get_TrainerPos/Yaw, Get_PokemonPos/Yaw)
+//     - ë‚´ë¶€ì ìœ¼ë¡œ BattleLayoutì— ìœ„ì„. ë£° ì •ë³´ëŠ” ë§¤ë‹ˆì € ë‚´ë¶€ì— ìº¡ìŠí™”
 /* -------------------------------------------------- */
 
 NS_BEGIN(Engine)
@@ -29,6 +29,8 @@ class CCommandQueue;
 class CDamage_Calculator;
 class CBattle_EventDispatcher;
 class IBattleAI;
+class CBattle_ActionSequencer;
+class CBattleMsg;
 
 class CBattle_Manager : public CBase
 {
@@ -63,6 +65,10 @@ public:
 	CBattle_EventDispatcher*	Get_EventDispatcher() const { return m_pEventDispatcher; }
 	IBattleAI* Get_AI(_uint iSide) const { return (iSide < g_kBattleSideCount) ? m_pAI[iSide] : nullptr; }
 
+	CBattle_ActionSequencer* Get_Sequencer() const { return m_pSequencer; }
+	void Set_BattleMsg(CBattleMsg* pMsg) { m_pBattleMsg = pMsg; }   // weak
+	CBattleMsg* Get_BattleMsg() const { return m_pBattleMsg; }
+
 	CBattler* Get_Battler(_uint iSide) const;
 	CCommandQueue* Get_Queue() const { return m_pQueue; }
 
@@ -90,6 +96,8 @@ private:
 	CDamage_Calculator* m_pDamageCalculator = { nullptr };
 	CBattle_EventDispatcher* m_pEventDispatcher = { nullptr };
 	IBattleAI* m_pAI[g_kBattleSideCount] = {};
+	CBattle_ActionSequencer* m_pSequencer = { nullptr };
+	CBattleMsg* m_pBattleMsg = { nullptr };  // weak â€” Level/UI Hub owns
 
 	_int m_iPacingLocks = { 0 };
 

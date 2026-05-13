@@ -194,6 +194,17 @@ void CInput_Device::Ready_KeyGroupMap()
 	m_iKeyGroupMap[DIK_ESCAPE] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_P] = KeyGroup::SYSTEM;
 
+	m_iKeyGroupMap[DIK_1] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_2] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_3] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_4] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_5] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_6] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_7] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_8] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_9] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_0] = KeyGroup::SYSTEM;
+
 	// UI 네비게이션
 	m_iKeyGroupMap[DIK_RETURN] = KeyGroup::UI_NAVIGATE;
 	m_iKeyGroupMap[DIK_TAB] = KeyGroup::UI_NAVIGATE;

@@ -8,6 +8,7 @@
 #include "Damage_Calculator.h"
 #include "Battle_EventDispatcher.h"
 #include "Battle_AI.h"
+#include "Battle_ActionSequencer.h"
 
 #include "GameInstance.h"
 
@@ -150,6 +151,10 @@ void CBattle_Manager::Update(_float fTimeDelta)
 	if (nullptr != m_pCurrentState)
 		m_pCurrentState->Update(ctx, fTimeDelta);
 
+	// State Update 중 Command 가 시퀀스를 빌드했을 수 있으므로 Sequencer Tick 진행
+	if (nullptr != m_pSequencer)
+		m_pSequencer->Tick(ctx, fTimeDelta);
+
 	Apply_Pending_Transition(ctx);
 }
 
@@ -250,6 +255,7 @@ BATTLE_CONTEXT CBattle_Manager::Build_Context()
 	ctx.pTurn = &m_tTurn;
 	ctx.pDispatcher = m_pEventDispatcher;
 	ctx.pDataMgr = CPokemonData_Manager::GetInstance();
+	ctx.pMsg = m_pBattleMsg;
 
 	return ctx;
 }
@@ -266,6 +272,10 @@ HRESULT CBattle_Manager::Initialize_CoreComponents()
 
 	m_pEventDispatcher = CBattle_EventDispatcher::Create();
 	if (nullptr == m_pEventDispatcher)
+		return E_FAIL;
+
+	m_pSequencer = CBattle_ActionSequencer::Create();
+	if (nullptr == m_pSequencer)
 		return E_FAIL;
 
 	return S_OK;
@@ -363,6 +373,7 @@ void CBattle_Manager::Free()
 	for (auto& pAI : m_pAI)
 		Safe_Release(pAI);
 
+	Safe_Release(m_pSequencer);
 	Safe_Release(m_pEventDispatcher);
 	Safe_Release(m_pDamageCalculator);
 	Safe_Release(m_pQueue);

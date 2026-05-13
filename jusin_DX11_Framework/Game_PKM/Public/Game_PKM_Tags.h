@@ -122,6 +122,8 @@ WNAME_TAG(LAYER_UI, L"Layer_UI");
 // Object
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
 WNAME_TAG(PROTO_OBJ_TITLE_BG, L"Prototype_GameObject_Title_BG");
+WNAME_TAG(PROTO_OBJ_LOGO_MONSTER, L"Prototype_GameObject_Logo_Monster");
+
 WNAME_TAG(PROTO_OBJ_TERRAIN, L"Prototype_GameObject_Terrain");
 WNAME_TAG(PROTO_OBJ_CAMERA_FREE, L"Prototype_GameObject_Camera_Free");
 WNAME_TAG(PROTO_OBJ_MONSTER, L"Prototype_GameObject_Monster");

@@ -186,6 +186,10 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/title/Title_BG.png"), 1)); },
 		TEXT("Prototype_Component_Texture_Title_BackGround"));
 
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_BACKGROUND,
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2)); },
+		TEXT("Prototype_Component_Texture_BackGround"));
+
 	// ---------- VIBuffer ----------
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC StarDesc{};
 	StarDesc.iNumInstance = 64;
@@ -193,14 +197,18 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &StarDesc)); },
 		TEXT("Prototype_Component_VIBuffer_Instance_Star"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_BACKGROUND,
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2)); },
-		TEXT("Prototype_Component_Texture_BackGround"));
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0025_00,
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel")); },
+		TEXT("Prototype_Component_Model_PM0025_00"));
 
 	// ---------- Shader ----------
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_SHADER_VTXUIINST,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxUIInstance.hlsl"), VTXUI_INSTANCE_DESC::Elements, VTXUI_INSTANCE_DESC::iNumElements)); },
 		TEXT("Prototype_Component_Shader_VtxUIInstance"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_POKEMON,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Pokemon.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); },
+		TEXT("Prototype_Component_Shader_Pokemon"));
 
 	// ---------- GameObject ----------
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_TITLE_BG,
@@ -210,6 +218,14 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_EFT_STAR,
 		CEffect_Star::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Effect_Star"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_LOGO_MONSTER,
+		CMonster::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Logo_Monster"));
+
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
+		CCamera_Free::Create(m_pDevice, m_pContext)); },
+		TEXT("Prototype_GameObject_Camera_Free"));
 
 	return S_OK;
 }
@@ -227,7 +243,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		};
 
 	// ---------- Texture ----------
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_CURSOR,
+	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_CURSOR,
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources//UI/cursor/cursor.png"), 1)); },
 		TEXT("Prototype_Component_Texture_Cursor"));
 
@@ -310,7 +326,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements)); },
 		TEXT("Prototype_Component_Shader_VtxMesh"));
 
-
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXANIMMESH,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); },
 		TEXT("Prototype_Component_Shader_VtxAnimMesh"));
@@ -331,25 +346,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); },
 		TEXT("Prototype_Component_Shader_Player_LGPE"));
 
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_POKEMON,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Pokemon.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements)); },
-		TEXT("Prototype_Component_Shader_Pokemon"));
-
-	//Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UI,
-	//	CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); },
-	//	TEXT("Prototype_Component_Shader_UI"));
-
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIIMAGE,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIImage.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); },
 		TEXT("Prototype_Component_Shader_UIImage"));
-
-	//Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIBUTTON_GLOW,
-	//	CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIButton_Glow.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); },
-	//	TEXT("Prototype_Component_Shader_UI_Button_Glow"));
-
-	//Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIBUTTON_LAYERED,
-	//	CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIButton_Layered.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements)); },
-	//	TEXT("Prototype_Component_Shader_UI_Button_Layered"));
 
 	// ---------- VIBuffer ----------
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_CUBE,
@@ -368,10 +367,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0007_00,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0007_00"));
-
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0025_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel")); },
-		TEXT("Prototype_Component_Model_PM0025_00"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
 		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel")); },
@@ -407,10 +402,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_Collider_Sphere"));
 
 	// ---------- Objects ----------
-	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
-		CCamera_Free::Create(m_pDevice, m_pContext)); },
-		TEXT("Prototype_GameObject_Camera_Free"));
-
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
 		CPlayer_LGPE::Create(m_pDevice, m_pContext)); },
 		TEXT("Prototype_GameObject_Player_LGPE"));

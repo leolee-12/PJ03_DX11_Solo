@@ -1,4 +1,4 @@
-#include "Game_API.h"
+﻿#include "Game_API.h"
 #include "Level_Loading.h"
 #include "SharedTexture_Manager.h"
 #include "UIButton_Glow.h"
@@ -18,7 +18,7 @@
 
 NS_BEGIN(Game_PKM)
 
-#pragma region ���� ����
+#pragma region 공용 로직
 HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eStartLevelID)
 {
 	CLevel* pPreLevel = CLevel_Loading::Create(pDevice, pContext, eStartLevelID);
@@ -206,7 +206,7 @@ HRESULT Ready_Fonts()
 }
 #pragma endregion
 
-#pragma region UI ��Ʈ�ѷ� Hub ����
+#pragma region UI 컨트롤러 Hub 래퍼
 
 namespace
 {
@@ -247,6 +247,24 @@ void UI_Close_All()
 	if (nullptr == g_pUIHub)
 		return;
 	g_pUIHub->Close_All();
+}
+
+void UI_Set_Cursor_Sequence(CUISequence* pSeq)
+{
+	/* 해제(nullptr) 시에는 Hub 를 새로 만들면 안 됨 — 다른 래퍼들과 동일한 g_pUIHub 가드 사용.
+	   주입(non-nullptr) 시에는 Get_UIHub 로 Hub 생성 보장. */
+	if (nullptr == pSeq)
+	{
+		if (nullptr == g_pUIHub)
+			return;
+		g_pUIHub->Set_Cursor_Sequence(nullptr);
+		return;
+	}
+
+	auto* pHub = Get_UIHub();
+	if (nullptr == pHub)
+		return;
+	pHub->Set_Cursor_Sequence(pSeq);
 }
 
 void UI_Cleanup()

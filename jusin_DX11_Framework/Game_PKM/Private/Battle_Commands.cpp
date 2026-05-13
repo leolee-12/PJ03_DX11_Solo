@@ -1,4 +1,4 @@
-#include "Battle_Commands.h"
+﻿#include "Battle_Commands.h"
 #include "Battler.h"
 #include "PokemonData_Manager.h"
 #include "Battle_Targeting.h"
@@ -6,6 +6,8 @@
 #include "Battle_Manager.h"
 #include "Damage_Calculator.h"
 #include "Battle_EventDispatcher.h"
+#include "Battle_ActionSequencer.h"
+#include "Battle_Action_Steps.h"
 
 #pragma region MoveCommand
 CMoveCommand::CMoveCommand()
@@ -47,7 +49,7 @@ _ushort CMoveCommand::Get_ActorSpeed(const BATTLE_CONTEXT& ctx) const
 HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
 {
     CBattler* pAttacker = ctx.Get_Self(m_tDesc.iActorSide);
-    if (nullptr == pAttacker || nullptr == ctx.pDataMgr)
+    if (nullptr == pAttacker || nullptr == ctx.pDataMgr || nullptr == ctx.pManager)
         return E_FAIL;
 
     const _uint iMoveID = pAttacker->Get_MoveID(m_tDesc.iMoveSlot);
@@ -55,6 +57,7 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
     if (nullptr == pMove)
         return E_FAIL;
 
+    // PP 0 — 시퀀스 빌드 없이 즉시 메시지 발행 후 종료
     if (0 == pAttacker->Get_PP(m_tDesc.iMoveSlot))
     {
         if (nullptr != ctx.pDispatcher)
@@ -69,102 +72,63 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
         return S_OK;
     }
 
+    // PP 차감 + 마지막 무브 기록
     pAttacker->Consume_PP(m_tDesc.iMoveSlot);
     pAttacker->Set_LastMoveUsed(iMoveID);
 
-    if (nullptr != ctx.pDispatcher)
-    {
-        EVENT_MOVE_USED tEvent{};
-        tEvent.iSide = m_tDesc.iActorSide;
-        tEvent.iMoveID = iMoveID;
-        ctx.pDispatcher->Publish(tEvent);
-    }
-
+    // 타겟 결정 (싱글배틀 — 첫 번째 타겟만 사용)
     BattleTargeting::TARGET_LIST tTargets{};
     BattleTargeting::Resolve(ctx, m_tDesc.iActorSide, m_tDesc.iActorSlot, *pMove, tTargets);
 
-    for (_uint i = 0; i < tTargets.iCount; ++i)
-    {
-        CBattler* pDefender = tTargets.aTargets[i];
-        if (nullptr == pDefender)
-            continue;
+    if (0 == tTargets.iCount || nullptr == tTargets.aTargets[0])
+        return S_OK;
 
-        if (false == BattleMath::Roll_Accuracy(pMove->iAccuracy, pAttacker, pDefender))
+    CBattler* pDefender = tTargets.aTargets[0];
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr == pSeq)
+        return E_FAIL;
+
+    // ActionData 셋업
+    pSeq->Reset_ActionData();
+    BATTLE_ACTION_DATA& tData = pSeq->Get_ActionData();
+    tData.iActorSide = m_tDesc.iActorSide;
+    tData.iActorSlot = m_tDesc.iActorSlot;
+    tData.iTargetSide = pDefender->Get_Side();
+    tData.iTargetSlot = pDefender->Get_SlotIndex();
+    tData.iMoveID = iMoveID;
+    tData.iMoveSlot = m_tDesc.iMoveSlot;
+
+    // 시퀀스 빌드
+    auto Push = [pSeq](IBattleAction_Step* pStep)
         {
-            if (nullptr != ctx.pDispatcher)
-            {
-                EVENT_MOVE_FAILED tEvent{};
-                tEvent.iSide = m_tDesc.iActorSide;
-                tEvent.iMoveID = iMoveID;
-                tEvent.eReason = MOVE_FAIL_REASON::MISSED;
-                ctx.pDispatcher->Publish(tEvent);
-            }
+            if (nullptr == pStep)
+                return;
 
-            continue;
-        }
+            pSeq->Push_Step(pStep);
+            Safe_Release(pStep);
+        };
 
-        if (MOVE_CATEGORY::STATUS != pMove->eCategory && pMove->iPower > 0)
-        {
-            if (nullptr == ctx.pManager || nullptr == ctx.pManager->Get_Damage_Calculator())
-                return E_FAIL;
+    Push(SAnnounce::Create(m_tDesc.iActorSide, iMoveID));
+    Push(SDelay::Create(0.3f));
+    Push(SCloseMsg::Create());
+    Push(SDelay::Create(0.2f));
+    Push(SAccuracyCheck::Create());
+    Push(SMissMessage::Create(m_tDesc.iActorSide, iMoveID));
+    Push(SApplyDamage::Create());
+    Push(SResultMessages::Create());
+    Push(SDelay::Create(0.2f));
+    Push(SCloseMsg::Create());
+    Push(SDelay::Create(0.3f));
+    Push(SFaintCheck::Create());
+    Push(SDelay::Create(0.2f));
+    Push(SCloseMsg::Create());
+    Push(SDone::Create());
 
-            POKEMON_INSTANCE* pAttackerInst = pAttacker->Get_Instance();
-            POKEMON_INSTANCE* pDefenderInst = pDefender->Get_Instance();
+    pSeq->Submit();
 
-            if (nullptr == pAttackerInst || nullptr == pDefenderInst)
-                continue;
-
-            DAMAGE_PIPE_DATA tPipe{};
-            tPipe.pAttacker = pAttacker;
-            tPipe.pDefender = pDefender;
-            tPipe.pMove = pMove;
-            tPipe.pField = ctx.pField;
-            tPipe.iBasePower = pMove->iPower;
-            tPipe.iAttackStat = BattleMath::Pick_AttackStat(*pAttackerInst, pMove->eCategory);
-            tPipe.iDefenseStat = BattleMath::Pick_DefenseStat(*pDefenderInst, pMove->eCategory);
-            tPipe.iAttackerLevel = (0 == pAttackerInst->iLevel) ? 1 : pAttackerInst->iLevel;
-
-            ctx.pManager->Get_Damage_Calculator()->Calculate(ctx, tPipe);
-
-            if (tPipe.fEffectiveness <= 0.f)
-            {
-                if (nullptr != ctx.pDispatcher)
-                {
-                    EVENT_MOVE_FAILED tEvent{};
-                    tEvent.iSide = m_tDesc.iActorSide;
-                    tEvent.iMoveID = iMoveID;
-                    tEvent.eReason = MOVE_FAIL_REASON::IMMUNE;
-                    ctx.pDispatcher->Publish(tEvent);
-                }
-
-                continue;
-            }
-
-            const _bool bWasAlive = pDefender->Is_Alive();
-            const _ushort iAppliedDamage = pDefender->Apply_Damage(tPipe.iFinalDamage);
-
-            if (nullptr != ctx.pDispatcher)
-            {
-                EVENT_DAMAGE_DEALT tEvent{};
-                tEvent.iTargetSide = pDefender->Get_Side();
-                tEvent.iAmount = iAppliedDamage;
-                tEvent.eSource = DAMAGE_SOURCE::MOVE;
-                tEvent.iMoveID = iMoveID;
-                tEvent.fEffectiveness = tPipe.fEffectiveness;
-                tEvent.bCrit = tPipe.bCrit;
-                ctx.pDispatcher->Publish(tEvent);
-            }
-
-            if (bWasAlive && false == pDefender->Is_Alive() && nullptr != ctx.pDispatcher)
-            {
-                EVENT_POKEMON_FAINTED tEvent{};
-                tEvent.iSide = pDefender->Get_Side();
-                ctx.pDispatcher->Publish(tEvent);
-            }
-        }
-
-        BattleMath::Apply_MoveEffect(ctx, *pMove, pAttacker, pDefender);
-    }
+    // 부가 효과(상태이상 등) 처리 — 본 트랙 보류, 추후 별도 step (SApplyEffect) 으로 통합 예정
+    // BattleMath::Apply_MoveEffect(ctx, *pMove, pAttacker, pDefender);  // stub
 
     return S_OK;
 }

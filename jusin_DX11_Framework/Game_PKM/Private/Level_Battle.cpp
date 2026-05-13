@@ -12,6 +12,7 @@
 #include "Battle_CommandMenu.h"
 #include "Battle_MoveMenu.h"
 #include "Battle_InputDirector.h"
+#include "Battle_PokemonListener.h"
 #include "Game_API.h"
 #include "Camera_Free.h"
 
@@ -227,7 +228,7 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
 
-	CameraDesc.vEye = _float3(0.f, 7.f, -12.f);
+	CameraDesc.vEye = _float3(-1.3f, 3.2f, -7.3f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = XMConvertToRadians(35.f);
 	CameraDesc.fNear = 0.1f;
@@ -316,7 +317,36 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		if (nullptr == pList || pList->empty())
 			return E_FAIL;
 
-		m_pBattleManager->Register_BattlerObj(iSide, pList->back());
+		CGameObject* pObj = pList->back();
+		m_pBattleManager->Register_BattlerObj(iSide, pObj);
+
+		// Battle_Pokemon 캐스팅 후 Manager 주입 + PokemonListener 결합
+		CBattle_Pokemon* pPoke = dynamic_cast<CBattle_Pokemon*>(pObj);
+		if (nullptr != pPoke)
+		{
+			pPoke->Set_Manager(m_pBattleManager);
+
+			CBattle_PokemonListener* pListener = CBattle_PokemonListener::Create();
+			if (nullptr == pListener)
+				return E_FAIL;
+
+			pListener->Bind(pPoke, iSide);
+
+			CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+			if (nullptr == pDispatcher)
+			{
+				Safe_Release(pListener);
+				return E_FAIL;
+			}
+
+			if (FAILED(pDispatcher->Subscribe(pListener)))
+			{
+				Safe_Release(pListener);
+				return E_FAIL;
+			}
+
+			m_pPokemonListeners[iSide] = pListener;  // strong ref 유지 (Free 에서 Safe_Re
+		}
 	}
 
 	return S_OK;
@@ -474,6 +504,30 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	m_pBattleMsg = pBattleMsg;      // weak - Hub owns
 	Safe_Release(pBattleMsg);       // local ref--
 
+	m_pBattleManager->Set_BattleMsg(m_pBattleMsg);
+
+	/* ===== 커서 시퀀스 — Hub 가 단일 인스턴스로 공유 =====
+		 다른 UI 시퀀스 등록을 모두 마친 뒤 마지막에 추가해 최상위에 그려지도록 함. */
+	{
+		CUISequence::UISEQUENCE_DESC tCursorDesc{};
+		tCursorDesc.strPath = "../../DataFiles/UI/UI_Cursor.uiseq";
+		tCursorDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pCursorSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tCursorDesc));
+		if (nullptr == pCursorSeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, LAYER_UI, pCursorSeq)))
+		{
+			Safe_Release(pCursorSeq);
+			return E_FAIL;
+		}
+
+		UI_Set_Cursor_Sequence(pCursorSeq);  // Hub 에 weak 주입
+		m_pCursorSeq = pCursorSeq;           // 레벨도 weak (Add_GameObject_Ex 가 owner)
+	}
+
 	m_pBattleMsgListener = CBattle_MsgListener::Create();
 	if (nullptr == m_pBattleMsgListener)
 		return E_FAIL;
@@ -526,13 +580,16 @@ HRESULT CLevel_Battle::Ready_Debug_WildOpponent()
 	m_tDebugWildOpponent.eNature = NATURE::HARDY;
 	m_tDebugWildOpponent.iAbilityID = pSpecies->iAbility1;
 
-	m_tDebugWildOpponent.iMoves[0] = pSpecies->iLearnset[0];
+	const _uint iInitialMoves[g_kMaxMovesPerPokemon] =
+	{
+		  pSpecies->iLearnset[0],
+		  pSpecies->iLearnset[1],
+		  pSpecies->iLearnset[2],
+		  pSpecies->iLearnset[3],
+	};
 
-	const MOVE_DATA* pMove = (0 != m_tDebugWildOpponent.iMoves[0]) ?
-		pDataMgr->Find_Move(m_tDebugWildOpponent.iMoves[0]) :
-		nullptr;
+	Assign_Moves(m_tDebugWildOpponent, iInitialMoves, g_kMaxMovesPerPokemon, pDataMgr);
 
-	m_tDebugWildOpponent.iCurrentPP[0] = (nullptr != pMove) ? pMove->iMaxPP : 0;
 	m_tDebugWildOpponent.eStatus = STATUS_CONDITION::NONE;
 
 	Recalc_All_Stats(m_tDebugWildOpponent, *pSpecies);
@@ -573,7 +630,20 @@ CLevel_Battle* CLevel_Battle::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 void CLevel_Battle::Free()
 {
-	// Director 먼저 정리 (메뉴/Manager 살아있을 때 람다 캡처 안전 + Dispatcher Unsubscribe)
+	// PokemonListener 들 정리 (Battle_Pokemon weak ref 가 살아있을 때)
+	for (_uint i = 0; i < g_kBattleSideCount; ++i)
+	{
+		if (nullptr != m_pPokemonListeners[i] && nullptr != m_pBattleManager)
+		{
+			CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+			if (nullptr != pDispatcher)
+				pDispatcher->Unsubscribe(m_pPokemonListeners[i]);
+		}
+
+		Safe_Release(m_pPokemonListeners[i]);
+	}
+
+	// Director 정리
 	if (nullptr != m_pInputDirector && nullptr != m_pBattleManager)
 	{
 		CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
@@ -592,7 +662,9 @@ void CLevel_Battle::Free()
 
 	Safe_Release(m_pBattleMsgListener);
 
+	UI_Set_Cursor_Sequence(nullptr);
 	UI_Close_All();
+	m_pCursorSeq = nullptr;
 	m_pBattleMsg = nullptr;
 	m_pBattlePlate = nullptr;
 	m_pCommandMenu = nullptr;

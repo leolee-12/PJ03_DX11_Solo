@@ -181,7 +181,29 @@ void CBattle_MoveMenu::Refresh_Slots()
 			m_Icons[i]->Set_Visible(true);
 			m_Icons[i]->Set_Texture(m_Icons[i]->Get_TextureTag(), static_cast<_uint>(pMove->eType));
 		}
+
+		const _uint iTypeIndex = Type_ToMoveTextureIndex(pMove->eType);
+
+		if (nullptr != m_Icons[i])
+		{
+			m_Icons[i]->Set_Visible(true);
+			m_Icons[i]->Set_Texture(PROTO_COM_TEX_BTL_MOVEICON, iTypeIndex);
+		}
+
+		const _bool bFocused =
+			nullptr != m_pGroup &&
+			m_pGroup->Get_FocusedIndex() == static_cast<_int>(i);
+
+		const _uint iButtonIndex = iTypeIndex * 2u + (bFocused ? 1u : 0u);
+
+		if (nullptr != m_Buttons[i])
+		{
+			m_Buttons[i]->Set_Visible(true);
+			m_Buttons[i]->Set_Texture(PROTO_COM_TEX_BTL_MOVE, iButtonIndex);
+		}
 	}
+
+
 }
 
 CBattle_MoveMenu* CBattle_MoveMenu::Create()

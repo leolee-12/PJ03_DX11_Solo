@@ -3,6 +3,7 @@
 #include "Game_PKM_Defines.h"
 
 NS_BEGIN(Game_PKM)
+class CPokemonData_Manager;
 
 inline constexpr _uint		g_kMaxLearnSet = 128;
 inline constexpr _uint		g_kTypeCount = 21;
@@ -180,6 +181,7 @@ _ushort	Calc_HP_Stat(_ushort iBase, _ubyte iIV, _ubyte iEV, _ubyte iLevel);
 _ushort	Calc_Other_Stat(_ushort iBase, _ubyte iIV, _ubyte iEV, _ubyte iLevel, _float fNatureMul);
 _float	Get_NatureMultiplier(NATURE eNature, STAT eStat);
 void	Recalc_All_Stats(POKEMON_INSTANCE& tInstance, const SPECIES_DATA& tSpecies);
+void	Assign_Moves(POKEMON_INSTANCE& tInstance, const _uint* pMoveIDs, _uint iMoveCount, const CPokemonData_Manager* pDataMgr);
 
 namespace PartyOps
 {

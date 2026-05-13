@@ -1,4 +1,5 @@
 #include "Battle_Data.h"
+#include "PokemonData_Manager.h"
 
 NS_BEGIN(Game_PKM)
 
@@ -93,6 +94,35 @@ void Recalc_All_Stats(POKEMON_INSTANCE& tInstance, const SPECIES_DATA& tSpecies)
 		Calc_Other_Stat(tSpecies.iBaseSpd, tInstance.iIV[static_cast<size_t>(S::SPD)],
 			tInstance.iEV[static_cast<size_t>(S::SPD)], tInstance.iLevel,
 			Get_NatureMultiplier(tInstance.eNature, S::SPD));
+}
+
+void Assign_Moves(POKEMON_INSTANCE& tInstance, const _uint* pMoveIDs, _uint iMoveCount, const CPokemonData_Manager* pDataMgr)
+{
+	for (_uint i = 0; i < g_kMaxMovesPerPokemon; ++i)
+	{
+		tInstance.iMoves[i] = 0;
+		tInstance.iCurrentPP[i] = 0;
+	}
+
+	if (nullptr == pMoveIDs || nullptr == pDataMgr)
+		return;
+
+	const _uint iCount = (iMoveCount < g_kMaxMovesPerPokemon) ?
+		iMoveCount : g_kMaxMovesPerPokemon;
+
+	for (_uint i = 0; i < iCount; ++i)
+	{
+		const _uint iMoveID = pMoveIDs[i];
+		if (0 == iMoveID)
+			continue;
+
+		const MOVE_DATA* pMove = pDataMgr->Find_Move(iMoveID);
+		if (nullptr == pMove)
+			continue;
+
+		tInstance.iMoves[i] = iMoveID;
+		tInstance.iCurrentPP[i] = pMove->iMaxPP;
+	}
 }
 
 void PartyOps::Clear(PARTY& tParty)
