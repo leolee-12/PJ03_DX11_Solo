@@ -46,6 +46,7 @@ void CMapObject::Late_Update(_float fTimeDelta)
 {
 
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERID::SHADOW, this);
 }
 
 HRESULT CMapObject::Render()
@@ -75,15 +76,12 @@ HRESULT CMapObject::Render_Shadow()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::PROJ))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_Shadow_FarZ(m_pShaderCom)))
-		return E_FAIL;
-
 	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
-			return E_FAIL;
+		//if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+		//	return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Begin(1)))
 			return E_FAIL;

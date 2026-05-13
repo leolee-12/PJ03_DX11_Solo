@@ -161,6 +161,7 @@
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl" />

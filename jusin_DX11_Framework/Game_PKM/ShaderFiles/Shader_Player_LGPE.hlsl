@@ -4,7 +4,6 @@ float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_WITMatrix;
 vector g_vCamPos;
 float g_fFarZ;
-float g_fShadowFarZ;
 
 // ÀçÁú
 texture2D g_TexDiff;

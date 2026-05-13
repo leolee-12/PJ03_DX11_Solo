@@ -75,9 +75,6 @@ HRESULT CBody_Hero::Render_Shadow()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::PROJ))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_Shadow_FarZ(m_pShaderCom)))
-		return E_FAIL;
-
 	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)

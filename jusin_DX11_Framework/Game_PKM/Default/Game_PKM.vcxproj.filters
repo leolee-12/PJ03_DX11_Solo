@@ -595,5 +595,8 @@
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
