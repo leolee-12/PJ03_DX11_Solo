@@ -87,7 +87,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
 	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vPosition = _float4(1.f, 1.2f, -3.f, 1.f);
+	LightDesc.vPosition = _float4(1.f, 0.2f, -3.f, 1.f);
 	LightDesc.fRange = 10.f;
 	
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
@@ -97,7 +97,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
 	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vPosition = _float4(0.f, 1.2f, -3.f, 1.f);
+	LightDesc.vPosition = _float4(0.f, 0.2f, -3.f, 1.f);
 	LightDesc.fRange = 10.f;
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
