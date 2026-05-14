@@ -8,6 +8,7 @@ float g_fFarZ;
 texture2D g_TexDiff;
 texture2D g_TexDiff2;
 texture2D g_TexDiff3;
+texture2D g_TexDiff4;
 
 texture2D g_TexOpct;
 texture2D g_TexData;
@@ -190,6 +191,36 @@ PS_OUT PS_GRASS(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_SOIL(PS_IN In)
+{
+	PS_OUT Out;
+	float4 vDiff1 = g_TexDiff.Sample(LinearSampler, In.vTex);
+	float4 vDiff2 = g_TexDiff2.Sample(LinearSampler, In.vTex);
+	float4 vDiff3 = g_TexDiff3.Sample(LinearSampler, In.vTex);
+	float4 vDiff4 = g_TexDiff4.Sample(LinearSampler, In.vTex);
+
+	Out.vDiff = vector(vDiff3.rgb, 1.f);
+	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
+
+	return Out;
+}
+
+PS_OUT PS_SOIL2(PS_IN In)
+{
+	PS_OUT Out;
+	float4 vDiff1 = g_TexDiff.Sample(LinearSampler, In.vTex);
+	float4 vDiff2 = g_TexDiff2.Sample(LinearSampler, In.vTex);
+
+	Out.vDiff = vector(vDiff2.rgb, 1.f);
+	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass DefaultPass
@@ -271,5 +302,25 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_GRASS();
+	}
+	pass Pass_Soil	// 8. Ground - Diff * 4
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SOIL();
+	}
+	pass Pass_Soil2	// 9. Ground - Diff * 2
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_SOIL2();
 	}
 };

@@ -301,7 +301,7 @@ void CLevel_Logo::Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& 
 		"bgm_title",
 		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
 		{
-			pGI->Play_BGM(L"BGM/1-03. Title Screen.mp3", 0.5f);
+			pGI->Play_BGM(L"BGM/1-03. Title Screen.mp3", 0.3f);
 		},
 		[pGI = m_pGameInstance](const CUISequence::UISEQ_EVENT_CONTEXT&)
 		{
@@ -315,7 +315,7 @@ void CLevel_Logo::Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& 
 			pGI->Play(
 				L"SFX/025 - Pikachu (01).wav",
 				CHANNELID::SFX,
-				0.7f);
+				0.6f);
 		});
 }
 

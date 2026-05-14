@@ -52,7 +52,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	pCamera->Set_FollowOffset({ 0.f, 6.5f, -7.5f });
 	m_pGameInstance->Set_MainCamera(pCamera);
 
-	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.5f);
+	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 
 	return S_OK;
 }
@@ -89,7 +89,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		if (FAILED(tEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv, sizeof(BATTLE_ENV))))
 			return;
 
-		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.5f);
+		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
 
 		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING),
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE, &tEntryDesc))))

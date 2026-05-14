@@ -58,6 +58,8 @@ HRESULT CMapObject::Render()
 	{
 		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff", 0 },
 		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff2", 1 },
+		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff3", 2 },
+		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff4", 3 },
 		{ MATERIAL_TYPE::OPACITY, "g_TexOpct" },
 		{ MATERIAL_TYPE::UNKNOWN, "g_TexData" },
 		{ MATERIAL_TYPE::UNKNOWN, "g_TexMask" },
