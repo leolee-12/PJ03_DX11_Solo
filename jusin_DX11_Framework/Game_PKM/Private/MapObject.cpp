@@ -56,7 +56,11 @@ HRESULT CMapObject::Render()
 
 	vector<CRenderProfile::MATERIAL_SLOT> Slots =
 	{
-			{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff" },
+		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff", 0 },
+		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff2", 1 },
+		{ MATERIAL_TYPE::OPACITY, "g_TexOpct" },
+		{ MATERIAL_TYPE::UNKNOWN, "g_TexData" },
+		{ MATERIAL_TYPE::UNKNOWN, "g_TexMask" },
 	};
 
 	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots)))

@@ -94,7 +94,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iLearnset[0] = 33;
 		tData.iLearnset[1] = 22;
 		tData.strModelTag = PROTO_COM_MODEL_PM0001_00;
-		tData.pRenderMappingPath = "../../Resources/Models/pm0001_00/pm0001_00_mapping.json";
+		tData.pRenderMappingPath = "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json";
 		tData.eRenderRuleKey = RENDER_RULE_KEY::POKEMON_DEFAULT;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
@@ -111,7 +111,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iLearnset[0] = 10;
 		tData.iLearnset[1] = 52;
 		tData.strModelTag = PROTO_COM_MODEL_PM0004_00;
-		tData.pRenderMappingPath = "../../Resources/Models/pm0004_00/pm0004_00_mapping.json";
+		tData.pRenderMappingPath = "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json";
 		tData.eRenderRuleKey = RENDER_RULE_KEY::POKEMON_DEFAULT;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
@@ -128,7 +128,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iLearnset[0] = 33;
 		tData.iLearnset[1] = 55;
 		tData.strModelTag = PROTO_COM_MODEL_PM0007_00;
-		tData.pRenderMappingPath = "../../Resources/Models/pm0007_00/pm0007_00_mapping.json";
+		tData.pRenderMappingPath = "../../Resources/Models/pkm/pm0007_00/pm0007_00_mapping.json";
 		tData.eRenderRuleKey = RENDER_RULE_KEY::POKEMON_DEFAULT;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
@@ -147,7 +147,7 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		tData.iLearnset[2] = 202;
 		tData.iLearnset[3] = 203;
 		tData.strModelTag = PROTO_COM_MODEL_PM0025_00;
-		tData.pRenderMappingPath = "../../Resources/Models/pm0025_00/pm0025_00_mapping.json";
+		tData.pRenderMappingPath = "../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json";
 		tData.eRenderRuleKey = RENDER_RULE_KEY::POKEMON_DEFAULT;
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}

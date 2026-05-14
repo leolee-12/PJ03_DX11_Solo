@@ -75,7 +75,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LIGHT_DESC LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);   // GamePlay와 동일 중성 화이트
+	LightDesc.vDiffuse = _float4(0.9f, 0.9f, 0.9f, 1.f);   // GamePlay와 동일 중성 화이트
 	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);   // GamePlay와 동일 중성 강화
 	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);     // 변화 없음
 	LightDesc.vDirection = _float4(0.2f, -0.7f, 0.7f, 0.f);   // Logo 고유 방향 유지
@@ -86,7 +86,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vPosition = _float4(1.f, 0.2f, -3.f, 1.f);
 	LightDesc.fRange = 10.f;
 	
@@ -96,7 +96,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vPosition = _float4(0.f, 0.2f, -3.f, 1.f);
 	LightDesc.fRange = 10.f;
 
@@ -106,7 +106,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
 	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vPosition = _float4(0.25f, 0.2f, -3.f, 1.f);
 	LightDesc.fRange = 10.f;
 
@@ -116,7 +116,7 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LightDesc.eType = LIGHT::POINT;
 	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.5f, 1.f);
 	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.1f, 0.1f, 0.1f, 1.f);
+	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
 	LightDesc.vPosition = _float4(0.75f, 0.2f, -3.f, 1.f);
 	LightDesc.fRange = 10.f;
 
@@ -164,7 +164,7 @@ HRESULT CLevel_Logo::Ready_Layer_Monster(WNameID strLayerTag)
 	MonsterDesc.iComponentLevel = ETOUI(LEVEL::STATIC);
 	MonsterDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
 	MonsterDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
-	MonsterDesc.pRenderMappingPath = "../../Resources/Models/PM0025_00/pm0025_00_mapping.json";
+	MonsterDesc.pRenderMappingPath = "../../Resources/Models/pkm/PM0025_00/pm0025_00_mapping.json";
 	MonsterDesc.fScale = 1.f;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(

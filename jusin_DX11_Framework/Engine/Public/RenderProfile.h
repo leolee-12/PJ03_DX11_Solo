@@ -14,7 +14,8 @@ public:
 	{
 		MATERIAL_TYPE eType = { MATERIAL_TYPE::DIFFUSE };
 		const _char* pConstName = { nullptr };
-	};
+		_int iTextureIndex = { -1 };	// -1이면 기존 variant / 0이상이면 명시한 index 사용
+	 };
 
 public:
 	HRESULT Build(CModel* pModel, const CRenderRule* pRule);

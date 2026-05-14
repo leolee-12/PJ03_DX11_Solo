@@ -69,7 +69,8 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 	Enqueue_All(eNextLevelID);	// 큐 적재 + Total 계산 : 메인스레드 단독
 
 	_uint iHW = max(2u, thread::hardware_concurrency());
-	_uint iWorkerCount = max(1u, min(iHW - 1u, iHW * 2 / 3));
+	//_uint iWorkerCount = max(1u, min(iHW - 1u, iHW * 2 / 3));
+	_uint iWorkerCount = max(1u, iHW);
 	m_Threads.resize(iWorkerCount, nullptr);
 
 	for (size_t i = 0; i < m_Threads.size(); ++i)
@@ -198,7 +199,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 		TEXT("Prototype_Component_VIBuffer_Instance_Star"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0025_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0025_00/pm0025_00.wmodel")); },
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0025_00/pm0025_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0025_00"));
 
 	// ---------- Shader ----------
@@ -361,15 +362,15 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	// ---------- Model ----------
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0001_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0001_00/pm0001_00.wmodel")); },
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0001_00/pm0001_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0001_00"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0004_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0004_00/pm0004_00.wmodel")); },
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0004_00/pm0004_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0004_00"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0007_00,
-		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/PM0007_00/pm0007_00.wmodel")); },
+		CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0007_00/pm0007_00.wmodel")); },
 		TEXT("Prototype_Component_Model_PM0007_00"));
 
 	Enqueue([this] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
@@ -416,18 +417,20 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
-	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_Rule(RENDER_RULE_KEY::MAP_DEFAULT);
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_TOWN01;
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/area02/town01_2_mapping.json");
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN01,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
 		TEXT("Prototype_MapObject_Town01"));
 
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_TOWN02;
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/area03/town_02_mapping.json");
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN02,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
 		TEXT("Prototype_MapObject_Town02"));
 
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_ROAD01;
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/area02/road01_mapping.json");
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
 		TEXT("Prototype_MapObject_Road01"));
@@ -631,8 +634,8 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::BATTLE);
-	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_Rule(RENDER_RULE_KEY::MAP_DEFAULT);
 	tMapDesc.strModelTag = PROTO_COM_MODEL_BMAP_TOWN;
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/battle_town/battle_town_mapping.json");
 	Enqueue([this, tMapDesc] { return m_pGameInstance->Add_Prototype(ETOUI(LEVEL::BATTLE), PROTO_BMAP_TOWN,
 		CMapObject::Create(m_pDevice, m_pContext, tMapDesc)); },
 		TEXT("Prototype_BattleMap_Town"));

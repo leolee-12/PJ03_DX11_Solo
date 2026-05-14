@@ -83,7 +83,7 @@ HRESULT CRenderer::Resize()
 		DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SHADE, iNewWidth, iNewHeight,
-		DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, iNewWidth, iNewHeight,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))

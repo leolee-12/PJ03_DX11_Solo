@@ -110,25 +110,12 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 	vector vReflect = reflect(normalize(g_vLightDir), normalize(vNormal));
 	vector vLook = vWorldPos - g_vCamPos;
-	Out.vSpec = (g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 50.f);
+	Out.vSpec = saturate((g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 20.f));
+
 	float fNdotL = dot(normalize(g_vLightDir) * -1.f, normalize(vNormal));
 	float fHalfLambert = fNdotL * 0.5f + 0.5f;
-	//fHalfLambert *= fHalfLambert; // Valve Half-Lambert: 라이트 면 또렷, 반대 면 부드럽게
-	Out.vShade = g_vLightDiff * fHalfLambert + g_vLightAmbt * g_vMtrlAmbt;
-
-		//vector vMtrlSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
-
-	//vector Light = normalize(g_vLightDir);
-	//vector vView = normalize(g_vCamPos - In.vWorldPos);
-	//vector vHalf = normalize((-Light) + vView);
-	//float fSpec = pow(max(dot(Normal, vHalf), 0.f), 150.f);
-	//float fShade = max(dot(Light * -1.f, Normal), 0.f);
-	//
-	//vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
-	//vector Ambt = g_vLightAmbt * vMtrlDiff;
-	//vector Spec = (g_vLightSpec * vMtrlSpec) * fSpec;
-	//Out.vCol = saturate(Diff + Ambt + Spec);
-	//return Out;
+	fHalfLambert *= fHalfLambert; // Valve Half-Lambert: 라이트 면 또렷, 반대 면 부드럽게
+	Out.vShade = saturate(g_vLightDiff * fHalfLambert + g_vLightAmbt * g_vMtrlAmbt);
 
 	return Out;
 }
@@ -161,12 +148,12 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 
 	vector vReflect = reflect(normalize(vLightDir), normalize(vNormal));
 	vector vLook = vWorldPos - g_vCamPos;
-	Out.vSpec = (g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 50.f) * fAtt;
+	Out.vSpec = saturate((g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 20.f) * fAtt);
 
 	float fNdotL = dot(normalize(vLightDir) * -1.f, normalize(vNormal));
 	float fHalfLambert = fNdotL * 0.5f + 0.5f;
 	fHalfLambert *= fHalfLambert;
-	Out.vShade = (g_vLightDiff * fHalfLambert + g_vLightAmbt * g_vMtrlAmbt) * fAtt;
+	Out.vShade = saturate((g_vLightDiff * fHalfLambert + g_vLightAmbt * g_vMtrlAmbt) * fAtt);
 
 	return Out;
 }
@@ -235,19 +222,6 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	// Contrast remap: 깊은 그림자/완전 빛은 클램프, 경계만 S-커브로 부드럽게
 	fLitFactor = smoothstep(0.f, 1.f, fLitFactor);
 	Out.vBackBuffer = Out.vBackBuffer * lerp(0.65f, 1.0f, fLitFactor);
-	
-	// --- 톤매핑 (휘도 기반 확장 Reinhard - 색 비율 유지, 채도 보존) ---
-	float fExposure = 2.6f;   // 2.0 -> 2.2 (전체 밝기 보강)
-	float fWhitePoint = 4.0f;
-	float3 vHDR = Out.vBackBuffer.rgb * fExposure;
-	float fL = dot(vHDR, float3(0.2126f, 0.7152f, 0.0722f));
-	float fLmapped = (fL * (1.0f + fL / (fWhitePoint * fWhitePoint))) / (1.0f + fL);
-	float3 vMapped = vHDR * (fLmapped / max(fL, 1e-4f));
-
-	// 휘도 기반 톤매핑이 이미 색을 보존하므로 추가 채도 부스트 불필요
-	vMapped = saturate(vMapped);
-
-	Out.vBackBuffer = float4(vMapped, Out.vBackBuffer.a);
 
 	return Out;
 }

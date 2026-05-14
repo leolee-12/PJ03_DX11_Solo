@@ -69,12 +69,15 @@ HRESULT CRenderProfile::Bind_AndDraw(
 			if (iType >= ETOUI(MATERIAL_TYPE::END))
 				return E_FAIL;
 
+			const _uint iTextureIndex = (Slot.iTextureIndex == -1 
+				? m_Table.variants[iMatIdx][iType] : Slot.iTextureIndex);
+
 			if (FAILED(m_pModel->Bind_Material(
 				pShader,
 				Slot.pConstName,
 				i,
 				Slot.eType,
-				m_Table.variants[iMatIdx][iType])))
+				iTextureIndex)))
 				return E_FAIL;
 		}
 
