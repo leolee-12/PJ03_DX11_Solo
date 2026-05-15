@@ -257,6 +257,11 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBa
 	return m_pPrototype_Manager->Add_Prototype(iLevelIndex, strProtoTag, pPrototype);
 }
 
+_bool CGameInstance::Has_Prototype(_uint iLevelIndex, WNameID strProtoTag)
+{
+	return m_pPrototype_Manager->Has_Prototype(iLevelIndex, strProtoTag);
+}
+
 CBase* CGameInstance::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg)
 {
 	return m_pPrototype_Manager->Clone_Prototype(eType, iLevelIndex, strProtoTag, pArg);

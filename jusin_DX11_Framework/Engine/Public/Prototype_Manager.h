@@ -28,6 +28,7 @@ private:
 public:
 	HRESULT		Initialize(_uint iNumLevels);
 	HRESULT		Add_Prototype(_uint iLevelIndex, WNameID strProtoTag, CBase* pPrototype);
+	_bool		Has_Prototype(_uint iLevelIndex, WNameID strProtoTag);
 	CBase*		Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg);
 	void		Clear(_uint iLevelIndex);
 

@@ -38,6 +38,17 @@ HRESULT CPrototype_Manager::Add_Prototype(_uint iLevelIndex, WNameID strProtoTag
 	return S_OK;
 }
 
+_bool CPrototype_Manager::Has_Prototype(_uint iLevelIndex, WNameID strProtoTag)
+{
+	lock_guard<mutex> lock(m_Mutex);
+
+	if (nullptr == m_pPrototypes ||
+		iLevelIndex >= m_iNumLevels)
+		return false;
+
+	return nullptr != Find_Prototype_NoLock(iLevelIndex, strProtoTag);
+}
+
 CBase* CPrototype_Manager::Clone_Prototype(PROTOTYPE eType, _uint iLevelIndex, WNameID strProtoTag, void* pArg)
 {
 	CBase* pPrototype = Find_Prototype_NoLock(iLevelIndex, strProtoTag);
