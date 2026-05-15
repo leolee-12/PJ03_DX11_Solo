@@ -405,6 +405,24 @@ void CUISequence::Play()
 
 	Release_All_ActiveSlots();
 
+	/* 자식 위젯들의 진행 상태를 깨끗하게 리셋.
+   - Animator::Stop_All() : 진행 중 트윈을 정지. 후속 PLAY_ANIM step 이
+	 Play_Animation 으로 트윈을 새로 발화하면 시작값(start)부터 진행됨.
+   - CUIImage::Reset_SpriteAnim() : sprite 프레임 인덱스/누적시간 0 복원.
+   두 번째 재생부터 위젯 상태가 첫 재생의 끝값에 머물러 깨지던 문제 해결. */
+	for (auto& pair : m_mapById)
+	{
+		CUIObject* pChild = pair.second;
+		if (nullptr == pChild)
+			continue;
+
+		if (CUIAnimator* pAnim = pChild->Get_Animator())
+			pAnim->Stop_All();
+
+		if (CUIImage* pImage = dynamic_cast<CUIImage*>(pChild))
+			pImage->Reset_SpriteAnim();
+	}
+
 	m_iCursor = 0;
 	m_fTimer = 0.f;
 	m_fSequenceTime = 0.f;

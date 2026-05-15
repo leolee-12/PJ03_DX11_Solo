@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Game_PKM_Defines.h"
+#include "Game_LevelEntry.h"
 #include "Level.h"
 
 NS_BEGIN(Engine)
@@ -29,7 +30,15 @@ public:
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
+	CUISequence* m_pFadeBattleSeq = { nullptr };
 	CMenu* m_pMenu = { nullptr };
+
+	// F6 트랜지션 상태 머신
+	enum class TRANSITION_STATE { IDLE, BUSY, END };
+	TRANSITION_STATE m_eTransition{ TRANSITION_STATE::IDLE };
+	_float m_fTransitionElapsed{ 0.f };
+	LEVEL_ENTRY_DESC m_PendingEntryDesc;
+	static constexpr _float TRANSITION_PUSH_AT_SEC = 5.0f;
 
 private:
 	HRESULT Ready_Lights();

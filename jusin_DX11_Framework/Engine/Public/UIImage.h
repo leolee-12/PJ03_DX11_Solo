@@ -42,6 +42,9 @@ public:
 	// Sprite anim
 	void Set_SpriteAnim(_bool bEnabled, _float fFrameDuration);
 	virtual void Set_SpriteTickAllowed(_bool bAllowed) override { m_bSpriteTickAllowed = bAllowed; }
+	/* sprite 프레임 인덱스 / 누적시간을 0 으로 강제 리셋.
+   시퀀스 두 번째 재생 시 첫 재생의 끝 프레임에 머무는 현상 방지. */
+	void Reset_SpriteAnim();
 
 	const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Get_SharedTextureBindings() const { return m_SharedTextureBindings; }
 	WNameID Get_TextureTag() const { return m_strTextureTag; }

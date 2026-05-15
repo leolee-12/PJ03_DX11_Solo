@@ -60,6 +60,50 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	/* 트랜지션 진행 중이면 입력 분기 전부 차단. 경과 누적 후 임계값 도달 시 Push_Level. */
+	if (TRANSITION_STATE::BUSY == m_eTransition)
+	{
+		m_fTransitionElapsed += fTimeDelta;
+
+		if (m_fTransitionElapsed >= TRANSITION_PUSH_AT_SEC)
+		{
+			/* Push 직전 시퀀스 가시화 해제. (Paused 동안 GAMEPLAY 는 렌더되지 않아 어차피
+			   Pop 으로 OnResume 됐을 때 다음 트리거를 위해 깨끗한 상태로 둠.) */
+			if (nullptr != m_pFadeBattleSeq)
+				m_pFadeBattleSeq->Set_Visible(false);
+
+			CLevel_Battle* pBattle = CLevel_Battle::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
+			if (nullptr == pBattle)
+			{
+				m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+				m_eTransition = TRANSITION_STATE::IDLE;
+				m_fTransitionElapsed = 0.f;
+				return;
+			}
+
+			if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::BATTLE), pBattle)))
+			{
+				Safe_Release(pBattle);
+				m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+				m_eTransition = TRANSITION_STATE::IDLE;
+				m_fTransitionElapsed = 0.f;
+				return;
+			}
+
+			/* Push 직후 입력 상태를 GAMEPLAY 로 복귀.
+			   BATTLE 측에서 별도 상태(MENU 등)를 원하면 Initialize 에서 덮어쓰면 됨. */
+			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+
+			/* Push 성공. GAMEPLAY 는 paused 상태로 전환되어 본 Update 는 더 이상 호출되지 않음 */
+			m_eTransition = TRANSITION_STATE::IDLE;
+			m_fTransitionElapsed = 0.f;
+			return;
+		}
+
+		UI_Update_All(fTimeDelta);
+		return;
+	}
+
 	if (m_pGameInstance->Key_Down(DIK_F2))
 		m_pGameInstance->Toggle_CameraFollow();
 
@@ -77,8 +121,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_P))
 	{
-		/* UI 가 열려 있으면 BATTLE 진입 차단 — 진입 후 GAMEPLAY UI 잔존/상태 꼬임 방지 */
+		/* UI 열린 상태면 트리거 무시. Fade 시퀀스 미보유면 진입 불가. */
 		if (UI_Is_AnyOpen())
+			return;
+		if (nullptr == m_pFadeBattleSeq)
 			return;
 
 		BATTLE_ENV tEnv = {};
@@ -87,25 +133,26 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		tEnv.iBGResourceID = 0;
 		tEnv.iZoneID = 0;
 
-		LEVEL_ENTRY_DESC tEntryDesc = {};
-		tEntryDesc.Clear();
-		tEntryDesc.eNextLevelID = LEVEL::BATTLE;
+		m_PendingEntryDesc.Clear();
+		m_PendingEntryDesc.eNextLevelID = LEVEL::BATTLE;
 
-		if (FAILED(tEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv, sizeof(BATTLE_ENV))))
+		if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv,
+			sizeof(BATTLE_ENV))))
 			return;
 
-		/* BGM 변경은 진입 직전 기존 위치 유지. F1-5 에서 OnPause/OnResume 로 옮길 예정. */
+		/* Fade 시작과 동시에 BATTLE BGM 시작. 실제 Push_Level 은 본 함수 상단의 경과 임계값
+호출됨. */
 		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
 
-		CLevel_Battle* pBattle = CLevel_Battle::Create(m_pDevice, m_pContext, &tEntryDesc);
-		if (nullptr == pBattle)
-			return;
+		m_pFadeBattleSeq->Set_Visible(true);
+		m_pFadeBattleSeq->Play();
 
-		if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::BATTLE), pBattle)))
-		{
-			Safe_Release(pBattle);
-			return;
-		}
+		/* 트랜지션 동안 게임 객체 수준 입력 전체 차단(WASD/마우스 등).
+		   SYSTEM 키는 LOCKED 에서도 통과하나, 본 함수 상단 BUSY 가드가 추가 방어. */
+		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
+
+		m_eTransition = TRANSITION_STATE::BUSY;
+		m_fTransitionElapsed = 0.f;
 
 		return;
 	}
@@ -131,10 +178,14 @@ void CLevel_GamePlay::OnPause()
 
 void CLevel_GamePlay::OnResume()
 {
-	/* BATTLE Pop 직후 호출. GAMEPLAY BGM 복원.
-	   BGM 키/볼륨은 Initialize 와 동일 값. 멤버 상수화는 후속 작업. */
+	/* BATTLE 이 InputState 를 변경했을 수 있으므로 GAMEPLAY 로 강제 복귀.
+	   BATTLE 측에서 LOCKED 이나 MENU 로 두고 종료했더라도 안전. */
+	m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+
+	/* GAMEPLAY BGM 복원. BGM 키/볼륨은 Initialize 와 동일 값. */
 	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 }
+
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
@@ -255,11 +306,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 {
+	CUISequence* pSeq{ nullptr };
 	CUISequence::UISEQUENCE_DESC tDesc{};
 	tDesc.strPath = "../../DataFiles/UI/UI_Menu.uiseq";
 	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 	
-	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
 	if (nullptr == pSeq)
 		return E_FAIL;
@@ -271,6 +323,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	}
 	
 	m_pRuntimeUI = pSeq;  // weak
+
+	/* ===== Fade Battle 트랜지션 시퀀스 (F6) — 초기엔 숨김. 트리거 시 Play 시작 ===== */
+	{
+		CUISequence::UISEQUENCE_DESC tFadeDesc{};
+		tFadeDesc.strPath = "../../DataFiles/UI/UI_FadeBattle.uiseq";
+		tFadeDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pFadeSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tFadeDesc));
+			if (nullptr == pFadeSeq)
+				return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pFadeSeq)))
+		{
+			Safe_Release(pFadeSeq);
+			return E_FAIL;
+		}
+
+		pFadeSeq->Set_Visible(false);   // 트리거 전까지 숨김
+		m_pFadeBattleSeq = pFadeSeq;    // weak (Add_GameObject_Ex 가 owner)
+	}
 
 	/* ===== 커서 시퀀스 — Hub 가 단일 인스턴스로 공유 ===== */
 	{
@@ -363,6 +436,7 @@ void CLevel_GamePlay::Free()
 	UI_Close_All();
 
 	m_pCursorSeq = nullptr;
+	m_pFadeBattleSeq = nullptr;
 	m_pMenu = nullptr;
 	m_pRuntimeUI = nullptr;
 
