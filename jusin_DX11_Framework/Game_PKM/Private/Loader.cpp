@@ -24,6 +24,7 @@
 #include "Battle_Trainer.h"
 #include "Body_Pokemon.h"
 #include "RenderRule_Manager.h"
+#include "UIImage_FadeBattle.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -179,10 +180,6 @@ void CLoader::Enqueue_All(LEVEL eNextLevelID)
 
 	case LEVEL::GAMEPLAY:
 		Ready_Resources_For_GamePlay();
-		break;
-
-	case LEVEL::BATTLE:
-		Ready_Resources_For_Battle();
 		break;
 
 	default:
@@ -501,6 +498,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CBody_Hero::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Body_Hero"));
 
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
+		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_UIImage_FadeBattle"));
+
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
 
@@ -619,6 +620,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CExplosion::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Explosion"));
 #pragma endregion
+
+	if (FAILED(Ready_Resources_For_Battle()))
+		return E_FAIL;
 
 	return S_OK;
 }

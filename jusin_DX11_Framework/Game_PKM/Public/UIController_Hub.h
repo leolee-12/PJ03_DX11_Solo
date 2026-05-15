@@ -21,6 +21,9 @@ public:
 	void    Unregister(CUIController* pCtrl);
 	void    Update_All(_float fTimeDelta);
 	void    Close_All();
+	/* 등록된 컨트롤러 중 하나라도 Open 상태면 true.
+   레벨 전환 가드용 — UI 열린 상태에서의 Push/Pop 차단. */
+	_bool   Is_AnyOpen() const;
 
 	/* 커서 시퀀스 주입 (weak 보관). 단일 인스턴스 공용.
    nullptr 을 넘기면 해제. */

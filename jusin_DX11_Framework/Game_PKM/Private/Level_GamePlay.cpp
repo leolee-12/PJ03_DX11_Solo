@@ -7,7 +7,7 @@
 #include "UIButton_Group.h"
 #include "Menu.h"
 #include "Game_API.h"
-#include "Level_Loading.h"
+#include "Level_Battle.h"
 #include "Game_LevelEntry.h"
 #include "Battle_Session.h"
 
@@ -77,6 +77,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_P))
 	{
+		/* UI 가 열려 있으면 BATTLE 진입 차단 — 진입 후 GAMEPLAY UI 잔존/상태 꼬임 방지 */
+		if (UI_Is_AnyOpen())
+			return;
+
 		BATTLE_ENV tEnv = {};
 		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
 		tEnv.eRule = BATTLE_RULE::WILD_SINGLE;
@@ -90,13 +94,20 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		if (FAILED(tEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv, sizeof(BATTLE_ENV))))
 			return;
 
+		/* BGM 변경은 진입 직전 기존 위치 유지. F1-5 에서 OnPause/OnResume 로 옮길 예정. */
 		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
 
-		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BATTLE, &tEntryDesc))))
+		CLevel_Battle* pBattle = CLevel_Battle::Create(m_pDevice, m_pContext, &tEntryDesc);
+		if (nullptr == pBattle)
+			return;
+
+		if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::BATTLE), pBattle)))
 		{
+			Safe_Release(pBattle);
 			return;
 		}
+
+		return;
 	}
 
 	/* 등록된 모든 UI 컨트롤러에 Update 전파. 닫혀 있으면 베이스가 즉시 return. */
@@ -110,6 +121,19 @@ HRESULT CLevel_GamePlay::Render()
 #endif
 
 	return S_OK;
+}
+
+void CLevel_GamePlay::OnPause()
+{
+	/* BATTLE Push 직후 호출. 현재 단계에서는 BGM 변경을 DIK_P 진입 분기에서 처리하므로
+	   여기서는 별도 작업 없음. 후속에서 입력 동결·카메라 일시정지 등을 추가할 자리. */
+}
+
+void CLevel_GamePlay::OnResume()
+{
+	/* BATTLE Pop 직후 호출. GAMEPLAY BGM 복원.
+	   BGM 키/볼륨은 Initialize 와 동일 값. 멤버 상수화는 후속 작업. */
+	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 }
 
 HRESULT CLevel_GamePlay::Ready_Lights()

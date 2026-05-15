@@ -65,6 +65,16 @@ void CUIController_Hub::Close_All()
 	m_Controllers.clear();
 }
 
+_bool CUIController_Hub::Is_AnyOpen() const
+{
+	for (CUIController* pCtrl : m_Controllers)
+	{
+		if (nullptr != pCtrl && pCtrl->Is_Open())
+			return true;
+	}
+	return false;
+}
+
 void CUIController_Hub::Set_Cursor_Sequence(CUISequence* pSeq)
 {
 	m_pCursor = pSeq;  // weak

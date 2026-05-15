@@ -23,6 +23,8 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void OnPause() override;
+	virtual void OnResume() override;
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };

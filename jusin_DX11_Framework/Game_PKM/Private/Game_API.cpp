@@ -249,6 +249,13 @@ void UI_Close_All()
 	g_pUIHub->Close_All();
 }
 
+_bool UI_Is_AnyOpen()
+{
+	if (nullptr == g_pUIHub)
+		return false;
+	return g_pUIHub->Is_AnyOpen();
+}
+
 void UI_Set_Cursor_Sequence(CUISequence* pSeq)
 {
 	/* 해제(nullptr) 시에는 Hub 를 새로 만들면 안 됨 — 다른 래퍼들과 동일한 g_pUIHub 가드 사용.

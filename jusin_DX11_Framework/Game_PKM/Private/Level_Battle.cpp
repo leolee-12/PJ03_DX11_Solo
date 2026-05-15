@@ -1,5 +1,4 @@
 ﻿#include "Level_Battle.h"
-#include "Level_Loading.h"
 #include "Battle_Manager.h"
 #include "PlayerState.h"
 #include "PokemonData_Manager.h"
@@ -105,13 +104,14 @@ void CLevel_Battle::Update(_float fTimeDelta)
 
 	if (m_pBattleManager->Is_Done())
 	{
-		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING),
-			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+		/* Pop_Level 성공 시 BATTLE 레벨(=this) 이 즉시 Free 되므로
+		   호출 후 어떤 멤버에도 접근하지 않고 곧바로 return. */
+		if (FAILED(m_pGameInstance->Pop_Level()))
 		{
+			MSG_BOX("Failed to Exit Battle");
 			return;
 		}
-
-		MSG_BOX("Failed to Exit Battle");
+		return;
 	}
 }
 

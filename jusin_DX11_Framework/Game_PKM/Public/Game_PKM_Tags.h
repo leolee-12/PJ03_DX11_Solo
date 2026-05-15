@@ -150,6 +150,7 @@ WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
 WNAME_TAG(PROTO_BTN_LAYERED_GET, L"Prototype_UIButton_Layered_Get");
 WNAME_TAG(PROTO_BTN_LAYERED_BTL_COMMAND, L"Prototype_UIButton_Layered_Battle_Command");
+WNAME_TAG(PROTO_IMG_FADEBATTLE, L"Prototype_UIImage_FadeBattle");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_PLAYER_STATE, L"Prototype_GameObject_PlayerState");
@@ -166,6 +167,7 @@ WNAME_TAG(PROTO_BMAP_TOWN, L"Prototype_BattleMap_Town");
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
 WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
 WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
+WNAME_TAG(COM_TEXTURE_NOISE, L"Com_Texture_Noise");
 
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");

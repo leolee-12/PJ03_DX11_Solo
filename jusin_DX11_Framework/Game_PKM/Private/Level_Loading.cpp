@@ -4,7 +4,6 @@
 
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
-#include "Level_Battle.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOADING);
@@ -49,9 +48,6 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			break;
 		case LEVEL::GAMEPLAY:
 			pNextLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
-			break;
-		case LEVEL::BATTLE:
-			pNextLevel = CLevel_Battle::Create(m_pDevice, m_pContext, &m_tEntryDesc);
 			break;
 		}
 

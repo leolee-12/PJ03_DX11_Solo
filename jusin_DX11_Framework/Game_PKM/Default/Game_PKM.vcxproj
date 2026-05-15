@@ -94,6 +94,7 @@
     <ClInclude Include="..\Public\UIButton_Layered.h" />
     <ClInclude Include="..\Public\UIController.h" />
     <ClInclude Include="..\Public\UIController_Hub.h" />
+    <ClInclude Include="..\Public\UIImage_FadeBattle.h" />
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClCompile Include="..\Private\UIButton_Layered.cpp" />
     <ClCompile Include="..\Private\UIController.cpp" />
     <ClCompile Include="..\Private\UIController_Hub.cpp" />
+    <ClCompile Include="..\Private\UIImage_FadeBattle.cpp" />
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>

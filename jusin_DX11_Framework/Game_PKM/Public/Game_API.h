@@ -26,6 +26,7 @@ HRESULT UI_Register(CUIController* pCtrl);		// AddRef on register
 void    UI_Unregister(CUIController* pCtrl);	// Safe_Release on unregister
 void    UI_Update_All(_float fTimeDelta);
 void    UI_Close_All();							// 레벨 종료/전환 시 호출
+_bool   UI_Is_AnyOpen();
 void    UI_Set_Cursor_Sequence(Engine::CUISequence* pSeq);  // weak 주입. nullptr 로 해제.
 void    UI_Cleanup();							// 앱 종료 시 1회 호출 - Hub 파괴
 #pragma endregion
