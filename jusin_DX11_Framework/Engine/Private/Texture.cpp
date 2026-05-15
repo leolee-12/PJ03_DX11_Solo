@@ -1,4 +1,5 @@
-#include "Texture.h"
+﻿#include "Texture.h"
+#include "Build_Mode.h"
 #include "GameInstance.h"
 
 CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -17,40 +18,62 @@ CTexture::CTexture(const CTexture& Prototype)
 
 HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNumTextures)
 {
-	m_iNumTextures = iNumTextures;
+    m_iNumTextures = iNumTextures;
 
-	_tchar szTextureFilePath[MAX_PATH] = TEXT("");
+    // 확장자별 SRV 로딩 — 본 분기와 폴백 분기 둘에서 사용
+    auto LoadByExt = [this](const _tchar* pPath, ID3D11ShaderResourceView** ppSRV) -> HRESULT
+        {
+            _tchar szEXT[MAX_PATH] = { };
+            _wsplitpath_s(pPath, nullptr, 0, nullptr, 0, nullptr, 0, szEXT, MAX_PATH);
 
-	for (size_t i = 0; i < iNumTextures; i++)
-	{
-		ID3D11ShaderResourceView* pSRV = { nullptr };
-		wsprintf(szTextureFilePath, pTextureFilePath, i);
+            if (false == lstrcmp(szEXT, TEXT(".dds")))
+                return CreateDDSTextureFromFile(m_pDevice, pPath, nullptr, ppSRV);
+            if (false == lstrcmp(szEXT, TEXT(".tga")))
+                return E_FAIL;
+            return CreateWICTextureFromFile(m_pDevice, pPath, nullptr, ppSRV);
+        };
 
-		_tchar szEXT[MAX_PATH] = { };
-		_wsplitpath_s(szTextureFilePath, nullptr, 0, nullptr, 0, nullptr, 0, szEXT, MAX_PATH);
+    // DDS 모드 토글 — 패턴 자체를 dds 폴더 경로로 변환
+    // 가드: 이미 .dds 패턴이면 Convert_PathToDDS 내부에서 그대로 반환
+    const _tchar* pUsePattern = pTextureFilePath;
+#if USE_DDS_MATERIAL
+    _wstring wConverted = Convert_PathToDDS(pTextureFilePath);
+    pUsePattern = wConverted.c_str();
+#endif
 
-		HRESULT hr = {};
+    _tchar szTextureFilePath[MAX_PATH] = TEXT("");
 
-		if (false == lstrcmp(szEXT, TEXT(".dds")))
-		{
-			hr = CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
-		}
-		else if (false == lstrcmp(szEXT, TEXT(".tga")))
-		{
-			hr = E_FAIL;
-		}
-		else
-		{
-			hr = CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
-		}
+    for (size_t i = 0; i < iNumTextures; i++)
+    {
+        ID3D11ShaderResourceView* pSRV = { nullptr };
+        wsprintf(szTextureFilePath, pUsePattern, i);
 
-		if (FAILED(hr))
-			return E_FAIL;
+        HRESULT hr = LoadByExt(szTextureFilePath, &pSRV);
 
-		m_Textures.push_back(pSRV);
-	}
+#if USE_DDS_MATERIAL
+        // dds 시도 실패 → 원본 경로로 폴백 (점진적 변환 지원)
+        if (FAILED(hr) && pUsePattern != pTextureFilePath)
+        {
+            _tchar szOriginalPath[MAX_PATH] = TEXT("");
+            wsprintf(szOriginalPath, pTextureFilePath, i);
 
-	return S_OK;
+#ifdef _DEBUG
+            _tchar szLog[MAX_PATH * 3] = TEXT("");
+            swprintf_s(szLog, TEXT("[CTexture] DDS fallback: %s -> %s (hr=0x%08X)\n"),
+                szTextureFilePath, szOriginalPath, static_cast<unsigned int>(hr));
+            OutputDebugString(szLog);
+#endif
+            hr = LoadByExt(szOriginalPath, &pSRV);
+        }
+#endif
+
+        if (FAILED(hr))
+            return E_FAIL;
+
+        m_Textures.push_back(pSRV);
+    }
+
+    return S_OK;
 }
 
 HRESULT CTexture::Initialize(void* pArg)

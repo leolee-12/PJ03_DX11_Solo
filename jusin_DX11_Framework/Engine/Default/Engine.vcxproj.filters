@@ -390,6 +390,9 @@
     <ClInclude Include="..\Public\RenderProfile.h">
       <Filter>06. Renderer\RenderRule</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Build_Mode.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

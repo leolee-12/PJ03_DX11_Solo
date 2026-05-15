@@ -68,7 +68,7 @@ namespace Engine
         return static_cast<unsigned int>(keys.size() - 2);
     }
 
-    static void Debug_DumpMatrix(const char* tag, const _float4x4& m)
+    static void Debug_DumpMatrix(const char* tag, const XMFLOAT4X4& m)
     {
 #ifdef _DEBUG
         char buf[1024];
@@ -86,6 +86,20 @@ namespace Engine
         OutputDebugStringA(buf);
 #endif
     }
+
+	// 원본 텍스처 경로 → dds 하위 폴더 경로
+	// 가드: 이미 .dds 확장자면 그대로 반환 (스카이박스 등 보호)
+	// 예: …/model_name/foo.png → …/model_name/dds/foo.dds
+	inline wstring Convert_PathToDDS(const wstring& origPath)
+	{
+		namespace fs = std::filesystem;
+		fs::path orig(origPath);
+
+		if (false == lstrcmpW(orig.extension().wstring().c_str(), L".dds"))
+			return origPath;
+
+		return (orig.parent_path() / L"dds" / (orig.stem().wstring() + L".dds")).wstring();
+	}
 }
 
 #endif // Engine_Function_h__

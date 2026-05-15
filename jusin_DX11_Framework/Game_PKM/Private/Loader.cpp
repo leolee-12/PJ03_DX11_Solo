@@ -236,7 +236,7 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 		TEXT("Prototype_Component_Texture_Star"));
 
 	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_BG,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/title/Title_BG.png"), 1); },
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/Title_BG.png"), 1); },
 		TEXT("Prototype_Component_Texture_Title_BackGround"));
 
 	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_BACKGROUND,
@@ -454,7 +454,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_Model_Road01"));
 
 	// ---------- Navigation & Collider ----------
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_NAVIGATION_MAP,
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
 		[this] { return CNavigation::Create(m_pDevice, m_pContext, TEXT("../../DataFiles/MapNaviMesh.nav")); },
 		TEXT("Prototype_Component_Navigation_Map"));
 
@@ -502,21 +502,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 #pragma region STUDY
 	// Texture
-/* Prototype_Component_Texture_Terrain_Diff */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_DIFF,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Tile%d.dds"), 2); },
-		TEXT("Prototype_Component_Texture_Terrain_Diff"));
-
-	/* Prototype_Component_Texture_Terrain_Mask */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_MASK,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Mask.dds"), 1); },
-		TEXT("Prototype_Component_Texture_Terrain_Mask"));
-
-	/* Prototype_Component_Texture_Terrain_Brush */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_TERRAIN_BRUSH,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Brush.png"), 1); },
-		TEXT("Prototype_Component_Texture_Terrain_Brush"));
-
 	/* Prototype_Component_Texture_Sky */
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_SKY,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/SkyBox/Sky_%d.dds"), 4); },
