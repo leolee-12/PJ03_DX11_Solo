@@ -96,7 +96,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_MsgIcon"
         },
         "transform": {
@@ -159,7 +159,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_MsgBox"
         },
         "transform": {
@@ -184,9 +184,6 @@
     {
       "desc": {
         "align": "LEFT",
-	"verticalAlign": "TOP",
-    	"wordWrap": true,
-    	"clipToRect": true,
         "anchor": {
           "kind": "BL",
           "offsetX": 466.0,

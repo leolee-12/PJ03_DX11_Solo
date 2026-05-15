@@ -43,7 +43,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_PlayerPlate"
         },
         "transform": {
@@ -101,7 +101,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_EnemyPlate"
         },
         "transform": {
@@ -159,7 +159,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_BallPlate"
         },
         "transform": {
@@ -217,7 +217,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_BallPlate"
         },
         "transform": {
@@ -902,7 +902,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Status_Gender"
         },
         "transform": {
@@ -960,7 +960,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Status_Gender"
         },
         "transform": {
@@ -1018,7 +1018,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Number"
         },
         "transform": {
@@ -1076,7 +1076,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Number"
         },
         "transform": {
@@ -1134,7 +1134,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Number_Slash"
         },
         "transform": {
@@ -1192,7 +1192,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Number"
         },
         "transform": {
@@ -1250,7 +1250,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Number"
         },
         "transform": {

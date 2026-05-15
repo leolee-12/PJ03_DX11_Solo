@@ -237,7 +237,7 @@
           "tag": "Prototype_Component_Shader_UI"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Move"
         },
         "transform": {
@@ -333,7 +333,7 @@
           "tag": "Prototype_Component_Shader_UI"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Move"
         },
         "transform": {
@@ -429,7 +429,7 @@
           "tag": "Prototype_Component_Shader_UI"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Move"
         },
         "transform": {
@@ -525,7 +525,7 @@
           "tag": "Prototype_Component_Shader_UI"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Move"
         },
         "transform": {
@@ -919,7 +919,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_MoveIcon"
         },
         "transform": {
@@ -977,7 +977,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_MoveIcon"
         },
         "transform": {
@@ -1035,7 +1035,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_MoveIcon"
         },
         "transform": {
@@ -1093,7 +1093,7 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_MoveIcon"
         },
         "transform": {

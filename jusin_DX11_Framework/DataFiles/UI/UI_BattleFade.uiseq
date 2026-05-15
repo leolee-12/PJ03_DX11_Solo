@@ -8,37 +8,13 @@
   },
   "timeline": [
     {
+      "animName": "Alpha",
       "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_001",
-      "visible": false
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
     },
     {
-      "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_002",
-      "visible": false
-    },
-    {
-      "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_003",
-      "visible": false
-    },
-    {
-      "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_002",
-      "visible": true
-    },
-    {
-      "joinPrev": false,
-      "kind": "SET_VISIBLE",
-      "targetId": "widget_003",
-      "visible": true
-    },
-    {
-      "animName": "Anim_001",
+      "animName": "Move",
       "joinPrev": false,
       "kind": "PLAY_ANIM",
       "targetId": "widget_001"
@@ -48,24 +24,37 @@
     {
       "animations": [
         {
-          "name": "Anim_001",
+          "name": "Move",
           "tracks": [
             {
-              "duration": 0.25,
+              "duration": 2.5,
               "ease": "EASE_IN_SINE",
-              "end": -40.0,
-              "loop": "PINGPONG",
-              "start": -25.0,
-              "target": "ANCHOR_OFFSET_Y"
+              "end": 640.0,
+              "loop": "NONE",
+              "start": -640.0,
+              "target": "ANCHOR_OFFSET_X"
+            }
+          ]
+        },
+        {
+          "name": "Alpha",
+          "tracks": [
+            {
+              "duration": 0.5,
+              "ease": "EASE_IN_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
             }
           ]
         }
       ],
       "desc": {
         "anchor": {
-          "kind": "BL",
-          "offsetX": 940.0,
-          "offsetY": -25.0,
+          "kind": "MC",
+          "offsetX": 640.0,
+          "offsetY": 0.0,
           "useAnchoredPos": true
         },
         "color": [
@@ -96,110 +85,42 @@
         },
         "texture": {
           "index": 0,
-          "level": 4,
-          "tag": "Prototype_Component_Texture_Battle_MsgIcon"
-        },
-        "transform": {
-          "centerX": 889.697021484375,
-          "centerY": 694.54541015625,
-          "pivotX": 0.5,
-          "pivotY": 0.5,
-          "sizeX": 40.0,
-          "sizeY": 40.0,
-          "visible": true,
-          "zOrder": 11
-        },
-        "viBuffer": {
-          "level": 0,
-          "tag": "Prototype_Component_VIBuffer_Rect"
-        }
-      },
-      "displayName": "BattleMsgIcon",
-      "id": "widget_001",
-      "type": "IMAGE"
-    },
-    {
-      "animations": [
-        {
-          "name": "Anim_001"
-        }
-      ],
-      "desc": {
-        "anchor": {
-          "kind": "BL",
-          "offsetX": 491.0,
-          "offsetY": -70.0,
-          "useAnchoredPos": true
-        },
-        "color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "layoutSlot": {
-          "desiredX": 0.0,
-          "desiredY": 0.0,
-          "margin": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ]
-        },
-        "shader": {
-          "level": 0,
-          "pass": 0,
-          "tag": "Prototype_Component_Shader_UI"
-        },
-        "sharedTextures": [],
-        "spriteAnim": {
-          "enabled": false,
-          "frameDuration": 0.0
-        },
-        "texture": {
-          "index": 0,
-          "level": 4,
-          "tag": "Prototype_Component_Texture_Battle_MsgBox"
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Battle_Fade_Line"
         },
         "transform": {
           "centerX": 640.0,
           "centerY": 360.0,
           "pivotX": 0.5,
           "pivotY": 0.5,
-          "sizeX": 980.0,
-          "sizeY": 136.0,
+          "sizeX": 2560.0,
+          "sizeY": 720.0,
           "visible": true,
-          "zOrder": 10
+          "zOrder": 0
         },
         "viBuffer": {
           "level": 0,
           "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "BattleMsgBox",
-      "id": "widget_002",
+      "displayName": "Line",
+      "id": "widget_001",
       "type": "IMAGE"
     },
     {
       "desc": {
-        "align": "LEFT",
-	"verticalAlign": "TOP",
-    	"wordWrap": true,
-    	"clipToRect": true,
         "anchor": {
-          "kind": "BL",
-          "offsetX": 466.0,
-          "offsetY": -65.0,
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
           "useAnchoredPos": true
         },
         "color": [
-          0.0,
-          0.0,
-          0.0,
+          1.0,
+          1.0,
+          1.0,
           1.0
         ],
-        "font": "Font_Malgun",
         "layoutSlot": {
           "desiredX": 0.0,
           "desiredY": 0.0,
@@ -210,21 +131,97 @@
             0.0
           ]
         },
-        "text": "Default Text",
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": true,
+          "frameDuration": 0.0833333358168602
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Battle_Fade_Mask"
+        },
         "transform": {
-          "centerX": 421.8180847167969,
-          "centerY": 654.5454711914063,
+          "centerX": 646.0,
+          "centerY": 360.0,
           "pivotX": 0.5,
           "pivotY": 0.5,
-          "sizeX": 882.0,
-          "sizeY": 96.0,
+          "sizeX": 1280.0,
+          "sizeY": 720.0,
           "visible": true,
-          "zOrder": 11
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
         }
       },
-      "displayName": "BattleMsgText",
+      "displayName": "Mask",
+      "id": "widget_002",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "MC",
+          "offsetX": 0.0,
+          "offsetY": 0.0,
+          "useAnchoredPos": false
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Battle_Fade_OutPrototype_Component_Texture_Battle_Fade_OutPrototype_Component_Texture_Battle_Fade_OutPrototype_Component_Texture_Battle_Fade_OutPrototype_Component_Texture_Battle_Fade_Out"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 200.0,
+          "sizeY": 200.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Image",
       "id": "widget_003",
-      "type": "TEXT"
+      "type": "IMAGE"
     }
   ]
 }

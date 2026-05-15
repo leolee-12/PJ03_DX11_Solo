@@ -45,6 +45,14 @@ WNAME_TAG(PROTO_COM_TEX_GET_LINE2_BACK, L"Prototype_Component_Texture_Get_Line2_
 WNAME_TAG(PROTO_COM_TEX_GET_TEXT_LV, L"Prototype_Component_Texture_Get_Text_LV");
 WNAME_TAG(PROTO_COM_TEX_GET_TEXT_NUM, L"Prototype_Component_Texture_Get_Text_Number");
 
+WNAME_TAG(PROTO_COM_TEX_BTL_FADE_COL, L"Prototype_Component_Texture_Battle_Fade_Color");
+WNAME_TAG(PROTO_COM_TEX_BTL_FADE_NOISE, L"Prototype_Component_Texture_Battle_Fade_Noise");
+WNAME_TAG(PROTO_COM_TEX_BTL_FADE_OUT, L"Prototype_Component_Texture_Battle_Fade_Out");
+WNAME_TAG(PROTO_COM_TEX_BTL_FADE_LINE, L"Prototype_Component_Texture_Battle_Fade_Line");
+WNAME_TAG(PROTO_COM_TEX_BTL_FADE_MASK, L"Prototype_Component_Texture_Battle_Fade_Mask");
+
+
+
 WNAME_TAG(PROTO_COM_TEX_BTL_BTN_FIGHT, L"Prototype_Component_Texture_Battle_Button_Fight");
 WNAME_TAG(PROTO_COM_TEX_BTL_BTN_POKE, L"Prototype_Component_Texture_Battle_Button_Poke");
 WNAME_TAG(PROTO_COM_TEX_BTL_BTN_BAG, L"Prototype_Component_Texture_Battle_Button_Bag");

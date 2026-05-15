@@ -27,6 +27,11 @@
     },
     {
       "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.009999999776482582
+    },
+    {
+      "joinPrev": false,
       "kind": "SET_VISIBLE",
       "targetId": "widget_001",
       "visible": true

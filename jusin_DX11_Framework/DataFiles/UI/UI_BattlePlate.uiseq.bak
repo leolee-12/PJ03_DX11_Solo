@@ -54,7 +54,7 @@
           "sizeX": 366.0,
           "sizeY": 99.0,
           "visible": true,
-          "zOrder": 11
+          "zOrder": 1
         },
         "viBuffer": {
           "level": 0,
@@ -293,7 +293,7 @@
           "sizeX": 330.0,
           "sizeY": 10.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -358,7 +358,7 @@
           "sizeX": 214.0,
           "sizeY": 6.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -469,7 +469,7 @@
           "sizeX": 180.0,
           "sizeY": 36.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 3
         }
       },
       "displayName": "Player_Name",
@@ -511,7 +511,7 @@
           "sizeX": 180.0,
           "sizeY": 36.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 3
         }
       },
       "displayName": "Enemy_Name",
@@ -565,7 +565,7 @@
           "sizeX": 48.0,
           "sizeY": 32.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -623,7 +623,7 @@
           "sizeX": 48.0,
           "sizeY": 32.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -681,7 +681,7 @@
           "sizeX": 32.0,
           "sizeY": 44.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -739,7 +739,7 @@
           "sizeX": 32.0,
           "sizeY": 44.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -797,7 +797,7 @@
           "sizeX": 32.0,
           "sizeY": 44.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -855,7 +855,7 @@
           "sizeX": 32.0,
           "sizeY": 44.0,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -913,7 +913,7 @@
           "sizeX": 28.799999237060547,
           "sizeY": 35.20000076293945,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -971,7 +971,7 @@
           "sizeX": 28.799999237060547,
           "sizeY": 35.20000076293945,
           "visible": true,
-          "zOrder": 12
+          "zOrder": 2
         },
         "viBuffer": {
           "level": 0,
@@ -1029,7 +1029,7 @@
           "sizeX": 18.200000762939453,
           "sizeY": 20.799999237060547,
           "visible": true,
-          "zOrder": 13
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,
@@ -1087,7 +1087,7 @@
           "sizeX": 18.200000762939453,
           "sizeY": 20.799999237060547,
           "visible": true,
-          "zOrder": 13
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,
@@ -1145,7 +1145,7 @@
           "sizeX": 18.200000762939453,
           "sizeY": 20.799999237060547,
           "visible": true,
-          "zOrder": 13
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,
@@ -1203,7 +1203,7 @@
           "sizeX": 18.200000762939453,
           "sizeY": 20.799999237060547,
           "visible": true,
-          "zOrder": 13
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,
@@ -1261,7 +1261,7 @@
           "sizeX": 18.200000762939453,
           "sizeY": 20.799999237060547,
           "visible": true,
-          "zOrder": 13
+          "zOrder": 3
         },
         "viBuffer": {
           "level": 0,

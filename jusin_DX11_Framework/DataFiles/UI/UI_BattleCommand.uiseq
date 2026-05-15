@@ -142,7 +142,7 @@
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Button_Fight"
         },
         "transform": {
@@ -239,7 +239,7 @@
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Button_Poke"
         },
         "transform": {
@@ -336,7 +336,7 @@
           "tag": "Prototype_Component_Shader_UI_Button_Layered"
         },
         "texture": {
-          "level": 4,
+          "level": 3,
           "tag": "Prototype_Component_Texture_Battle_Button_Bag"
         },
         "transform": {

@@ -248,7 +248,7 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_Battle::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::BATTLE), PROTO_BMAP_TOWN, ETOUI(LEVEL::BATTLE), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_TOWN, ETOUI(LEVEL::BATTLE), strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
@@ -361,11 +361,12 @@ HRESULT CLevel_Battle::Ready_Layer_Effect(WNameID strLayerTag)
 
 HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 {
+	CUISequence* pSeq{ nullptr };
 	CUISequence::UISEQUENCE_DESC tDesc{};
 	tDesc.strPath = "../../DataFiles/UI/UI_BattlePlate.uiseq";
 	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
 
-	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
 	if (nullptr == pSeq)
 		return E_FAIL;
