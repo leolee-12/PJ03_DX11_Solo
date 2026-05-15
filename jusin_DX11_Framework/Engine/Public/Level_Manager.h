@@ -10,25 +10,37 @@
 /* -------------------------------------------------- */
 
 NS_BEGIN(Engine)
+class CGameInstance;
+class CLevel;
 
 class CLevel_Manager final : public CBase
 {
+public:
+	struct LEVEL_ENTRY
+	{
+		_int iLevelIndex = { -1 };
+		CLevel* pLevel = { nullptr };
+	};
+
 private:
 	CLevel_Manager();
 	virtual ~CLevel_Manager() = default;
 
 public:
-	_int Get_CurrentLevel() const { return m_iCurrentLevelIndex; }
+	_int  Get_CurrentLevel() const { return m_iCurrentLevelIndex; }
+	_bool Is_Level_Active(_uint iLevel) const;
 
-	HRESULT	Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);
+	HRESULT Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);	// 스택 정리 후 새 레벨로 시작
+	HRESULT Push_Level(_int iLevelIndex, class CLevel* pNewLevel);		// 새 레벨을 스택 top에 push(직전 top은 OnPause)
+	HRESULT Pop_Level();												// 현재 top을 정리 후 pop(새로운 top은 OnResume)
 	void	Update(_float fTimeDelta);
 	HRESULT	Render();
 
 
 private:
-	class CLevel*			m_pCurrentLevel = { nullptr };
-	class CGameInstance*	m_pGameInstance = { nullptr };
-	_int					m_iCurrentLevelIndex = { -1 };
+	CGameInstance*		m_pGameInstance = { nullptr };
+	vector<LEVEL_ENTRY>	m_LevelStack;
+	_int				m_iCurrentLevelIndex = { -1 };   // 스택 top의 인덱스 캐싱
 
 public:
 	static CLevel_Manager* Create();

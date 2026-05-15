@@ -245,9 +245,24 @@ HRESULT CGameInstance::Change_Level(_int iNewLevelIndex, CLevel* pNewLevel)
 	return m_pLevel_Manager->Change_Level(iNewLevelIndex, pNewLevel);
 }
 
+HRESULT CGameInstance::Push_Level(_int iLevelIndex, CLevel* pNewLevel)
+{
+	return m_pLevel_Manager->Push_Level(iLevelIndex, pNewLevel);
+}
+
+HRESULT CGameInstance::Pop_Level()
+{
+	return m_pLevel_Manager->Pop_Level();
+}
+
 _int CGameInstance::Get_CurrentLevel() const
 {
 	return m_pLevel_Manager->Get_CurrentLevel();
+}
+
+_bool CGameInstance::Is_Level_Active(_uint iLevel) const
+{
+	return m_pLevel_Manager->Is_Level_Active(iLevel);
 }
 #pragma endregion
 

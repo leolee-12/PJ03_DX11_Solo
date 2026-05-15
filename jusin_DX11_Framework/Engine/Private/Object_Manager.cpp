@@ -104,19 +104,31 @@ HRESULT CObject_Manager::Add_GameObject_Ex(_uint iLayerLevel, WNameID strLayerTa
 void CObject_Manager::Priority_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
+	{
+		if (false == m_pGameInstance->Is_Level_Active(static_cast<_uint>(i))) continue;
+		
 		m_pLayers[i].for_each([fTimeDelta](auto& pair) { pair.second->Priority_Update(fTimeDelta); });
+	}
 }
 
 void CObject_Manager::Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
+	{
+		if (false == m_pGameInstance->Is_Level_Active(static_cast<_uint>(i))) continue;
+
 		m_pLayers[i].for_each([fTimeDelta](auto& pair) { pair.second->Update(fTimeDelta); });
+	}
 }
 
 void CObject_Manager::Late_Update(_float fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
+	{
+		if (false == m_pGameInstance->Is_Level_Active(static_cast<_uint>(i))) continue;
+
 		m_pLayers[i].for_each([fTimeDelta](auto& pair) { pair.second->Late_Update(fTimeDelta); });
+	}
 }
 
 void CObject_Manager::Notify_ViewportResized(_float2 vNewViewport)

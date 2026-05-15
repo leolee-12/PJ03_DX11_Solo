@@ -42,7 +42,10 @@ public:
 
 #pragma region LEVEL_MANAGER
 	HRESULT Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);
-	_int Get_CurrentLevel() const;
+	HRESULT Push_Level(_int iLevelIndex, class CLevel* pNewLevel);
+	HRESULT Pop_Level();
+	_int    Get_CurrentLevel() const;
+	_bool   Is_Level_Active(_uint iLevel) const;
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER

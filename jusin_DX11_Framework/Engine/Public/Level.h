@@ -16,6 +16,9 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+	virtual void OnPause() {};	// 본 레벨이 스택 상에서 paused 상태로 진입할 때 호출(위에 새 레벨이 push)
+	virtual void OnResume() {};	// 본 레벨이 스택 상에서 다시 top이 될 때 호출 (위의 레벨이 pop)
+
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };

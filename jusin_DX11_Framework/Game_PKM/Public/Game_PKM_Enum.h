@@ -3,7 +3,7 @@
 
 NS_BEGIN(Game_PKM)
 
-enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, BATTLE, END };
+enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, BATTLE, CAPTURE, INDOOR, END };
 
 namespace Navigation
 {
