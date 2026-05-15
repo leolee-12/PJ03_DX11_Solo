@@ -1,13 +1,14 @@
 #include "EditInstance.h"
-
-#include "GameInstance.h"
-#include "UIEditorSession.h"
-#include "UIPreviewHost.h"
 #include "ImGui_Manager.h"
+#include "Panel_Viewport.h"
 #include "Select_Manager.h"
 #include "Editor_Serializer.h"
 #include "Model_Loader.h"
-#include "Panel_Viewport.h"
+#include "UIEditorSession.h"
+#include "UIPreviewHost.h"
+
+#include "GameInstance.h"
+#include "Camera.h"
 
 IMPLEMENT_SINGLETON(CEditInstance)
 
@@ -76,14 +77,19 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	m_pImGui_Manager->Update(fTimeDelta);
 
 	ImGuiIO& io = ImGui::GetIO();
-	if (io.WantTextInput || !m_bCameraEnabled)
-	{
-		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);
-	}
-	else
+	const _bool bFreeCameraInput = m_bCameraEnabled && !io.WantTextInput;
+
+	if (bFreeCameraInput)
 	{
 		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
 	}
+	else
+	{
+		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);
+	}
+
+	if (CCamera* pMainCamera = m_pGameInstance->Get_MainCamera())
+		pMainCamera->Set_ControlEnabled(bFreeCameraInput);
 }
 
 HRESULT CEditInstance::Draw()

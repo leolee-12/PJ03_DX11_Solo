@@ -131,6 +131,8 @@
       <AdditionalIncludeDirectories>../Public\;../../EngineSDK/inc\;../../GameSDK/inc\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -21,6 +21,7 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 {
 	auto pDesc = static_cast<CAMERA_FREE_DESC*>(pArg);
 	m_fMouseSensor = pDesc->fMouseSensor;
+	m_bControlEnabled = pDesc->bControlEnabled;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -30,7 +31,7 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
-	if (Is_Following())
+	if (Is_Following() || !m_bControlEnabled)
 	{
 		__super::Priority_Update(fTimeDelta);
 		return;

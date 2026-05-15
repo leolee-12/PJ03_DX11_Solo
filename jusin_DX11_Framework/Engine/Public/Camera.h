@@ -25,6 +25,8 @@ public:
 	void Set_Following(_bool b) { m_bFollow = b; }
 	void Toggle_Following() { m_bFollow = !m_bFollow; }
 
+	virtual void Set_ControlEnabled(_bool) {};
+	virtual _bool Is_ControlEnabled() const { return false; }
 	virtual _string Get_TypeName() const { return "Camera"; }
 	const _float* Get_FarZPtr() const { return &m_fFar; }
 

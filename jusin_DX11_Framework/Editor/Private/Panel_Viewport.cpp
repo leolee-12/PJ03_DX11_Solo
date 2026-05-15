@@ -8,6 +8,7 @@
 #include "VP_OverlayDrawer.h"
 
 #include "GameInstance.h"
+#include "Camera.h"
 
 namespace
 {
@@ -257,11 +258,36 @@ void CPanel_Viewport::Draw_DebugHUD()
 	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
 	const ImVec2& vDisplayPos = m_pMapper ? m_pMapper->Get_DisplayPos() : s_vFallBack0;
 
-	const char* szCamState = m_pEditInstance->Is_CameraEnabled() ? "CAM: ON" : "CAM: OFF";
+	const CCamera* pMainCamera = m_pGameInstance->Get_MainCamera();
+	const _bool bCameraToggleOn = m_pEditInstance->Is_CameraEnabled();
+	const _bool bControlEnabled = (nullptr != pMainCamera && pMainCamera->Is_ControlEnabled());
+	const _bool bFollowing = (nullptr != pMainCamera && pMainCamera->Is_Following());
+
+	const char* szCamState = "CAM: OFF";
+	ImU32 iCamColor = IM_COL32(255, 100, 100, 255);
+
+	if (bCameraToggleOn)
+	{
+		if (bFollowing)
+		{
+			szCamState = "CAM: FOLLOW";
+			iCamColor = IM_COL32(255, 220, 100, 255);
+		}
+		else if (bControlEnabled)
+		{
+			szCamState = "CAM: FREE";
+			iCamColor = IM_COL32(100, 255, 100, 255);
+		}
+		else
+		{
+			szCamState = "CAM: LOCKED";
+			iCamColor = IM_COL32(255, 180, 100, 255);
+		}
+	}
+
 	pDrawList->AddText(
 		ImVec2(static_cast<_float>(g_iWinSizeX) - vDisplayPos.x, vDisplayPos.y + 30.f),
-		m_pEditInstance->Is_CameraEnabled() ? IM_COL32(100, 255, 100, 255) : IM_COL32(255, 100, 100,
-			255),
+		iCamColor,
 		szCamState);
 
 	pDrawList->AddText(

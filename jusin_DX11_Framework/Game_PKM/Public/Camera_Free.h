@@ -10,6 +10,7 @@ public:
 	struct CAMERA_FREE_DESC final : public CCamera::CAMERA_DESC
 	{
 		_float fMouseSensor;
+		_bool bControlEnabled = { false };
 	};
 
 private:
@@ -18,6 +19,8 @@ private:
 	virtual ~CCamera_Free() = default;
 
 public:
+	virtual void Set_ControlEnabled(_bool bEnabled) override { m_bControlEnabled = bEnabled; }
+	virtual _bool Is_ControlEnabled() const override { return m_bControlEnabled; }
 	virtual _string Get_TypeName() const { return "Camera_Free"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -28,6 +31,7 @@ public:
 
 private:
 	_float	m_fMouseSensor = {};
+	_bool m_bControlEnabled = { false };
 
 public:
 	static CCamera_Free* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
