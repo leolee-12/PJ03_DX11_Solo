@@ -53,6 +53,10 @@ HRESULT CBody_Hero::Render()
 	vector<CRenderProfile::MATERIAL_SLOT> Slots =
 	{
 			{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff" },
+			{ MATERIAL_TYPE::DIFFUSE, "g_TexSpec" },
+			{ MATERIAL_TYPE::DIFFUSE, "g_TexAmbt_R", 0 },
+			{ MATERIAL_TYPE::DIFFUSE, "g_TexAmbt_G", 1 },
+			{ MATERIAL_TYPE::DIFFUSE, "g_TexAmbt_B", 2 },
 			{ MATERIAL_TYPE::EMISSIVE, "g_TexEmit" },
 			{ MATERIAL_TYPE::LAYER_COLOR, "g_TexLycl" },
 	};

@@ -98,6 +98,8 @@ struct PS_OUT
 	float4 vDiff : SV_TARGET0;
 	float4 vNorm : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
+	float4 vAmbt : SV_TARGET3;
+
 };
 
 struct PS_OUT_SHADOW
@@ -141,7 +143,7 @@ PS_OUT PS_Default(PS_IN In)	// 0번 패스
 
 PS_OUT_SHADOW PS_SHADOW(PS_IN In)
 {
-	PS_OUT_SHADOW Out;
+	PS_OUT_SHADOW Out = (PS_OUT_SHADOW)0;
 
 	Out.vLightDepth = vector(In.vProjPos.z / In.vProjPos.w, 0.f, 0.f, 0.f);
 
@@ -150,7 +152,7 @@ PS_OUT_SHADOW PS_SHADOW(PS_IN In)
 
 PS_OUT PS_DANR(PS_IN In)	// 2번 패스
 {
-	PS_OUT Out;
+	PS_OUT Out = (PS_OUT)0;
 	
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 	if (vMtrlDiff.a < 0.1f)
@@ -159,12 +161,15 @@ PS_OUT PS_DANR(PS_IN In)	// 2번 패스
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+
+	float fAO = g_TexAO.Sample(LinearSampler, In.vTex).r;
+	Out.vAmbt = vector(fAO.xxx, 0.f);
 	return Out;
 }
 
 PS_OUT PS_DALNR(PS_IN In)	// 3번 패스
 {
-	PS_OUT Out;
+	PS_OUT Out = (PS_OUT)0;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 	if (vMtrlDiff.a < 0.1f)
 		discard;
@@ -172,6 +177,9 @@ PS_OUT PS_DALNR(PS_IN In)	// 3번 패스
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+
+	float fAO = g_TexAO.Sample(LinearSampler, In.vTex).r;
+	Out.vAmbt = vector(fAO.xxx, 0.f);
 	return Out;
 }
 
@@ -205,6 +213,7 @@ PS_OUT PS_DLN(PS_IN In)	// 4번 패스
 	Out.vDiff = float4(vEyeColor, 1.0f);
 	Out.vNorm = vector(vEyeNormal.xyz * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
 	return Out;
 }
 
@@ -241,6 +250,7 @@ PS_OUT PS_DLMN(PS_IN In)	// 5번 패스
 	Out.vDiff = float4(vEyeColor, 1.0f);
 	Out.vNorm = vector(vEyeNormal.xyz * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
 	return Out;
 }
 
@@ -255,6 +265,7 @@ PS_OUT PS_DL(PS_IN In)	// 6번 패스
 	Out.vDiff = float4(vMtrlDiff.rgb * vLymColor, 1.0f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
 	return Out;
 }
 

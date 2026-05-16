@@ -88,6 +88,9 @@ HRESULT CRenderer::Resize()
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, iNewWidth, iNewHeight,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_AMBIENT, iNewWidth, iNewHeight,
+		DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.505f, 0.f))))
+		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_SPECULAR, iNewWidth, iNewHeight,
 		DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
@@ -107,6 +110,8 @@ HRESULT CRenderer::Resize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DEPTH)))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_AMBIENT)))
+		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_PICKPOS)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SHADE)))
@@ -121,15 +126,20 @@ HRESULT CRenderer::Resize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(vViewportDesc.x, vViewportDesc.y, 0.f, 1.f));
 
 #ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_DIFFUSE, 150.f, 150.f, 300.f, 300.f)))
+	_float fSizeX = 256.f;
+	_float fSizeY = 144.f;
+
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_DIFFUSE, fSizeX * 0.5f, fSizeY * 0.5f, fSizeX, fSizeY)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_NORMAL, 150.f, 450.f, 300.f, 300.f)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_NORMAL, fSizeX * 0.5f, fSizeY * 1.5f, fSizeX, fSizeY)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SHADE, 450.f, 150.f, 300.f, 300.f)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_AMBIENT, fSizeX * 0.5f, fSizeY * 2.5f, fSizeX, fSizeY)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SPECULAR, 450.f, 450.f, 300.f, 300.f)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SHADE, fSizeX * 1.5f, fSizeY * 0.5f, fSizeX, fSizeY)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_LIGHTDEPTH, 200.f, 200.f, 400.f, 400.f)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SPECULAR, fSizeX * 1.5f, fSizeY * 1.5f, fSizeX, fSizeY)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_LIGHTDEPTH, fSizeX * 1.5f, fSizeY * 2.5f, fSizeX, fSizeY)))
 		return E_FAIL;
 #endif
 
@@ -217,6 +227,8 @@ HRESULT CRenderer::Render_Lights()
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_NORMAL, m_pShader, "g_TexNorm")))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DEPTH, m_pShader, "g_TexDepth")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_AMBIENT, m_pShader, "g_TexAmbt")))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -407,7 +419,7 @@ HRESULT CRenderer::Render_Debug()
 	{
 		m_pGameInstance->Render_RT_Debug(MRT_GAMEOBJECTS, m_pShader, m_pVIBuffer);
 		m_pGameInstance->Render_RT_Debug(MRT_LIGHTACC, m_pShader, m_pVIBuffer);
-		//m_pGameInstance->Render_RT_Debug(MRT_SHADOWOBJECTS, m_pShader, m_pVIBuffer);
+		m_pGameInstance->Render_RT_Debug(MRT_SHADOWOBJECTS, m_pShader, m_pVIBuffer);
 	}
 	return S_OK;
 }

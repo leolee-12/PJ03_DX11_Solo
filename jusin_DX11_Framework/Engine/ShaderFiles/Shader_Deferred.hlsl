@@ -9,6 +9,7 @@ texture2D g_TexNorm;
 texture2D g_TexDepth;
 texture2D g_TexDiff;
 texture2D g_TexSpec;
+texture2D g_TexAmbt;
 texture2D g_TexShade;
 texture2D g_TexLightDepth;
 
@@ -85,12 +86,58 @@ struct PS_OUT_LIGHT
 	float4 vSpec : SV_TARGET1;
 };
 
+float g_fSpecPower = 64.0f;
+float g_fSpecStrength = 0.25f;
+float g_fSpcBase = 0.20f;
+float g_fSpcLineStrength = 0.15f;
+float g_fToonStrength = 0.35f;
+
+float ExtractSpcLine(float fSpcRaw)
+{
+	float fLine = saturate((fSpcRaw - g_fSpcBase) / (1.0f - g_fSpcBase));
+	fLine = smoothstep(0.10f, 0.45f, fLine);
+	return fLine;
+}
+
+float g_fAmbtMapStrength = 0.2f;
+float g_fAmbtChromaStrength = 0.0f; // 일단 0 권장. 색감 필요하면 0.05~0.15
+
+float3 DecodeAmbtMap(float3 vAmbtRaw)
+{
+	vAmbtRaw = saturate(vAmbtRaw);
+
+	// AO fallback path: AO는 보통 grayscale.
+	// 1 = no occlusion, 0 = occluded.
+	float fGrayRange = max(vAmbtRaw.r, max(vAmbtRaw.g, vAmbtRaw.b))
+					- min(vAmbtRaw.r, min(vAmbtRaw.g, vAmbtRaw.b));
+
+	if (fGrayRange < 0.02f)
+	{
+		float fAO = vAmbtRaw.r;
+		return lerp(1.f, max(fAO, 0.65f), g_fAmbtMapStrength).xxx;
+	}
+
+	float fAmbt = dot(vAmbtRaw, float3(0.299f, 0.587f, 0.114f));
+
+	// 너무 낮은 값이 전체 색을 과하게 죽이지 않도록 제한
+	fAmbt = lerp(1.f, fAmbt, g_fAmbtMapStrength);
+	fAmbt = max(fAmbt, 0.85f);
+
+	return fAmbt.xxx;
+}
+
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
-	PS_OUT_LIGHT Out = (PS_OUT_LIGHT)0;
+	PS_OUT_LIGHT Out;
 
-	vector vNormalDesc = g_TexNorm.Sample(LinearSampler, In.vTex);
-	vector vDepthDesc = g_TexDepth.Sample(LinearSampler, In.vTex);
+	vector vNormalDesc = g_TexNorm.Sample(PointSampler, In.vTex);
+	vector vDepthDesc = g_TexDepth.Sample(PointSampler, In.vTex);
+	
+	vector vAmbtSpcDesc = g_TexAmbt.Sample(PointSampler, In.vTex);
+	float3 vAmbt = vAmbtSpcDesc.rgb;
+	float fSpcRaw = vAmbtSpcDesc.a;
+	float fSpcLine = ExtractSpcLine(fSpcRaw);
+
 	float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
 
@@ -108,14 +155,50 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	// 월드
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 
-	vector vReflect = reflect(normalize(g_vLightDir), normalize(vNormal));
-	vector vLook = vWorldPos - g_vCamPos;
-	Out.vSpec = saturate((g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 20.f));
+	float3 N = normalize(vNormal.xyz);
+	float3 L = normalize(-g_vLightDir.xyz);
+	float3 V = normalize(g_vCamPos.xyz - vWorldPos.xyz);
+	float3 H = normalize(L + V);
+	float fNdotL = saturate(dot(N, L));
 
-	float fNdotL = dot(normalize(g_vLightDir) * -1.f, normalize(vNormal));
+	// Half-Lambert: 라이트 면 또렷, 반대 면 부드럽게
 	float fHalfLambert = fNdotL * 0.5f + 0.5f;
-	fHalfLambert *= fHalfLambert; // Valve Half-Lambert: 라이트 면 또렷, 반대 면 부드럽게
-	Out.vShade = saturate(g_vLightDiff * fHalfLambert + g_vLightAmbt * g_vMtrlAmbt);
+	fHalfLambert *= fHalfLambert;
+
+	// Soft-Toon
+	float fToonDiff = smoothstep(0.25f, 0.70f, fHalfLambert);
+	float fDiffFactor = lerp(fHalfLambert, fToonDiff, g_fToonStrength);
+
+	// Ambt-Term
+	float3 vAmbtFactor = DecodeAmbtMap(vAmbt);
+
+	// Output
+	float3 vShadeDiff = g_vLightDiff.rgb * fDiffFactor;
+	float3 vShadeAmbt = g_vLightAmbt.rgb * vAmbtFactor;
+	Out.vShade = float4(saturate(vShadeDiff + vShadeAmbt), 1.f);
+
+	// Specular - soft dynamic spec + painted highlight mask
+	float fNdotH = saturate(dot(N, H));
+	float fSpecRawDynamic = pow(fNdotH, g_fSpecPower);
+
+	// spc map: broad material/spec mask
+	float3 vSpecular =
+		g_vLightSpec.rgb *
+		g_vMtrlSpec.rgb *
+		fSpecRawDynamic *
+		fSpcRaw *
+		g_fSpecStrength;
+
+	// spc map: authored bright line/detail mask
+	float fLightVisible = smoothstep(0.15f, 0.50f, fNdotL);
+
+	float3 vPaintedHighlight =
+		g_vLightSpec.rgb *
+		fSpcLine *
+		fLightVisible *
+		g_fSpcLineStrength;
+
+	Out.vSpec = float4(saturate(vSpecular + vPaintedHighlight), 1.0f);
 
 	return Out;
 }
@@ -124,8 +207,14 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
 	PS_OUT_LIGHT Out = (PS_OUT_LIGHT)0;
 
-	vector vNormalDesc = g_TexNorm.Sample(LinearSampler, In.vTex);
-	vector vDepthDesc = g_TexDepth.Sample(LinearSampler, In.vTex);
+	vector vNormalDesc = g_TexNorm.Sample(PointSampler, In.vTex);
+	vector vDepthDesc = g_TexDepth.Sample(PointSampler, In.vTex);
+
+	vector vAmbtSpcDesc = g_TexAmbt.Sample(PointSampler, In.vTex);
+	float3 vAmbt = vAmbtSpcDesc.rgb;
+	float fSpcRaw = vAmbtSpcDesc.a;
+	float fSpcLine = ExtractSpcLine(fSpcRaw);
+
 	float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
 	
@@ -143,17 +232,48 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	// 월드
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 
+	float3 N = normalize(vNormal.xyz);
+	float3 L = normalize(g_vLightPos.xyz - vWorldPos.xyz);
+	float3 V = normalize(g_vCamPos.xyz - vWorldPos.xyz);
+	float3 H = normalize(L + V);
+
 	vector vLightDir = vWorldPos - g_vLightPos;
 	float fAtt = saturate((g_fLightRange - length(vLightDir)) / g_fLightRange);
 
-	vector vReflect = reflect(normalize(vLightDir), normalize(vNormal));
-	vector vLook = vWorldPos - g_vCamPos;
-	Out.vSpec = saturate((g_vLightSpec * g_vMtrlSpec) * pow(saturate(dot(normalize(vReflect) * -1.f, normalize(vLook))), 20.f) * fAtt);
+	float fNdotL = saturate(dot(N, L));
 
-	float fNdotL = dot(normalize(vLightDir) * -1.f, normalize(vNormal));
 	float fHalfLambert = fNdotL * 0.5f + 0.5f;
 	fHalfLambert *= fHalfLambert;
-	Out.vShade = saturate((g_vLightDiff * fHalfLambert + g_vLightAmbt * g_vMtrlAmbt) * fAtt);
+
+	float fToonDiffuse = smoothstep(0.25f, 0.70f, fHalfLambert);
+	float fDiffuseFactor = lerp(fHalfLambert, fToonDiffuse, g_fToonStrength);
+
+	Out.vShade = float4(saturate(g_vLightDiff.rgb * fDiffuseFactor * fAtt), 1.0f);
+
+	// Point specular - soft dynamic spec + painted highlight mask
+	float fNdotH = saturate(dot(N, H));
+	float fSpecRawDynamic = pow(fNdotH, g_fSpecPower);
+
+	// spc map: broad material/spec mask
+	float3 vSpecular =
+		g_vLightSpec.rgb *
+		g_vMtrlSpec.rgb *
+		fSpecRawDynamic *
+		fSpcRaw *
+		g_fSpecStrength *
+		fAtt;
+
+	// spc map: authored bright line/detail mask
+	float fLightVisible = smoothstep(0.15f, 0.50f, fNdotL);
+
+	float3 vPaintedHighlight =
+		g_vLightSpec.rgb *
+		fSpcLine *
+		fLightVisible *
+		g_fSpcLineStrength *
+		fAtt;
+
+	Out.vSpec = float4(saturate(vSpecular + vPaintedHighlight), 1.0f);
 
 	return Out;
 }
@@ -163,16 +283,16 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	PS_OUT_BACKBUFFER Out;
 
 	// Diffuse + Shade -> 최종 색상 결정
-	vector vDiffuse = g_TexDiff.Sample(LinearSampler, In.vTex);
+	vector vDiffuse = g_TexDiff.Sample(PointSampler, In.vTex);
 	if (0.5f > vDiffuse.a)
 		discard;
 
-	vector vShade = g_TexShade.Sample(LinearSampler, In.vTex);
-	vector vSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
+	vector vShade = g_TexShade.Sample(PointSampler, In.vTex);
+	vector vSpec = g_TexSpec.Sample(PointSampler, In.vTex);
 	Out.vBackBuffer = vDiffuse * vShade + vSpec;
 
 	// 그림자 반영
-	vector vDepthDesc = g_TexDepth.Sample(LinearSampler, In.vTex);
+	vector vDepthDesc = g_TexDepth.Sample(PointSampler, In.vTex);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
 
 	vector vWorldPos;

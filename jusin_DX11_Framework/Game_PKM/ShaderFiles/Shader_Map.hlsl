@@ -63,7 +63,8 @@ struct PS_OUT
 	float4 vDiff : SV_TARGET0;
 	float4 vNorm : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
-	float4 vPickPos : SV_TARGET3;
+	float4 vAmbt : SV_TARGET3;
+	float4 vPickPos : SV_TARGET4;
 };
 
 PS_OUT PS_MAIN(PS_IN In)

@@ -7,10 +7,10 @@ float g_fFarZ;
 
 // 재질
 texture2D g_TexDiff;
-//texture2D g_TexSpec;
-//texture2D g_TexAmbt_R;
-//texture2D g_TexAmbt_G;
-//texture2D g_TexAmbt_B;
+texture2D g_TexSpec;
+texture2D g_TexAmbt_R;
+texture2D g_TexAmbt_G;
+texture2D g_TexAmbt_B;
 texture2D g_TexEmit;
 texture2D g_TexLycl;
 
@@ -80,6 +80,8 @@ struct PS_OUT
 	float4 vDiff : SV_TARGET0;
 	float4 vNorm : SV_TARGET1;
 	float4 vDepth : SV_TARGET2;
+	float4 vAmbt : SV_TARGET3;
+
 };
 
 PS_OUT PS_DS(PS_IN In)	// 0번 패스
@@ -93,28 +95,14 @@ PS_OUT PS_DS(PS_IN In)	// 0번 패스
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, g_TexSpec.Sample(LinearSampler, In.vTex).r);
 	return Out;
-
-	//vector vMtrlSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
-
-	//vector Light = normalize(g_vLightDir);
-	//vector vView = normalize(g_vCamPos - In.vWorldPos);
-	//vector vHalf = normalize((-Light) + vView);
-	//float fSpec = pow(max(dot(Normal, vHalf), 0.f), 150.f);
-	//float fShade = max(dot(Light * -1.f, Normal), 0.f);
-	//
-	//vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
-	//vector Ambt = g_vLightAmbt * vMtrlDiff;
-	//vector Spec = (g_vLightSpec * vMtrlSpec) * fSpec;
-	//Out.vCol = saturate(Diff + Ambt + Spec);
-	//return Out;
 }
 
 PS_OUT PS_DSEL(PS_IN In)	// 1번 패스
 {
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
-	//vector vMtrlSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
 	vector vMtrlEmit = float4(0.f, 0.f, 0.f, 1.f);
 	
 	if (vMtrlDiff.a < 0.1f)
@@ -127,49 +115,23 @@ PS_OUT PS_DSEL(PS_IN In)	// 1번 패스
 	Out.vDiff = vector((vMtrlDiff + vMtrlEmit).rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, g_TexSpec.Sample(LinearSampler, In.vTex).r);
 	return Out;
-
-	//vector Normal = normalize(In.vNorm);
-	//vector Light = normalize(g_vLightDir);
-	//vector vView = normalize(g_vCamPos - In.vWorldPos);
-	//vector vHalf = normalize((-Light) + vView);
-	//float fSpec = pow(max(dot(Normal, vHalf), 0.f), 150.f);
-	//float fShade = max(dot(Light * -1.f, Normal), 0.f);
-	//
-	//vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
-	//vector Ambt = g_vLightAmbt * vMtrlDiff;
-	//vector Spec = (g_vLightSpec * vMtrlSpec) * fSpec;
-	//Out.vCol = saturate(Diff + Ambt + Spec + vMtrlEmit);
-	//return Out;
 }
 
 PS_OUT PS_DSAAA(PS_IN In)	// 2번 패스
 {
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
-	//vector vMtrlSpec = g_TexSpec.Sample(LinearSampler, In.vTex);
-	//vector vMtrlAmbt = float4(	g_TexAmbt_R.Sample(LinearSampler, In.vTex).r,
-	//							g_TexAmbt_G.Sample(LinearSampler, In.vTex).r, 
-	//							g_TexAmbt_B.Sample(LinearSampler, In.vTex).r, 
-	//							1.f);
 
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(	g_TexAmbt_R.Sample(LinearSampler, In.vTex).r,
+						g_TexAmbt_G.Sample(LinearSampler, In.vTex).r,
+						g_TexAmbt_B.Sample(LinearSampler, In.vTex).r,
+						g_TexSpec.Sample(LinearSampler, In.vTex).r);
 	return Out;
-
-	//vector Normal = normalize(In.vNorm);
-	//vector Light = normalize(g_vLightDir);
-	//vector vView = normalize(g_vCamPos - In.vWorldPos);
-	//vector vHalf = normalize((-Light) + vView);
-	//float fSpec = pow(max(dot(Normal, vHalf), 0.f), 150.f);
-	//float fShade = max(dot(Light * -1.f, Normal), 0.f);
-	//
-	//vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
-	//vector Ambt = (g_vLightAmbt * vMtrlAmbt) * vMtrlDiff;
-	//vector Spec = (g_vLightSpec * vMtrlSpec) * fSpec;
-	//Out.vCol = saturate(Diff + Ambt + Spec);
-	//return Out;
 }
 
 struct PS_OUT_SHADOW

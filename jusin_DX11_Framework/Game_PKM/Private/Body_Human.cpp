@@ -22,6 +22,9 @@ HRESULT CBody_Human::Initialize(void* pArg)
 
 	BODY_HUMAN_DESC Desc = *pDesc;
 
+	if (0 == Desc.strShaderProtoTag)
+		Desc.strShaderProtoTag = PROTO_COM_SHADER_HUMAN;
+
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
@@ -38,12 +41,9 @@ HRESULT CBody_Human::Render()
 
 	vector<CRenderProfile::MATERIAL_SLOT> Slots =
 	{
-			{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff" },
-			//{ MATERIAL_TYPE::AMBIENT_OCCLUSION, "g_TexAO" },
-			//{ MATERIAL_TYPE::NORMALS, "g_TexNorm" },
-			//{ MATERIAL_TYPE::SHININESS, "g_TexRough" },
-			//{ MATERIAL_TYPE::LAYER_COLOR, "g_TexLycl" },
-			//{ MATERIAL_TYPE::LAYER_MASK, "g_TexMask" },
+	  { MATERIAL_TYPE::DIFFUSE, "g_TexDiff" },
+	  { MATERIAL_TYPE::SPECULAR, "g_TexSpec" },
+	  { MATERIAL_TYPE::AMBIENT, "g_TexAmbt" },
 	};
 
 	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots, "g_BoneMatrices")))

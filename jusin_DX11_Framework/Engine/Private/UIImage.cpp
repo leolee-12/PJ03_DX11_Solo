@@ -21,6 +21,8 @@ void CUIImage::Set_SpriteAnim(_bool bEnabled, _float fFrameDuration)
 
 void CUIImage::Reset_SpriteAnim()
 {
+	if (!m_bSpriteAnimEnabled) return;
+
 	m_iTextureIndex = (m_iSpriteFrameCount > 0) ? 0 : INVALID_INDEX;
 	m_fSpriteAccumTime = 0.f;
 }
