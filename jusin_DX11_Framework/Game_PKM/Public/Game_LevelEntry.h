@@ -7,6 +7,7 @@ enum class LEVEL_ENTRY_PAYLOAD : _ubyte
 {
 	NONE,
 	BATTLE_ENV,
+	CAPTURE_ENV,
 	END
 };
 

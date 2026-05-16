@@ -51,13 +51,17 @@ _bool CInteraction_Encounter::CanInteract(const INTERACTION_CONTEXT& ctx) const
 
 void CInteraction_Encounter::Execute(const INTERACTION_CONTEXT& ctx)
 {
-	// TODO: 어댑터 도입 후
+	wchar_t szLog[128] = {};
+	swprintf_s(szLog, L"[Interaction_Encounter] Execute: SpeciesID=%u, Level=%u\n",
+		m_iSpeciesID, m_iLevel);
+	OutputDebugStringW(szLog);
+
+	// TODO: Capture 레벨 구현 후 옵션 B 로 확장
 	// m_pGameInstance->Get_EncounterService()->Start(m_iSpeciesID, m_iLevel);
-	// m_pGameInstance->Get_SceneService()->Change_Level(LEVEL_CAPTURE);
+	// → CLevel_GamePlay::Request_Capture(CAPTURE_ENV{...}) 호출 흐름으로 연결 예정
 }
 
-CInteraction_Encounter* CInteraction_Encounter::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
-	pContext)
+CInteraction_Encounter* CInteraction_Encounter::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CInteraction_Encounter* pInstance = new CInteraction_Encounter(pDevice, pContext);
 

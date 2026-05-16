@@ -53,6 +53,7 @@
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\Capture_Session.h" />
     <ClInclude Include="..\Public\CommandQueue.h" />
     <ClInclude Include="..\Public\Damage_Pipe.h" />
     <ClInclude Include="..\Public\Damage_Calculator.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="..\Public\Interaction.h" />
     <ClInclude Include="..\Public\Interaction_Encounter.h" />
     <ClInclude Include="..\Public\Level_Battle.h" />
+    <ClInclude Include="..\Public\Level_Capture.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -154,6 +156,7 @@
     <ClCompile Include="..\Private\Interaction.cpp" />
     <ClCompile Include="..\Private\Interaction_Encounter.cpp" />
     <ClCompile Include="..\Private\Level_Battle.cpp" />
+    <ClCompile Include="..\Private\Level_Capture.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />

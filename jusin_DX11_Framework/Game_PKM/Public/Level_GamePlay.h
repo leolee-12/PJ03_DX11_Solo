@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Game_PKM_Defines.h"
 #include "Game_LevelEntry.h"
+#include "Capture_Session.h"
 #include "Level.h"
 
 NS_BEGIN(Engine)
@@ -26,6 +27,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void OnPause() override;
 	virtual void OnResume() override;
+
+	void Request_Capture(const CAPTURE_ENV& tEnv);
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };

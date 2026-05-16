@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include "Game_API.h"
 #include "Level_Battle.h"
+#include "Level_Capture.h"
 #include "Game_LevelEntry.h"
 #include "Battle_Session.h"
 #include "Body_Human.h"
@@ -84,6 +85,35 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			if (nullptr != m_pFadeBattleSeq)
 				m_pFadeBattleSeq->Set_Visible(false);
 
+			/* CAPTURE 진입: CLevel_Capture Push. */
+			if (LEVEL::CAPTURE == m_PendingEntryDesc.eNextLevelID)
+			{
+				CLevel_Capture* pCapture = CLevel_Capture::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
+				if (nullptr == pCapture)
+				{
+					m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+					m_eTransition = TRANSITION_STATE::IDLE;
+					m_fTransitionElapsed = 0.f;
+					return;
+				}
+
+				if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::CAPTURE), pCapture)))
+				{
+					Safe_Release(pCapture);
+					m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+					m_eTransition = TRANSITION_STATE::IDLE;
+					m_fTransitionElapsed = 0.f;
+					return;
+				}
+
+				/* Push 직후 입력 상태 복귀. CAPTURE 측에서 별도 상태가 필요하면 Initialize 에서 덮어쓰면 됨. */
+				m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+
+				m_eTransition = TRANSITION_STATE::IDLE;
+				m_fTransitionElapsed = 0.f;
+				return;
+			}
+
 			CLevel_Battle* pBattle = CLevel_Battle::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
 			if (nullptr == pBattle)
 			{
@@ -152,8 +182,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			sizeof(BATTLE_ENV))))
 			return;
 
-		/* Fade 시작과 동시에 BATTLE BGM 시작. 실제 Push_Level 은 본 함수 상단의 경과 임계값
-호출됨. */
+		/* Fade 시작과 동시에 BATTLE BGM 시작. 실제 Push_Level 은 본 함수 상단의 경과 임계값 초과 시 호출됨. */
 		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
 
 		m_pFadeBattleSeq->Set_Visible(true);
@@ -166,6 +195,17 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		m_eTransition = TRANSITION_STATE::BUSY;
 		m_fTransitionElapsed = 0.f;
 
+		return;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_O))
+	{
+		CAPTURE_ENV tEnv = {};
+		tEnv.iSpeciesID = 25;
+		tEnv.iLevel = 5;
+		tEnv.iInitialBallItemID = 0;
+		tEnv.iZoneID = 0;
+		Request_Capture(tEnv);
 		return;
 	}
 
@@ -196,8 +236,50 @@ void CLevel_GamePlay::OnResume()
 
 	/* GAMEPLAY BGM 복원. BGM 키/볼륨은 Initialize 와 동일 값. */
 	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
+
+	/* Pause 동안 LAYER_INTERACTABLE 의 액터가 소멸·재배치됐을 수 있으므로
+	   Player 의 직전-overlap 캐시를 비워 다음 접촉을 정상적인 Enter 로 처리. */
+	if (const list<CGameObject*>* pPlayerList =
+		m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, LAYER_PLAYER))
+	{
+		for (CGameObject* pObject : *pPlayerList)
+		{
+			if (CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pObject))
+			{
+				pPlayer->Clear_TouchSet();
+				break;
+			}
+		}
+	}
 }
 
+void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv)
+{
+	/* 이미 다른 트랜지션 중이거나, UI 가 열려 있거나, Fade 시퀀스 미보유면 무시. */
+	if (TRANSITION_STATE::IDLE != m_eTransition)
+		return;
+	if (UI_Is_AnyOpen())
+		return;
+	if (nullptr == m_pFadeBattleSeq)
+		return;
+
+	m_PendingEntryDesc.Clear();
+	m_PendingEntryDesc.eNextLevelID = LEVEL::CAPTURE;
+
+	if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::CAPTURE_ENV, &tEnv,
+		sizeof(CAPTURE_ENV))))
+		return;
+
+	/* Fade 시퀀스는 BATTLE 과 공유. CAPTURE 전용 Fade·BGM 분기는 후속에서 결정. */
+	m_pFadeBattleSeq->Set_Visible(true);
+	m_pFadeBattleSeq->Play();
+
+	/* 트랜지션 동안 게임 객체 수준 입력 차단. */
+	m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
+
+	m_eTransition = TRANSITION_STATE::BUSY;
+	m_fTransitionElapsed = 0.f;
+}
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {

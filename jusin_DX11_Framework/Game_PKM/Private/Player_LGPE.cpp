@@ -95,8 +95,6 @@ void CPlayer_LGPE::Late_Update(_float fTimeDelta)
 
 	Update_TouchTriggers();
 
-	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
-
 #ifdef _DEBUG
 	m_pGameInstance->Add_DebugComponent(m_pColliderCom);
 	m_pGameInstance->Add_DebugComponent(m_pNavigationCom);
@@ -107,6 +105,12 @@ HRESULT CPlayer_LGPE::Render()
 {
 	return S_OK;
 }
+
+void CPlayer_LGPE::Clear_TouchSet()
+{
+	m_PrevTouchSet.clear();
+}
+
 
 HRESULT CPlayer_LGPE::Ready_Components()
 {
@@ -304,7 +308,7 @@ void CPlayer_LGPE::Update_TouchTriggers()
 	if (nullptr != pNewlyEnteredFirst)
 		Fire_Touch(pNewlyEnteredFirst);
 
-	// weak 비교만 수행 — dangling 안전. OnPause/OnResume 훅 도입 시 OnResume 에서 clear() 권장.
+	// weak 비교만 수행 — dangling 안전. 레벨 Push/Pop 경계는 GAMEPLAY::OnResume 이 Clear_TouchSet() 호출로 정리.
 	m_PrevTouchSet = std::move(CurrentTouchSet);
 }
 

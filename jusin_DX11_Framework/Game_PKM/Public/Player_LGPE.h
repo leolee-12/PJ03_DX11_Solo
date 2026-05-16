@@ -31,6 +31,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	void Clear_TouchSet();
+
 private:
 	_uint m_iState = {};
 	CNavigation* m_pNavigationCom = { nullptr };
