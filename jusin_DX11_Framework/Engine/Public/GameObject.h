@@ -1,15 +1,18 @@
 #pragma once
 #include "Transform.h"
+#include "Component.h"
 
 NS_BEGIN(Engine)
+class CGameInstance;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
 public:
-	typedef struct tagGameObjectDesc : public CTransform::TRANSFORM_DESC
+	struct GAMEOBJECT_DESC : public CTransform::TRANSFORM_DESC
 	{
+		_float3 vSpawnPos = {};	// ¿ùµå ÁÂÇ¥
 		_uint iFlag = { ObjFlag::ACTIVE };
-	}GAMEOBJECT_DESC;
+	};
 
 protected:
 	CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
@@ -17,8 +20,6 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
-	//virtual json Serialize_Props() const PURE;
-	//virtual void Deserialize_Props() const PURE;
 	virtual _bool Is_UI() { return false; }
 	virtual _string Get_TypeName() const { return "GameObject"; }
 	virtual _float Get_RenderOrder() const { return m_pTransformCom->Get_Depth(); }
@@ -42,15 +43,21 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_Shadow() { return S_OK; };
 
-	class CComponent* Find_Component(WNameID strComTag);
+	CComponent* Find_Component(WNameID strComTag);
+
+	template<typename T>
+	T* Get_Component(WNameID strComTag)
+	{
+		return dynamic_cast<T*>(Find_Component(strComTag));
+	}
 
 protected:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
-	class CGameInstance* m_pGameInstance = { nullptr };
+	CGameInstance* m_pGameInstance = { nullptr };
 
-	WNameMap<class CComponent*> m_Components;
-	class CTransform* m_pTransformCom = { nullptr };
+	WNameMap<CComponent*> m_Components;
+	CTransform* m_pTransformCom = { nullptr };
 	_wstring m_strName = {};
 	_uint m_iFlag = {};
 

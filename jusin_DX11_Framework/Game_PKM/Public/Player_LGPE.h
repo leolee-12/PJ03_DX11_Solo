@@ -7,6 +7,7 @@ NS_BEGIN(Engine)
 NS_END
 
 NS_BEGIN(Game_PKM)
+class CActor;
 
 class CPlayer_LGPE final : public CContainerObject
 {
@@ -33,6 +34,7 @@ public:
 private:
 	_uint m_iState = {};
 	CNavigation* m_pNavigationCom = { nullptr };
+	CActor* m_pCurrentInteractTarget = { nullptr };   // weak — 매 프레임 후보 갱신
 
 private:
 	HRESULT Ready_Components();
@@ -41,6 +43,10 @@ private:
 
 	_vector Read_MoveInput() const;
 	void Update_AnimState(_bool bHasInput);
+
+	void Update_Interaction(_float fTimeDelta);
+	CActor* Find_InteractionCandidate() const;
+	void Try_Talk();
 
 public:
 	static CPlayer_LGPE* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

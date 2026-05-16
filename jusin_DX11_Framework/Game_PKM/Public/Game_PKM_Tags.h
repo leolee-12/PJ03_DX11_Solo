@@ -22,8 +22,6 @@ WNAME_TAG(PROTO_COM_TEX_TITLE_PIKA, L"Prototype_Component_Texture_Title_Pika");
 WNAME_TAG(PROTO_COM_TEX_STAR, L"Prototype_Component_Texture_Star");
 WNAME_TAG(PROTO_COM_TEX_TITLE_BG, L"Prototype_Component_Texture_Title_BackGround");
 
-
-
 WNAME_TAG(PROTO_COM_TEX_CURSOR, L"Prototype_Component_Texture_Cursor");
 
 WNAME_TAG(PROTO_COM_TEX_MENU_BALL, L"Prototype_Component_Texture_Menu_Ball");
@@ -51,8 +49,6 @@ WNAME_TAG(PROTO_COM_TEX_BTL_FADE_OUT, L"Prototype_Component_Texture_Battle_Fade_
 WNAME_TAG(PROTO_COM_TEX_BTL_FADE_LINE, L"Prototype_Component_Texture_Battle_Fade_Line");
 WNAME_TAG(PROTO_COM_TEX_BTL_FADE_MASK, L"Prototype_Component_Texture_Battle_Fade_Mask");
 
-
-
 WNAME_TAG(PROTO_COM_TEX_BTL_BTN_FIGHT, L"Prototype_Component_Texture_Battle_Button_Fight");
 WNAME_TAG(PROTO_COM_TEX_BTL_BTN_POKE, L"Prototype_Component_Texture_Battle_Button_Poke");
 WNAME_TAG(PROTO_COM_TEX_BTL_BTN_BAG, L"Prototype_Component_Texture_Battle_Button_Bag");
@@ -71,6 +67,8 @@ WNAME_TAG(PROTO_COM_TEX_BTL_MOVE, L"Prototype_Component_Texture_Battle_Move");
 WNAME_TAG(PROTO_COM_TEX_BTL_MOVEICON, L"Prototype_Component_Texture_Battle_MoveIcon");
 WNAME_TAG(PROTO_COM_TEX_BTL_MOVESHADOW, L"Prototype_Component_Texture_Battle_MoveShadow");
 
+
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
@@ -88,6 +86,8 @@ WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance
 WNAME_TAG(PROTO_COM_SHADER_UIIMAGE, L"Prototype_Component_Shader_UIImage");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_GLOW, L"Prototype_Component_Shader_UI_Button_Glow");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_LAYERED, L"Prototype_Component_Shader_UI_Button_Layered");
+
+
 
 // VIBuffer & Model
 WNAME_TAG(PROTO_COM_VIBUFFER_RECT, L"Prototype_Component_VIBuffer_Rect");
@@ -112,6 +112,8 @@ WNAME_TAG(PROTO_COM_MODEL_MAP_ROAD01, L"Prototype_Component_Model_Map_Road01");
 
 WNAME_TAG(PROTO_COM_MODEL_BMAP_TOWN, L"Prototype_Component_Model_BMap_Town");
 
+
+
 // Navigation & Collider
 WNAME_TAG(PROTO_COM_NAVIGATION_TERRAIN, L"Prototype_Component_Navigation_Terrain");
 WNAME_TAG(PROTO_COM_NAVIGATION_MAP, L"Prototype_Component_Navigation_Map");
@@ -119,14 +121,26 @@ WNAME_TAG(PROTO_COM_COLLIDER_AABB, L"Prototype_Component_Collider_AABB");
 WNAME_TAG(PROTO_COM_COLLIDER_OBB, L"Prototype_Component_Collider_OBB");
 WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
 
+
+
+// Interaction
+WNAME_TAG(PROTO_COM_INTERACTION_DIALOGUE, L"Prototype_Component_Interaction_Dialogue");
+WNAME_TAG(PROTO_COM_INTERACTION_ENCOUNTER, L"Prototype_Component_Interaction_Encounter");
+
+
+
 // Layer
 WNAME_TAG(LAYER_PERSISTENT, L"Layer_Persistent");
 WNAME_TAG(LAYER_BACKGROUND, L"Layer_BackGround");
 WNAME_TAG(LAYER_CAMERA, L"Layer_Camera");
 WNAME_TAG(LAYER_PLAYER, L"Layer_Player");
 WNAME_TAG(LAYER_MONSTER, L"Layer_Monster");
+WNAME_TAG(LAYER_NPC, L"Layer_NPC");
+WNAME_TAG(LAYER_INTERACTABLE, L"Layer_Interactable");
 WNAME_TAG(LAYER_EFFECT, L"Layer_Effect");
 WNAME_TAG(LAYER_UI, L"Layer_UI");
+
+
 
 // Object
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
@@ -154,8 +168,12 @@ WNAME_TAG(PROTO_IMG_FADEBATTLE, L"Prototype_UIImage_FadeBattle");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");
 WNAME_TAG(PROTO_OBJ_PLAYER_STATE, L"Prototype_GameObject_PlayerState");
+
 WNAME_TAG(PROTO_OBJ_BODY_HERO, L"Prototype_GameObject_Body_Hero");
 WNAME_TAG(PROTO_OBJ_BODY_POKEMON, L"Prototype_GameObject_Body_Pokemon");
+WNAME_TAG(PROTO_OBJ_BODY_HUMAN, L"Prototype_GameObject_Body_Human");
+
+WNAME_TAG(PROTO_OBJ_ACTOR_NPC, L"Prototype_GameObject_Actor_NPC");
 
 WNAME_TAG(PROTO_MAP_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_MAP_TOWN02, L"Prototype_MapObject_Town02");
@@ -163,15 +181,23 @@ WNAME_TAG(PROTO_MAP_ROAD01, L"Prototype_MapObject_Road01");
 
 WNAME_TAG(PROTO_BMAP_TOWN, L"Prototype_BattleMap_Town");
 
+
+
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
 WNAME_TAG(COM_TEXTURE_MASK, L"Com_Texture_Mask");
 WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
 WNAME_TAG(COM_TEXTURE_NOISE, L"Com_Texture_Noise");
 
+WNAME_TAG(COM_INTERACTION_DIALOGUE, L"Com_Interaction_Dialogue");
+
+
+
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");
 WNAME_TAG(PART_WEAPON, L"Part_Weapon");
+
+
 
 // Font
 WNAME_TAG(FONT_MALGUN, L"Font_Malgun");

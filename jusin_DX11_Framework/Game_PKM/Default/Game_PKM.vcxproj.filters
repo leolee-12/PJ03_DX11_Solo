@@ -88,9 +88,6 @@
     <Filter Include="03. Components">
       <UniqueIdentifier>{aa94a3f4-a191-4349-9cd2-62d519beeb8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Components\UI_Instance">
-      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. PartObject">
       <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
     </Filter>
@@ -135,6 +132,15 @@
     </Filter>
     <Filter Include="07. UI\Image_Custom">
       <UniqueIdentifier>{5fe30791-b6fd-4f3a-8499-8e2f2bf206e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\01. Interaction">
+      <UniqueIdentifier>{a65c6751-2841-4ac4-a429-d2b3ee7e5dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\00. UI_Instance">
+      <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameActor\01. NPC">
+      <UniqueIdentifier>{ab8b83a2-815e-47e3-a3d4-4fe612e05281}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -211,7 +217,7 @@
       <Filter>06. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
-      <Filter>03. Components\UI_Instance</Filter>
+      <Filter>03. Components\00. UI_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController.h">
       <Filter>07. UI\Controller</Filter>
@@ -372,6 +378,24 @@
     <ClInclude Include="..\Public\UIImage_FadeBattle.h">
       <Filter>07. UI\Image_Custom</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Interaction.h">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interaction_Dialogue.h">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interaction_Encounter.h">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Human.h">
+      <Filter>04. PartObject\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Actor.h">
+      <Filter>02. GameActor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Actor_NPC.h">
+      <Filter>02. GameActor\01. NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -435,7 +459,7 @@
       <Filter>06. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
-      <Filter>03. Components\UI_Instance</Filter>
+      <Filter>03. Components\00. UI_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Game_PresetTable.cpp">
       <Filter>97. Game_API</Filter>
@@ -559,6 +583,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIImage_FadeBattle.cpp">
       <Filter>07. UI\Image_Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction.cpp">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction_Dialogue.cpp">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction_Encounter.cpp">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Human.cpp">
+      <Filter>04. PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Actor.cpp">
+      <Filter>02. GameActor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Actor_NPC.cpp">
+      <Filter>02. GameActor\01. NPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

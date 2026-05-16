@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Actor.h" />
+    <ClInclude Include="..\Public\Actor_NPC.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\Public\BattleMsg.h" />
     <ClInclude Include="..\Public\BattlePlate.h" />
@@ -45,6 +47,7 @@
     <ClInclude Include="..\Public\Battle_Trainer.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\Body_Hero.h" />
+    <ClInclude Include="..\Public\Body_Human.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
@@ -52,6 +55,7 @@
     <ClInclude Include="..\Public\Damage_Pipe.h" />
     <ClInclude Include="..\Public\Damage_Calculator.h" />
     <ClInclude Include="..\Public\Damage_Modifiers.h" />
+    <ClInclude Include="..\Public\Interaction_Dialogue.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
     <ClInclude Include="..\Public\Explosion.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
@@ -71,6 +75,8 @@
     <ClInclude Include="..\Public\IBattleEventListener.h" />
     <ClInclude Include="..\Public\IBattleState.h" />
     <ClInclude Include="..\Public\IDamageModifier.h" />
+    <ClInclude Include="..\Public\Interaction.h" />
+    <ClInclude Include="..\Public\Interaction_Encounter.h" />
     <ClInclude Include="..\Public\Level_Battle.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -99,6 +105,8 @@
     <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Actor.cpp" />
+    <ClCompile Include="..\Private\Actor_NPC.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\BattleMsg.cpp" />
     <ClCompile Include="..\Private\BattlePlate.cpp" />
@@ -121,12 +129,14 @@
     <ClCompile Include="..\Private\Battle_Trainer.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\Private\Body_Hero.cpp" />
+    <ClCompile Include="..\Private\Body_Human.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Pokemon.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
     <ClCompile Include="..\Private\Damage_Modifiers.cpp" />
+    <ClCompile Include="..\Private\Interaction_Dialogue.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
     <ClCompile Include="..\Private\Explosion.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
@@ -135,6 +145,8 @@
     <ClCompile Include="..\Private\Battle_Session.cpp" />
     <ClCompile Include="..\Private\Battle_Stream.cpp" />
     <ClCompile Include="..\Private\Game_PresetTable.cpp" />
+    <ClCompile Include="..\Private\Interaction.cpp" />
+    <ClCompile Include="..\Private\Interaction_Encounter.cpp" />
     <ClCompile Include="..\Private\Level_Battle.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />

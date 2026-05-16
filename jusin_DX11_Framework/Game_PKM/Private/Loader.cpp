@@ -25,6 +25,9 @@
 #include "Body_Pokemon.h"
 #include "RenderRule_Manager.h"
 #include "UIImage_FadeBattle.h"
+#include "Body_Human.h"
+#include "Interaction_Dialogue.h"
+#include "Actor_NPC.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -489,6 +492,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CCollider::Create(m_pDevice, m_pContext, COLLIDER::SPHERE); },
 		TEXT("Prototype_Component_Collider_Sphere"));
 
+	// ---------- Interaction ----------
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_DIALOGUE,
+		[this] { return CInteraction_Dialogue::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_Interaction_Dialogue"));
+
+
 	// ---------- Objects ----------
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
 		[this] { return CPlayer_LGPE::Create(m_pDevice, m_pContext); },
@@ -497,6 +506,18 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HERO,
 		[this] { return CBody_Hero::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Body_Hero"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_POKEMON,
+		[this] { return CBody_Pokemon::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Body_Pokemon"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HUMAN,
+		[this] { return CBody_Human::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Body_Human"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
+		[this] { return CActor_NPC::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Actor_NPC"));
 
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
 		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
@@ -545,7 +566,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_VIBuffer_Terrain"));
 
 	/* Prototype_Component_Model_Fiona */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIONA,
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_FIONA,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.wmodel"); },
 		TEXT("Prototype_Component_Model_Fiona"));
 
@@ -726,10 +747,6 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
 		[this] { return CBattle_Trainer::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Battle_Trainer"));
-
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_POKEMON,
-		[this] { return CBody_Pokemon::Create(m_pDevice, m_pContext); },
-		TEXT("Prototype_GameObject_Body_Pokemon"));
 
 	return S_OK;
 }

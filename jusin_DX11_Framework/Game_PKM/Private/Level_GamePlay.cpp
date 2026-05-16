@@ -10,6 +10,9 @@
 #include "Level_Battle.h"
 #include "Game_LevelEntry.h"
 #include "Battle_Session.h"
+#include "Body_Human.h"
+#include "Body_Pokemon.h"
+#include "Actor_NPC.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -39,6 +42,9 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Layer_NPC(LAYER_NPC)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT)))
 		return E_FAIL;
@@ -52,6 +58,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	pCamera->Set_FollowOffset({ 0.f, 6.5f, -7.5f });
 	m_pGameInstance->Set_MainCamera(pCamera);
 	pCamera->Set_Following(true);
+	pCamera->Set_ControlEnabled(true);
 
 	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 
@@ -291,6 +298,59 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 	//	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 	//		return E_FAIL;
 	//}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
+{
+	// 1) 인간 NPC (Fiona)
+	{
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_FIONA;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+
+		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
+		NpcDesc.pBodyDesc = &BodyDesc;
+		NpcDesc.strDialogueKey = L"dialogue_npc_human";
+		NpcDesc.vSpawnPos = _float3(21.f, 0.f, -13.f);   // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
+			CURRENT_LEVEL, strLayerTag,
+			&NpcDesc)))
+			return E_FAIL;
+	}
+
+	// 2) 포켓몬 NPC (피카츄 외형, 대화 가능)
+	{
+		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
+		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = nullptr;                    // RenderRule 매니저 사용 시 채움
+
+		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+		NpcDesc.pBodyDesc = &BodyDesc;
+		NpcDesc.strDialogueKey = L"dialogue_npc_pokemon";
+		NpcDesc.vSpawnPos = _float3(19.f, 0.f, -13.f);  // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
+			CURRENT_LEVEL, strLayerTag,
+			&NpcDesc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

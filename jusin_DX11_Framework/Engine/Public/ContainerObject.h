@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "PartObject.h"
 
 NS_BEGIN(Engine)
 
@@ -18,8 +18,19 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	template<typename T>
+	T* Get_Part(WNameID strPartTag)
+	{
+		CPartObject** ppPart = m_PartObjects.find(strPartTag);
+
+		if (nullptr == ppPart)
+			return nullptr;
+
+		return dynamic_cast<T*>(*ppPart);
+	}
+
 protected:
-	WNameMap<class CPartObject*> m_PartObjects;
+	WNameMap<CPartObject*> m_PartObjects;
 
 	MOVEMENT_TUNING m_Tuning = {};
 	MOVEMENT_STATE m_MoveState = {};

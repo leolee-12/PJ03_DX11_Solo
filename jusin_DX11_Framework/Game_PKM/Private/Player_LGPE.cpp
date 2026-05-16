@@ -2,6 +2,14 @@
 #include "GameInstance.h"
 
 #include "Body_Hero.h"
+#include "Actor.h"
+#include "Interaction.h"
+
+namespace
+{
+	constexpr _float INTERACT_MAX_DIST = 3.0f;
+	constexpr _float INTERACT_COS_ANGLE = 0.5f;   // cos(60°)
+}
 
 CPlayer_LGPE::CPlayer_LGPE(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CContainerObject{ pDevice, pContext }
@@ -68,6 +76,9 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 
 	// 3) 다음 프레임 애니메이션 상태
 	Update_AnimState(bHasInput);
+
+	// 4) 상호작용 후보 탐색 + 입력 처리
+	Update_Interaction(fTimeDelta);
 }
 
 void CPlayer_LGPE::Late_Update(_float fTimeDelta)
@@ -151,6 +162,88 @@ void CPlayer_LGPE::Update_AnimState(_bool bHasInput)
 {
 	CBody_Hero* pBody = static_cast<CBody_Hero*>(m_PartObjects[PART_BODY]);
 	pBody->Set_Anim(bHasInput && !m_MoveState.Pivoting ? RUN : IDLE, true);
+}
+
+void CPlayer_LGPE::Update_Interaction(_float fTimeDelta)
+{
+	OutputDebugStringW(L"[Player] Update_Interaction tick\n");
+
+	m_pCurrentInteractTarget = Find_InteractionCandidate();
+
+	if (m_pGameInstance->Key_Down(DIK_F))
+	{
+		OutputDebugStringW(L"[Player] F pressed\n");
+		if (nullptr == m_pCurrentInteractTarget)
+		{
+			OutputDebugStringW(L"[Player] No target (Find_InteractionCandidate returned nullptr\n");
+				return;
+		}
+
+		OutputDebugStringW(L"[Player] Target found, calling Try_Talk\n");
+		Try_Talk();
+	}
+}
+
+CActor* CPlayer_LGPE::Find_InteractionCandidate() const
+{
+	const list<CGameObject*>* pNpcList =
+		m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_NPC);
+
+	if (nullptr == pNpcList || pNpcList->empty())
+		return nullptr;
+
+	const _vector vPlayerPos = m_pTransformCom->Get_State(STATE::POSITION);
+	const _vector vPlayerLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	CActor* pBest = nullptr;
+	_float fBestDistSq = INTERACT_MAX_DIST * INTERACT_MAX_DIST;
+
+	for (CGameObject* pObject : *pNpcList)
+	{
+		CActor* pActor = dynamic_cast<CActor*>(pObject);
+		if (nullptr == pActor)
+			continue;
+
+		const _vector vNpcPos = pActor->Get_Transform()->Get_State(STATE::POSITION);
+		const _vector vDelta = vNpcPos - vPlayerPos;
+		const _float fDistSq = XMVectorGetX(XMVector3LengthSq(vDelta));
+
+		if (fDistSq > fBestDistSq)
+			continue;
+
+		const _vector vToNpc = XMVector3Normalize(vDelta);
+		const _float fDot = XMVectorGetX(XMVector3Dot(vPlayerLook, vToNpc));
+
+		if (fDot < INTERACT_COS_ANGLE)
+			continue;
+
+		pBest = pActor;
+		fBestDistSq = fDistSq;
+	}
+
+	return pBest;
+}
+
+void CPlayer_LGPE::Try_Talk()
+{
+	if (nullptr == m_pCurrentInteractTarget)
+		return;
+
+	INTERACTION_CONTEXT ctx;
+	ctx.pCaller = this;
+	ctx.pTarget = m_pCurrentInteractTarget;
+	ctx.eEvent = INTERACTION_EVENT::TALK;
+
+	const _vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	XMStoreFloat4(&ctx.vCallerPosition, vPos);
+
+	const _vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	XMStoreFloat4(&ctx.vCallerLook, vLook);
+
+	const _bool bResult = m_pCurrentInteractTarget->TryInteract(ctx);
+	OutputDebugStringW(bResult
+		? L"[Player] TryInteract = true\n"
+		: L"[Player] TryInteract = false\n");
 }
 
 CPlayer_LGPE* CPlayer_LGPE::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
