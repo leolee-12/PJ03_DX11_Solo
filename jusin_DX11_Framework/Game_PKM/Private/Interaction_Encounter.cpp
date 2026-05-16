@@ -1,4 +1,8 @@
 #include "Interaction_Encounter.h"
+#include "Level_GamePlay.h"
+
+#include "GameInstance.h"
+#include "Level.h"
 
 CInteraction_Encounter::CInteraction_Encounter(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CInteraction{ pDevice, pContext }
@@ -56,9 +60,23 @@ void CInteraction_Encounter::Execute(const INTERACTION_CONTEXT& ctx)
 		m_iSpeciesID, m_iLevel);
 	OutputDebugStringW(szLog);
 
-	// TODO: Capture 레벨 구현 후 옵션 B 로 확장
-	// m_pGameInstance->Get_EncounterService()->Start(m_iSpeciesID, m_iLevel);
-	// → CLevel_GamePlay::Request_Capture(CAPTURE_ENV{...}) 호출 흐름으로 연결 예정
+	/* 현재 활성 레벨이 GAMEPLAY 일 때만 Capture 진입 요청.
+	   GAMEPLAY 외 상태에서 Wild 액터에 닿는 경로는 정상 동선이 아니므로 무시. */
+	CLevel* pCurrent = m_pGameInstance->Get_CurrentLevelPtr();
+	CLevel_GamePlay* pGamePlay = dynamic_cast<CLevel_GamePlay*>(pCurrent);
+	if (nullptr == pGamePlay)
+	{
+		OutputDebugStringW(L"[Interaction_Encounter] Skip: current level is not GAMEPLAY\n");
+		return;
+	}
+
+	CAPTURE_ENV tEnv = {};
+	tEnv.iSpeciesID = m_iSpeciesID;
+	tEnv.iLevel = m_iLevel;
+	tEnv.iInitialBallItemID = 0;   // 후속 단위에서 야생 액터 기본 볼 ID 로 채움
+	tEnv.iZoneID = 0;   // 후속 단위에서 GAMEPLAY 의 현재 존 ID 주입
+
+	pGamePlay->Request_Capture(tEnv);
 }
 
 CInteraction_Encounter* CInteraction_Encounter::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

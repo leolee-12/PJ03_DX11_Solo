@@ -260,6 +260,11 @@ _int CGameInstance::Get_CurrentLevel() const
 	return m_pLevel_Manager->Get_CurrentLevel();
 }
 
+CLevel* CGameInstance::Get_CurrentLevelPtr() const
+{
+	return m_pLevel_Manager->Get_CurrentLevelPtr();
+}
+
 _bool CGameInstance::Is_Level_Active(_uint iLevel) const
 {
 	return m_pLevel_Manager->Is_Level_Active(iLevel);

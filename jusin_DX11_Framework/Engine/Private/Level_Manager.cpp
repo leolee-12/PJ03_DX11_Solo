@@ -74,6 +74,14 @@ HRESULT CLevel_Manager::Pop_Level()
     return S_OK;
 }
 
+CLevel* CLevel_Manager::Get_CurrentLevelPtr() const
+{
+    if (m_LevelStack.empty())
+        return nullptr;
+
+    return m_LevelStack.back().pLevel;
+}
+
 _bool CLevel_Manager::Is_Level_Active(_uint iLevel) const
 {
     /* STATIC(0번 슬롯)은 항상 활성 (영속) */

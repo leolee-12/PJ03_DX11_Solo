@@ -186,8 +186,6 @@ void CPlayer_LGPE::Update_AnimState(_bool bHasInput)
 
 void CPlayer_LGPE::Update_Interaction(_float fTimeDelta)
 {
-	OutputDebugStringW(L"[Player] Update_Interaction tick\n");
-
 	m_pCurrentInteractTarget = Find_InteractionCandidate();
 
 	if (m_pGameInstance->Key_Down(DIK_F))

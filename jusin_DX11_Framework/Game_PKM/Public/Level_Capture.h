@@ -6,6 +6,7 @@
 #include "Level.h"
 
 NS_BEGIN(Game_PKM)
+class CCapture_Manager;
 
 class CLevel_Capture final : public CLevel
 {
@@ -23,6 +24,7 @@ private:
 
 private:
 	CAPTURE_ENV m_tEnv = {};
+	CCapture_Manager* m_pCaptureManager = { nullptr };
 
 public:
 	static CLevel_Capture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LEVEL_ENTRY_DESC* pEntryDesc);

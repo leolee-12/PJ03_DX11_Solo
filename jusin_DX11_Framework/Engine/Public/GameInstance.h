@@ -7,6 +7,7 @@
 /* ------------------------------------------------------------ */
 
 NS_BEGIN(Engine)
+class CLevel;
 
 class ENGINE_DLL CGameInstance final : public CBase
 {
@@ -45,6 +46,7 @@ public:
 	HRESULT Push_Level(_int iLevelIndex, class CLevel* pNewLevel);
 	HRESULT Pop_Level();
 	_int    Get_CurrentLevel() const;
+	CLevel* Get_CurrentLevelPtr() const;
 	_bool   Is_Level_Active(_uint iLevel) const;
 #pragma endregion
 

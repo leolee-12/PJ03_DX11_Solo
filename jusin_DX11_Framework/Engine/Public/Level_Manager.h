@@ -28,6 +28,7 @@ private:
 
 public:
 	_int  Get_CurrentLevel() const { return m_iCurrentLevelIndex; }
+	CLevel* Get_CurrentLevelPtr() const;
 	_bool Is_Level_Active(_uint iLevel) const;
 
 	HRESULT Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);	// 스택 정리 후 새 레벨로 시작

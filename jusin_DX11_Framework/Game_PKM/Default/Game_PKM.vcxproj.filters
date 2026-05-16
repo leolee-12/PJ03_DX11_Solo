@@ -426,6 +426,9 @@
     <ClInclude Include="..\Public\Level_Capture.h">
       <Filter>00. Levels\04. Capture</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Capture_Manager.h">
+      <Filter>04. Contents\01. Capture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -643,6 +646,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Capture.cpp">
       <Filter>00. Levels\04. Capture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Capture_Manager.cpp">
+      <Filter>04. Contents\01. Capture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

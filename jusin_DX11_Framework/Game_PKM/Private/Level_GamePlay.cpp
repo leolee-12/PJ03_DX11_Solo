@@ -198,17 +198,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		return;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_O))
-	{
-		CAPTURE_ENV tEnv = {};
-		tEnv.iSpeciesID = 25;
-		tEnv.iLevel = 5;
-		tEnv.iInitialBallItemID = 0;
-		tEnv.iZoneID = 0;
-		Request_Capture(tEnv);
-		return;
-	}
-
 	/* 등록된 모든 UI 컨트롤러에 Update 전파. 닫혀 있으면 베이스가 즉시 return. */
 	UI_Update_All(fTimeDelta);
 }
