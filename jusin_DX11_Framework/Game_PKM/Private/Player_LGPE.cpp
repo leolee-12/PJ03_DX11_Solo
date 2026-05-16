@@ -1,14 +1,14 @@
-#include "Player_LGPE.h"
-#include "GameInstance.h"
-
+ï»¿#include "Player_LGPE.h"
 #include "Body_Hero.h"
 #include "Actor.h"
 #include "Interaction.h"
 
+#include "GameInstance.h"
+
 namespace
 {
 	constexpr _float INTERACT_MAX_DIST = 3.0f;
-	constexpr _float INTERACT_COS_ANGLE = 0.5f;   // cos(60¡Æ)
+	constexpr _float INTERACT_COS_ANGLE = 0.5f;   // cos(60Â°)
 }
 
 CPlayer_LGPE::CPlayer_LGPE(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -60,24 +60,28 @@ void CPlayer_LGPE::Priority_Update(_float fTimeDelta)
 
 void CPlayer_LGPE::Update(_float fTimeDelta)
 {
-	// 1) ÆÄÃ÷ ¾Ö´Ï¸ÞÀÌ¼Ç ÁøÇà : ÀÌÀü ÇÁ·¹ÀÓ¿¡ ¾Ö´Ô °áÁ¤ -> RootMotionDelta »ý¼º
+	// 1) íŒŒì¸  ì• ë‹ˆë©”ì´ì…˜ ì§„í–‰ : ì´ì „ í”„ë ˆìž„ì— ì• ë‹˜ ê²°ì • -> RootMotionDelta ìƒì„±
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
 			if (nullptr != Pair.second)
 				Pair.second->Update(fTimeDelta);
 		});
 	
-	// 2) ÀÔ·Â -> ÀÌµ¿ ¹æÇâ
+	// 2) ìž…ë ¥ -> ì´ë™ ë°©í–¥
 	_vector vMoveDir = Read_MoveInput();
 	_bool bHasInput = (XMVectorGetX(XMVector3LengthSq(vMoveDir)) > 1e-6f);
 	CBody_Hero* pBody = static_cast<CBody_Hero*>(m_PartObjects[PART_BODY]);
 
 	Tick_RootMotionMovement(vMoveDir, bHasInput, pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
 
-	// 3) ´ÙÀ½ ÇÁ·¹ÀÓ ¾Ö´Ï¸ÞÀÌ¼Ç »óÅÂ
+	// 2.5) ì½œë¼ì´ë” world ê°±ì‹  â€” ìœ„ì¹˜ í™•ì • ì§í›„
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Update(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+
+	// 3) ë‹¤ìŒ í”„ë ˆìž„ ì• ë‹ˆë©”ì´ì…˜ ìƒíƒœ
 	Update_AnimState(bHasInput);
 
-	// 4) »óÈ£ÀÛ¿ë ÈÄº¸ Å½»ö + ÀÔ·Â Ã³¸®
+	// 4) ìƒí˜¸ìž‘ìš© í›„ë³´ íƒìƒ‰ + ìž…ë ¥ ì²˜ë¦¬
 	Update_Interaction(fTimeDelta);
 }
 
@@ -89,9 +93,12 @@ void CPlayer_LGPE::Late_Update(_float fTimeDelta)
 				Pair.second->Late_Update(fTimeDelta);
 		});
 
+	Update_TouchTriggers();
+
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+
 #ifdef _DEBUG
-	//m_pGameInstance->Add_DebugComponent(m_pColliderCom);
+	m_pGameInstance->Add_DebugComponent(m_pColliderCom);
 	m_pGameInstance->Add_DebugComponent(m_pNavigationCom);
 #endif
 }
@@ -108,6 +115,15 @@ HRESULT CPlayer_LGPE::Ready_Components()
 
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
 		COM_NAVIGATION, reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Collider_Sphere â€” TOUCH íŠ¸ë¦¬ê±°ìš© */
+	CBounding_Sphere::BOUNDING_SPHERE_DESC SphereDesc{};
+	SphereDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+	SphereDesc.fRadius = 0.5f;
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_SPHERE,
+		COM_COLLIDER_SPHERE, reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -246,6 +262,74 @@ void CPlayer_LGPE::Try_Talk()
 		: L"[Player] TryInteract = false\n");
 }
 
+void CPlayer_LGPE::Update_TouchTriggers()
+{
+	const list<CGameObject*>* pList =
+		m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_INTERACTABLE);
+
+	unordered_set<CActor*> CurrentTouchSet;
+
+	if (nullptr == m_pColliderCom || nullptr == pList || pList->empty())
+	{
+		m_PrevTouchSet.clear();
+		return;
+	}
+
+	CActor* pNewlyEnteredFirst = nullptr;
+
+	for (CGameObject* pObject : *pList)
+	{
+		CActor* pActor = dynamic_cast<CActor*>(pObject);
+		if (nullptr == pActor)
+			continue;
+
+		CCollider* pTargetCollider = pActor->Get_Component<CCollider>(COM_COLLIDER_SPHERE);
+		if (nullptr == pTargetCollider)
+			continue;
+
+		if (!m_pColliderCom->Intersect(pTargetCollider))
+			continue;
+
+		CurrentTouchSet.insert(pActor);
+
+		// ì§ì „ í”„ë ˆìž„ì—ë„ overlap ì´ì—ˆìœ¼ë©´ Enter ê°€ ì•„ë‹˜ â€” ë°œí™” ì œì™¸
+		if (m_PrevTouchSet.find(pActor) != m_PrevTouchSet.end())
+			continue;
+
+		// ì²« Enter ì•¡í„° 1ê°œë§Œ ë°œí™” (ë‹¤ì¤‘ ì§„ìž… ì‹œ ì¤‘ë³µ Push_Level ë°©ì§€)
+		if (nullptr == pNewlyEnteredFirst)
+			pNewlyEnteredFirst = pActor;
+	}
+
+	if (nullptr != pNewlyEnteredFirst)
+		Fire_Touch(pNewlyEnteredFirst);
+
+	// weak ë¹„êµë§Œ ìˆ˜í–‰ â€” dangling ì•ˆì „. OnPause/OnResume í›… ë„ìž… ì‹œ OnResume ì—ì„œ clear() ê¶Œìž¥.
+	m_PrevTouchSet = std::move(CurrentTouchSet);
+}
+
+void CPlayer_LGPE::Fire_Touch(CActor* pActor)
+{
+	if (nullptr == pActor)
+		return;
+
+	INTERACTION_CONTEXT ctx;
+	ctx.pCaller = this;
+	ctx.pTarget = pActor;
+	ctx.eEvent = INTERACTION_EVENT::TOUCH;
+
+	const _vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	XMStoreFloat4(&ctx.vCallerPosition, vPos);
+
+	const _vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	XMStoreFloat4(&ctx.vCallerLook, vLook);
+
+	const _bool bResult = pActor->TryInteract(ctx);
+	OutputDebugStringW(bResult
+		? L"[Player] TOUCH fired = true\n"
+		: L"[Player] TOUCH fired = false\n");
+}
+
 CPlayer_LGPE* CPlayer_LGPE::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer_LGPE* pInstance = new CPlayer_LGPE(pDevice, pContext);
@@ -274,7 +358,10 @@ CGameObject* CPlayer_LGPE::Clone(void* pArg)
 
 void CPlayer_LGPE::Free()
 {
-	__super::Free();
+	m_PrevTouchSet.clear();
 
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pNavigationCom);
+	
+	__super::Free();
 }

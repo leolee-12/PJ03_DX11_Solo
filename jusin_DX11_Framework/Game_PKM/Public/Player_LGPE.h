@@ -3,7 +3,7 @@
 #include "ContainerObject.h"
 
 NS_BEGIN(Engine)
-
+class CCollider;
 NS_END
 
 NS_BEGIN(Game_PKM)
@@ -34,7 +34,9 @@ public:
 private:
 	_uint m_iState = {};
 	CNavigation* m_pNavigationCom = { nullptr };
+	CCollider* m_pColliderCom = { nullptr };
 	CActor* m_pCurrentInteractTarget = { nullptr };   // weak — 매 프레임 후보 갱신
+	unordered_set<CActor*> m_PrevTouchSet;             // 직전 프레임 overlap 액터 (weak)
 
 private:
 	HRESULT Ready_Components();
@@ -47,6 +49,9 @@ private:
 	void Update_Interaction(_float fTimeDelta);
 	CActor* Find_InteractionCandidate() const;
 	void Try_Talk();
+
+	void Update_TouchTriggers();
+	void Fire_Touch(CActor* pActor);
 
 public:
 	static CPlayer_LGPE* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -13,6 +13,8 @@
 #include "Body_Human.h"
 #include "Body_Pokemon.h"
 #include "Actor_NPC.h"
+#include "Actor_WildPokemon.h"
+#include "RenderRule_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -44,6 +46,9 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 	
 	if (FAILED(Ready_Layer_NPC(LAYER_NPC)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Wild(LAYER_INTERACTABLE)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT)))
@@ -304,13 +309,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 {
-	// 1) 인간 NPC (Fiona)
+	auto* pRuleManager = CRenderRule_Manager::GetInstance();
+	if (nullptr == pRuleManager)
+		return E_FAIL;
+
+	// 1) 인간 NPC
 	{
 		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_FIONA;
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_ROCK;
 		BodyDesc.iDefaultAnim = 0;
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
+			"../../Resources/Models/people/rock/rock_mapping.json");
 
 		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
 		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
@@ -318,7 +329,82 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		NpcDesc.pBodyDesc = &BodyDesc;
 		NpcDesc.strDialogueKey = L"dialogue_npc_human";
-		NpcDesc.vSpawnPos = _float3(21.f, 0.f, -13.f);   // 검수 시 조정
+		NpcDesc.vSpawnPos = _float3(21.f, 0.f, -14.f);   // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
+			CURRENT_LEVEL, strLayerTag,
+			&NpcDesc)))
+			return E_FAIL;
+	}
+
+	// 1) 인간 NPC
+	{
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_WATER;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
+			"../../Resources/Models/people/water/water_mapping.json");
+
+		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
+		NpcDesc.pBodyDesc = &BodyDesc;
+		NpcDesc.strDialogueKey = L"dialogue_npc_human";
+		NpcDesc.vSpawnPos = _float3(22.f, 0.f, -14.f);   // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
+			CURRENT_LEVEL, strLayerTag,
+			&NpcDesc)))
+			return E_FAIL;
+	}
+
+	// 1) 인간 NPC
+	{
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_FAT;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
+			"../../Resources/Models/people/fat/fat_mapping.json");
+
+		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
+		NpcDesc.pBodyDesc = &BodyDesc;
+		NpcDesc.strDialogueKey = L"dialogue_npc_human";
+		NpcDesc.vSpawnPos = _float3(23.f, 0.f, -14.f);   // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
+			CURRENT_LEVEL, strLayerTag,
+			&NpcDesc)))
+			return E_FAIL;
+	}
+
+	// 1) 인간 NPC
+	{
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_DOCTOR;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
+			"../../Resources/Models/people/doctor/doctor_mapping.json");
+
+		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
+		NpcDesc.pBodyDesc = &BodyDesc;
+		NpcDesc.strDialogueKey = L"dialogue_npc_human";
+		NpcDesc.vSpawnPos = _float3(24.f, 0.f, -14.f);   // 검수 시 조정
 
 		if (FAILED(m_pGameInstance->Add_GameObject(
 			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
@@ -335,7 +421,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 		BodyDesc.iDefaultAnim = 0;
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = nullptr;                    // RenderRule 매니저 사용 시 채움
+		BodyDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule(
+			"../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json");
 
 		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
 		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
@@ -349,6 +436,63 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
 			CURRENT_LEVEL, strLayerTag,
 			&NpcDesc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
+{
+	// 1) Wild — Pikachu Lv5
+	{
+		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
+		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = nullptr;
+
+		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
+		WildDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		WildDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		WildDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+		WildDesc.pBodyDesc = &BodyDesc;
+		WildDesc.iSpeciesID = 25;
+		WildDesc.iLevel = 5;
+		WildDesc.vSpawnPos = _float3(19.f, 0.f, -8.f);   // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_WILD_POKEMON,
+			CURRENT_LEVEL, strLayerTag,
+			&WildDesc)))
+			return E_FAIL;
+	}
+
+	// 2) Wild — Bulbasaur Lv5
+	{
+		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0001_00;
+		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = 1.f;
+		BodyDesc.pRenderRule = nullptr;
+
+		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
+		WildDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		WildDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		WildDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+		WildDesc.pBodyDesc = &BodyDesc;
+		WildDesc.iSpeciesID = 1;
+		WildDesc.iLevel = 5;
+		WildDesc.vSpawnPos = _float3(21.f, 0.f, -8.f);   // 검수 시 조정
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			CURRENT_LEVEL, PROTO_OBJ_ACTOR_WILD_POKEMON,
+			CURRENT_LEVEL, strLayerTag,
+			&WildDesc)))
 			return E_FAIL;
 	}
 

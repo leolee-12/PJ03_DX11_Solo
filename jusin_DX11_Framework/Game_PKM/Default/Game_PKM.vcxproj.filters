@@ -142,6 +142,12 @@
     <Filter Include="02. GameActor\01. NPC">
       <UniqueIdentifier>{ab8b83a2-815e-47e3-a3d4-4fe612e05281}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. ShaderFiles\Body">
+      <UniqueIdentifier>{8801ab90-8eee-404d-aa1f-eb99cd9cea89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameActor\02. Wild">
+      <UniqueIdentifier>{550aa659-6d0a-4f7d-b12b-2c6e2fcbdf66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -396,6 +402,15 @@
     <ClInclude Include="..\Public\Actor_NPC.h">
       <Filter>02. GameActor\01. NPC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Actor_WildPokemon.h">
+      <Filter>02. GameActor\02. Wild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Actor_CaptureTarget.h">
+      <Filter>02. GameActor\02. Wild</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interaction_BallHit.h">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -602,6 +617,15 @@
     <ClCompile Include="..\Private\Actor_NPC.cpp">
       <Filter>02. GameActor\01. NPC</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Actor_WildPokemon.cpp">
+      <Filter>02. GameActor\02. Wild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Actor_CaptureTarget.cpp">
+      <Filter>02. GameActor\02. Wild</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction_BallHit.cpp">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
@@ -617,9 +641,6 @@
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxCube.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
@@ -643,11 +664,17 @@
     <FxCompile Include="..\ShaderFiles\Shader_UIImage.hlsl">
       <Filter>98. ShaderFiles\UI</Filter>
     </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl">
       <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl">
+      <Filter>98. ShaderFiles\Body</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl">
+      <Filter>98. ShaderFiles\Body</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl">
+      <Filter>98. ShaderFiles\Body</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

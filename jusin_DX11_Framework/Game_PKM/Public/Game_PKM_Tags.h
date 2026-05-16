@@ -80,6 +80,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXPOINTINST, L"Prototype_Component_Shader_VtxPointIn
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
 WNAME_TAG(PROTO_COM_SHADER_POKEMON, L"Prototype_Component_Shader_Pokemon");
+WNAME_TAG(PROTO_COM_SHADER_HUMAN, L"Prototype_Component_Shader_Human");
 WNAME_TAG(PROTO_COM_SHADER_MAP, L"Prototype_Component_Shader_Map");
 WNAME_TAG(PROTO_COM_SHADER_UI, L"Prototype_Component_Shader_UI");
 WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance");
@@ -105,6 +106,11 @@ WNAME_TAG(PROTO_COM_MODEL_PM0007_00, L"Prototype_Component_Model_²¿ºÎ±â");
 WNAME_TAG(PROTO_COM_MODEL_PM0025_00, L"Prototype_Component_Model_ÇÇÄ«Ãò");
 
 WNAME_TAG(PROTO_COM_MODEL_HERO, L"Prototype_Component_Model_Hero");
+WNAME_TAG(PROTO_COM_MODEL_HEROINE, L"Prototype_Component_Model_Heroine");
+WNAME_TAG(PROTO_COM_MODEL_DOCTOR, L"Prototype_Component_Model_Doctor");
+WNAME_TAG(PROTO_COM_MODEL_PPL_ROCK, L"Prototype_Component_Model_People_Rock");
+WNAME_TAG(PROTO_COM_MODEL_PPL_WATER, L"Prototype_Component_Model_People_Water");
+WNAME_TAG(PROTO_COM_MODEL_PPL_FAT, L"Prototype_Component_Model_People_Fat");
 
 WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN01, L"Prototype_Component_Model_Map_Town01");
 WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN02, L"Prototype_Component_Model_Map_Town02");
@@ -126,6 +132,7 @@ WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
 // Interaction
 WNAME_TAG(PROTO_COM_INTERACTION_DIALOGUE, L"Prototype_Component_Interaction_Dialogue");
 WNAME_TAG(PROTO_COM_INTERACTION_ENCOUNTER, L"Prototype_Component_Interaction_Encounter");
+WNAME_TAG(PROTO_COM_INTERACTION_BALLHIT, L"Prototype_Component_Interaction_BallHit");
 
 
 
@@ -174,6 +181,8 @@ WNAME_TAG(PROTO_OBJ_BODY_POKEMON, L"Prototype_GameObject_Body_Pokemon");
 WNAME_TAG(PROTO_OBJ_BODY_HUMAN, L"Prototype_GameObject_Body_Human");
 
 WNAME_TAG(PROTO_OBJ_ACTOR_NPC, L"Prototype_GameObject_Actor_NPC");
+WNAME_TAG(PROTO_OBJ_ACTOR_WILD_POKEMON, L"Prototype_GameObject_Actor_WildPokemon");
+WNAME_TAG(PROTO_OBJ_ACTOR_CAPTURE_TARGET, L"Prototype_GameObject_Actor_CaptureTarget");
 
 WNAME_TAG(PROTO_MAP_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_MAP_TOWN02, L"Prototype_MapObject_Town02");
@@ -190,6 +199,8 @@ WNAME_TAG(COM_TEXTURE_BRUSH, L"Com_Texture_Brush");
 WNAME_TAG(COM_TEXTURE_NOISE, L"Com_Texture_Noise");
 
 WNAME_TAG(COM_INTERACTION_DIALOGUE, L"Com_Interaction_Dialogue");
+WNAME_TAG(COM_INTERACTION_ENCOUNTER, L"Com_Interaction_Encounter");
+WNAME_TAG(COM_INTERACTION_BALLHIT, L"Com_Interaction_BallHit");
 
 
 

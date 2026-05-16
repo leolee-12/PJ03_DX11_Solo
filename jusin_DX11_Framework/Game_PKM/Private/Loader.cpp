@@ -26,8 +26,12 @@
 #include "RenderRule_Manager.h"
 #include "UIImage_FadeBattle.h"
 #include "Body_Human.h"
-#include "Interaction_Dialogue.h"
 #include "Actor_NPC.h"
+#include "Actor_WildPokemon.h"
+#include "Actor_CaptureTarget.h"
+#include "Interaction_Dialogue.h"
+#include "Interaction_Encounter.h"
+#include "Interaction_BallHit.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -433,6 +437,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Player_LGPE"));
 
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_HUMAN,
+		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Human.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
+		TEXT("Prototype_Component_Shader_Human"));
+
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_MAP,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Map.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Map"));
@@ -462,6 +470,28 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel"); },
 		TEXT("Prototype_Component_Model_Hero"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_DOCTOR,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/doctor/doctor.wmodel"); },
+		TEXT("Prototype_Component_Model_Doctor"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_ROCK,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/rock/rock.wmodel"); },
+		TEXT("Prototype_Component_Model_People_Rock"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_WATER,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/water/water.wmodel"); },
+		TEXT("Prototype_Component_Model_People_Water"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_FAT,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/fat/fat.wmodel"); },
+		TEXT("Prototype_Component_Model_People_Fat"));
+
+	//WNAME_TAG(PROTO_COM_MODEL_HEROINE, L"Prototype_Component_Model_Heroine");
+	//WNAME_TAG(PROTO_COM_MODEL_DOCTOR, L"Prototype_Component_Model_Doctor");
+	//WNAME_TAG(PROTO_COM_MODEL_PPL_ROCK, L"Prototype_Component_Model_People_Rock");
+	//WNAME_TAG(PROTO_COM_MODEL_PPL_WATER, L"Prototype_Component_Model_People_Water");
+	//WNAME_TAG(PROTO_COM_MODEL_PPL_FAT, L"Prototype_Component_Model_People_Fat");
 
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"); },
@@ -497,6 +527,13 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CInteraction_Dialogue::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_Interaction_Dialogue"));
 
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_ENCOUNTER,
+		[this] { return CInteraction_Encounter::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_Interaction_Encounter"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_BALLHIT,
+		[this] { return CInteraction_BallHit::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_Interaction_BallHit"));
 
 	// ---------- Objects ----------
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
@@ -518,6 +555,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
 		[this] { return CActor_NPC::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Actor_NPC"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_WILD_POKEMON,
+		[this] { return CActor_WildPokemon::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Actor_WildPokemon"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_CAPTURE_TARGET,
+		[this] { return CActor_CaptureTarget::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Actor_CaptureTarget"));
 
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
 		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
