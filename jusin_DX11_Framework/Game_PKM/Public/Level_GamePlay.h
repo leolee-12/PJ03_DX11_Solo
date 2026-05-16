@@ -47,6 +47,7 @@ private:
 	HRESULT Ready_Layer_Player(WNameID strLayerTag);
 	HRESULT Ready_Layer_Monster(WNameID strLayerTag);
 	HRESULT Ready_Layer_NPC(WNameID strLayerTag);
+	HRESULT Ready_Layer_Wild(WNameID strLayerTag);
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
