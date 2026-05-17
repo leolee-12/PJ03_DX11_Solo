@@ -97,6 +97,15 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 					return;
 				}
 
+				/* Push 직전 — Fade 가림 상태에서 충돌 트리거 WildPokemon 을 deferred 삭제.
+				   Layer 가 다음 Update 사이클에서 Safe_Release + 리스트 제거 →
+				   Pop 후 OnResume 시점에 collider 검사 대상에서 자동 빠짐 → 무한 루프 방지. */
+				if (nullptr != m_pPendingDeleteWild)
+				{
+					m_pPendingDeleteWild->Set_Dead();
+					m_pPendingDeleteWild = nullptr;   // weak 초기화 — dangling 차단
+				}
+
 				if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::CAPTURE), pCapture)))
 				{
 					Safe_Release(pCapture);
@@ -242,7 +251,7 @@ void CLevel_GamePlay::OnResume()
 	}
 }
 
-void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv)
+void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTarget)
 {
 	/* 이미 다른 트랜지션 중이거나, UI 가 열려 있거나, Fade 시퀀스 미보유면 무시. */
 	if (TRANSITION_STATE::IDLE != m_eTransition)
@@ -258,6 +267,10 @@ void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv)
 	if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::CAPTURE_ENV, &tEnv,
 		sizeof(CAPTURE_ENV))))
 		return;
+
+	/* 트랜지션이 실제 시작될 때만 삭제 대상 보관 — 가드 통과 후로 두어
+	   UI 열린 상태 등에서 무시된 호출은 WildPokemon 도 그대로 두는 정합성 확보. */
+	m_pPendingDeleteWild = pTarget;   // weak
 
 	/* Fade 시퀀스는 BATTLE 과 공유. CAPTURE 전용 Fade·BGM 분기는 후속에서 결정. */
 	m_pFadeBattleSeq->Set_Visible(true);

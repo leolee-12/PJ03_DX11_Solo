@@ -22,10 +22,13 @@ public:
 
 	void    Begin();
 	void    Update(_float fTimeDelta);
-
+	void    Enter_Aiming();   // INTRO 일 때 메뉴 "준비한다" 로 호출 → AIMING 전이. 다른 페이즈에 호출되면 무시.
+	void    Try_Throw();      // AIMING 일 때 마우스 좌클릭으로 호출 → THROWING 전이.
+	void    Request_Run();    // 메뉴 "도망간다" / ESC 로 호출 → m_eResult=FAIL_RUN, DONE 전이. 이 DONE 이면 무시.
 	_bool   Is_Done() const { return CAPTURE_PHASE::DONE == m_ePhase; }
+	
 
-	const CAPTURE_ENV& Get_Env()    const { return m_tEnv; }
+	const CAPTURE_ENV&	Get_Env()    const { return m_tEnv; }
 	CAPTURE_PHASE       Get_Phase()  const { return m_ePhase; }
 	CAPTURE_RESULT      Get_Result() const { return m_eResult; }
 

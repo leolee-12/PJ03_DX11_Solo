@@ -315,7 +315,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 100.0,
+          "offsetX": 130.0,
           "offsetY": -205.0,
           "useAnchoredPos": true
         },
@@ -368,7 +368,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 100.0,
+          "offsetX": 130.0,
           "offsetY": -150.0,
           "useAnchoredPos": true
         },
@@ -421,7 +421,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 100.0,
+          "offsetX": 130.0,
           "offsetY": -95.0,
           "useAnchoredPos": true
         },
@@ -474,7 +474,7 @@
       "desc": {
         "anchor": {
           "kind": "BL",
-          "offsetX": 100.0,
+          "offsetX": 130.0,
           "offsetY": -40.0,
           "useAnchoredPos": true
         },
@@ -522,6 +522,390 @@
       "id": "widget_009",
       "prototypeTag": "Prototype_UIButton_Layered_Get",
       "type": "BUTTON"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 130.0,
+          "offsetY": -205.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "준비한다",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 2
+        }
+      },
+      "displayName": "Text1",
+      "id": "widget_010",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 130.0,
+          "offsetY": -150.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "가방",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 2
+        }
+      },
+      "displayName": "Text2",
+      "id": "widget_011",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 130.0,
+          "offsetY": -95.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "도움말",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 2
+        }
+      },
+      "displayName": "Text3",
+      "id": "widget_012",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "BL",
+          "offsetX": 130.0,
+          "offsetY": -40.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "도망간다",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 180.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 2
+        }
+      },
+      "displayName": "Text4",
+      "id": "widget_013",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -109.0,
+          "offsetY": 50.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "Name",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 150.0,
+          "sizeY": 36.0,
+          "visible": true,
+          "zOrder": 2
+        }
+      },
+      "displayName": "Name",
+      "id": "widget_014",
+      "type": "TEXT"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -120.0,
+          "offsetY": 96.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_LV"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 48.0,
+          "sizeY": 32.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "LV",
+      "id": "widget_015",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -80.0,
+          "offsetY": 90.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 44.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "LV Num1",
+      "id": "widget_016",
+      "type": "IMAGE"
+    },
+    {
+      "desc": {
+        "anchor": {
+          "kind": "TR",
+          "offsetX": -49.0,
+          "offsetY": 90.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": "Prototype_Component_Texture_Get_Text_Number"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 32.0,
+          "sizeY": 44.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "LV Num2",
+      "id": "widget_017",
+      "type": "IMAGE"
     }
   ]
 }

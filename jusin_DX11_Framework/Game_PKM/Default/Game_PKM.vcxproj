@@ -53,6 +53,7 @@
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\Capture_Menu.h" />
     <ClInclude Include="..\Public\Capture_Manager.h" />
     <ClInclude Include="..\Public\Capture_Session.h" />
     <ClInclude Include="..\Public\CommandQueue.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Menu.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\MonsterBall.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerState.h" />
     <ClInclude Include="..\Public\Player_LGPE.h" />
@@ -141,6 +143,7 @@
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Pokemon.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\Capture_Menu.cpp" />
     <ClCompile Include="..\Private\Capture_Manager.cpp" />
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
@@ -166,6 +169,7 @@
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Menu.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\MonsterBall.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerState.cpp" />
     <ClCompile Include="..\Private\Player_LGPE.cpp" />

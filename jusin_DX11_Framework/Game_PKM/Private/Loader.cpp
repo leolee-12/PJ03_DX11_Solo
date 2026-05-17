@@ -32,6 +32,7 @@
 #include "Interaction_Dialogue.h"
 #include "Interaction_Encounter.h"
 #include "Interaction_BallHit.h"
+#include "MonsterBall.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -311,6 +312,8 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 				}, pDebugName);
 		};
 
+
+
 	// ---------- Texture ----------
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_CURSOR,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/cursor/cursor.png"), 1); },
@@ -408,6 +411,8 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_ptn_%02d.png"), 39); },
 		TEXT("Prototype_Component_Texture_Battle_Fade_Mask"));
 
+
+
 	// ---------- Shader ----------
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXNORTEX,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements); },
@@ -449,10 +454,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIImage.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements); },
 		TEXT("Prototype_Component_Shader_UIImage"));
 
+
+
 	// ---------- VIBuffer ----------
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_CUBE,
 		[this] { return CVIBuffer_Cube::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_VIBuffer_Cube"));
+
+
 
 	// ---------- Model ----------
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0001_00,
@@ -487,12 +496,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/fat/fat.wmodel"); },
 		TEXT("Prototype_Component_Model_People_Fat"));
 
-	//WNAME_TAG(PROTO_COM_MODEL_HEROINE, L"Prototype_Component_Model_Heroine");
-	//WNAME_TAG(PROTO_COM_MODEL_DOCTOR, L"Prototype_Component_Model_Doctor");
-	//WNAME_TAG(PROTO_COM_MODEL_PPL_ROCK, L"Prototype_Component_Model_People_Rock");
-	//WNAME_TAG(PROTO_COM_MODEL_PPL_WATER, L"Prototype_Component_Model_People_Water");
-	//WNAME_TAG(PROTO_COM_MODEL_PPL_FAT, L"Prototype_Component_Model_People_Fat");
-
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"); },
 		TEXT("Prototype_Component_Model_Town01"));
@@ -504,6 +507,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_ROAD01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/road01.wmodel"); },
 		TEXT("Prototype_Component_Model_Road01"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_MONSTER_BALL,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ball/ball.wmodel"); },
+		TEXT("Prototype_Component_Model_MonsterBall"));
+
+
 
 	// ---------- Navigation & Collider ----------
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
@@ -588,6 +597,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_MapObject_Road01"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER_BALL,
+		[this] { return CMonsterBall::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_MonsterBall"));
+
+
 
 #pragma region STUDY
 	// Texture

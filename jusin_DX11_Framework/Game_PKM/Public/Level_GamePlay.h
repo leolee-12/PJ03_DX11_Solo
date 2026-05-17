@@ -10,6 +10,7 @@ class CUIButton;
 class CUIProgressBar;
 class CUIText;
 class CUISequence;
+class CGameObject;
 NS_END
 
 NS_BEGIN(Game_PKM)
@@ -28,7 +29,7 @@ public:
 	virtual void OnPause() override;
 	virtual void OnResume() override;
 
-	void Request_Capture(const CAPTURE_ENV& tEnv);
+	void Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTarget);
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
@@ -41,6 +42,7 @@ private:
 	TRANSITION_STATE m_eTransition{ TRANSITION_STATE::IDLE };
 	_float m_fTransitionElapsed{ 0.f };
 	LEVEL_ENTRY_DESC m_PendingEntryDesc;
+	CGameObject* m_pPendingDeleteWild = { nullptr };   // weak — Push 직전 Set_Dead 호출 후 nullptr 초기화
 	static constexpr _float TRANSITION_PUSH_AT_SEC = 5.0f;
 
 private:

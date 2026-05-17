@@ -83,7 +83,7 @@
           "sizeX": 64.0,
           "sizeY": 64.0,
           "visible": true,
-          "zOrder": 0
+          "zOrder": 10
         },
         "viBuffer": {
           "level": 0,

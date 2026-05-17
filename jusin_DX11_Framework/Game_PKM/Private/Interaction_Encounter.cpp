@@ -76,7 +76,7 @@ void CInteraction_Encounter::Execute(const INTERACTION_CONTEXT& ctx)
 	tEnv.iInitialBallItemID = 0;   // 후속 단위에서 야생 액터 기본 볼 ID 로 채움
 	tEnv.iZoneID = 0;   // 후속 단위에서 GAMEPLAY 의 현재 존 ID 주입
 
-	pGamePlay->Request_Capture(tEnv);
+	pGamePlay->Request_Capture(tEnv, ctx.pTarget);
 }
 
 CInteraction_Encounter* CInteraction_Encounter::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

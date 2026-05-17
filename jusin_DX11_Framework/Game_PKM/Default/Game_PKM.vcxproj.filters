@@ -157,6 +157,18 @@
     <Filter Include="04. Contents\01. Capture">
       <UniqueIdentifier>{9838a4ba-fd25-4a4e-8946-3e2b0a999215}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Objects\04. UI\Controller\Gameplay">
+      <UniqueIdentifier>{28ef0a5e-607b-42e0-b5ea-e36571d1c969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\04. UI\Controller\Battle">
+      <UniqueIdentifier>{d6b751af-1669-4a33-b6b4-1027b50dcbc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\04. UI\Controller\Capture">
+      <UniqueIdentifier>{ed9b42dc-f08d-4a74-b7c5-eef9dfeb1ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\05. Ball">
+      <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -237,9 +249,6 @@
     <ClInclude Include="..\Public\UIController.h">
       <Filter>01. Objects\04. UI\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Menu.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\UIButton_Layered.h">
       <Filter>01. Objects\04. UI\Button_Custom</Filter>
     </ClInclude>
@@ -278,9 +287,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Body_Pokemon.h">
       <Filter>01. Objects\02. PartObject\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BattleMsg.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battler.h">
       <Filter>04. Contents\00. Battle\01. Battler</Filter>
@@ -360,15 +366,6 @@
     <ClInclude Include="..\Public\Battle_MsgListener.h">
       <Filter>04. Contents\00. Battle\05. Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BattlePlate.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_CommandMenu.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_MoveMenu.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Battle_InputDirector.h">
       <Filter>04. Contents\00. Battle\05. Events</Filter>
     </ClInclude>
@@ -428,6 +425,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Capture_Manager.h">
       <Filter>04. Contents\01. Capture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Menu.h">
+      <Filter>01. Objects\04. UI\Controller\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattlePlate.h">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_CommandMenu.h">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_MoveMenu.h">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattleMsg.h">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Capture_Menu.h">
+      <Filter>01. Objects\04. UI\Controller\Capture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterBall.h">
+      <Filter>01. Objects\05. Ball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -500,9 +518,6 @@
     <ClCompile Include="..\Private\UIController.cpp">
       <Filter>01. Objects\04. UI\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Menu.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\UIButton_Glow.cpp">
       <Filter>01. Objects\04. UI\Button_Custom</Filter>
     </ClCompile>
@@ -535,9 +550,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Pokemon.cpp">
       <Filter>01. Objects\02. PartObject\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BattleMsg.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battler.cpp">
       <Filter>04. Contents\00. Battle\01. Battler</Filter>
@@ -586,15 +598,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battle_MsgListener.cpp">
       <Filter>04. Contents\00. Battle\05. Events</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BattlePlate.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_CommandMenu.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_MoveMenu.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_InputDirector.cpp">
       <Filter>04. Contents\00. Battle\05. Events</Filter>
@@ -649,6 +652,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Capture_Manager.cpp">
       <Filter>04. Contents\01. Capture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Menu.cpp">
+      <Filter>01. Objects\04. UI\Controller\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_CommandMenu.cpp">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_MoveMenu.cpp">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattleMsg.cpp">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattlePlate.cpp">
+      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Capture_Menu.cpp">
+      <Filter>01. Objects\04. UI\Controller\Capture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterBall.cpp">
+      <Filter>01. Objects\05. Ball</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
