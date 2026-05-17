@@ -8,6 +8,7 @@
 #include "Capture_Menu.h"
 #include "Game_API.h"
 #include "MonsterBall.h"
+#include "RenderRule_Manager.h"
 
 #include "GameInstance.h"
 
@@ -141,13 +142,19 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
 		return E_FAIL;
 
+	CRenderRule_Manager* pRuleManager = CRenderRule_Manager::GetInstance();
+	if (nullptr == pRuleManager)
+		return E_FAIL;
+
 	CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
 	BodyDesc.strModelProtoTag = pSpecies->strModelTag;
 	BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
 	BodyDesc.iDefaultAnim = 0;
 	BodyDesc.bLoop = true;
 	BodyDesc.fScale = 1.f;
-	BodyDesc.pRenderRule = nullptr;
+	BodyDesc.pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
+	if (nullptr == BodyDesc.pRenderRule)
+		return E_FAIL;
 
 	CActor_CaptureTarget::ACTOR_CAPTURE_DESC TargetDesc{};
 	TargetDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
@@ -157,6 +164,7 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	TargetDesc.iSpeciesID = m_tEnv.iSpeciesID;
 	TargetDesc.iLevel = m_tEnv.iLevel;
 	TargetDesc.iInitialBallItemID = m_tEnv.iInitialBallItemID;
+	TargetDesc.bCaughtBefore = false;
 	TargetDesc.vSpawnPos = _float3(0.f, 0.f, 0.f);    // 카메라 vAt 지점
 
 	/* Clone → LookAt → Add_GameObject_Ex 패턴.
@@ -178,6 +186,8 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 		Safe_Release(pTarget);
 		return E_FAIL;
 	}
+
+	m_pCaptureTarget = pTarget;
 
 	return S_OK;
 }
@@ -240,6 +250,8 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 			Safe_Release(pMenu);
 			return E_FAIL;
 		}
+
+		pMenu->Bind(m_pCaptureTarget);
 
 		/* Activate: MENU 인덱스 → 행동 라우팅.
 			READY=메뉴 닫고 AIMING 진입 / BAG·HELP=미구현 로그 / RUN=Request_Run. */
@@ -363,6 +375,7 @@ void CLevel_Capture::Free()
 	UI_Close_All();
 	m_pCursorSeq = nullptr;
 	m_pCaptureMenu = nullptr;
+	m_pCaptureTarget = nullptr;
 
 	Safe_Release(m_pCaptureManager);
 

@@ -24,6 +24,9 @@ HRESULT CActor_CaptureTarget::Initialize(void* pArg)
         return E_FAIL;
 
     const ACTOR_CAPTURE_DESC* pDesc = static_cast<const ACTOR_CAPTURE_DESC*>(pArg);
+    m_iSpeciesID = pDesc->iSpeciesID;
+    m_iLevel = pDesc->iLevel;
+    m_bCaughtBefore = pDesc->bCaughtBefore;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;

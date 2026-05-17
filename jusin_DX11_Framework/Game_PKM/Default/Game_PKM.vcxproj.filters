@@ -91,9 +91,6 @@
     <Filter Include="01. Objects\01. GameActor\01. NPC">
       <UniqueIdentifier>{ab8b83a2-815e-47e3-a3d4-4fe612e05281}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Objects\01. GameActor\02. Wild">
-      <UniqueIdentifier>{550aa659-6d0a-4f7d-b12b-2c6e2fcbdf66}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Objects\00. Environment">
       <UniqueIdentifier>{2ff14eb7-25dd-4762-b3cb-6d4ce4df7f87}</UniqueIdentifier>
     </Filter>
@@ -168,6 +165,12 @@
     </Filter>
     <Filter Include="01. Objects\05. Ball">
       <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\01. GameActor\03. Capture">
+      <UniqueIdentifier>{550aa659-6d0a-4f7d-b12b-2c6e2fcbdf66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\01. GameActor\02. Battle">
+      <UniqueIdentifier>{2d9401fd-e566-40f1-ac84-98ac92b4d63d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,7 +273,7 @@
     <ClInclude Include="..\Public\Game_PresetTable.h">
       <Filter>02. Game_API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState.h">
+    <ClInclude Include="..\Public\Player_Status.h">
       <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Manager.h">
@@ -317,12 +320,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Targeting.h">
       <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_Pokemon.h">
-      <Filter>04. Contents\00. Battle\01. Battler</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Battle_Trainer.h">
-      <Filter>04. Contents\00. Battle\01. Battler</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Commands.h">
       <Filter>04. Contents\00. Battle\02. Commands</Filter>
@@ -409,10 +406,10 @@
       <Filter>01. Objects\01. GameActor\01. NPC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor_WildPokemon.h">
-      <Filter>01. Objects\01. GameActor\02. Wild</Filter>
+      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor_CaptureTarget.h">
-      <Filter>01. Objects\01. GameActor\02. Wild</Filter>
+      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interaction_BallHit.h">
       <Filter>03. Components\01. Interaction</Filter>
@@ -446,6 +443,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\MonsterBall.h">
       <Filter>01. Objects\05. Ball</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Trainer.h">
+      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Pokemon.h">
+      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -536,7 +539,7 @@
     <ClCompile Include="..\Private\PokemonData_Manager.cpp">
       <Filter>02. Game_API\01. PokemonData</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState.cpp">
+    <ClCompile Include="..\Private\Player_Status.cpp">
       <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Manager.cpp">
@@ -571,12 +574,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Targeting.cpp">
       <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_Pokemon.cpp">
-      <Filter>04. Contents\00. Battle\01. Battler</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Battle_Trainer.cpp">
-      <Filter>04. Contents\00. Battle\01. Battler</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Commands.cpp">
       <Filter>04. Contents\00. Battle\02. Commands</Filter>
@@ -639,10 +636,10 @@
       <Filter>01. Objects\01. GameActor\01. NPC</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor_WildPokemon.cpp">
-      <Filter>01. Objects\01. GameActor\02. Wild</Filter>
+      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor_CaptureTarget.cpp">
-      <Filter>01. Objects\01. GameActor\02. Wild</Filter>
+      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interaction_BallHit.cpp">
       <Filter>03. Components\01. Interaction</Filter>
@@ -673,6 +670,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\MonsterBall.cpp">
       <Filter>01. Objects\05. Ball</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Pokemon.cpp">
+      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Trainer.cpp">
+      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

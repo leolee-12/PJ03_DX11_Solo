@@ -1,24 +1,24 @@
-#include "PlayerState.h"
+#include "Player_Status.h"
 #include "PokemonData_Manager.h"
 
-CPlayerState::CPlayerState(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayer_Status::CPlayer_Status(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
 	m_strName = L"PlayerState";
 }
 
-CPlayerState::CPlayerState(const CPlayerState& Prototype)
+CPlayer_Status::CPlayer_Status(const CPlayer_Status& Prototype)
 	: CGameObject{ Prototype }
 {
 }
 
-HRESULT CPlayerState::Initialize_Prototype()
+HRESULT CPlayer_Status::Initialize_Prototype()
 {
 	PartyOps::Clear(m_tParty);
 	return S_OK;
 }
 
-HRESULT CPlayerState::Initialize(void* pArg)
+HRESULT CPlayer_Status::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -73,33 +73,33 @@ HRESULT CPlayerState::Initialize(void* pArg)
 	return S_OK;
 }
 
-CPlayerState* CPlayerState::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayer_Status* CPlayer_Status::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPlayerState* pInstance = new CPlayerState(pDevice, pContext);
+	CPlayer_Status* pInstance = new CPlayer_Status(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CPlayerState");
+		MSG_BOX("Failed to Created : CPlayer_Status");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CPlayerState::Clone(void* pArg)
+CGameObject* CPlayer_Status::Clone(void* pArg)
 {
-	CPlayerState* pInstance = new CPlayerState(*this);
+	CPlayer_Status* pInstance = new CPlayer_Status(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CPlayerState");
+		MSG_BOX("Failed to Cloned : CPlayer_Status");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPlayerState::Free()
+void CPlayer_Status::Free()
 {
 	__super::Free();
 }

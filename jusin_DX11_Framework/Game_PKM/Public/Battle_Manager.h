@@ -7,7 +7,7 @@
 //  1) 한 판의 도메인 상태 보유
 //	(BATTLE_ENV / BATTLE_SLOT[] / FIELD_STATE / TURN_CONTEXT / BATTLE_PHASE).
 //  2) 외부 데이터 핸들 보유 :  소유 X
-//	(CPlayerState*, 상대 POKEMON_INSTANCE*, 상대 TRAINER_DATA*).
+//	(CPlayer_Status*, 상대 POKEMON_INSTANCE*, 상대 TRAINER_DATA*).
 //  3) 배틀 시각 객체 핸들 보유 : 소유 X
 //	(m_pBattlerObj[], m_pTrainerObj[])
 //     - Level_Battle이 객체 생성 후 Register_*로 등록
@@ -22,7 +22,7 @@ class CGameObject;
 NS_END
 
 NS_BEGIN(Game_PKM)
-class CPlayerState;
+class CPlayer_Status;
 class CBattler;
 class IBattleState;
 class CCommandQueue;
@@ -41,7 +41,7 @@ private:
 public:
 	HRESULT Initialize(const BATTLE_ENV& tEnv);
 
-	HRESULT Bind_PlayerParty(CPlayerState* pPlayerState, _uint iLeadSlot);
+	HRESULT Bind_PlayerParty(CPlayer_Status* pPlayerState, _uint iLeadSlot);
 	HRESULT Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent);
 	HRESULT Bind_OpponentTrainer(TRAINER_DATA* pTrainerData);
 
@@ -101,7 +101,7 @@ private:
 
 	_int m_iPacingLocks = { 0 };
 
-	CPlayerState*		m_pPlayerState = { nullptr };
+	CPlayer_Status*		m_pPlayerState = { nullptr };
 	POKEMON_INSTANCE*	m_pOpponentSingle = { nullptr };
 	TRAINER_DATA*		m_pOpponentTrainer = { nullptr };
 

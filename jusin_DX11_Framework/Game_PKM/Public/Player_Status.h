@@ -4,12 +4,12 @@
 
 NS_BEGIN(Game_PKM)
 
-class CPlayerState final : public CGameObject
+class CPlayer_Status final : public CGameObject
 {
 protected:
-	CPlayerState(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayerState(const CPlayerState& Prototype);
-	virtual ~CPlayerState() = default;
+	CPlayer_Status(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPlayer_Status(const CPlayer_Status& Prototype);
+	virtual ~CPlayer_Status() = default;
 
 public:
 	virtual _string Get_TypeName() const override { return "PlayerState"; }
@@ -37,7 +37,7 @@ private:
 	_uint m_iBadgeFlags = {};
 
 public:
-	static CPlayerState* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPlayer_Status* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 
 private:

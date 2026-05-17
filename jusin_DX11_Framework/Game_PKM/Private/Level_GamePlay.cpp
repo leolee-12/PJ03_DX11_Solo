@@ -16,6 +16,7 @@
 #include "Actor_NPC.h"
 #include "Actor_WildPokemon.h"
 #include "RenderRule_Manager.h"
+#include "PokemonData_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -528,15 +529,30 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 {
+	auto* pDataMgr = CPokemonData_Manager::GetInstance();
+	if (nullptr == pDataMgr)
+		return E_FAIL;
+
+	auto* pRuleManager = CRenderRule_Manager::GetInstance();
+	if (nullptr == pRuleManager)
+		return E_FAIL;
+
 	// 1) Wild — Pikachu Lv5
 	{
+		const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(25);
+		if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
+			return E_FAIL;
+
 		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
 		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
 		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
 		BodyDesc.iDefaultAnim = 0;
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = nullptr;
+		BodyDesc.strModelProtoTag = pSpecies->strModelTag;
+		BodyDesc.pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
+		if (nullptr == BodyDesc.pRenderRule)
+			return E_FAIL;
 
 		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
 		WildDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
@@ -556,13 +572,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 
 	// 2) Wild — Bulbasaur Lv5
 	{
+		const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(1);
+		if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
+			return E_FAIL;
+
 		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
 		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0001_00;
 		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
 		BodyDesc.iDefaultAnim = 0;
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = nullptr;
+		BodyDesc.pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
+		if (nullptr == BodyDesc.pRenderRule)
+			return E_FAIL;
 
 		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
 		WildDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);

@@ -1,4 +1,5 @@
 #include "RenderRule_Manager.h"
+#include "Battle_Data.h"
 
 IMPLEMENT_SINGLETON(CRenderRule_Manager)
 
@@ -44,6 +45,19 @@ const CRenderRule* CRenderRule_Manager::Find_OrLoadMappingRule(const _char* pMap
 		return nullptr;
 
 	m_MappingRules.emplace(strPath, pRule);
+
+	return pRule;
+}
+
+const CRenderRule* CRenderRule_Manager::Find_PokemonRenderRule(const SPECIES_DATA* pSpecies)
+{
+	if (nullptr == pSpecies)
+		return nullptr;
+
+	const CRenderRule* pRule = Find_OrLoadMappingRule(pSpecies->pRenderMappingPath);
+
+	if (nullptr == pRule)
+		pRule = Find_Rule(pSpecies->eRenderRuleKey);
 
 	return pRule;
 }

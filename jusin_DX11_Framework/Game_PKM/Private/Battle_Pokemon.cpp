@@ -58,11 +58,11 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 		if (nullptr == pRuleManager)
 			return E_FAIL;
 
-		m_pRenderRule = pRuleManager->Find_OrLoadMappingRule(pSpecies->pRenderMappingPath);
-
-		if (nullptr == m_pRenderRule)
-			m_pRenderRule = pRuleManager->Find_Rule(pSpecies->eRenderRuleKey);
+		m_pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
 	}
+
+	if (nullptr == m_pRenderRule)
+		return E_FAIL;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;

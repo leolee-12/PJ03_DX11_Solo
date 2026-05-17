@@ -2,6 +2,7 @@
 #include "Base.h"
 #include "Game_PKM_Defines.h"
 #include "RenderRule.h"
+#include "Battle_Data.h"
 
 NS_BEGIN(Game_PKM)
 
@@ -18,6 +19,7 @@ public:
 
 	const CRenderRule* Find_Rule(RENDER_RULE_KEY eKey) const;
 	const CRenderRule* Find_OrLoadMappingRule(const _char* pMappingFilePath);
+	const CRenderRule* Find_PokemonRenderRule(const SPECIES_DATA* pSpecies);
 
 private:
 	HRESULT Load_BuiltinRules();

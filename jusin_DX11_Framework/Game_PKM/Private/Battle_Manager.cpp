@@ -1,5 +1,5 @@
 #include "Battle_Manager.h"
-#include "PlayerState.h"
+#include "Player_Status.h"
 #include "PokemonData_Manager.h"
 #include "Battle_Layout.h"
 #include "Battler.h"
@@ -43,7 +43,7 @@ HRESULT CBattle_Manager::Initialize(const BATTLE_ENV& tEnv)
 	return S_OK;
 }
 
-HRESULT CBattle_Manager::Bind_PlayerParty(CPlayerState* pPlayerState, _uint iLeadSlot)
+HRESULT CBattle_Manager::Bind_PlayerParty(CPlayer_Status* pPlayerState, _uint iLeadSlot)
 {
 	if (nullptr == pPlayerState)
 		return E_FAIL;

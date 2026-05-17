@@ -6,7 +6,7 @@
 #include "UIController.h"
 #include "UIController_Hub.h"
 #include "PokemonData_Manager.h"
-#include "PlayerState.h"
+#include "Player_Status.h"
 #include "Game_PresetTable.h"
 #include "RenderRule_Manager.h"
 
@@ -36,7 +36,7 @@ HRESULT Ready_PersistentObjects(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 	auto* pGameInstance = CGameInstance::GetInstance();
 
 	if (FAILED(pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_PLAYER_STATE,
-		CPlayerState::Create(pDevice, pContext))))
+		CPlayer_Status::Create(pDevice, pContext))))
 		return E_FAIL;
 
 	if (FAILED(pGameInstance->Add_GameObject(ETOUI(LEVEL::STATIC), PROTO_OBJ_PLAYER_STATE,

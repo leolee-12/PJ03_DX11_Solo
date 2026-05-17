@@ -13,6 +13,7 @@ NS_BEGIN(Game_PKM)
 class CCapture_Manager;
 class CCapture_Menu;
 class CMonsterBall;
+class CActor_CaptureTarget;
 
 class CLevel_Capture final : public CLevel
 {
@@ -37,6 +38,7 @@ private:
 	CCapture_Menu* m_pCaptureMenu = { nullptr };   // weak — UI Hub 가 owner
 	CUISequence* m_pCursorSeq = { nullptr };      // weak — Add_GameObject_Ex 가 owner
 	CMonsterBall* m_pMonsterBall = { nullptr };   // weak — 레이어가 owner
+	CActor_CaptureTarget* m_pCaptureTarget = { nullptr };  // weak - layer owns
 
 public:
 	static CLevel_Capture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LEVEL_ENTRY_DESC* pEntryDesc);

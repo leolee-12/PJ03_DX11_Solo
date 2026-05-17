@@ -4,6 +4,7 @@
 #include "UIImage.h"
 #include "UIText.h"
 #include "UIProgressBar.h"
+#include "Capture_Menu.h"
 
 CBattlePlate::CBattlePlate()
 {
@@ -219,8 +220,7 @@ void CBattlePlate::Apply_HPNumbers(CBattler* pBattler)
 	Apply_TwoDigitImage(m_pPlayer_MaxHP, iMax, true);
 }
 
-void CBattlePlate::Apply_TwoDigitImage(CUIImage* (&pDigits)[2], _uint iValue, _bool
-	bHideLeadingZero)
+void CBattlePlate::Apply_TwoDigitImage(CUIImage* (&pDigits)[2], _uint iValue, _bool bHideLeadingZero)
 {
 	if (nullptr == pDigits[0] || nullptr == pDigits[1])
 		return;

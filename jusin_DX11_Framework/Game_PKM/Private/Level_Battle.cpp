@@ -1,6 +1,6 @@
 ﻿#include "Level_Battle.h"
 #include "Battle_Manager.h"
-#include "PlayerState.h"
+#include "Player_Status.h"
 #include "PokemonData_Manager.h"
 #include "Battle_Pokemon.h"
 #include "Battle_Trainer.h"
@@ -146,7 +146,7 @@ HRESULT CLevel_Battle::Bind_Battle_Sources()
 	if (nullptr == pObjects || pObjects->empty())
 		return E_FAIL;
 
-	CPlayerState* pPlayerState = static_cast<CPlayerState*>(pObjects->front());
+	CPlayer_Status* pPlayerState = static_cast<CPlayer_Status*>(pObjects->front());
 	if (nullptr == pPlayerState)
 		return E_FAIL;
 

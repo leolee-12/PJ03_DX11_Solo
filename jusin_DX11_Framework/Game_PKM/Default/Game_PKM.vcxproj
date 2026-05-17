@@ -94,7 +94,7 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MonsterBall.h" />
     <ClInclude Include="..\Public\Player.h" />
-    <ClInclude Include="..\Public\PlayerState.h" />
+    <ClInclude Include="..\Public\Player_Status.h" />
     <ClInclude Include="..\Public\Player_LGPE.h" />
     <ClInclude Include="..\Public\Battle_Pokemon.h" />
     <ClInclude Include="..\Public\PokemonData_Manager.h" />
@@ -171,7 +171,7 @@
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MonsterBall.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
-    <ClCompile Include="..\Private\PlayerState.cpp" />
+    <ClCompile Include="..\Private\Player_Status.cpp" />
     <ClCompile Include="..\Private\Player_LGPE.cpp" />
     <ClCompile Include="..\Private\Battle_Pokemon.cpp" />
     <ClCompile Include="..\Private\PokemonData_Manager.cpp" />
