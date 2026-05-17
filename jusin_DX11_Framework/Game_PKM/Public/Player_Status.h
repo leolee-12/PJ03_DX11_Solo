@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Player_Data.h"
 #include "Battle_Data.h"
 
 NS_BEGIN(Game_PKM)
@@ -21,6 +22,17 @@ public:
 	PARTY& Get_Party() { return m_tParty; }
 	const PARTY& Get_Party() const { return m_tParty; }
 
+	POKEDEX& Get_Pokedex() { return m_tPokedex; }
+	const POKEDEX& Get_Pokedex() const { return m_tPokedex; }
+
+	BOX& Get_Box() { return m_tBox; }
+	const BOX& Get_Box() const { return m_tBox; }
+
+	POKEDEX_STATE Get_DexState(_uint iDexNo) const;
+	_bool Mark_DexSeen(_uint iDexNo);
+	_bool Mark_DexCaught(_uint iDexNo);
+	_bool Acquire_Pokemon(_uint iSpeciesID, _ubyte iLevel, _uint iCapturedAtZoneID);
+
 	_uint Get_TrainerID() const { return m_iTrainerID; }
 	void Set_TrainerID(_uint iTrainerID) { m_iTrainerID = iTrainerID; }
 
@@ -32,6 +44,8 @@ public:
 
 private:
 	PARTY m_tParty = {};
+	BOX m_tBox = {};
+	POKEDEX m_tPokedex = {};
 	_uint m_iTrainerID = { 1 };
 	_uint m_iMoney = {};
 	_uint m_iBadgeFlags = {};

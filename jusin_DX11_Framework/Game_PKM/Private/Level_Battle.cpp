@@ -163,6 +163,11 @@ HRESULT CLevel_Battle::Bind_Battle_Sources()
 	if (FAILED(m_pBattleManager->Bind_OpponentSingle(&m_tDebugWildOpponent)))
 		return E_FAIL;
 
+	/* 게임 본 사양은 트레이너 배틀만.
+	   트레이너 배틀 도입 시 이 호출을 Bind_OpponentTrainer 직후로 옮기고
+	   pTrainerData->tParty.arrSlots[0..iCount-1].iSpeciesID 전체 순회로 교체. */
+	pPlayerState->Mark_DexSeen(m_tDebugWildOpponent.iSpeciesID);
+
 	return S_OK;
 }
 

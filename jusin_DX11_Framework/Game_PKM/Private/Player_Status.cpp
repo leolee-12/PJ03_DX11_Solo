@@ -15,6 +15,8 @@ CPlayer_Status::CPlayer_Status(const CPlayer_Status& Prototype)
 HRESULT CPlayer_Status::Initialize_Prototype()
 {
 	PartyOps::Clear(m_tParty);
+	BoxOps::Clear(m_tBox);
+	PokedexOps::Clear(m_tPokedex);
 	return S_OK;
 }
 
@@ -24,53 +26,55 @@ HRESULT CPlayer_Status::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (0 == m_tParty.iCount)
-	{
-		auto* pDataMgr = CPokemonData_Manager::GetInstance();
-		const SPECIES_DATA* pSpecies = pDataMgr ? pDataMgr->Find_Species(25) : nullptr;
-
-		if (nullptr != pSpecies)
-		{
-			POKEMON_INSTANCE tSeed = {};
-
-			tSeed.iSpeciesID = pSpecies->iDexNo;
-			wcscpy_s(tSeed.szNickname, pSpecies->szName);
-
-			tSeed.iLevel = 5;
-			tSeed.iExp = 0;
-
-			for (size_t i = 0; i < static_cast<size_t>(STAT::END); ++i)
-			{
-				tSeed.iIV[i] = g_kMaxIV;
-				tSeed.iEV[i] = 0;
-			}
-
-			tSeed.eNature = NATURE::JOLLY;
-			tSeed.iAbilityID = pSpecies->iAbility1;
-
-			const _uint iInitialMoves[g_kMaxMovesPerPokemon] =
-			{
-				  pSpecies->iLearnset[0],
-				  pSpecies->iLearnset[1],
-				  pSpecies->iLearnset[2],
-				  pSpecies->iLearnset[3],
-			};
-
-			Assign_Moves(tSeed, iInitialMoves, g_kMaxMovesPerPokemon, pDataMgr);
-
-			tSeed.eStatus = STATUS_CONDITION::NONE;
-			tSeed.iHeldItemID = 0;
-
-			Recalc_All_Stats(tSeed, *pSpecies);
-			tSeed.iCurrentHP = tSeed.iStat[static_cast<size_t>(STAT::HP)];
-
-			tSeed.iOriginalTrainerID = m_iTrainerID;
-			tSeed.iCapturedAtZoneID = 0;
-
-			PartyOps::Add(m_tParty, tSeed);
-		}
-	}
+		Acquire_Pokemon(25, 5, 0);
 
 	return S_OK;
+}
+
+POKEDEX_STATE CPlayer_Status::Get_DexState(_uint iDexNo) const
+{
+	return PokedexOps::Get(m_tPokedex, iDexNo);
+}
+
+_bool CPlayer_Status::Mark_DexSeen(_uint iDexNo)
+{
+	return PokedexOps::Mark_Seen(m_tPokedex, iDexNo);
+}
+
+_bool CPlayer_Status::Mark_DexCaught(_uint iDexNo)
+{
+	return PokedexOps::Mark_Caught(m_tPokedex, iDexNo);
+}
+
+_bool CPlayer_Status::Acquire_Pokemon(_uint iSpeciesID, _ubyte iLevel, _uint iCapturedAtZoneID)
+{
+	auto* pDataMgr = CPokemonData_Manager::GetInstance();
+	if (nullptr == pDataMgr)
+		return false;
+
+	const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(iSpeciesID);
+	if (nullptr == pSpecies)
+		return false;
+
+	POKEMON_INSTANCE tInstance = Build_PokemonInstance(
+		*pSpecies,
+		iLevel,
+		m_iTrainerID,
+		iCapturedAtZoneID,
+		pDataMgr);
+
+	_bool bAdded = false;
+
+	if (PartyOps::Has_Empty_Slot(m_tParty))
+		bAdded = PartyOps::Add(m_tParty, tInstance);
+	else
+		bAdded = BoxOps::Add(m_tBox, tInstance);
+
+	if (false == bAdded)
+		return false;
+
+	Mark_DexCaught(iSpeciesID);
+	return true;
 }
 
 CPlayer_Status* CPlayer_Status::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

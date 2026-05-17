@@ -450,6 +450,9 @@
     <ClInclude Include="..\Public\Battle_Pokemon.h">
       <Filter>01. Objects\01. GameActor\02. Battle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_Data.h">
+      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -676,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Trainer.cpp">
       <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Data.cpp">
+      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
