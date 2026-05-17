@@ -33,6 +33,7 @@
 #include "Interaction_Encounter.h"
 #include "Interaction_BallHit.h"
 #include "MonsterBall.h"
+#include "CaptureRing.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -349,47 +350,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_BUTTON,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_button_%02d.png"), 3); },
-		TEXT("Prototype_Component_Texture_Get_Button"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_ICON,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_icon.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Icon"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_Info.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Info"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO2,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_Info2.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Info2"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_FILL,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line_fill.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Line_Fill"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_BACK,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line_back.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Line_Back"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_FILL,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_fill.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Line2_Fill"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_BACK,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_back.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Line2_Back"));
-
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_LV,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_text_Lv.png"), 1); },
-		TEXT("Prototype_Component_Texture_Get_Text_LV"));
-
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_NUM,
-		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_itm_number_%02d.png"), 10); },
-		TEXT("Prototype_Component_Texture_Get_Text_Number"));
-
-
 
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_COL,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_bg_col.png"), 1); },
@@ -508,10 +468,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/road01.wmodel"); },
 		TEXT("Prototype_Component_Model_Road01"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_MONSTER_BALL,
-		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ball/ball.wmodel"); },
-		TEXT("Prototype_Component_Model_MonsterBall"));
-
 
 
 	// ---------- Navigation & Collider ----------
@@ -569,10 +525,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CActor_WildPokemon::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Actor_WildPokemon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_CAPTURE_TARGET,
-		[this] { return CActor_CaptureTarget::Create(m_pDevice, m_pContext); },
-		TEXT("Prototype_GameObject_Actor_CaptureTarget"));
-
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
 		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_UIImage_FadeBattle"));
@@ -597,10 +549,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_MapObject_Road01"));
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER_BALL,
-		[this] { return CMonsterBall::Create(m_pDevice, m_pContext); },
-		TEXT("Prototype_GameObject_MonsterBall"));
 
 
 
@@ -705,6 +653,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	if (FAILED(Ready_Resources_For_Battle()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Resources_For_Capture()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -807,6 +758,98 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
 		[this] { return CBattle_Trainer::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Battle_Trainer"));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Resources_For_Capture()
+{
+	auto Enqueue = [this](TaskFunc fn, const _tchar* pDebugName = nullptr)
+		{
+			LOAD_TASK tTask = {};
+			tTask.strDebugName = (nullptr != pDebugName) ? pDebugName : TEXT("Capture Load Task");
+			tTask.fn = move(fn);
+
+			m_TaskQueue.push(move(tTask));
+			++m_iTotalCount;
+		};
+
+	auto EnqueuePrototype = [this, &Enqueue](_uint iLevelIndex, WNameID strProtoTag, auto Factory, const
+		_tchar* pDebugName = nullptr)
+		{
+			if (m_pGameInstance->Has_Prototype(iLevelIndex, strProtoTag))
+				return;
+
+			Enqueue([this, iLevelIndex, strProtoTag, Factory = move(Factory)]() mutable
+				{
+					return m_pGameInstance->Add_Prototype(iLevelIndex, strProtoTag, Factory());
+				}, pDebugName);
+		};
+
+
+
+	// ---------- Texture ----------
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_BUTTON,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_button_%02d.png"), 3); },
+		TEXT("Prototype_Component_Texture_Get_Button"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_ICON,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_icon.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Icon"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_Info.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Info"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO2,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_Info2.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Info2"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_FILL,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line_fill.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Line_Fill"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_BACK,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line_back.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Line_Back"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_FILL,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_fill.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Line2_Fill"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_BACK,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_back.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Line2_Back"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_LV,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_text_Lv.png"), 1); },
+		TEXT("Prototype_Component_Texture_Get_Text_LV"));
+
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_NUM,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_itm_number_%02d.png"), 10); },
+		TEXT("Prototype_Component_Texture_Get_Text_Number"));
+
+
+
+	// ---------- VIBuffer & Model ----------
+	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_MONSTER_BALL,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ball/ball.wmodel"); },
+		TEXT("Prototype_Component_Model_MonsterBall"));
+
+
+
+	// ---------- Objects ----------
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_CAPTURE_TARGET,
+		[this] { return CActor_CaptureTarget::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Actor_CaptureTarget"));
+
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER_BALL,
+		[this] { return CMonsterBall::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_MonsterBall"));
+	
+	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAPTURE_RING,
+		[this] { return CCaptureRing::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_CaptureRing"));
 
 	return S_OK;
 }

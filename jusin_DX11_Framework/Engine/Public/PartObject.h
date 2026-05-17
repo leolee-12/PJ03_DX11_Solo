@@ -6,10 +6,11 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CPartObject abstract : public CGameObject
 {
 public:
-	typedef struct tagPartObjectDesc
+	struct PARTOBJECT_DESC : public CGameObject::GAMEOBJECT_DESC
 	{
 		const _float4x4* pParentMatrix;
-	}PARTOBJECT_DESC;
+	};
+
 protected:
 	CPartObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPartObject(const CPartObject& Prototype);

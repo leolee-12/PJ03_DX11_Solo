@@ -634,7 +634,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	
 	m_pRuntimeUI = pSeq;  // weak
 
-	/* ===== Fade Battle 트랜지션 시퀀스 (F6) — 초기엔 숨김. 트리거 시 Play 시작 ===== */
 	{
 		CUISequence::UISEQUENCE_DESC tFadeDesc{};
 		tFadeDesc.strPath = "../../DataFiles/UI/UI_FadeBattle.uiseq";
@@ -713,7 +712,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 		});
 
 	/* Hub 등록 — 내부 AddRef. 이후 local 레퍼런스 해제. */
-	if (FAILED(UI_Register(pMenu)))
+	if (FAILED(UI_Register(pMenu, ETOUI(LEVEL::GAMEPLAY))))
 	{
 		Safe_Release(pMenu);
 		return E_FAIL;

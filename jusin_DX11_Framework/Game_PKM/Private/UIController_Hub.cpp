@@ -14,34 +14,42 @@ HRESULT CUIController_Hub::Initialize()
 	return S_OK;
 }
 
-HRESULT CUIController_Hub::Register(CUIController* pCtrl)
-{/* 컨트롤러 등록(AddRef). 이미 등록된 포인터면 S_FALSE. */
+HRESULT CUIController_Hub::Register(CUIController* pCtrl, _uint iOwnerLevel)
+{
 	if (nullptr == pCtrl)
 		return E_FAIL;
 
-	/* 중복 등록 방지 */
-	for (CUIController* p : m_Controllers)
+	for (const CONTROLLER_ENTRY& Entry : m_Controllers)
 	{
-		if (p == pCtrl)
+		if (Entry.pCtrl == pCtrl)
 			return S_FALSE;
 	}
 
 	Safe_AddRef(pCtrl);
-	m_Controllers.push_back(pCtrl);
+
+	CONTROLLER_ENTRY Entry{};
+	Entry.iOwnerLevel = iOwnerLevel;
+	Entry.pCtrl = pCtrl;
+	m_Controllers.push_back(Entry);
+
 	return S_OK;
 }
 
 void CUIController_Hub::Unregister(CUIController* pCtrl)
-{/* 등록 해제(Safe_Release). 미등록 포인터면 무시. */
+{
 	if (nullptr == pCtrl)
 		return;
 
 	for (auto it = m_Controllers.begin(); it != m_Controllers.end(); ++it)
 	{
-		if (*it == pCtrl)
+		if (it->pCtrl == pCtrl)
 		{
+			if (m_pLastActiveCtrl == pCtrl)
+				m_pLastActiveCtrl = nullptr;
+
+			CUIController* pRelease = it->pCtrl;
 			m_Controllers.erase(it);
-			Safe_Release(pCtrl);
+			Safe_Release(pRelease);
 			return;
 		}
 	}
@@ -49,8 +57,10 @@ void CUIController_Hub::Unregister(CUIController* pCtrl)
 
 void CUIController_Hub::Update_All(_float fTimeDelta)
 {	/* 모든 등록 컨트롤러에 Update 전파 (iterator 무효화 주의 - Unregister/Close_All) */
-	for (CUIController* pCtrl : m_Controllers)
+	for (CONTROLLER_ENTRY& Entry : m_Controllers)
 	{
+		CUIController* pCtrl = Entry.pCtrl;
+
 		if (nullptr != pCtrl)
 			pCtrl->Update(fTimeDelta);
 	}
@@ -59,19 +69,45 @@ void CUIController_Hub::Update_All(_float fTimeDelta)
 }
 
 void CUIController_Hub::Close_All()
-{	/* 레벨 종료/전환 시 일괄 정리용 */
-	for (CUIController* pCtrl : m_Controllers)
-		Safe_Release(pCtrl);
+{
+	m_pLastActiveCtrl = nullptr;
+
+	for (CONTROLLER_ENTRY& Entry : m_Controllers)
+		Safe_Release(Entry.pCtrl);
+
 	m_Controllers.clear();
+}
+
+void CUIController_Hub::Cleanup_Level(_uint iOwnerLevel)
+{
+	for (auto it = m_Controllers.begin(); it != m_Controllers.end();)
+	{
+		if (it->iOwnerLevel != iOwnerLevel)
+		{
+			++it;
+			continue;
+		}
+
+		CUIController* pRelease = it->pCtrl;
+
+		if (m_pLastActiveCtrl == pRelease)
+			m_pLastActiveCtrl = nullptr;
+
+		it = m_Controllers.erase(it);
+		Safe_Release(pRelease);
+	}
 }
 
 _bool CUIController_Hub::Is_AnyOpen() const
 {
-	for (CUIController* pCtrl : m_Controllers)
+	for (const CONTROLLER_ENTRY& Entry : m_Controllers)
 	{
+		CUIController* pCtrl = Entry.pCtrl;
+
 		if (nullptr != pCtrl && pCtrl->Is_Open())
 			return true;
 	}
+
 	return false;
 }
 
@@ -104,7 +140,7 @@ CUIController* CUIController_Hub::Find_Active_Controller() const
 	   활성 조건: Open && 그룹 Active && 그룹에 포커스 버튼 존재. */
 	for (auto it = m_Controllers.rbegin(); it != m_Controllers.rend(); ++it)
 	{
-		CUIController* pCtrl = *it;
+		CUIController* pCtrl = it->pCtrl;
 
 		if (nullptr == pCtrl)
 			continue;

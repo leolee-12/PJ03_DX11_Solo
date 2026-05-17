@@ -390,7 +390,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 
 		pBattlePlate->Bind(m_pBattleManager);
 
-		if (FAILED(UI_Register(pBattlePlate)))
+		if (FAILED(UI_Register(pBattlePlate, ETOUI(LEVEL::BATTLE))))
 		{
 			Safe_Release(pBattlePlate);
 			return E_FAIL;
@@ -426,7 +426,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 			return E_FAIL;
 		}
 
-		if (FAILED(UI_Register(pCmdMenu)))
+		if (FAILED(UI_Register(pCmdMenu, ETOUI(LEVEL::BATTLE))))
 		{
 			Safe_Release(pCmdMenu);
 			return E_FAIL;
@@ -462,7 +462,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 
 		pMoveMenu->Bind(m_pBattleManager);
 
-		if (FAILED(UI_Register(pMoveMenu)))
+		if (FAILED(UI_Register(pMoveMenu, ETOUI(LEVEL::BATTLE))))
 		{
 			Safe_Release(pMoveMenu);
 			return E_FAIL;
@@ -496,7 +496,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 		return E_FAIL;
 	}
 
-	if (FAILED(UI_Register(pBattleMsg)))
+	if (FAILED(UI_Register(pBattleMsg, ETOUI(LEVEL::BATTLE))))
 	{
 		Safe_Release(pBattleMsg);
 		return E_FAIL;
@@ -664,7 +664,7 @@ void CLevel_Battle::Free()
 	Safe_Release(m_pBattleMsgListener);
 
 	UI_Set_Cursor_Sequence(nullptr);
-	UI_Close_All();
+	UI_Cleanup_Level(ETOUI(LEVEL::BATTLE));
 	m_pCursorSeq = nullptr;
 	m_pBattleMsg = nullptr;
 	m_pBattlePlate = nullptr;

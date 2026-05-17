@@ -79,17 +79,21 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	ImGuiIO& io = ImGui::GetIO();
 	const _bool bFreeCameraInput = m_bCameraEnabled && !io.WantTextInput;
 
-	if (bFreeCameraInput)
+	// Do not overwrite gameplay-owned transient input locks.
+	if (INPUT_STATE::LOCKED != m_pGameInstance->Get_InputState())
 	{
-		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-	}
-	else
-	{
-		m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);
-	}
+		if (bFreeCameraInput)
+		{
+			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+		}
+		else
+		{
+			m_pGameInstance->Set_InputState(INPUT_STATE::NAVIGATE);
+		}
 
-	if (CCamera* pMainCamera = m_pGameInstance->Get_MainCamera())
-		pMainCamera->Set_ControlEnabled(bFreeCameraInput);
+		if (CCamera* pMainCamera = m_pGameInstance->Get_MainCamera())
+			pMainCamera->Set_ControlEnabled(bFreeCameraInput);
+	}
 }
 
 HRESULT CEditInstance::Draw()

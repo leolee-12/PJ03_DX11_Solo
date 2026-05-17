@@ -61,6 +61,7 @@ private:
 	HRESULT Ready_Resources_For_Logo();
 	HRESULT Ready_Resources_For_GamePlay();
 	HRESULT Ready_Resources_For_Battle();
+	HRESULT Ready_Resources_For_Capture();
 
 public:
 	static CLoader*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
