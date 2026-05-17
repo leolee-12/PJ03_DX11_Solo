@@ -53,6 +53,7 @@
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Pokemon.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
+    <ClInclude Include="..\Public\CaptureRing.h" />
     <ClInclude Include="..\Public\Capture_Menu.h" />
     <ClInclude Include="..\Public\Capture_Manager.h" />
     <ClInclude Include="..\Public\Capture_Session.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Pokemon.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
+    <ClCompile Include="..\Private\CaptureRing.cpp" />
     <ClCompile Include="..\Private\Capture_Menu.cpp" />
     <ClCompile Include="..\Private\Capture_Manager.cpp" />
     <ClCompile Include="..\Private\CommandQueue.cpp" />

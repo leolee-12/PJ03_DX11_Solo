@@ -2,8 +2,11 @@
 #include "Actor.h"
 #include "Body.h"
 
-NS_BEGIN(Game_PKM)
+NS_BEGIN(Engine)
+class CCollider;
+NS_END
 
+NS_BEGIN(Game_PKM)
 class CInteraction_BallHit;
 
 class CActor_CaptureTarget final : public CActor
@@ -28,11 +31,6 @@ private:
 	virtual ~CActor_CaptureTarget() = default;
 
 public:
-	virtual _string Get_TypeName() const override { return "CaptureTargetActor"; }
-	_uint Get_SpeciesID() const { return m_iSpeciesID; }
-	_uint Get_Level() const { return m_iLevel; }
-	_bool Is_CaughtBefore() const { return m_bCaughtBefore; }
-
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -40,12 +38,24 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	virtual _string Get_TypeName() const override { return "CaptureTargetActor"; }
+	_uint Get_SpeciesID() const { return m_iSpeciesID; }
+	_uint Get_Level() const { return m_iLevel; }
+	_bool Is_CaughtBefore() const { return m_bCaughtBefore; }
+	CCollider* Get_Collider() const { return m_pColliderCom; }
+	_float  Get_CaptureRadius() const { return m_fCaptureRadius; }
+	_float3 Get_CaptureCenter() const;
+
 private:
 	CInteraction_BallHit* m_pBallHit = { nullptr };
+	CCollider* m_pColliderCom = { nullptr };
 
 	_uint m_iSpeciesID = { 0 };
 	_uint m_iLevel = { 1 };
 	_bool m_bCaughtBefore = { false };
+
+	_float  m_fCaptureRadius = { 0.6f };
+	_float3 m_vCaptureCenter = { 0.f, 0.5f, 0.f };
 
 private:
 	HRESULT Ready_Components(const ACTOR_CAPTURE_DESC* pDesc);

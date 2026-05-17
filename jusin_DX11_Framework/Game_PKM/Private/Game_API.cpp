@@ -220,12 +220,12 @@ namespace
 	}
 }
 
-HRESULT UI_Register(CUIController* pCtrl)
+HRESULT UI_Register(CUIController* pCtrl, _uint iOwnerLevel)
 {
 	auto* pHub = Get_UIHub();
 	if (nullptr == pHub)
 		return E_FAIL;
-	return pHub->Register(pCtrl);
+	return pHub->Register(pCtrl, iOwnerLevel);
 }
 
 void UI_Unregister(CUIController* pCtrl)
@@ -247,6 +247,13 @@ void UI_Close_All()
 	if (nullptr == g_pUIHub)
 		return;
 	g_pUIHub->Close_All();
+}
+
+void UI_Cleanup_Level(_uint iOwnerLevel)
+{
+	if (nullptr == g_pUIHub)
+		return;
+	g_pUIHub->Cleanup_Level(iOwnerLevel);
 }
 
 _bool UI_Is_AnyOpen()

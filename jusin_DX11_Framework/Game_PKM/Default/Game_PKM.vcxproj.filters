@@ -163,14 +163,14 @@
     <Filter Include="01. Objects\04. UI\Controller\Capture">
       <UniqueIdentifier>{ed9b42dc-f08d-4a74-b7c5-eef9dfeb1ae1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Objects\05. Ball">
-      <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Objects\01. GameActor\03. Capture">
       <UniqueIdentifier>{550aa659-6d0a-4f7d-b12b-2c6e2fcbdf66}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Objects\01. GameActor\02. Battle">
       <UniqueIdentifier>{2d9401fd-e566-40f1-ac84-98ac92b4d63d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\05. Misc">
+      <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -442,13 +442,16 @@
       <Filter>01. Objects\04. UI\Controller\Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MonsterBall.h">
-      <Filter>01. Objects\05. Ball</Filter>
+      <Filter>01. Objects\05. Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Trainer.h">
       <Filter>01. Objects\01. GameActor\02. Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Pokemon.h">
       <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CaptureRing.h">
+      <Filter>01. Objects\05. Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -669,13 +672,16 @@
       <Filter>01. Objects\04. UI\Controller\Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonsterBall.cpp">
-      <Filter>01. Objects\05. Ball</Filter>
+      <Filter>01. Objects\05. Misc</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Pokemon.cpp">
       <Filter>01. Objects\01. GameActor\02. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Trainer.cpp">
       <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CaptureRing.cpp">
+      <Filter>01. Objects\05. Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

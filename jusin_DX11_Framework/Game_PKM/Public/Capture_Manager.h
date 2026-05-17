@@ -10,6 +10,8 @@
 /* -------------------------------------------------- */
 
 NS_BEGIN(Game_PKM)
+class CActor_CaptureTarget;
+class CMonsterBall;
 
 class CCapture_Manager final : public CBase
 {
@@ -18,6 +20,12 @@ private:
 	virtual ~CCapture_Manager() = default;
 
 public:
+	_bool				Is_Done() const { return CAPTURE_PHASE::DONE == m_ePhase; }
+	const CAPTURE_ENV&	Get_Env() const { return m_tEnv; }
+	CAPTURE_PHASE		Get_Phase() const { return m_ePhase; }
+	CAPTURE_RESULT		Get_Result() const { return m_eResult; }
+
+
 	HRESULT Initialize(const CAPTURE_ENV& tEnv);
 
 	void    Begin();
@@ -25,21 +33,23 @@ public:
 	void    Enter_Aiming();   // INTRO 일 때 메뉴 "준비한다" 로 호출 → AIMING 전이. 다른 페이즈에 호출되면 무시.
 	void    Try_Throw();      // AIMING 일 때 마우스 좌클릭으로 호출 → THROWING 전이.
 	void    Request_Run();    // 메뉴 "도망간다" / ESC 로 호출 → m_eResult=FAIL_RUN, DONE 전이. 이 DONE 이면 무시.
-	_bool   Is_Done() const { return CAPTURE_PHASE::DONE == m_ePhase; }
-	
-
-	const CAPTURE_ENV&	Get_Env()    const { return m_tEnv; }
-	CAPTURE_PHASE       Get_Phase()  const { return m_ePhase; }
-	CAPTURE_RESULT      Get_Result() const { return m_eResult; }
-
-private:
-	void    Goto_Phase(CAPTURE_PHASE ePhase);
+	void    Set_Combatants(CActor_CaptureTarget* pTarget, CMonsterBall* pBall);
 
 private:
 	CAPTURE_ENV    m_tEnv = {};
 	CAPTURE_PHASE  m_ePhase = { CAPTURE_PHASE::INTRO };
 	CAPTURE_RESULT m_eResult = { CAPTURE_RESULT::NONE };
 	_float         m_fPhaseElapsed = { 0.f };
+
+	CActor_CaptureTarget* m_pTarget = { nullptr };   // weak
+	CMonsterBall* m_pBall = { nullptr };     // weak
+	_bool m_bHitThisThrow = { false };
+
+private:
+	void    Goto_Phase(CAPTURE_PHASE ePhase);
+	void    Tick_Throwing();
+	_float  Calc_Capture_Probability() const;
+	void    Resolve_Throw();
 
 public:
 	static CCapture_Manager* Create(const CAPTURE_ENV& tEnv);

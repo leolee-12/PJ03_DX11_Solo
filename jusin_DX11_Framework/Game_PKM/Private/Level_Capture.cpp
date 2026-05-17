@@ -14,6 +14,10 @@
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::CAPTURE);
+
+static const _float3 CAPTURE_TARGET_POS = { 0.f, 0.f, 0.f };
+static const _float3 CAPTURE_CAMERA_EYE = { 0.f, 3.8f, -5.2f };
+static const _float3 CAPTURE_CAMERA_AT = { 0.f, 0.65f, 0.f };
 NS_END
 
 CLevel_Capture::CLevel_Capture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const CAPTURE_ENV& tEnv)
@@ -46,6 +50,7 @@ HRESULT CLevel_Capture::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
+	m_pCaptureManager->Set_Combatants(m_pCaptureTarget, m_pMonsterBall);
 	m_pCaptureManager->Begin();
 
 	return S_OK;
@@ -56,30 +61,48 @@ void CLevel_Capture::Update(_float fTimeDelta)
 	if (nullptr == m_pCaptureManager)
 		return;
 
+	const CAPTURE_PHASE ePhaseBeforeUpdate = m_pCaptureManager->Get_Phase();
+
 	/* AIMING 에서만 좌클릭 = 볼 던지기. 재던지기 시 볼이 DONE 이면 Reset 선행. */
-	if (m_pGameInstance->Mouse_Down(DIMB::LBUTTON)
-		&& CAPTURE_PHASE::AIMING == m_pCaptureManager->Get_Phase())
+	const _bool bAiming = CAPTURE_PHASE::AIMING == ePhaseBeforeUpdate;
+
+	if (bAiming && m_pGameInstance->Mouse_Down(DIMB::LBUTTON))
 	{
+		Set_AimingCameraControl(false);
+
 		if (nullptr != m_pMonsterBall
 			&& CMonsterBall::BALL_STATE::DONE == m_pMonsterBall->Get_State())
 		{
 			m_pMonsterBall->Reset();
 		}
 
+		Update_AimPose();
+
 		m_pCaptureManager->Try_Throw();
 
 		if (nullptr != m_pMonsterBall)
 			m_pMonsterBall->Launch();
 	}
+	else if (bAiming)
+	{
+		Update_AimPose();
+	}
 
 	m_pCaptureManager->Update(fTimeDelta);
+
+	const CAPTURE_PHASE ePhaseAfterUpdate = m_pCaptureManager->Get_Phase();
+
+	if (CAPTURE_PHASE::AIMING != ePhaseBeforeUpdate
+		&& CAPTURE_PHASE::AIMING == ePhaseAfterUpdate)
+	{
+		Set_AimingCameraControl(true);
+		Update_AimPose();
+	}
 
 	UI_Update_All(fTimeDelta);
 
 	if (m_pCaptureManager->Is_Done())
 	{
-		/* Pop_Level 성공 시 본 레벨(=this) 이 즉시 Free 되므로
-		   호출 후 어떤 멤버에도 접근하지 않고 곧바로 return. */
 		if (FAILED(m_pGameInstance->Pop_Level()))
 		{
 			MSG_BOX("Failed to Exit Capture");
@@ -113,20 +136,31 @@ HRESULT CLevel_Capture::Ready_Layer_Camera(WNameID strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
 
-	CameraDesc.vEye = _float3(-1.3f, 3.2f, -7.3f);
-	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.vEye = CAPTURE_CAMERA_EYE;
+	CameraDesc.vAt = CAPTURE_CAMERA_AT;
 	CameraDesc.fFovy = XMConvertToRadians(35.f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 20.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	CameraDesc.fMouseSensor = 0.03f;
+	CameraDesc.bControlEnabled = false;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(
-		ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
-		CURRENT_LEVEL, strLayerTag,
-		&CameraDesc)))
+	CCamera_Free* pCamera = static_cast<CCamera_Free*>(
+		m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC),
+			PROTO_OBJ_CAMERA_FREE, &CameraDesc));
+
+	if (nullptr == pCamera)
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pCamera)))
+	{
+		Safe_Release(pCamera);
+		return E_FAIL;
+	}
+
+	m_pCaptureCamera = pCamera;
 
 	return S_OK;
 }
@@ -165,7 +199,7 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	TargetDesc.iLevel = m_tEnv.iLevel;
 	TargetDesc.iInitialBallItemID = m_tEnv.iInitialBallItemID;
 	TargetDesc.bCaughtBefore = false;
-	TargetDesc.vSpawnPos = _float3(0.f, 0.f, 0.f);    // 카메라 vAt 지점
+	TargetDesc.vSpawnPos = CAPTURE_TARGET_POS;
 
 	/* Clone → LookAt → Add_GameObject_Ex 패턴.
 	   Add_GameObject 와 달리 인스턴스 포인터를 잡을 수 있어 등록 전에 회전 적용 가능. */
@@ -178,8 +212,8 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 
 	/* 카메라 위치를 정면으로 보도록 회전.
 	   좌표는 Ready_Layer_Camera 의 vEye 와 동일해야 함 — 수동 동기화. */
-	const _vector vCamPos = XMVectorSet(-1.3f, 3.2f, -7.3f, 1.f);
-	pTarget->Get_Transform()->LookAt(vCamPos);
+	const _vector vCamPos = XMVectorSetW(XMLoadFloat3(&CAPTURE_CAMERA_EYE), 1.f);
+	pTarget->Get_Transform()->LookAt(vCamPos);;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pTarget)))
 	{
@@ -199,9 +233,10 @@ HRESULT CLevel_Capture::Ready_Layer_Ball(WNameID strLayerTag)
 	   도착점은 vAt=(0,0,0) = CaptureTarget 위치. */
 	BallDesc.vSpawnPos = _float3(-0.7f, 0.5f, -4.f);
 	BallDesc.vTargetPos = _float3(0.f, 0.f, 0.f);
-	BallDesc.fFlightDuration = 1.0f;
-	BallDesc.fArcHeight = 2.0f;
+	BallDesc.fFlightDuration = 0.72f;
+	BallDesc.fArcHeight = 0.75f;
 	BallDesc.fImpactDuration = 0.5f;
+	BallDesc.fRotationPerSec = XMConvertToRadians(720.f);
 
 	/* Clone → Add_GameObject_Ex 패턴 — 인스턴스 포인터 캐시 후 등록. */
 	CMonsterBall* pBall = static_cast<CMonsterBall*>(
@@ -262,14 +297,20 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 					switch (eMenu)
 					{
 					case CCapture_Menu::MENU::READY:
-						/* 메뉴 닫고 AIMING 진입. 이후 마우스로 시점 조작 + 좌클릭 던지기.
-						   볼 숨김 — 좌클릭 발사(Launch) 시 자동 가시화. */
 						if (nullptr != m_pCaptureMenu)
 							m_pCaptureMenu->Close();
+
 						if (nullptr != m_pCaptureManager)
 							m_pCaptureManager->Enter_Aiming();
+
+						Set_AimingCameraControl(true);
+
 						if (nullptr != m_pMonsterBall)
-							m_pMonsterBall->Hide();
+						{
+							m_pMonsterBall->Reset();
+							Update_AimPose();
+							m_pMonsterBall->Show();
+						}
 						break;
 
 					case CCapture_Menu::MENU::BAG:
@@ -301,7 +342,7 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 					m_pCaptureManager->Request_Run();
 			});
 
-		if (FAILED(UI_Register(pMenu)))
+		if (FAILED(UI_Register(pMenu, ETOUI(LEVEL::CAPTURE))))
 		{
 			Safe_Release(pMenu);
 			return E_FAIL;
@@ -341,6 +382,60 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 	return S_OK;
 }
 
+void CLevel_Capture::Set_AimingCameraControl(_bool bEnabled)
+{
+	if (nullptr != m_pCaptureCamera)
+		m_pCaptureCamera->Set_ControlEnabled(bEnabled);
+}
+
+void CLevel_Capture::Update_AimPose()
+{
+	if (nullptr == m_pCaptureCamera || nullptr == m_pMonsterBall)
+		return;
+
+	CTransform* pCamTransform = m_pCaptureCamera->Get_Transform();
+	if (nullptr == pCamTransform)
+		return;
+
+	_vector vCamPos = pCamTransform->Get_State(STATE::POSITION);
+	_vector vLook = pCamTransform->Get_State(STATE::LOOK);
+	_vector vUp = pCamTransform->Get_State(STATE::UP);
+
+	if (XMVectorGetX(XMVector3LengthSq(vLook)) <= 0.000001f)
+		return;
+
+	vLook = XMVector3Normalize(vLook);
+	vUp = XMVector3Normalize(vUp);
+
+	constexpr _float AIM_START_FORWARD = 0.65f;
+	constexpr _float AIM_START_DOWN = 0.62f;
+	constexpr _float AIM_MIN_DISTANCE = 3.f;
+	constexpr _float AIM_FALLBACK_DISTANCE = 10.f;
+
+	_vector vTargetPos = vCamPos + vLook * AIM_FALLBACK_DISTANCE;
+
+	if (nullptr != m_pCaptureTarget)
+	{
+		const _float3 vCaptureCenterF = m_pCaptureTarget->Get_CaptureCenter();
+		const _vector vCaptureCenter = XMLoadFloat3(&vCaptureCenterF);
+
+		_float fDistance = XMVectorGetX(XMVector3Dot(vCaptureCenter - vCamPos, vLook));
+		if (fDistance < AIM_MIN_DISTANCE)
+			fDistance = AIM_MIN_DISTANCE;
+
+		vTargetPos = vCamPos + vLook * fDistance;
+	}
+
+	const _vector vStartPos = vCamPos + vLook * AIM_START_FORWARD - vUp * AIM_START_DOWN;
+
+	_float3 vStartPosF{};
+	_float3 vTargetPosF{};
+	XMStoreFloat3(&vStartPosF, vStartPos);
+	XMStoreFloat3(&vTargetPosF, vTargetPos);
+
+	m_pMonsterBall->Set_AimPose(vStartPosF, vTargetPosF);
+}
+
 CLevel_Capture* CLevel_Capture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LEVEL_ENTRY_DESC* pEntryDesc)
 {
 	if (nullptr == pEntryDesc)
@@ -372,7 +467,8 @@ CLevel_Capture* CLevel_Capture::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 void CLevel_Capture::Free()
 {
 	UI_Set_Cursor_Sequence(nullptr);
-	UI_Close_All();
+	UI_Cleanup_Level(ETOUI(LEVEL::CAPTURE));
+	m_pCaptureCamera = nullptr;
 	m_pCursorSeq = nullptr;
 	m_pCaptureMenu = nullptr;
 	m_pCaptureTarget = nullptr;
