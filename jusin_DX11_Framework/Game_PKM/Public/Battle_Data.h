@@ -182,16 +182,22 @@ _ushort	Calc_Other_Stat(_ushort iBase, _ubyte iIV, _ubyte iEV, _ubyte iLevel, _f
 _float	Get_NatureMultiplier(NATURE eNature, STAT eStat);
 void	Recalc_All_Stats(POKEMON_INSTANCE& tInstance, const SPECIES_DATA& tSpecies);
 void	Assign_Moves(POKEMON_INSTANCE& tInstance, const _uint* pMoveIDs, _uint iMoveCount, const CPokemonData_Manager* pDataMgr);
+POKEMON_INSTANCE Build_PokemonInstance(
+	const SPECIES_DATA& tSpecies,
+	_ubyte iLevel,
+	_uint iOriginalTrainerID,
+	_uint iCapturedAtZoneID,
+	const CPokemonData_Manager* pDataMgr);
 
-namespace PartyOps
-{
-	void Clear(PARTY& tParty);
-	_bool Add(PARTY& tParty, const POKEMON_INSTANCE& tInstance);
-	POKEMON_INSTANCE* Get(PARTY& tParty, _uint iSlot);
-	const POKEMON_INSTANCE* Get(const PARTY& tParty, _uint iSlot);
-	_uint Find_First_Alive(const PARTY& tParty);
-}
+NS_BEGIN(PartyOps)
+void Clear(PARTY& tParty);
+_bool Add(PARTY& tParty, const POKEMON_INSTANCE& tInstance);
+POKEMON_INSTANCE* Get(PARTY& tParty, _uint iSlot);
+const POKEMON_INSTANCE* Get(const PARTY& tParty, _uint iSlot);
+_bool Has_Empty_Slot(const PARTY& tParty);
+_uint Find_First_Alive(const PARTY& tParty);
+NS_END	// PartyOps
 
-NS_END
+NS_END	// Game_PKM
 
 #endif // Battle_Data_h__

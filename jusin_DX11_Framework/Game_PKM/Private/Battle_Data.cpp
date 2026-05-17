@@ -125,6 +125,52 @@ void Assign_Moves(POKEMON_INSTANCE& tInstance, const _uint* pMoveIDs, _uint iMov
 	}
 }
 
+POKEMON_INSTANCE Build_PokemonInstance(
+	const SPECIES_DATA& tSpecies,
+	_ubyte iLevel,
+	_uint iOriginalTrainerID,
+	_uint iCapturedAtZoneID,
+	const CPokemonData_Manager* pDataMgr)
+{
+	POKEMON_INSTANCE tInstance = {};
+
+	tInstance.iSpeciesID = tSpecies.iDexNo;
+	wcscpy_s(tInstance.szNickname, tSpecies.szName);
+
+	tInstance.iLevel = iLevel;
+	tInstance.iExp = 0;
+
+	for (size_t i = 0; i < static_cast<size_t>(STAT::END); ++i)
+	{
+		tInstance.iIV[i] = g_kMaxIV;
+		tInstance.iEV[i] = 0;
+	}
+
+	tInstance.eNature = NATURE::JOLLY;
+	tInstance.iAbilityID = tSpecies.iAbility1;
+
+	const _uint iInitialMoves[g_kMaxMovesPerPokemon] =
+	{
+			tSpecies.iLearnset[0],
+			tSpecies.iLearnset[1],
+			tSpecies.iLearnset[2],
+			tSpecies.iLearnset[3],
+	};
+
+	Assign_Moves(tInstance, iInitialMoves, g_kMaxMovesPerPokemon, pDataMgr);
+
+	tInstance.eStatus = STATUS_CONDITION::NONE;
+	tInstance.iHeldItemID = 0;
+
+	Recalc_All_Stats(tInstance, tSpecies);
+	tInstance.iCurrentHP = tInstance.iStat[static_cast<size_t>(STAT::HP)];
+
+	tInstance.iOriginalTrainerID = iOriginalTrainerID;
+	tInstance.iCapturedAtZoneID = iCapturedAtZoneID;
+
+	return tInstance;
+}
+
 void PartyOps::Clear(PARTY& tParty)
 {
 	memset(&tParty, 0, sizeof(PARTY));
@@ -156,6 +202,11 @@ const POKEMON_INSTANCE* PartyOps::Get(const PARTY& tParty, _uint iSlot)
 		return nullptr;
 
 	return &tParty.arrSlots[iSlot];
+}
+
+_bool PartyOps::Has_Empty_Slot(const PARTY& tParty)
+{
+	return tParty.iCount < g_kMaxPartySize;
 }
 
 _uint PartyOps::Find_First_Alive(const PARTY& tParty)

@@ -453,6 +453,9 @@
     <ClInclude Include="..\Public\CaptureRing.h">
       <Filter>01. Objects\05. Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_Data.h">
+      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -682,6 +685,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CaptureRing.cpp">
       <Filter>01. Objects\05. Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Data.cpp">
+      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

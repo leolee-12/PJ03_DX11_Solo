@@ -4,11 +4,11 @@
 #include "Actor_CaptureTarget.h"
 #include "Body_Pokemon.h"
 #include "PokemonData_Manager.h"
-#include "Battle_Data.h"
 #include "Capture_Menu.h"
 #include "Game_API.h"
 #include "MonsterBall.h"
 #include "RenderRule_Manager.h"
+#include "Player_Status.h"
 
 #include "GameInstance.h"
 
@@ -18,6 +18,23 @@ static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::CAPTURE);
 static const _float3 CAPTURE_TARGET_POS = { 0.f, 0.f, 0.f };
 static const _float3 CAPTURE_CAMERA_EYE = { 0.f, 3.8f, -5.2f };
 static const _float3 CAPTURE_CAMERA_AT = { 0.f, 0.65f, 0.f };
+
+namespace
+{
+	static CPlayer_Status* Find_PlayerState(CGameInstance* pGameInstance)
+	{
+		if (nullptr == pGameInstance)
+			return nullptr;
+
+		const list<CGameObject*>* pObjects =
+			pGameInstance->Get_ObjectList(ETOUI(LEVEL::STATIC), LAYER_PERSISTENT);
+
+		if (nullptr == pObjects || pObjects->empty())
+			return nullptr;
+
+		return static_cast<CPlayer_Status*>(pObjects->front());
+	}
+}
 NS_END
 
 CLevel_Capture::CLevel_Capture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const CAPTURE_ENV& tEnv)
@@ -49,6 +66,9 @@ HRESULT CLevel_Capture::Initialize()
 
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
+
+	if (CPlayer_Status* pPlayerState = Find_PlayerState(m_pGameInstance))
+		pPlayerState->Mark_DexSeen(m_tEnv.iSpeciesID);
 
 	m_pCaptureManager->Set_Combatants(m_pCaptureTarget, m_pMonsterBall);
 	m_pCaptureManager->Begin();
@@ -103,6 +123,19 @@ void CLevel_Capture::Update(_float fTimeDelta)
 
 	if (m_pCaptureManager->Is_Done())
 	{
+		if (CAPTURE_RESULT::SUCCESS == m_pCaptureManager->Get_Result())
+		{
+			if (CPlayer_Status* pPlayerState = Find_PlayerState(m_pGameInstance))
+			{
+				pPlayerState->Acquire_Pokemon(
+					m_tEnv.iSpeciesID,
+					static_cast<_ubyte>(m_tEnv.iLevel),
+					m_tEnv.iZoneID);
+			}
+		}
+
+		/* Pop_Level 성공 시 본 레벨(=this) 이 즉시 Free 되므로
+		   호출 후 어떤 멤버에도 접근하지 않고 곧바로 return. */
 		if (FAILED(m_pGameInstance->Pop_Level()))
 		{
 			MSG_BOX("Failed to Exit Capture");
