@@ -12,6 +12,14 @@ sampler LinearSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler LinearSamplerBias = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = wrap;
+    AddressV = wrap;
+    MipLODBias = 1.f;
+};
+
 sampler PointSampler = sampler_state
 {
     filter = min_mag_mip_point;

@@ -154,32 +154,60 @@ PS_OUT PS_DANR(PS_IN In)	// 2번 패스
 {
 	PS_OUT Out = (PS_OUT)0;
 	
-	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
+	vector vMtrlDiff = g_TexDiff.Sample(LinearSamplerBias, In.vTex);
 	if (vMtrlDiff.a < 0.1f)
 		discard;
+
+	// Normal 구성
+	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
+	float3 vNormal;
+	vNormal.xy = vNormDesc.xy;
+	vNormal.z = sqrt(saturate(1.0f - dot(vNormal.xy, vNormal.xy)));
+	vNormal = normalize(vNormal);
+
+	float3 T = normalize(In.vTangent.xyz);
+	float3 B = normalize(In.vBinormal.xyz) * -1.f;
+	float3 N = normalize(In.vNorm.xyz);
+	float3x3 WorldMatrix = float3x3(T, B, N);
+
+	vNormal = normalize(mul(vNormal, WorldMatrix));
 	
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
-	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vNorm = vector(vNormal * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 
 	float fAO = g_TexAO.Sample(LinearSampler, In.vTex).r;
-	Out.vAmbt = vector(fAO.xxx, 0.f);
+	Out.vAmbt = vector(fAO.xxx, 1.f - g_TexRough.Sample(LinearSampler, In.vTex).r);
 	return Out;
 }
 
 PS_OUT PS_DALNR(PS_IN In)	// 3번 패스
 {
 	PS_OUT Out = (PS_OUT)0;
-	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
+	vector vMtrlDiff = g_TexDiff.Sample(LinearSamplerBias, In.vTex);
 	if (vMtrlDiff.a < 0.1f)
 		discard;
 
+	// Normal 구성
+	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
+	float3 vNormal;
+	vNormal.xy = vNormDesc.xy;
+	vNormal.z = sqrt(saturate(1.0f - dot(vNormal.xy, vNormal.xy)));
+	vNormal = normalize(vNormal);
+
+	float3 T = normalize(In.vTangent.xyz);
+	float3 B = normalize(In.vBinormal.xyz) * -1.f;
+	float3 N = normalize(In.vNorm.xyz);
+	float3x3 WorldMatrix = float3x3(T, B, N);
+
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
-	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vNorm = vector(vNormal * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 
 	float fAO = g_TexAO.Sample(LinearSampler, In.vTex).r;
-	Out.vAmbt = vector(fAO.xxx, 0.f);
+	Out.vAmbt = vector(fAO.xxx, 1.f - g_TexRough.Sample(LinearSampler, In.vTex).r);
 	return Out;
 }
 

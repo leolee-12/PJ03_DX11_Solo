@@ -14,6 +14,8 @@ texture2D g_TexOpct;
 texture2D g_TexData;
 texture2D g_TexMask;
 
+vector g_vDefaultAmbt = vector(0.f, 0.f, 0.5f, 0.f);
+
 struct VS_IN
 {
 	float3 vPos : POSITION;
@@ -76,7 +78,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -114,7 +116,7 @@ PS_OUT PS_TREE(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -133,7 +135,7 @@ PS_OUT PS_TREE2(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -149,7 +151,7 @@ PS_OUT PS_ALPHATEST(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -172,7 +174,7 @@ PS_OUT PS_GLASS(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -188,7 +190,7 @@ PS_OUT PS_GRASS(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -204,7 +206,7 @@ PS_OUT PS_SOIL(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 
@@ -218,7 +220,7 @@ PS_OUT PS_SOIL2(PS_IN In)
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 	Out.vPickPos = vector(In.vWorldPos.xyz, 1.f);
-
+	Out.vAmbt = g_vDefaultAmbt;
 	return Out;
 }
 

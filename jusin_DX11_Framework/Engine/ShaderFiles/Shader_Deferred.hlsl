@@ -102,6 +102,10 @@ float ExtractSpcLine(float fSpcRaw)
 float g_fAmbtMapStrength = 0.2f;
 float g_fAmbtChromaStrength = 0.0f; // 일단 0 권장. 색감 필요하면 0.05~0.15
 
+// AO fallback
+float g_fAOStrength = 0.5f;
+float g_fAOFloor = 0.45f;
+
 float3 DecodeAmbtMap(float3 vAmbtRaw)
 {
 	vAmbtRaw = saturate(vAmbtRaw);
@@ -111,19 +115,23 @@ float3 DecodeAmbtMap(float3 vAmbtRaw)
 	float fGrayRange = max(vAmbtRaw.r, max(vAmbtRaw.g, vAmbtRaw.b))
 					- min(vAmbtRaw.r, min(vAmbtRaw.g, vAmbtRaw.b));
 
+	float fResult = 1.f;
+
 	if (fGrayRange < 0.02f)
 	{
 		float fAO = vAmbtRaw.r;
-		return lerp(1.f, max(fAO, 0.65f), g_fAmbtMapStrength).xxx;
+		fResult = lerp(1.f, max(fAO, g_fAOFloor), g_fAOStrength);
+	}
+	else
+	{
+		float fAmbt = dot(vAmbtRaw, float3(0.299f, 0.587f, 0.114f));
+
+		// 너무 낮은 값이 전체 색을 과하게 죽이지 않도록 제한
+		fAmbt = lerp(1.f, fAmbt, g_fAmbtMapStrength);
+		fResult = max(fAmbt, 0.85f);
 	}
 
-	float fAmbt = dot(vAmbtRaw, float3(0.299f, 0.587f, 0.114f));
-
-	// 너무 낮은 값이 전체 색을 과하게 죽이지 않도록 제한
-	fAmbt = lerp(1.f, fAmbt, g_fAmbtMapStrength);
-	fAmbt = max(fAmbt, 0.85f);
-
-	return fAmbt.xxx;
+	return float3(fResult, fResult, fResult);
 }
 
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
@@ -291,6 +299,22 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	vector vSpec = g_TexSpec.Sample(PointSampler, In.vTex);
 	Out.vBackBuffer = vDiffuse * vShade + vSpec;
 
+	return Out;
+}
+
+PS_OUT_BACKBUFFER PS_MAIN_COMBINED_SHADOW(PS_IN In)
+{
+	PS_OUT_BACKBUFFER Out;
+
+	// Diffuse + Shade -> 최종 색상 결정
+	vector vDiffuse = g_TexDiff.Sample(PointSampler, In.vTex);
+	if (0.5f > vDiffuse.a)
+		discard;
+
+	vector vShade = g_TexShade.Sample(PointSampler, In.vTex);
+	vector vSpec = g_TexSpec.Sample(PointSampler, In.vTex);
+	Out.vBackBuffer = vDiffuse * vShade + vSpec;
+
 	// 그림자 반영
 	vector vDepthDesc = g_TexDepth.Sample(PointSampler, In.vTex);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
@@ -306,7 +330,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	// - 뷰 스페이스 위치
 	vWorldPos *= fViewZ;
 	vWorldPos = mul(vWorldPos, g_ProjInvMatrix);
-	
+
 	// - 월드 스페이스 위치 -> 광원 시점 Clip 스페이스
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 	vWorldPos = mul(vWorldPos, g_SLViewMatrix);
@@ -323,7 +347,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	float fW, fH;
 	g_TexLightDepth.GetDimensions(fW, fH);
 	float2 vTexelSize = float2(1.f / fW, 1.f / fH);
-	
+
 	// 3x3 PCF (각 탭은 하드웨어 2x2 PCF -> 실효 4x4)
 	float fLitFactor = 0.f;
 	[unroll]
@@ -338,7 +362,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 			}
 		}
 	fLitFactor /= 9.f;
-	
+
 	// Contrast remap: 깊은 그림자/완전 빛은 클램프, 경계만 S-커브로 부드럽게
 	fLitFactor = smoothstep(0.f, 1.f, fLitFactor);
 	Out.vBackBuffer = Out.vBackBuffer * lerp(0.65f, 1.0f, fLitFactor);
@@ -401,5 +425,16 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_COMBINED();
+	}
+
+	pass Combined_Shadow
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Z_Disable, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN_COMBINED_SHADOW();
 	}
 }

@@ -66,6 +66,7 @@ public:
 
 #pragma region RENDERER
 	void Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
+	void Set_UseShadow(_bool b);
 #ifdef _DEBUG
 	void Add_DebugComponent(class CComponent* pComponent);
 #endif

@@ -22,6 +22,8 @@ public:
 	HRESULT		Draw();
 	HRESULT		Resize();
 
+	void		Set_UseShadow(_bool b) { m_bUseShadow = b; }
+
 #ifdef _DEBUG
 	void Add_DebugComponent(class CComponent* pComponent);
 #endif
@@ -47,10 +49,13 @@ private:
 	HRESULT Render_Shadow();
 	HRESULT Render_NonBlend();
 	HRESULT Render_Lights();
-	HRESULT Render_Combined();
+	HRESULT Render_Combined(_bool m_bUseShadow);
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
+
+private:
+	_bool m_bUseShadow = { true };
 
 private:
 	HRESULT Ready_DepthStencil_Buffer();
