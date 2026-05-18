@@ -335,6 +335,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	if (FAILED(m_pGameInstance->Set_ShadowLight(ShadowDesc)))
 		return E_FAIL;
 
+	m_pGameInstance->Set_UseShadow(true);
+
 	return S_OK;
 }
 

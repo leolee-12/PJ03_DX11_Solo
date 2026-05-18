@@ -330,6 +330,11 @@ void CGameInstance::Add_RenderGroup(RENDERID eGroupID, CGameObject* pGameObject)
 	m_pRenderer->Add_RenderGroup(eGroupID, pGameObject);
 }
 
+void CGameInstance::Set_UseShadow(_bool b)
+{
+	m_pRenderer->Set_UseShadow(b);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Add_DebugComponent(CComponent* pComponent)
 {

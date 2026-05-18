@@ -16,7 +16,7 @@ NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::CAPTURE);
 
 static const _float3 CAPTURE_TARGET_POS = { 0.f, 0.f, 0.f };
-static const _float3 CAPTURE_CAMERA_EYE = { 0.f, 3.8f, -5.2f };
+static const _float3 CAPTURE_CAMERA_EYE = { 0.f, 3.282f, -4.345f };
 static const _float3 CAPTURE_CAMERA_AT = { 0.f, 0.65f, 0.f };
 
 namespace

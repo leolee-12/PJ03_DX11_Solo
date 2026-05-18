@@ -27,19 +27,19 @@ struct BOX
 };
 
 NS_BEGIN(PokedexOps)
-void Clear(POKEDEX& tPokedex);
-POKEDEX_STATE Get(const POKEDEX& tPokedex, _uint iDexNo);
-_bool Mark_Seen(POKEDEX& tPokedex, _uint iDexNo);
-_bool Mark_Caught(POKEDEX& tPokedex, _uint iDexNo);
-_uint Count(const POKEDEX& tPokedex, POKEDEX_STATE eState);
+void			Clear(POKEDEX& tPokedex);
+POKEDEX_STATE	Get(const POKEDEX& tPokedex, _uint iDexNo);
+_bool			Mark_Seen(POKEDEX& tPokedex, _uint iDexNo);
+_bool			Mark_Caught(POKEDEX& tPokedex, _uint iDexNo);
+_uint			Count(const POKEDEX& tPokedex, POKEDEX_STATE eState);
 NS_END	// PokedexOps
 
 NS_BEGIN(BoxOps)
-void Clear(BOX& tBox);
-_bool Add(BOX& tBox, const POKEMON_INSTANCE& tInstance);
-POKEMON_INSTANCE* Get(BOX& tBox, _uint iSlot);
+void					Clear(BOX& tBox);
+_bool					Add(BOX& tBox, const POKEMON_INSTANCE& tInstance);
+POKEMON_INSTANCE*		Get(BOX& tBox, _uint iSlot);
 const POKEMON_INSTANCE* Get(const BOX& tBox, _uint iSlot);
-_bool Has_Empty_Slot(const BOX& tBox);
+_bool					Has_Empty_Slot(const BOX& tBox);
 NS_END	// BoxOps
 
 NS_END	// Game_PKM

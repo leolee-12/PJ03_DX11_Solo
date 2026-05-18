@@ -16,6 +16,7 @@ namespace
 
 	constexpr _float IMPACT_BOUNCE_DISTANCE = 0.65f;
 	constexpr _float IMPACT_BOUNCE_DURATION = 0.32f;
+	constexpr _float IMPACT_BOUNCE_UP_BIAS = 0.25f;
 	constexpr _float MISS_BOUNCE_FORWARD = 0.65f;
 	constexpr _float MISS_BOUNCE_HEIGHT = 0.45f;
 	constexpr _float MISS_BOUNCE_DURATION = 0.42f;
@@ -241,6 +242,10 @@ void CMonsterBall::Trigger_Impact(const _float3& vTargetCenter)
 	if (XMVectorGetX(XMVector3LengthSq(vNormal)) <= 0.000001f)
 		vNormal = XMVectorSet(0.f, 0.f, -1.f, 0.f);
 
+	vNormal = XMVector3Normalize(vNormal);
+
+	/* 반사 방향에 위쪽 성분을 강제로 가산해 항상 위로 튕기도록 보정. */
+	vNormal = vNormal + XMVectorSet(0.f, IMPACT_BOUNCE_UP_BIAS, 0.f, 0.f);
 	vNormal = XMVector3Normalize(vNormal);
 
 	_float3 vStartCenter{};

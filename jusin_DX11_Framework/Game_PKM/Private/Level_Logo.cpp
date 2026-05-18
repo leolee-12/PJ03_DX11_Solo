@@ -33,8 +33,8 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_UI(LAYER_UI)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_UI(LAYER_UI)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -81,53 +81,25 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LIGHT_DESC LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.9f, 0.9f, 0.9f, 1.f);   // GamePlay와 동일 중성 화이트
-	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);   // GamePlay와 동일 중성 강화
-	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);     // 변화 없음
-	LightDesc.vDirection = _float4(0.2f, -0.7f, 0.7f, 0.f);   // Logo 고유 방향 유지
+	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);  // 중성 화이트 (RGB 균일), 살짝 감소
+	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);  // 중성 화이트, 강화 → 평평·푸른 끼 제거
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);  // 변화 없음
+	LightDesc.vDirection = _float4(0.2f, -0.5f, 0.85f, 0.f);   // Logo 고유 방향 유지
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vPosition = _float4(1.f, 0.2f, -3.f, 1.f);
-	LightDesc.fRange = 10.f;
-	
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+	//LightDesc.eType = LIGHT::POINT;
+	//LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	//LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
+	//LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
+	//LightDesc.vPosition = _float4(1.f, 0.2f, -3.f, 1.f);
+	//LightDesc.fRange = 10.f;
+	//
+	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+	//	return E_FAIL;
 
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vPosition = _float4(0.f, 0.2f, -3.f, 1.f);
-	LightDesc.fRange = 10.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vPosition = _float4(0.25f, 0.2f, -3.f, 1.f);
-	LightDesc.fRange = 10.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.5f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vPosition = _float4(0.75f, 0.2f, -3.f, 1.f);
-	LightDesc.fRange = 10.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+	m_pGameInstance->Set_UseShadow(false);
 
 	return S_OK;
 }

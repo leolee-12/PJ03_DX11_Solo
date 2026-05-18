@@ -49,7 +49,7 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Render_Combined()))
+	if (FAILED(Render_Combined(m_bUseShadow)))
 		return E_FAIL;
 
 	if (FAILED(Render_NonLight()))
@@ -86,7 +86,7 @@ HRESULT CRenderer::Resize()
 		DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DEPTH, iNewWidth, iNewHeight,
-		DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_AMBIENT, iNewWidth, iNewHeight,
 		DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.505f, 0.f))))
@@ -258,8 +258,10 @@ HRESULT CRenderer::Render_Lights()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Combined()
+HRESULT CRenderer::Render_Combined(_bool m_bUseShadow)
 {
+	_uint iShaderPass = ETOUI(DEFERRED::COMBINED);
+
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DIFFUSE, m_pShader, "g_TexDiff")))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_SHADE, m_pShader, "g_TexShade")))
@@ -268,8 +270,6 @@ HRESULT CRenderer::Render_Combined()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DEPTH, m_pShader, "g_TexDepth")))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_LIGHTDEPTH, m_pShader, "g_TexLightDepth")))
-		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -277,18 +277,25 @@ HRESULT CRenderer::Render_Combined()
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pShader->Bind_Matrix("g_SLViewMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShader->Bind_Matrix("g_SLProjMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::PROJ))))
-		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_Shadow_FarZ(m_pShader)))
-		return E_FAIL;
+	if (m_bUseShadow)
+	{
+		iShaderPass++;
+
+		if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_LIGHTDEPTH, m_pShader, "g_TexLightDepth")))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_Matrix("g_SLViewMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::VIEW))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_Matrix("g_SLProjMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::PROJ))))
+			return E_FAIL;
+		if (FAILED(m_pGameInstance->Bind_Shadow_FarZ(m_pShader)))
+			return E_FAIL;
+	}
 
 	if (FAILED(m_pVIBuffer->Bind_Resources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Begin(ETOUI(DEFERRED::COMBINED))))
+	if (FAILED(m_pShader->Begin(iShaderPass)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
