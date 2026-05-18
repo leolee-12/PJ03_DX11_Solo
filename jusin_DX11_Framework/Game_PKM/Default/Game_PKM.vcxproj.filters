@@ -31,9 +31,6 @@
     <Filter Include="80. Study\03. Particles">
       <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. ShaderFiles\UI">
-      <UniqueIdentifier>{eb3ed17d-22b4-460f-9b7f-c0492c7f36ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Levels\03. Battle">
       <UniqueIdentifier>{a1b486c3-6811-4b22-be00-ff1df523ef66}</UniqueIdentifier>
     </Filter>
@@ -48,9 +45,6 @@
     </Filter>
     <Filter Include="03. Components\00. UI_Instance">
       <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. ShaderFiles\Body">
-      <UniqueIdentifier>{8801ab90-8eee-404d-aa1f-eb99cd9cea89}</UniqueIdentifier>
     </Filter>
     <Filter Include="00. Levels\04. Capture">
       <UniqueIdentifier>{493e10d9-d3f7-4011-a840-86bbe73542df}</UniqueIdentifier>
@@ -142,9 +136,6 @@
     <Filter Include="02. Game_API">
       <UniqueIdentifier>{564c7465-cb9d-4b18-9180-4375805faed6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Game_API\02. RenderRule">
-      <UniqueIdentifier>{31b14ad8-a734-4f36-b2c3-9c37628b8154}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Game_API\00. SharedTexture">
       <UniqueIdentifier>{a62c7091-9edc-43af-b350-b5d5a0492f72}</UniqueIdentifier>
     </Filter>
@@ -174,6 +165,24 @@
     </Filter>
     <Filter Include="04. Contents\02. Spawn">
       <UniqueIdentifier>{492461dc-2dfd-4a4c-b9f4-3c73c61c8dfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Game_API\02. TrainerData">
+      <UniqueIdentifier>{618138b5-dfd7-4118-8ed9-efd41789c494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Game_API\03. RenderRule">
+      <UniqueIdentifier>{31b14ad8-a734-4f36-b2c3-9c37628b8154}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\01. Body">
+      <UniqueIdentifier>{8801ab90-8eee-404d-aa1f-eb99cd9cea89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\02. UI">
+      <UniqueIdentifier>{eb3ed17d-22b4-460f-9b7f-c0492c7f36ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\03. Effect">
+      <UniqueIdentifier>{cc50901e-7524-4cae-9772-5603c55f38f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\00. Basic">
+      <UniqueIdentifier>{0722cd0d-6b8c-4e96-b0ff-2d42f5377627}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -370,7 +379,7 @@
       <Filter>04. Contents\00. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\RenderRule_Manager.h">
-      <Filter>02. Game_API\02. RenderRule</Filter>
+      <Filter>02. Game_API\03. RenderRule</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IBattleAction_Step.h">
       <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
@@ -464,6 +473,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Spawn_Manager.h">
       <Filter>04. Contents\02. Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TrainerData_Manager.h">
+      <Filter>02. Game_API\02. TrainerData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle.h">
+      <Filter>01. Objects\03. Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Test_Single.h">
+      <Filter>01. Objects\03. Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleEmitter.h">
+      <Filter>01. Objects\03. Effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -615,7 +636,7 @@
       <Filter>04. Contents\00. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\RenderRule_Manager.cpp">
-      <Filter>02. Game_API\02. RenderRule</Filter>
+      <Filter>02. Game_API\03. RenderRule</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_ActionSequencer.cpp">
       <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
@@ -701,55 +722,70 @@
     <ClCompile Include="..\Private\Spawn_Manager.cpp">
       <Filter>04. Contents\02. Spawn</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TrainerData_Manager.cpp">
+      <Filter>02. Game_API\02. TrainerData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle.cpp">
+      <Filter>01. Objects\03. Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Test_Single.cpp">
+      <Filter>01. Objects\03. Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleEmitter.cpp">
+      <Filter>01. Objects\03. Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxMesh.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxAnimMesh.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxCube.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxPointInstance.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_VtxUIInstance.hlsl">
-      <Filter>98. ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl">
-      <Filter>98. ShaderFiles\UI</Filter>
+      <Filter>98. ShaderFiles\02. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl">
-      <Filter>98. ShaderFiles\UI</Filter>
+      <Filter>98. ShaderFiles\02. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl">
-      <Filter>98. ShaderFiles\UI</Filter>
+      <Filter>98. ShaderFiles\02. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIImage.hlsl">
-      <Filter>98. ShaderFiles\UI</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl">
-      <Filter>98. ShaderFiles</Filter>
+      <Filter>98. ShaderFiles\02. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl">
-      <Filter>98. ShaderFiles\Body</Filter>
+      <Filter>98. ShaderFiles\01. Body</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl">
-      <Filter>98. ShaderFiles\Body</Filter>
+      <Filter>98. ShaderFiles\01. Body</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl">
-      <Filter>98. ShaderFiles\Body</Filter>
+      <Filter>98. ShaderFiles\01. Body</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl">
+      <Filter>98. ShaderFiles\01. Body</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>98. ShaderFiles\00. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxCube.hlsl">
+      <Filter>98. ShaderFiles\00. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>98. ShaderFiles\00. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>98. ShaderFiles\00. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxTex.hlsl">
+      <Filter>98. ShaderFiles\00. Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxUIInstance.hlsl">
+      <Filter>98. ShaderFiles\02. UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
+      <Filter>98. ShaderFiles\03. Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_VtxPointInstance.hlsl">
+      <Filter>98. ShaderFiles\03. Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Effect_M1.hlsl">
+      <Filter>98. ShaderFiles\03. Effect</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

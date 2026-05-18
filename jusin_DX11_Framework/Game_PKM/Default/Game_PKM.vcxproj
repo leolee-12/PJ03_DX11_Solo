@@ -61,6 +61,7 @@
     <ClInclude Include="..\Public\Damage_Pipe.h" />
     <ClInclude Include="..\Public\Damage_Calculator.h" />
     <ClInclude Include="..\Public\Damage_Modifiers.h" />
+    <ClInclude Include="..\Public\Effect_Test_Single.h" />
     <ClInclude Include="..\Public\Interaction_BallHit.h" />
     <ClInclude Include="..\Public\Interaction_Dialogue.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
@@ -94,6 +95,8 @@
     <ClInclude Include="..\Public\Menu.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MonsterBall.h" />
+    <ClInclude Include="..\Public\Particle.h" />
+    <ClInclude Include="..\Public\ParticleEmitter.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Player_Data.h" />
     <ClInclude Include="..\Public\Player_Status.h" />
@@ -107,6 +110,7 @@
     <ClInclude Include="..\Public\Spawn_Defines.h" />
     <ClInclude Include="..\Public\Spawn_Manager.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\TrainerData_Manager.h" />
     <ClInclude Include="..\Public\UIButton_Glow.h" />
     <ClInclude Include="..\Public\UIButton_Group.h" />
     <ClInclude Include="..\Public\UIButton_Layered.h" />
@@ -153,6 +157,7 @@
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
     <ClCompile Include="..\Private\Damage_Modifiers.cpp" />
+    <ClCompile Include="..\Private\Effect_Test_Single.cpp" />
     <ClCompile Include="..\Private\Interaction_BallHit.cpp" />
     <ClCompile Include="..\Private\Interaction_Dialogue.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
@@ -175,6 +180,8 @@
     <ClCompile Include="..\Private\Menu.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MonsterBall.cpp" />
+    <ClCompile Include="..\Private\Particle.cpp" />
+    <ClCompile Include="..\Private\ParticleEmitter.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Player_Data.cpp" />
     <ClCompile Include="..\Private\Player_Status.cpp" />
@@ -187,6 +194,7 @@
     <ClCompile Include="..\Private\Snow.cpp" />
     <ClCompile Include="..\Private\Spawn_Manager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\TrainerData_Manager.cpp" />
     <ClCompile Include="..\Private\UIButton_Glow.cpp" />
     <ClCompile Include="..\Private\UIButton_Group.cpp" />
     <ClCompile Include="..\Private\UIButton_Layered.cpp" />
@@ -197,6 +205,7 @@
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_Effect_M1.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl" />

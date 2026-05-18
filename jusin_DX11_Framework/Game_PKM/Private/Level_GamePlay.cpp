@@ -1,7 +1,6 @@
 ﻿#include "Level_GamePlay.h"
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
-#include "Effect_Star.h"
 #include "UIButton_Glow.h"
 #include "UIButton_Layered.h"
 #include "UIButton_Group.h"
@@ -18,6 +17,7 @@
 #include "RenderRule_Manager.h"
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
+#include "Effect_Test_Single.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -184,7 +184,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 		BATTLE_ENV tEnv = {};
 		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
-		tEnv.eRule = BATTLE_RULE::WILD_SINGLE;
+		tEnv.eRule = BATTLE_RULE::TRAINER_SINGLE;
+		tEnv.iOpponentTrainerID = 1;
 		tEnv.iBGResourceID = 0;
 		tEnv.iZoneID = 0;
 
@@ -586,8 +587,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EXPLOSION,
-		ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+	CEffect_Test_Single::DESC EffectDesc{};
+	EffectDesc.vSpawnPos = _float3(20.7f, 2.f, -16.8f);
+	EffectDesc.vInitVelocity = _float3(0.f, 1.f, 0.f);
+	EffectDesc.vAcceleration = _float3(0.f, 0.f, 0.f);
+	EffectDesc.fLifeTime = 5.f;
+	EffectDesc.fSize = 1.25f;
+	EffectDesc.vColor = _float4(1.f, 1.f, 0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_GameObject(
+		ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT_TEST_SINGLE,
+		ETOUI(LEVEL::GAMEPLAY), strLayerTag,
+		&EffectDesc)))
 		return E_FAIL;
 
 	return S_OK;

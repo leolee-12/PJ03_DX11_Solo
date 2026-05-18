@@ -34,6 +34,7 @@
 #include "Interaction_BallHit.h"
 #include "MonsterBall.h"
 #include "CaptureRing.h"
+#include "Effect_Test_Single.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -418,6 +419,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxPointInstance.hlsl"), VTXPOINT_INSTANCE_DESC::Elements, VTXPOINT_INSTANCE_DESC::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxPointInstance"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_EFFECT_M1,
+		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Effect_M1.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements); },
+		TEXT("Prototype_Component_Shader_Effect_M1"));
+
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_PLAYER_LGPE,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Player_LGPE"));
@@ -580,6 +585,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
 		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_UIImage_FadeBattle"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT_TEST_SINGLE,
+		[this] { return CEffect_Test_Single::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Effect_Test_Single"));
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);

@@ -134,6 +134,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXANIMMESH, L"Prototype_Component_Shader_VtxAnimMesh
 WNAME_TAG(PROTO_COM_SHADER_VTXCUBE, L"Prototype_Component_Shader_VtxCube");
 WNAME_TAG(PROTO_COM_SHADER_VTXRECTINST, L"Prototype_Component_Shader_VtxRectInstance");
 WNAME_TAG(PROTO_COM_SHADER_VTXPOINTINST, L"Prototype_Component_Shader_VtxPointInstance");
+WNAME_TAG(PROTO_COM_SHADER_EFFECT_M1, L"Prototype_Component_Shader_Effect_M1");
 
 WNAME_TAG(PROTO_COM_SHADER_PLAYER_LGPE, L"Prototype_Component_Shader_Player_LGPE");
 WNAME_TAG(PROTO_COM_SHADER_POKEMON, L"Prototype_Component_Shader_Pokemon");
@@ -233,6 +234,8 @@ WNAME_TAG(PROTO_OBJ_SKY, L"Prototype_GameObject_Sky");
 WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
+WNAME_TAG(PROTO_OBJ_EFFECT_TEST_SINGLE, L"Prototype_GameObject_Effect_Test_Single");
+
 WNAME_TAG(PROTO_OBJ_BATTLE_TRAINER, L"Prototype_GameObject_Battle_Trainer");
 
 WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
