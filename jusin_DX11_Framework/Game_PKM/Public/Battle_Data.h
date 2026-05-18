@@ -14,6 +14,7 @@ inline constexpr _ubyte		g_kMaxEVPerStat = 252;
 inline constexpr _ushort	g_kMaxEVTotal = 510;
 inline constexpr _ubyte		g_kMaxLevel = 100;
 inline constexpr _ubyte		g_kMinLevel = 1;
+inline constexpr _uint		g_kTrainerDialogTextLen = 128;
 
 enum class ITEM_CATEGORY : _ubyte
 {
@@ -172,9 +173,9 @@ struct TRAINER_DATA
 	_uint iRewardMoney = {};
 	_uint iRewardItemID = {};
 
-	_uint iEncounterDialogID = {};
-	_uint iVictoryDialogID = {};
-	_uint iDefeatDialogID = {};
+	_tchar szEncounterDialog[g_kTrainerDialogTextLen] = {};
+	_tchar szVictoryDialog[g_kTrainerDialogTextLen] = {};
+	_tchar szDefeatDialog[g_kTrainerDialogTextLen] = {};
 };
 
 _ushort	Calc_HP_Stat(_ushort iBase, _ubyte iIV, _ubyte iEV, _ubyte iLevel);

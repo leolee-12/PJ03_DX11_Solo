@@ -2,6 +2,7 @@
 #include "Battle_Manager.h"
 #include "Player_Status.h"
 #include "PokemonData_Manager.h"
+#include "TrainerData_Manager.h"
 #include "Battle_Pokemon.h"
 #include "Battle_Trainer.h"
 #include "BattleMsg.h"
@@ -35,10 +36,17 @@ namespace
 		case BATTLE_PHASE::RESOLVE_ACTION_2: return TEXT("RESOLVE_ACTION_2");
 		case BATTLE_PHASE::RESOLVE_END_TURN: return TEXT("RESOLVE_END_TURN");
 		case BATTLE_PHASE::CHECK_END: return TEXT("CHECK_END");
+		case BATTLE_PHASE::FORCED_SWITCH: return TEXT("FORCED_SWITCH");
 		case BATTLE_PHASE::OUTRO: return TEXT("OUTRO");
 		case BATTLE_PHASE::DONE: return TEXT("DONE");
 		default: return TEXT("UNKNOWN");
 		}
+	}
+
+	_bool Is_TrainerRule(BATTLE_RULE eRule)
+	{
+		return BATTLE_RULE::TRAINER_SINGLE == eRule ||
+			BATTLE_RULE::TRAINER_DOUBLE == eRule;
 	}
 }
 NS_END
@@ -157,16 +165,45 @@ HRESULT CLevel_Battle::Bind_Battle_Sources()
 	if (FAILED(m_pBattleManager->Bind_PlayerParty(pPlayerState, iLead)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Debug_WildOpponent()))
-		return E_FAIL;
+	if (Is_TrainerRule(m_tEnv.eRule))
+	{
+		auto* pTrainerMgr = CTrainerData_Manager::GetInstance();
+		if (nullptr == pTrainerMgr)
+			return E_FAIL;
+		const TRAINER_DATA* pTrainerData =
+			pTrainerMgr->Find_Trainer(m_tEnv.iOpponentTrainerID);
+		if (nullptr == pTrainerData)
+			return E_FAIL;
 
-	if (FAILED(m_pBattleManager->Bind_OpponentSingle(&m_tDebugWildOpponent)))
-		return E_FAIL;
+		m_tOpponentTrainer = *pTrainerData;
 
-	/* 게임 본 사양은 트레이너 배틀만.
-	   트레이너 배틀 도입 시 이 호출을 Bind_OpponentTrainer 직후로 옮기고
-	   pTrainerData->tParty.arrSlots[0..iCount-1].iSpeciesID 전체 순회로 교체. */
-	pPlayerState->Mark_DexSeen(m_tDebugWildOpponent.iSpeciesID);
+		if (FAILED(m_pBattleManager->Bind_OpponentTrainer(&m_tOpponentTrainer)))
+			return E_FAIL;
+
+		const PARTY& tTrainerParty = m_tOpponentTrainer.tParty;
+
+		for (_uint i = 0; i < tTrainerParty.iCount; ++i)
+		{
+			const POKEMON_INSTANCE* pOpponentPokemon = PartyOps::Get(tTrainerParty, i);
+			if (nullptr == pOpponentPokemon)
+				continue;
+
+			if (0 == pOpponentPokemon->iSpeciesID || 0 == pOpponentPokemon->iCurrentHP)
+				continue;
+
+			pPlayerState->Mark_DexSeen(pOpponentPokemon->iSpeciesID);
+		}
+	}
+	else
+	{
+		if (FAILED(Ready_Debug_WildOpponent()))
+			return E_FAIL;
+
+		if (FAILED(m_pBattleManager->Bind_OpponentSingle(&m_tDebugWildOpponent)))
+			return E_FAIL;
+
+		pPlayerState->Mark_DexSeen(m_tDebugWildOpponent.iSpeciesID);
+	}
 
 	return S_OK;
 }

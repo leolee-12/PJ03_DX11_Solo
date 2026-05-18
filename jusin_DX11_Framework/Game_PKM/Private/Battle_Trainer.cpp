@@ -77,6 +77,12 @@ HRESULT CBattle_Trainer::Render()
 	return S_OK;
 }
 
+void CBattle_Trainer::Play_Throw()
+{
+	if (nullptr != m_pBody)
+		m_pBody->Set_Anim(17, false);
+}
+
 HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 {
 	CBody::BODY_DESC BodyDesc{};
@@ -93,6 +99,10 @@ HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 
 	if (FAILED(__super::Add_PartObject(
 		ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
+		return E_FAIL;
+
+	m_pBody = Get_Part<CBody>(PART_BODY);
+	if (nullptr == m_pBody)
 		return E_FAIL;
 
 	return S_OK;

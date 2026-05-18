@@ -54,6 +54,7 @@ private:
 	CBattle_PokemonListener* m_pPokemonListeners[g_kBattleSideCount] = { nullptr, nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
 	POKEMON_INSTANCE m_tDebugWildOpponent = {};
+	TRAINER_DATA m_tOpponentTrainer = {};
 
 public:
 	static CLevel_Battle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LEVEL_ENTRY_DESC* pEntryDesc);

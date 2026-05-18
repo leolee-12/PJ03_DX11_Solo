@@ -5,6 +5,7 @@
 #include "ContainerObject.h"
 
 NS_BEGIN(Game_PKM)
+class CBody;
 
 class CBattle_Trainer final : public CContainerObject
 {
@@ -38,7 +39,11 @@ public:
     virtual void Late_Update(_float fTimeDelta) override;
     virtual HRESULT Render() override;
 
+    void Play_Throw();
+
 private:
+    CBody* m_pBody = { nullptr }; // weak
+
     _uint m_iSide = { g_kBattleSide_Player };
     WNameID m_strBodyProtoTag = {};
     WNameID m_strModelProtoTag = {};

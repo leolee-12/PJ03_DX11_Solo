@@ -6,6 +6,7 @@
 #include "UIController.h"
 #include "UIController_Hub.h"
 #include "PokemonData_Manager.h"
+#include "TrainerData_Manager.h"
 #include "Player_Status.h"
 #include "Game_PresetTable.h"
 #include "RenderRule_Manager.h"
@@ -56,6 +57,13 @@ HRESULT Ready_StaticTables()
 	if (FAILED(pPokemonDataManager->Initialize()))
 		return E_FAIL;
 
+	auto* pTrainerDataManager = CTrainerData_Manager::GetInstance();
+	if (nullptr == pTrainerDataManager)
+		return E_FAIL;
+
+	if (FAILED(pTrainerDataManager->Initialize()))
+		return E_FAIL;
+
 	auto* pRenderRuleManager = CRenderRule_Manager::GetInstance();
 	if (nullptr == pRenderRuleManager)
 		return E_FAIL;
@@ -70,6 +78,7 @@ void Cleanup_StaticTables()
 {
 	CSpawn_Manager::DestroyInstance();
 	CRenderRule_Manager::DestroyInstance();
+	CTrainerData_Manager::DestroyInstance();
 	CPokemonData_Manager::DestroyInstance();
 }
 #pragma endregion

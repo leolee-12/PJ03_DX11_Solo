@@ -52,6 +52,9 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
     if (nullptr == pAttacker || nullptr == ctx.pDataMgr || nullptr == ctx.pManager)
         return E_FAIL;
 
+    if (false == pAttacker->Is_Alive())
+        return S_OK;
+
     const _uint iMoveID = pAttacker->Get_MoveID(m_tDesc.iMoveSlot);
     const MOVE_DATA* pMove = ctx.pDataMgr->Find_Move(iMoveID);
     if (nullptr == pMove)
@@ -133,7 +136,7 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
     return S_OK;
 }
 
-CMoveCommand * CMoveCommand::Create(const DESC & tDesc)
+CMoveCommand* CMoveCommand::Create(const DESC & tDesc)
 {
     CMoveCommand* pInstance = new CMoveCommand();
 
@@ -165,6 +168,9 @@ HRESULT CSwitchCommand::Initialize(const DESC& tDesc)
     if (tDesc.iActorSlot >= g_kMaxSlotsPerSide)
         return E_FAIL;
 
+    if (tDesc.iTargetPartyIndex >= g_kMaxPartySize)
+        return E_FAIL;
+
     m_tDesc = tDesc;
 
     return S_OK;
@@ -178,7 +184,13 @@ _ushort CSwitchCommand::Get_ActorSpeed(const BATTLE_CONTEXT& ctx) const
 
 HRESULT CSwitchCommand::Execute(const BATTLE_CONTEXT& ctx)
 {
-    (void)ctx;
+    if (nullptr == ctx.pManager)
+        return E_FAIL;
+
+    return ctx.pManager->Replace_BattlerSlot(
+        m_tDesc.iActorSide,
+        m_tDesc.iTargetPartyIndex);
+
     return S_OK;
 }
 

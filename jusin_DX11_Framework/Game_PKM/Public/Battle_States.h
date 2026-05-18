@@ -170,11 +170,14 @@ private:
 	virtual ~CForcedSwitchState() = default;
 
 public:
-	virtual BATTLE_PHASE Get_Phase() const override { return BATTLE_PHASE::CHECK_END; }
+	virtual BATTLE_PHASE Get_Phase() const override { return BATTLE_PHASE::FORCED_SWITCH; }
 
 	virtual void OnEnter(const BATTLE_CONTEXT& ctx) override;
 	virtual void Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
 	virtual void OnExit(const BATTLE_CONTEXT& ctx) override;
+
+private:
+	_bool m_bSubmitted = { false };
 
 public:
 	static CForcedSwitchState* Create();

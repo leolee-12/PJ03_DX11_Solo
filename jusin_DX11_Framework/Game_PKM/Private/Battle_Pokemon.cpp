@@ -127,6 +127,18 @@ void CBattle_Pokemon::Play_Hurt()
 	Play_Anim_NonLoop(ANIM_KIND::HURT, 2.4f);
 }
 
+void CBattle_Pokemon::Play_Enter()
+{
+	if (nullptr != m_pBody)
+		m_pBody->Set_Anim(
+			BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::ENTER),
+			false);
+
+	m_eCurrentKind = ANIM_KIND::ENTER;
+	m_fAnimTimer = 0.f;
+	m_fAnimDuration = 2.f;
+}
+
 void CBattle_Pokemon::Play_Faint()
 {
 	// 기절은 IDLE 로 복귀하지 않음 — duration 0 으로 두고 model 만 변경 + 락 해제 (현재 단계에서 단순화)

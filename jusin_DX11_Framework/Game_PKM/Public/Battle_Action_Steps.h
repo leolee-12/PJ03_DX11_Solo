@@ -51,6 +51,78 @@ private:
 	virtual void Free() override;
 };
 
+class SBattleText final : public IBattleAction_Step
+{
+private:
+    SBattleText();
+    virtual ~SBattleText() = default;
+
+public:
+    HRESULT Initialize(const _wstring& strText, _float fHoldSeconds);
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _wstring m_strText = {};
+    _float m_fHoldSeconds = { 0.4f };
+    _float m_fHoldTimer = { 0.f };
+    _bool m_bOpened = { false };
+
+public:
+    static SBattleText* Create(const _wstring& strText, _float fHoldSeconds = 0.4f);
+
+private:
+    virtual void Free() override;
+};
+
+class STrainerThrow final : public IBattleAction_Step
+{
+private:
+    STrainerThrow();
+    virtual ~STrainerThrow() = default;
+
+public:
+    HRESULT Initialize(_uint iSide, _float fDuration);
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint m_iSide = { 0 };
+    _float m_fDuration = { 0.8f };
+    _float m_fElapsed = { 0.f };
+
+public:
+    static STrainerThrow* Create(_uint iSide, _float fDuration = 0.8f);
+
+private:
+    virtual void Free() override;
+};
+
+class SPokemonEnter final : public IBattleAction_Step
+{
+private:
+    SPokemonEnter();
+    virtual ~SPokemonEnter() = default;
+
+public:
+    HRESULT Initialize(_uint iSide);
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint m_iSide = { 0 };
+    _float m_fGrace = { 0.f };
+
+public:
+    static SPokemonEnter* Create(_uint iSide);
+
+private:
+    virtual void Free() override;
+};
+
 /* SDone
    - 시퀀스 마지막에 명시적으로 두는 sentinel. 즉시 완료.
    - 시퀀서는 빈 step 도달 시 자동 종료하므로 필수는 아니지만,

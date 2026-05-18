@@ -48,9 +48,9 @@ void Serialize(IStream& Stream, TRAINER_DATA& v)
 	Serialize(Stream, v.iRewardMoney);
 	Serialize(Stream, v.iRewardItemID);
 
-	Serialize(Stream, v.iEncounterDialogID);
-	Serialize(Stream, v.iVictoryDialogID);
-	Serialize(Stream, v.iDefeatDialogID);
+	Stream.IO(v.szEncounterDialog, sizeof(v.szEncounterDialog));
+	Stream.IO(v.szVictoryDialog, sizeof(v.szVictoryDialog));
+	Stream.IO(v.szDefeatDialog, sizeof(v.szDefeatDialog));
 }
 
 NS_END

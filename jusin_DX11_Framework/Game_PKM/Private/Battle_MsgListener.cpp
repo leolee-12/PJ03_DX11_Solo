@@ -43,7 +43,10 @@ _wstring CBattle_MsgListener::Get_MoveName(_uint iMoveID) const
 
 void CBattle_MsgListener::On_BattleStarted(const EVENT_BATTLE_STARTED& tEvent)
 {
-	(void)tEvent;
+	if (BATTLE_RULE::TRAINER_SINGLE == tEvent.tEnv.eRule ||
+		BATTLE_RULE::TRAINER_DOUBLE == tEvent.tEnv.eRule)
+		return;
+
 	m_qMessages.push(_wstring(TEXT("야생 ")) + Get_BattlerName(g_kBattleSide_Opponent) + TEXT("이(가) 나타났다!"));
 }
 
@@ -119,6 +122,12 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 
 	const _bool bTyping = m_pMsg->Is_Open() && false == m_pMsg->Is_Done();
 	const _bool bFinishedDisplay = m_pMsg->Is_Open() && m_pMsg->Is_Done();
+
+	const _bool bHasListenerWork =
+		m_bLockHeld || m_bWaiting || false == m_qMessages.empty();
+
+	if (false == bHasListenerWork && m_pMsg->Is_Open())
+		return;
 
 	// 1) 타이핑 완료 시점 감지 — 현재 메시지에 대해 대기가 아직이면 타이머 시작
 	if (bFinishedDisplay && false == m_bWaiting && false == m_bMessageWaitConsumed)

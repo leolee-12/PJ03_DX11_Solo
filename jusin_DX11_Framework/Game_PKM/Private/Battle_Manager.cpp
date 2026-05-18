@@ -130,6 +130,50 @@ HRESULT CBattle_Manager::Bind_OpponentTrainer(TRAINER_DATA* pTrainerData)
 	return S_OK;
 }
 
+HRESULT CBattle_Manager::Replace_BattlerSlot(_uint iSide, _uint iPartyIndex)
+{
+	if (iSide >= g_kBattleSideCount)
+		return E_FAIL;
+
+	POKEMON_INSTANCE* pNewPokemon = Resolve_PartyPokemon(iSide, iPartyIndex);
+	if (nullptr == pNewPokemon)
+		return E_FAIL;
+
+	if (0 == pNewPokemon->iSpeciesID || 0 == pNewPokemon->iCurrentHP)
+		return E_FAIL;
+
+	CBattler* pBattler = m_pBattlers[iSide];
+
+	if (nullptr != pBattler && pBattler->Get_Instance() == pNewPokemon)
+		return S_OK;
+
+	if (nullptr != pBattler)
+	{
+		pBattler->Reset_For_Switch(pNewPokemon);
+	}
+	else
+	{
+		CBattler::BATTLER_DESC tDesc{};
+		tDesc.iSide = iSide;
+		tDesc.iSlotIndex = 0;
+		tDesc.pInstance = pNewPokemon;
+
+		m_pBattlers[iSide] = CBattler::Create(tDesc);
+		if (nullptr == m_pBattlers[iSide])
+			return E_FAIL;
+	}
+
+	if (nullptr != m_pEventDispatcher)
+	{
+		EVENT_POKEMON_SWITCHED tEvent{};
+		tEvent.iSide = iSide;
+		tEvent.iNewPartyIndex = iPartyIndex;
+		m_pEventDispatcher->Publish(tEvent);
+	}
+
+	return S_OK;
+}
+
 void CBattle_Manager::Begin()
 {
 	Request_State(BATTLE_PHASE::INTRO);
@@ -245,6 +289,27 @@ _float CBattle_Manager::Get_PokemonYaw(_uint iSide, _uint iSlotIndex) const
 	return BattleLayout::Get_PokemonYaw(m_tEnv.eRule, iSide, iSlotIndex);
 }
 
+void CBattle_Manager::Request_ForcedSwitch(_uint iSide)
+{
+	if (iSide >= g_kBattleSideCount)
+		return;
+
+	m_iForcedSwitchSide = iSide;
+	Request_State(BATTLE_PHASE::FORCED_SWITCH);
+}
+
+_uint CBattle_Manager::Find_FirstAlivePartyIndex(_uint iSide) const
+{
+	for (_uint i = 0; i < g_kMaxPartySize; ++i)
+	{
+		POKEMON_INSTANCE* pPokemon = Resolve_PartyPokemon(iSide, i);
+		if (nullptr != pPokemon && pPokemon->iCurrentHP > 0)
+			return i;
+	}
+
+	return g_kMaxPartySize;
+}
+
 BATTLE_CONTEXT CBattle_Manager::Build_Context()
 {
 	BATTLE_CONTEXT ctx{};
@@ -307,6 +372,9 @@ IBattleState* CBattle_Manager::Create_State(BATTLE_PHASE ePhase)
 	case BATTLE_PHASE::CHECK_END:
 		return CCheckEndState::Create();
 
+	case BATTLE_PHASE::FORCED_SWITCH:
+		return CForcedSwitchState::Create();
+
 	case BATTLE_PHASE::OUTRO:
 		return COutroState::Create();
 
@@ -344,6 +412,31 @@ void CBattle_Manager::Request_State(BATTLE_PHASE ePhase)
 {
 	Release_State(m_pNextState);
 	m_pNextState = Create_State(ePhase);
+}
+
+POKEMON_INSTANCE* CBattle_Manager::Resolve_PartyPokemon(_uint iSide, _uint iPartyIndex) const
+{
+	if (iPartyIndex >= g_kMaxPartySize)
+		return nullptr;
+
+	if (g_kBattleSide_Player == iSide)
+	{
+		if (nullptr == m_pPlayerState)
+			return nullptr;
+
+		return PartyOps::Get(m_pPlayerState->Get_Party(), iPartyIndex);
+	}
+
+	if (g_kBattleSide_Opponent == iSide)
+	{
+		if (nullptr != m_pOpponentTrainer)
+			return PartyOps::Get(m_pOpponentTrainer->tParty, iPartyIndex);
+
+		if (nullptr != m_pOpponentSingle && 0 == iPartyIndex)
+			return m_pOpponentSingle;
+	}
+
+	return nullptr;
 }
 
 CBattle_Manager* CBattle_Manager::Create(const BATTLE_ENV& tEnv)

@@ -7,6 +7,7 @@
 #include "IBattleAI.h"
 #include "Battle_EventDispatcher.h"
 #include "Battle_ActionSequencer.h"
+#include "Battle_Action_Steps.h"
 
 #include "GameInstance.h"
 
@@ -23,6 +24,58 @@ void CIntroState::OnEnter(const BATTLE_CONTEXT& ctx)
     EVENT_BATTLE_STARTED tEvent{};
     tEvent.tEnv = ctx.pManager->Get_Env();
     ctx.pDispatcher->Publish(tEvent);
+
+    const BATTLE_ENV& tEnv = ctx.pManager->Get_Env();
+
+    const bool bTrainerRule =
+        BATTLE_RULE::TRAINER_SINGLE == tEnv.eRule ||
+        BATTLE_RULE::TRAINER_DOUBLE == tEnv.eRule;
+
+    if (false == bTrainerRule)
+        return;
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
+    if (nullptr == pSeq || nullptr == pTrainer)
+        return;
+
+    CBattler* pPlayer = ctx.Get_Self(g_kBattleSide_Player);
+    CBattler* pOpponent = ctx.Get_Self(g_kBattleSide_Opponent);
+    if (nullptr == pPlayer || nullptr == pOpponent)
+        return;
+
+    const _wstring strTrainerName = pTrainer->szName;
+    const _wstring strOpponentPokemon = pOpponent->Get_Instance()->szNickname;
+    const _wstring strPlayerPokemon = pPlayer->Get_Instance()->szNickname;
+
+    auto Push = [pSeq](IBattleAction_Step* pStep)
+        {
+            if (nullptr == pStep)
+                return;
+
+            pSeq->Push_Step(pStep);
+            Safe_Release(pStep);
+        };
+
+    Push(SDelay::Create(0.2f));
+    Push(SBattleText::Create(strTrainerName + TEXT("가 승부를 걸어왔다!")));
+    Push(SCloseMsg::Create());
+    Push(SDelay::Create(0.2f));
+
+    Push(SBattleText::Create(strTrainerName + TEXT("는 ") + strOpponentPokemon + TEXT("을(를) 내보냈다!")));
+    Push(STrainerThrow::Create(g_kBattleSide_Opponent));
+    Push(SPokemonEnter::Create(g_kBattleSide_Opponent));
+    Push(SCloseMsg::Create());
+    Push(SDelay::Create(0.2f));
+
+    Push(SBattleText::Create(TEXT("플레이어는 ") + strPlayerPokemon + TEXT("을(를) 내보냈다!")));
+    Push(STrainerThrow::Create(g_kBattleSide_Player));
+    Push(SPokemonEnter::Create(g_kBattleSide_Player));
+    Push(SCloseMsg::Create());
+    Push(SDelay::Create(0.2f));
+    Push(SDone::Create());
+
+    pSeq->Submit();
 }
 
 void CIntroState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
@@ -33,6 +86,10 @@ void CIntroState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
         return;
 
     if (ctx.pManager->Is_Pacing_Busy())
+        return;
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr != pSeq && pSeq->Is_Active())
         return;
 
     ctx.pManager->Request_State(BATTLE_PHASE::INPUT_PLAYER);
@@ -338,9 +395,30 @@ void CCheckEndState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
     const _bool bPlayerAlive = (nullptr != pPlayer && pPlayer->Is_Alive());
     const _bool bOpponentAlive = (nullptr != pOpponent && pOpponent->Is_Alive());
 
-    if (false == bPlayerAlive || false == bOpponentAlive)
+    if (false == bPlayerAlive && false == bOpponentAlive)
     {
         ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
+        return;
+    }
+
+    {
+        const _uint iNext = ctx.pManager->Find_FirstAlivePartyIndex(g_kBattleSide_Opponent);
+        if (g_kMaxPartySize != iNext)
+            ctx.pManager->Request_ForcedSwitch(g_kBattleSide_Opponent);
+        else
+            ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
+
+        return;
+    }
+
+    if (false == bPlayerAlive)
+    {
+        const _uint iNext = ctx.pManager->Find_FirstAlivePartyIndex(g_kBattleSide_Player);
+        if (g_kMaxPartySize != iNext)
+            ctx.pManager->Request_ForcedSwitch(g_kBattleSide_Player);
+        else
+            ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
+
         return;
     }
 
@@ -376,13 +454,55 @@ CForcedSwitchState::CForcedSwitchState()
 
 void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
 {
-    (void)ctx;
+    m_bSubmitted = false;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    const _uint iSide = ctx.pManager->Get_ForcedSwitchSide();
+    const _uint iNext = ctx.pManager->Find_FirstAlivePartyIndex(iSide);
+
+    if (g_kMaxPartySize == iNext)
+    {
+        ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
+        return;
+    }
+
+    if (FAILED(ctx.pManager->Replace_BattlerSlot(iSide, iNext)))
+    {
+        ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
+        return;
+    }
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr != pSeq)
+    {
+        pSeq->Push_Step(SPokemonEnter::Create(iSide));
+        pSeq->Push_Step(SDone::Create());
+        pSeq->Submit();
+    }
+
+    m_bSubmitted = true;
 }
 
 void CForcedSwitchState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
 {
-    (void)ctx;
     (void)fTimeDelta;
+
+    if (nullptr == ctx.pManager)
+        return;
+
+    if (ctx.pManager->Has_Pending_Transition())
+        return;
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr != pSeq && pSeq->Is_Active())
+        return;
+
+    if (m_bSubmitted)
+        ctx.pManager->Request_State(BATTLE_PHASE::INPUT_PLAYER);
+    else
+        ctx.pManager->Request_State(BATTLE_PHASE::OUTRO);
 }
 
 void CForcedSwitchState::OnExit(const BATTLE_CONTEXT& ctx)

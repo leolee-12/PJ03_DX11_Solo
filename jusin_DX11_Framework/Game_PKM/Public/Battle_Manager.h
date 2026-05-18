@@ -44,6 +44,7 @@ public:
 	HRESULT Bind_PlayerParty(CPlayer_Status* pPlayerState, _uint iLeadSlot);
 	HRESULT Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent);
 	HRESULT Bind_OpponentTrainer(TRAINER_DATA* pTrainerData);
+	HRESULT Replace_BattlerSlot(_uint iSide, _uint iPartyIndex);
 
 	void	Begin();
 	void	Update(_float fTimeDelta);
@@ -61,6 +62,7 @@ public:
 	const FIELD_STATE&		Get_Field() const { return m_tField; }
 	const TURN_CONTEXT&		Get_Turn() const { return m_tTurn; }
 	BATTLE_PHASE			Get_Phase() const { return m_ePhase; }
+	const TRAINER_DATA*		Get_OpponentTrainer() const { return m_pOpponentTrainer; }
 	CDamage_Calculator*		Get_Damage_Calculator() const { return m_pDamageCalculator; }
 	CBattle_EventDispatcher*	Get_EventDispatcher() const { return m_pEventDispatcher; }
 	IBattleAI* Get_AI(_uint iSide) const { return (iSide < g_kBattleSideCount) ? m_pAI[iSide] : nullptr; }
@@ -82,6 +84,10 @@ public:
 	_float  Get_TrainerYaw(_uint iSide, _uint iSlotIndex = 0) const;
 	_float3 Get_PokemonPos(_uint iSide, _uint iSlotIndex = 0) const;
 	_float  Get_PokemonYaw(_uint iSide, _uint iSlotIndex = 0) const;
+	
+	void Request_ForcedSwitch(_uint iSide);
+	_uint Find_FirstAlivePartyIndex(_uint iSide) const;
+	_uint Get_ForcedSwitchSide() const { return m_iForcedSwitchSide; }
 
 private:
 	BATTLE_ENV		m_tEnv = {};
@@ -108,12 +114,16 @@ private:
 	CGameObject* m_pBattlerObj[g_kBattleSideCount] = {};
 	CGameObject* m_pTrainerObj[g_kBattleSideCount] = {};
 
+	_uint m_iForcedSwitchSide = { g_kBattleSideCount };
+
 private:
 	BATTLE_CONTEXT Build_Context();
 	HRESULT Initialize_CoreComponents();
 	IBattleState* Create_State(BATTLE_PHASE ePhase);
 	void Apply_Pending_Transition(const BATTLE_CONTEXT& ctx);
 	void Release_State(IBattleState*& pState);
+	POKEMON_INSTANCE* Resolve_PartyPokemon(_uint iSide, _uint iPartyIndex) const;
+
 
 public:
 	static CBattle_Manager* Create(const BATTLE_ENV& tEnv);

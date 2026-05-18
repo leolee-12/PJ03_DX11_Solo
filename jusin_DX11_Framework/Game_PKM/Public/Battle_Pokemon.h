@@ -49,6 +49,7 @@ public:
 	void  Set_Manager(CBattle_Manager* pManager);
 	void  Play_Attack();
 	void  Play_Hurt();
+	void  Play_Enter();
 	void  Play_Faint();
 	void  Return_To_Idle();
 	_bool Is_Anim_Finished() const { return ANIM_KIND::IDLE == m_eCurrentKind || ANIM_KIND::FAINT == m_eCurrentKind; }

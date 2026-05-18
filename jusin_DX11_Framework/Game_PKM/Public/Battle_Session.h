@@ -41,7 +41,9 @@ struct BATTLE_ENV
 {
 	ENVIRONMENT_TYPE eEnvironment;
 	BATTLE_RULE      eRule;
+	_uint            iOpponentTrainerID;
 	_uint            iBGResourceID;
+
 	_bool            bCanRun;
 	_bool            bCanCapture;
 	_bool            bExpGain;
