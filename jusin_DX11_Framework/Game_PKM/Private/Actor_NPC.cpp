@@ -1,4 +1,4 @@
-#include "Actor_NPC.h"
+﻿#include "Actor_NPC.h"
 #include "Body.h"
 #include "Interaction_Dialogue.h"
 
@@ -36,6 +36,13 @@ HRESULT CActor_NPC::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(pDesc->vSpawnPos.x, pDesc->vSpawnPos.y, pDesc->vSpawnPos.z, 1.f));
+
+	// S4 추가 — 트레이너 페이로드 캐싱 + 초기 회전 적용
+	m_iSpawnRectID = pDesc->iSpawnRectID;
+	if (pDesc->bIsTrainer)
+	{
+		m_pTransformCom->Rotation(0.f, pDesc->fInitialRotationY, 0.f);
+	}
 
 	Cache_Members();
 	Rebuild_InteractionCache();

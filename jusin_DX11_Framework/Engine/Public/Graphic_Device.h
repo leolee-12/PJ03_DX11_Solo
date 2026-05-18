@@ -11,6 +11,9 @@ private:
 
 public:
 	const HWND Get_HWND() const { return m_hWnd; }
+	ID3D11Device* Get_Device() const { return m_pDevice; }
+	ID3D11DeviceContext* Get_Context() const { return m_pContext; }
+
 
 public:
 	ID3D11RenderTargetView** Get_BackBufferRTV() { return &m_pBackBufferRTV; }

@@ -225,6 +225,16 @@ _float CGameInstance::Random(_float fMin, _float fMax)
 {
 	return fMin + static_cast<_float>(rand()) / RAND_MAX * (fMax - fMin);
 }
+
+ID3D11Device* CGameInstance::Get_Device() const
+{
+	return m_pGraphic_Device->Get_Device();
+}
+
+ID3D11DeviceContext* CGameInstance::Get_Context() const
+{
+	return m_pGraphic_Device->Get_Context();
+}
 #pragma endregion
 
 #pragma region TIMER_MANAGER

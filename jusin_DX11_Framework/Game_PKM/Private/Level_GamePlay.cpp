@@ -17,6 +17,7 @@
 #include "Actor_WildPokemon.h"
 #include "RenderRule_Manager.h"
 #include "PokemonData_Manager.h"
+#include "Spawn_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -156,6 +157,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		return;
 	}
 
+	CSpawn_Manager::GetInstance()->Update(fTimeDelta);
+
 	if (m_pGameInstance->Key_Down(DIK_F2))
 		m_pGameInstance->Toggle_CameraFollow();
 
@@ -216,6 +219,9 @@ HRESULT CLevel_GamePlay::Render()
 {
 #ifdef _DEBUG
 	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("게임플레이레벨입니다."));
+
+	if (CSpawn_Manager* pSpawnMgr = CSpawn_Manager::GetInstance())
+		pSpawnMgr->Render_Debug();
 #endif
 
 	return S_OK;
@@ -498,30 +504,60 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 			return E_FAIL;
 	}
 
-	// 2) 포켓몬 NPC (피카츄 외형, 대화 가능)
+	// 2) 포켓몬 모델 검수용 NPC
 	{
-		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
-		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule(
-			"../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json");
+		struct POKEMON_PREVIEW_DESC
+		{
+			WNameID strModelProtoTag = {};
+			const _char* pMappingPath = { nullptr };
+			_float3 vSpawnPos = {};
+			_float fScale = { 1.f };
+		};
 
-		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
-		NpcDesc.pBodyDesc = &BodyDesc;
-		NpcDesc.strDialogueKey = L"dialogue_npc_pokemon";
-		NpcDesc.vSpawnPos = _float3(19.f, 0.f, -13.f);  // 검수 시 조정
+		const POKEMON_PREVIEW_DESC PokemonPreviews[] =
+		{
+				//{ PROTO_COM_MODEL_PM0001_00, "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json", _float3(14.f, 0.f, -18.f), 1.f },
+				//{ PROTO_COM_MODEL_PM0004_00, "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json", _float3(16.f, 0.f, -18.f), 1.f },
+				//{ PROTO_COM_MODEL_PM0007_00, "../../Resources/Models/pkm/pm0007_00/pm0007_00_mapping.json", _float3(18.f, 0.f, -18.f), 1.f },
+				//{ PROTO_COM_MODEL_PM0010_00, "../../Resources/Models/pkm/pm0010_00/pm0010_00_mapping.json", _float3(20.f, 0.f, -18.f), 1.f },
+				//{ PROTO_COM_MODEL_PM0025_00, "../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json", _float3(24.f, 0.f, -18.f), 1.f },
+				{ PROTO_COM_MODEL_PM0041_00, "../../Resources/Models/pkm/pm0041_00/pm0041_00_mapping.json", _float3(26.f, 0.f, -18.f), 1.f },
 
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
-			CURRENT_LEVEL, strLayerTag,
-			&NpcDesc)))
-			return E_FAIL;
+				{ PROTO_COM_MODEL_PM0043_00, "../../Resources/Models/pkm/pm0043_00/pm0043_00_mapping.json", _float3(14.f, 0.f, -21.f), 1.f },
+				{ PROTO_COM_MODEL_PM0059_00, "../../Resources/Models/pkm/pm0059_00/pm0059_00_mapping.json", _float3(16.f, 0.f, -21.f), 1.f },
+				{ PROTO_COM_MODEL_PM0074_00, "../../Resources/Models/pkm/pm0074_00/pm0074_00_mapping.json", _float3(18.f, 0.f, -21.f), 1.f },
+				//{ PROTO_COM_MODEL_PM0095_00, "../../Resources/Models/pkm/pm0095_00/pm0095_00_mapping.json", _float3(20.f, 0.f, -21.f), 1.f },
+				{ PROTO_COM_MODEL_PM0121_00, "../../Resources/Models/pkm/pm0121_00/pm0121_00_mapping.json", _float3(22.f, 0.f, -21.f), 1.f },
+				//{ PROTO_COM_MODEL_PM0130_00, "../../Resources/Models/pkm/pm0130_00/pm0130_00_mapping.json", _float3(24.f, 0.f, -21.f), 1.f },
+		};
+
+		for (const POKEMON_PREVIEW_DESC& Preview : PokemonPreviews)
+		{
+			CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
+			BodyDesc.strModelProtoTag = Preview.strModelProtoTag;
+			BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+			BodyDesc.iDefaultAnim = 0;
+			BodyDesc.bLoop = true;
+			BodyDesc.fScale = Preview.fScale;
+			BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(Preview.pMappingPath);
+
+			if (nullptr == BodyDesc.pRenderRule)
+				return E_FAIL;
+
+			CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+			NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+			NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+			NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+			NpcDesc.pBodyDesc = &BodyDesc;
+			NpcDesc.strDialogueKey = L"dialogue_npc_pokemon";
+			NpcDesc.vSpawnPos = Preview.vSpawnPos;
+
+			if (FAILED(m_pGameInstance->Add_GameObject(
+				CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
+				CURRENT_LEVEL, strLayerTag,
+				&NpcDesc)))
+				return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -529,81 +565,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 {
-	auto* pDataMgr = CPokemonData_Manager::GetInstance();
-	if (nullptr == pDataMgr)
+	(void)strLayerTag;
+
+	CSpawn_Manager* pSpawnMgr = CSpawn_Manager::GetInstance();
+	if (nullptr == pSpawnMgr) return E_FAIL;
+
+	if (FAILED(pSpawnMgr->Initialize(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP)))
 		return E_FAIL;
 
-	auto* pRuleManager = CRenderRule_Manager::GetInstance();
-	if (nullptr == pRuleManager)
+	if (FAILED(pSpawnMgr->Load_From_File(TEXT("../../DataFiles/Spawn_GamePlay.spawn"))))
 		return E_FAIL;
 
-	// 1) Wild — Pikachu Lv5
-	{
-		const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(25);
-		if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
-			return E_FAIL;
-
-		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0025_00;
-		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.strModelProtoTag = pSpecies->strModelTag;
-		BodyDesc.pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
-		if (nullptr == BodyDesc.pRenderRule)
-			return E_FAIL;
-
-		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
-		WildDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		WildDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		WildDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
-		WildDesc.pBodyDesc = &BodyDesc;
-		WildDesc.iSpeciesID = 25;
-		WildDesc.iLevel = 5;
-		WildDesc.vSpawnPos = _float3(19.f, 0.f, -8.f);   // 검수 시 조정
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_WILD_POKEMON,
-			CURRENT_LEVEL, strLayerTag,
-			&WildDesc)))
-			return E_FAIL;
-	}
-
-	// 2) Wild — Bulbasaur Lv5
-	{
-		const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(1);
-		if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
-			return E_FAIL;
-
-		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PM0001_00;
-		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
-		if (nullptr == BodyDesc.pRenderRule)
-			return E_FAIL;
-
-		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
-		WildDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		WildDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		WildDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
-		WildDesc.pBodyDesc = &BodyDesc;
-		WildDesc.iSpeciesID = 1;
-		WildDesc.iLevel = 5;
-		WildDesc.vSpawnPos = _float3(21.f, 0.f, -8.f);   // 검수 시 조정
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_WILD_POKEMON,
-			CURRENT_LEVEL, strLayerTag,
-			&WildDesc)))
-			return E_FAIL;
-	}
+	if (FAILED(pSpawnMgr->Begin())) return E_FAIL;
 
 	return S_OK;
 }
+
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 {

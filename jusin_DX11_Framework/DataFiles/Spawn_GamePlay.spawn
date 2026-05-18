@@ -1,0 +1,55 @@
+ # Wild Pokemon + Trainer 스폰 데이터 — GamePlay 레벨
+  # 좌표: 월드 (Center.y 는 NavMesh 투영 결과로 덮임)
+  # RotationY: 라디안 (예: 1.5708 = 90도)
+  # Kind: WildPokemon | Trainer | NPC | EventObject
+
+  SpawnRect {
+      ID = 1
+      Kind = WildPokemon
+      Center = 19.0, 0.0, -8.0
+      Size = 6.0, 6.0
+      RotationY = 0.0
+      SpeciesID = 25
+      Level = 5
+      MaxAliveCount = 1
+      ProjectRadius = 2.0
+      LeashRadius = 5.0
+      MinDistanceFromPlayer = 0.0
+      MaxDistanceFromPlayer = 0.0
+      RequireReachable = true
+      SpawnOnLoad = true
+      Respawn = true
+      RespawnDelay = 5.0
+  }
+
+  SpawnRect {
+      ID = 2
+      Kind = WildPokemon
+      Center = 21.0, 0.0, -8.0
+      Size = 6.0, 6.0
+      RotationY = 0.0
+      SpeciesID = 1
+      Level = 5
+      MaxAliveCount = 1
+      ProjectRadius = 2.0
+      LeashRadius = 5.0
+      MinDistanceFromPlayer = 0.0
+      MaxDistanceFromPlayer = 0.0
+      RequireReachable = true
+      SpawnOnLoad = true
+      Respawn = true
+      RespawnDelay = 5.0
+  }
+
+  SpawnRect {
+      ID = 100
+      Kind = Trainer
+      Center = 25.0, 0.0, -14.0
+      Size = 2.0, 2.0
+      RotationY = 0.0
+      MaxAliveCount = 1
+      ProjectRadius = 2.0
+      RequireReachable = false
+      SpawnOnLoad = true
+      Respawn = false
+  }

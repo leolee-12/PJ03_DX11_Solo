@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Actor.h"
 #include "Body.h"
 
@@ -13,9 +13,14 @@ public:
 	{
 		WNameID strBodyProtoTag = { 0 };
 		CBody::BODY_DESC* pBodyDesc = { nullptr };
-		_uint iBodyProtoLevel = ETOUI(LEVEL::STATIC);          // Body Proto����
+		_uint iBodyProtoLevel = ETOUI(LEVEL::STATIC);          // Body Proto레벨
 		_wstring strDialogueKey;
-		_uint iComponentLevel = ETOUI(LEVEL::GAMEPLAY);        // Interaction �� ������Ʈ Proto����
+		_uint iComponentLevel = ETOUI(LEVEL::GAMEPLAY);        // Interaction 등 컴포넌트 Proto레벨
+
+		// S4 추가 — 트레이너 스폰 페이로드 (SpawnManager 가 채움). 기존 비-트레이너 NPC 는 default 유지.
+		_bool   bIsTrainer = { false };
+		_uint   iSpawnRectID = { 0 };
+		_float  fInitialRotationY = { 0.f };   // 라디안. bIsTrainer 가 true 인 경우에만 Initialize 시 적용
 	};
 
 private:
@@ -35,6 +40,9 @@ public:
 
 private:
 	CInteraction_Dialogue* m_pDialogue = { nullptr };
+	
+	// S4 추가 — 트레이너 페이로드 캐싱
+	_uint m_iSpawnRectID = { 0 };
 
 private:
 	HRESULT Ready_Components(const ACTOR_NPC_DESC* pDesc);

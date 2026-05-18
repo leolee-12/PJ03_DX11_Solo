@@ -1,8 +1,20 @@
 #include "Navigation.h"
-#include "Navigation.h"
-
 #include "Cell.h"
 #include "GameInstance.h"
+
+namespace
+{
+	constexpr _uint kInvalidCellLocal = static_cast<_uint>(-1);
+	constexpr _uint kRandPointAttempts = 16;
+	constexpr _uint kReachableAttempts = 8;
+	constexpr _float kWanderProjectRadius = 2.f;
+
+	inline _float RandomFloat_(_float fMin, _float fMax)
+	{
+		if (fMin >= fMax) return fMin;
+		return fMin + (fMax - fMin) * (static_cast<_float>(rand()) / static_cast<_float>(RAND_MAX));
+	}
+}
 
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNaviFilePath, const _tchar* pNeighborFilePath)
 	: CComponent{ pDevice, pContext }
@@ -256,6 +268,164 @@ _vector XM_CALLCONV CNavigation::Compute_SlidePos(_fvector vCurPos, _fvector vDe
 
 	// 이동 가능 시 슬라이드, 아니면 원 위치
 	return Is_Move(vSlidePos) ? vSlidePos : vCurPos;
+}
+
+_bool CNavigation::Project_PointToNavigation(
+	const _float3& vWorldPos, _float fSearchRadius, _uint iAreaMask,
+	_float3* pOutNavPos, _uint* pOutCellIndex) const
+{
+	if (nullptr == pOutNavPos || nullptr == pOutCellIndex)
+		return false;
+
+	(void)iAreaMask;   // 1차 no-op
+
+	const _vector vPosVec = XMLoadFloat3(&vWorldPos);
+
+	// 1차: XZ 평면상 직접 셀 내부 검색.
+	const _int iDirect = Find_CellIndex_ByPos(vPosVec);
+	if (-1 != iDirect)
+	{
+		const _float fHeight = m_Cells[iDirect]->Compute_Height(vPosVec);
+		*pOutNavPos = _float3{ vWorldPos.x, fHeight, vWorldPos.z };
+		*pOutCellIndex = static_cast<_uint>(iDirect);
+		return true;
+	}
+
+	// 2차: fSearchRadius 안에서 가장 가까운 셀 중심.
+	if (fSearchRadius <= 0.f)
+		return false;
+	const _float fRadiusSq = fSearchRadius * fSearchRadius;
+
+	_int    iBestCell = -1;
+	_float  fBestDistSq = FLT_MAX;
+	_float3 vBestCenter = {};
+
+	for (size_t i = 0; i < m_Cells.size(); ++i)
+	{
+		_float3 vCenter;
+		XMStoreFloat3(&vCenter, m_Cells[i]->Get_Center());
+
+		const _float fDx = vCenter.x - vWorldPos.x;
+		const _float fDz = vCenter.z - vWorldPos.z;
+		const _float fDistSq = fDx * fDx + fDz * fDz;
+
+		if (fDistSq <= fRadiusSq && fDistSq < fBestDistSq)
+		{
+			fBestDistSq = fDistSq;
+			iBestCell = static_cast<_int>(i);
+			vBestCenter = vCenter;
+		}
+	}
+
+	if (-1 == iBestCell)
+		return false;
+
+	*pOutNavPos = vBestCenter;
+	*pOutCellIndex = static_cast<_uint>(iBestCell);
+	return true;
+}
+
+_bool CNavigation::Is_Reachable(
+	_uint iStartCellIndex, _uint iGoalCellIndex, _uint iAreaMask) const
+{
+	(void)iAreaMask;   // 1차 no-op
+
+	if (iStartCellIndex >= m_Cells.size()) return false;
+	if (iGoalCellIndex >= m_Cells.size()) return false;
+	if (iStartCellIndex == iGoalCellIndex) return true;
+
+	vector<_bool> bVisited(m_Cells.size(), false);
+	queue<_uint>  oFrontier;
+
+	oFrontier.push(iStartCellIndex);
+	bVisited[iStartCellIndex] = true;
+
+	while (!oFrontier.empty())
+	{
+		const _uint iCur = oFrontier.front();
+		oFrontier.pop();
+
+		_int* const pNeighbors = m_Cells[iCur]->Get_NeighborIndices();
+		for (size_t i = 0; i < 3; ++i)
+		{
+			const _int iNeighbor = pNeighbors[i];
+			if (-1 == iNeighbor) continue;
+
+			const _uint iNeighU = static_cast<_uint>(iNeighbor);
+			if (iNeighU >= m_Cells.size()) continue;
+			if (bVisited[iNeighU])         continue;
+
+			if (iNeighU == iGoalCellIndex)
+				return true;
+
+			bVisited[iNeighU] = true;
+			oFrontier.push(iNeighU);
+		}
+	}
+	return false;
+}
+
+_bool CNavigation::Find_RandomPoint_InRect(
+	const _float3& vCenter, const _float2& vSize, _float fRotationY,
+	_float fProjectRadius, _uint iAreaMask,
+	_float3* pOutNavPos, _uint* pOutCellIndex) const
+{
+	if (nullptr == pOutNavPos || nullptr == pOutCellIndex)
+		return false;
+
+	const _float fHalfX = vSize.x * 0.5f;
+	const _float fHalfZ = vSize.y * 0.5f;
+
+	for (_uint i = 0; i < kRandPointAttempts; ++i)
+	{
+		const _float fLocalX = RandomFloat_(-fHalfX, fHalfX);
+		const _float fLocalZ = RandomFloat_(-fHalfZ, fHalfZ);
+
+		const _vector vLocal = XMVectorSet(fLocalX, 0.f, fLocalZ, 0.f);
+		const _vector vRotated = XMVector3TransformCoord(vLocal, XMMatrixRotationY(fRotationY));
+		const _vector vWorld = vRotated + XMLoadFloat3(&vCenter);
+
+		_float3 vCandidate{};
+		XMStoreFloat3(&vCandidate, vWorld);
+
+		if (Project_PointToNavigation(vCandidate, fProjectRadius, iAreaMask, pOutNavPos, pOutCellIndex))
+			return true;
+	}
+	return false;
+}
+
+_bool CNavigation::Find_RandomReachablePoint_InRadius(
+	const _float3& vOrigin, _uint iOriginCellIndex,
+	_float fRadius, _uint iAreaMask,
+	_float3* pOutNavPos, _uint* pOutCellIndex) const
+{
+	if (nullptr == pOutNavPos || nullptr == pOutCellIndex) return false;
+	if (fRadius <= 0.f)                                    return false;
+
+	for (_uint i = 0; i < kReachableAttempts; ++i)
+	{
+		const _float fAngle = RandomFloat_(0.f, XM_2PI);
+		const _float fDist = RandomFloat_(0.f, fRadius);
+
+		const _float3 vCandidate{
+				vOrigin.x + cosf(fAngle) * fDist,
+				vOrigin.y,
+				vOrigin.z + sinf(fAngle) * fDist
+		};
+
+		_float3 vNavPos = {};
+		_uint   iCellIndex = kInvalidCellLocal;
+
+		if (!Project_PointToNavigation(vCandidate, kWanderProjectRadius, iAreaMask, &vNavPos, &iCellIndex))
+			continue;
+		if (!Is_Reachable(iOriginCellIndex, iCellIndex, iAreaMask))
+			continue;
+
+		*pOutNavPos = vNavPos;
+		*pOutCellIndex = iCellIndex;
+		return true;
+	}
+	return false;
 }
 
 #ifdef _DEBUG

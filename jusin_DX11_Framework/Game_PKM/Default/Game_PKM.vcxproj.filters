@@ -172,6 +172,9 @@
     <Filter Include="01. Objects\05. Misc">
       <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Contents\02. Spawn">
+      <UniqueIdentifier>{492461dc-2dfd-4a4c-b9f4-3c73c61c8dfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -456,6 +459,12 @@
     <ClInclude Include="..\Public\Player_Data.h">
       <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Spawn_Defines.h">
+      <Filter>04. Contents\02. Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spawn_Manager.h">
+      <Filter>04. Contents\02. Spawn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -688,6 +697,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player_Data.cpp">
       <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spawn_Manager.cpp">
+      <Filter>04. Contents\02. Spawn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

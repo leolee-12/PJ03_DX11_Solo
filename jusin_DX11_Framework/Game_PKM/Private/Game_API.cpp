@@ -9,6 +9,7 @@
 #include "Player_Status.h"
 #include "Game_PresetTable.h"
 #include "RenderRule_Manager.h"
+#include "Spawn_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -67,6 +68,7 @@ HRESULT Ready_StaticTables()
 
 void Cleanup_StaticTables()
 {
+	CSpawn_Manager::DestroyInstance();
 	CRenderRule_Manager::DestroyInstance();
 	CPokemonData_Manager::DestroyInstance();
 }

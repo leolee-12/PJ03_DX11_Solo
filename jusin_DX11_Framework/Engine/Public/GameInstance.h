@@ -34,6 +34,9 @@ public:
 	_float2 Get_ViewportSize() { return m_vViewportSize; }
 	void Toggle_Debug() { m_bDebug = !m_bDebug; }
 	_bool Is_Debug() { return m_bDebug; }
+
+	ID3D11Device* Get_Device() const;
+	ID3D11DeviceContext* Get_Context() const;
 #pragma endregion
 
 #pragma region TIMER_MANAGER
