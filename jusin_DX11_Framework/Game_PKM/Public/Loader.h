@@ -57,11 +57,17 @@ private:
 	std::vector<HANDLE>		m_Threads;
 
 private:
+	void Enqueue_LoadTask(TaskFunc fn, const _tchar* pDebugName = TEXT("Load Task"));
+
+	template<typename Factory>
+	void Enqueue_Prototype(_uint iLevelIndex, WNameID strProtoTag, Factory FactoryFunc, const _tchar* pDebugName = TEXT("Load Task"));
+	
 	void Enqueue_All(LEVEL eNextLevelID);
 	HRESULT Ready_Resources_For_Logo();
 	HRESULT Ready_Resources_For_GamePlay();
 	HRESULT Ready_Resources_For_Battle();
 	HRESULT Ready_Resources_For_Capture();
+	HRESULT Ready_Resources_For_Effect();
 
 public:
 	static CLoader*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

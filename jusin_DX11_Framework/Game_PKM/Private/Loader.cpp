@@ -179,6 +179,30 @@ void CLoader::Show()
 
 #endif
 
+void CLoader::Enqueue_LoadTask(TaskFunc fn, const _tchar* pDebugName)
+{
+	LOAD_TASK tTask = {};
+	tTask.strDebugName = (nullptr != pDebugName) ? pDebugName : TEXT("Load Task");
+	tTask.fn = move(fn);
+
+	m_TaskQueue.push(move(tTask));
+	++m_iTotalCount;
+}
+
+template<typename Factory>
+inline void CLoader::Enqueue_Prototype(_uint iLevelIndex, WNameID strProtoTag, Factory FactoryFunc, const _tchar* pDebugName)
+{
+	if (m_pGameInstance->Has_Prototype(iLevelIndex, strProtoTag))
+		return;
+
+	Enqueue_LoadTask(
+		[this, iLevelIndex, strProtoTag, FactoryFunc = move(FactoryFunc)]() mutable
+		{
+			return m_pGameInstance->Add_Prototype(iLevelIndex, strProtoTag, FactoryFunc());
+		},
+		pDebugName);
+}
+
 void CLoader::Enqueue_All(LEVEL eNextLevelID)
 {
 	switch (eNextLevelID)
@@ -198,91 +222,69 @@ void CLoader::Enqueue_All(LEVEL eNextLevelID)
 
 HRESULT CLoader::Ready_Resources_For_Logo()
 {
-	auto Enqueue = [this](TaskFunc fn, const _tchar* pDebugName = nullptr)
-		{
-			LOAD_TASK tTask = {};
-			tTask.strDebugName = (nullptr != pDebugName) ? pDebugName : TEXT("Logo Load Task");
-			tTask.fn = move(fn);
-
-			m_TaskQueue.push(move(tTask));
-			++m_iTotalCount;
-		};
-
-	auto EnqueuePrototype = [this, &Enqueue](_uint iLevelIndex, WNameID strProtoTag, auto Factory, const
-		_tchar* pDebugName = nullptr)
-		{
-			if (m_pGameInstance->Has_Prototype(iLevelIndex, strProtoTag))
-				return;
-
-			Enqueue([this, iLevelIndex, strProtoTag, Factory = move(Factory)]() mutable
-				{
-					return m_pGameInstance->Add_Prototype(iLevelIndex, strProtoTag, Factory());
-				}, pDebugName);
-		};
-	
 	// ---------- Texture ----------
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_PBGF_DIFF,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_PBGF_DIFF,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbgf_00.png"), 1); },
 		TEXT("Prototype_Component_Texture_Title_pbgf_Diff"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_LOGO_DIFF,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_LOGO_DIFF,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_logo_%02d.png"), 3); },
 		TEXT("Prototype_Component_Texture_Title_Logo_Diff"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_PBTN_DIFF,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_PBTN_DIFF,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/title_pbtn_%02d.png"), 1); },
 		TEXT("Prototype_Component_Texture_Title_pbtn_Diff"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_PIKA,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_PIKA,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/pber_pika_%02d.png"), 11); },
 		TEXT("Prototype_Component_Texture_Title_Pika"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_STAR,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_STAR,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Star/Star_%02d.png"), 3); },
 		TEXT("Prototype_Component_Texture_Star"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_BG,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_TITLE_BG,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/title/Title_BG.png"), 1); },
 		TEXT("Prototype_Component_Texture_Title_BackGround"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_BACKGROUND,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_TEX_BACKGROUND,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Default%d.jpg"), 2); },
 		TEXT("Prototype_Component_Texture_BackGround"));
 
 	// ---------- VIBuffer ----------
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC StarDesc{};
 	StarDesc.iNumInstance = 64;
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_VIBUFFER_INST_STAR,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_VIBUFFER_INST_STAR,
 		[this, StarDesc]() mutable { return CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &StarDesc); },
 		TEXT("Prototype_Component_VIBuffer_Instance_Star"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0025_00,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0025_00,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0025_00/pm0025_00.wmodel"); },
 		TEXT("Prototype_Component_Model_PM0025_00"));
 
 	// ---------- Shader ----------
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_COM_SHADER_VTXUIINST,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_COM_SHADER_VTXUIINST,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxUIInstance.hlsl"), VTXUI_INSTANCE_DESC::Elements, VTXUI_INSTANCE_DESC::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxUIInstance"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_POKEMON,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_POKEMON,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Pokemon.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Pokemon"));
 
 	// ---------- GameObject ----------
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_TITLE_BG,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_TITLE_BG,
 		[this] { return CBackGround::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_BackGround"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_EFT_STAR,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_EFT_STAR,
 		[this] { return CEffect_Star::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Effect_Star"));
 
-	EnqueuePrototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_LOGO_MONSTER,
+	Enqueue_Prototype(ETOUI(LEVEL::LOGO), PROTO_OBJ_LOGO_MONSTER,
 		[this] { return CMonster::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Logo_Monster"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
 		[this] { return CCamera_Free::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Camera_Free"));
 
@@ -291,241 +293,291 @@ HRESULT CLoader::Ready_Resources_For_Logo()
 
 HRESULT CLoader::Ready_Resources_For_GamePlay()
 {
-	auto Enqueue = [this](TaskFunc fn, const _tchar* pDebugName = nullptr)
-		{
-			LOAD_TASK tTask = {};
-			tTask.strDebugName = (nullptr != pDebugName) ? pDebugName : TEXT("GamePlay Load Task");
-			tTask.fn = move(fn);
-
-			m_TaskQueue.push(move(tTask));
-			++m_iTotalCount;
-		};
-
-	auto EnqueuePrototype = [this, &Enqueue](_uint iLevelIndex, WNameID strProtoTag, auto Factory, const
-		_tchar* pDebugName = nullptr)
-		{
-			if (m_pGameInstance->Has_Prototype(iLevelIndex, strProtoTag))
-				return;
-
-			Enqueue([this, iLevelIndex, strProtoTag, Factory = move(Factory)]() mutable
-				{
-					return m_pGameInstance->Add_Prototype(iLevelIndex, strProtoTag, Factory());
-				}, pDebugName);
-		};
-
-
-
 	// ---------- Texture ----------
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_CURSOR,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_CURSOR,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/cursor/cursor.png"), 1); },
 		TEXT("Prototype_Component_Texture_Cursor"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_BALL,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_BALL,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_ball.png"), 1); },
 		TEXT("Prototype_Component_Texture_Menu_Ball"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_PARTNER,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_PARTNER,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_partner_%02d.png"), 3); },
 		TEXT("Prototype_Component_Texture_Menu_Partner"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_DEX,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_DEX,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_dex_%02d.png"), 5); },
 		TEXT("Prototype_Component_Texture_Menu_Dex"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_BAG,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_BAG,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_bag_%02d.png"), 5); },
 		TEXT("Prototype_Component_Texture_Menu_Bag"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_ENTRY,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_ENTRY,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_entry_%02d.png"), 5); },
 		TEXT("Prototype_Component_Texture_Menu_Entry"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_LINK,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_LINK,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_link_%02d.png"), 5); },
 		TEXT("Prototype_Component_Texture_Menu_Link"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_REPORT,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MENU_REPORT,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/mainmenu/main_menu_report_%02d.png"), 5); },
 		TEXT("Prototype_Component_Texture_Menu_Report"));
 
 
 
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_COL,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_COL,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_bg_col.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_Fade_Color"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_NOISE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_NOISE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_bg_noise.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_Fade_Noise"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_OUT,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_OUT,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_bg_out.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_Fade_Out"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_LINE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_LINE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_line.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_Fade_Line"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_MASK,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_FADE_MASK,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Effects/Fade_Battle/trainer_ptn_%02d.png"), 39); },
 		TEXT("Prototype_Component_Texture_Battle_Fade_Mask"));
+	
+
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_ENTRY_BG_PLATE,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/entry/Entry_BG_Plate_%02d.png"), 4); },
+		TEXT("Prototype_Component_Texture_Entry_BG_Plate"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_ENTRY_ICON,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/entry/Entry_Icon.png"), 1); },
+		TEXT("Prototype_Component_Texture_Entry_Icon"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_ENTRY_PLATE,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/entry/Entry_Plate_%02d.png"), 3); },
+		TEXT("Prototype_Component_Texture_Entry_Plate"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_POKEMON_ICON,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/icon_pokemon/poke_icon_%03d.png"), 154); },
+		TEXT("Prototype_Component_Texture_Pokemon_Icon"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_LOADING_MARK,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/loading/gokigen_mark_p_%02d.png"), 15); },
+		TEXT("Prototype_Component_Texture_Loading_Mark"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MSGBOX_BG,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/msgBox/msgBox_BG_%02d.png"), 2); },
+		TEXT("Prototype_Component_Texture_MsgBox_BG"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_MSGBOX_ICON,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/msgBox/msgBox_Icon.png"), 1); },
+		TEXT("Prototype_Component_Texture_MsgBox_Icon"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_STATUS_GAUGE_BACK,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/status/gauge_back.png"), 1); },
+		TEXT("Prototype_Component_Texture_Status_Gauge_Back"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_STATUS_GAUGE_FRAME,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/status/gauge_frame.png"), 1); },
+		TEXT("Prototype_Component_Texture_Status_Gauge_Frame"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_STATUS_GAUGE_OUTLINE,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/status/gauge_outline.png"), 1); },
+		TEXT("Prototype_Component_Texture_Status_Gauge_Outline"));
 
 
 
 	// ---------- Shader ----------
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXNORTEX,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXNORTEX,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxNorTex"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXMESH,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXMESH,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxMesh"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXANIMMESH,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXANIMMESH,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxAnimMesh"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXCUBE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXCUBE,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxCube"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXRECTINST,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXRECTINST,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXRECT_INSTANCE_DESC::Elements, VTXRECT_INSTANCE_DESC::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxRectInstance"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXPOINTINST,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXPOINTINST,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_VtxPointInstance.hlsl"), VTXPOINT_INSTANCE_DESC::Elements, VTXPOINT_INSTANCE_DESC::iNumElements); },
 		TEXT("Prototype_Component_Shader_VtxPointInstance"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_PLAYER_LGPE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_PLAYER_LGPE,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Player_LGPE"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_HUMAN,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_HUMAN,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Human.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Human"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_MAP,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_MAP,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Map.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Map"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIIMAGE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIIMAGE,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIImage.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements); },
 		TEXT("Prototype_Component_Shader_UIImage"));
 
 
 
 	// ---------- VIBuffer ----------
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_CUBE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_CUBE,
 		[this] { return CVIBuffer_Cube::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_VIBuffer_Cube"));
 
 
 
 	// ---------- Model ----------
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0001_00,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0001_00,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0001_00/pm0001_00.wmodel"); },
 		TEXT("Prototype_Component_Model_PM0001_00"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0004_00,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0004_00,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0004_00/pm0004_00.wmodel"); },
 		TEXT("Prototype_Component_Model_PM0004_00"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0007_00,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0007_00,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0007_00/pm0007_00.wmodel"); },
 		TEXT("Prototype_Component_Model_PM0007_00"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0010_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0010_00/pm0010_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0010_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0041_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0041_00/pm0041_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0041_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0043_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0043_00/pm0043_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0043_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0059_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0059_00/pm0059_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0059_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0074_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0074_00/pm0074_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0074_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0095_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0095_00/pm0095_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0095_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0121_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0121_00/pm0121_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0121_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0130_00,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0130_00/pm0130_00.wmodel"); },
+		TEXT("Prototype_Component_Model_PM0130_00"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel"); },
 		TEXT("Prototype_Component_Model_Hero"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_DOCTOR,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_DOCTOR,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/doctor/doctor.wmodel"); },
 		TEXT("Prototype_Component_Model_Doctor"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_ROCK,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_ROCK,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/rock/rock.wmodel"); },
 		TEXT("Prototype_Component_Model_People_Rock"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_WATER,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_WATER,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/water/water.wmodel"); },
 		TEXT("Prototype_Component_Model_People_Water"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_FAT,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_FAT,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/fat/fat.wmodel"); },
 		TEXT("Prototype_Component_Model_People_Fat"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN01,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"); },
 		TEXT("Prototype_Component_Model_Town01"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN02,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN02,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area03/town_02.wmodel"); },
 		TEXT("Prototype_Component_Model_Town02"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_ROAD01,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_ROAD01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/road01.wmodel"); },
 		TEXT("Prototype_Component_Model_Road01"));
 
 
 
 	// ---------- Navigation & Collider ----------
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
 		[this] { return CNavigation::Create(m_pDevice, m_pContext, TEXT("../../DataFiles/MapNaviMesh.nav")); },
 		TEXT("Prototype_Component_Navigation_Map"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_AABB,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_AABB,
 		[this] { return CCollider::Create(m_pDevice, m_pContext, COLLIDER::AABB); },
 		TEXT("Prototype_Component_Collider_AABB"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_OBB,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_OBB,
 		[this] { return CCollider::Create(m_pDevice, m_pContext, COLLIDER::OBB); },
 		TEXT("Prototype_Component_Collider_OBB"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_SPHERE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_COLLIDER_SPHERE,
 		[this] { return CCollider::Create(m_pDevice, m_pContext, COLLIDER::SPHERE); },
 		TEXT("Prototype_Component_Collider_Sphere"));
 
 	// ---------- Interaction ----------
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_DIALOGUE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_DIALOGUE,
 		[this] { return CInteraction_Dialogue::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_Interaction_Dialogue"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_ENCOUNTER,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_ENCOUNTER,
 		[this] { return CInteraction_Encounter::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_Interaction_Encounter"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_BALLHIT,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_BALLHIT,
 		[this] { return CInteraction_BallHit::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_Interaction_BallHit"));
 
 	// ---------- Objects ----------
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
 		[this] { return CPlayer_LGPE::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Player_LGPE"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HERO,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HERO,
 		[this] { return CBody_Hero::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Body_Hero"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_POKEMON,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_POKEMON,
 		[this] { return CBody_Pokemon::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Body_Pokemon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HUMAN,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BODY_HUMAN,
 		[this] { return CBody_Human::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Body_Human"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
 		[this] { return CActor_NPC::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Actor_NPC"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_WILD_POKEMON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_WILD_POKEMON,
 		[this] { return CActor_WildPokemon::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Actor_WildPokemon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_IMG_FADEBATTLE,
 		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_UIImage_FadeBattle"));
 
@@ -534,19 +586,19 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_TOWN01;
 	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/area02/town01_2_mapping.json");
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN01,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN01,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_MapObject_Town01"));
 
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_TOWN02;
 	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/area03/town_02_mapping.json");
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN02,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_TOWN02,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_MapObject_Town02"));
 
 	tMapDesc.strModelTag = PROTO_COM_MODEL_MAP_ROAD01;
 	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/area02/road01_mapping.json");
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_MapObject_Road01"));
 
@@ -555,12 +607,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 #pragma region STUDY
 	// Texture
 	/* Prototype_Component_Texture_Sky */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_SKY,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_SKY,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/SkyBox/Sky_%d.dds"), 4); },
 		TEXT("Prototype_Component_Texture_Sky"));
 
 	/* Prototype_Component_Texture_Snow */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_SNOW,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_SNOW,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Snow/Snow.png"), 1); },
 		TEXT("Prototype_Component_Texture_Snow"));
 
@@ -569,17 +621,17 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 
 	// VIBuffer
 	/* Prototype_Component_VIBuffer_Terrain */
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_TERRAIN,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_TERRAIN,
 		[this] { return CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Terrain/Height.bmp")); },
 		TEXT("Prototype_Component_VIBuffer_Terrain"));
 
 	/* Prototype_Component_Model_Fiona */
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_FIONA,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_FIONA,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Fiona/Fiona.wmodel"); },
 		TEXT("Prototype_Component_Model_Fiona"));
 
 	/* Prototype_Component_Model_ForkLift */
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FORKLIFT,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ForkLift/ForkLift.wmodel"); },
 		TEXT("Prototype_Component_Model_ForkLift"));
 
@@ -593,7 +645,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	SnowDesc.vLifeRange = _float2(4.f, 8.f);
 	SnowDesc.isLoop = true;
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_SNOW,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_SNOW,
 		[this, SnowDesc]() mutable { return CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &SnowDesc); },
 		TEXT("Prototype_Component_VIBuffer_Instance_Snow"));
 
@@ -608,44 +660,44 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	ExplDesc.vPivot = _float3(0.f, 0.f, 0.f);
 	ExplDesc.isLoop = true;
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_EXPLOSION,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_EXPLOSION,
 		[this, ExplDesc]() mutable { return CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplDesc); },
 		TEXT("Prototype_Component_VIBuffer_Instance_Explosion"));
 
 	// Object
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_MONSTER,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_MONSTER,
 		[this] { return CBattle_Pokemon::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Monster"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_TERRAIN,
 		[this] { return CTerrain::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Terrain"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FORKLIFT,
 		[this] { return CForkLift::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_ForkLift"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER,
 		[this] { return CPlayer::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Player"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_PLAYER,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_BODY_PLAYER,
 		[this] { return CBody_Player::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Body_Player"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WEAPON,
 		[this] { return CWeapon::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Weapon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY,
 		[this] { return CSky::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Sky"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
 		[this] { return CSnow::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Snow"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EXPLOSION,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EXPLOSION,
 		[this] { return CExplosion::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Explosion"));
 #pragma endregion
@@ -656,94 +708,75 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	if (FAILED(Ready_Resources_For_Capture()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Resources_For_Effect()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CLoader::Ready_Resources_For_Battle()
 {
-	auto Enqueue = [this](TaskFunc fn, const _tchar* pDebugName = nullptr)
-		{
-			LOAD_TASK tTask = {};
-			tTask.strDebugName = (nullptr != pDebugName) ? pDebugName : TEXT("Battle Load Task");
-			tTask.fn = move(fn);
-
-			m_TaskQueue.push(move(tTask));
-			++m_iTotalCount;
-		};
-
-	auto EnqueuePrototype = [this, &Enqueue](_uint iLevelIndex, WNameID strProtoTag, auto Factory, const
-		_tchar* pDebugName = nullptr)
-		{
-			if (m_pGameInstance->Has_Prototype(iLevelIndex, strProtoTag))
-				return;
-
-			Enqueue([this, iLevelIndex, strProtoTag, Factory = move(Factory)]() mutable
-				{
-					return m_pGameInstance->Add_Prototype(iLevelIndex, strProtoTag, Factory());
-				}, pDebugName);
-		};
-
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BTN_FIGHT,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BTN_FIGHT,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_command_battle_%02d.png"), 4); },
 		TEXT("Prototype_Component_Texture_Battle_Button_Fight"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BTN_POKE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BTN_POKE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_command_poke_%02d.png"), 4); },
 		TEXT("Prototype_Component_Texture_Battle_Button_Poke"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BTN_BAG,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BTN_BAG,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_command_bag_%02d.png"), 4); },
 		TEXT("Prototype_Component_Texture_Battle_Button_Bag"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_PLAYERPLATE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_PLAYERPLATE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_PlayerPlate.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_PlayerPlate"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_ENEMYPLATE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_ENEMYPLATE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_EnemyPlate.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_EnemyPlate"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BALLPLATE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BALLPLATE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_BallPlate.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_BallPlate"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BALLICON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_BALLICON,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/ball_icon_%02d.png"), 4); },
 		TEXT("Prototype_Component_Texture_Battle_BallIcon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_NUM,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_NUM,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_Num_%02d.png"), 10); },
 		TEXT("Prototype_Component_Texture_Battle_Number"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_NUM_SLASH,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_NUM_SLASH,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/battle_Num_slash.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_Number_Slash"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_STATUS_GENDER,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_STATUS_GENDER,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battle/status_gender_%02d.png"), 2); },
 		TEXT("Prototype_Component_Texture_Status_Gender"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MSGBOX,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MSGBOX,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battleMsg/Battle_MsgBox.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_MsgBox"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MSGICON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MSGICON,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battleMsg/Battle_MsgIcon.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_MsgIcon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MOVE,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MOVE,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battleMove/BattleMove_%02d.png"), 36); },
 		TEXT("Prototype_Component_Texture_Battle_Move"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MOVEICON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MOVEICON,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battleMove/BattleMoveIcon_%02d.png"), 18); },
 		TEXT("Prototype_Component_Texture_Battle_MoveIcon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MOVESHADOW,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_BTL_MOVESHADOW,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_battleMove/BattleMove_Shadow.png"), 1); },
 		TEXT("Prototype_Component_Texture_Battle_MoveShadow"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_BMAP_TOWN,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_BMAP_TOWN,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/battle_town/battle_town.wmodel"); },
 		TEXT("Prototype_Component_Model_Town01"));
 
@@ -751,11 +784,11 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
 	tMapDesc.strModelTag = PROTO_COM_MODEL_BMAP_TOWN;
 	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/battle_town/battle_town_mapping.json");
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_TOWN,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_TOWN,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_BattleMap_Town"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
 		[this] { return CBattle_Trainer::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Battle_Trainer"));
 
@@ -764,92 +797,133 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 
 HRESULT CLoader::Ready_Resources_For_Capture()
 {
-	auto Enqueue = [this](TaskFunc fn, const _tchar* pDebugName = nullptr)
-		{
-			LOAD_TASK tTask = {};
-			tTask.strDebugName = (nullptr != pDebugName) ? pDebugName : TEXT("Capture Load Task");
-			tTask.fn = move(fn);
-
-			m_TaskQueue.push(move(tTask));
-			++m_iTotalCount;
-		};
-
-	auto EnqueuePrototype = [this, &Enqueue](_uint iLevelIndex, WNameID strProtoTag, auto Factory, const
-		_tchar* pDebugName = nullptr)
-		{
-			if (m_pGameInstance->Has_Prototype(iLevelIndex, strProtoTag))
-				return;
-
-			Enqueue([this, iLevelIndex, strProtoTag, Factory = move(Factory)]() mutable
-				{
-					return m_pGameInstance->Add_Prototype(iLevelIndex, strProtoTag, Factory());
-				}, pDebugName);
-		};
-
-
-
 	// ---------- Texture ----------
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_BUTTON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_BUTTON,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_button_%02d.png"), 3); },
 		TEXT("Prototype_Component_Texture_Get_Button"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_ICON,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_ICON,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_icon.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Icon"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_Info.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Info"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO2,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_INFO2,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_Info2.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Info2"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_FILL,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_FILL,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line_fill.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Line_Fill"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_BACK,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE_BACK,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line_back.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Line_Back"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_FILL,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_FILL,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_fill.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Line2_Fill"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_BACK,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_GET_LINE2_BACK,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_back.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Line2_Back"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_LV,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_LV,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_text_Lv.png"), 1); },
 		TEXT("Prototype_Component_Texture_Get_Text_LV"));
 
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_NUM,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_GET_TEXT_NUM,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/UI/poke_get/poke_get_itm_number_%02d.png"), 10); },
 		TEXT("Prototype_Component_Texture_Get_Text_Number"));
 
 
 
 	// ---------- VIBuffer & Model ----------
-	EnqueuePrototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_MONSTER_BALL,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_MONSTER_BALL,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/ball/ball.wmodel"); },
 		TEXT("Prototype_Component_Model_MonsterBall"));
 
 
 
 	// ---------- Objects ----------
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_CAPTURE_TARGET,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_CAPTURE_TARGET,
 		[this] { return CActor_CaptureTarget::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Actor_CaptureTarget"));
 
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER_BALL,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER_BALL,
 		[this] { return CMonsterBall::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_MonsterBall"));
 	
-	EnqueuePrototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAPTURE_RING,
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_CAPTURE_RING,
 		[this] { return CCaptureRing::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_CaptureRing"));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Resources_For_Effect()
+{
+	struct EFFECT_TEXTURE_PROTO_DESC
+	{
+		WNameID strProtoTag;
+		const _tchar* pTextureFilePath;
+		const _tchar* pDebugName;
+	};
+
+	const EFFECT_TEXTURE_PROTO_DESC EffectTextureDescs[] =
+	{
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_0_LINE702_SML_O, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_line702_sml_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_0_Line702_Sml_O") },
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_0_MASK702_O, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_0_Mask702_O") },
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE004_SML_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_1_circle004_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_1_Circle004_Sml_M") },
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE005_SML_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_1_circle005_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_1_Circle005_Sml_M") },
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_2_FIRE003_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_2_fire003_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_2_Fire003_M") },
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_2_HIT011_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_2_hit011_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_2_Hit011_M") },
+			{ PROTO_COM_TEX_EFT_BALL_ABSORB_3_FLOW701_O, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_3_flow701_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_3_Flow701_O") },
+
+			{ PROTO_COM_TEX_EFT_BALL_HIT_0_MASK702_O, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Mask702_O") },
+			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE002_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke002_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke002_M") },
+			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE005_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke005_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke005_M") },
+			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE203_A, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke203_a.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke203_A") },
+			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE702_O, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke702_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke702_O") },
+			{ PROTO_COM_TEX_EFT_BALL_HIT_1_CIRCLE003_SML_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_1_circle003_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_1_Circle003_Sml_M") },
+			{ PROTO_COM_TEX_EFT_BALL_HIT_1_FLASH001_SML_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_1_flash001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_1_Flash001_Sml_M") },
+
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_BLUR003_SML_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_blur003_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Blur003_Sml_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_LINE701_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_line701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Line701_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_MASK702_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Mask702_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_SMOKE702_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_smoke702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Smoke702_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_1_CIRCLE004_SML_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_1_circle004_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_1_Circle004_Sml_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_1_CIRCLE005_SML_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_1_circle005_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_1_Circle005_Sml_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_DUST701_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_dust701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Dust701_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_HIT011_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_hit011_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Hit011_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_SMOKE703_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_smoke703_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Smoke703_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_WATER009_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_water009_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Water009_M") },
+
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_LINE702_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_line702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Line702_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_MASK702_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Mask702_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_MASK703_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_mask703_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Mask703_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_SMOKE702_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_smoke702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Smoke702_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_1_CIRCLE005_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_1_circle005_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_1_Circle005_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_1_FLASH001_SML_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_1_flash001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_1_Flash001_Sml_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_2_DUST701_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_2_dust701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_2_Dust701_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_2_SMOKE001_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_2_smoke001_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_2_Smoke001_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_2_TRANSFORM001_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_2_transform001_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_2_Transform001_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_3_CLOUD001_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_3_cloud001_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_3_Cloud001_M") },
+
+			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_LINE701_O, TEXT("../../Resources/Effects/Capture_success/fxpt_0_line701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_0_Line701_O") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MASK003_M, TEXT("../../Resources/Effects/Capture_success/fxpt_0_mask003_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_0_Mask003_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MA_STAR001_SML_M, TEXT("../../Resources/Effects/Capture_success/fxpt_0_ma_star001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_0_Ma_Star001_Sml_M") },
+			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_1_CIRCLE001_SML_M, TEXT("../../Resources/Effects/Capture_success/fxpt_1_circle001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_1_Circle001_Sml_M") },
+	};
+
+	for (const auto& Desc : EffectTextureDescs)
+	{
+		Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), Desc.strProtoTag,
+			[this, pTextureFilePath = Desc.pTextureFilePath] { return CTexture::Create(m_pDevice, m_pContext, pTextureFilePath, 1); },
+			Desc.pDebugName);
+	}
 
 	return S_OK;
 }

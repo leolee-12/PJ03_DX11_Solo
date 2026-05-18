@@ -129,6 +129,12 @@ float3 ResolveLymColor(float4 vLym)
 	return lerp(vRGBColor, g_vLymColorA.rgb, fAlphaMask);
 }
 
+float2 ResolveMirrorTextureUV(float2 vUV)
+{
+	vUV.x = 1.f - abs(vUV.x * 2.f - 1.f);
+	return saturate(vUV);
+}
+
 PS_OUT PS_Default(PS_IN In)	// 0번 패스
 {
 	PS_OUT Out = (PS_OUT)0;
@@ -269,6 +275,88 @@ PS_OUT PS_DL(PS_IN In)	// 6번 패스
 	return Out;
 }
 
+PS_OUT PS_D_MIRROR(PS_IN In)	// 7번 패스
+{
+	PS_OUT Out = (PS_OUT)0;
+	float2 vUV = ResolveMirrorTextureUV(In.vTex);
+	float4 vMtrlDiff = g_TexDiff.Sample(ClampSampler, vUV);
+	Out.vDiff = float4(vMtrlDiff.rgb, 1.0f);
+	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
+	return Out;
+}
+
+float PingPong01(float x)
+{
+	// Blender Math Ping-Pong, Scale = 1.0 대응
+	// x: 임의 입력
+	// return: 0 -> 1 -> 0 -> 1 형태 반복
+	x = frac(x * 0.5f) * 2.0f;
+	return 1.0f - abs(x - 1.0f);
+}
+
+float2 ResolvePass8TexVector(float2 uv)
+{
+	// Blender Mapping 노드
+	// Scale X = 2.0, Y = 1.0
+	uv.x *= 2.0f;
+
+	// Blender Math 노드
+	// Operation = Ping-Pong, Scale = 1.0
+	uv.x = PingPong01(uv.x);
+
+	return uv;
+}
+
+PS_OUT PS_D_ADJUST(PS_IN In)	// 8번 패스
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	float2 vUV = ResolvePass8TexVector(In.vTex);
+	float4 vEye = g_TexDiff.Sample(LinearSampler, vUV);
+
+	Out.vDiff = float4(vEye.rgb, 1.0f);
+	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
+	return Out;
+}
+
+PS_OUT PS_DLN2(PS_IN In)	// 4번 패스
+{
+	PS_OUT Out = (PS_OUT)0;
+
+	// Sampling
+	float4 vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
+	float4 vLym = g_TexLycl.Sample(LinearSampler, In.vTex);
+
+	// Lym 해석
+	float3 vRegionColor = ResolveLymColor(vLym) * vMtrlDiff.rgb;
+	float3 vEyeColor = 1.f - saturate(vRegionColor);
+
+	// Normal 구성
+	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
+	float3 vEyeNormal;
+	vEyeNormal.xy = vNormDesc.xy;
+	vEyeNormal.z = sqrt(saturate(1.0f - dot(vEyeNormal.xy, vEyeNormal.xy)));
+	vEyeNormal = normalize(vEyeNormal);
+
+	float3 T = normalize(In.vTangent.xyz);
+	float3 B = normalize(In.vBinormal.xyz) * -1.f;
+	float3 N = normalize(In.vNorm.xyz);
+	float3x3 WorldMatrix = float3x3(T, B, N);
+
+	vEyeNormal = normalize(mul(vEyeNormal, WorldMatrix));
+
+	// Output
+	Out.vDiff = float4(vEyeColor, 1.0f);
+	Out.vNorm = vector(vEyeNormal.xyz * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Pass_Default		// 0. Body
@@ -340,5 +428,35 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DL();
+	}
+	pass Pass_D_Mirror		// 7. col + Mirror 캐터피
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_D_MIRROR();
+	}
+	pass Pass_DL_Adjust		// 8. col + Adjust 아쿠스타
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_D_ADJUST();
+	}
+	pass Pass_DLN2			// 9. eye3
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DLN2();
 	}
 };

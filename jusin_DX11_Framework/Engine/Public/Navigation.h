@@ -32,6 +32,26 @@ public:
 	_int XM_CALLCONV Find_CellIndex_ByPos(_fvector vWorldPos) const;
 	_vector XM_CALLCONV Compute_SlidePos(_fvector vCurPos, _fvector vDesiredPos);
 
+	/* -------- Spawn/Wander 쿼리 (S1 추가) --------
+   호출자 (CSpawn_Manager 등) 가 m_iCurrentCellIndex 와 무관하게 사용할 수 있도록
+   모두 const 메서드. iAreaMask 는 1차 no-op. */
+	_bool Project_PointToNavigation(
+		const _float3& vWorldPos, _float fSearchRadius, _uint iAreaMask,
+		_float3* pOutNavPos, _uint* pOutCellIndex) const;
+
+	_bool Is_Reachable(
+		_uint iStartCellIndex, _uint iGoalCellIndex, _uint iAreaMask) const;
+
+	_bool Find_RandomPoint_InRect(
+		const _float3& vCenter, const _float2& vSize, _float fRotationY,
+		_float fProjectRadius, _uint iAreaMask,
+		_float3* pOutNavPos, _uint* pOutCellIndex) const;
+
+	_bool Find_RandomReachablePoint_InRadius(
+		const _float3& vOrigin, _uint iOriginCellIndex,
+		_float fRadius, _uint iAreaMask,
+		_float3* pOutNavPos, _uint* pOutCellIndex) const;
+
 #ifdef _DEBUG
 public:
 	HRESULT Render() override;

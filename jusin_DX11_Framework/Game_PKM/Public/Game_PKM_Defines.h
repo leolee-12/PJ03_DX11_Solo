@@ -3,7 +3,6 @@
 
 #include <Windows.h>
 #include <process.h>
-#include <queue>
 #include <concurrent_queue.h>
 
 #include "Engine_Defines.h"

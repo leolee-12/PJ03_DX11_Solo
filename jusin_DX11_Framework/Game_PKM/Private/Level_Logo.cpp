@@ -41,6 +41,12 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_F2))
+		m_pGameInstance->Toggle_CameraFollow();
+
+	if (m_pGameInstance->Key_Down(DIK_F3))
+		m_pGameInstance->Toggle_Debug();
+
 	if (m_pGameInstance->Key_Down(DIK_F8))
 	{
 		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))

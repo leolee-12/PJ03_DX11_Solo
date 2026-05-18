@@ -152,6 +152,57 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 		m_SpeciesTable.emplace(tData.iDexNo, tData);
 	}
 
+	auto AddSpecies = [this](_uint iDexNo, const _tchar* pName,
+		TYPE eType1, TYPE eType2,
+		_ushort iHP, _ushort iAtk, _ushort iDef, _ushort iSpAtk, _ushort iSpDef, _ushort iSpd,
+		_uint iAbility1, _uint iAbility2, _uint iHiddenAbility,
+		_uint iMove0, _uint iMove1, _uint iMove2, _uint iMove3,
+		WNameID strModelTag, const _char* pMappingPath)
+		{
+			SPECIES_DATA tData{};
+			tData.iDexNo = iDexNo;
+			wcscpy_s(tData.szName, pName);
+			tData.eType1 = eType1;
+			tData.eType2 = eType2;
+			tData.iBaseHP = iHP; tData.iBaseAtk = iAtk; tData.iBaseDef = iDef;
+			tData.iBaseSpAtk = iSpAtk; tData.iBaseSpDef = iSpDef; tData.iBaseSpd = iSpd;
+			tData.iAbility1 = iAbility1;
+			tData.iAbility2 = iAbility2;
+			tData.iHiddenAbility = iHiddenAbility;
+			tData.iLearnset[0] = iMove0;
+			tData.iLearnset[1] = iMove1;
+			tData.iLearnset[2] = iMove2;
+			tData.iLearnset[3] = iMove3;
+			tData.strModelTag = strModelTag;
+			tData.pRenderMappingPath = pMappingPath;
+			tData.eRenderRuleKey = RENDER_RULE_KEY::POKEMON_DEFAULT;
+			m_SpeciesTable.emplace(tData.iDexNo, tData);
+		};
+
+	AddSpecies(10, L"Ä³ÅÍÇÇ", TYPE::BUG, TYPE::NONE, 45, 30, 35, 20, 20, 45, 19, 0, 50,
+		33, 450, 0, 0, PROTO_COM_MODEL_PM0010_00, "../../Resources/Models/pkm/pm0010_00/pm0010_00_mapping.json");
+
+	AddSpecies(41, L"ÁÖ¹î", TYPE::POISON, TYPE::FLYING, 40, 45, 35, 30, 40, 55, 39, 0, 151,
+		141, 44, 310, 0, PROTO_COM_MODEL_PM0041_00, "../../Resources/Models/pkm/pm0041_00/pm0041_00_mapping.json");
+
+	AddSpecies(43, L"¶Ñ¹÷ÃÝ", TYPE::GRASS, TYPE::POISON, 45, 50, 55, 75, 65, 30, 34, 0, 50,
+		71, 22, 0, 0, PROTO_COM_MODEL_PM0043_00, "../../Resources/Models/pkm/pm0043_00/pm0043_00_mapping.json");
+
+	AddSpecies(59, L"À©µð", TYPE::FIRE, TYPE::NONE, 90, 110, 80, 100, 80, 95, 22, 18, 154,
+		52, 44, 83, 0, PROTO_COM_MODEL_PM0059_00, "../../Resources/Models/pkm/pm0059_00/pm0059_00_mapping.json");
+
+	AddSpecies(74, L"²¿¸¶µ¹", TYPE::ROCK, TYPE::GROUND, 40, 80, 100, 30, 30, 20, 69, 5, 8,
+		33, 88, 0, 0, PROTO_COM_MODEL_PM0074_00, "../../Resources/Models/pkm/pm0074_00/pm0074_00_mapping.json");
+
+	AddSpecies(95, L"·Õ½ºÅæ", TYPE::ROCK, TYPE::GROUND, 35, 45, 160, 30, 45, 70, 69, 5, 133,
+		33, 88, 157, 0, PROTO_COM_MODEL_PM0095_00, "../../Resources/Models/pkm/pm0095_00/pm0095_00_mapping.json");
+
+	AddSpecies(121, L"¾ÆÄí½ºÅ¸", TYPE::WATER, TYPE::PSYCHIC, 60, 75, 85, 100, 85, 115, 35, 30, 148,
+		55, 93, 246, 0, PROTO_COM_MODEL_PM0121_00, "../../Resources/Models/pkm/pm0121_00/pm0121_00_mapping.json");
+
+	AddSpecies(130, L"°¼¶óµµ½º", TYPE::WATER, TYPE::FLYING, 95, 125, 79, 60, 100, 81, 22, 0, 153,
+		55, 44, 127, 242, PROTO_COM_MODEL_PM0130_00, "../../Resources/Models/pkm/pm0130_00/pm0130_00_mapping.json");
+
 	auto AddMove = [this](_uint iID, const _tchar* pName, TYPE eType, MOVE_CATEGORY eCategory,
 		_ushort iPower, _ubyte iAccuracy, _ubyte iMaxPP, _byte iPriority = 0)
 		{
@@ -176,6 +227,19 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 	AddMove(201, L"Âü¹æÂü¹æ¼­ÇÎ", TYPE::WATER, MOVE_CATEGORY::SPECIAL, 90, 100, 15);
 	AddMove(202, L"µÕ½ÇµÕ½ÇÆú", TYPE::FLYING, MOVE_CATEGORY::PHYSICAL, 90, 95, 15);
 	AddMove(203, L"ÆÄÄ¡ÆÄÄ¡¾×¼¿", TYPE::ELECTRIC, MOVE_CATEGORY::PHYSICAL, 50, 100, 15);
+	AddMove(44, L"¹°±â", TYPE::DARK, MOVE_CATEGORY::PHYSICAL, 60, 100, 25);
+	AddMove(71, L"Èí¼ö", TYPE::GRASS, MOVE_CATEGORY::SPECIAL, 20, 100, 25);
+	AddMove(83, L"È¸¿À¸®ºÒ²É", TYPE::FIRE, MOVE_CATEGORY::SPECIAL, 35, 85, 15);
+	AddMove(88, L"µ¹¶³±¸±â", TYPE::ROCK, MOVE_CATEGORY::PHYSICAL, 50, 90, 15);
+	AddMove(93, L"¿°µ¿·Â", TYPE::PSYCHIC, MOVE_CATEGORY::SPECIAL, 50, 100, 25);
+	AddMove(98, L"Àü±¤¼®È­", TYPE::NORMAL, MOVE_CATEGORY::PHYSICAL, 40, 100, 30, 1);
+	AddMove(127, L"ÆøÆ÷¿À¸£±â", TYPE::WATER, MOVE_CATEGORY::PHYSICAL, 80, 100, 15);
+	AddMove(141, L"ÈíÇ÷", TYPE::BUG, MOVE_CATEGORY::PHYSICAL, 80, 100, 10);
+	AddMove(157, L"½ºÅæ»þ¿ö", TYPE::ROCK, MOVE_CATEGORY::PHYSICAL, 75, 90, 10);
+	AddMove(242, L"±ú¹°¾îºÎ¼ö±â", TYPE::DARK, MOVE_CATEGORY::PHYSICAL, 80, 100, 15);
+	AddMove(246, L"¿ø½ÃÀÇÈû", TYPE::ROCK, MOVE_CATEGORY::SPECIAL, 60, 100, 5);
+	AddMove(310, L"³î·¡Å°±â", TYPE::GHOST, MOVE_CATEGORY::PHYSICAL, 30, 100, 15);
+	AddMove(450, L"¹ú·¹¸ÔÀ½", TYPE::BUG, MOVE_CATEGORY::PHYSICAL, 60, 100, 20);
 
 	auto AddAbility = [this](_uint iID, const _tchar* pName, _uint iEffectID = 0)
 		{
@@ -190,6 +254,24 @@ HRESULT CPokemonData_Manager::Load_BuiltinSeed()
 	AddAbility(2, L"Blaze");
 	AddAbility(3, L"Torrent");
 	AddAbility(9, L"Static");
+	AddAbility(5, L"Sturdy");
+	AddAbility(8, L"Sand Veil");
+	AddAbility(18, L"Flash Fire");
+	AddAbility(19, L"Shield Dust");
+	AddAbility(22, L"Intimidate");
+	AddAbility(30, L"Natural Cure");
+	AddAbility(34, L"Chlorophyll");
+	AddAbility(35, L"Illuminate");
+	AddAbility(39, L"Inner Focus");
+	AddAbility(50, L"Run Away");
+	AddAbility(55, L"Hustle");
+	AddAbility(62, L"Guts");
+	AddAbility(69, L"Rock Head");
+	AddAbility(133, L"Weak Armor");
+	AddAbility(148, L"Analytic");
+	AddAbility(151, L"Infiltrator");
+	AddAbility(153, L"Moxie");
+	AddAbility(154, L"Justified");
 
 	auto& tWild = m_BattleRules[static_cast<size_t>(BATTLE_RULE::WILD_SINGLE)];
 	tWild.eRule = BATTLE_RULE::WILD_SINGLE;
