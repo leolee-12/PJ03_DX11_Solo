@@ -17,6 +17,8 @@
 #include "Battle_PlateListener.h"
 #include "Game_API.h"
 #include "Camera_Free.h"
+#include "Camera_Director.h"
+#include "Camera_Sequence.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -43,6 +45,89 @@ namespace
 		case BATTLE_PHASE::DONE: return TEXT("DONE");
 		default: return TEXT("UNKNOWN");
 		}
+	}
+
+	CCamera_Sequence* Build_Test_Sequence()
+	{
+		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
+		if (nullptr == pSeq)
+			return nullptr;
+
+		CAMERA_SHOT_DESC shot = {};
+
+		shot.eType = CAMERA_SHOT_TYPE::CUT;
+		shot.fDuration = 0.4f;
+		shot.fBlendTime = 0.f;
+		shot.vPositionOffset = _float3(-5.0f, 2.5f, -3.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.5f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.7f;
+		shot.fBlendTime = 0.4f;
+		shot.vPositionOffset = _float3(5.0f, 2.5f, -3.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.fDuration = 0.6f;
+		shot.fBlendTime = 0.3f;
+		shot.vPositionOffset = _float3(0.0f, 1.5f, -4.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.eType = CAMERA_SHOT_TYPE::RETURN_DEFAULT;
+		shot.fDuration = 0.6f;
+		shot.fBlendTime = 0.4f;
+		shot.vPositionOffset = _float3();
+		shot.vLookAtOffset = _float3();
+		pSeq->Push_Shot(shot);
+
+		return pSeq;
+	}
+
+	CCamera_Sequence* Build_Test_TargetSequence()
+	{
+		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
+		if (nullptr == pSeq)
+			return nullptr;
+
+		CAMERA_SHOT_DESC shot = {};
+
+		shot.eType = CAMERA_SHOT_TYPE::CUT;
+		shot.fDuration = 0.5f;
+		shot.fBlendTime = 0.f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::ATTACKER;
+		shot.vPositionOffset = _float3(2.0f, 2.0f, -2.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.7f;
+		shot.fBlendTime = 0.4f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.vPositionOffset = _float3(0.0f, 5.0f, -5.0f);
+		shot.vLookAtOffset = _float3(0.0f, 0.5f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.fDuration = 0.6f;
+		shot.fBlendTime = 0.3f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.vPositionOffset = _float3(0.0f, 2.0f, -3.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.eType = CAMERA_SHOT_TYPE::RETURN_DEFAULT;
+		shot.fDuration = 0.6f;
+		shot.fBlendTime = 0.4f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::NONE;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::NONE;
+		shot.vPositionOffset = _float3();
+		shot.vLookAtOffset = _float3();
+		pSeq->Push_Shot(shot);
+
+		return pSeq;
 	}
 }
 NS_END
@@ -90,6 +175,29 @@ void CLevel_Battle::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F3))
 		m_pGameInstance->Toggle_Debug();
 
+	if (m_pGameInstance->Key_Down(DIK_F7))
+	{
+		CCamera_Director::GetInstance()->Start_Shake(0.1f, 35.f, 0.4f);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F8))
+	{
+		if (CCamera_Sequence* pSeq = Build_Test_Sequence())
+		{
+			CCamera_Director::GetInstance()->Play_Sequence(pSeq);
+			Safe_Release(pSeq);
+		}
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F9))
+	{
+		if (CCamera_Sequence* pSeq = Build_Test_TargetSequence())
+		{
+			CCamera_Director::GetInstance()->Play_Sequence(pSeq);
+			Safe_Release(pSeq);
+		}
+	}
+
 	if (nullptr == m_pBattleManager)
 		return;
 
@@ -97,6 +205,8 @@ void CLevel_Battle::Update(_float fTimeDelta)
 		m_pBattleMsgListener->Tick(fTimeDelta);
 
 	m_pBattleManager->Update(fTimeDelta);
+
+	CCamera_Director::GetInstance()->Tick(fTimeDelta);
 
 	if (nullptr != m_pBattleMsgListener)
 		m_pBattleMsgListener->Tick(fTimeDelta);
@@ -266,11 +376,39 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 	CameraDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	CameraDesc.fMouseSensor = 0.03f;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(
-		ETOUI(LEVEL::STATIC), PROTO_OBJ_CAMERA_FREE,
-		ETOUI(LEVEL::BATTLE), strLayerTag,
-		&CameraDesc)))
+	/* Camera_Free 인스턴스 직접 확보 (Director Bind 용).
+	   Effect_Manager::Spawn 과 동일 패턴 — Clone 의 ref 는 Layer 가 가져가고
+	   caller 는 borrowed 포인터로만 사용(실패 시에만 Safe_Release). */
+	CBase* pCloned = m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT,
+		ETOUI(LEVEL::STATIC),
+		PROTO_OBJ_CAMERA_FREE,
+		&CameraDesc);
+	if (nullptr == pCloned)
 		return E_FAIL;
+
+	CCamera_Free* pCamera = static_cast<CCamera_Free*>(pCloned);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(
+		ETOUI(LEVEL::BATTLE), strLayerTag, pCamera)))
+	{
+		Safe_Release(pCamera);
+		return E_FAIL;
+	}
+
+	/* M1: Director Bind + BATTLE_DEFAULT 모드 진입 + 기본 카메라 위치 즉시 cut.
+	   호출 순서 — Set_Mode 가 먼저여야 Set_Default_Battle_Pose 가 즉시 Apply 됨
+	   (Camera_Director.cpp:Set_Default_Battle_Pose 의 mode 가드 참고). */
+	CAMERA_POSE def = {};
+	def.vPosition = _float3(-4.0f, 3.0f, -7.0f);   // §4.5: 분석서 §8.1 권장치와 현재값 절충
+	def.vLookAt = _float3(0.0f, 0.8f, 0.0f);
+	def.vUp = _float3(0.0f, 1.0f, 0.0f);
+	def.fFovY = 0.f;                            // M1: FOV 변경 없음 (§4.3)
+
+	CCamera_Director* pDirector = CCamera_Director::GetInstance();
+	pDirector->Bind(pCamera, m_pBattleManager);
+	pDirector->Set_Mode(CAMERA_MODE::BATTLE_DEFAULT);
+	pDirector->Set_Default_Battle_Pose(def);
 
 	return S_OK;
 }
@@ -653,6 +791,12 @@ CLevel_Battle* CLevel_Battle::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 void CLevel_Battle::Free()
 {
+	/* §함정 10 + 종료 누수 차단:
+	   MainApp::Free 에서 Cleanup_StaticTables 가 Release_Engine 보다 먼저 호출되어
+	   Director 인스턴스가 이미 파괴된 상태에서 본 함수가 호출되는 경로가 있다.
+	   GetInstance 를 거치면 새 인스턴스가 만들어져 누수가 되므로, Try_Unbind 로 우회. */
+	CCamera_Director::Try_Unbind();
+
 	// PokemonListener 들 정리 (Battle_Pokemon weak ref 가 살아있을 때)
 	for (_uint i = 0; i < g_kBattleSideCount; ++i)
 	{

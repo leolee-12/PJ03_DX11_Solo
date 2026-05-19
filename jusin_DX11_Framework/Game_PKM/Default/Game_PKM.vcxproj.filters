@@ -187,6 +187,9 @@
     <Filter Include="05. Effects\Particle">
       <UniqueIdentifier>{0d0cbdf4-df1b-493e-bd14-4b072d988d3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Contents\03. Camera">
+      <UniqueIdentifier>{373c1197-f9b3-495e-a728-6c362712b4bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -510,6 +513,18 @@
     <ClInclude Include="..\Public\ParticleCurve.h">
       <Filter>05. Effects\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_Director.h">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Defines.h">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Sequence.h">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Shake.h">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -772,6 +787,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\ParticleEmitter.cpp">
       <Filter>05. Effects\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Director.cpp">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Sequence.cpp">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Shake.cpp">
+      <Filter>04. Contents\03. Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

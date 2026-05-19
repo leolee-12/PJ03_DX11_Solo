@@ -12,6 +12,7 @@
 #include "RenderRule_Manager.h"
 #include "Spawn_Manager.h"
 #include "Effect_Manager.h"
+#include "Camera_Director.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -77,6 +78,7 @@ HRESULT Ready_StaticTables()
 
 void Cleanup_StaticTables()
 {
+	CCamera_Director::DestroyInstance();
 	CEffect_Manager::DestroyInstance();
 	CSpawn_Manager::DestroyInstance();
 	CRenderRule_Manager::DestroyInstance();
