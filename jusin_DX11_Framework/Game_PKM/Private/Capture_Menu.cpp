@@ -74,7 +74,7 @@ HRESULT CCapture_Menu::Resolve_Buttons()
 		if (nullptr == pBtn)
 			return E_FAIL;
 
-		m_Buttons[i] = pBtn;  // weak — sequence(children) 가 소유
+		m_Buttons[i] = pBtn;  // weak - sequence(children) 가 소유
 	}
 
 	return S_OK;
@@ -174,7 +174,7 @@ CCapture_Menu* CCapture_Menu::Create()
 
 void CCapture_Menu::Free()
 {
-	/* m_Buttons 는 weak — 별도 해제 불필요 */
+	/* m_Buttons 는 weak - 별도 해제 불필요 */
 	m_pTarget = nullptr;
 	m_pName = nullptr;
 	m_pCaughtStateIcon = nullptr;

@@ -46,7 +46,7 @@ HRESULT CMenu::Resolve_Buttons()
 		if (nullptr == pBtn)
 			return E_FAIL;
 
-		m_Buttons[i] = pBtn;  // weak — sequence(children) 가 소유
+		m_Buttons[i] = pBtn;  // weak - sequence(children) 가 소유
 	}
 
 	return S_OK;
@@ -84,6 +84,6 @@ CMenu* CMenu::Create()
 
 void CMenu::Free()
 {
-	/* m_Buttons 는 weak — 별도 해제 불필요 */
-	__super::Free();   // CUIController::Free → Safe_Release(m_pGroup, m_pGameInstance)
+	/* m_Buttons 는 weak - 별도 해제 불필요 */
+	__super::Free();   // CUIController::Free -> Safe_Release(m_pGroup, m_pGameInstance)
 }

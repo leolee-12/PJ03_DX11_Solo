@@ -9,15 +9,15 @@ class CBattle_MoveMenu;
 
 /* CBattle_InputDirector
    - 플레이어 입력 흐름 통제 (MAIN ↔ MOVE 모드 전환 + 결정 시 Queue.Push)
-   - EventListener 상속 — EVENT_TURN_STARTED 수신 시 MAIN 모드 진입 (메뉴 활성)
+   - EventListener 상속 - EVENT_TURN_STARTED 수신 시 MAIN 모드 진입 (메뉴 활성)
    - 명령 결정 시 자체적으로 Queue.Push + EVENT_COMMAND_SELECTED 발행 후 IDLE 모드 (메뉴 비활성)
    - CommandMenu / MoveMenu / Manager 는 weak (UI Hub / Level / Level owns)
    - 본 트랙 정책:
-	   MAIN 에서 FIGHT  → MOVE 진입
-	   MAIN 에서 POKE/BAG → 무시 (메뉴 재포커스)
-	   MAIN 에서 CANCEL → 도망 (CRunCommand)
-	   MOVE 에서 슬롯  → CMoveCommand (PP 0 이면 무시)
-	   MOVE 에서 CANCEL → MAIN 복귀 */
+	   MAIN 에서 FIGHT  -> MOVE 진입
+	   MAIN 에서 POKE/BAG -> 무시 (메뉴 재포커스)
+	   MAIN 에서 CANCEL -> 도망 (CRunCommand)
+	   MOVE 에서 슬롯  -> CMoveCommand (PP 0 이면 무시)
+	   MOVE 에서 CANCEL -> MAIN 복귀 */
 class CBattle_InputDirector final : public CBattle_EventListenerBase
 {
 public:

@@ -15,7 +15,7 @@ class CBattler;
    - UI_BattlePlate.uiseq 위젯들에 양 측 플레이트의 HP/이름/레벨/성별을 매 프레임 lazy 갱신한다.
    - CBattle_Manager 의 Get_Battler(side) 를 폴링하여 슬롯 상태를 가져온다.
    - HP 바는 목표값(현재 HP 비율) 과 표시값을 분리해 부드럽게 lerp 한다.
-   - 이벤트 구독 없음 (페이싱 락 미보유 — UI 표시 책임만). */
+   - 이벤트 구독 없음 (페이싱 락 미보유 - UI 표시 책임만). */
 class CBattlePlate final : public CUIController
 {
 private:

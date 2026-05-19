@@ -54,10 +54,10 @@ namespace
 			return;
 
 		_wstring dir = path.substr(0, iSepPos);
-		CreateDirectoryW(dir.c_str(), nullptr); /* 이미 있으면 ERROR_ALREADY_EXISTS — 무시 */
+		CreateDirectoryW(dir.c_str(), nullptr); /* 이미 있으면 ERROR_ALREADY_EXISTS - 무시 */
 	}
 
-	/* blob → 파일. 성공 true. */
+	/* blob -> 파일. 성공 true. */
 	_bool Save_BlobToFile(const _tchar* pPath, const void* pData, size_t Size)
 	{
 		Ensure_DirectoryW(pPath);
@@ -70,7 +70,7 @@ namespace
 		return ofs.good();
 	}
 
-	/* 파일 → 메모리 버퍼. 성공 true. */
+	/* 파일 -> 메모리 버퍼. 성공 true. */
 	bool Load_FileToBlob(const _tchar* pPath, vector<unsigned char>& outBytes)
 	{
 		std::ifstream ifs(pPath, std::ios::binary | std::ios::ate);
@@ -139,7 +139,7 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 		}
 	}
 
-	/* 2) HLSL 컴파일 람다 — 캐시 무효 또는 캐시 손상 시 호출.
+	/* 2) HLSL 컴파일 람다 - 캐시 무효 또는 캐시 손상 시 호출.
 			 성공 시 *ppOutBlob 에 결과 blob, .fxo 파일도 갱신. */
 	auto fnCompileAndSave = [this, pShaderFilePath, iHlslFlag, &fxoPath](ID3DBlob** ppOutBlob) ->
 		HRESULT
@@ -149,9 +149,9 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 			const HRESULT hr = D3DCompileFromFile(
 				pShaderFilePath,
 				nullptr,                            /* pDefines */
-				D3D_COMPILE_STANDARD_FILE_INCLUDE,  /* pInclude — 기존 동작 유지 */
-				nullptr,                            /* pEntrypoint — effect 는 entry 없음 */
-				"fx_5_0",                           /* pTarget — effect 5.0 */
+				D3D_COMPILE_STANDARD_FILE_INCLUDE,  /* pInclude - 기존 동작 유지 */
+				nullptr,                            /* pEntrypoint - effect 는 entry 없음 */
+				"fx_5_0",                           /* pTarget - effect 5.0 */
 				iHlslFlag,
 				0,                                  /* Flags2 */
 				ppOutBlob,
@@ -170,14 +170,14 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 			if (FAILED(hr))
 				return hr;
 
-			/* 저장 실패는 무시 — 메모리상 blob 으로 Effect 생성은 계속 가능 */
+			/* 저장 실패는 무시 - 메모리상 blob 으로 Effect 생성은 계속 가능 */
 			Save_BlobToFile(fxoPath.c_str(),
 				(*ppOutBlob)->GetBufferPointer(),
 				(*ppOutBlob)->GetBufferSize());
 			return S_OK;
 		};
 
-	/* 3) Effect 생성 — 캐시 로드 우선, 실패 시 컴파일로 폴백 */
+	/* 3) Effect 생성 - 캐시 로드 우선, 실패 시 컴파일로 폴백 */
 	bool bEffectCreated = false;
 
 	if (bCacheValid)
@@ -221,7 +221,7 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 			return E_FAIL;
 	}
 
-	/* 4) InputLayout 생성 — 기존 로직 그대로 */
+	/* 4) InputLayout 생성 - 기존 로직 그대로 */
 	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByIndex(0);
 
 	if (nullptr == pTechnique)

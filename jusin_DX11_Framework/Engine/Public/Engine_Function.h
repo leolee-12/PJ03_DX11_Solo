@@ -87,9 +87,9 @@ namespace Engine
 #endif
     }
 
-	// 원본 텍스처 경로 → dds 하위 폴더 경로
+	// 원본 텍스처 경로 -> dds 하위 폴더 경로
 	// 가드: 이미 .dds 확장자면 그대로 반환 (스카이박스 등 보호)
-	// 예: …/model_name/foo.png → …/model_name/dds/foo.dds
+	// 예: …/model_name/foo.png -> …/model_name/dds/foo.dds
 	inline wstring Convert_PathToDDS(const wstring& origPath)
 	{
 		namespace fs = std::filesystem;

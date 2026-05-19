@@ -74,7 +74,7 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 
 	Tick_RootMotionMovement(vMoveDir, bHasInput, pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
 
-	// 2.5) 콜라이더 world 갱신 — 위치 확정 직후
+	// 2.5) 콜라이더 world 갱신 - 위치 확정 직후
 	if (nullptr != m_pColliderCom)
 		m_pColliderCom->Update(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
 
@@ -121,7 +121,7 @@ HRESULT CPlayer_LGPE::Ready_Components()
 		COM_NAVIGATION, reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
-	/* For.Com_Collider_Sphere — TOUCH 트리거용 */
+	/* For.Com_Collider_Sphere - TOUCH 트리거용 */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC SphereDesc{};
 	SphereDesc.vCenter = _float3(0.f, 0.5f, 0.f);
 	SphereDesc.fRadius = 0.5f;
@@ -294,7 +294,7 @@ void CPlayer_LGPE::Update_TouchTriggers()
 
 		CurrentTouchSet.insert(pActor);
 
-		// 직전 프레임에도 overlap 이었으면 Enter 가 아님 — 발화 제외
+		// 직전 프레임에도 overlap 이었으면 Enter 가 아님 - 발화 제외
 		if (m_PrevTouchSet.find(pActor) != m_PrevTouchSet.end())
 			continue;
 
@@ -306,7 +306,7 @@ void CPlayer_LGPE::Update_TouchTriggers()
 	if (nullptr != pNewlyEnteredFirst)
 		Fire_Touch(pNewlyEnteredFirst);
 
-	// weak 비교만 수행 — dangling 안전. 레벨 Push/Pop 경계는 GAMEPLAY::OnResume 이 Clear_TouchSet() 호출로 정리.
+	// weak 비교만 수행 - dangling 안전. 레벨 Push/Pop 경계는 GAMEPLAY::OnResume 이 Clear_TouchSet() 호출로 정리.
 	m_PrevTouchSet = std::move(CurrentTouchSet);
 }
 

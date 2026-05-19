@@ -366,7 +366,7 @@ void CSound_Manager::Stop_Sound(CHANNELID eChannelID)
 	bool bPlaying = false;
 	FMOD_RESULT eResult = pChannel->isPlaying(&bPlaying);
 
-	// invalid handle / 이미 정지 → 조용히 정리만
+	// invalid handle / 이미 정지 -> 조용히 정리만
 	if (FMOD_OK == eResult && bPlaying)
 	{
 		eResult = pChannel->stop();

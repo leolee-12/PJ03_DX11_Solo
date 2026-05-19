@@ -39,7 +39,7 @@ SamplerComparisonState ShadowCompareSampler
     Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
     AddressU = CLAMP;
     AddressV = CLAMP;
-    ComparisonFunc = LESS_EQUAL; // refDepth <= storedDepth ¡æ "±×¸²ÀÚ ¾Æ´Ô(=ºû ¹ÞÀ½)"
+    ComparisonFunc = LESS_EQUAL; // refDepth <= storedDepth -> "±×¸²ÀÚ ¾Æ´Ô(=ºû ¹ÞÀ½)"
 };
 
 RasterizerState RS_Wireframe

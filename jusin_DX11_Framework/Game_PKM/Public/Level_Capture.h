@@ -31,9 +31,9 @@ private:
 	CAPTURE_ENV m_tEnv = {};
 	CCamera_Free* m_pCaptureCamera = { nullptr };  // weak - layer owns
 	CCapture_Manager* m_pCaptureManager = { nullptr };
-	CCapture_Menu* m_pCaptureMenu = { nullptr };   // weak — UI Hub 가 owner
-	CUISequence* m_pCursorSeq = { nullptr };      // weak — Add_GameObject_Ex 가 owner
-	CMonsterBall* m_pMonsterBall = { nullptr };   // weak — 레이어가 owner
+	CCapture_Menu* m_pCaptureMenu = { nullptr };   // weak - UI Hub 가 owner
+	CUISequence* m_pCursorSeq = { nullptr };      // weak - Add_GameObject_Ex 가 owner
+	CMonsterBall* m_pMonsterBall = { nullptr };   // weak - 레이어가 owner
 	CActor_CaptureTarget* m_pCaptureTarget = { nullptr };  // weak - layer owns
 
 private:

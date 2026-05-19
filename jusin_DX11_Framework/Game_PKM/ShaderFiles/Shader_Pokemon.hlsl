@@ -385,6 +385,25 @@ PS_OUT PS_DLN2(PS_IN In)	// 4번 패스
 	return Out;
 }
 
+PS_OUT PS_DL_IRIS(PS_IN In)	// 10번 패스
+{
+	PS_OUT Out = (PS_OUT)0;
+	float2 vUV = ResolvePass8TexVector(In.vTex);
+	float4 vMtrlDiff = g_TexDiff.Sample(LinearSampler, vUV);
+
+	if (vMtrlDiff.a < 0.1f)
+	{
+		float2 vIrisTex = float2(vUV.x * -2.f, vUV.y * 4.f);
+		vMtrlDiff.rgb = g_TexLycl.Sample(LinearSampler, vIrisTex).rgb;
+	}
+
+	Out.vDiff = float4(vMtrlDiff.rgb, 1.0f);
+	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
+	Out.vAmbt = vector(1.f, 1.f, 1.f, 0.f);
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Pass_Default		// 0. Body
@@ -486,5 +505,15 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DLN2();
+	}
+	pass Pass_DL_Iris		// 10. eye4 (eye_col + iris)
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_Default, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_DL_IRIS();
 	}
 };

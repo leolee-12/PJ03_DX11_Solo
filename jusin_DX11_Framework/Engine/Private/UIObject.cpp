@@ -221,7 +221,7 @@ void CUIObject::Recalculate_RenderTransform()
 		fActualWidth, fActualHeight,
 		ePolicy);
 
-	// resolved center(design) → render center
+	// resolved center(design) -> render center
 	const _float2 vRenderCenter = UICanvasMath::Design_To_RenderPoint(
 		_float2(m_fResolvedCenterX, m_fResolvedCenterY),
 		m_tCanvasTransform,
@@ -229,7 +229,7 @@ void CUIObject::Recalculate_RenderTransform()
 	m_fRenderCenterX = vRenderCenter.x;
 	m_fRenderCenterY = vRenderCenter.y;
 
-	// size(design) → render size (offset 미적용, scale만 반영)
+	// size(design) -> render size (offset 미적용, scale만 반영)
 	const _float4 vRenderRect = UICanvasMath::Design_To_RenderRect(
 		_float4(0.f, 0.f, m_fSizeX, m_fSizeY),
 		m_tCanvasTransform,

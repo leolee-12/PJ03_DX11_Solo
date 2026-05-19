@@ -11,7 +11,7 @@ NS_BEGIN(Game_PKM)
    ============================================================ */
 
 inline constexpr _uint INVALID_NAV_CELL = static_cast<_uint>(-1);
-inline constexpr _uint NAV_AREA_WALKABLE = 0xFFFFFFFFu;   // 1차 no-op — 모든 마스크 통과
+inline constexpr _uint NAV_AREA_WALKABLE = 0xFFFFFFFFu;   // 1차 no-op - 모든 마스크 통과
 inline constexpr _uint g_kMaxSpawnAttemptsPerTry = 16;
 inline constexpr _uint g_kMaxWanderAttempts = 8;
 
@@ -39,10 +39,10 @@ struct SPAWN_RECT_DESC
 
 	_uint       iAllowedAreaMask = { NAV_AREA_WALKABLE };          // 1차 no-op
 
-	_uint       iEncounterTableID = { 0 };                          // S2 본 단위에서는 미사용 — 본격 인카운터 테이블 도입 시 활성화
+	_uint       iEncounterTableID = { 0 };                          // S2 본 단위에서는 미사용 - 본격 인카운터 테이블 도입 시 활성화
 	_uint       iMaxAliveCount = { 1 };
 
-	// TODO(S2 임시 — 본격 인카운터 테이블 도입 시 제거)
+	// TODO(S2 임시 - 본격 인카운터 테이블 도입 시 제거)
 	_uint       iSpeciesID_Temp = { 0 };
 	_uint       iLevel_Temp = { 1 };
 

@@ -120,7 +120,7 @@ void CBattlePlate::On_Update(_float fTimeDelta)
 	const _float fPlayerTarget = Read_HP01(m_pManager->Get_Battler(g_kBattleSide_Player));
 	const _float fEnemyTarget = Read_HP01(m_pManager->Get_Battler(g_kBattleSide_Opponent));
 
-	constexpr _float fLerpSpeed = 0.6f;  // 초당 비율 — 0~1 전체 변화에 약 1.7초
+	constexpr _float fLerpSpeed = 0.6f;  // 초당 비율 - 0~1 전체 변화에 약 1.7초
 	const _float fStep = fLerpSpeed * fTimeDelta;
 
 	auto Lerp_Step = [fStep](_float fDisplay, _float fTarget) -> _float
@@ -193,7 +193,7 @@ void CBattlePlate::Apply_Gender(CUIImage* pGender, CBattler* pBattler)
 
 	(void)pBattler;
 
-	// POKEMON_INSTANCE 에 성별 필드 부재 — 본 트랙에서는 숨김 처리.
+	// POKEMON_INSTANCE 에 성별 필드 부재 - 본 트랙에서는 숨김 처리.
 	// 데이터 모델 확장 후 P3 후속 단위에서 인덱스(Male=0/Female=1) 적용 예정.
 	pGender->Set_Visible(false);
 }

@@ -136,7 +136,7 @@ void CUIController_Hub::Set_Cursor_Sequence(CUISequence* pSeq)
 
 CUIController* CUIController_Hub::Find_Active_Controller() const
 {
-	/* m_Controllers 뒤에서부터 순회 → 가장 마지막에 Register 된 활성 컨트롤러 우선.
+	/* m_Controllers 뒤에서부터 순회 -> 가장 마지막에 Register 된 활성 컨트롤러 우선.
 	   활성 조건: Open && 그룹 Active && 그룹에 포커스 버튼 존재. */
 	for (auto it = m_Controllers.rbegin(); it != m_Controllers.rend(); ++it)
 	{
@@ -166,7 +166,7 @@ void CUIController_Hub::Update_Cursor(_float fTimeDelta)
 	CUIController* pActive = Find_Active_Controller();
 
 	/* 활성 컨트롤러가 이전 프레임과 달라지면 딜레이 타이머 리셋.
-	   (nullptr → 신규 / 신규 → 다른 컨트롤러 모두 포함.
+	   (nullptr -> 신규 / 신규 -> 다른 컨트롤러 모두 포함.
 		같은 컨트롤러 내부 포커스 이동은 이 분기에 걸리지 않음.) */
 	if (pActive != m_pLastActiveCtrl)
 	{
@@ -180,7 +180,7 @@ void CUIController_Hub::Update_Cursor(_float fTimeDelta)
 		return;
 	}
 
-	/* 딜레이 진행 중 — 매 프레임 감소시키되 커서는 숨김 유지. */
+	/* 딜레이 진행 중 - 매 프레임 감소시키되 커서는 숨김 유지. */
 	if (m_fCursorShowTimer > 0.f)
 	{
 		m_fCursorShowTimer -= fTimeDelta;

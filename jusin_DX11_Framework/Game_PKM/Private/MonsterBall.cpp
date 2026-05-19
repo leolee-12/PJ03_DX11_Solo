@@ -62,8 +62,8 @@ HRESULT CMonsterBall::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	/* 시각 보정 — Scaling 후 Rotation(X축 -60°). CTransform::Rotation 은 현재 스케일을 보존하므로
-	   Scaling → Rotation 순서로 호출 안전. Set_State(POSITION) 은 RIGHT/UP/LOOK 보존 → 회전/스케일 유지. */
+	/* 시각 보정 - Scaling 후 Rotation(X축 -60°). CTransform::Rotation 은 현재 스케일을 보존하므로
+	   Scaling -> Rotation 순서로 호출 안전. Set_State(POSITION) 은 RIGHT/UP/LOOK 보존 -> 회전/스케일 유지. */
 	_float fScale = 1.f;
 	m_pTransformCom->Scaling(fScale, fScale, fScale);
 	//m_pTransformCom->Rotation(XMConvertToRadians(-60.f), 0.f, 0.f);
@@ -189,7 +189,7 @@ void CMonsterBall::Launch()
 	m_fBounceTime = 0.f;
 	m_fBounceDuration = 0.f;
 	m_fBounceHeight = 0.f;
-	OutputDebugStringW(L"[MonsterBall] READY → FLYING (Show)\n");
+	OutputDebugStringW(L"[MonsterBall] READY -> FLYING (Show)\n");
 }
 
 void CMonsterBall::Reset()
@@ -259,12 +259,12 @@ void CMonsterBall::Trigger_Impact(const _float3& vTargetCenter)
 
 HRESULT CMonsterBall::Ready_Components()
 {
-	/* Shader — 애니메이션 메시용 VTXANIMMESH 사용. */
+	/* Shader - 애니메이션 메시용 VTXANIMMESH 사용. */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXANIMMESH,
 		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	/* Model — ball.wmodel (Loader 등록). */
+	/* Model - ball.wmodel (Loader 등록). */
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_MONSTER_BALL,
 		COM_MODEL, reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
@@ -396,7 +396,7 @@ void CMonsterBall::Update_Position()
 		: 1.f;
 
 	/* XZ 선형 보간, Y 선형 + 표준 포물선 가산.
-	   arc 항 4·H·t·(1-t) 는 t=0/1 에서 0, t=0.5 에서 H — 정점 높이 = H. */
+	   arc 항 4·H·t·(1-t) 는 t=0/1 에서 0, t=0.5 에서 H - 정점 높이 = H. */
 	const _float x = m_vStartPos.x + (m_vTargetPos.x - m_vStartPos.x) * t;
 	const _float z = m_vStartPos.z + (m_vTargetPos.z - m_vStartPos.z) * t;
 	const _float yLin = m_vStartPos.y + (m_vTargetPos.y - m_vStartPos.y) * t;

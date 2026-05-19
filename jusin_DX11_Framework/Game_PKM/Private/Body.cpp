@@ -79,7 +79,7 @@ void CBody::Late_Update(_float fTimeDelta)
 
 
 	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
-	if (true == m_pGameInstance->isIn_Frustum_WorldSpace(vPos, 2.f))
+	if (true == m_pGameInstance->isIn_Frustum_WorldSpace(vPos, 5.f))
 	{
 		m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 		m_pGameInstance->Add_RenderGroup(RENDERID::SHADOW, this);

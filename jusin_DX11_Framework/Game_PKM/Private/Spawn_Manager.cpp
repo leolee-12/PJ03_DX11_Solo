@@ -79,7 +79,7 @@ HRESULT CSpawn_Manager::Initialize(_uint iNaviProtoLevel, WNameID strNaviProtoTa
 
 	m_pGameInstance = CGameInstance::GetInstance();   // weak
 
-	// NavMesh 프로토타입 클론 — pArg=nullptr 이면 매니저 측 m_iCurrentCellIndex = -1.
+	// NavMesh 프로토타입 클론 - pArg=nullptr 이면 매니저 측 m_iCurrentCellIndex = -1.
 	CBase* pCloned = m_pGameInstance->Clone_Prototype(
 		PROTOTYPE::COMPONENT, iNaviProtoLevel, strNaviProtoTag, nullptr);
 	if (nullptr == pCloned)
@@ -312,7 +312,7 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 
 	const SPAWN_RECT_DESC& tDesc = tRuntime.tDesc;
 
-	// 종/렌더룰 조회 — Find 실패는 데이터 오류, 더 이상 시도해도 동일하므로 즉시 false.
+	// 종/렌더룰 조회 - Find 실패는 데이터 오류, 더 이상 시도해도 동일하므로 즉시 false.
 	CPokemonData_Manager* pDataMgr = CPokemonData_Manager::GetInstance();
 	if (nullptr == pDataMgr) return false;
 
@@ -362,7 +362,7 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 		BodyDesc.iDefaultAnim = 0;
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
-		BodyDesc.bEnableRootMotion = true;     // S3 Fix — Body_Hero 와 동일 패턴
+		BodyDesc.bEnableRootMotion = true;     // S3 Fix - Body_Hero 와 동일 패턴
 		BodyDesc.iRootMotionBoneIndex = 0;       // 1차 root bone. 모델별 조정 필요 시 후속에서 노출
 		BodyDesc.pRenderRule = pRenderRule;
 
@@ -374,7 +374,7 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 		WildDesc.iSpeciesID = tDesc.iSpeciesID_Temp;
 		WildDesc.iLevel = tDesc.iLevel_Temp;
 		WildDesc.vSpawnPos = vNavPos;
-		WildDesc.fRotationPerSec = XMConvertToRadians(720.f);   // S3 Fix #2 — 회전 활성화
+		WildDesc.fRotationPerSec = XMConvertToRadians(720.f);   // S3 Fix #2 - 회전 활성화
 
 		WildDesc.iSpawnRectID = tDesc.iSpawnID;
 		WildDesc.vSpawnAnchor = tRuntime.vProjectedCenter;
@@ -430,9 +430,9 @@ _bool CSpawn_Manager::Spawn_Trainer(SPAWN_RECT_RUNTIME& tRuntime)
 	NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
 	NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 	NpcDesc.pBodyDesc = &BodyDesc;
-	NpcDesc.strDialogueKey = L"dialogue_trainer";       // 1차 — 후속에서 SPAWN_RECT_DESC 노출 검토
+	NpcDesc.strDialogueKey = L"dialogue_trainer";       // 1차 - 후속에서 SPAWN_RECT_DESC 노출 검토
 	NpcDesc.vSpawnPos = tRuntime.vProjectedCenter; // 사각형 중심 (이미 NavMesh 위로 투영됨)
-	NpcDesc.fRotationPerSec = XMConvertToRadians(720.f); // S3 Fix#2 와 동일 — Face_Direction 동작 보장
+	NpcDesc.fRotationPerSec = XMConvertToRadians(720.f); // S3 Fix#2 와 동일 - Face_Direction 동작 보장
 
 	// S4 신규 트레이너 페이로드
 	NpcDesc.bIsTrainer = true;
@@ -513,7 +513,7 @@ void CSpawn_Manager::Recount_AliveCounts()
 		}
 	}
 
-	// 3) 사망 감지 — WILD_POKEMON rect 만 대상.
+	// 3) 사망 감지 - WILD_POKEMON rect 만 대상.
 	for (auto& tRuntime : m_Runtimes)
 	{
 		if (tRuntime.tDesc.eSpawnKind != SPAWN_KIND::WILD_POKEMON) continue;
@@ -533,7 +533,7 @@ HRESULT CSpawn_Manager::Ready_DebugResources()
 	if (nullptr == m_pNavigationClone) return E_FAIL;
 
 	// CNavigation 으로부터 디바이스/컨텍스트 빌릴 수 있지만 직접 노출이 없으므로
-	// CGameInstance 의 보유 디바이스를 사용 — Component 와 동일 패턴.
+	// CGameInstance 의 보유 디바이스를 사용 - Component 와 동일 패턴.
 	pDevice = m_pGameInstance->Get_Device();
 	pContext = m_pGameInstance->Get_Context();
 	if (nullptr == pDevice || nullptr == pContext) return E_FAIL;

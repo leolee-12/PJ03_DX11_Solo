@@ -141,7 +141,7 @@ void CBattle_Pokemon::Play_Enter()
 
 void CBattle_Pokemon::Play_Faint()
 {
-	// 기절은 IDLE 로 복귀하지 않음 — duration 0 으로 두고 model 만 변경 + 락 해제 (현재 단계에서 단순화)
+	// 기절은 IDLE 로 복귀하지 않음 - duration 0 으로 두고 model 만 변경 + 락 해제 (현재 단계에서 단순화)
 	if (nullptr != m_pBody)
 		m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::FAINT),
 			false);
@@ -150,7 +150,7 @@ void CBattle_Pokemon::Play_Faint()
 	m_fAnimTimer = 0.f;
 	m_fAnimDuration = 0.f;
 
-	// 직전 Play_Hurt 등으로 잔존하는 락이 있으면 강제 해제 — KO 시점에서는 페이싱을 풀어야 다음단계 진행 가능
+	// 직전 Play_Hurt 등으로 잔존하는 락이 있으면 강제 해제 - KO 시점에서는 페이싱을 풀어야 다음단계 진행 가능
 	if (m_bLockHeld && nullptr != m_pManager)
 	{
 		m_pManager->Release_Pacing_Lock();
@@ -186,7 +186,7 @@ void CBattle_Pokemon::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
 	m_fAnimTimer = 0.f;
 	m_fAnimDuration = fDuration;
 
-	// 락 이미 보유 중인데 새 anim 으로 덮어쓰는 경우 — 기존 락 유지 (새로 잡지 않음).
+	// 락 이미 보유 중인데 새 anim 으로 덮어쓰는 경우 - 기존 락 유지 (새로 잡지 않음).
 	// 그러나 새 duration > 0 이어야 자동 복귀로 락이 풀린다. fDuration <= 0 으로 호출되는 경우는 Play_Faint 가 자체 처리.
 	if (false == m_bLockHeld && nullptr != m_pManager && fDuration > 0.f)
 	{
@@ -214,7 +214,7 @@ HRESULT CBattle_Pokemon::Ready_PartObjects(const POKEMON_DESC* pDesc)
 		ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
 		return E_FAIL;
 
-	// 추가된 Body 캐싱 — m_PartObjects 에서 PART_BODY 키로 찾는다.
+	// 추가된 Body 캐싱 - m_PartObjects 에서 PART_BODY 키로 찾는다.
 	m_PartObjects.for_each([this](auto& Pair)
 		{
 			if (Pair.first == PART_BODY)

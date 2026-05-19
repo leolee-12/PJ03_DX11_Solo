@@ -43,7 +43,7 @@ HRESULT CBattle_CommandMenu::Resolve_Buttons()
 		if (nullptr == pBtn)
 			return E_FAIL;
 
-		m_Buttons[i] = pBtn;  // weak — sequence(children) 가 소유
+		m_Buttons[i] = pBtn;  // weak - sequence(children) 가 소유
 	}
 
 	return S_OK;
@@ -81,6 +81,6 @@ CBattle_CommandMenu* CBattle_CommandMenu::Create()
 
 void CBattle_CommandMenu::Free()
 {
-	/* m_Buttons 는 weak — 별도 해제 불필요 */
+	/* m_Buttons 는 weak - 별도 해제 불필요 */
 	__super::Free();
 }

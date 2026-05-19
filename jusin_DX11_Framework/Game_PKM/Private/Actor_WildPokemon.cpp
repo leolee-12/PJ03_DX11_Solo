@@ -45,7 +45,7 @@ HRESULT CActor_WildPokemon::Initialize(void* pArg)
     if (FAILED(Ready_PartObjects(pDesc)))
         return E_FAIL;
 
-    // S2 추가 — desc 의 SpawnRect 페이로드 캐싱 (사용은 S3 배회 로직)
+    // S2 추가 - desc 의 SpawnRect 페이로드 캐싱 (사용은 S3 배회 로직)
     m_iSpawnRectID = pDesc->iSpawnRectID;
     m_vSpawnAnchor = pDesc->vSpawnAnchor;
     m_fLeashRadius = pDesc->fLeashRadius;
@@ -101,7 +101,7 @@ HRESULT CActor_WildPokemon::Ready_Components(const ACTOR_WILD_DESC* pDesc)
         COM_INTERACTION_ENCOUNTER, reinterpret_cast<CComponent**>(&m_pEncounter), &EncDesc)))
         return E_FAIL;
 
-    // SPHERE Collider — TOUCH 트리거용
+    // SPHERE Collider - TOUCH 트리거용
     CBounding_Sphere::BOUNDING_SPHERE_DESC SphereDesc{};
     SphereDesc.vCenter = _float3(0.f, 0.5f, 0.f);
     SphereDesc.fRadius = 0.6f;
@@ -110,7 +110,7 @@ HRESULT CActor_WildPokemon::Ready_Components(const ACTOR_WILD_DESC* pDesc)
         COM_COLLIDER_SPHERE, reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
         return E_FAIL;
 
-    // S3 추가 — Navigation 컴포넌트
+    // S3 추가 - Navigation 컴포넌트
     // INVALID_NAV_CELL 을 _int 로 cast 하면 -1 이 되어 CNavigation::Set_CurrentCellIndex 가 invalid 처리.
     CNavigation::NAVIGATION_DESC NaviDesc{ static_cast<_int>(pDesc->iCurrentCellIndex) };
 
@@ -161,7 +161,7 @@ void CActor_WildPokemon::Tick_Wander(_float fTimeDelta)
             else
                 m_fWanderTimer = SpawnMath::RandomFloat(kIdleMinSec, kIdleMaxSec);
         }
-        // IDLE: vMoveDir = 0, bHasInput = false → Tick_RootMotionMovement 가 정지 분기로 빠짐.
+        // IDLE: vMoveDir = 0, bHasInput = false -> Tick_RootMotionMovement 가 정지 분기로 빠짐.
         break;
     }
 
@@ -186,7 +186,7 @@ void CActor_WildPokemon::Tick_Wander(_float fTimeDelta)
             break;
         }
 
-        // 루트모션 delta=0 / 막힘 케이스 — 일정 시간 안에 도착 못 하면 새 타깃 시도
+        // 루트모션 delta=0 / 막힘 케이스 - 일정 시간 안에 도착 못 하면 새 타깃 시도
         m_fMoveDuration += fTimeDelta;
         if (m_fMoveDuration > kMoveTimeoutSec)
         {
@@ -196,7 +196,7 @@ void CActor_WildPokemon::Tick_Wander(_float fTimeDelta)
             break;
         }
 
-        // 의도 방향 — Face_Direction 가 XZ 만 사용. 정규화는 Tick_RootMotionMovement 내부에서 수행됨.
+        // 의도 방향 - Face_Direction 가 XZ 만 사용. 정규화는 Tick_RootMotionMovement 내부에서 수행됨.
         vMoveDir = vDeltaXZ;
         bHasInput = true;
         break;
@@ -205,7 +205,7 @@ void CActor_WildPokemon::Tick_Wander(_float fTimeDelta)
     default: break;
     }
 
-    // Player_LGPE 와 동일 — 회전 + 루트모션 delta 기반 위치 갱신.
+    // Player_LGPE 와 동일 - 회전 + 루트모션 delta 기반 위치 갱신.
     Tick_RootMotionMovement(vMoveDir, bHasInput,
         m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
 }

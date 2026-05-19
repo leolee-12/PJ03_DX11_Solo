@@ -31,14 +31,14 @@ public:
 	void Bind(CActor_CaptureTarget* pTarget);
 
 protected:
-	/* 베이스 Initialize() 가 호출하는 훅 — 직접 호출 금지 */
+	/* 베이스 Initialize() 가 호출하는 훅 - 직접 호출 금지 */
 	virtual HRESULT Resolve_Widgets() override;
 	virtual HRESULT Resolve_Buttons() override;
 	virtual HRESULT Build_Group()     override;
 	virtual void    On_Update(_float fTimeDelta) override;
 
 private:
-	/* 위젯 id → 버튼 weak 매핑. BTN 순서와 1:1. uiseq 의 widget id 가 바뀌면 cpp 의 s_WidgetIds[] 만 수정. */
+	/* 위젯 id -> 버튼 weak 매핑. BTN 순서와 1:1. uiseq 의 widget id 가 바뀌면 cpp 의 s_WidgetIds[] 만 수정. */
 	CUIButton* m_Buttons[ETOUI(MENU::END)]{ nullptr };
 	CActor_CaptureTarget* m_pTarget = { nullptr };
 	CUIText* m_pName = { nullptr };

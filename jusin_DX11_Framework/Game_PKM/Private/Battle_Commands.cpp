@@ -60,7 +60,7 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
     if (nullptr == pMove)
         return E_FAIL;
 
-    // PP 0 — 시퀀스 빌드 없이 즉시 메시지 발행 후 종료
+    // PP 0 - 시퀀스 빌드 없이 즉시 메시지 발행 후 종료
     if (0 == pAttacker->Get_PP(m_tDesc.iMoveSlot))
     {
         if (nullptr != ctx.pDispatcher)
@@ -79,7 +79,7 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
     pAttacker->Consume_PP(m_tDesc.iMoveSlot);
     pAttacker->Set_LastMoveUsed(iMoveID);
 
-    // 타겟 결정 (싱글배틀 — 첫 번째 타겟만 사용)
+    // 타겟 결정 (싱글배틀 - 첫 번째 타겟만 사용)
     BattleTargeting::TARGET_LIST tTargets{};
     BattleTargeting::Resolve(ctx, m_tDesc.iActorSide, m_tDesc.iActorSlot, *pMove, tTargets);
 
@@ -130,7 +130,7 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
 
     pSeq->Submit();
 
-    // 부가 효과(상태이상 등) 처리 — 본 트랙 보류, 추후 별도 step (SApplyEffect) 으로 통합 예정
+    // 부가 효과(상태이상 등) 처리 - 본 트랙 보류, 추후 별도 step (SApplyEffect) 으로 통합 예정
     // BattleMath::Apply_MoveEffect(ctx, *pMove, pAttacker, pDefender);  // stub
 
     return S_OK;

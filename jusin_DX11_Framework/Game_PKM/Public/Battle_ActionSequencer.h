@@ -30,7 +30,7 @@ struct BATTLE_ACTION_DATA
    - Manager 가 owns. 한 시점에 하나의 액션 시퀀스만 실행.
    - 시퀀스는 Push_Step 으로 빌드 후 Submit 으로 시작.
    - Tick 이 매 프레임 현재 step 의 Update 를 호출, Is_Complete 시 다음 step 으로 진행.
-   - 활성 동안 ResolveAction State 가 락처럼 사용 — Is_Active() == true 면 다음 단계 보류. */
+   - 활성 동안 ResolveAction State 가 락처럼 사용 - Is_Active() == true 면 다음 단계 보류. */
 class CBattle_ActionSequencer final : public CBase
 {
 private:

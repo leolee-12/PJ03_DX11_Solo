@@ -24,7 +24,7 @@ public:
 	void    Close_All();
 	void    Cleanup_Level(_uint iOwnerLevel);
 	/* 등록된 컨트롤러 중 하나라도 Open 상태면 true.
-   레벨 전환 가드용 — UI 열린 상태에서의 Push/Pop 차단. */
+   레벨 전환 가드용 - UI 열린 상태에서의 Push/Pop 차단. */
 	_bool   Is_AnyOpen() const;
 
 	/* 커서 시퀀스 주입 (weak 보관). 단일 인스턴스 공용.
@@ -45,7 +45,7 @@ private:
 	Engine::CUISequence* m_pCursor{ nullptr };  // weak (level owns)
 
 	/* 활성 컨트롤러 전환 시 짧은 딜레이 동안 커서 숨김.
-   이전 활성 컨트롤러 포인터는 비교용 weak — Safe_Release 안 함. */
+   이전 활성 컨트롤러 포인터는 비교용 weak - Safe_Release 안 함. */
 	CUIController* m_pLastActiveCtrl{ nullptr };
 	_float         m_fCursorShowDelay{ 0.333f };
 	_float         m_fCursorShowTimer{ 0.f };

@@ -37,7 +37,7 @@ private:
 	_uint m_iState = {};
 	CNavigation* m_pNavigationCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
-	CActor* m_pCurrentInteractTarget = { nullptr };   // weak — 매 프레임 후보 갱신
+	CActor* m_pCurrentInteractTarget = { nullptr };   // weak - 매 프레임 후보 갱신
 	unordered_set<CActor*> m_PrevTouchSet;             // 직전 프레임 overlap 액터 (weak)
 
 private:

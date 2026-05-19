@@ -126,7 +126,7 @@ void CVP_PickingCtrl::Handle_ViewportClick()
 	if (!m_bHasLastHit)
 		return;
 
-	// Nav 점 찍기 모드 — EditInstance를 통해 MapTool에 전달
+	// Nav 점 찍기 모드 - EditInstance를 통해 MapTool에 전달
 	if (m_pEditInstance->Is_NavEditMode())
 	{
 		m_pEditInstance->Fire_NavClick(m_vLastWorldHitPos);

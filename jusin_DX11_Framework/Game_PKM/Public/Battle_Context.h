@@ -18,7 +18,7 @@ struct BATTLE_CONTEXT
 	TURN_CONTEXT* pTurn = { nullptr }; // weak
 	CBattle_EventDispatcher* pDispatcher = { nullptr }; // weak
 	CPokemonData_Manager* pDataMgr = { nullptr }; // weak
-	CBattleMsg* pMsg = { nullptr }; // weak — step 이 BattleMsg::Close 등을 직접 호출하기 위한 통
+	CBattleMsg* pMsg = { nullptr }; // weak - step 이 BattleMsg::Close 등을 직접 호출하기 위한 통
 
 	CBattler* Get_Self(_uint iSide) const
 	{

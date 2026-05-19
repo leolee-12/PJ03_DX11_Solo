@@ -9,6 +9,7 @@
 #include "Damage_Calculator.h"
 #include "Battle_Pokemon.h"
 #include "Battle_Trainer.h"
+#include "Player_Status.h"
 
 #pragma region SDelay
 SDelay::SDelay()
@@ -429,7 +430,7 @@ void SMissMessage::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
 _bool SMissMessage::Is_Complete(const BATTLE_CONTEXT& ctx) const
 {
 	if (false == m_bPublished)
-		return true;  // 명중 → 메시지 발행 안 함 → 즉시 완료
+		return true;  // 명중 -> 메시지 발행 안 함 -> 즉시 완료
 
 	if (m_fGrace < 0.05f)
 		return false;
@@ -616,7 +617,7 @@ void SApplyDamage::OnEnter(const BATTLE_CONTEXT& ctx)
 
 	pCalc->Calculate(ctx, tPipe);
 
-	// 면역 분기 — 데미지 미적용 + IMMUNE 메시지 발행
+	// 면역 분기 - 데미지 미적용 + IMMUNE 메시지 발행
 	if (tPipe.fEffectiveness <= 0.f)
 	{
 		if (nullptr != ctx.pDispatcher)
@@ -727,6 +728,93 @@ SFaintCheck* SFaintCheck::Create()
 }
 
 void SFaintCheck::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SPrizeMoney
+SPrizeMoney::SPrizeMoney()
+{
+}
+
+HRESULT SPrizeMoney::Initialize(_uint iAmount, _float fHoldSeconds)
+{
+	m_iAmount = iAmount;
+	m_fHoldSeconds = (fHoldSeconds > 0.f) ? fHoldSeconds : 0.f;
+	m_fHoldTimer = 0.f;
+	m_bOpened = false;
+	m_bApplied = false;
+
+	m_strText = _wstring(TEXT("플레이어는 상금으로 ")) + to_wstring(m_iAmount) + TEXT("원을 손에 넣었다!");
+
+		return S_OK;
+}
+
+void SPrizeMoney::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_fHoldTimer = 0.f;
+	m_bOpened = false;
+
+	if (false == m_bApplied && nullptr != ctx.pManager)
+	{
+		CPlayer_Status* pState = ctx.pManager->Get_PlayerState();
+		if (nullptr != pState)
+		{
+			pState->Set_Money(pState->Get_Money() + m_iAmount);
+			m_bApplied = true;
+		}
+	}
+
+	if (nullptr == ctx.pMsg)
+		return;
+
+	ctx.pMsg->Set_Message(m_strText);
+	ctx.pMsg->Open();
+	m_bOpened = true;
+}
+
+void SPrizeMoney::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	if (false == m_bOpened || nullptr == ctx.pMsg)
+		return;
+
+	m_fHoldTimer += fTimeDelta;
+
+	const _float fTypeSeconds =
+		static_cast<_float>(m_strText.length()) / 45.f;
+
+	if (m_fHoldTimer >= fTypeSeconds)
+		ctx.pMsg->Complete();
+}
+
+_bool SPrizeMoney::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+
+	if (false == m_bOpened)
+		return true;
+
+	const _float fTypeSeconds =
+		static_cast<_float>(m_strText.length()) / 45.f;
+
+	return m_fHoldTimer >= (fTypeSeconds + m_fHoldSeconds);
+}
+
+SPrizeMoney* SPrizeMoney::Create(_uint iAmount, _float fHoldSeconds)
+{
+	SPrizeMoney* pInstance = new SPrizeMoney();
+
+	if (FAILED(pInstance->Initialize(iAmount, fHoldSeconds)))
+	{
+		MSG_BOX("Failed to Created : SPrizeMoney");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void SPrizeMoney::Free()
 {
 	__super::Free();
 }

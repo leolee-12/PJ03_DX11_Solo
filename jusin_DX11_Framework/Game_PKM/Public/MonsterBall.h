@@ -12,7 +12,7 @@ NS_BEGIN(Game_PKM)
 
 /* -------------------------------------------------- */
 // CMonsterBall : Capture 레벨에서 던지는 몬스터볼
-//  - READY → FLYING → IMPACT → DONE 상태 머신
+//  - READY -> FLYING -> IMPACT -> DONE 상태 머신
 //  - FLYING 시 포물선 운동 (XZ 선형, Y 선형 + arc)
 //  - IMPACT 시 충돌 방향 반대로 짧게 이동한 뒤 OPEN 애니메이션 재생
 /* -------------------------------------------------- */
@@ -61,9 +61,9 @@ public:
 	const _float3& Get_CenterPosition() const { return m_vCenterPos; }
 	void       Set_AimPose(const _float3& vStartPos, const _float3& vTargetPos);
 
-	void       Launch();   // READY 상태에서만 동작 → FLYING 전이 + 자동 Show
-	void       Reset();    // 강제로 READY 로 복귀 — 재던지기 진입 시 호출 (가시성 건드리지 않음)
-	void       Hide();     // 외부 가시성 false — Late_Update 의 RenderGroup 등록 차단
+	void       Launch();   // READY 상태에서만 동작 -> FLYING 전이 + 자동 Show
+	void       Reset();    // 강제로 READY 로 복귀 - 재던지기 진입 시 호출 (가시성 건드리지 않음)
+	void       Hide();     // 외부 가시성 false - Late_Update 의 RenderGroup 등록 차단
 	void       Show();     // 외부 가시성 true
 
 	void       Trigger_Impact(const _float3& vTargetCenter);   // FLYING 중 외부 충돌 신호로 IMPACT 전이
@@ -103,7 +103,7 @@ private:
 	void    Update_Impact(_float fTimeDelta);
 	void    Update_Done(_float fTimeDelta);
 
-	void    Update_Position();    // 현재 t 기반 포물선 좌표 → Transform 반영
+	void    Update_Position();    // 현재 t 기반 포물선 좌표 -> Transform 반영
 	void    Update_Collider();
 	void    Set_CenterPosition(const _float3& vCenterPos);
 	void	Face_CenterTo(const _float3& vCenterPos, const _float3& vTargetCenter);

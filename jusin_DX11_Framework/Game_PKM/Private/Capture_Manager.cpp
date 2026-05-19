@@ -30,7 +30,7 @@ void CCapture_Manager::Begin()
 	m_ePhase = CAPTURE_PHASE::INTRO;
 	m_fPhaseElapsed = 0.f;
 
-	OutputDebugStringW(L"[Capture_Manager] Begin → INTRO\n");
+	OutputDebugStringW(L"[Capture_Manager] Begin -> INTRO\n");
 }
 
 void CCapture_Manager::Update(_float fTimeDelta)
@@ -43,12 +43,12 @@ void CCapture_Manager::Update(_float fTimeDelta)
 	switch (m_ePhase)
 	{
 	case CAPTURE_PHASE::INTRO:
-		/* 메뉴 주도 — INTRO 에서는 시간 경과 자동 전이 안 함.
+		/* 메뉴 주도 - INTRO 에서는 시간 경과 자동 전이 안 함.
 		   메뉴 "준비한다" Activate 가 Enter_Aiming() 을 호출해야 AIMING 으로 전이. */
 		break;
 
 	case CAPTURE_PHASE::AIMING:
-		/* 진행 트리거는 Level_Capture::Update → Try_Throw() 경로.
+		/* 진행 트리거는 Level_Capture::Update -> Try_Throw() 경로.
 		   여기서는 시간 진행 없음. */
 		break;
 
@@ -119,7 +119,7 @@ void CCapture_Manager::Request_Run()
 {
 	/* DONE 외 어디서든 호출 가능 (메뉴 "도망간다" + ESC 통합 라우팅).
 	   이미 DONE 이면 중복 호출 방지로 무시.
-	   결과를 FAIL_RUN 으로 설정한 뒤 DONE 으로 직접 전이 →
+	   결과를 FAIL_RUN 으로 설정한 뒤 DONE 으로 직접 전이 ->
 	   Level_Capture::Update 의 Is_Done() 분기가 Pop_Level 실행. */
 	if (CAPTURE_PHASE::DONE == m_ePhase)
 		return;
@@ -140,7 +140,7 @@ void CCapture_Manager::Goto_Phase(CAPTURE_PHASE ePhase)
 	m_fPhaseElapsed = 0.f;
 
 	wchar_t szLog[128] = {};
-	swprintf_s(szLog, L"[Capture_Manager] Phase → %u (result=%u)\n",
+	swprintf_s(szLog, L"[Capture_Manager] Phase -> %u (result=%u)\n",
 		static_cast<_uint>(ePhase), static_cast<_uint>(m_eResult));
 	OutputDebugStringW(szLog);
 }

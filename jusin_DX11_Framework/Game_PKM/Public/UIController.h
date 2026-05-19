@@ -13,7 +13,7 @@ NS_BEGIN(Game_PKM)
 // - CUISequence weak 보관 (레벨이 소유)
 // - CUIButton_Group owned (Free 시 Safe_Release)
 // - 입력·포커스·활성화 처리는 Group 에 위임, 디스패치만 담당
-// - 위젯 id → 버튼 매핑은 서브클래스 책임 (Resolve_Buttons / Build_Group)
+// - 위젯 id -> 버튼 매핑은 서브클래스 책임 (Resolve_Buttons / Build_Group)
 
 class CUIController : public CBase
 {
@@ -45,7 +45,7 @@ public:
 	CUISequence* Get_Sequence() const { return m_pSequence; }
 
 protected:
-	/* 서브클래스 옵션 훅 — Initialize() 에서 순서대로 호출.
+	/* 서브클래스 옵션 훅 - Initialize() 에서 순서대로 호출.
 			   Resolve_Widgets()        : 이미지/텍스트/프로그레스바 등 비-버튼 위젯 핸들 보관
 			   Resolve_Buttons()        : 버튼 위젯 핸들 보관
 			   Build_Group()            : CUIButton_Group 구성

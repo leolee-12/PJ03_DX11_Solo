@@ -20,7 +20,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 {
     m_iNumTextures = iNumTextures;
 
-    // 확장자별 SRV 로딩 — 본 분기와 폴백 분기 둘에서 사용
+    // 확장자별 SRV 로딩 - 본 분기와 폴백 분기 둘에서 사용
     auto LoadByExt = [this](const _tchar* pPath, ID3D11ShaderResourceView** ppSRV) -> HRESULT
         {
             _tchar szEXT[MAX_PATH] = { };
@@ -33,7 +33,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
             return CreateWICTextureFromFile(m_pDevice, pPath, nullptr, ppSRV);
         };
 
-    // DDS 모드 토글 — 패턴 자체를 dds 폴더 경로로 변환
+    // DDS 모드 토글 - 패턴 자체를 dds 폴더 경로로 변환
     // 가드: 이미 .dds 패턴이면 Convert_PathToDDS 내부에서 그대로 반환
     const _tchar* pUsePattern = pTextureFilePath;
 #if USE_DDS_MATERIAL
@@ -51,7 +51,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
         HRESULT hr = LoadByExt(szTextureFilePath, &pSRV);
 
 #if USE_DDS_MATERIAL
-        // dds 시도 실패 → 원본 경로로 폴백 (점진적 변환 지원)
+        // dds 시도 실패 -> 원본 경로로 폴백 (점진적 변환 지원)
         if (FAILED(hr) && pUsePattern != pTextureFilePath)
         {
             _tchar szOriginalPath[MAX_PATH] = TEXT("");

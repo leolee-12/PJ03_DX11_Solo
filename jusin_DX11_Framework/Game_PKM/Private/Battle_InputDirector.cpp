@@ -25,7 +25,7 @@ void CBattle_InputDirector::Bind(CBattle_Manager* pManager,
 	m_pCommandMenu = pCommandMenu;
 	m_pMoveMenu = pMoveMenu;
 
-	// 콜백 등록 — 람다에서 this 캡처. Director 생명주기가 메뉴보다 같거나 짧음을 보장 (Level 이 모두 정리)
+	// 콜백 등록 - 람다에서 this 캡처. Director 생명주기가 메뉴보다 같거나 짧음을 보장 (Level 이 모두 정리)
 	if (nullptr != m_pCommandMenu)
 	{
 		m_pCommandMenu->Set_OnActivate([this](_int iIdx) { this->Handle_CommandActivate(iIdx); });
@@ -99,7 +99,7 @@ void CBattle_InputDirector::Handle_CommandActivate(_int iIndex)
 
 void CBattle_InputDirector::Handle_CommandCancel()
 {
-	// 결정 1B: MAIN 에서 Cancel → 도망
+	// 결정 1B: MAIN 에서 Cancel -> 도망
 	Submit_Run();
 }
 
@@ -167,7 +167,7 @@ void CBattle_InputDirector::Enter_Idle()
 		m_pMoveMenu->Close();
 
 	m_eMode = MODE::IDLE;
-	m_bModeChangePending = false;  // Idle 은 즉시 — 다음 Tick 에 Open 할 메뉴 없음
+	m_bModeChangePending = false;  // Idle 은 즉시 - 다음 Tick 에 Open 할 메뉴 없음
 }
 
 HRESULT CBattle_InputDirector::Submit_Move(_uint iMoveSlot)

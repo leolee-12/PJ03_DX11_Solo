@@ -200,7 +200,7 @@ HRESULT CLevel_Capture::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 {
-	/* CAPTURE_ENV.iSpeciesID 기반 모델 매핑 — PokemonData_Manager 조회. */
+	/* CAPTURE_ENV.iSpeciesID 기반 모델 매핑 - PokemonData_Manager 조회. */
 	const CPokemonData_Manager* pPokeDataMgr = CPokemonData_Manager::GetInstance();
 	if (nullptr == pPokeDataMgr)
 		return E_FAIL;
@@ -234,7 +234,7 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	TargetDesc.bCaughtBefore = false;
 	TargetDesc.vSpawnPos = CAPTURE_TARGET_POS;
 
-	/* Clone → LookAt → Add_GameObject_Ex 패턴.
+	/* Clone -> LookAt -> Add_GameObject_Ex 패턴.
 	   Add_GameObject 와 달리 인스턴스 포인터를 잡을 수 있어 등록 전에 회전 적용 가능. */
 	CActor_CaptureTarget* pTarget = static_cast<CActor_CaptureTarget*>(
 		m_pGameInstance->Clone_Prototype(
@@ -244,7 +244,7 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 		return E_FAIL;
 
 	/* 카메라 위치를 정면으로 보도록 회전.
-	   좌표는 Ready_Layer_Camera 의 vEye 와 동일해야 함 — 수동 동기화. */
+	   좌표는 Ready_Layer_Camera 의 vEye 와 동일해야 함 - 수동 동기화. */
 	const _vector vCamPos = XMVectorSetW(XMLoadFloat3(&CAPTURE_CAMERA_EYE), 1.f);
 	pTarget->Get_Transform()->LookAt(vCamPos);;
 
@@ -262,7 +262,7 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 HRESULT CLevel_Capture::Ready_Layer_Ball(WNameID strLayerTag)
 {
 	CMonsterBall::MONSTER_BALL_DESC BallDesc{};
-	/* 카메라 vEye(-1.3, 3.2, -7.3) 기준 Y만 하강 — 화면 하단부 근사.
+	/* 카메라 vEye(-1.3, 3.2, -7.3) 기준 Y만 하강 - 화면 하단부 근사.
 	   도착점은 vAt=(0,0,0) = CaptureTarget 위치. */
 	BallDesc.vSpawnPos = _float3(-0.7f, 0.5f, -4.f);
 	BallDesc.vTargetPos = _float3(0.f, 0.f, 0.f);
@@ -271,7 +271,7 @@ HRESULT CLevel_Capture::Ready_Layer_Ball(WNameID strLayerTag)
 	BallDesc.fImpactDuration = 0.5f;
 	BallDesc.fRotationPerSec = XMConvertToRadians(720.f);
 
-	/* Clone → Add_GameObject_Ex 패턴 — 인스턴스 포인터 캐시 후 등록. */
+	/* Clone -> Add_GameObject_Ex 패턴 - 인스턴스 포인터 캐시 후 등록. */
 	CMonsterBall* pBall = static_cast<CMonsterBall*>(
 		m_pGameInstance->Clone_Prototype(
 			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::GAMEPLAY),
@@ -285,7 +285,7 @@ HRESULT CLevel_Capture::Ready_Layer_Ball(WNameID strLayerTag)
 		return E_FAIL;
 	}
 
-	m_pMonsterBall = pBall;   // weak — 레이어가 owner
+	m_pMonsterBall = pBall;   // weak - 레이어가 owner
 	return S_OK;
 }
 
@@ -321,7 +321,7 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 
 		pMenu->Bind(m_pCaptureTarget);
 
-		/* Activate: MENU 인덱스 → 행동 라우팅.
+		/* Activate: MENU 인덱스 -> 행동 라우팅.
 			READY=메뉴 닫고 AIMING 진입 / BAG·HELP=미구현 로그 / RUN=Request_Run. */
 		pMenu->Set_OnActivate([this](_int iIdx)
 			{
@@ -347,15 +347,15 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 						break;
 
 					case CCapture_Menu::MENU::BAG:
-						OutputDebugStringW(L"[CCapture_Menu] BAG 선택 — 미구현\n");
+						OutputDebugStringW(L"[CCapture_Menu] BAG 선택 - 미구현\n");
 						break;
 
 					case CCapture_Menu::MENU::HELP:
-						OutputDebugStringW(L"[CCapture_Menu] HELP 선택 — 미구현\n");
+						OutputDebugStringW(L"[CCapture_Menu] HELP 선택 - 미구현\n");
 						break;
 
 					case CCapture_Menu::MENU::RUN:
-						/* 도망간다 — Request_Run() 로 FAIL_RUN + DONE 전이.
+						/* 도망간다 - Request_Run() 로 FAIL_RUN + DONE 전이.
 						   Is_Done() 분기가 Pop_Level 실행. */
 						if (nullptr != m_pCaptureManager)
 							m_pCaptureManager->Request_Run();
@@ -366,8 +366,8 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 					}
 					});
 
-		/* Cancel(ESC): "도망간다" 와 동일 동작 — Request_Run 으로 통합 라우팅.
-		   Request_Run 이 FAIL_RUN + DONE 으로 전이 → Is_Done() 분기가 Pop_Level 실행.
+		/* Cancel(ESC): "도망간다" 와 동일 동작 - Request_Run 으로 통합 라우팅.
+		   Request_Run 이 FAIL_RUN + DONE 으로 전이 -> Is_Done() 분기가 Pop_Level 실행.
 		   m_bExitRequested 경로는 단위 δ 에서 제거 예정. */
 		pMenu->Set_OnCancel([this]()
 			{
@@ -381,16 +381,16 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 			return E_FAIL;
 		}
 
-		m_pCaptureMenu = pMenu;  // weak — UI Hub owns
+		m_pCaptureMenu = pMenu;  // weak - UI Hub owns
 		Safe_Release(pMenu);
 	}
 
-	/* Director 가 범위 외 → 등록 직후 직접 Open (Battle 의 BattlePlate 양식과 동일).
+	/* Director 가 범위 외 -> 등록 직후 직접 Open (Battle 의 BattlePlate 양식과 동일).
 	   Open 안 하면 m_bOpen=false 라 입력 무시. */
 	if (nullptr != m_pCaptureMenu)
 		m_pCaptureMenu->Open();
 
-	/* ===== 커서 시퀀스 — Hub 가 단일 인스턴스로 공유 =====
+	/* ===== 커서 시퀀스 - Hub 가 단일 인스턴스로 공유 =====
 	   다른 UI 시퀀스 등록을 모두 마친 뒤 마지막에 추가해 최상위에 그려지도록 함. */
 	{
 		CUISequence::UISEQUENCE_DESC tCursorDesc{};
