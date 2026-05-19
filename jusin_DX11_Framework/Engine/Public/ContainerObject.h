@@ -38,6 +38,7 @@ protected:
 protected:
 	HRESULT Add_PartObject(_uint iPrototypeLevelIndex, const WNameID strPrototypeTag,
 		const WNameID strPartTag, void* pArg = nullptr);
+	HRESULT Remove_PartObject(const WNameID strPartTag);
 	void XM_CALLCONV Tick_RootMotionMovement(
 		_fvector vMoveDir,
 		_bool bHasInput,

@@ -2,14 +2,15 @@
 #include "Game_PKM_Defines.h"
 #include "GameObject.h"
 #include "Particle.h"
+#include "ParticleCurve.h"
 
 NS_BEGIN(Engine)
 class CTexture;
 class CShader;
-class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Game_PKM)
+class CVIBuffer_Particle3D_Instance;
 
 class CParticleEmitter final : public CGameObject
 {
@@ -27,10 +28,24 @@ public:
 		_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 		_float  fEmitConeHalfAngle = 0.f;
 
+		enum class BILLBOARD_MODE { VIEW_ALIGNED, AXIS_LOCKED, FIXED_NORMAL };
+		BILLBOARD_MODE eBillboard = BILLBOARD_MODE::VIEW_ALIGNED;
+		_float3        vBillboardFixedAxis = { 0.f, 1.f, 0.f };
+
+		CCurveFloat  curveSize;
+		CCurveColor  curveColor;
+		CCurveFloat  curveAlpha;
+
+		enum class BLEND_MODE { ALPHA, ADDITIVE };
+		BLEND_MODE eBlend = BLEND_MODE::ADDITIVE;
+
 		enum class SPAWN_OVERFLOW_POLICY { DROP_NEW, DROP_OLDEST };
 		SPAWN_OVERFLOW_POLICY eOverflow = SPAWN_OVERFLOW_POLICY::DROP_NEW;
 
 		_bool bSimulateInLocalAtSpawn = false;
+		WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
+		_uint   iTextureProtoLevel = ETOUI(LEVEL::STATIC);
+		class CTransform* pParentTransform = nullptr;  // M8: effect root transform °øÀ¯ (nullable)
 	};
 
 private:
@@ -54,7 +69,7 @@ public:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderGlobals();
-	HRESULT Render_Particle(const CParticle& Particle);
+	void    Build_Instances();
 
 	void Spawn_Burst_Once();
 	void Spawn_FromAccumulator(_float fTimeDelta);
@@ -74,9 +89,11 @@ private:
 	_bool m_bEmitting = true;
 	_bool m_bBurstSpawned = false;
 
+	CTransform* m_pParentTransform = nullptr;
 	CTexture* m_pTextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CVIBuffer_Particle3D_Instance* m_pVIBufferCom = { nullptr };
+	vector<VTXPARTICLE3D_INSTANCE> m_InstanceScratch;
 
 public:
 	static CParticleEmitter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

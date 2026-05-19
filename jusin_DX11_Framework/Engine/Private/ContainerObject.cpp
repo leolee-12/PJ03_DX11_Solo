@@ -54,6 +54,20 @@ HRESULT CContainerObject::Add_PartObject(_uint iPrototypeLevelIndex, const WName
 	return S_OK;
 }
 
+HRESULT CContainerObject::Remove_PartObject(const WNameID strPartTag)
+{
+	CPartObject** ppPartObject = m_PartObjects.find(strPartTag);
+	if (nullptr == ppPartObject)
+		return E_FAIL;
+
+	Safe_Release(*ppPartObject);
+
+	if (false == m_PartObjects.erase(strPartTag))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void XM_CALLCONV CContainerObject::Tick_RootMotionMovement(_fvector vMoveDir, _bool bHasInput,
 	const _float3& vRawRootMotionDelta, CNavigation* pNavigation, _float fTimeDelta)
 {

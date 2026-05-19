@@ -1,4 +1,6 @@
-#include "ParticleEmitter.h"
+﻿#include "ParticleEmitter.h"
+#include "VIBuffer_Particle3D_Instance.h"
+
 #include "GameInstance.h"
 
 CParticleEmitter::CParticleEmitter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -20,6 +22,8 @@ HRESULT CParticleEmitter::Initialize(void* pArg)
 {
 	if (nullptr != pArg)
 		m_tDesc = *static_cast<EMITTER_DESC*>(pArg);
+	
+	m_pParentTransform = m_tDesc.pParentTransform;
 
 	if (FAILED(__super::Initialize(&m_tDesc)))
 		return E_FAIL;
@@ -29,10 +33,18 @@ HRESULT CParticleEmitter::Initialize(void* pArg)
 
 	m_tDesc.iCapacity = max(1u, m_tDesc.iCapacity);
 	m_Particles.resize(m_tDesc.iCapacity);
+	m_InstanceScratch.reserve(m_tDesc.iCapacity);
 	m_iAliveCount = 0;
 	m_fSpawnAccumulator = 0.f;
 	m_bEmitting = true;
 	m_bBurstSpawned = false;
+
+	if (m_tDesc.curveAlpha.IsEmpty())
+	{
+		m_tDesc.curveAlpha.Add_Key(0.0f, 1.f);
+		m_tDesc.curveAlpha.Add_Key(0.9f, 1.f);
+		m_tDesc.curveAlpha.Add_Key(1.0f, 0.f);
+	}
 
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(m_tDesc.vSpawnPos.x, m_tDesc.vSpawnPos.y, m_tDesc.vSpawnPos.z, 1.f));
@@ -66,87 +78,21 @@ void CParticleEmitter::Late_Update(_float fTimeDelta)
 	if (0 == m_iAliveCount)
 		return;
 
+	Build_Instances();
+
 	m_pGameInstance->Add_RenderGroup(RENDERID::BLEND, this);
 }
 
 HRESULT CParticleEmitter::Render()
 {
+	if (0 == m_iAliveCount)
+		return S_OK;
+
 	if (FAILED(Bind_ShaderGlobals()))
 		return E_FAIL;
 
-	for (_uint i = 0; i < m_iAliveCount; ++i)
-	{
-		if (FAILED(Render_Particle(m_Particles[i])))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT CParticleEmitter::Ready_Components()
-{
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_TEX_DUMMY_WHITE,
-		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
-		return E_FAIL;
-
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_EFFECT_M1,
-		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
-
-	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_RECT,
-		COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CParticleEmitter::Bind_ShaderGlobals()
-{
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform(D3DTS::PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CParticleEmitter::Render_Particle(const CParticle& Particle)
-{
-	_vector vRootPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vLocalPos = XMLoadFloat3(&Particle.vPosition);
-	_vector vWorldPos = vRootPos + XMVectorSetW(vLocalPos, 0.f);
-
-	_matrix matWorld =
-		XMMatrixScaling(Particle.fSize, Particle.fSize, 1.f) *
-		XMMatrixTranslationFromVector(vWorldPos);
-
-	_float4x4 WorldMatrix{};
-	XMStoreFloat4x4(&WorldMatrix, matWorld);
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &Particle.vColor, sizeof(_float4))))
-		return E_FAIL;
-
-	_float fAlpha = 1.f;
-	if (Particle.fLifeTime > 0.f)
-	{
-		const _float fRatio = min(Particle.fAge / Particle.fLifeTime, 1.f);
-		constexpr _float fFadeStartRatio = 0.8f;
-
-		if (fRatio > fFadeStartRatio)
-			fAlpha = 1.f - min((fRatio - fFadeStartRatio) / (1.f - fFadeStartRatio), 1.f);
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &fAlpha, sizeof(_float))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Begin(0)))
+	const _uint iPass = (EMITTER_DESC::BLEND_MODE::ALPHA == m_tDesc.eBlend) ? 0u : 1u;
+	if (FAILED(m_pShaderCom->Begin(iPass)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources()))
@@ -156,6 +102,91 @@ HRESULT CParticleEmitter::Render_Particle(const CParticle& Particle)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+HRESULT CParticleEmitter::Ready_Components()
+{
+	const WNameID strTextureProtoTag =
+		(m_tDesc.strTextureProtoTag != INVALID_TAG)
+		? m_tDesc.strTextureProtoTag
+		: PROTO_COM_TEX_DUMMY_WHITE;
+
+	if (FAILED(__super::Add_Component(m_tDesc.iTextureProtoLevel, strTextureProtoTag,
+		COM_TEXTURE, reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_PARTICLE3D,
+		COM_SHADER, reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_PARTICLE3D,
+		COM_VIBUFFER, reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CParticleEmitter::Bind_ShaderGlobals()
+{
+	/* M8: parent (effect root) transform이 있으면 그쪽을 g_WorldMatrix로.
+	   없으면 자체 transform (단독 emitter 사용 시 회귀 없음). */
+	CTransform* pSrcTransform = (nullptr != m_pParentTransform)
+		? m_pParentTransform
+		: m_pTransformCom;
+
+	if (FAILED(pSrcTransform->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix",
+		m_pGameInstance->Get_Transform(D3DTS::VIEW))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix",
+		m_pGameInstance->Get_Transform(D3DTS::PROJ))))
+		return E_FAIL;
+
+	/* M4: 카메라 inverse view (월드 공간 basis 추출용) */
+	const _float4x4* pViewInv = m_pGameInstance->Get_Transform_Inverse(D3DTS::VIEW);
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewInvMatrix", pViewInv)))
+		return E_FAIL;
+
+	/* M4: 빌보드 모드 + 고정축 */
+	const _uint iBillboardMode = static_cast<_uint>(m_tDesc.eBillboard);
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBillboardMode", &iBillboardMode, sizeof(_uint))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vFixedAxis",
+		&m_tDesc.vBillboardFixedAxis, sizeof(_float3))))
+		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CParticleEmitter::Build_Instances()
+{
+	m_InstanceScratch.resize(m_iAliveCount);
+
+	for (_uint i = 0; i < m_iAliveCount; ++i)
+	{
+		const CParticle& p = m_Particles[i];
+		VTXPARTICLE3D_INSTANCE& v = m_InstanceScratch[i];
+
+		v.vCenter = p.vPosition;       // emitter local
+		v.fSize = p.fSize;
+		v.fRotation = p.fRotation;
+		v._pad0 = _float3(0.f, 0.f, 0.f);
+
+		v.vColor = p.vColor;
+		v.vAgeLife = _float2(p.fAge, p.fLifeTime);
+		v._pad1 = _float2(0.f, 0.f);
+
+		v.vAtlasUV = _float4(0.f, 0.f, 1.f, 1.f);   // M6+ 에서 의미 부여
+	}
+
+	m_pVIBufferCom->Update_Particle3D_Instances(m_InstanceScratch.data(), m_iAliveCount);
 }
 
 void CParticleEmitter::Spawn_Burst_Once()
@@ -252,6 +283,19 @@ void CParticleEmitter::Update_Particles(_float fTimeDelta)
 			Kill_AtIndex(i);
 			continue;
 		}
+
+		/* M6: 커브 sample (t01 = age/life). 빈 커브는 skip — 입자 초기값 유지. */
+		const _float fLife = max(Particle.fLifeTime, 0.0001f);
+		const _float t01 = min(Particle.fAge / fLife, 1.f);
+
+		if (!m_tDesc.curveSize.IsEmpty())
+			Particle.fSize = m_tDesc.curveSize.Sample(t01);
+
+		if (!m_tDesc.curveColor.IsEmpty())
+			Particle.vColor = m_tDesc.curveColor.Sample(t01);
+
+		if (!m_tDesc.curveAlpha.IsEmpty())
+			Particle.vColor.w *= m_tDesc.curveAlpha.Sample(t01);
 
 		++i;
 	}

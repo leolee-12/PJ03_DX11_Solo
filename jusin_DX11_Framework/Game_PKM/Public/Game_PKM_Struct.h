@@ -1,4 +1,4 @@
-#ifndef Game_PKM_Struct_h__
+﻿#ifndef Game_PKM_Struct_h__
 #define Game_PKM_Struct_h__
 
 NS_BEGIN(Game_PKM)
@@ -75,6 +75,35 @@ struct VTXUI_INSTANCE_DESC
 		{"TEXCOORD", 5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{"TEXCOORD", 6, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 80, D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		{"TEXCOORD", 7, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 96, D3D11_INPUT_PER_INSTANCE_DATA, 1}
+	};
+};
+
+struct VTXPARTICLE3D_INSTANCE
+{
+	_float3 vCenter;        // emitter local 좌표
+	_float  fSize;
+	_float  fRotation;      // 빌보드 평면 내 회전 (radian)
+	_float3 _pad0;
+	_float4 vColor;         // RGBA
+	_float2 vAgeLife;       // (age, lifeTime)
+	_float2 _pad1;
+	_float4 vAtlasUV;       // (offsetU, offsetV, scaleU, scaleV) - M4 시점 (0,0,1,1) 고정
+};
+// stride = 12+4 + 4+12 + 16 + 8+8 + 16 = 80 bytes
+
+struct VTXPARTICLE3D_INSTANCE_DESC
+{
+	static constexpr unsigned int iNumElements = { 7 };
+	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA,   0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA,   0},
+
+		{"TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1}, // vCenter + fSize
+		{"TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1}, // fRotation + _pad0
+		{"TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1}, // vColor
+		{"TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1}, // vAgeLife + _pad1
+		{"TEXCOORD", 5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1}, // vAtlasUV
 	};
 };
 #pragma endregion

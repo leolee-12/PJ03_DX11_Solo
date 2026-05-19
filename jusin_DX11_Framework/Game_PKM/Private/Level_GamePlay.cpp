@@ -10,6 +10,7 @@
 #include "Level_Capture.h"
 #include "Game_LevelEntry.h"
 #include "Battle_Session.h"
+#include "Body_Hero.h"
 #include "Body_Human.h"
 #include "Body_Pokemon.h"
 #include "Actor_NPC.h"
@@ -18,6 +19,8 @@
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
 #include "Effect_Test_Single.h"
+#include "ParticleEmitter.h"
+#include "Effect_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -99,13 +102,13 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 					return;
 				}
 
-				/* Push 직전 — Fade 가림 상태에서 충돌 트리거 WildPokemon 을 deferred 삭제.
-				   Layer 가 다음 Update 사이클에서 Safe_Release + 리스트 제거 →
-				   Pop 후 OnResume 시점에 collider 검사 대상에서 자동 빠짐 → 무한 루프 방지. */
+				/* Push 직전 - Fade 가림 상태에서 충돌 트리거 WildPokemon 을 deferred 삭제.
+				   Layer 가 다음 Update 사이클에서 Safe_Release + 리스트 제거 ->
+				   Pop 후 OnResume 시점에 collider 검사 대상에서 자동 빠짐 -> 무한 루프 방지. */
 				if (nullptr != m_pPendingDeleteWild)
 				{
 					m_pPendingDeleteWild->Set_Dead();
-					m_pPendingDeleteWild = nullptr;   // weak 초기화 — dangling 차단
+					m_pPendingDeleteWild = nullptr;   // weak 초기화 - dangling 차단
 				}
 
 				if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::CAPTURE), pCapture)))
@@ -165,13 +168,34 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F3))
 		m_pGameInstance->Toggle_Debug();
 
-	/* F4 — 메뉴 열기/닫기 토글. Open() 이 시퀀스 Play 도 같이 트리거. */
+	/* F4 - 메뉴 열기/닫기 토글. Open() 이 시퀀스 Play 도 같이 트리거. */
 	if (m_pGameInstance->Key_Down(DIK_F4) && nullptr != m_pMenu)
 	{
 		if (m_pMenu->Is_Open())
 			m_pMenu->Close();
 		else
 			m_pMenu->Open();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F5) && nullptr != m_pDebugEffect)
+	{
+		m_pDebugEffect->Stop();
+		m_pDebugEffect = nullptr;
+		m_pDebugEffectOwner = nullptr;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F6) && nullptr != m_pDebugEffect)
+	{
+		m_pDebugEffect->Destroy();
+		m_pDebugEffect = nullptr;
+		m_pDebugEffectOwner = nullptr;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F7) && nullptr != m_pDebugEffectOwner)
+	{
+		m_pDebugEffectOwner->Set_Dead();
+		m_pDebugEffect = nullptr;
+		m_pDebugEffectOwner = nullptr;
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_P))
@@ -276,7 +300,7 @@ void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTar
 		sizeof(CAPTURE_ENV))))
 		return;
 
-	/* 트랜지션이 실제 시작될 때만 삭제 대상 보관 — 가드 통과 후로 두어
+	/* 트랜지션이 실제 시작될 때만 삭제 대상 보관 - 가드 통과 후로 두어
 	   UI 열린 상태 등에서 무시된 호출은 WildPokemon 도 그대로 두는 정합성 확보. */
 	m_pPendingDeleteWild = pTarget;   // weak
 
@@ -299,32 +323,12 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);  // 중성 화이트 (RGB 균일), 살짝 감소
-	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);  // 중성 화이트, 강화 → 평평·푸른 끼 제거
+	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);  // 중성 화이트, 강화 -> 평평·푸른 끼 제거
 	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);  // 변화 없음
 	LightDesc.vDirection = _float4(0.5f, -0.5f, 0.5f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
-
-	//LightDesc.eType = LIGHT::POINT;
-	//LightDesc.vDiffuse = _float4(1.f, 0.f, 0.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.05f, 0.f, 0.f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 0.1f, 0.1f, 1.f);
-	//LightDesc.vPosition = _float4(10.f, 5.f, 10.f, 1.f);
-	//LightDesc.fRange = 15.f;
-	//
-	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-	//	return E_FAIL;
-	//
-	//LightDesc.eType = LIGHT::POINT;
-	//LightDesc.vDiffuse = _float4(0.f, 1.f, 0.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.f, 0.05f, 0.f, 1.f);
-	//LightDesc.vSpecular = _float4(0.1f, 1.f, 0.1f, 1.f);
-	//LightDesc.vPosition = _float4(25.f, 5.f, 10.f, 1.f);
-	//LightDesc.fRange = 15.f;
-	//
-	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-	//	return E_FAIL;
 
 	SHADOW_LIGHT_DESC ShadowDesc{};
 	ShadowDesc.vEye = _float4(0.f, 8.f, 0.f, 1.f);
@@ -375,10 +379,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SNOW,
-	//	ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-	//	return E_FAIL;
-
 	return S_OK;
 }
 
@@ -392,12 +392,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 {
-	//for (size_t i = 0; i < 20; i++)
-	//{
-	//	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_MONSTER, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
-	//		return E_FAIL;
-	//}
-
 	return S_OK;
 }
 
@@ -519,19 +513,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 
 		const POKEMON_PREVIEW_DESC PokemonPreviews[] =
 		{
-				//{ PROTO_COM_MODEL_PM0001_00, "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json", _float3(14.f, 0.f, -18.f), 1.f },
-				//{ PROTO_COM_MODEL_PM0004_00, "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json", _float3(16.f, 0.f, -18.f), 1.f },
-				//{ PROTO_COM_MODEL_PM0007_00, "../../Resources/Models/pkm/pm0007_00/pm0007_00_mapping.json", _float3(18.f, 0.f, -18.f), 1.f },
-				//{ PROTO_COM_MODEL_PM0010_00, "../../Resources/Models/pkm/pm0010_00/pm0010_00_mapping.json", _float3(20.f, 0.f, -18.f), 1.f },
-				//{ PROTO_COM_MODEL_PM0025_00, "../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json", _float3(24.f, 0.f, -18.f), 1.f },
+				{ PROTO_COM_MODEL_PM0001_00, "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json", _float3(14.f, 0.f, -18.f), 1.f },
+				{ PROTO_COM_MODEL_PM0004_00, "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json", _float3(16.f, 0.f, -18.f), 1.f },
+				{ PROTO_COM_MODEL_PM0007_00, "../../Resources/Models/pkm/pm0007_00/pm0007_00_mapping.json", _float3(18.f, 0.f, -18.f), 1.f },
+				{ PROTO_COM_MODEL_PM0010_00, "../../Resources/Models/pkm/pm0010_00/pm0010_00_mapping.json", _float3(20.f, 0.f, -18.f), 1.f },
+				{ PROTO_COM_MODEL_PM0025_00, "../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json", _float3(24.f, 0.f, -18.f), 1.f },
 				{ PROTO_COM_MODEL_PM0041_00, "../../Resources/Models/pkm/pm0041_00/pm0041_00_mapping.json", _float3(26.f, 0.f, -18.f), 1.f },
 
 				{ PROTO_COM_MODEL_PM0043_00, "../../Resources/Models/pkm/pm0043_00/pm0043_00_mapping.json", _float3(14.f, 0.f, -21.f), 1.f },
 				{ PROTO_COM_MODEL_PM0059_00, "../../Resources/Models/pkm/pm0059_00/pm0059_00_mapping.json", _float3(16.f, 0.f, -21.f), 1.f },
 				{ PROTO_COM_MODEL_PM0074_00, "../../Resources/Models/pkm/pm0074_00/pm0074_00_mapping.json", _float3(18.f, 0.f, -21.f), 1.f },
-				//{ PROTO_COM_MODEL_PM0095_00, "../../Resources/Models/pkm/pm0095_00/pm0095_00_mapping.json", _float3(20.f, 0.f, -21.f), 1.f },
+				{ PROTO_COM_MODEL_PM0095_00, "../../Resources/Models/pkm/pm0095_00/pm0095_00_mapping.json", _float3(20.f, 0.f, -21.f), 1.f },
 				{ PROTO_COM_MODEL_PM0121_00, "../../Resources/Models/pkm/pm0121_00/pm0121_00_mapping.json", _float3(22.f, 0.f, -21.f), 1.f },
-				//{ PROTO_COM_MODEL_PM0130_00, "../../Resources/Models/pkm/pm0130_00/pm0130_00_mapping.json", _float3(24.f, 0.f, -21.f), 1.f },
+				{ PROTO_COM_MODEL_PM0130_00, "../../Resources/Models/pkm/pm0130_00/pm0130_00_mapping.json", _float3(24.f, 0.f, -21.f), 1.f },
 		};
 
 		for (const POKEMON_PREVIEW_DESC& Preview : PokemonPreviews)
@@ -587,19 +581,38 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 {
-	CEffect_Test_Single::DESC EffectDesc{};
-	EffectDesc.vSpawnPos = _float3(20.7f, 2.f, -16.8f);
-	EffectDesc.vInitVelocity = _float3(0.f, 1.f, 0.f);
-	EffectDesc.vAcceleration = _float3(0.f, 0.f, 0.f);
-	EffectDesc.fLifeTime = 5.f;
-	EffectDesc.fSize = 1.25f;
-	EffectDesc.vColor = _float4(1.f, 1.f, 0.f, 1.f);
+	const list<CGameObject*>* pPlayerList =
+		m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER);
 
-	if (FAILED(m_pGameInstance->Add_GameObject(
-		ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT_TEST_SINGLE,
-		ETOUI(LEVEL::GAMEPLAY), strLayerTag,
-		&EffectDesc)))
+	if (nullptr == pPlayerList || pPlayerList->empty())
+		return S_OK;
+
+	CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pPlayerList->front());
+	if (nullptr == pPlayer)
+		return S_OK;
+
+	CBody_Hero* pBody = pPlayer->Get_Part<CBody_Hero>(PART_BODY);
+	if (nullptr == pBody)
+		return S_OK;
+
+	CEffect::EFFECT_DESC::ATTACH_INFO attachInfo{};
+	attachInfo.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::BONE;
+	attachInfo.pOwner = pBody;
+	attachInfo.strBoneName = "Waist";
+	XMStoreFloat4x4(&attachInfo.mLocalOffset, XMMatrixIdentity());
+
+	CEffect* pEffect = CEffect_Manager::GetInstance()->Spawn(
+		"MAGIC_FIRE",
+		_float3(0.f, 0.f, 0.f),
+		ETOUI(LEVEL::GAMEPLAY),
+		strLayerTag,
+		attachInfo);
+
+	if (nullptr == pEffect)
 		return E_FAIL;
+
+	m_pDebugEffect = pEffect;
+	m_pDebugEffectOwner = pBody;
 
 	return S_OK;
 }
@@ -644,7 +657,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 		m_pFadeBattleSeq = pFadeSeq;    // weak (Add_GameObject_Ex 가 owner)
 	}
 
-	/* ===== 커서 시퀀스 — Hub 가 단일 인스턴스로 공유 ===== */
+	/* ===== 커서 시퀀스 - Hub 가 단일 인스턴스로 공유 ===== */
 	{
 		CUISequence::UISEQUENCE_DESC tCursorDesc{};
 		tCursorDesc.strPath = "../../DataFiles/UI/UI_Cursor.uiseq";
@@ -676,7 +689,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 		return E_FAIL;
 	}
 
-	/* 활성화 콜백 — 어떤 항목이 선택됐는지 OutputDebugString 으로 확인 */
+	/* 활성화 콜백 - 어떤 항목이 선택됐는지 OutputDebugString 으로 확인 */
 	pMenu->Set_OnActivate([](_int iIndex)
 		{
 			static constexpr const _char* s_Names[] =
@@ -695,20 +708,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 			}
 		});
 
-	/* 취소 콜백 — 베이스가 콜백 후 Close() 자동 호출 */
+	/* 취소 콜백 - 베이스가 콜백 후 Close() 자동 호출 */
 	pMenu->Set_OnCancel([]()
 		{
 			OutputDebugStringA("[Menu] Cancelled\n");
 		});
 
-	/* Hub 등록 — 내부 AddRef. 이후 local 레퍼런스 해제. */
+	/* Hub 등록 - 내부 AddRef. 이후 local 레퍼런스 해제. */
 	if (FAILED(UI_Register(pMenu, ETOUI(LEVEL::GAMEPLAY))))
 	{
 		Safe_Release(pMenu);
 		return E_FAIL;
 	}
 
-	m_pMenu = pMenu;        // weak — Hub 가 owner
+	m_pMenu = pMenu;        // weak - Hub 가 owner
 	Safe_Release(pMenu);    // local ref-- (Hub 가 ref 보유 중이라 안전)
 
 	return S_OK;
@@ -738,6 +751,7 @@ void CLevel_GamePlay::Free()
 	m_pFadeBattleSeq = nullptr;
 	m_pMenu = nullptr;
 	m_pRuntimeUI = nullptr;
-
+	m_pDebugEffect = nullptr;
+	m_pDebugEffectOwner = nullptr;
 	__super::Free();
 }

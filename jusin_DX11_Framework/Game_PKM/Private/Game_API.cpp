@@ -11,6 +11,7 @@
 #include "Game_PresetTable.h"
 #include "RenderRule_Manager.h"
 #include "Spawn_Manager.h"
+#include "Effect_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -76,6 +77,7 @@ HRESULT Ready_StaticTables()
 
 void Cleanup_StaticTables()
 {
+	CEffect_Manager::DestroyInstance();
 	CSpawn_Manager::DestroyInstance();
 	CRenderRule_Manager::DestroyInstance();
 	CTrainerData_Manager::DestroyInstance();
@@ -276,7 +278,7 @@ _bool UI_Is_AnyOpen()
 
 void UI_Set_Cursor_Sequence(CUISequence* pSeq)
 {
-	/* 해제(nullptr) 시에는 Hub 를 새로 만들면 안 됨 — 다른 래퍼들과 동일한 g_pUIHub 가드 사용.
+	/* 해제(nullptr) 시에는 Hub 를 새로 만들면 안 됨 - 다른 래퍼들과 동일한 g_pUIHub 가드 사용.
 	   주입(non-nullptr) 시에는 Get_UIHub 로 Hub 생성 보장. */
 	if (nullptr == pSeq)
 	{

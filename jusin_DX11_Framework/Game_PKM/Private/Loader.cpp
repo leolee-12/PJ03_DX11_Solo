@@ -1,4 +1,4 @@
-#include "Loader.h"
+Ôªø#include "Loader.h"
 
 #include <chrono>
 #include <sstream>
@@ -35,6 +35,10 @@
 #include "MonsterBall.h"
 #include "CaptureRing.h"
 #include "Effect_Test_Single.h"
+#include "ParticleEmitter.h"
+#include "VIBuffer_Particle3D_Instance.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -61,7 +65,7 @@ unsigned int APIENTRY ThreadMain(void* pArg)
 	const HRESULT hrCoInit = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
 #ifdef _DEBUG
-	/* øˆƒø ¥Ÿºˆ∞° µøΩ√ø° wcout ø° æ≤∏È ¡Ÿ¿Ã ºØ¿Ãπ«∑Œ static mutex ∑Œ ¡Ÿ ¥‹¿ß ¡˜∑ƒ»≠ */
+	/* ÏõåÏª§ Îã§ÏàòÍ∞Ä ÎèôÏãúÏóê wcout Ïóê Ïì∞Î©¥ Ï§ÑÏù¥ ÏÑûÏù¥ÎØÄÎ°ú static mutex Î°ú Ï§Ñ Îã®ÏúÑ ÏßÅÎ†¨Ìôî */
 	static std::mutex s_LogMutex;
 #endif
 
@@ -79,7 +83,7 @@ unsigned int APIENTRY ThreadMain(void* pArg)
 		const auto ms = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
 
 		{
-			/* ∑Œ±◊ πÆ¿⁄ø≠¿∫ ∑Œƒ√ø°º≠ ¡∂∏≥ (race æ¯¿Ω) °Ê mutex ∫∏»£¥¬ ƒ‹º÷ æ≤±‚ø°∏∏ «—¡§ */
+			/* Î°úÍ∑∏ Î¨∏ÏûêÏó¥ÏùÄ Î°úÏª¨ÏóêÏÑú Ï°∞Î¶Ω (race ÏóÜÏùå) -> mutex Î≥¥Ìò∏Îäî ÏΩòÏÜî Ïì∞Í∏∞ÏóêÎßå ÌïúÏ†ï */
 			wstringstream wss;
 			wss << L"[LOAD] [TID=" << GetCurrentThreadId() << L"] "
 					<< (FAILED(hrTask) ? L"[F] " : L"[S] ")
@@ -117,7 +121,11 @@ unsigned int APIENTRY ThreadMain(void* pArg)
 HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
-	Enqueue_All(eNextLevelID);	// ≈• ¿˚¿Á + Total ∞ËªÍ : ∏ﬁ¿ŒΩ∫∑πµÂ ¥‹µ∂
+	Enqueue_All(eNextLevelID);	// ÌÅê Ï†ÅÏû¨ + Total Í≥ÑÏÇ∞ : Î©îÏù∏Ïä§Î†àÎìú Îã®ÎèÖ
+
+	/* M7a ÏûÑÏãú ÏΩîÎìú Î∏îÎ°ù (ÏΩîÎìú Í∏∞Î∞ò Ï†ïÏùò Îì±Î°ù) Ï†ÑÏ≤¥ Ï†úÍ±∞.
+	   JSON Î°úÎìúÎäî CEffect_Manager::Initialize() ÎÇ¥Î∂ÄÏóêÏÑú ÏûêÎèô ÏàòÌñâ. */
+	CEffect_Manager::GetInstance()->Initialize();
 
 	_uint iHW = max(2u, thread::hardware_concurrency());
 	//_uint iWorkerCount = max(1u, min(iHW - 1u, iHW * 2 / 3));
@@ -166,7 +174,7 @@ void CLoader::Show()
 {
 	_wstring strLoadText =	to_wstring(m_iCompletedCount.load()) + L" / "
 							+ to_wstring(m_iTotalCount) + L" ("
-							+ to_wstring(m_Threads.size()) + L"∞≥ Ω∫∑πµÂ ∞°µø ¡ﬂ)";
+							+ to_wstring(m_Threads.size()) + L"Í∞ú Ïä§Î†àÎìú Í∞ÄÎèô Ï§ë)";
 
 	const _wstring strLastErrorTask = Get_LastErrorTask();
 	if (Has_Error() && false == strLastErrorTask.empty())
@@ -423,6 +431,11 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Effect_M1.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements); },
 		TEXT("Prototype_Component_Shader_Effect_M1"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_PARTICLE3D,
+		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Particle3D.hlsl"), VTXPARTICLE3D_INSTANCE_DESC::Elements,
+			VTXPARTICLE3D_INSTANCE_DESC::iNumElements); },
+		TEXT("Prototype_Component_Shader_Particle3D"));
+
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_PLAYER_LGPE,
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Player_LGPE.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Player_LGPE"));
@@ -446,6 +459,30 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CVIBuffer_Cube::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_VIBuffer_Cube"));
 
+	/* Prototype_Component_VIBuffer_Instance_Effect - emitterÏö© (capacity 256) */
+	CVIBuffer_Rect_Instance::RECT_INSTANCE_DESC EmitterVBDesc{};
+	EmitterVBDesc.iNumInstance = 256;
+	EmitterVBDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	EmitterVBDesc.vPosOffset = _float3(0.f, 0.f, 0.f);
+	EmitterVBDesc.vSizeRange = _float2(0.2f, 0.5f);
+	EmitterVBDesc.vSpeedRange = _float2(0.f, 0.f);   // ÏÇ¨Ïö© Ïïà Ìï® (emitterÍ∞Ä ÏßÅÏ†ë Ï±ÑÏõÄ)
+	EmitterVBDesc.vLifeRange = _float2(1.f, 1.f);   // ÏÇ¨Ïö© Ïïà Ìï®
+	EmitterVBDesc.isLoop = false;
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_EFFECT,
+		[this, EmitterVBDesc]() mutable { return CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &EmitterVBDesc); },
+		TEXT("Prototype_Component_VIBuffer_Instance_Effect"));
+
+	/* Prototype_Component_VIBuffer_Instance_Particle3D ‚Äî M4 Ïã†Í∑ú Ìè¨Îß∑ (capacity 256) */
+	CVIBuffer_Particle3D_Instance::PARTICLE3D_INSTANCE_DESC Particle3DVBDesc{};
+	Particle3DVBDesc.iNumInstance = 256;
+	Particle3DVBDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	Particle3DVBDesc.vPosOffset = _float3(0.f, 0.f, 0.f);
+	Particle3DVBDesc.vSizeRange = _float2(0.2f, 0.5f);
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_PARTICLE3D,
+		[this, Particle3DVBDesc]() mutable { return CVIBuffer_Particle3D_Instance::Create(m_pDevice, m_pContext, &Particle3DVBDesc); },
+		TEXT("Prototype_Component_VIBuffer_Instance_Particle3D"));
 
 
 	// ---------- Model ----------
@@ -589,6 +626,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT_TEST_SINGLE,
 		[this] { return CEffect_Test_Single::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Effect_Test_Single"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PARTICLE_EMITTER,
+		[this] { return CParticleEmitter::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Particle_Emitter"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT,
+		[this] { return CEffect::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Effect"));
 
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);

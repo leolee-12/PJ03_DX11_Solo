@@ -44,6 +44,7 @@
     <ClInclude Include="..\Public\Battle_Math.h" />
     <ClInclude Include="..\Public\Battle_MoveMenu.h" />
     <ClInclude Include="..\Public\Battle_MsgListener.h" />
+    <ClInclude Include="..\Public\Battle_PlateListener.h" />
     <ClInclude Include="..\Public\Battle_PokemonListener.h" />
     <ClInclude Include="..\Public\Battle_States.h" />
     <ClInclude Include="..\Public\Battle_Targeting.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="..\Private\Battle_Math.cpp" />
     <ClCompile Include="..\Private\Battle_MoveMenu.cpp" />
     <ClCompile Include="..\Private\Battle_MsgListener.cpp" />
+    <ClCompile Include="..\Private\Battle_PlateListener.cpp" />
     <ClCompile Include="..\Private\Battle_PokemonListener.cpp" />
     <ClCompile Include="..\Private\Battle_States.cpp" />
     <ClCompile Include="..\Private\Battle_Targeting.cpp" />

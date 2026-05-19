@@ -145,7 +145,7 @@ WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance
 WNAME_TAG(PROTO_COM_SHADER_UIIMAGE, L"Prototype_Component_Shader_UIImage");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_GLOW, L"Prototype_Component_Shader_UI_Button_Glow");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_LAYERED, L"Prototype_Component_Shader_UI_Button_Layered");
-
+WNAME_TAG(PROTO_COM_SHADER_PARTICLE3D, L"Prototype_Component_Shader_Particle3D");
 
 
 // VIBuffer & Model
@@ -155,6 +155,8 @@ WNAME_TAG(PROTO_COM_VIBUFFER_CUBE, L"Prototype_Component_VIBuffer_Cube");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_SNOW, L"Prototype_Component_VIBuffer_Instance_Snow");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_EXPLOSION, L"Prototype_Component_VIBuffer_Instance_Explosion");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_STAR, L"Prototype_Component_VIBuffer_Instance_Star");
+WNAME_TAG(PROTO_COM_VIBUFFER_INST_EFFECT, L"Prototype_Component_VIBuffer_Instance_Effect");
+WNAME_TAG(PROTO_COM_VIBUFFER_INST_PARTICLE3D, L"Prototype_Component_VIBuffer_Instance_Particle3D");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
@@ -235,6 +237,7 @@ WNAME_TAG(PROTO_OBJ_SNOW, L"Prototype_GameObject_Snow");
 WNAME_TAG(PROTO_OBJ_EXPLOSION, L"Prototype_GameObject_Explosion");
 WNAME_TAG(PROTO_OBJ_EFT_STAR, L"Prototype_GameObject_Effect_Star");
 WNAME_TAG(PROTO_OBJ_EFFECT_TEST_SINGLE, L"Prototype_GameObject_Effect_Test_Single");
+WNAME_TAG(PROTO_OBJ_PARTICLE_EMITTER, L"Prototype_GameObject_Particle_Emitter");
 
 WNAME_TAG(PROTO_OBJ_BATTLE_TRAINER, L"Prototype_GameObject_Battle_Trainer");
 
@@ -258,12 +261,11 @@ WNAME_TAG(PROTO_OBJ_ACTOR_CAPTURE_TARGET, L"Prototype_GameObject_Actor_CaptureTa
 WNAME_TAG(PROTO_MAP_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_MAP_TOWN02, L"Prototype_MapObject_Town02");
 WNAME_TAG(PROTO_MAP_ROAD01, L"Prototype_MapObject_Road01");
-
 WNAME_TAG(PROTO_BMAP_TOWN, L"Prototype_BattleMap_Town");
 
 WNAME_TAG(PROTO_OBJ_MONSTER_BALL, L"Prototype_GameObject_MonsterBall");
 WNAME_TAG(PROTO_OBJ_CAPTURE_RING, L"Prototype_GameObject_CaptureRing");
-
+WNAME_TAG(PROTO_OBJ_EFFECT, L"Prototype_GameObject_Effect");
 
 
 // Component

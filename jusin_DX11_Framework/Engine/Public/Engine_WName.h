@@ -130,6 +130,26 @@ namespace Engine
 		T* find(WNameID id) { return find_ptr(id); }
 		const T* find(WNameID id) const { return find_ptr(id); }
 
+		bool erase(WNameID id)
+		{
+			if (!m_bLarge)
+			{
+				auto iter = std::find_if(m_Small.begin(), m_Small.end(),
+					[id](const auto& pair)
+					{
+						return pair.first == id;
+					});
+
+				if (iter == m_Small.end())
+					return false;
+
+				m_Small.erase(iter);
+				return true;
+			}
+
+			return 0 != m_Large.erase(id);
+		}
+
 		T& operator[](WNameID id)
 		{
 			T* value = find_ptr(id);
@@ -187,6 +207,11 @@ namespace Engine
 		T* find(WNameID id) { return find_ptr(id); }
 		const T* find(WNameID id) const { return find_ptr(id); }
 		
+		bool erase(WNameID id)
+		{
+			return 0 != m_Map.erase(id);
+		}
+
 		T& operator[](WNameID id)
 		{
 			T* value = find_ptr(id);

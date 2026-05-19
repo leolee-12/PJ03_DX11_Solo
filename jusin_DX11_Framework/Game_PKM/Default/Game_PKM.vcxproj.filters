@@ -504,6 +504,9 @@
     <ClInclude Include="..\Public\Effect_Manager.h">
       <Filter>05. Effects</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Battle_PlateListener.h">
+      <Filter>04. Contents\00. Battle\05. Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -763,6 +766,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Manager.cpp">
       <Filter>05. Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_PlateListener.cpp">
+      <Filter>04. Contents\00. Battle\05. Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
