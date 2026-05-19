@@ -67,6 +67,10 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 		wcscpy_s(tData.szVictoryDialog, TEXT("I won!"));
 		wcscpy_s(tData.szDefeatDialog, TEXT("I lost!"));
 
+		tData.strBodyProtoTag = PROTO_OBJ_BODY_HERO;
+		tData.strModelProtoTag = PROTO_COM_MODEL_HERO;
+		tData.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+
 		PartyOps::Clear(tData.tParty);
 
 		if (FAILED(AddPokemon(tData, 25, 5)))

@@ -109,8 +109,17 @@ void CBattle_MsgListener::On_RunSucceeded(const EVENT_RUN_SUCCEEDED& tEvent)
 
 void CBattle_MsgListener::On_BattleEnded(const EVENT_BATTLE_ENDED& tEvent)
 {
+	if (nullptr != m_pManager)
+	{
+		const BATTLE_RULE eRule = m_pManager->Get_Env().eRule;
+		if (BATTLE_RULE::TRAINER_SINGLE == eRule ||
+			BATTLE_RULE::TRAINER_DOUBLE == eRule)
+			return;
+	}
+
 	if (tEvent.iWinnerSide == g_kBattleSide_Player)
-		m_qMessages.push(_wstring(TEXT("야생 ")) + Get_BattlerName(g_kBattleSide_Opponent) + TEXT("을(를) 쓰러뜨렸다!"));
+		m_qMessages.push(_wstring(TEXT("야생 ")) + Get_BattlerName(g_kBattleSide_Opponent) +
+			TEXT("을(를) 쓰러뜨렸다!"));
 	else
 		m_qMessages.push(TEXT("눈앞이 캄캄해졌다..."));
 }
@@ -129,7 +138,7 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 	if (false == bHasListenerWork && m_pMsg->Is_Open())
 		return;
 
-	// 1) 타이핑 완료 시점 감지 — 현재 메시지에 대해 대기가 아직이면 타이머 시작
+	// 1) 타이핑 완료 시점 감지 - 현재 메시지에 대해 대기가 아직이면 타이머 시작
 	if (bFinishedDisplay && false == m_bWaiting && false == m_bMessageWaitConsumed)
 	{
 		m_bWaiting = true;
@@ -148,7 +157,7 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 		}
 	}
 
-	// 3) busy 판정 — 타이핑 중 / 대기 중 / 큐에 다음 메시지 있음 중 하나라도 해당하면 락 유지
+	// 3) busy 판정 - 타이핑 중 / 대기 중 / 큐에 다음 메시지 있음 중 하나라도 해당하면 락 유지
 	const _bool bBusy = bTyping || m_bWaiting || (false == m_qMessages.empty());
 
 	if (bBusy && false == m_bLockHeld)
@@ -162,7 +171,7 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 		m_bLockHeld = false;
 	}
 
-	// 4) 다음 메시지 시작 — 타이핑 중도 아니고 대기 중도 아니며 큐에 메시지가 있을 때
+	// 4) 다음 메시지 시작 - 타이핑 중도 아니고 대기 중도 아니며 큐에 메시지가 있을 때
 	const _bool bCanStartNext = (false == bTyping) && (false == m_bWaiting) && (false == m_qMessages.empty());
 	if (bCanStartNext)
 	{
@@ -172,7 +181,7 @@ void CBattle_MsgListener::Tick(_float fTimeDelta)
 		m_pMsg->Set_Message(strNext);
 		m_pMsg->Open();
 
-		m_bMessageWaitConsumed = false; // 새 메시지 시작 — 대기 플래그 리셋
+		m_bMessageWaitConsumed = false; // 새 메시지 시작 - 대기 플래그 리셋
 	}
 
 	// 5) 현재 메시지의 표시·대기 모두 끝났고 큐가 비면 박스 닫기

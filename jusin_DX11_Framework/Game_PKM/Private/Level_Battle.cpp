@@ -13,6 +13,7 @@
 #include "Battle_MoveMenu.h"
 #include "Battle_InputDirector.h"
 #include "Battle_PokemonListener.h"
+#include "Battle_ExpGainListener.h"
 #include "Game_API.h"
 #include "Camera_Free.h"
 
@@ -41,12 +42,6 @@ namespace
 		case BATTLE_PHASE::DONE: return TEXT("DONE");
 		default: return TEXT("UNKNOWN");
 		}
-	}
-
-	_bool Is_TrainerRule(BATTLE_RULE eRule)
-	{
-		return BATTLE_RULE::TRAINER_SINGLE == eRule ||
-			BATTLE_RULE::TRAINER_DOUBLE == eRule;
 	}
 }
 NS_END
@@ -104,6 +99,9 @@ void CLevel_Battle::Update(_float fTimeDelta)
 
 	if (nullptr != m_pBattleMsgListener)
 		m_pBattleMsgListener->Tick(fTimeDelta);
+
+	if (nullptr != m_pExpGainListener)
+		m_pExpGainListener->Tick(fTimeDelta);
 
 	UI_Update_All(fTimeDelta);
 
@@ -165,44 +163,32 @@ HRESULT CLevel_Battle::Bind_Battle_Sources()
 	if (FAILED(m_pBattleManager->Bind_PlayerParty(pPlayerState, iLead)))
 		return E_FAIL;
 
-	if (Is_TrainerRule(m_tEnv.eRule))
+	auto* pTrainerMgr = CTrainerData_Manager::GetInstance();
+	if (nullptr == pTrainerMgr)
+		return E_FAIL;
+
+	const TRAINER_DATA* pTrainerData =
+		pTrainerMgr->Find_Trainer(m_tEnv.iOpponentTrainerID);
+	if (nullptr == pTrainerData)
+		return E_FAIL;
+
+	m_tOpponentTrainer = *pTrainerData;
+
+	if (FAILED(m_pBattleManager->Bind_OpponentTrainer(&m_tOpponentTrainer)))
+		return E_FAIL;
+
+	const PARTY& tTrainerParty = m_tOpponentTrainer.tParty;
+
+	for (_uint i = 0; i < tTrainerParty.iCount; ++i)
 	{
-		auto* pTrainerMgr = CTrainerData_Manager::GetInstance();
-		if (nullptr == pTrainerMgr)
-			return E_FAIL;
-		const TRAINER_DATA* pTrainerData =
-			pTrainerMgr->Find_Trainer(m_tEnv.iOpponentTrainerID);
-		if (nullptr == pTrainerData)
-			return E_FAIL;
+		const POKEMON_INSTANCE* pOpponentPokemon = PartyOps::Get(tTrainerParty, i);
+		if (nullptr == pOpponentPokemon)
+			continue;
 
-		m_tOpponentTrainer = *pTrainerData;
+		if (0 == pOpponentPokemon->iSpeciesID || 0 == pOpponentPokemon->iCurrentHP)
+			continue;
 
-		if (FAILED(m_pBattleManager->Bind_OpponentTrainer(&m_tOpponentTrainer)))
-			return E_FAIL;
-
-		const PARTY& tTrainerParty = m_tOpponentTrainer.tParty;
-
-		for (_uint i = 0; i < tTrainerParty.iCount; ++i)
-		{
-			const POKEMON_INSTANCE* pOpponentPokemon = PartyOps::Get(tTrainerParty, i);
-			if (nullptr == pOpponentPokemon)
-				continue;
-
-			if (0 == pOpponentPokemon->iSpeciesID || 0 == pOpponentPokemon->iCurrentHP)
-				continue;
-
-			pPlayerState->Mark_DexSeen(pOpponentPokemon->iSpeciesID);
-		}
-	}
-	else
-	{
-		if (FAILED(Ready_Debug_WildOpponent()))
-			return E_FAIL;
-
-		if (FAILED(m_pBattleManager->Bind_OpponentSingle(&m_tDebugWildOpponent)))
-			return E_FAIL;
-
-		pPlayerState->Mark_DexSeen(m_tDebugWildOpponent.iSpeciesID);
+		pPlayerState->Mark_DexSeen(pOpponentPokemon->iSpeciesID);
 	}
 
 	return S_OK;
@@ -301,13 +287,34 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 	if (nullptr == m_pBattleManager)
 		return E_FAIL;
 
+	CPlayer_Status* pPlayerState = m_pBattleManager->Get_PlayerState();
+	const TRAINER_DATA* pTrainerData = m_pBattleManager->Get_OpponentTrainer();
+
 	for (_uint iSide = 0; iSide < g_kBattleSideCount; ++iSide)
 	{
 		CBattle_Trainer::BATTLE_TRAINER_DESC tDesc{};
 		tDesc.iSide = iSide;
-		tDesc.strBodyProtoTag = PROTO_OBJ_BODY_HERO;
-		tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
-		tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+
+		if (g_kBattleSide_Player == iSide && nullptr != pPlayerState)
+		{
+			tDesc.strBodyProtoTag = pPlayerState->Get_TrainerBodyProtoTag();
+			tDesc.strModelProtoTag = pPlayerState->Get_TrainerModelProtoTag();
+			tDesc.strShaderProtoTag = pPlayerState->Get_TrainerShaderProtoTag();
+		}
+		else if (g_kBattleSide_Opponent == iSide && nullptr != pTrainerData)
+		{
+			tDesc.strBodyProtoTag = pTrainerData->strBodyProtoTag;
+			tDesc.strModelProtoTag = pTrainerData->strModelProtoTag;
+			tDesc.strShaderProtoTag = pTrainerData->strShaderProtoTag;
+		}
+		else
+		{
+			// 야생 룰 공존 기간 또는 데이터 누락 시 폴백
+			tDesc.strBodyProtoTag = PROTO_OBJ_BODY_HERO;
+			tDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
+			tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+		}
+
 		tDesc.iDefaultAnim = 17;
 		tDesc.bLoop = true;
 		tDesc.fScale = 0.4f;
@@ -438,7 +445,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 			return E_FAIL;
 		}
 
-		m_pBattlePlate = pBattlePlate;  // weak — UI Hub owns
+		m_pBattlePlate = pBattlePlate;  // weak - UI Hub owns
 		Safe_Release(pBattlePlate);
 
 		m_pBattlePlate->Open();
@@ -474,7 +481,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 			return E_FAIL;
 		}
 
-		m_pCommandMenu = pCmdMenu;      // weak — UI Hub owns
+		m_pCommandMenu = pCmdMenu;      // weak - UI Hub owns
 		Safe_Release(pCmdMenu);
 	}
 
@@ -510,7 +517,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 			return E_FAIL;
 		}
 
-		m_pMoveMenu = pMoveMenu;        // weak — UI Hub owns
+		m_pMoveMenu = pMoveMenu;        // weak - UI Hub owns
 		Safe_Release(pMoveMenu);
 	}
 
@@ -549,7 +556,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 
 	m_pBattleManager->Set_BattleMsg(m_pBattleMsg);
 
-	/* ===== 커서 시퀀스 — Hub 가 단일 인스턴스로 공유 =====
+	/* ===== 커서 시퀀스 - Hub 가 단일 인스턴스로 공유 =====
 		 다른 UI 시퀀스 등록을 모두 마친 뒤 마지막에 추가해 최상위에 그려지도록 함. */
 	{
 		CUISequence::UISEQUENCE_DESC tCursorDesc{};
@@ -584,6 +591,15 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	if (FAILED(pDispatcher->Subscribe(m_pBattleMsgListener)))
 		return E_FAIL;
 
+	m_pExpGainListener = CBattle_ExpGainListener::Create();
+	if (nullptr == m_pExpGainListener)
+		return E_FAIL;
+
+	m_pExpGainListener->Bind(m_pBattleManager);
+
+	if (FAILED(pDispatcher->Subscribe(m_pExpGainListener)))
+		return E_FAIL;
+
 	m_pInputDirector = CBattle_InputDirector::Create();
 	if (nullptr == m_pInputDirector)
 		return E_FAIL;
@@ -592,53 +608,6 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 
 	if (FAILED(pDispatcher->Subscribe(m_pInputDirector)))
 		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CLevel_Battle::Ready_Debug_WildOpponent()
-{
-	auto* pDataMgr = CPokemonData_Manager::GetInstance();
-	if (nullptr == pDataMgr)
-		return E_FAIL;
-
-	const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(1);
-	if (nullptr == pSpecies)
-		return E_FAIL;
-
-	m_tDebugWildOpponent = {};
-
-	m_tDebugWildOpponent.iSpeciesID = pSpecies->iDexNo;
-	wcscpy_s(m_tDebugWildOpponent.szNickname, pSpecies->szName);
-
-	m_tDebugWildOpponent.iLevel = 5;
-	m_tDebugWildOpponent.iExp = 0;
-
-	for (size_t i = 0; i < static_cast<size_t>(STAT::END); ++i)
-	{
-		m_tDebugWildOpponent.iIV[i] = g_kMaxIV;
-		m_tDebugWildOpponent.iEV[i] = 0;
-	}
-
-	m_tDebugWildOpponent.eNature = NATURE::HARDY;
-	m_tDebugWildOpponent.iAbilityID = pSpecies->iAbility1;
-
-	const _uint iInitialMoves[g_kMaxMovesPerPokemon] =
-	{
-		  pSpecies->iLearnset[0],
-		  pSpecies->iLearnset[1],
-		  pSpecies->iLearnset[2],
-		  pSpecies->iLearnset[3],
-	};
-
-	Assign_Moves(m_tDebugWildOpponent, iInitialMoves, g_kMaxMovesPerPokemon, pDataMgr);
-
-	m_tDebugWildOpponent.eStatus = STATUS_CONDITION::NONE;
-
-	Recalc_All_Stats(m_tDebugWildOpponent, *pSpecies);
-	m_tDebugWildOpponent.iCurrentHP = m_tDebugWildOpponent.iStat[static_cast<size_t>(STAT::HP)];
-
-	m_tDebugWildOpponent.iCapturedAtZoneID = m_tEnv.iZoneID;
 
 	return S_OK;
 }
@@ -695,6 +664,15 @@ void CLevel_Battle::Free()
 	}
 
 	Safe_Release(m_pInputDirector);
+
+	if (nullptr != m_pExpGainListener && nullptr != m_pBattleManager)
+	{
+		CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+		if (nullptr != pDispatcher)
+			pDispatcher->Unsubscribe(m_pExpGainListener);
+	}
+
+	Safe_Release(m_pExpGainListener);
 
 	if (nullptr != m_pBattleMsgListener && nullptr != m_pBattleManager)
 	{

@@ -25,6 +25,10 @@ HRESULT CPlayer_Status::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_strTrainerBodyProtoTag = PROTO_OBJ_BODY_HERO;
+	m_strTrainerModelProtoTag = PROTO_COM_MODEL_HERO;
+	m_strTrainerShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
+
 	if (0 == m_tParty.iCount)
 		Acquire_Pokemon(25, 5, 0);
 

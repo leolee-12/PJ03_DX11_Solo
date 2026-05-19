@@ -134,8 +134,8 @@ void CInputPlayerState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
         return;
 
     // DIK_ESCAPE 는 Director 의 메뉴 Cancel 콜백이 단독 담당.
-    //  MAIN 에서 Cancel → 도망(CRunCommand)
-    //  MOVE 에서 Cancel → MAIN 복귀
+    //  MAIN 에서 Cancel -> 도망(CRunCommand)
+    //  MOVE 에서 Cancel -> MAIN 복귀
     // State 는 큐에 명령이 올라온 것만 감지해 다음 단계로 전이한다.
     CCommandQueue* pQueue = ctx.pManager->Get_Queue();
     if (nullptr == pQueue || pQueue->Empty())
@@ -401,6 +401,7 @@ void CCheckEndState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
         return;
     }
 
+    if (false == bOpponentAlive)
     {
         const _uint iNext = ctx.pManager->Find_FirstAlivePartyIndex(g_kBattleSide_Opponent);
         if (g_kMaxPartySize != iNext)
@@ -475,12 +476,45 @@ void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
     }
 
     CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
-    if (nullptr != pSeq)
+    if (nullptr == pSeq)
     {
-        pSeq->Push_Step(SPokemonEnter::Create(iSide));
-        pSeq->Push_Step(SDone::Create());
-        pSeq->Submit();
+        m_bSubmitted = true;
+        return;
     }
+
+    CBattler* pBattler = ctx.pManager->Get_Battler(iSide);
+    const POKEMON_INSTANCE* pInstance = (nullptr != pBattler) ? pBattler->Get_Instance() : nullptr;
+    const _wstring strPokemonName = (nullptr != pInstance)
+        ? _wstring(pInstance->szNickname) : _wstring(TEXT("?"));
+
+    _wstring strSendOutMsg;
+    if (g_kBattleSide_Opponent == iSide)
+    {
+        const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
+        const _wstring strTrainerName = (nullptr != pTrainer)
+            ? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
+        strSendOutMsg = strTrainerName + TEXT("는 ") + strPokemonName + TEXT("을(를) 내보냈다!");
+    }
+    else
+    {
+        strSendOutMsg = _wstring(TEXT("플레이어는 ")) + strPokemonName + TEXT("을(를) 내보냈다!");
+    }
+
+    auto Push = [pSeq](IBattleAction_Step* pStep)
+        {
+            if (nullptr == pStep)
+                return;
+
+            pSeq->Push_Step(pStep);
+            Safe_Release(pStep);
+        };
+
+    Push(SBattleText::Create(strSendOutMsg));
+    Push(SPokemonEnter::Create(iSide));
+    Push(SCloseMsg::Create());
+    Push(SDelay::Create(0.2f));
+    Push(SDone::Create());
+    pSeq->Submit();
 
     m_bSubmitted = true;
 }
@@ -528,7 +562,7 @@ COutroState::COutroState()
 
 void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 {
-    if (nullptr == ctx.pDispatcher)
+    if (nullptr == ctx.pDispatcher || nullptr == ctx.pManager)
         return;
 
     CBattler* pPlayer = ctx.Get_Self(g_kBattleSide_Player);
@@ -546,7 +580,60 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
     else
         tEvent.iWinnerSide = g_kBattleSide_Player;  // 도망/Esc 등 무승부적 종료 - 임시로 Player 표기
 
-    ctx.pDispatcher->Publish(tEvent);
+        ctx.pDispatcher->Publish(tEvent);
+
+    const BATTLE_ENV& tEnv = ctx.pManager->Get_Env();
+    const bool bTrainerRule =
+        BATTLE_RULE::TRAINER_SINGLE == tEnv.eRule ||
+        BATTLE_RULE::TRAINER_DOUBLE == tEnv.eRule;
+
+    if (false == bTrainerRule)
+        return;
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr == pSeq)
+        return;
+
+    const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
+    const _wstring strTrainerName = (nullptr != pTrainer)
+        ? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
+
+    auto Push = [pSeq](IBattleAction_Step* pStep)
+        {
+            if (nullptr == pStep)
+                return;
+
+            pSeq->Push_Step(pStep);
+            Safe_Release(pStep);
+        };
+
+    if (g_kBattleSide_Player == tEvent.iWinnerSide)
+    {
+        Push(SBattleText::Create(strTrainerName + TEXT("와의 승부에서 이겼다!")));
+        Push(SCloseMsg::Create());
+        Push(SDelay::Create(0.2f));
+
+        if (nullptr != pTrainer && 0 != pTrainer->szDefeatDialog[0])
+        {
+            Push(SBattleText::Create(_wstring(pTrainer->szDefeatDialog)));
+            Push(SCloseMsg::Create());
+            Push(SDelay::Create(0.2f));
+        }
+
+        const _uint iReward = (nullptr != pTrainer) ? pTrainer->iRewardMoney : 0;
+        Push(SPrizeMoney::Create(iReward));
+        Push(SCloseMsg::Create());
+        Push(SDelay::Create(0.2f));
+    }
+    else
+    {
+        Push(SBattleText::Create(_wstring(TEXT("눈앞이 캄캄해졌다..."))));
+        Push(SCloseMsg::Create());
+        Push(SDelay::Create(0.2f));
+    }
+
+    Push(SDone::Create());
+    pSeq->Submit();
 }
 
 void COutroState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
@@ -557,8 +644,11 @@ void COutroState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
         return;
 
     if (ctx.pManager->Is_Pacing_Busy())
-        if (ctx.pManager->Is_Pacing_Busy())
-            return;
+        return;
+
+    CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+    if (nullptr != pSeq && pSeq->Is_Active())
+        return;
 
     ctx.pManager->Request_Exit();
 }

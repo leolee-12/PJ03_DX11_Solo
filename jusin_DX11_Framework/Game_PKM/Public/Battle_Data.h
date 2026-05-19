@@ -176,6 +176,10 @@ struct TRAINER_DATA
 	_tchar szEncounterDialog[g_kTrainerDialogTextLen] = {};
 	_tchar szVictoryDialog[g_kTrainerDialogTextLen] = {};
 	_tchar szDefeatDialog[g_kTrainerDialogTextLen] = {};
+
+	WNameID strBodyProtoTag = {};
+	WNameID strModelProtoTag = {};
+	WNameID strShaderProtoTag = {};
 };
 
 _ushort	Calc_HP_Stat(_ushort iBase, _ubyte iIV, _ubyte iEV, _ubyte iLevel);

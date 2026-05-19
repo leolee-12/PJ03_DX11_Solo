@@ -42,6 +42,10 @@ public:
 	_uint Get_BadgeFlags() const { return m_iBadgeFlags; }
 	void Set_BadgeFlags(_uint iBadgeFlags) { m_iBadgeFlags = iBadgeFlags; }
 
+	WNameID Get_TrainerBodyProtoTag() const { return m_strTrainerBodyProtoTag; }
+	WNameID Get_TrainerModelProtoTag() const { return m_strTrainerModelProtoTag; }
+	WNameID Get_TrainerShaderProtoTag() const { return m_strTrainerShaderProtoTag; }
+
 private:
 	PARTY m_tParty = {};
 	BOX m_tBox = {};
@@ -49,6 +53,10 @@ private:
 	_uint m_iTrainerID = { 1 };
 	_uint m_iMoney = {};
 	_uint m_iBadgeFlags = {};
+
+	WNameID m_strTrainerBodyProtoTag = {};
+	WNameID m_strTrainerModelProtoTag = {};
+	WNameID m_strTrainerShaderProtoTag = {};
 
 public:
 	static CPlayer_Status* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -18,6 +18,7 @@ class CBattle_CommandMenu;
 class CBattle_MoveMenu;
 class CBattle_InputDirector;
 class CBattle_PokemonListener;
+class CBattle_ExpGainListener;
 
 class CLevel_Battle final : public CLevel
 {
@@ -40,8 +41,6 @@ private:
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
-	HRESULT Ready_Debug_WildOpponent();
-
 private:
 	BATTLE_ENV m_tEnv = {};
 	CBattle_Manager* m_pBattleManager = { nullptr };
@@ -52,8 +51,8 @@ private:
 	CBattle_MoveMenu* m_pMoveMenu = { nullptr };
 	CBattle_InputDirector* m_pInputDirector = { nullptr };
 	CBattle_PokemonListener* m_pPokemonListeners[g_kBattleSideCount] = { nullptr, nullptr };
+	CBattle_ExpGainListener* m_pExpGainListener = { nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
-	POKEMON_INSTANCE m_tDebugWildOpponent = {};
 	TRAINER_DATA m_tOpponentTrainer = {};
 
 public:

@@ -63,7 +63,7 @@ private:
 
 	// P7-B 신규
 	CBattle_Manager* m_pManager = { nullptr };  // weak
-	CBody* m_pBody = { nullptr };  // weak — Container owns
+	CBody* m_pBody = { nullptr };  // weak - Container owns
 
 	ANIM_KIND  m_eCurrentKind = { ANIM_KIND::IDLE };
 	_float     m_fAnimTimer = { 0.f };

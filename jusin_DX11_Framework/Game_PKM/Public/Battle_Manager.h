@@ -42,7 +42,6 @@ public:
 	HRESULT Initialize(const BATTLE_ENV& tEnv);
 
 	HRESULT Bind_PlayerParty(CPlayer_Status* pPlayerState, _uint iLeadSlot);
-	HRESULT Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent);
 	HRESULT Bind_OpponentTrainer(TRAINER_DATA* pTrainerData);
 	HRESULT Replace_BattlerSlot(_uint iSide, _uint iPartyIndex);
 
@@ -63,7 +62,9 @@ public:
 	const TURN_CONTEXT&		Get_Turn() const { return m_tTurn; }
 	BATTLE_PHASE			Get_Phase() const { return m_ePhase; }
 	const TRAINER_DATA*		Get_OpponentTrainer() const { return m_pOpponentTrainer; }
+	CPlayer_Status*			Get_PlayerState() const { return m_pPlayerState; }   // weak
 	CDamage_Calculator*		Get_Damage_Calculator() const { return m_pDamageCalculator; }
+
 	CBattle_EventDispatcher*	Get_EventDispatcher() const { return m_pEventDispatcher; }
 	IBattleAI* Get_AI(_uint iSide) const { return (iSide < g_kBattleSideCount) ? m_pAI[iSide] : nullptr; }
 
@@ -103,12 +104,11 @@ private:
 	CBattle_EventDispatcher* m_pEventDispatcher = { nullptr };
 	IBattleAI* m_pAI[g_kBattleSideCount] = {};
 	CBattle_ActionSequencer* m_pSequencer = { nullptr };
-	CBattleMsg* m_pBattleMsg = { nullptr };  // weak — Level/UI Hub owns
+	CBattleMsg* m_pBattleMsg = { nullptr };  // weak - Level/UI Hub owns
 
 	_int m_iPacingLocks = { 0 };
 
 	CPlayer_Status*		m_pPlayerState = { nullptr };
-	POKEMON_INSTANCE*	m_pOpponentSingle = { nullptr };
 	TRAINER_DATA*		m_pOpponentTrainer = { nullptr };
 
 	CGameObject* m_pBattlerObj[g_kBattleSideCount] = {};

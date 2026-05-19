@@ -69,32 +69,6 @@ HRESULT CBattle_Manager::Bind_PlayerParty(CPlayer_Status* pPlayerState, _uint iL
 	return S_OK;
 }
 
-HRESULT CBattle_Manager::Bind_OpponentSingle(POKEMON_INSTANCE* pOpponent)
-{
-	if (nullptr == pOpponent)
-		return E_FAIL;
-
-	m_pOpponentSingle = pOpponent;
-
-	Safe_Release(m_pBattlers[g_kBattleSide_Opponent]);
-
-	CBattler::BATTLER_DESC tDesc{};
-	tDesc.iSide = g_kBattleSide_Opponent;
-	tDesc.iSlotIndex = 0;
-	tDesc.pInstance = pOpponent;
-
-	m_pBattlers[g_kBattleSide_Opponent] = CBattler::Create(tDesc);
-	if (nullptr == m_pBattlers[g_kBattleSide_Opponent])
-		return E_FAIL;
-
-	Safe_Release(m_pAI[g_kBattleSide_Opponent]);
-	m_pAI[g_kBattleSide_Opponent] = CRandomAI::Create();
-	if (nullptr == m_pAI[g_kBattleSide_Opponent])
-		return E_FAIL;
-
-	return S_OK;
-}
-
 HRESULT CBattle_Manager::Bind_OpponentTrainer(TRAINER_DATA* pTrainerData)
 {
 	if (nullptr == pTrainerData)
@@ -431,9 +405,6 @@ POKEMON_INSTANCE* CBattle_Manager::Resolve_PartyPokemon(_uint iSide, _uint iPart
 	{
 		if (nullptr != m_pOpponentTrainer)
 			return PartyOps::Get(m_pOpponentTrainer->tParty, iPartyIndex);
-
-		if (nullptr != m_pOpponentSingle && 0 == iPartyIndex)
-			return m_pOpponentSingle;
 	}
 
 	return nullptr;

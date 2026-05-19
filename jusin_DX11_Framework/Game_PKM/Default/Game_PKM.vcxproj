@@ -37,6 +37,7 @@
     <ClInclude Include="..\Public\Battle_EventDispatcher.h" />
     <ClInclude Include="..\Public\Battle_EventListenerBase.h" />
     <ClInclude Include="..\Public\Battle_Events.h" />
+    <ClInclude Include="..\Public\Battle_ExpGainListener.h" />
     <ClInclude Include="..\Public\Battle_InputDirector.h" />
     <ClInclude Include="..\Public\Battle_Layout.h" />
     <ClInclude Include="..\Public\Battle_Manager.h" />
@@ -61,6 +62,9 @@
     <ClInclude Include="..\Public\Damage_Pipe.h" />
     <ClInclude Include="..\Public\Damage_Calculator.h" />
     <ClInclude Include="..\Public\Damage_Modifiers.h" />
+    <ClInclude Include="..\Public\Effect.h" />
+    <ClInclude Include="..\Public\Effect_Defines.h" />
+    <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Effect_Test_Single.h" />
     <ClInclude Include="..\Public\Interaction_BallHit.h" />
     <ClInclude Include="..\Public\Interaction_Dialogue.h" />
@@ -96,6 +100,7 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MonsterBall.h" />
     <ClInclude Include="..\Public\Particle.h" />
+    <ClInclude Include="..\Public\ParticleCurve.h" />
     <ClInclude Include="..\Public\ParticleEmitter.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Player_Data.h" />
@@ -117,6 +122,7 @@
     <ClInclude Include="..\Public\UIController.h" />
     <ClInclude Include="..\Public\UIController_Hub.h" />
     <ClInclude Include="..\Public\UIImage_FadeBattle.h" />
+    <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
@@ -136,6 +142,7 @@
     <ClCompile Include="..\Private\Battle_CommandMenu.cpp" />
     <ClCompile Include="..\Private\Battle_Commands.cpp" />
     <ClCompile Include="..\Private\Battle_EventDispatcher.cpp" />
+    <ClCompile Include="..\Private\Battle_ExpGainListener.cpp" />
     <ClCompile Include="..\Private\Battle_InputDirector.cpp" />
     <ClCompile Include="..\Private\Battle_Manager.cpp" />
     <ClCompile Include="..\Private\Battle_Math.cpp" />
@@ -157,6 +164,8 @@
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
     <ClCompile Include="..\Private\Damage_Modifiers.cpp" />
+    <ClCompile Include="..\Private\Effect.cpp" />
+    <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Effect_Test_Single.cpp" />
     <ClCompile Include="..\Private\Interaction_BallHit.cpp" />
     <ClCompile Include="..\Private\Interaction_Dialogue.cpp" />
@@ -201,6 +210,7 @@
     <ClCompile Include="..\Private\UIController.cpp" />
     <ClCompile Include="..\Private\UIController_Hub.cpp" />
     <ClCompile Include="..\Private\UIImage_FadeBattle.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
@@ -208,6 +218,7 @@
     <FxCompile Include="..\ShaderFiles\Shader_Effect_M1.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Particle3D.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl" />

@@ -206,7 +206,7 @@ private:
 /* SResultMessages
    - 직전 step (SApplyDamage 등) 이 발행한 메시지 들(크리/효과적/등)이
      모두 표시되고 박스가 닫힐 때까지 대기.
-   - 자체 EVENT 발행은 없음 — 순수 대기 step. */
+   - 자체 EVENT 발행은 없음 - 순수 대기 step. */
 class SResultMessages final : public IBattleAction_Step
 {
 private:
@@ -250,7 +250,7 @@ private:
 };
 
 /* SApplyDamage
-   - DAMAGE_PIPE_DATA 빌드 → CDamage_Calculator 통과 → CBattler::Apply_Damage.
+   - DAMAGE_PIPE_DATA 빌드 -> CDamage_Calculator 통과 -> CBattler::Apply_Damage.
    - 결과를 ActionData.tPipe / iAppliedDamage / bFaintedThisHit 에 기록.
    - 면역(effectiveness<=0) 시 MOVE_FAILED(IMMUNE) 발행 + 데미지 미적용.
    - 적용 시 DAMAGE_DEALT 발행. 즉시 완료 (메시지 대기는 SResultMessages 가 담당). */
@@ -292,6 +292,39 @@ private:
 
 public:
     static SFaintCheck* Create();
+
+private:
+    virtual void Free() override;
+};
+
+/* SPrizeMoney
+     - 트레이너 OUTRO 의 상금 step.
+     - OnEnter 시 Player_Status.m_iMoney 를 1회 증가 (m_bApplied 가드).
+     - 메시지 박스에 "플레이어는 상금으로 N원을 손에 넣었다!" 텍스트 표시.
+     - SBattleText 와 동일한 hold/Type 페이스 규약 사용. */
+class SPrizeMoney final : public IBattleAction_Step
+{
+private:
+    SPrizeMoney();
+    virtual ~SPrizeMoney() = default;
+
+public:
+    HRESULT Initialize(_uint iAmount, _float fHoldSeconds);
+
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint    m_iAmount = { 0 };
+    _wstring m_strText = {};
+    _float   m_fHoldSeconds = { 0.4f };
+    _float   m_fHoldTimer = { 0.f };
+    _bool    m_bOpened = { false };
+    _bool    m_bApplied = { false };
+
+public:
+    static SPrizeMoney* Create(_uint iAmount, _float fHoldSeconds = 0.4f);
 
 private:
     virtual void Free() override;
