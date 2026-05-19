@@ -81,10 +81,10 @@ HRESULT CLevel_Logo::Ready_Lights()
 	LIGHT_DESC LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);  // 중성 화이트 (RGB 균일), 살짝 감소
-	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);  // 중성 화이트, 강화 -> 평평·푸른 끼 제거
-	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);  // 변화 없음
-	LightDesc.vDirection = _float4(0.2f, -0.5f, 0.85f, 0.f);   // Logo 고유 방향 유지
+	LightDesc.vDiffuse = _float4(0.56f, 0.56f, 0.54f, 1.f);
+	LightDesc.vAmbient = _float4(0.62f, 0.62f, 0.60f, 1.f);
+	LightDesc.vSpecular = _float4(0.03f, 0.03f, 0.03f, 1.f);
+	LightDesc.vDirection = _float4(0.05f, -0.25f, 0.97f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;

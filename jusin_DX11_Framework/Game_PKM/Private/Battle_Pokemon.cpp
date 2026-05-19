@@ -34,9 +34,17 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 
 	m_pInstance = pDesc->pInstance;
 	m_iSide = pDesc->iSide;
+
 	m_strBodyProtoTag = (0 != pDesc->strBodyProtoTag)
 		? pDesc->strBodyProtoTag
 		: PROTO_OBJ_BODY_POKEMON;
+
+	m_strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
+		? pDesc->strShaderProtoTag
+		: PROTO_COM_SHADER_POKEMON;
+	m_iDefaultAnim = pDesc->iDefaultAnim;
+	m_bLoop = pDesc->bLoop;
+	m_fScale = pDesc->fScale;
 
 	if (m_iSide >= g_kBattleSideCount)
 		return E_FAIL;
@@ -67,7 +75,7 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_PartObjects(pDesc)))
+	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
 	const _float3& vPos = pDesc->vPos;
@@ -115,6 +123,67 @@ HRESULT CBattle_Pokemon::Render()
 void CBattle_Pokemon::Set_Manager(CBattle_Manager* pManager)
 {
 	m_pManager = pManager;
+}
+
+HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
+{
+	if (nullptr == pNewInstance)
+		return E_FAIL;
+
+	const CPokemonData_Manager* pDataMgr = CPokemonData_Manager::GetInstance();
+	if (nullptr == pDataMgr)
+		return E_FAIL;
+
+	const SPECIES_DATA* pSpecies = pDataMgr->Find_Species(pNewInstance->iSpeciesID);
+	if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
+		return E_FAIL;
+
+	if (pSpecies->strModelTag == m_strSpeciesModelTag)
+	{
+		m_pInstance = pNewInstance;
+		return S_OK;
+	}
+
+	auto* pRuleManager = CRenderRule_Manager::GetInstance();
+	if (nullptr == pRuleManager)
+		return E_FAIL;
+
+	const CRenderRule* pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
+	if (nullptr == pRenderRule)
+		return E_FAIL;
+
+	if (m_bLockHeld && nullptr != m_pManager)
+	{
+		m_pManager->Release_Pacing_Lock();
+		m_bLockHeld = false;
+	}
+
+	m_pBody = nullptr;
+
+	if (FAILED(__super::Remove_PartObject(PART_BODY)))
+		return E_FAIL;
+
+	m_pInstance = pNewInstance;
+	m_strSpeciesModelTag = pSpecies->strModelTag;
+	m_pRenderRule = pRenderRule;
+
+	if (FAILED(Ready_PartObjects()))
+		return E_FAIL;
+
+	if (nullptr != m_pManager)
+	{
+		const _float3 vPos = m_pManager->Get_PokemonPos(m_iSide);
+		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_pManager->Get_PokemonYaw(m_iSide));
+	}
+
+	m_eCurrentKind = ANIM_KIND::IDLE;
+	m_fAnimTimer = 0.f;
+	m_fAnimDuration = 0.f;
+
+	Play_Enter();
+
+	return S_OK;
 }
 
 void CBattle_Pokemon::Play_Attack()
@@ -195,18 +264,16 @@ void CBattle_Pokemon::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
 	}
 }
 
-HRESULT CBattle_Pokemon::Ready_PartObjects(const POKEMON_DESC* pDesc)
+HRESULT CBattle_Pokemon::Ready_PartObjects()
 {
 	CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	BodyDesc.strModelProtoTag = m_strSpeciesModelTag;
-	BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
-		? pDesc->strShaderProtoTag
-		: PROTO_COM_SHADER_POKEMON;
+	BodyDesc.strShaderProtoTag = m_strShaderProtoTag;
 	BodyDesc.pRenderRule = m_pRenderRule;
-	BodyDesc.iDefaultAnim = pDesc->iDefaultAnim;
-	BodyDesc.bLoop = pDesc->bLoop;
-	BodyDesc.fScale = pDesc->fScale;
+	BodyDesc.iDefaultAnim = m_iDefaultAnim;
+	BodyDesc.bLoop = m_bLoop;
+	BodyDesc.fScale = m_fScale;
 	BodyDesc.bEnableRootMotion = false;
 	BodyDesc.iRootMotionBoneIndex = 0;
 
@@ -214,12 +281,7 @@ HRESULT CBattle_Pokemon::Ready_PartObjects(const POKEMON_DESC* pDesc)
 		ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
 		return E_FAIL;
 
-	// 추가된 Body 캐싱 - m_PartObjects 에서 PART_BODY 키로 찾는다.
-	m_PartObjects.for_each([this](auto& Pair)
-		{
-			if (Pair.first == PART_BODY)
-				m_pBody = dynamic_cast<CBody*>(Pair.second);
-		});
+	m_pBody = Get_Part<CBody>(PART_BODY);
 
 	return S_OK;
 }

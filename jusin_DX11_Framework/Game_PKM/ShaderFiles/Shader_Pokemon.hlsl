@@ -135,6 +135,21 @@ float2 ResolveMirrorTextureUV(float2 vUV)
 	return saturate(vUV);
 }
 
+float3 ApplyYellowBodyTone(float3 vBase)
+{
+	float fLuminance = dot(vBase, float3(0.299f, 0.587f, 0.114f));
+
+	float fYellowMask = saturate((min(vBase.r, vBase.g) - vBase.b - 0.10f) / 0.30f);
+	float fBrightMask = smoothstep(0.38f, 0.72f, fLuminance);
+	float fYellowToneMask = fYellowMask * fBrightMask;
+
+	float fTargetLuminance = lerp(fLuminance, 0.78f, 0.48f);
+	float3 vToned = vBase * (fTargetLuminance / max(fLuminance, 0.001f));
+	vToned *= float3(1.00f, 0.995f, 0.96f);
+
+	return lerp(vBase, saturate(vToned), fYellowToneMask);
+}
+
 PS_OUT PS_Default(PS_IN In)	// 0번 패스
 {
 	PS_OUT Out = (PS_OUT)0;
@@ -177,8 +192,8 @@ PS_OUT PS_DANR(PS_IN In)	// 2번 패스
 	float3x3 WorldMatrix = float3x3(T, B, N);
 
 	vNormal = normalize(mul(vNormal, WorldMatrix));
-	
-	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
+
+	Out.vDiff = vector(ApplyYellowBodyTone(vMtrlDiff.rgb), 1.f);
 	Out.vNorm = vector(vNormal * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 
@@ -208,7 +223,7 @@ PS_OUT PS_DALNR(PS_IN In)	// 3번 패스
 
 	vNormal = normalize(mul(vNormal, WorldMatrix));
 
-	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
+	Out.vDiff = vector(ApplyYellowBodyTone(vMtrlDiff.rgb), 1.f);
 	Out.vNorm = vector(vNormal * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
 

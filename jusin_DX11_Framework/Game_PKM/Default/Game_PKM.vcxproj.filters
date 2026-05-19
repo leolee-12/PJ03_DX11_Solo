@@ -184,6 +184,9 @@
     <Filter Include="05. Effects">
       <UniqueIdentifier>{911aec86-4d94-417b-a60f-60175478b046}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Effects\Particle">
+      <UniqueIdentifier>{0d0cbdf4-df1b-493e-bd14-4b072d988d3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -477,13 +480,7 @@
     <ClInclude Include="..\Public\TrainerData_Manager.h">
       <Filter>02. Game_API\02. TrainerData</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Particle.h">
-      <Filter>05. Effects</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect_Test_Single.h">
-      <Filter>05. Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ParticleEmitter.h">
       <Filter>05. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_ExpGainListener.h">
@@ -491,9 +488,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h">
       <Filter>03. Components\00. VIBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ParticleCurve.h">
-      <Filter>05. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Defines.h">
       <Filter>05. Effects</Filter>
@@ -506,6 +500,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Battle_PlateListener.h">
       <Filter>04. Contents\00. Battle\05. Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleEmitter.h">
+      <Filter>05. Effects\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle.h">
+      <Filter>05. Effects\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleCurve.h">
+      <Filter>05. Effects\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -746,13 +749,7 @@
     <ClCompile Include="..\Private\TrainerData_Manager.cpp">
       <Filter>02. Game_API\02. TrainerData</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Particle.cpp">
-      <Filter>05. Effects</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Effect_Test_Single.cpp">
-      <Filter>05. Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ParticleEmitter.cpp">
       <Filter>05. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_ExpGainListener.cpp">
@@ -769,6 +766,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battle_PlateListener.cpp">
       <Filter>04. Contents\00. Battle\05. Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle.cpp">
+      <Filter>05. Effects\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleEmitter.cpp">
+      <Filter>05. Effects\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

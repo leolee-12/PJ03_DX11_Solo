@@ -14,6 +14,7 @@
 #include "Battle_InputDirector.h"
 #include "Battle_PokemonListener.h"
 #include "Battle_ExpGainListener.h"
+#include "Battle_PlateListener.h"
 #include "Game_API.h"
 #include "Camera_Free.h"
 
@@ -379,7 +380,7 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 			if (nullptr == pListener)
 				return E_FAIL;
 
-			pListener->Bind(pPoke, iSide);
+			pListener->Bind(pPoke, iSide, m_pBattleManager);
 
 			CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
 			if (nullptr == pDispatcher)
@@ -449,6 +450,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 		Safe_Release(pBattlePlate);
 
 		m_pBattlePlate->Open();
+		m_pBattlePlate->Snap_HPDisplay();
 	}
 
 	tDesc.strPath = "../../DataFiles/UI/UI_BattleCommand.uiseq";
@@ -600,6 +602,15 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	if (FAILED(pDispatcher->Subscribe(m_pExpGainListener)))
 		return E_FAIL;
 
+	m_pBattlePlateListener = CBattle_PlateListener::Create();
+	if (nullptr == m_pBattlePlateListener)
+		return E_FAIL;
+
+	m_pBattlePlateListener->Bind(m_pBattlePlate);
+
+	if (FAILED(pDispatcher->Subscribe(m_pBattlePlateListener)))
+		return E_FAIL;
+
 	m_pInputDirector = CBattle_InputDirector::Create();
 	if (nullptr == m_pInputDirector)
 		return E_FAIL;
@@ -682,6 +693,15 @@ void CLevel_Battle::Free()
 	}
 
 	Safe_Release(m_pBattleMsgListener);
+
+	if (nullptr != m_pBattlePlateListener && nullptr != m_pBattleManager)
+	{
+		CBattle_EventDispatcher* pDispatcher = m_pBattleManager->Get_EventDispatcher();
+		if (nullptr != pDispatcher)
+			pDispatcher->Unsubscribe(m_pBattlePlateListener);
+	}
+
+	Safe_Release(m_pBattlePlateListener);
 
 	UI_Set_Cursor_Sequence(nullptr);
 	UI_Cleanup_Level(ETOUI(LEVEL::BATTLE));

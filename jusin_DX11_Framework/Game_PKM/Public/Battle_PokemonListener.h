@@ -2,7 +2,7 @@
 #include "Battle_EventListenerBase.h"
 
 NS_BEGIN(Game_PKM)
-
+class CBattle_Manager;
 class CBattle_Pokemon;
 
 /* CBattle_PokemonListener
@@ -17,14 +17,16 @@ private:
 
 public:
 	HRESULT Initialize();
-	void Bind(CBattle_Pokemon* pPokemon, _uint iSide);
+	void Bind(CBattle_Pokemon* pPokemon, _uint iSide, CBattle_Manager* pManager);
 
 	virtual void On_MoveUsed(const EVENT_MOVE_USED& tEvent) override;
 	virtual void On_DamageDealt(const EVENT_DAMAGE_DEALT& tEvent) override;
 	virtual void On_PokemonFainted(const EVENT_POKEMON_FAINTED& tEvent) override;
+	virtual void On_PokemonSwitched(const EVENT_POKEMON_SWITCHED& tEvent) override;
 
 private:
 	CBattle_Pokemon* m_pPokemon = { nullptr };  // weak
+	CBattle_Manager* m_pManager = { nullptr };  // weak
 	_uint            m_iSide = { 0 };
 
 public:

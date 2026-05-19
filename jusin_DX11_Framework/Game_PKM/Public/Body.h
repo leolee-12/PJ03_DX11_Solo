@@ -30,6 +30,7 @@ protected:
 	virtual ~CBody() = default;
 
 public:
+	const _float4x4* Get_CombinedWorldMatrixPtr() const { return &m_CombinedWorldMatrix; }
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	const _float3& Get_RootMotionDelta() const;
 	void Set_Anim(_uint iAnimIdx, _bool isLoop = false, _float fBlendDuration = g_kDefaultBlendDuration);

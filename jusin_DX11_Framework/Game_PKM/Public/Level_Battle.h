@@ -19,6 +19,7 @@ class CBattle_MoveMenu;
 class CBattle_InputDirector;
 class CBattle_PokemonListener;
 class CBattle_ExpGainListener;
+class CBattle_PlateListener;
 
 class CLevel_Battle final : public CLevel
 {
@@ -52,6 +53,7 @@ private:
 	CBattle_InputDirector* m_pInputDirector = { nullptr };
 	CBattle_PokemonListener* m_pPokemonListeners[g_kBattleSideCount] = { nullptr, nullptr };
 	CBattle_ExpGainListener* m_pExpGainListener = { nullptr };
+	CBattle_PlateListener* m_pBattlePlateListener = { nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
 	TRAINER_DATA m_tOpponentTrainer = {};
 

@@ -15,6 +15,31 @@ void CBattlePlate::Bind(CBattle_Manager* pManager)
 	m_pManager = pManager;
 }
 
+void CBattlePlate::Snap_HPDisplay()
+{
+	if (nullptr == m_pManager)
+		return;
+
+	auto Read_HP01 = [](CBattler* pBattler) -> _float
+		{
+			if (nullptr == pBattler)
+				return 0.f;
+
+			const _ushort iCur = pBattler->Get_CurrentHP();
+			const _ushort iMax = pBattler->Get_MaxHP();
+			return (iMax > 0) ? (static_cast<_float>(iCur) / static_cast<_float>(iMax)) : 0.f;
+		};
+
+	m_fPlayerHP01_Display = Read_HP01(m_pManager->Get_Battler(g_kBattleSide_Player));
+	m_fEnemyHP01_Display = Read_HP01(m_pManager->Get_Battler(g_kBattleSide_Opponent));
+
+	if (nullptr != m_pPlayer_HP)
+		m_pPlayer_HP->Set_FillAmount(m_fPlayerHP01_Display);
+
+	if (nullptr != m_pEnemy_HP)
+		m_pEnemy_HP->Set_FillAmount(m_fEnemyHP01_Display);
+}
+
 HRESULT CBattlePlate::Resolve_Widgets()
 {
 	m_pPlayer_HP = Find_Widget_As<CUIProgressBar>("widget_005");
@@ -68,27 +93,10 @@ void CBattlePlate::On_Refresh()
 	if (nullptr == m_pManager)
 		return;
 
-	auto Read_HP01 = [](CBattler* pBattler) -> _float
-		{
-			if (nullptr == pBattler)
-				return 0.f;
-
-			const _ushort iCur = pBattler->Get_CurrentHP();
-			const _ushort iMax = pBattler->Get_MaxHP();
-			return (iMax > 0) ? (static_cast<_float>(iCur) / static_cast<_float>(iMax)) : 0.f;
-		};
+	Snap_HPDisplay();
 
 	CBattler* pPlayer = m_pManager->Get_Battler(g_kBattleSide_Player);
 	CBattler* pEnemy = m_pManager->Get_Battler(g_kBattleSide_Opponent);
-
-	m_fPlayerHP01_Display = Read_HP01(pPlayer);
-	m_fEnemyHP01_Display = Read_HP01(pEnemy);
-
-	if (nullptr != m_pPlayer_HP)
-		m_pPlayer_HP->Set_FillAmount(m_fPlayerHP01_Display);
-
-	if (nullptr != m_pEnemy_HP)
-		m_pEnemy_HP->Set_FillAmount(m_fEnemyHP01_Display);
 
 	Apply_Name(m_pPlayer_Name, pPlayer);
 	Apply_Name(m_pEnemy_Name, pEnemy);

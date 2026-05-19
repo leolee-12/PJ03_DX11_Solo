@@ -24,6 +24,7 @@ private:
 
 public:
 	void Bind(CBattle_Manager* pManager);
+	void Snap_HPDisplay();
 
 protected:
 	virtual HRESULT Resolve_Widgets() override;

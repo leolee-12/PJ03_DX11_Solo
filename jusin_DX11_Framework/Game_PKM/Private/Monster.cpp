@@ -55,7 +55,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	m_pModelCom->Set_AnimationIndex(m_iCurrAnim, true);
 
 	m_pTransformCom->ScaleTo(2.f, 2.f, 2.f);
-	m_pTransformCom->Rotation(0.f, XMConvertToRadians(190.f), 0.f);
+	m_pTransformCom->Rotation(XMConvertToRadians(-5.f), XMConvertToRadians(190.f), 0.f);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.5f, -1.f, -2.8f, 1.f));
 	return S_OK;
 }
@@ -67,6 +67,10 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
+	// 0 : Idle
+	// 19 : Sleep_Loop
+	// 20 : Sleep_End
+
 	if (m_pGameInstance->Key_Down(DIK_1))
 	{
 		m_iCurrAnim++;

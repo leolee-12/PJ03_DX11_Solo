@@ -47,6 +47,7 @@ public:
 
 	// P7-B 신규: anim 제어 + 페이싱 락 연동
 	void  Set_Manager(CBattle_Manager* pManager);
+	HRESULT Apply_Switch(POKEMON_INSTANCE* pNewInstance);
 	void  Play_Attack();
 	void  Play_Hurt();
 	void  Play_Enter();
@@ -58,7 +59,11 @@ private:
 	POKEMON_INSTANCE* m_pInstance = { nullptr };
 	_uint m_iSide = { g_kBattleSide_Player };
 	WNameID m_strBodyProtoTag = {};
+	WNameID m_strShaderProtoTag = {};
 	WNameID m_strSpeciesModelTag = {};
+	_uint m_iDefaultAnim = { 0 };
+	_bool m_bLoop = { true };
+	_float m_fScale = { 1.f };
 	const CRenderRule* m_pRenderRule = { nullptr };
 
 	// P7-B 신규
@@ -71,7 +76,7 @@ private:
 	_bool      m_bLockHeld = { false };
 
 private:
-	HRESULT Ready_PartObjects(const POKEMON_DESC* pDesc);
+	HRESULT Ready_PartObjects();
 	void    Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration);
 
 public:
