@@ -84,6 +84,11 @@ HRESULT CCamera_Free::Render()
 	return S_OK;
 }
 
+void CCamera_Free::Flush_PipeLine()
+{
+	__super::Update(0.f);
+}
+
 CCamera_Free* CCamera_Free::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CCamera_Free* pInstance = new CCamera_Free(pDevice, pContext);

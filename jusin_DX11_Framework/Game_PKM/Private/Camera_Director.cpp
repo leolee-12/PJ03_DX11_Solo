@@ -10,9 +10,6 @@ IMPLEMENT_SINGLETON(CCamera_Director)
 
 namespace
 {
-	/* CAMERA_POSE 의 선형 보간 helper. Up 은 보간하지 않고 b.vUp 그대로 채택(§4.1).
-	   fFovY 는 M7 까지 미사용이라 b.fFovY 그대로 — 두 Pose 가 모두 0 인 일반 케이스에선 의미 없음.
-*/
 	CAMERA_POSE Lerp_Pose(const CAMERA_POSE& a, const CAMERA_POSE& b, _float t)
 	{
 		CAMERA_POSE r;
@@ -29,6 +26,145 @@ namespace
 		r.vUp = b.vUp;
 		r.fFovY = b.fFovY;
 		return r;
+	}
+
+	CCamera_Sequence* Build_Tackle_Physical_Sequence()
+	{
+		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
+		if (nullptr == pSeq)
+			return nullptr;
+
+		CAMERA_SHOT_DESC shot = {};
+
+		shot.eType = CAMERA_SHOT_TYPE::CUT;
+		shot.fDuration = 0.35f;
+		shot.fBlendTime = 0.f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::ATTACKER;
+		shot.vPositionOffset = _float3(2.0f, 2.0f, -2.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.45f;
+		shot.fBlendTime = 0.25f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.vPositionOffset = _float3(-1.0f, 2.0f, -4.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.35f;
+		shot.fBlendTime = 0.18f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.vPositionOffset = _float3(0.5f, 1.5f, -2.5f);
+		shot.vLookAtOffset = _float3(0.0f, 0.9f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		return pSeq;
+	}
+
+	CCamera_Sequence* Build_Ranged_Energy_Sequence()
+	{
+		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
+		if (nullptr == pSeq)
+			return nullptr;
+
+		CAMERA_SHOT_DESC shot = {};
+
+		shot.eType = CAMERA_SHOT_TYPE::CUT;
+		shot.fDuration = 0.25f;
+		shot.fBlendTime = 0.f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.vPositionOffset = _float3(-2.5f, 2.2f, -3.5f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot = {};
+		shot.eType = CAMERA_SHOT_TYPE::FOLLOW_LOOKAT;
+		shot.fDuration = 0.65f;
+		shot.fBlendTime = 0.25f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.vPositionOffset = _float3(0.0f, 2.0f, -5.0f);
+		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot = {};
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.35f;
+		shot.fBlendTime = 0.18f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
+		shot.vPositionOffset = _float3(-1.2f, 1.6f, -2.2f);
+		shot.vLookAtOffset = _float3(0.0f, 0.9f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		return pSeq;
+	}
+
+	CCamera_Sequence* Build_Area_Wide_Sequence()
+	{
+		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
+		if (nullptr == pSeq)
+			return nullptr;
+
+		CAMERA_SHOT_DESC shot = {};
+
+		shot.eType = CAMERA_SHOT_TYPE::CUT;
+		shot.fDuration = 0.3f;
+		shot.fBlendTime = 0.f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.vPositionOffset = _float3(0.0f, 4.8f, -6.2f);
+		shot.vLookAtOffset = _float3(0.0f, 0.8f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot = {};
+		shot.eType = CAMERA_SHOT_TYPE::FOLLOW_LOOKAT;
+		shot.fDuration = 0.75f;
+		shot.fBlendTime = 0.35f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.vPositionOffset = _float3(0.0f, 5.6f, -7.0f);
+		shot.vLookAtOffset = _float3(0.0f, 0.7f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot = {};
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.4f;
+		shot.fBlendTime = 0.25f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
+		shot.vPositionOffset = _float3(-3.2f, 3.0f, -6.0f);
+		shot.vLookAtOffset = _float3(0.0f, 0.8f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		return pSeq;
+	}
+
+	CCamera_Sequence* Build_Camera_Sequence(CAMERA_SEQUENCE_ID eID)
+	{
+		switch (eID)
+		{
+		case CAMERA_SEQUENCE_ID::TACKLE_PHYSICAL:
+			return Build_Tackle_Physical_Sequence();
+
+		case CAMERA_SEQUENCE_ID::RANGED_ENERGY:
+			return Build_Ranged_Energy_Sequence();
+
+		case CAMERA_SEQUENCE_ID::AREA_WIDE:
+			return Build_Area_Wide_Sequence();
+
+		case CAMERA_SEQUENCE_ID::NONE:
+		case CAMERA_SEQUENCE_ID::HIT_ONLY:
+		case CAMERA_SEQUENCE_ID::BUFF_SELF:
+		default:
+			return nullptr;
+		}
 	}
 }
 
@@ -120,8 +256,45 @@ void CCamera_Director::Play_Sequence(CCamera_Sequence* pSeq)
 
 	m_pCurrentSequence = pSeq;
 	Safe_AddRef(m_pCurrentSequence);
+	m_eCurrentSequenceID = CAMERA_SEQUENCE_ID::NONE;
 
 	Set_Mode(CAMERA_MODE::CINEMATIC);
+}
+
+_bool CCamera_Director::Play_Sequence(CAMERA_SEQUENCE_ID eID)
+{
+	CCamera_Sequence* pSeq = Build_Camera_Sequence(eID);
+	if (nullptr == pSeq)
+		return false;
+
+	Play_Sequence(pSeq);
+	m_eCurrentSequenceID = eID;
+	Safe_Release(pSeq);
+
+	return true;
+}
+
+_float CCamera_Director::Get_Sequence_Duration(CAMERA_SEQUENCE_ID eID) const
+{
+	CCamera_Sequence* pSeq = Build_Camera_Sequence(eID);
+	if (nullptr == pSeq)
+		return 0.f;
+
+	const _float fDuration = pSeq->Get_Total_Duration();
+	Safe_Release(pSeq);
+
+	return fDuration;
+}
+
+void CCamera_Director::Return_To_BattleDefault(_float fBlendTime)
+{
+	Stop_Sequence();
+	Set_Mode(CAMERA_MODE::BATTLE_DEFAULT);
+
+	if (fBlendTime <= 0.f)
+		Cut_To(m_DefaultBattlePose);
+	else
+		Blend_To(m_DefaultBattlePose, fBlendTime);
 }
 
 void CCamera_Director::Stop_Sequence()
@@ -134,6 +307,34 @@ void CCamera_Director::Stop_Sequence()
 
 	if (CAMERA_MODE::CINEMATIC == m_eMode)
 		Set_Mode(CAMERA_MODE::BATTLE_DEFAULT);
+
+	m_ActiveShotPose = {};
+}
+
+CAMERA_SHOT_TYPE CCamera_Director::Get_CurrentShotType() const
+{
+	if (nullptr == m_pCurrentSequence)
+		return CAMERA_SHOT_TYPE::END;
+
+	const CAMERA_SHOT_DESC* pShot = m_pCurrentSequence->Get_Current_Shot();
+	return (nullptr != pShot) ? pShot->eType : CAMERA_SHOT_TYPE::END;
+}
+
+_float CCamera_Director::Get_CurrentShotElapsed() const
+{
+	if (nullptr == m_pCurrentSequence)
+		return 0.f;
+
+	return m_pCurrentSequence->Get_Elapsed_In_Shot();
+}
+
+_float CCamera_Director::Get_CurrentShotDuration() const
+{
+	if (nullptr == m_pCurrentSequence)
+		return 0.f;
+
+	const CAMERA_SHOT_DESC* pShot = m_pCurrentSequence->Get_Current_Shot();
+	return (nullptr != pShot) ? pShot->fDuration : 0.f;
 }
 
 void CCamera_Director::Start_Shake(_float fPower, _float fFrequency, _float fDuration)
@@ -168,19 +369,22 @@ void CCamera_Director::Tick(_float fTimeDelta)
 			const _bool bJustEntered =
 				(m_pCurrentSequence->Get_Elapsed_In_Shot() <= fTimeDelta + FLT_EPSILON);
 
-			const CAMERA_POSE shotPose =
-				(CAMERA_SHOT_TYPE::RETURN_DEFAULT == pShot->eType)
-				? m_DefaultBattlePose
-				: Evaluate_Shot(*pShot);
-
 			if (bJustEntered)
 			{
+				m_ActiveShotPose =
+					(CAMERA_SHOT_TYPE::RETURN_DEFAULT == pShot->eType)
+					? m_DefaultBattlePose
+					: Evaluate_Shot(*pShot);
+
 				const _float fBlend =
 					(CAMERA_SHOT_TYPE::CUT == pShot->eType) ? 0.f : pShot->fBlendTime;
-				Begin_Blend(shotPose, fBlend);
+				Begin_Blend(m_ActiveShotPose, fBlend);
 			}
 
-			basePose = shotPose;
+			if (CAMERA_SHOT_TYPE::FOLLOW_LOOKAT == pShot->eType)
+				basePose = Evaluate_Shot(*pShot);
+			else
+				basePose = m_ActiveShotPose;
 		}
 	}
 	else if (CAMERA_MODE::BATTLE_DEFAULT == m_eMode)
@@ -203,6 +407,9 @@ void CCamera_Director::Tick(_float fTimeDelta)
 		finalPose.vPosition.z + vShakeOffset.z);
 
 	Apply_Pose_To_Camera(finalPose);
+
+	if (nullptr != m_pCamera)
+		m_pCamera->Flush_PipeLine();
 }
 
 void CCamera_Director::Begin_Blend(const CAMERA_POSE& target, _float fBlendTime)

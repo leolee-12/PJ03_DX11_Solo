@@ -18,7 +18,6 @@
 #include "Game_API.h"
 #include "Camera_Free.h"
 #include "Camera_Director.h"
-#include "Camera_Sequence.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -47,87 +46,44 @@ namespace
 		}
 	}
 
-	CCamera_Sequence* Build_Test_Sequence()
+	const _tchar* Get_CameraModeName(CAMERA_MODE eMode)
 	{
-		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
-		if (nullptr == pSeq)
-			return nullptr;
-
-		CAMERA_SHOT_DESC shot = {};
-
-		shot.eType = CAMERA_SHOT_TYPE::CUT;
-		shot.fDuration = 0.4f;
-		shot.fBlendTime = 0.f;
-		shot.vPositionOffset = _float3(-5.0f, 2.5f, -3.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.5f, 0.0f);
-		pSeq->Push_Shot(shot);
-
-		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
-		shot.fDuration = 0.7f;
-		shot.fBlendTime = 0.4f;
-		shot.vPositionOffset = _float3(5.0f, 2.5f, -3.0f);
-		pSeq->Push_Shot(shot);
-
-		shot.fDuration = 0.6f;
-		shot.fBlendTime = 0.3f;
-		shot.vPositionOffset = _float3(0.0f, 1.5f, -4.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
-		pSeq->Push_Shot(shot);
-
-		shot.eType = CAMERA_SHOT_TYPE::RETURN_DEFAULT;
-		shot.fDuration = 0.6f;
-		shot.fBlendTime = 0.4f;
-		shot.vPositionOffset = _float3();
-		shot.vLookAtOffset = _float3();
-		pSeq->Push_Shot(shot);
-
-		return pSeq;
+		switch (eMode)
+		{
+		case CAMERA_MODE::FIELD: return TEXT("FIELD");
+		case CAMERA_MODE::BATTLE_DEFAULT: return TEXT("BATTLE_DEFAULT");
+		case CAMERA_MODE::CINEMATIC: return TEXT("CINEMATIC");
+		case CAMERA_MODE::DEBUG_FREE: return TEXT("DEBUG_FREE");
+		default: return TEXT("UNKNOWN");
+		}
 	}
 
-	CCamera_Sequence* Build_Test_TargetSequence()
+	const _tchar* Get_CameraShotTypeName(CAMERA_SHOT_TYPE eType)
 	{
-		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
-		if (nullptr == pSeq)
-			return nullptr;
+		switch (eType)
+		{
+		case CAMERA_SHOT_TYPE::CUT: return TEXT("CUT");
+		case CAMERA_SHOT_TYPE::BLEND_TO: return TEXT("BLEND_TO");
+		case CAMERA_SHOT_TYPE::FOLLOW_LOOKAT: return TEXT("FOLLOW_LOOKAT");
+		case CAMERA_SHOT_TYPE::ORBIT: return TEXT("ORBIT");
+		case CAMERA_SHOT_TYPE::DOLLY: return TEXT("DOLLY");
+		case CAMERA_SHOT_TYPE::SHAKE_ONLY: return TEXT("SHAKE_ONLY");
+		case CAMERA_SHOT_TYPE::RETURN_DEFAULT: return TEXT("RETURN_DEFAULT");
+		default: return TEXT("NONE");
+		}
+	}
 
-		CAMERA_SHOT_DESC shot = {};
-
-		shot.eType = CAMERA_SHOT_TYPE::CUT;
-		shot.fDuration = 0.5f;
-		shot.fBlendTime = 0.f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::ATTACKER;
-		shot.vPositionOffset = _float3(2.0f, 2.0f, -2.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
-		pSeq->Push_Shot(shot);
-
-		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
-		shot.fDuration = 0.7f;
-		shot.fBlendTime = 0.4f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.vPositionOffset = _float3(0.0f, 5.0f, -5.0f);
-		shot.vLookAtOffset = _float3(0.0f, 0.5f, 0.0f);
-		pSeq->Push_Shot(shot);
-
-		shot.fDuration = 0.6f;
-		shot.fBlendTime = 0.3f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = _float3(0.0f, 2.0f, -3.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
-		pSeq->Push_Shot(shot);
-
-		shot.eType = CAMERA_SHOT_TYPE::RETURN_DEFAULT;
-		shot.fDuration = 0.6f;
-		shot.fBlendTime = 0.4f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::NONE;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::NONE;
-		shot.vPositionOffset = _float3();
-		shot.vLookAtOffset = _float3();
-		pSeq->Push_Shot(shot);
-
-		return pSeq;
+	const _tchar* Get_CameraSequenceName(CAMERA_SEQUENCE_ID eID)
+	{
+		switch (eID)
+		{
+		case CAMERA_SEQUENCE_ID::TACKLE_PHYSICAL: return TEXT("TACKLE_PHYSICAL");
+		case CAMERA_SEQUENCE_ID::RANGED_ENERGY: return TEXT("RANGED_ENERGY");
+		case CAMERA_SEQUENCE_ID::AREA_WIDE: return TEXT("AREA_WIDE");
+		case CAMERA_SEQUENCE_ID::HIT_ONLY: return TEXT("HIT_ONLY");
+		case CAMERA_SEQUENCE_ID::BUFF_SELF: return TEXT("BUFF_SELF");
+		default: return TEXT("NONE");
+		}
 	}
 }
 NS_END
@@ -175,29 +131,6 @@ void CLevel_Battle::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F3))
 		m_pGameInstance->Toggle_Debug();
 
-	if (m_pGameInstance->Key_Down(DIK_F7))
-	{
-		CCamera_Director::GetInstance()->Start_Shake(0.1f, 35.f, 0.4f);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F8))
-	{
-		if (CCamera_Sequence* pSeq = Build_Test_Sequence())
-		{
-			CCamera_Director::GetInstance()->Play_Sequence(pSeq);
-			Safe_Release(pSeq);
-		}
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F9))
-	{
-		if (CCamera_Sequence* pSeq = Build_Test_TargetSequence())
-		{
-			CCamera_Director::GetInstance()->Play_Sequence(pSeq);
-			Safe_Release(pSeq);
-		}
-	}
-
 	if (nullptr == m_pBattleManager)
 		return;
 
@@ -243,6 +176,26 @@ HRESULT CLevel_Battle::Render()
 		strTitle += Get_BattlePhaseName(m_pBattleManager->Get_Phase());
 		strTitle += TEXT(" | Turn: ");
 		strTitle += to_wstring(tTurn.iTurnNumber);
+
+		CCamera_Director* pDirector = CCamera_Director::GetInstance();
+		strTitle += TEXT(" | Cam: ");
+		strTitle += Get_CameraModeName(pDirector->Get_Mode());
+
+		if (pDirector->Is_Sequence_Playing())
+		{
+			strTitle += TEXT(" ");
+			strTitle += Get_CameraSequenceName(pDirector->Get_CurrentSequenceID());
+			strTitle += TEXT(" ");
+			strTitle += Get_CameraShotTypeName(pDirector->Get_CurrentShotType());
+			strTitle += TEXT(" ");
+			strTitle += to_wstring(static_cast<_uint>(pDirector->Get_CurrentShotElapsed() * 1000.f));
+			strTitle += TEXT("/");
+			strTitle += to_wstring(static_cast<_uint>(pDirector->Get_CurrentShotDuration() * 1000.f));
+			strTitle += TEXT("ms");
+		}
+
+		if (pDirector->Is_Shake_Active())
+			strTitle += TEXT(" Shake");
 
 		SetWindowText(m_pGameInstance->Get_HWND(), strTitle.c_str());
 	}
@@ -456,7 +409,7 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 
 		tDesc.iDefaultAnim = 17;
 		tDesc.bLoop = true;
-		tDesc.fScale = 0.4f;
+		tDesc.fScale = 1.f;
 		tDesc.vPos = m_pBattleManager->Get_TrainerPos(iSide);
 		tDesc.fYaw = m_pBattleManager->Get_TrainerYaw(iSide);
 

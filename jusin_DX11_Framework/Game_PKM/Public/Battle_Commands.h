@@ -1,5 +1,6 @@
 #pragma once
 #include "IBattleCommand.h"
+#include "Camera_Defines.h"
 
 NS_BEGIN(Game_PKM)
 
@@ -13,6 +14,7 @@ public:
 		_uint iMoveSlot = { 0 };
 		_uint iTargetSide = { g_kBattleSide_Opponent };
 		_uint iTargetSlot = { 0 };
+		CAMERA_SEQUENCE_ID eCameraSequence = { CAMERA_SEQUENCE_ID::NONE };
 	};
 
 private:

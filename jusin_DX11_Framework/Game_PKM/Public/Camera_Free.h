@@ -29,6 +29,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	void Flush_PipeLine();
+
 private:
 	_float	m_fMouseSensor = {};
 	_bool m_bControlEnabled = { false };

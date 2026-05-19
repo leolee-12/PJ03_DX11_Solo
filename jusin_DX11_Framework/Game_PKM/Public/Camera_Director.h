@@ -33,9 +33,18 @@ public:
 	void Cut_To(const CAMERA_POSE& target);
 	void Blend_To(const CAMERA_POSE& target, _float fBlendTime);
 
-	void Play_Sequence(CCamera_Sequence* pSeq);                    // M3 신규
-	void Stop_Sequence();                                          // M3 신규
-	_bool Is_Sequence_Playing() const { return nullptr != m_pCurrentSequence; }  // M3 신규
+	void Play_Sequence(CCamera_Sequence* pSeq);
+	_bool Play_Sequence(CAMERA_SEQUENCE_ID eID);
+
+	_float Get_Sequence_Duration(CAMERA_SEQUENCE_ID eID) const;
+	void Return_To_BattleDefault(_float fBlendTime);
+
+	void Stop_Sequence();
+	_bool Is_Sequence_Playing() const { return nullptr != m_pCurrentSequence; }
+	CAMERA_SEQUENCE_ID Get_CurrentSequenceID() const { return m_eCurrentSequenceID; }
+	CAMERA_SHOT_TYPE Get_CurrentShotType() const;
+	_float Get_CurrentShotElapsed() const;
+	_float Get_CurrentShotDuration() const;
 
 	void Start_Shake(_float fPower, _float fFrequency, _float fDuration);
 	void Stop_Shake();
@@ -50,6 +59,7 @@ private:
 	CAMERA_MODE      m_eMode = { CAMERA_MODE::FIELD };
 
 	CAMERA_POSE      m_CurrentPose = {};
+	CAMERA_POSE      m_ActiveShotPose = {};
 	CAMERA_POSE      m_DefaultBattlePose = {};
 	CAMERA_POSE      m_PreviousPose = {};
 	_float           m_fBlendElapsed = { 0.f };
@@ -57,6 +67,7 @@ private:
 	_bool            m_bBlending = { false };
 
 	CCamera_Sequence* m_pCurrentSequence = { nullptr };
+	CAMERA_SEQUENCE_ID m_eCurrentSequenceID = { CAMERA_SEQUENCE_ID::NONE };
 	CCamera_Shake m_Shake;
 
 private:
