@@ -16,6 +16,7 @@ NS_END
 NS_BEGIN(Game_PKM)
 class CMenu;
 class CEffect;
+class CBattleMsg;
 
 class CLevel_GamePlay : public CLevel
 {
@@ -31,12 +32,25 @@ public:
 	virtual void OnResume() override;
 
 	void Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTarget);
+	_bool Start_Dialogue(const _wstring& strDialogueKey);
+	_bool Start_Dialogue_Text(const _wstring& strMessage);
+	_bool Is_Dialogue_Playing() const;
+	_bool Is_Dialogue_Done() const;
+	void Close_Dialogue();
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
 	CUISequence* m_pFadeBattleSeq = { nullptr };
 	CMenu* m_pMenu = { nullptr };
+
+	CUISequence* m_pDialogueSeq = { nullptr };   // weak
+	CBattleMsg* m_pDialogueMsg = { nullptr };    // weak - Hub owns
+	_bool m_bDialogueActive = { false };
+	_wstring m_strActiveDialogueKey;
+
+	vector<_wstring> m_DialoguePages;
+	_uint m_iDialoguePageIndex = { 0 };
 
 	// F6 트랜지션 상태 머신
 	enum class TRANSITION_STATE { IDLE, BUSY, END };

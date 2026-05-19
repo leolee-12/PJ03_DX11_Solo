@@ -12,13 +12,6 @@ class CActor;
 class CPlayer_LGPE final : public CContainerObject
 {
 private:
-	enum HERO_ANIM
-	{
-		IDLE = 17,
-		RUN = 76
-	};
-
-private:
 	CPlayer_LGPE(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer_LGPE(const CPlayer_LGPE& Prototype);
 	virtual ~CPlayer_LGPE() = default;
@@ -37,8 +30,9 @@ private:
 	_uint m_iState = {};
 	CNavigation* m_pNavigationCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
-	CActor* m_pCurrentInteractTarget = { nullptr };   // weak - 매 프레임 후보 갱신
-	unordered_set<CActor*> m_PrevTouchSet;             // 직전 프레임 overlap 액터 (weak)
+	CActor* m_pCurrentInteractTarget = { nullptr };	// weak
+	unordered_set<CActor*> m_PrevTouchSet;			// 직전 프레임 overlap 액터 (weak)
+	WNameID m_strBodyModelProtoTag = {};
 
 private:
 	HRESULT Ready_Components();

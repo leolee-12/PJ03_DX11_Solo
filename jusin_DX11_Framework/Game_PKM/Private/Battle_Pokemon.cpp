@@ -186,9 +186,9 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 	return S_OK;
 }
 
-void CBattle_Pokemon::Play_Attack()
+void CBattle_Pokemon::Play_Attack(ANIM_KIND eAttackKind)
 {
-	Play_Anim_NonLoop(ANIM_KIND::ATTACK, 3.f);
+	Play_Anim_NonLoop(eAttackKind, 3.f);
 }
 
 void CBattle_Pokemon::Play_Hurt()

@@ -8,9 +8,7 @@ float g_fFarZ;
 // 재질
 texture2D g_TexDiff;
 texture2D g_TexSpec;
-texture2D g_TexAmbt_R;
-texture2D g_TexAmbt_G;
-texture2D g_TexAmbt_B;
+texture2D g_TexAmbt;
 texture2D g_TexEmit;
 texture2D g_TexLycl;
 
@@ -127,10 +125,9 @@ PS_OUT PS_DSAAA(PS_IN In)	// 2번 패스
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
-	Out.vAmbt = vector(	g_TexAmbt_R.Sample(LinearSampler, In.vTex).r,
-						g_TexAmbt_G.Sample(LinearSampler, In.vTex).r,
-						g_TexAmbt_B.Sample(LinearSampler, In.vTex).r,
-						g_TexSpec.Sample(LinearSampler, In.vTex).r);
+	Out.vAmbt = vector(
+		g_TexAmbt.Sample(LinearSampler, In.vTex).rgb,
+		g_TexSpec.Sample(LinearSampler, In.vTex).r);
 	return Out;
 }
 

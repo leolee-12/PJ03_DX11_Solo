@@ -5,6 +5,7 @@
 #include "UIButton_Layered.h"
 #include "UIButton_Group.h"
 #include "Menu.h"
+#include "BattleMsg.h"
 #include "Game_API.h"
 #include "Level_Battle.h"
 #include "Level_Capture.h"
@@ -28,6 +29,77 @@
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
 NS_END
+
+namespace
+{
+	_bool Resolve_GamePlayDialogueText(const _wstring& strKey, _wstring& strOut)
+	{
+		struct DIALOGUE_TEXT
+		{
+			const wchar_t* pKey = nullptr;
+			const wchar_t* pText = nullptr;
+		};
+
+		static constexpr DIALOGUE_TEXT DialogueTexts[] =
+		{
+				{ L"dialogue_npc_doctor", L"많은 곳을 탐험하여 모든 포켓몬을 도감에 기록해보거라.\f마을마다 있는 체육관에 도전해보는 것은 어떻겠느냐 ? " },
+				{ L"dialogue_npc_juveniles", L"나는 포켓몬을 키우고 있어.\f풀숲에서 튀어나오는 포켓몬이나, 승부를 걸어오는 트레이너로부터 나를 지켜주거든." },
+				{ L"dialogue_npc_fat", L"과학의 힘이란 대단해!" },
+				{ L"dialogue_npc_nurse", L"안녕하세요. 포켓몬을 회복시켜 드리겠습니다." },
+
+				{ L"dialogue_trainer_shortpants", L"눈이 마주치면 포켓몬 배틀! 그것이 규칙이야." },
+				{ L"dialogue_trainer_rock", L"눈이 마주쳤군! 포켓몬 배틀을 시작하자!" },
+				{ L"dialogue_trainer_water", L"물 타입 포켓몬의 힘을 보여주지!" },
+
+				{ L"dialogue_pokemon_pm0001_00", L"이상해씨가 조용히 햇빛을 받고 있다." },
+				{ L"dialogue_pokemon_pm0004_00", L"파이리가 꼬리의 불꽃을 살랑이고 있다." },
+				{ L"dialogue_pokemon_pm0007_00", L"꼬부기가 이쪽을 빤히 바라본다." },
+				{ L"dialogue_pokemon_pm0010_00", L"캐터피가 작은 몸을 꿈틀거린다." },
+				{ L"dialogue_pokemon_pm0025_00", L"피카츄가 볼을 반짝이며 울었다." },
+				{ L"dialogue_pokemon_pm0041_00", L"주뱃이 날개를 퍼덕이고 있다." },
+				{ L"dialogue_pokemon_pm0043_00", L"뚜벅쵸가 잎사귀를 흔들고 있다." },
+				{ L"dialogue_pokemon_pm0059_00", L"윈디가 늠름하게 자리를 지키고 있다." },
+				{ L"dialogue_pokemon_pm0074_00", L"꼬마돌이 단단한 몸을 굴릴 준비를 한다." },
+				{ L"dialogue_pokemon_pm0095_00", L"롱스톤이 거대한 몸을 낮게 웅크리고 있다." },
+				{ L"dialogue_pokemon_pm0121_00", L"아쿠스타의 보석이 은은하게 빛난다." },
+				{ L"dialogue_pokemon_pm0130_00", L"갸라도스가 위압적으로 포효한다." },
+		};
+
+		for (const DIALOGUE_TEXT& DialogueText : DialogueTexts)
+		{
+				if (strKey == DialogueText.pKey)
+				{
+						strOut = DialogueText.pText;
+						return true;
+				}
+		}
+
+		return false;
+	}
+
+	void Build_DialoguePages(const _wstring& strMessage, vector<_wstring>& Pages)
+	{
+		Pages.clear();
+
+		_wstring strPage;
+		for (wchar_t ch : strMessage)
+		{
+			if (L'\f' == ch)
+			{
+				if (false == strPage.empty())
+					Pages.push_back(strPage);
+
+				strPage.clear();
+				continue;
+			}
+
+			strPage.push_back(ch);
+		}
+
+		if (false == strPage.empty())
+			Pages.push_back(strPage);
+	}
+}
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel{ pDevice, pContext }
@@ -78,6 +150,40 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	if (m_bDialogueActive)
+	{
+		UI_Update_All(fTimeDelta);
+
+		if (m_pGameInstance->Key_Down(DIK_RETURN) ||
+			m_pGameInstance->Key_Down(DIK_SPACE))
+		{
+			if (nullptr == m_pDialogueMsg)
+			{
+				Close_Dialogue();
+				return;
+			}
+
+			if (false == m_pDialogueMsg->Is_Done())
+			{
+				m_pDialogueMsg->Complete();
+			}
+			else
+			{
+				if (m_iDialoguePageIndex + 1 < m_DialoguePages.size())
+				{
+					++m_iDialoguePageIndex;
+					m_pDialogueMsg->Set_Message(m_DialoguePages[m_iDialoguePageIndex]);
+				}
+				else
+				{
+					Close_Dialogue();
+				}
+			}
+		}
+
+		return;
+	}
+
 	/* 트랜지션 진행 중이면 입력 분기 전부 차단. 경과 누적 후 임계값 도달 시 Push_Level. */
 	if (TRANSITION_STATE::BUSY == m_eTransition)
 	{
@@ -315,6 +421,69 @@ void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTar
 	m_fTransitionElapsed = 0.f;
 }
 
+_bool CLevel_GamePlay::Start_Dialogue(const _wstring& strDialogueKey)
+{
+	_wstring strMessage;
+	if (false == Resolve_GamePlayDialogueText(strDialogueKey, strMessage))
+		return false;
+
+	if (false == Start_Dialogue_Text(strMessage))
+		return false;
+
+	m_strActiveDialogueKey = strDialogueKey;
+	return true;
+}
+
+_bool CLevel_GamePlay::Start_Dialogue_Text(const _wstring& strMessage)
+{
+	if (true == m_bDialogueActive)
+		return false;
+
+	if (nullptr == m_pDialogueMsg)
+		return false;
+
+	if (true == strMessage.empty())
+		return false;
+
+	Build_DialoguePages(strMessage, m_DialoguePages);
+	if (true == m_DialoguePages.empty())
+		return false;
+
+	m_iDialoguePageIndex = 0;
+	m_strActiveDialogueKey.clear();
+
+	m_pDialogueMsg->Set_Message(m_DialoguePages[m_iDialoguePageIndex]);
+	m_pDialogueMsg->Open(true);
+
+	m_pGameInstance->Set_InputState(INPUT_STATE::MENU);
+	m_bDialogueActive = true;
+
+	return true;
+}
+
+_bool CLevel_GamePlay::Is_Dialogue_Playing() const
+{
+	return m_bDialogueActive;
+}
+
+_bool CLevel_GamePlay::Is_Dialogue_Done() const
+{
+	return nullptr == m_pDialogueMsg ? true : m_pDialogueMsg->Is_Done();
+}
+
+void CLevel_GamePlay::Close_Dialogue()
+{
+	if (nullptr != m_pDialogueMsg)
+		m_pDialogueMsg->Close();
+
+	m_bDialogueActive = false;
+	m_strActiveDialogueKey.clear();
+	m_DialoguePages.clear();
+	m_iDialoguePageIndex = 0;
+
+	m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+}
+
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
 	m_pGameInstance->Clear_Lights();
@@ -397,166 +566,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 {
-	auto* pRuleManager = CRenderRule_Manager::GetInstance();
-	if (nullptr == pRuleManager)
-		return E_FAIL;
-
-	// 1) 인간 NPC
-	{
-		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_ROCK;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
-			"../../Resources/Models/people/rock/rock_mapping.json");
-
-		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
-		NpcDesc.pBodyDesc = &BodyDesc;
-		NpcDesc.strDialogueKey = L"dialogue_npc_human";
-		NpcDesc.vSpawnPos = _float3(21.f, 0.f, -14.f);   // 검수 시 조정
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
-			CURRENT_LEVEL, strLayerTag,
-			&NpcDesc)))
-			return E_FAIL;
-	}
-
-	// 1) 인간 NPC
-	{
-		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_WATER;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
-			"../../Resources/Models/people/water/water_mapping.json");
-
-		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
-		NpcDesc.pBodyDesc = &BodyDesc;
-		NpcDesc.strDialogueKey = L"dialogue_npc_human";
-		NpcDesc.vSpawnPos = _float3(22.f, 0.f, -14.f);   // 검수 시 조정
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
-			CURRENT_LEVEL, strLayerTag,
-			&NpcDesc)))
-			return E_FAIL;
-	}
-
-	// 1) 인간 NPC
-	{
-		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_FAT;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
-			"../../Resources/Models/people/fat/fat_mapping.json");
-
-		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
-		NpcDesc.pBodyDesc = &BodyDesc;
-		NpcDesc.strDialogueKey = L"dialogue_npc_human";
-		NpcDesc.vSpawnPos = _float3(23.f, 0.f, -14.f);   // 검수 시 조정
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
-			CURRENT_LEVEL, strLayerTag,
-			&NpcDesc)))
-			return E_FAIL;
-	}
-
-	// 1) 인간 NPC
-	{
-		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = PROTO_COM_MODEL_DOCTOR;
-		BodyDesc.iDefaultAnim = 0;
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = 1.f;
-		BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(
-			"../../Resources/Models/people/doctor/doctor_mapping.json");
-
-		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
-		NpcDesc.pBodyDesc = &BodyDesc;
-		NpcDesc.strDialogueKey = L"dialogue_npc_human";
-		NpcDesc.vSpawnPos = _float3(24.f, 0.f, -14.f);   // 검수 시 조정
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
-			CURRENT_LEVEL, strLayerTag,
-			&NpcDesc)))
-			return E_FAIL;
-	}
-
-	// 2) 포켓몬 모델 검수용 NPC
-	{
-		struct POKEMON_PREVIEW_DESC
-		{
-			WNameID strModelProtoTag = {};
-			const _char* pMappingPath = { nullptr };
-			_float3 vSpawnPos = {};
-			_float fScale = { 1.f };
-		};
-
-		const POKEMON_PREVIEW_DESC PokemonPreviews[] =
-		{
-				{ PROTO_COM_MODEL_PM0001_00, "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json", _float3(14.f, 0.f, -18.f), 1.f },
-				{ PROTO_COM_MODEL_PM0004_00, "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json", _float3(16.f, 0.f, -18.f), 1.f },
-				{ PROTO_COM_MODEL_PM0007_00, "../../Resources/Models/pkm/pm0007_00/pm0007_00_mapping.json", _float3(18.f, 0.f, -18.f), 1.f },
-				{ PROTO_COM_MODEL_PM0010_00, "../../Resources/Models/pkm/pm0010_00/pm0010_00_mapping.json", _float3(20.f, 0.f, -18.f), 1.f },
-				{ PROTO_COM_MODEL_PM0025_00, "../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json", _float3(24.f, 0.f, -18.f), 1.f },
-				{ PROTO_COM_MODEL_PM0041_00, "../../Resources/Models/pkm/pm0041_00/pm0041_00_mapping.json", _float3(26.f, 0.f, -18.f), 1.f },
-
-				{ PROTO_COM_MODEL_PM0043_00, "../../Resources/Models/pkm/pm0043_00/pm0043_00_mapping.json", _float3(14.f, 0.f, -21.f), 1.f },
-				{ PROTO_COM_MODEL_PM0059_00, "../../Resources/Models/pkm/pm0059_00/pm0059_00_mapping.json", _float3(16.f, 0.f, -21.f), 1.f },
-				{ PROTO_COM_MODEL_PM0074_00, "../../Resources/Models/pkm/pm0074_00/pm0074_00_mapping.json", _float3(18.f, 0.f, -21.f), 1.f },
-				{ PROTO_COM_MODEL_PM0095_00, "../../Resources/Models/pkm/pm0095_00/pm0095_00_mapping.json", _float3(20.f, 0.f, -21.f), 1.f },
-				{ PROTO_COM_MODEL_PM0121_00, "../../Resources/Models/pkm/pm0121_00/pm0121_00_mapping.json", _float3(22.f, 0.f, -21.f), 1.f },
-				{ PROTO_COM_MODEL_PM0130_00, "../../Resources/Models/pkm/pm0130_00/pm0130_00_mapping.json", _float3(24.f, 0.f, -21.f), 1.f },
-		};
-
-		for (const POKEMON_PREVIEW_DESC& Preview : PokemonPreviews)
-		{
-			CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
-			BodyDesc.strModelProtoTag = Preview.strModelProtoTag;
-			BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-			BodyDesc.iDefaultAnim = 0;
-			BodyDesc.bLoop = true;
-			BodyDesc.fScale = Preview.fScale;
-			BodyDesc.pRenderRule = pRuleManager->Find_OrLoadMappingRule(Preview.pMappingPath);
-
-			if (nullptr == BodyDesc.pRenderRule)
-				return E_FAIL;
-
-			CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-			NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-			NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-			NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
-			NpcDesc.pBodyDesc = &BodyDesc;
-			NpcDesc.strDialogueKey = L"dialogue_npc_pokemon";
-			NpcDesc.vSpawnPos = Preview.vSpawnPos;
-
-			if (FAILED(m_pGameInstance->Add_GameObject(
-				CURRENT_LEVEL, PROTO_OBJ_ACTOR_NPC,
-				CURRENT_LEVEL, strLayerTag,
-				&NpcDesc)))
-				return E_FAIL;
-		}
-	}
-
+	(void)strLayerTag;
 	return S_OK;
 }
 
@@ -637,6 +647,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	
 	m_pRuntimeUI = pSeq;  // weak
 
+	/* Fade */
 	{
 		CUISequence::UISEQUENCE_DESC tFadeDesc{};
 		tFadeDesc.strPath = "../../DataFiles/UI/UI_FadeBattle.uiseq";
@@ -655,6 +666,46 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 
 		pFadeSeq->Set_Visible(false);   // 트리거 전까지 숨김
 		m_pFadeBattleSeq = pFadeSeq;    // weak (Add_GameObject_Ex 가 owner)
+	}
+
+	/* MsgBox */
+	{
+		CUISequence::UISEQUENCE_DESC tDialogueDesc{};
+		tDialogueDesc.strPath = "../../DataFiles/UI/UI_BattleMsg.uiseq";
+		tDialogueDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pDialogueSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDialogueDesc));
+		if (nullptr == pDialogueSeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pDialogueSeq)))
+		{
+			Safe_Release(pDialogueSeq);
+			return E_FAIL;
+		}
+
+		CBattleMsg* pDialogueMsg = CBattleMsg::Create();
+		if (nullptr == pDialogueMsg)
+			return E_FAIL;
+
+		if (FAILED(pDialogueMsg->Initialize(pDialogueSeq)))
+		{
+			Safe_Release(pDialogueMsg);
+			return E_FAIL;
+		}
+
+		pDialogueMsg->Close();
+
+		if (FAILED(UI_Register(pDialogueMsg, ETOUI(LEVEL::GAMEPLAY))))
+		{
+			Safe_Release(pDialogueMsg);
+			return E_FAIL;
+		}
+
+		m_pDialogueSeq = pDialogueSeq;
+		m_pDialogueMsg = pDialogueMsg;      // weak - Hub owns
+		Safe_Release(pDialogueMsg);         // local ref--
 	}
 
 	/* ===== 커서 시퀀스 - Hub 가 단일 인스턴스로 공유 ===== */
@@ -746,6 +797,11 @@ void CLevel_GamePlay::Free()
 	   (Hub::Update_Cursor 가 다음 프레임에 호출되더라도 m_pCursor == nullptr 분기로 빠짐.) */
 	UI_Set_Cursor_Sequence(nullptr);
 	UI_Close_All();
+
+	m_pDialogueMsg = nullptr;
+	m_pDialogueSeq = nullptr;
+	m_bDialogueActive = false;
+	m_strActiveDialogueKey.clear();
 
 	m_pCursorSeq = nullptr;
 	m_pFadeBattleSeq = nullptr;

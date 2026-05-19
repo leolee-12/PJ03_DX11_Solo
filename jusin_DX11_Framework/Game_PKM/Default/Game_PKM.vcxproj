@@ -31,6 +31,7 @@
     <ClInclude Include="..\Public\Battle_Action_Steps.h" />
     <ClInclude Include="..\Public\Battle_AI.h" />
     <ClInclude Include="..\Public\Battle_AnimDef.h" />
+    <ClInclude Include="..\Public\Battle_Camera_Steps.h" />
     <ClInclude Include="..\Public\Battle_CommandMenu.h" />
     <ClInclude Include="..\Public\Battle_Commands.h" />
     <ClInclude Include="..\Public\Battle_Context.h" />
@@ -144,6 +145,7 @@
     <ClCompile Include="..\Private\Battle_Action_Steps.cpp" />
     <ClCompile Include="..\Private\Battle_AI.cpp" />
     <ClCompile Include="..\Private\Battle_AnimDef.cpp" />
+    <ClCompile Include="..\Private\Battle_Camera_Steps.cpp" />
     <ClCompile Include="..\Private\Battle_CommandMenu.cpp" />
     <ClCompile Include="..\Private\Battle_Commands.cpp" />
     <ClCompile Include="..\Private\Battle_EventDispatcher.cpp" />

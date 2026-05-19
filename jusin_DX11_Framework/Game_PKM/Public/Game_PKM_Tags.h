@@ -179,6 +179,9 @@ WNAME_TAG(PROTO_COM_MODEL_DOCTOR, L"Prototype_Component_Model_Doctor");
 WNAME_TAG(PROTO_COM_MODEL_PPL_ROCK, L"Prototype_Component_Model_People_Rock");
 WNAME_TAG(PROTO_COM_MODEL_PPL_WATER, L"Prototype_Component_Model_People_Water");
 WNAME_TAG(PROTO_COM_MODEL_PPL_FAT, L"Prototype_Component_Model_People_Fat");
+WNAME_TAG(PROTO_COM_MODEL_PPL_NURSE, L"Prototype_Component_Model_People_Nurse");
+WNAME_TAG(PROTO_COM_MODEL_PPL_JUVENILES, L"Prototype_Component_Model_People_Juveniles");
+WNAME_TAG(PROTO_COM_MODEL_PPL_SHORTPANTS, L"Prototype_Component_Model_People_Shortpants");
 
 WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN01, L"Prototype_Component_Model_Map_Town01");
 WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN02, L"Prototype_Component_Model_Map_Town02");

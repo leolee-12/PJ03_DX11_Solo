@@ -48,7 +48,7 @@ public:
 	// P7-B 신규: anim 제어 + 페이싱 락 연동
 	void  Set_Manager(CBattle_Manager* pManager);
 	HRESULT Apply_Switch(POKEMON_INSTANCE* pNewInstance);
-	void  Play_Attack();
+	void Play_Attack(ANIM_KIND eAttackKind = ANIM_KIND::ATTACK_PHYSICAL);
 	void  Play_Hurt();
 	void  Play_Enter();
 	void  Play_Faint();

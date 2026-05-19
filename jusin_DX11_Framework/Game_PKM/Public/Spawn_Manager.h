@@ -46,18 +46,18 @@ public:
 	void    Clear();
 
 	HRESULT Register_SpawnRect(const SPAWN_RECT_DESC& tDesc);
-	HRESULT Load_From_File(const _tchar* pFilePath);   // S5 - 텍스트 데이터 로더
+	HRESULT Load_From_File(const _tchar* pFilePath);
 
 	const vector<SPAWN_RECT_RUNTIME>& Get_Runtimes() const { return m_Runtimes; }
 
 #ifdef _DEBUG
-	HRESULT Render_Debug();                            // S5 - Level::Render 에서 호출
+	HRESULT Render_Debug();
 #endif
 
 private:
 	_bool   Prepare_SpawnRect(SPAWN_RECT_RUNTIME& tRuntime);
-	_bool   Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime);   // S2 본문
-	_bool   Spawn_Trainer(SPAWN_RECT_RUNTIME& tRuntime);          // S4 본문
+	_bool   Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime);
+	_bool   Spawn_NPC(SPAWN_RECT_RUNTIME& tRuntime);
 	_bool   Check_DistanceFromPlayer(const _float3& vPos, _float fMin, _float fMax) const;
 	void    Recount_AliveCounts();
 

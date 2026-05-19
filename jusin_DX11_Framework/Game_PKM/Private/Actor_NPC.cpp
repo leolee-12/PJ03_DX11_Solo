@@ -37,9 +37,8 @@ HRESULT CActor_NPC::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(pDesc->vSpawnPos.x, pDesc->vSpawnPos.y, pDesc->vSpawnPos.z, 1.f));
 
-	// S4 추가 - 트레이너 페이로드 캐싱 + 초기 회전 적용
 	m_iSpawnRectID = pDesc->iSpawnRectID;
-	if (pDesc->bIsTrainer)
+	if (pDesc->bIsTrainer || pDesc->bApplyInitialRotation)
 	{
 		m_pTransformCom->Rotation(0.f, pDesc->fInitialRotationY, 0.f);
 	}
@@ -58,6 +57,8 @@ void CActor_NPC::Priority_Update(_float fTimeDelta)
 void CActor_NPC::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
+
+	Update_FaceTurn(fTimeDelta);
 }
 
 void CActor_NPC::Late_Update(_float fTimeDelta)
@@ -68,6 +69,12 @@ void CActor_NPC::Late_Update(_float fTimeDelta)
 HRESULT CActor_NPC::Render()
 {
 	return __super::Render();
+}
+
+void XM_CALLCONV CActor_NPC::Face_To(_fvector vTargetPos)
+{
+	XMStoreFloat3(&m_vFaceTurnTarget, vTargetPos);
+	m_bFaceTurnActive = true;
 }
 
 HRESULT CActor_NPC::Ready_Components(const ACTOR_NPC_DESC* pDesc)
@@ -99,6 +106,60 @@ HRESULT CActor_NPC::Ready_PartObjects(const ACTOR_NPC_DESC* pDesc)
 void CActor_NPC::Cache_Members()
 {
 	m_pBody = Get_Part<CBody>(PART_BODY);
+}
+
+void CActor_NPC::Update_FaceTurn(_float fTimeDelta)
+{
+	if (false == m_bFaceTurnActive)
+		return;
+
+	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vTarget = XMLoadFloat3(&m_vFaceTurnTarget);
+	vTarget = XMVectorSetY(vTarget, XMVectorGetY(vPos));
+
+	_vector vTargetDir = vTarget - vPos;
+	vTargetDir = XMVectorSetY(vTargetDir, 0.f);
+
+	if (XMVectorGetX(XMVector3LengthSq(vTargetDir)) <= 0.0001f)
+	{
+		m_bFaceTurnActive = false;
+		return;
+	}
+
+	vTargetDir = XMVector3Normalize(vTargetDir);
+
+	_vector vCurLook = m_pTransformCom->Get_State(STATE::LOOK);
+	vCurLook = XMVectorSetY(vCurLook, 0.f);
+
+	if (XMVectorGetX(XMVector3LengthSq(vCurLook)) <= 0.0001f)
+	{
+		m_bFaceTurnActive = false;
+		return;
+	}
+
+	vCurLook = XMVector3Normalize(vCurLook);
+
+	const _float fCurYaw = atan2f(XMVectorGetX(vCurLook), XMVectorGetZ(vCurLook));
+	const _float fTargetYaw = atan2f(XMVectorGetX(vTargetDir), XMVectorGetZ(vTargetDir));
+
+	_float fDeltaYaw = fTargetYaw - fCurYaw;
+
+	while (fDeltaYaw > XM_PI)
+		fDeltaYaw -= XM_2PI;
+	while (fDeltaYaw < -XM_PI)
+		fDeltaYaw += XM_2PI;
+
+	const _float fStep = m_fFaceTurnRadiansPerSec * fTimeDelta;
+
+	if (fabsf(fDeltaYaw) <= fStep || fabsf(fDeltaYaw) <= XMConvertToRadians(1.f))
+	{
+		m_pTransformCom->Rotation(0.f, fTargetYaw, 0.f);
+		m_bFaceTurnActive = false;
+		return;
+	}
+
+	const _float fNextYaw = fCurYaw + (fDeltaYaw > 0.f ? fStep : -fStep);
+	m_pTransformCom->Rotation(0.f, fNextYaw, 0.f);
 }
 
 CActor_NPC* CActor_NPC::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

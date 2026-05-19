@@ -2,6 +2,7 @@
 #include "Battle_Pokemon.h"
 #include "Battle_Manager.h"
 #include "Battler.h"
+#include "PokemonData_Manager.h"
 
 CBattle_PokemonListener::CBattle_PokemonListener()
 {
@@ -27,7 +28,17 @@ void CBattle_PokemonListener::On_MoveUsed(const EVENT_MOVE_USED& tEvent)
 	if (tEvent.iSide != m_iSide)
 		return;
 
-	m_pPokemon->Play_Attack();
+	ANIM_KIND eMoveAnimKind = ANIM_KIND::ATTACK_PHYSICAL;
+
+	const CPokemonData_Manager* pDataMgr = CPokemonData_Manager::GetInstance();
+	if (nullptr != pDataMgr)
+	{
+		const MOVE_DATA* pMove = pDataMgr->Find_Move(tEvent.iMoveID);
+		if (nullptr != pMove)
+			eMoveAnimKind = BattleAnim::Resolve_MoveAnimKind(pMove->eCategory);
+	}
+
+	m_pPokemon->Play_Attack(eMoveAnimKind);
 }
 
 void CBattle_PokemonListener::On_DamageDealt(const EVENT_DAMAGE_DEALT& tEvent)

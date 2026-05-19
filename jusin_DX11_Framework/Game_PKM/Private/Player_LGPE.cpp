@@ -2,6 +2,8 @@
 #include "Body_Hero.h"
 #include "Actor.h"
 #include "Interaction.h"
+#include "Level_GamePlay.h"
+#include "Battle_AnimDef.h"
 
 #include "GameInstance.h"
 
@@ -9,6 +11,19 @@ namespace
 {
 	constexpr _float INTERACT_MAX_DIST = 3.0f;
 	constexpr _float INTERACT_COS_ANGLE = 0.5f;   // cos(60°)
+
+	_bool Is_GamePlayDialogueActive(CGameInstance* pGameInstance)
+	{
+		if (nullptr == pGameInstance)
+			return false;
+
+		CLevel* pCurrent = pGameInstance->Get_CurrentLevelPtr();
+		CLevel_GamePlay* pGamePlay = dynamic_cast<CLevel_GamePlay*>(pCurrent);
+		if (nullptr == pGamePlay)
+			return false;
+
+		return pGamePlay->Is_Dialogue_Playing();
+	}
 }
 
 CPlayer_LGPE::CPlayer_LGPE(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -66,6 +81,16 @@ void CPlayer_LGPE::Update(_float fTimeDelta)
 			if (nullptr != Pair.second)
 				Pair.second->Update(fTimeDelta);
 		});
+
+	if (true == Is_GamePlayDialogueActive(m_pGameInstance))	// 대화 중엔 입력 차단
+	{
+		if (nullptr != m_pColliderCom)
+			m_pColliderCom->Update(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+
+		Update_AnimState(false);
+		m_pCurrentInteractTarget = nullptr;
+		return;
+	}
 	
 	// 2) 입력 -> 이동 방향
 	_vector vMoveDir = Read_MoveInput();
@@ -135,13 +160,15 @@ HRESULT CPlayer_LGPE::Ready_Components()
 
 HRESULT CPlayer_LGPE::Ready_PartObjects()
 {
+	m_strBodyModelProtoTag = PROTO_COM_MODEL_HERO;
+
 	CBody_Hero::BODY_HERO_DESC BodyDesc{};
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.strModelProtoTag = PROTO_COM_MODEL_HERO;
+	BodyDesc.strModelProtoTag = m_strBodyModelProtoTag;
 	BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
-	BodyDesc.iDefaultAnim = 0;
+	BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, ANIM_KIND::IDLE);
 	BodyDesc.bLoop = true;
-	BodyDesc.fScale = 0.4f;
+	BodyDesc.fScale = 1.f;
 	BodyDesc.bEnableRootMotion = true;
 	BodyDesc.iRootMotionBoneIndex = 3;
 	BodyDesc.pParentState = &m_iState;
@@ -181,11 +208,27 @@ _vector CPlayer_LGPE::Read_MoveInput() const
 void CPlayer_LGPE::Update_AnimState(_bool bHasInput)
 {
 	CBody_Hero* pBody = static_cast<CBody_Hero*>(m_PartObjects[PART_BODY]);
-	pBody->Set_Anim(bHasInput && !m_MoveState.Pivoting ? RUN : IDLE, true);
+	if (nullptr == pBody)
+		return;
+
+	const ANIM_KIND eAnimKind =
+		(bHasInput && !m_MoveState.Pivoting)
+		? ANIM_KIND::WALK
+		: ANIM_KIND::IDLE;
+
+	pBody->Set_Anim(
+		BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, eAnimKind),
+		true);
 }
 
 void CPlayer_LGPE::Update_Interaction(_float fTimeDelta)
 {
+	if (true == Is_GamePlayDialogueActive(m_pGameInstance))
+	{
+		m_pCurrentInteractTarget = nullptr;
+		return;
+	}
+
 	m_pCurrentInteractTarget = Find_InteractionCandidate();
 
 	if (m_pGameInstance->Key_Down(DIK_F))

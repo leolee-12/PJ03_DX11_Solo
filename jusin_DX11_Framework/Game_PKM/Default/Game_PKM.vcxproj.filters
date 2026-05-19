@@ -249,9 +249,6 @@
     <ClInclude Include="..\Public\Player_LGPE.h">
       <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Hero.h">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Enum.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
@@ -525,6 +522,12 @@
     <ClInclude Include="..\Public\Camera_Shake.h">
       <Filter>04. Contents\03. Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Body_Hero.h">
+      <Filter>01. Objects\02. PartObject\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Camera_Steps.h">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -573,9 +576,6 @@
       <Filter>01. Objects\00. Environment\03. Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_LGPE.cpp">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Body_Hero.cpp">
       <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Snow.cpp">
@@ -795,6 +795,12 @@
       <Filter>04. Contents\03. Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Shake.cpp">
+      <Filter>04. Contents\03. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Hero.cpp">
+      <Filter>01. Objects\02. PartObject\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Camera_Steps.cpp">
       <Filter>04. Contents\03. Camera</Filter>
     </ClCompile>
   </ItemGroup>

@@ -536,7 +536,7 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		TEXT("Prototype_Component_Model_PM0130_00"));
 
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
-		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/Hero/tr0001_00.wmodel"); },
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/hero/tr0001_00.wmodel"); },
 		TEXT("Prototype_Component_Model_Hero"));
 
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_DOCTOR,
@@ -554,6 +554,24 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_FAT,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/fat/fat.wmodel"); },
 		TEXT("Prototype_Component_Model_People_Fat"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HEROINE,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/heroine/heroine.wmodel"); },
+			TEXT("Prototype_Component_Model_Heroine"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_NURSE,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/nurse/nurse.wmodel"); },
+			TEXT("Prototype_Component_Model_People_Nurse"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_JUVENILES,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/juveniles/juveniles.wmodel"); },
+			TEXT("Prototype_Component_Model_People_Juveniles"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PPL_SHORTPANTS,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/shortpants/shortpants.wmodel"); },
+			TEXT("Prototype_Component_Model_People_Shortpants"));
+
+
 
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"); },

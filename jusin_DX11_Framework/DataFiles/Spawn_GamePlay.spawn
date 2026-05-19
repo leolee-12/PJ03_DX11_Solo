@@ -1,55 +1,175 @@
  # Wild Pokemon + Trainer 스폰 데이터 — GamePlay 레벨
   # 좌표: 월드 (Center.y 는 NavMesh 투영 결과로 덮임)
-  # RotationY: 라디안 (예: 1.5708 = 90도)
+  # RotationY: 라디안 (예: 1.5708 = 90도, 3.1416 = 180도)
   # Kind: WildPokemon | Trainer | NPC | EventObject
 
   SpawnRect {
-      ID = 1
-      Kind = WildPokemon
-      Center = 19.0, 0.0, -8.0
-      Size = 6.0, 6.0
-      RotationY = 0.0
-      SpeciesID = 25
-      Level = 5
-      MaxAliveCount = 1
-      ProjectRadius = 2.0
-      LeashRadius = 5.0
-      MinDistanceFromPlayer = 0.0
-      MaxDistanceFromPlayer = 0.0
-      RequireReachable = true
-      SpawnOnLoad = true
-      Respawn = true
-      RespawnDelay = 5.0
-  }
+        ID = 200
+        Kind = NPC
+        NPCProfile = Doctor
+        DialogueKey = dialogue_npc_doctor
+        Center = 20.0, 0.0, -2.5
+        Size = 1.0, 1.0
+        RotationY = 3.1416
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
 
-  SpawnRect {
-      ID = 2
-      Kind = WildPokemon
-      Center = 21.0, 0.0, -8.0
-      Size = 6.0, 6.0
-      RotationY = 0.0
-      SpeciesID = 1
-      Level = 5
-      MaxAliveCount = 1
-      ProjectRadius = 2.0
-      LeashRadius = 5.0
-      MinDistanceFromPlayer = 0.0
-      MaxDistanceFromPlayer = 0.0
-      RequireReachable = true
-      SpawnOnLoad = true
-      Respawn = true
-      RespawnDelay = 5.0
-  }
+    SpawnRect {
+        ID = 201
+        Kind = NPC
+        NPCProfile = Juveniles
+        DialogueKey = dialogue_npc_juveniles
+        Center = 15.0, 0.0, -12.0
+        Size = 1.0, 1.0
+        RotationY = 3.1416
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
 
-  SpawnRect {
-      ID = 100
-      Kind = Trainer
-      Center = 25.0, 0.0, -14.0
-      Size = 2.0, 2.0
-      RotationY = 0.0
-      MaxAliveCount = 1
-      ProjectRadius = 2.0
-      RequireReachable = false
-      SpawnOnLoad = true
-      Respawn = false
-  }
+    SpawnRect {
+        ID = 202
+        Kind = NPC
+        NPCProfile = Fat
+        DialogueKey = dialogue_npc_fat
+        Center = 23.0, 0.0, -18.0
+        Size = 1.0, 1.0
+        RotationY = 3.1416
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
+
+    SpawnRect {
+        ID = 203
+        Kind = NPC
+        NPCProfile = Shortpants
+        DialogueKey = dialogue_trainer_shortpants
+        Center = 26.5, 0.0, 10.0
+        Size = 1.0, 1.0
+        RotationY = 1.5708
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
+
+    SpawnRect {
+        ID = 204
+        Kind = NPC
+        NPCProfile = Nurse
+        DialogueKey = dialogue_npc_nurse
+        Center = 15.5, 3.0, 53.0
+        Size = 1.0, 1.0
+        RotationY = 3.1416
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
+
+    SpawnRect {
+        ID = 205
+        Kind = NPC
+        NPCProfile = Rock
+        DialogueKey = dialogue_trainer_rock
+        Center = 13.5, 3.0, 62.2
+        Size = 1.0, 1.0
+        RotationY = 3.1416
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
+
+    SpawnRect {
+        ID = 300
+        Kind = NPC
+        NPCProfile = PM0001_00
+        DialogueKey = dialogue_pokemon_pm0001_00
+        Center = 16.0, 0.0, -12.0
+        Size = 1.0, 1.0
+        RotationY = 3.1416
+        MaxAliveCount = 1
+        ProjectRadius = 2.0
+        SpawnOnLoad = true
+        Respawn = false
+    }
+
+    SpawnRect {
+        ID = 301
+        Kind = NPC
+        NPCProfile = PM0004_00
+        DialogueKey = dialogue_pokemon_pm0004_00
+        Center = 24.0, 0.0, -18.0
+        Size = 1.0, 1.0
+        RotationY = 1.5708
+        MaxAliveCount = 1
+        ProjectRadius = 3.1416
+        SpawnOnLoad = true
+        Respawn = false
+    }
+
+
+# 야생 포켓몬 출현 지역
+SpawnRect {
+        ID = 10
+        Kind = WildPokemon
+        Center = 20.75, 0.0, 5.85
+        Size = 12.5, 3.3
+        RotationY = 0.0
+        SpeciesID = 10
+        Level = 2
+        MaxAliveCount = 3
+        ProjectRadius = 3.0
+        LeashRadius = 8.0
+        MinDistanceFromPlayer = 4.0
+        MaxDistanceFromPlayer = 35.0
+        RequireReachable = true
+        SpawnOnLoad = true
+        Respawn = true
+        RespawnDelay = 6.0
+    }
+
+    SpawnRect {
+        ID = 11
+        Kind = WildPokemon
+        Center = 20.75, 0.0, 16.6
+        Size = 12.5, 2.2
+        RotationY = 0.0
+        SpeciesID = 43
+        Level = 3
+        MaxAliveCount = 2
+        ProjectRadius = 3.0
+        LeashRadius = 10.0
+        MinDistanceFromPlayer = 6.0
+        MaxDistanceFromPlayer = 40.0
+        RequireReachable = true
+        SpawnOnLoad = false
+        Respawn = true
+        RespawnDelay = 6.0
+    }
+
+    SpawnRect {
+        ID = 12
+        Kind = WildPokemon
+        Center = 24.5, 0.0, 28.45
+        Size = 6.2, 6.3
+        RotationY = 0.0
+        SpeciesID = 41
+        Level = 4
+        MaxAliveCount = 2
+        ProjectRadius = 3.0
+        LeashRadius = 10.0
+        MinDistanceFromPlayer = 6.0
+        MaxDistanceFromPlayer = 40.0
+        RequireReachable = true
+        SpawnOnLoad = false
+        Respawn = true
+        RespawnDelay = 6.0
+    }

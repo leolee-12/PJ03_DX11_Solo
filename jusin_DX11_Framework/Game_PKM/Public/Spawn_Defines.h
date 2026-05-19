@@ -28,10 +28,27 @@ enum class SPAWN_KIND : _ubyte
 	END
 };
 
+enum class SPAWN_NPC_PROFILE : _ubyte
+{
+	NONE,
+	DOCTOR,
+	JUVENILES,
+	FAT,
+	SHORTPANTS,
+	NURSE,
+	ROCK,
+	WATER,
+	PM0001_00,
+	PM0004_00,
+	END
+};
+
 struct SPAWN_RECT_DESC
 {
 	_uint       iSpawnID = { 0 };                          // 0 = unassigned
 	SPAWN_KIND  eSpawnKind = { SPAWN_KIND::WILD_POKEMON };
+	SPAWN_NPC_PROFILE eNpcProfile = { SPAWN_NPC_PROFILE::NONE };
+	_tchar     szDialogueKey[64] = {};
 
 	_float3     vCenter = {};                             // 월드 좌표. Y 는 검증 시 NavMesh 투영 결과로 덮임
 	_float2     vSize = { 1.f, 1.f };

@@ -6,6 +6,7 @@
 #include "Body_Pokemon.h"
 #include "Body_Human.h"
 #include "Navigation.h"
+#include "Battle_AnimDef.h"
 
 #include "GameInstance.h"
 
@@ -62,6 +63,62 @@ namespace
 		if (v == "NPC")          return SPAWN_KIND::NPC;
 		if (v == "EventObject")  return SPAWN_KIND::EVENT_OBJECT;
 		return SPAWN_KIND::WILD_POKEMON;
+	}
+
+	inline SPAWN_NPC_PROFILE Parse_NpcProfile_(const std::string& v)
+	{
+		if (v == "Doctor")       return SPAWN_NPC_PROFILE::DOCTOR;
+		if (v == "Juveniles")    return SPAWN_NPC_PROFILE::JUVENILES;
+		if (v == "Fat")          return SPAWN_NPC_PROFILE::FAT;
+		if (v == "Shortpants")   return SPAWN_NPC_PROFILE::SHORTPANTS;
+		if (v == "Nurse")        return SPAWN_NPC_PROFILE::NURSE;
+		if (v == "Rock")         return SPAWN_NPC_PROFILE::ROCK;
+		if (v == "Water")        return SPAWN_NPC_PROFILE::WATER;
+		if (v == "PM0001_00")    return SPAWN_NPC_PROFILE::PM0001_00;
+		if (v == "PM0004_00")    return SPAWN_NPC_PROFILE::PM0004_00;
+		return SPAWN_NPC_PROFILE::NONE;
+	}
+
+	template<size_t N>
+	inline void Copy_Wide_(wchar_t(&dst)[N], const std::string& src)
+	{
+		const _wstring wide = StoW(src);
+		wcsncpy_s(dst, wide.c_str(), _TRUNCATE);
+	}
+
+	struct NPC_PROFILE_INFO
+	{
+		SPAWN_NPC_PROFILE eProfile = { SPAWN_NPC_PROFILE::NONE };
+		_bool bPokemon = { false };
+		WNameID strModelProtoTag = {};
+		const _char* pMappingPath = { nullptr };
+		const wchar_t* pDefaultDialogueKey = { nullptr };
+		_float fScale = { 1.f };
+	};
+
+	const NPC_PROFILE_INFO* Find_NpcProfile_(SPAWN_NPC_PROFILE eProfile)
+	{
+		static constexpr NPC_PROFILE_INFO Profiles[] =
+		{
+			{ SPAWN_NPC_PROFILE::DOCTOR, false, PROTO_COM_MODEL_DOCTOR, "../../Resources/Models/people/doctor/doctor_mapping.json", L"dialogue_npc_doctor", 1.f },
+			{ SPAWN_NPC_PROFILE::JUVENILES, false, PROTO_COM_MODEL_PPL_JUVENILES, "../../Resources/Models/people/juveniles/juveniles_mapping.json", L"dialogue_npc_juveniles", 1.f },
+			{ SPAWN_NPC_PROFILE::FAT, false, PROTO_COM_MODEL_PPL_FAT, "../../Resources/Models/people/fat/fat_mapping.json", L"dialogue_npc_fat", 1.f },
+			{ SPAWN_NPC_PROFILE::SHORTPANTS, false, PROTO_COM_MODEL_PPL_SHORTPANTS, "../../Resources/Models/people/shortpants/shortpants_mapping.json", L"dialogue_trainer_shortpants", 1.f },
+			{ SPAWN_NPC_PROFILE::NURSE, false, PROTO_COM_MODEL_PPL_NURSE, "../../Resources/Models/people/nurse/nurse_mapping.json", L"dialogue_npc_nurse", 1.f },
+			{ SPAWN_NPC_PROFILE::ROCK, false, PROTO_COM_MODEL_PPL_ROCK, "../../Resources/Models/people/rock/rock_mapping.json", L"dialogue_trainer_rock", 1.f },
+			{ SPAWN_NPC_PROFILE::WATER, false, PROTO_COM_MODEL_PPL_WATER, "../../Resources/Models/people/water/water_mapping.json", L"dialogue_trainer_water", 1.f },
+
+			{ SPAWN_NPC_PROFILE::PM0001_00, true, PROTO_COM_MODEL_PM0001_00, "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json", L"dialogue_pokemon_pm0001_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0004_00, true, PROTO_COM_MODEL_PM0004_00, "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json", L"dialogue_pokemon_pm0004_00", 1.f },
+		};
+
+		for (const NPC_PROFILE_INFO& Profile : Profiles)
+		{
+			if (Profile.eProfile == eProfile)
+				return &Profile;
+		}
+
+		return nullptr;
 	}
 }
 
@@ -187,6 +244,8 @@ HRESULT CSpawn_Manager::Load_From_File(const _tchar* pFilePath)
 		else if (key == "SpawnOnLoad")           tCur.bSpawnOnLoad = Parse_Bool_(val);
 		else if (key == "Respawn")               tCur.bRespawn = Parse_Bool_(val);
 		else if (key == "RespawnDelay")          tCur.fRespawnDelay = std::stof(val);
+		else if (key == "NPCProfile")            tCur.eNpcProfile = Parse_NpcProfile_(val);
+		else if (key == "DialogueKey")           Copy_Wide_(tCur.szDialogueKey, val);
 	}
 
 	return S_OK;
@@ -208,7 +267,8 @@ HRESULT CSpawn_Manager::Begin()
 		switch (tRuntime.tDesc.eSpawnKind)
 		{
 		case SPAWN_KIND::WILD_POKEMON: Try_SpawnWildPokemon(tRuntime); break;
-		case SPAWN_KIND::TRAINER:      Spawn_Trainer(tRuntime);        break;
+		case SPAWN_KIND::NPC:
+		case SPAWN_KIND::TRAINER:      Spawn_NPC(tRuntime);            break;
 		default: break;
 		}
 	}
@@ -246,7 +306,8 @@ void CSpawn_Manager::Update(_float fTimeDelta)
 		switch (tRuntime.tDesc.eSpawnKind)
 		{
 		case SPAWN_KIND::WILD_POKEMON: bSpawned = Try_SpawnWildPokemon(tRuntime); break;
-		case SPAWN_KIND::TRAINER:      /* S4 */                                   break;
+		case SPAWN_KIND::NPC:
+		case SPAWN_KIND::TRAINER:      bSpawned = Spawn_NPC(tRuntime);            break;
 		default: break;
 		}
 
@@ -359,7 +420,7 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
 		BodyDesc.strModelProtoTag = pSpecies->strModelTag;
 		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-		BodyDesc.iDefaultAnim = 0;
+		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pSpecies->strModelTag, ANIM_KIND::IDLE);
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
 		BodyDesc.bEnableRootMotion = true;     // S3 Fix - Body_Hero 와 동일 패턴
@@ -402,52 +463,78 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 	return false;
 }
 
-_bool CSpawn_Manager::Spawn_Trainer(SPAWN_RECT_RUNTIME& tRuntime)
+_bool CSpawn_Manager::Spawn_NPC(SPAWN_RECT_RUNTIME& tRuntime)
 {
-	if (!tRuntime.bValid)                                       return false;
-	if (tRuntime.iAliveCount >= tRuntime.tDesc.iMaxAliveCount)  return false;
-	if (nullptr == m_pGameInstance)                             return false;
+	if (!tRuntime.bValid)                                      return false;
+	if (tRuntime.iAliveCount >= tRuntime.tDesc.iMaxAliveCount) return false;
+	if (nullptr == m_pGameInstance)                            return false;
 
 	const SPAWN_RECT_DESC& tDesc = tRuntime.tDesc;
+	const NPC_PROFILE_INFO* pProfile = Find_NpcProfile_(tDesc.eNpcProfile);
+	if (nullptr == pProfile)
+		return false;
 
-	// 1차: 단일 트레이너 외형 (ROCK). 종별 다양화는 후속.
 	CRenderRule_Manager* pRuleMgr = CRenderRule_Manager::GetInstance();
-	if (nullptr == pRuleMgr) return false;
+	if (nullptr == pRuleMgr)
+		return false;
 
-	const CRenderRule* pRenderRule = pRuleMgr->Find_OrLoadMappingRule(
-		"../../Resources/Models/people/rock/rock_mapping.json");
-	if (nullptr == pRenderRule) return false;
-
-	CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-	BodyDesc.strModelProtoTag = PROTO_COM_MODEL_PPL_ROCK;
-	BodyDesc.iDefaultAnim = 0;
-	BodyDesc.bLoop = true;
-	BodyDesc.fScale = 1.f;
-	BodyDesc.pRenderRule = pRenderRule;
+	const CRenderRule* pRenderRule = pRuleMgr->Find_OrLoadMappingRule(pProfile->pMappingPath);
+	if (nullptr == pRenderRule)
+		return false;
 
 	CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
 	NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
 	NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-	NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
-	NpcDesc.pBodyDesc = &BodyDesc;
-	NpcDesc.strDialogueKey = L"dialogue_trainer";       // 1차 - 후속에서 SPAWN_RECT_DESC 노출 검토
-	NpcDesc.vSpawnPos = tRuntime.vProjectedCenter; // 사각형 중심 (이미 NavMesh 위로 투영됨)
-	NpcDesc.fRotationPerSec = XMConvertToRadians(720.f); // S3 Fix#2 와 동일 - Face_Direction 동작 보장
-
-	// S4 신규 트레이너 페이로드
-	NpcDesc.bIsTrainer = true;
+	NpcDesc.vSpawnPos = tRuntime.vProjectedCenter;
+	NpcDesc.strDialogueKey = (L'\0' != tDesc.szDialogueKey[0]) ? tDesc.szDialogueKey : pProfile->pDefaultDialogueKey;
+	NpcDesc.fRotationPerSec = XMConvertToRadians(720.f);
+	NpcDesc.bIsTrainer = (SPAWN_KIND::TRAINER == tDesc.eSpawnKind);
 	NpcDesc.iSpawnRectID = tDesc.iSpawnID;
+	NpcDesc.bApplyInitialRotation = true;
 	NpcDesc.fInitialRotationY = tDesc.fRotationY;
 
-	if (FAILED(m_pGameInstance->Add_GameObject(
-		ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
-		ETOUI(LEVEL::GAMEPLAY), LAYER_NPC,
-		&NpcDesc)))
-		return false;
+	if (pProfile->bPokemon)
+	{
+		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = pProfile->strModelProtoTag;
+		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pProfile->strModelProtoTag, ANIM_KIND::IDLE);
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = pProfile->fScale;
+		BodyDesc.pRenderRule = pRenderRule;
+
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+		NpcDesc.pBodyDesc = &BodyDesc;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
+			ETOUI(LEVEL::GAMEPLAY), LAYER_NPC,
+			&NpcDesc)))
+			return false;
+	}
+	else
+	{
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = pProfile->strModelProtoTag;
+		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pProfile->strModelProtoTag, ANIM_KIND::IDLE);
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = pProfile->fScale;
+		BodyDesc.pRenderRule = pRenderRule;
+
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
+		NpcDesc.pBodyDesc = &BodyDesc;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(
+			ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
+			ETOUI(LEVEL::GAMEPLAY), LAYER_NPC,
+			&NpcDesc)))
+			return false;
+	}
 
 	++tRuntime.iAliveCount;
 	tRuntime.bHasEverSpawned = true;
 	tRuntime.fRespawnTimer = 0.f;
+
 	return true;
 }
 

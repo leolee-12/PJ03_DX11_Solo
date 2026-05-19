@@ -1,4 +1,8 @@
 #include "Interaction_Dialogue.h"
+#include "Level_GamePlay.h"
+#include "Actor_NPC.h"
+
+#include "GameInstance.h"
 
 CInteraction_Dialogue::CInteraction_Dialogue(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CInteraction{ pDevice, pContext }
@@ -36,20 +40,42 @@ _bool CInteraction_Dialogue::Supports(INTERACTION_EVENT eEvent) const
 
 _bool CInteraction_Dialogue::CanInteract(const INTERACTION_CONTEXT& ctx) const
 {
-	if (!Supports(ctx.eEvent))
+	if (false == Supports(ctx.eEvent))
 		return false;
 
-	// TODO: 어댑터 도입 후
-	// if (m_pGameInstance->Get_DialogueService()->Is_Playing())
-	//     return false;
+	if (true == m_strDialogueKey.empty())
+		return false;
+
+	CLevel* pCurrent = m_pGameInstance->Get_CurrentLevelPtr();
+	CLevel_GamePlay* pGamePlay = dynamic_cast<CLevel_GamePlay*>(pCurrent);
+	if (nullptr == pGamePlay)
+		return false;
+
+	if (true == pGamePlay->Is_Dialogue_Playing())
+		return false;
 
 	return true;
 }
 
 void CInteraction_Dialogue::Execute(const INTERACTION_CONTEXT& ctx)
 {
-	// TODO: 어댑터 도입 후
-	// m_pGameInstance->Get_DialogueService()->Start(m_strDialogueKey);
+	if (false == CanInteract(ctx))
+		return;
+
+	CLevel* pCurrent = m_pGameInstance->Get_CurrentLevelPtr();
+	CLevel_GamePlay* pGamePlay = dynamic_cast<CLevel_GamePlay*>(pCurrent);
+	if (nullptr == pGamePlay)
+		return;
+
+	CActor_NPC* pNPC = dynamic_cast<CActor_NPC*>(ctx.pTarget);
+	if (nullptr != pNPC)
+		pNPC->Face_To(XMLoadFloat4(&ctx.vCallerPosition));
+
+	if (false == pGamePlay->Start_Dialogue(m_strDialogueKey))
+	{
+		OutputDebugStringW(L"[Interaction_Dialogue] Start_Dialogue failed\n");
+		return;
+	}
 }
 
 CInteraction_Dialogue* CInteraction_Dialogue::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
