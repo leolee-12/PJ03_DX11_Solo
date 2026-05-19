@@ -58,6 +58,9 @@
     <Filter Include="03. ImGui_Manager">
       <UniqueIdentifier>{7f0f2e57-24aa-4eea-95a0-4322871d92a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Panels\07. Effect">
+      <UniqueIdentifier>{4b0d9489-9734-4b07-b774-4c0d38a6c21b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -164,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\VP_OverlayDrawer.h">
       <Filter>04. Panels\06. Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Panel_Effect.h">
+      <Filter>04. Panels\07. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectEditorSession.h">
+      <Filter>04. Panels\07. Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +282,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VP_OverlayDrawer.cpp">
       <Filter>04. Panels\06. Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Panel_Effect.cpp">
+      <Filter>04. Panels\07. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectEditorSession.cpp">
+      <Filter>04. Panels\07. Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

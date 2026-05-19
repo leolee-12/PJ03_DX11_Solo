@@ -9,6 +9,7 @@
 #include "Panel_UIAnim.h"
 #include "Panel_Model.h"
 #include "Panel_Viewport.h"
+#include "Panel_Effect.h"
 
 CImGui_Manager::CImGui_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -264,6 +265,10 @@ HRESULT CImGui_Manager::Add_Panels()
 	pInstance = CPanel_Viewport::Create(m_pDevice, m_pContext);
 	if (nullptr == pInstance) return E_FAIL;
 	m_Panels[ETOUI(PANEL::VIEWPORT)] = pInstance;
+
+	pInstance = CPanel_Effect::Create();
+	if (nullptr == pInstance) return E_FAIL;
+	m_Panels[ETOUI(PANEL::EFFECT)] = pInstance;
 
 	return S_OK;
 }

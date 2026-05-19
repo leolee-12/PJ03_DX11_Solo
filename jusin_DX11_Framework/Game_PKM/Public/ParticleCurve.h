@@ -44,6 +44,7 @@ public:
 	void  Clear() { m_Keys.clear(); }
 	_bool IsEmpty() const { return m_Keys.empty(); }
 	_uint Get_KeyCount() const { return static_cast<_uint>(m_Keys.size()); }
+	const std::vector<CurveKey<T>>& Get_Keys() const { return m_Keys; }
 
 	T Sample(_float t01) const
 	{

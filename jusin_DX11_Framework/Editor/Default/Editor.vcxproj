@@ -155,12 +155,14 @@
     <ClInclude Include="..\Public\Editor_Serializer.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
     <ClInclude Include="..\Public\Editor_UI.h" />
+    <ClInclude Include="..\Public\EffectEditorSession.h" />
     <ClInclude Include="..\Public\ImGui_Manager.h" />
     <ClInclude Include="..\Public\Model_Loader.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Object_Registry.h" />
     <ClInclude Include="..\Public\Panel_Base.h" />
+    <ClInclude Include="..\Public\Panel_Effect.h" />
     <ClInclude Include="..\Public\Panel_MapTool.h" />
     <ClInclude Include="..\Public\EditorApp.h" />
     <ClInclude Include="..\Public\Editor_Defines.h" />
@@ -196,12 +198,14 @@
     <ClCompile Include="..\Private\EditInstance.cpp" />
     <ClCompile Include="..\Private\Editor_Serializer.cpp" />
     <ClCompile Include="..\Private\Editor_UI.cpp" />
+    <ClCompile Include="..\Private\EffectEditorSession.cpp" />
     <ClCompile Include="..\Private\ImGui_Manager.cpp" />
     <ClCompile Include="..\Private\Model_Loader.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Object_Registry.cpp" />
     <ClCompile Include="..\Private\Panel_Base.cpp" />
+    <ClCompile Include="..\Private\Panel_Effect.cpp" />
     <ClCompile Include="..\Private\Panel_MapTool.cpp" />
     <ClCompile Include="..\Private\EditorApp.cpp" />
     <ClCompile Include="..\Private\Panel_Model.cpp" />

@@ -36,9 +36,6 @@ struct EMITTER_DEFINITION
 	CCurveColor  curveColor;
 	CCurveFloat  curveAlpha;
 
-	/* 텍스처는 prototype tag (Loader 단계에서 등록되어 있어야 함). M7a 시점은
-	   Manager가 emitter 생성 시 desc에 옮겨주지 않고 default(흰 더미)를 그대로 사용.
-	   텍스처 prototype 선택은 M7b 또는 별도 단위에서 emitter에 노출. */
 	WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
 };
 
@@ -47,6 +44,68 @@ struct EFFECT_DEFINITION
 	_string strID = "";
 	vector<EMITTER_DEFINITION> Emitters;
 };
+
+struct EFFECT_TEXTURE_OPTION
+{
+	const char* pLabel;
+	WNameID strTag;
+	const char* pProtoTag;
+	const _tchar* pTextureFilePath;
+	const _tchar* pDebugName;
+};
+
+#define EFFECT_TEXTURE_OPTION_ROW(label, tag, path, proto) \
+        { label, tag, proto, path, TEXT(proto) }
+
+inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
+{
+	  EFFECT_TEXTURE_OPTION_ROW("Dummy White", PROTO_COM_TEX_DUMMY_WHITE, nullptr, "Prototype_Component_Texture_Dummy_White"),
+
+	  EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 0 Line702 Sml", PROTO_COM_TEX_EFT_BALL_ABSORB_0_LINE702_SML_O,
+		  TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_line702_sml_o.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_0_Line702_Sml_O"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 0 Mask702", PROTO_COM_TEX_EFT_BALL_ABSORB_0_MASK702_O,
+			TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_mask702_o.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_0_Mask702_O"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 1 Circle004 Sml", PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE004_SML_M,
+			TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_1_circle004_sml_m.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_1_Circle004_Sml_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 1 Circle005 Sml", PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE005_SML_M,
+			TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_1_circle005_sml_m.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_1_Circle005_Sml_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 2 Fire003", PROTO_COM_TEX_EFT_BALL_ABSORB_2_FIRE003_M,
+			TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_2_fire003_m.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_2_Fire003_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 2 Hit011", PROTO_COM_TEX_EFT_BALL_ABSORB_2_HIT011_M,
+			TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_2_hit011_m.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_2_Hit011_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 3 Flow701", PROTO_COM_TEX_EFT_BALL_ABSORB_3_FLOW701_O,
+			TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_3_flow701_o.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_3_Flow701_O"),
+
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 0 Mask702", PROTO_COM_TEX_EFT_BALL_HIT_0_MASK702_O,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_0_mask702_o.png"), "Prototype_Component_Texture_Effect_Ball_Hit_0_Mask702_O"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 0 Smoke002", PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE002_M,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke002_m.png"), "Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke002_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 0 Smoke005", PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE005_M,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke005_m.png"), "Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke005_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 0 Smoke203", PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE203_A,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke203_a.png"), "Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke203_A"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 0 Smoke702", PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE702_O,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke702_o.png"), "Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke702_O"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 1 Circle003 Sml", PROTO_COM_TEX_EFT_BALL_HIT_1_CIRCLE003_SML_M,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_1_circle003_sml_m.png"), "Prototype_Component_Texture_Effect_Ball_Hit_1_Circle003_Sml_M"),
+		EFFECT_TEXTURE_OPTION_ROW("Ball Hit 1 Flash001 Sml", PROTO_COM_TEX_EFT_BALL_HIT_1_FLASH001_SML_M,
+			TEXT("../../Resources/Effects/Ball_hit/fxpt_1_flash001_sml_m.png"), "Prototype_Component_Texture_Effect_Ball_Hit_1_Flash001_Sml_M"),
+
+/* Capture_failed / Capture_hit / Capture_success 행은 현재 Loader.cpp의 EffectTextureDescs 행을 같은 형식으로 모두 이동 */
+};
+
+#undef EFFECT_TEXTURE_OPTION_ROW
+
+inline const EFFECT_TEXTURE_OPTION* Effect_FindTextureOption(WNameID strTag)
+{
+	for (const auto& option : g_EffectTextureOptions)
+	{
+		if (option.strTag == strTag)
+			return &option;
+	}
+
+	return nullptr;
+}
 
 /* helper: EMITTER_DEFINITION → CParticleEmitter::EMITTER_DESC 변환.
    vSpawnPos는 CEffect가 root 위치를 결정하여 emitter들에 전달. */
@@ -70,6 +129,268 @@ inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION&
 	desc.curveColor = def.curveColor;
 	desc.curveAlpha = def.curveAlpha;
 	return desc;
+}
+
+inline _string Effect_BillboardToString(CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE eMode)
+{
+	switch (eMode)
+	{
+	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::AXIS_LOCKED:
+		return "AXIS_LOCKED";
+	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::FIXED_NORMAL:
+		return "FIXED_NORMAL";
+	default:
+		return "VIEW_ALIGNED";
+	}
+}
+
+inline CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE Effect_BillboardFromString(const _string& strValue)
+{
+	if (strValue == "AXIS_LOCKED")
+		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::AXIS_LOCKED;
+	if (strValue == "FIXED_NORMAL")
+		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::FIXED_NORMAL;
+
+	return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VIEW_ALIGNED;
+}
+
+inline _string Effect_BlendToString(CParticleEmitter::EMITTER_DESC::BLEND_MODE eMode)
+{
+	return (eMode == CParticleEmitter::EMITTER_DESC::BLEND_MODE::ALPHA)
+		? "ALPHA"
+		: "ADDITIVE";
+}
+
+inline CParticleEmitter::EMITTER_DESC::BLEND_MODE Effect_BlendFromString(const _string& strValue)
+{
+	return (strValue == "ALPHA")
+		? CParticleEmitter::EMITTER_DESC::BLEND_MODE::ALPHA
+		: CParticleEmitter::EMITTER_DESC::BLEND_MODE::ADDITIVE;
+}
+
+inline json Effect_SerializeCurveFloat(const CCurveFloat& curve)
+{
+	json jKeys = json::array();
+
+	for (const auto& key : curve.Get_Keys())
+		jKeys.push_back({ key.t, key.v });
+
+	return jKeys;
+}
+
+inline json Effect_SerializeCurveColor(const CCurveColor& curve)
+{
+	json jKeys = json::array();
+
+	for (const auto& key : curve.Get_Keys())
+		jKeys.push_back({ key.t, { key.v.x, key.v.y, key.v.z, key.v.w } });
+
+	return jKeys;
+}
+
+inline void Effect_ParseCurveFloat(const json& jKeys, CCurveFloat& outCurve)
+{
+	outCurve.Clear();
+
+	if (!jKeys.is_array())
+		return;
+
+	for (const auto& jk : jKeys)
+	{
+		if (!jk.is_array() || jk.size() < 2)
+			continue;
+
+		const _float fTime = jk[0].get<_float>();
+		const _float fValue = jk[1].get<_float>();
+
+		outCurve.Add_Key(fTime, fValue);
+	}
+}
+
+inline void Effect_ParseCurveColor(const json& jKeys, CCurveColor& outCurve)
+{
+	outCurve.Clear();
+
+	if (!jKeys.is_array())
+		return;
+
+	for (const auto& jk : jKeys)
+	{
+		if (!jk.is_array() || jk.size() < 2)
+			continue;
+		if (!jk[1].is_array() || jk[1].size() < 4)
+			continue;
+
+		const _float fTime = jk[0].get<_float>();
+		const _float4 vValue = _float4(
+			jk[1][0].get<_float>(),
+			jk[1][1].get<_float>(),
+			jk[1][2].get<_float>(),
+			jk[1][3].get<_float>());
+
+		outCurve.Add_Key(fTime, vValue);
+	}
+}
+
+template <typename T>
+inline void Effect_GetOpt(const json& j, const _char* pKey, T& out)
+{
+	if (j.contains(pKey))
+		out = j[pKey].get<T>();
+}
+
+inline void Effect_ReadFloat2(const json& j, _float2& out)
+{
+	if (j.is_array() && j.size() >= 2)
+		out = _float2(
+			j[0].get<_float>(),
+			j[1].get<_float>());
+}
+
+inline void Effect_ReadFloat3(const json& j, _float3& out)
+{
+	if (j.is_array() && j.size() >= 3)
+		out = _float3(
+			j[0].get<_float>(),
+			j[1].get<_float>(),
+			j[2].get<_float>());
+}
+
+inline HRESULT Effect_ParseEmitterJson(const json& je, EMITTER_DEFINITION& out)
+{
+	if (!je.is_object())
+		return E_FAIL;
+
+	Effect_GetOpt(je, "name", out.strName);
+	Effect_GetOpt(je, "capacity", out.iCapacity);
+	Effect_GetOpt(je, "spawnRate", out.fSpawnRate);
+	Effect_GetOpt(je, "burstCount", out.iBurstCount);
+
+	if (je.contains("lifeTimeRange"))
+		Effect_ReadFloat2(je["lifeTimeRange"], out.vLifeTimeRange);
+	if (je.contains("speedRange"))
+		Effect_ReadFloat2(je["speedRange"], out.vSpeedRange);
+	if (je.contains("sizeRange"))
+		Effect_ReadFloat2(je["sizeRange"], out.vSizeRange);
+	if (je.contains("emitDirection"))
+		Effect_ReadFloat3(je["emitDirection"], out.vEmitDirection);
+
+	Effect_GetOpt(je, "emitConeHalfAngle", out.fEmitConeHalfAngle);
+
+	if (je.contains("billboard"))
+		out.eBillboard = Effect_BillboardFromString(je["billboard"].get<_string>());
+	if (je.contains("billboardFixedAxis"))
+		Effect_ReadFloat3(je["billboardFixedAxis"], out.vBillboardFixedAxis);
+	if (je.contains("blend"))
+		out.eBlend = Effect_BlendFromString(je["blend"].get<_string>());
+
+	if (je.contains("textureProtoTag"))
+	{
+		const _string strTag = je["textureProtoTag"].get<_string>();
+		if (!strTag.empty())
+			out.strTextureProtoTag = WNAME(StoW(strTag));
+	}
+
+	if (je.contains("curves") && je["curves"].is_object())
+	{
+		const json& jCurves = je["curves"];
+
+		if (jCurves.contains("size"))
+			Effect_ParseCurveFloat(jCurves["size"], out.curveSize);
+		if (jCurves.contains("color"))
+			Effect_ParseCurveColor(jCurves["color"], out.curveColor);
+		if (jCurves.contains("alpha"))
+			Effect_ParseCurveFloat(jCurves["alpha"], out.curveAlpha);
+	}
+
+	return S_OK;
+}
+
+inline HRESULT Effect_ParseDefinitionJson(const json& jRoot, EFFECT_DEFINITION& out)
+{
+	if (!jRoot.is_object())
+		return E_FAIL;
+
+	if (!jRoot.contains("id") || !jRoot["id"].is_string())
+		return E_FAIL;
+
+	out = {};
+	out.strID = jRoot["id"].get<_string>();
+
+	if (jRoot.contains("emitters") && jRoot["emitters"].is_array())
+	{
+		for (const auto& je : jRoot["emitters"])
+		{
+			EMITTER_DEFINITION emitter{};
+
+			if (FAILED(Effect_ParseEmitterJson(je, emitter)))
+				continue;
+
+			out.Emitters.push_back(emitter);
+		}
+	}
+
+	return S_OK;
+}
+
+inline _string Effect_TextureTagToString(WNameID strTag)
+{
+	if (const EFFECT_TEXTURE_OPTION* pOption = Effect_FindTextureOption(strTag))
+		return pOption->pProtoTag;
+
+#ifdef _DEBUG
+	const _string strLookup = WtoS(_wstring(Engine::WNameRegistry::Lookup(strTag)));
+	return (strLookup == "<unknown>") ? _string{} : strLookup;
+#else
+	return {};
+#endif
+}
+
+inline json Effect_SerializeEmitterJson(const EMITTER_DEFINITION& emitter)
+{
+	json j;
+	j["name"] = emitter.strName;
+	j["capacity"] = emitter.iCapacity;
+	j["spawnRate"] = emitter.fSpawnRate;
+	j["burstCount"] = emitter.iBurstCount;
+	j["lifeTimeRange"] = { emitter.vLifeTimeRange.x, emitter.vLifeTimeRange.y };
+	j["speedRange"] = { emitter.vSpeedRange.x, emitter.vSpeedRange.y };
+	j["sizeRange"] = { emitter.vSizeRange.x, emitter.vSizeRange.y };
+	j["emitDirection"] = { emitter.vEmitDirection.x, emitter.vEmitDirection.y,
+emitter.vEmitDirection.z };
+	j["emitConeHalfAngle"] = emitter.fEmitConeHalfAngle;
+	j["billboard"] = Effect_BillboardToString(emitter.eBillboard);
+	j["billboardFixedAxis"] = { emitter.vBillboardFixedAxis.x, emitter.vBillboardFixedAxis.y,
+emitter.vBillboardFixedAxis.z };
+	j["blend"] = Effect_BlendToString(emitter.eBlend);
+
+	const _string strTextureTag = Effect_TextureTagToString(emitter.strTextureProtoTag);
+	if (!strTextureTag.empty())
+		j["textureProtoTag"] = strTextureTag;
+
+	json jCurves;
+	if (!emitter.curveSize.IsEmpty())
+		jCurves["size"] = Effect_SerializeCurveFloat(emitter.curveSize);
+	if (!emitter.curveColor.IsEmpty())
+		jCurves["color"] = Effect_SerializeCurveColor(emitter.curveColor);
+	if (!emitter.curveAlpha.IsEmpty())
+		jCurves["alpha"] = Effect_SerializeCurveFloat(emitter.curveAlpha);
+	if (!jCurves.empty())
+		j["curves"] = jCurves;
+
+	return j;
+}
+
+inline json Effect_SerializeDefinitionJson(const EFFECT_DEFINITION& def)
+{
+	json root;
+	root["id"] = def.strID;
+	root["emitters"] = json::array();
+
+	for (const auto& emitter : def.Emitters)
+		root["emitters"].push_back(Effect_SerializeEmitterJson(emitter));
+
+	return root;
 }
 
 NS_END

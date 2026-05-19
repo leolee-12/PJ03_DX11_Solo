@@ -1,0 +1,562 @@
+#include "Panel_Effect.h"
+#include "EditInstance.h"
+#include "EffectEditorSession.h"
+
+#include "GameInstance.h"
+
+namespace
+{
+	constexpr _int CURVE_PREVIEW_SAMPLES = 64;
+
+	void Plot_FloatCurve(const char* pLabel, const CCurveFloat& curve)
+	{
+		_float Values[CURVE_PREVIEW_SAMPLES] = {};
+
+		for (_int i = 0; i < CURVE_PREVIEW_SAMPLES; ++i)
+		{
+			const _float fT = static_cast<_float>(i) / static_cast<_float>(CURVE_PREVIEW_SAMPLES - 1);
+			Values[i] = curve.IsEmpty() ? 0.f : curve.Sample(fT);
+		}
+
+		ImGui::PlotLines(pLabel, Values, CURVE_PREVIEW_SAMPLES, 0, nullptr, 0.f, 1.f, ImVec2(0.f, 48.f));
+	}
+
+	void Plot_ColorCurve(const char* pLabel, const CCurveColor& curve)
+	{
+		_float Values[CURVE_PREVIEW_SAMPLES] = {};
+
+		for (_int i = 0; i < CURVE_PREVIEW_SAMPLES; ++i)
+		{
+			const _float fT = static_cast<_float>(i) / static_cast<_float>(CURVE_PREVIEW_SAMPLES - 1);
+			const _float4 vColor = curve.IsEmpty() ? _float4(0.f, 0.f, 0.f, 0.f) : curve.Sample(fT);
+			Values[i] = (vColor.x + vColor.y + vColor.z) / 3.f;
+		}
+
+		ImGui::PlotLines(pLabel, Values, CURVE_PREVIEW_SAMPLES, 0, nullptr, 0.f, 1.f, ImVec2(0.f, 48.f));
+	}
+
+	void Set_SizePopCurve(CCurveFloat& curve)
+	{
+		curve.Clear();
+		curve.Add_Key(0.f, 0.1f);
+		curve.Add_Key(0.2f, 1.f);
+		curve.Add_Key(1.f, 0.f);
+	}
+
+	void Set_FireColorCurve(CCurveColor& curve)
+	{
+		curve.Clear();
+		curve.Add_Key(0.f, _float4(1.f, 1.f, 1.f, 1.f));
+		curve.Add_Key(0.5f, _float4(1.f, 1.f, 0.4f, 1.f));
+		curve.Add_Key(1.f, _float4(1.f, 0.3f, 0.f, 0.f));
+	}
+
+	void Set_FadeAlphaCurve(CCurveFloat& curve)
+	{
+		curve.Clear();
+		curve.Add_Key(0.f, 0.f);
+		curve.Add_Key(0.1f, 1.f);
+		curve.Add_Key(1.f, 0.f);
+	}
+
+	_float ClampRange(_float fValue, _float fMin, _float fMax)
+	{
+		if (fValue < fMin)
+			return fMin;
+		if (fValue > fMax)
+			return fMax;
+		return fValue;
+	}
+
+	void Draw_FloatCurveKeys(
+		const char* pTitle,
+		CCurveFloat& curve,
+		CEffectEditorSession* pSession,
+		const char* pDirtyReason,
+		_float fValueMin,
+		_float fValueMax)
+	{
+		if (!ImGui::TreeNode(pTitle))
+			return;
+
+		auto Keys = curve.Get_Keys();
+		_bool bChanged = false;
+		_int iRemove = -1;
+
+		for (_int i = 0; i < static_cast<_int>(Keys.size()); ++i)
+		{
+			ImGui::PushID(i);
+
+			_float fT = Keys[i].t;
+			_float fValue = Keys[i].v;
+
+			ImGui::SetNextItemWidth(90.f);
+			if (ImGui::DragFloat("T", &fT, 0.01f, 0.f, 1.f, "%.2f"))
+			{
+				Keys[i].t = ClampRange(fT, 0.f, 1.f);
+				bChanged = true;
+			}
+
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(90.f);
+			if (ImGui::DragFloat("V", &fValue, 0.01f, fValueMin, fValueMax, "%.2f"))
+			{
+				Keys[i].v = ClampRange(fValue, fValueMin, fValueMax);
+				bChanged = true;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Delete"))
+				iRemove = i;
+
+			ImGui::PopID();
+		}
+
+		if (0 <= iRemove && iRemove < static_cast<_int>(Keys.size()))
+		{
+			Keys.erase(Keys.begin() + iRemove);
+			bChanged = true;
+		}
+
+		if (ImGui::Button("Add Key"))
+		{
+			Keys.push_back({ 0.5f, 1.f });
+			bChanged = true;
+		}
+
+		if (bChanged)
+		{
+			curve.Clear();
+
+			for (const auto& key : Keys)
+				curve.Add_Key(
+					ClampRange(key.t, 0.f, 1.f),
+					ClampRange(key.v, fValueMin, fValueMax));
+
+			if (nullptr != pSession)
+				pSession->Mark_Dirty(pDirtyReason);
+		}
+
+		ImGui::TreePop();
+	}
+
+	void Draw_ColorCurveKeys(
+		const char* pTitle,
+		CCurveColor& curve,
+		CEffectEditorSession* pSession,
+		const char* pDirtyReason)
+	{
+		if (!ImGui::TreeNode(pTitle))
+			return;
+
+		auto Keys = curve.Get_Keys();
+		_bool bChanged = false;
+		_int iRemove = -1;
+
+		for (_int i = 0; i < static_cast<_int>(Keys.size()); ++i)
+		{
+			ImGui::PushID(i);
+
+			_float fT = Keys[i].t;
+			_float4 vColor = Keys[i].v;
+
+			ImGui::SetNextItemWidth(90.f);
+			if (ImGui::DragFloat("T", &fT, 0.01f, 0.f, 1.f, "%.2f"))
+			{
+				Keys[i].t = ClampRange(fT, 0.f, 1.f);
+				bChanged = true;
+			}
+
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(180.f);
+			if (ImGui::ColorEdit4("RGBA", &vColor.x))
+			{
+				Keys[i].v = _float4(
+					ClampRange(vColor.x, 0.f, 1.f),
+					ClampRange(vColor.y, 0.f, 1.f),
+					ClampRange(vColor.z, 0.f, 1.f),
+					ClampRange(vColor.w, 0.f, 1.f));
+				bChanged = true;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Delete"))
+				iRemove = i;
+
+			ImGui::PopID();
+		}
+
+		if (0 <= iRemove && iRemove < static_cast<_int>(Keys.size()))
+		{
+			Keys.erase(Keys.begin() + iRemove);
+			bChanged = true;
+		}
+
+		if (ImGui::Button("Add Color Key"))
+		{
+			Keys.push_back({ 0.5f, _float4(1.f, 1.f, 1.f, 1.f) });
+			bChanged = true;
+		}
+
+		if (bChanged)
+		{
+			curve.Clear();
+
+			for (const auto& key : Keys)
+				curve.Add_Key(ClampRange(key.t, 0.f, 1.f), key.v);
+
+			if (nullptr != pSession)
+				pSession->Mark_Dirty(pDirtyReason);
+		}
+
+		ImGui::TreePop();
+	}
+}
+
+CPanel_Effect::CPanel_Effect()
+	: CPanel_Base()
+{
+}
+
+HRESULT CPanel_Effect::Initialize()
+{
+	m_strTitle = "Effect";
+
+	if (FAILED(__super::Initialize()))
+		return E_FAIL;
+
+	m_pSession = CEffectEditorSession::Create();
+	if (nullptr == m_pSession)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CPanel_Effect::Update(_float fTimeDelta)
+{
+	if (nullptr != m_pSession)
+		m_pSession->Update(fTimeDelta);
+}
+
+HRESULT CPanel_Effect::Render()
+{
+	if (!Begin_Panel()) { End_Panel(); return S_OK; }
+
+	if (nullptr == m_pSession)
+	{
+		ImGui::TextDisabled("Effect session is not available.");
+		End_Panel();
+		return S_OK;
+	}
+
+	const EFFECT_DEFINITION& doc = m_pSession->Get_Doc();
+
+	{
+		_char szID[128] = {};
+		strncpy_s(szID, IM_ARRAYSIZE(szID), doc.strID.c_str(), _TRUNCATE);
+
+		if (ImGui::InputText("ID", szID, IM_ARRAYSIZE(szID)))
+			m_pSession->Set_DocID(szID);
+	}
+
+	{
+		_char szPath[260] = {};
+		strncpy_s(szPath, IM_ARRAYSIZE(szPath), m_pSession->Get_DocPath().c_str(), _TRUNCATE);
+
+		if (ImGui::InputText("Path", szPath, IM_ARRAYSIZE(szPath)))
+			m_pSession->Set_DocPath(szPath);
+	}
+
+	ImGui::Text("State: %s", m_pSession->Is_Dirty() ? "Dirty" : "Clean");
+
+	const _string& strStatus = m_pSession->Get_Status();
+	if (!strStatus.empty())
+		ImGui::TextDisabled("%s", strStatus.c_str());
+
+	ImGui::Separator();
+
+	if (ImGui::Button("New"))
+		m_pSession->New_Doc();
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save"))
+		m_pSession->Save(m_pSession->Get_DocPath());
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Load"))
+		m_pSession->Load(m_pSession->Get_DocPath());
+
+
+
+	if (ImGui::Button("Spawn Preview"))
+		m_pSession->Spawn_Preview();
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Stop Preview"))
+		m_pSession->Stop_Preview();
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Destroy Preview"))
+		m_pSession->Destroy_Preview();
+
+
+
+	ImGui::TextDisabled("Preview: %s", m_pSession->Is_PreviewAlive() ? "Alive" : "None");
+
+	_float3 vPreviewPosition = m_pSession->Get_PreviewPosition();
+	if (ImGui::DragFloat3("Preview Position", &vPreviewPosition.x, 0.05f, -100.f, 100.f, "%.2f"))
+		m_pSession->Set_PreviewPosition(vPreviewPosition);
+
+
+
+	if (ImGui::Button("Reset Preview Position"))
+		m_pSession->Reset_PreviewPosition();
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Add Emitter"))
+		m_pSession->Add_Emitter();
+
+	ImGui::SameLine();
+
+	const _bool bHasSelection = (m_pSession->Get_SelectedEmitter() >= 0);
+	ImGui::BeginDisabled(!bHasSelection);
+	if (ImGui::Button("Remove Emitter"))
+		m_pSession->Erase_SelectedEmitter();
+	ImGui::EndDisabled();
+
+	ImGui::Separator();
+
+	ImGui::Text("Emitters: %d", static_cast<_int>(doc.Emitters.size()));
+
+	for (_int i = 0; i < static_cast<_int>(doc.Emitters.size()); ++i)
+	{
+		const EMITTER_DEFINITION& emitter = doc.Emitters[i];
+
+		_string label = emitter.strName.empty()
+			? ("Emitter " + std::to_string(i))
+			: emitter.strName;
+
+		const _bool bSelected = (m_pSession->Get_SelectedEmitter() == i);
+		if (ImGui::Selectable(label.c_str(), bSelected))
+			m_pSession->Set_SelectedEmitter(i);
+	}
+
+	ImGui::Separator();
+	ImGui::TextUnformatted("Emitter Inspector");
+
+	EMITTER_DEFINITION* pEmitter = m_pSession->Get_SelectedEmitterMutable();
+	if (nullptr == pEmitter)
+	{
+		ImGui::TextDisabled("No emitter selected.");
+		End_Panel();
+		return S_OK;
+	}
+
+	{
+		_char szName[128] = {};
+		strcpy_s(szName, pEmitter->strName.c_str());
+
+		if (ImGui::InputText("Name", szName, IM_ARRAYSIZE(szName)))
+		{
+			pEmitter->strName = szName;
+			m_pSession->Mark_Dirty("Emitter name changed");
+		}
+	}
+
+	{
+		_int iCapacity = static_cast<_int>(pEmitter->iCapacity);
+		if (ImGui::InputInt("Capacity", &iCapacity))
+		{
+			pEmitter->iCapacity = static_cast<_uint>(max(1, iCapacity));
+			m_pSession->Mark_Dirty("Emitter capacity changed");
+		}
+	}
+
+	if (ImGui::InputFloat("Spawn Rate", &pEmitter->fSpawnRate, 1.f, 10.f, "%.2f"))
+	{
+		pEmitter->fSpawnRate = max(0.f, pEmitter->fSpawnRate);
+		m_pSession->Mark_Dirty("Emitter spawn rate changed");
+	}
+
+	{
+		_int iBurstCount = static_cast<_int>(pEmitter->iBurstCount);
+		if (ImGui::InputInt("Burst Count", &iBurstCount))
+		{
+			pEmitter->iBurstCount = static_cast<_uint>(max(0, iBurstCount));
+			m_pSession->Mark_Dirty("Emitter burst count changed");
+		}
+	}
+
+	if (ImGui::DragFloat2("Life Time", &pEmitter->vLifeTimeRange.x, 0.01f, 0.01f, 60.f, "%.2f"))
+	{
+		if (pEmitter->vLifeTimeRange.x > pEmitter->vLifeTimeRange.y)
+			std::swap(pEmitter->vLifeTimeRange.x, pEmitter->vLifeTimeRange.y);
+
+		m_pSession->Mark_Dirty("Emitter lifetime changed");
+	}
+
+	if (ImGui::DragFloat2("Speed", &pEmitter->vSpeedRange.x, 0.01f, 0.f, 100.f, "%.2f"))
+	{
+		if (pEmitter->vSpeedRange.x > pEmitter->vSpeedRange.y)
+			std::swap(pEmitter->vSpeedRange.x, pEmitter->vSpeedRange.y);
+
+		m_pSession->Mark_Dirty("Emitter speed changed");
+	}
+
+	if (ImGui::DragFloat2("Size", &pEmitter->vSizeRange.x, 0.01f, 0.f, 100.f, "%.2f"))
+	{
+		if (pEmitter->vSizeRange.x > pEmitter->vSizeRange.y)
+			std::swap(pEmitter->vSizeRange.x, pEmitter->vSizeRange.y);
+
+		m_pSession->Mark_Dirty("Emitter size changed");
+	}
+
+	if (ImGui::DragFloat3("Emit Direction", &pEmitter->vEmitDirection.x, 0.01f, -1.f, 1.f, "%.2f"))
+		m_pSession->Mark_Dirty("Emitter direction changed");
+
+	if (ImGui::DragFloat("Cone Half Angle", &pEmitter->fEmitConeHalfAngle, 0.01f, 0.f, XM_PI, "%.3f"))
+		m_pSession->Mark_Dirty("Emitter cone changed");
+
+	{
+		const char* pBillboardLabels[] = { "VIEW_ALIGNED", "AXIS_LOCKED", "FIXED_NORMAL" };
+		_int iBillboard = static_cast<_int>(pEmitter->eBillboard);
+
+		if (ImGui::Combo("Billboard", &iBillboard, pBillboardLabels, IM_ARRAYSIZE(pBillboardLabels)))
+		{
+			pEmitter->eBillboard =
+				static_cast<CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE>(iBillboard);
+			m_pSession->Mark_Dirty("Emitter billboard changed");
+		}
+	}
+
+	if (ImGui::DragFloat3("Fixed Axis", &pEmitter->vBillboardFixedAxis.x, 0.01f, -1.f, 1.f, "%.2f"))
+		m_pSession->Mark_Dirty("Emitter fixed axis changed");
+
+	{
+		const char* pBlendLabels[] = { "ALPHA", "ADDITIVE" };
+		_int iBlend = static_cast<_int>(pEmitter->eBlend);
+
+		if (ImGui::Combo("Blend", &iBlend, pBlendLabels, IM_ARRAYSIZE(pBlendLabels)))
+		{
+			pEmitter->eBlend =
+				static_cast<CParticleEmitter::EMITTER_DESC::BLEND_MODE>(iBlend);
+			m_pSession->Mark_Dirty("Emitter blend changed");
+		}
+	}
+
+	const auto& TextureOptions = Game_PKM::g_EffectTextureOptions;
+
+	_int iTexture = 0;
+	for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
+	{
+		if (TextureOptions[i].strTag == pEmitter->strTextureProtoTag)
+		{
+			iTexture = i;
+			break;
+		}
+	}
+
+	if (ImGui::BeginCombo("Texture", TextureOptions[iTexture].pLabel))
+	{
+		for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
+		{
+			const _bool bSelected = (iTexture == i);
+			if (ImGui::Selectable(TextureOptions[i].pLabel, bSelected))
+			{
+				pEmitter->strTextureProtoTag = TextureOptions[i].strTag;
+				m_pSession->Mark_Dirty("Emitter texture changed");
+			}
+
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
+		}
+
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::CollapsingHeader("Curves", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		Plot_FloatCurve("Size Curve", pEmitter->curveSize);
+
+		if (ImGui::Button("Size Pop"))
+		{
+			Set_SizePopCurve(pEmitter->curveSize);
+			m_pSession->Mark_Dirty("Size curve preset changed");
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Clear Size"))
+		{
+			pEmitter->curveSize.Clear();
+			m_pSession->Mark_Dirty("Size curve cleared");
+		}
+		Draw_FloatCurveKeys("Size Keys", pEmitter->curveSize, m_pSession, "Size curve key changed", 0.f, 2.f);
+		Plot_ColorCurve("Color Curve", pEmitter->curveColor);
+
+		if (ImGui::Button("Fire Color"))
+		{
+			Set_FireColorCurve(pEmitter->curveColor);
+			m_pSession->Mark_Dirty("Color curve preset changed");
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Clear Color"))
+		{
+			pEmitter->curveColor.Clear();
+			m_pSession->Mark_Dirty("Color curve cleared");
+		}
+		Draw_ColorCurveKeys("Color Keys", pEmitter->curveColor, m_pSession, "Color curve key changed");
+		Plot_FloatCurve("Alpha Curve", pEmitter->curveAlpha);
+
+		if (ImGui::Button("Fade Alpha"))
+		{
+			Set_FadeAlphaCurve(pEmitter->curveAlpha);
+			m_pSession->Mark_Dirty("Alpha curve preset changed");
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Clear Alpha"))
+		{
+			pEmitter->curveAlpha.Clear();
+			m_pSession->Mark_Dirty("Alpha curve cleared");
+		}
+
+		Draw_FloatCurveKeys("Alpha Keys", pEmitter->curveAlpha, m_pSession, "Alpha curve key changed", 0.f, 1.f);
+	}
+
+	End_Panel();
+	return S_OK;
+}
+
+
+CPanel_Effect* CPanel_Effect::Create()
+{
+	CPanel_Effect* pInstance = new CPanel_Effect();
+
+	if (FAILED(pInstance->Initialize()))
+	{
+		MSG_BOX("Failed to Create : CPanel_Effect");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CPanel_Effect::Free()
+{
+	Safe_Release(m_pSession);
+
+	__super::Free();
+}

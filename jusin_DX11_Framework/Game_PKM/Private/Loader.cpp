@@ -39,6 +39,7 @@
 #include "VIBuffer_Particle3D_Instance.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "Camera_Director.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -126,6 +127,10 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 	/* M7a 임시 코드 블록 (코드 기반 정의 등록) 전체 제거.
 	   JSON 로드는 CEffect_Manager::Initialize() 내부에서 자동 수행. */
 	CEffect_Manager::GetInstance()->Initialize();
+
+	/* M1: Camera Director 싱글톤 초기화. 본 시점엔 빈 본문이나
+   M9 에서 JSON 프리셋 로드를 본 함수 내부에서 처리. */
+	CCamera_Director::GetInstance()->Initialize();
 
 	_uint iHW = max(2u, thread::hardware_concurrency());
 	//_uint iWorkerCount = max(1u, min(iHW - 1u, iHW * 2 / 3));
@@ -926,56 +931,16 @@ HRESULT CLoader::Ready_Resources_For_Effect()
 		const _tchar* pDebugName;
 	};
 
-	const EFFECT_TEXTURE_PROTO_DESC EffectTextureDescs[] =
+	for (const auto& Desc : Game_PKM::g_EffectTextureOptions)
 	{
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_0_LINE702_SML_O, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_line702_sml_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_0_Line702_Sml_O") },
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_0_MASK702_O, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_0_Mask702_O") },
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE004_SML_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_1_circle004_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_1_Circle004_Sml_M") },
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE005_SML_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_1_circle005_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_1_Circle005_Sml_M") },
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_2_FIRE003_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_2_fire003_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_2_Fire003_M") },
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_2_HIT011_M, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_2_hit011_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_2_Hit011_M") },
-			{ PROTO_COM_TEX_EFT_BALL_ABSORB_3_FLOW701_O, TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_3_flow701_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Absorb_3_Flow701_O") },
+		if (nullptr == Desc.pTextureFilePath)
+			continue;
 
-			{ PROTO_COM_TEX_EFT_BALL_HIT_0_MASK702_O, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Mask702_O") },
-			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE002_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke002_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke002_M") },
-			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE005_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke005_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke005_M") },
-			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE203_A, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke203_a.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke203_A") },
-			{ PROTO_COM_TEX_EFT_BALL_HIT_0_SMOKE702_O, TEXT("../../Resources/Effects/Ball_hit/fxpt_0_smoke702_o.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_0_Smoke702_O") },
-			{ PROTO_COM_TEX_EFT_BALL_HIT_1_CIRCLE003_SML_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_1_circle003_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_1_Circle003_Sml_M") },
-			{ PROTO_COM_TEX_EFT_BALL_HIT_1_FLASH001_SML_M, TEXT("../../Resources/Effects/Ball_hit/fxpt_1_flash001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Ball_Hit_1_Flash001_Sml_M") },
-
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_BLUR003_SML_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_blur003_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Blur003_Sml_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_LINE701_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_line701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Line701_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_MASK702_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Mask702_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_SMOKE702_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_0_smoke702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_0_Smoke702_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_1_CIRCLE004_SML_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_1_circle004_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_1_Circle004_Sml_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_1_CIRCLE005_SML_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_1_circle005_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_1_Circle005_Sml_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_DUST701_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_dust701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Dust701_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_HIT011_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_hit011_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Hit011_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_SMOKE703_O, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_smoke703_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Smoke703_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_WATER009_M, TEXT("../../Resources/Effects/Capture_failed/fxpt_2_water009_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Failed_2_Water009_M") },
-
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_LINE702_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_line702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Line702_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_MASK702_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_mask702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Mask702_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_MASK703_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_mask703_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Mask703_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_0_SMOKE702_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_0_smoke702_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_0_Smoke702_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_1_CIRCLE005_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_1_circle005_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_1_Circle005_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_1_FLASH001_SML_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_1_flash001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_1_Flash001_Sml_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_2_DUST701_O, TEXT("../../Resources/Effects/Capture_hit/fxpt_2_dust701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_2_Dust701_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_2_SMOKE001_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_2_smoke001_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_2_Smoke001_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_2_TRANSFORM001_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_2_transform001_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_2_Transform001_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_HIT_3_CLOUD001_M, TEXT("../../Resources/Effects/Capture_hit/fxpt_3_cloud001_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Hit_3_Cloud001_M") },
-
-			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_LINE701_O, TEXT("../../Resources/Effects/Capture_success/fxpt_0_line701_o.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_0_Line701_O") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MASK003_M, TEXT("../../Resources/Effects/Capture_success/fxpt_0_mask003_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_0_Mask003_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MA_STAR001_SML_M, TEXT("../../Resources/Effects/Capture_success/fxpt_0_ma_star001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_0_Ma_Star001_Sml_M") },
-			{ PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_1_CIRCLE001_SML_M, TEXT("../../Resources/Effects/Capture_success/fxpt_1_circle001_sml_m.png"), TEXT("Prototype_Component_Texture_Effect_Capture_Success_1_Circle001_Sml_M") },
-	};
-
-	for (const auto& Desc : EffectTextureDescs)
-	{
-		Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), Desc.strProtoTag,
-			[this, pTextureFilePath = Desc.pTextureFilePath] { return CTexture::Create(m_pDevice, m_pContext, pTextureFilePath, 1); },
+		Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), Desc.strTag,
+			[this, pTextureFilePath = Desc.pTextureFilePath]
+			{
+				return CTexture::Create(m_pDevice, m_pContext, pTextureFilePath, 1);
+			},
 			Desc.pDebugName);
 	}
 
