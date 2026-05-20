@@ -39,6 +39,7 @@ struct EMITTER_DEFINITION
 	_float fAtlasFps = 0.f;
 	_bool  bAtlasLoop = false;
 	_bool  bMirrorUV = false;
+	_bool  bIgnoreDepth = false;
 
 	/* 시간 커브 */
 	CCurveFloat  curveSize;
@@ -162,6 +163,7 @@ inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION&
 	desc.fAtlasFps = def.fAtlasFps;
 	desc.bAtlasLoop = def.bAtlasLoop;
 	desc.bMirrorUV = def.bMirrorUV;
+	desc.bIgnoreDepth = def.bIgnoreDepth;
 	desc.strTextureProtoTag = def.strTextureProtoTag;
 	desc.curveSize = def.curveSize;
 	desc.curveColor = def.curveColor;
@@ -329,6 +331,7 @@ inline HRESULT Effect_ParseEmitterJson(const json& je, EMITTER_DEFINITION& out)
 	Effect_GetOpt(je, "atlasFps", out.fAtlasFps);
 	Effect_GetOpt(je, "atlasLoop", out.bAtlasLoop);
 	Effect_GetOpt(je, "mirrorUV", out.bMirrorUV);
+	Effect_GetOpt(je, "ignoreDepth", out.bIgnoreDepth);
 
 	if (je.contains("textureProtoTag"))
 	{
@@ -416,6 +419,7 @@ emitter.vBillboardFixedAxis.z };
 	j["atlasFps"] = emitter.fAtlasFps;
 	j["atlasLoop"] = emitter.bAtlasLoop;
 	j["mirrorUV"] = emitter.bMirrorUV;
+	j["ignoreDepth"] = emitter.bIgnoreDepth;
 
 	const _string strTextureTag = Effect_TextureTagToString(emitter.strTextureProtoTag);
 	if (!strTextureTag.empty())

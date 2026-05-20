@@ -226,8 +226,9 @@ HRESULT CEffectEditorSession::Spawn_Preview()
 		return E_FAIL;
 	}
 
-	if (!pGameInstance->Has_Prototype(iLevel, PROTO_OBJ_EFFECT) ||
-		!pGameInstance->Has_Prototype(iLevel, PROTO_OBJ_PARTICLE_EMITTER))
+	const _uint iProtoLevel = ETOUI(LEVEL::STATIC);
+	if (!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_EFFECT) ||
+		!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_PARTICLE_EMITTER))
 	{
 		m_strStatus = "Preview failed: effect prototypes are not loaded";
 		return E_FAIL;

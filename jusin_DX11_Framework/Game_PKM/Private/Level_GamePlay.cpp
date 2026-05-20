@@ -304,18 +304,18 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		m_pDebugEffectOwner = nullptr;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_P))
-	{
-		BATTLE_ENV tEnv = {};
-		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
-		tEnv.eRule = BATTLE_RULE::TRAINER_SINGLE;
-		tEnv.iOpponentTrainerID = 1;
-		tEnv.iBGResourceID = 0;
-		tEnv.iZoneID = 0;
-
-		Request_Battle(tEnv);
-		return;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_P))
+	//{
+	//	BATTLE_ENV tEnv = {};
+	//	tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
+	//	tEnv.eRule = BATTLE_RULE::TRAINER_SINGLE;
+	//	tEnv.iOpponentTrainerID = 1;
+	//	tEnv.iBGResourceID = 0;
+	//	tEnv.iZoneID = 0;
+	//
+	//	Request_Battle(tEnv);
+	//	return;
+	//}
 
 	UI_Update_All(fTimeDelta);
 }

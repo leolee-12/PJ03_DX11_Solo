@@ -427,8 +427,9 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pSpecies->strModelTag, ANIM_KIND::IDLE);
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = 1.f;
-		BodyDesc.bEnableRootMotion = true;     // S3 Fix - Body_Hero 와 동일 패턴
-		BodyDesc.iRootMotionBoneIndex = 0;       // 1차 root bone. 모델별 조정 필요 시 후속에서 노출
+		BodyDesc.bEnableRootMotion = true;
+		BodyDesc.iRootMotionBoneIndex = 0;
+		BodyDesc.strRootMotionBoneName = "Waist";
 		BodyDesc.pRenderRule = pRenderRule;
 
 		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};
@@ -439,13 +440,14 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 		WildDesc.iSpeciesID = tDesc.iSpeciesID_Temp;
 		WildDesc.iLevel = tDesc.iLevel_Temp;
 		WildDesc.vSpawnPos = vNavPos;
-		WildDesc.fRotationPerSec = XMConvertToRadians(720.f);   // S3 Fix #2 - 회전 활성화
+		WildDesc.fRotationPerSec = XMConvertToRadians(720.f);
 
 		WildDesc.iSpawnRectID = tDesc.iSpawnID;
 		WildDesc.vSpawnAnchor = tRuntime.vProjectedCenter;
 		WildDesc.fLeashRadius = tDesc.fLeashRadius;
 		WildDesc.iCurrentCellIndex = iCellIndex;
 		WildDesc.tSpawnRectDesc = tDesc;
+		WildDesc.strBodyModelProtoTag = pSpecies->strModelTag;
 
 		if (FAILED(m_pGameInstance->Add_GameObject(
 			ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_WILD_POKEMON,

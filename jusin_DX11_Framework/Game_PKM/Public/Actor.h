@@ -18,6 +18,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void Tick_Movement(_float fTimeDelta);
 
 public:
 	_bool CanInteract(const INTERACTION_CONTEXT& ctx) const;

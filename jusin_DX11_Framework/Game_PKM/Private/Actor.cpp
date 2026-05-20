@@ -31,6 +31,8 @@ void CActor::Update(_float fTimeDelta)
 				Pair.second->Update(fTimeDelta);
 		});
 
+	Tick_Movement(fTimeDelta);
+
 	for (auto* pInteraction : m_Interactions)
 	{
 		if (nullptr != pInteraction)
@@ -47,6 +49,12 @@ void CActor::Late_Update(_float fTimeDelta)
 			if (nullptr != Pair.second)
 				Pair.second->Late_Update(fTimeDelta);
 		});
+}
+
+void CActor::Tick_Movement(_float fTimeDelta)
+{
+	Tick_RootMotionMovement(XMVectorZero(), false, _float3{},
+		/*pNavigation=*/nullptr, fTimeDelta);
 }
 
 _bool CActor::CanInteract(const INTERACTION_CONTEXT& ctx) const

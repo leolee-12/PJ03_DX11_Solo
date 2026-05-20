@@ -1,6 +1,7 @@
 ﻿#include "Actor_WildPokemon.h"
 #include "Body.h"
 #include "Interaction_Encounter.h"
+#include "Battle_AnimDef.h"
 
 #include "GameInstance.h"
 
@@ -45,12 +46,12 @@ HRESULT CActor_WildPokemon::Initialize(void* pArg)
     if (FAILED(Ready_PartObjects(pDesc)))
         return E_FAIL;
 
-    // S2 추가 - desc 의 SpawnRect 페이로드 캐싱 (사용은 S3 배회 로직)
     m_iSpawnRectID = pDesc->iSpawnRectID;
     m_vSpawnAnchor = pDesc->vSpawnAnchor;
     m_fLeashRadius = pDesc->fLeashRadius;
     m_iCurrentCellIndex = pDesc->iCurrentCellIndex;
     m_tSpawnRectDesc = pDesc->tSpawnRectDesc;
+    m_strBodyModelProtoTag = pDesc->strBodyModelProtoTag;
 
     m_pTransformCom->Set_State(STATE::POSITION,
         XMVectorSet(pDesc->vSpawnPos.x, pDesc->vSpawnPos.y, pDesc->vSpawnPos.z, 1.f));
@@ -69,8 +70,6 @@ void CActor_WildPokemon::Priority_Update(_float fTimeDelta)
 void CActor_WildPokemon::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
-
-    Tick_Wander(fTimeDelta);
 
     if (nullptr != m_pColliderCom)
         m_pColliderCom->Update(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
@@ -140,7 +139,7 @@ void CActor_WildPokemon::Cache_Members()
     m_pBody = Get_Part<CBody>(PART_BODY);
 }
 
-void CActor_WildPokemon::Tick_Wander(_float fTimeDelta)
+void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
 {
     if (nullptr == m_pNavigationCom || nullptr == m_pBody) return;
 
@@ -205,7 +204,31 @@ void CActor_WildPokemon::Tick_Wander(_float fTimeDelta)
     default: break;
     }
 
-    // Player_LGPE 와 동일 - 회전 + 루트모션 delta 기반 위치 갱신.
+    /* IDLE/WALK 애니메이션 전환 - bHasInput && !Pivoting 일 때 WALK, 아니면 IDLE.
+       Player_LGPE::Update_AnimState 와 동일 패턴. 같은 인덱스 재설정은 CModel::Set_AnimationIndex 가 초기 가드로 무시. */
+    const ANIM_KIND eKind =
+        (bHasInput && !m_MoveState.Pivoting)
+        ? ANIM_KIND::WALK
+        : ANIM_KIND::IDLE;
+    m_pBody->Set_Anim(
+        BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, eKind),
+        true);
+
+#ifdef _DEBUG
+    if (bHasInput)
+    {
+        const _float3& vDelta = m_pBody->Get_RootMotionDelta();
+        char szLog[256] = {};
+        sprintf_s(szLog, "[Wild] anim=%u delta=(%.6f, %.6f, %.6f)\n",
+            BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, ANIM_KIND::WALK),
+            vDelta.x, vDelta.y, vDelta.z);
+        OutputDebugStringA(szLog);
+    }
+#endif
+
+    Tick_RootMotionMovement(vMoveDir, bHasInput,
+        m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
+
     Tick_RootMotionMovement(vMoveDir, bHasInput,
         m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
 }

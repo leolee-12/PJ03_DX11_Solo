@@ -20,6 +20,12 @@ DepthStencilState DSS_DepthReadNoWrite
 	DepthFunc = LESS_EQUAL;
 };
 
+DepthStencilState DSS_DepthOff
+{
+	  DepthEnable = false;
+	  DepthWriteMask = ZERO;
+};
+
 BlendState BS_Additive
 {
 	BlendEnable[0] = true;
@@ -133,6 +139,26 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_DepthReadNoWrite, 0);
+		SetBlendState(BS_Additive, float4(0,0,0,0), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+	pass Alpha_DepthOff         // pass 2 - pass 0 의 깊이 무시 변형
+	{
+		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_DepthOff, 0);
+		SetBlendState(BS_AlphaBlend, float4(0,0,0,0), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_MAIN();
+	}
+	pass Additive_DepthOff      // pass 3 - pass 1 의 깊이 무시 변형
+	{
+		SetRasterizerState(RS_Cull_None);
+		SetDepthStencilState(DSS_DepthOff, 0);
 		SetBlendState(BS_Additive, float4(0,0,0,0), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();

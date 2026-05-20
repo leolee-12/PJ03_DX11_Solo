@@ -208,10 +208,10 @@ void CBattle_Pokemon::Play_Enter()
 {
 	if (nullptr != m_pBody)
 		m_pBody->Set_Anim(
-			BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::ENTER),
+			BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::INTRO),
 			false);
 
-	m_eCurrentKind = ANIM_KIND::ENTER;
+	m_eCurrentKind = ANIM_KIND::INTRO;
 	m_fAnimTimer = 0.f;
 	m_fAnimDuration = 2.f;
 }

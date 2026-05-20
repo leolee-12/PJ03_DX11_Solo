@@ -31,6 +31,8 @@ public:
 		_float             fLeashRadius = { 10.f };
 		_uint              iCurrentCellIndex = { INVALID_NAV_CELL };
 		SPAWN_RECT_DESC    tSpawnRectDesc = {};
+
+		WNameID            strBodyModelProtoTag = { 0 };
 	};
 
 private:
@@ -72,14 +74,16 @@ private:
 	_float3      m_vMoveTarget = {};
 	_uint        m_iTargetCellIndex = { INVALID_NAV_CELL };
 	_bool        m_bUseRectWander = { true };
+	WNameID      m_strBodyModelProtoTag = { 0 };
 
 private:
 	HRESULT Ready_Components(const ACTOR_WILD_DESC* pDesc);
 	HRESULT Ready_PartObjects(const ACTOR_WILD_DESC* pDesc);
 	void    Cache_Members();
 
-	void  Tick_Wander(_float fTimeDelta);
-	_bool Choose_WanderTarget();
+	virtual void Tick_Movement(_float fTimeDelta) override;
+	_bool   Choose_WanderTarget();
+
 
 public:
 	static CActor_WildPokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

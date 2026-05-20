@@ -50,6 +50,7 @@ public:
 		_float fAtlasFps = 0.f;
 		_bool  bAtlasLoop = false;
 		_bool  bMirrorUV = false;
+		_bool  bIgnoreDepth = false;
 
 		_bool bSimulateInLocalAtSpawn = false;
 		WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;

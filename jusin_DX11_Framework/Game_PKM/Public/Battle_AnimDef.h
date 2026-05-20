@@ -7,17 +7,23 @@ enum class ANIM_KIND : _ubyte
 {
     IDLE = 0,
     WALK = 1,
-    TALK = 2,
-
-    ATTACK_PHYSICAL = 3,
-    ATTACK_SPECIAL = 4,
-
-    HURT = 5,
-    FAINT = 6,
-    ENTER = 7,
+    RUN = 2,
+    TALK = 3,
+    HURT = 4,
+    FAINT = 5,
+    INTRO = 6,
+    ORDER = 7,
+    FOCUS = 8,
+    THROW = 9,
+    SWITCH = 10,
+    ATTACK_PHYSICAL = 11,
+    ATTACK_SPECIAL = 12,
+    EVENT1 = 13,
+    EVENT2 = 14,
+    EVENT3 = 15,
 
     ATTACK = ATTACK_PHYSICAL, // 기존 호출 호환용
-    END = 8
+    END = 16
 };
 
 namespace BattleAnim

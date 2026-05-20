@@ -22,6 +22,7 @@ public:
 		_float3 vLocalOffset = {};
 		_bool bEnableRootMotion = { false };
 		_uint iRootMotionBoneIndex = { 0 };
+		_string strRootMotionBoneName = "";
 		const _uint* pParentState = { nullptr };
 	};
 

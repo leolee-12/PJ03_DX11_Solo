@@ -59,6 +59,25 @@ HRESULT CBody::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(pDesc->vLocalOffset.x, pDesc->vLocalOffset.y, pDesc->vLocalOffset.z, 1.f));
 	m_pModelCom->Set_AnimationIndex(pDesc->iDefaultAnim, pDesc->bLoop);
+
+	_uint iRootBoneIndex = pDesc->iRootMotionBoneIndex;
+	if (!pDesc->strRootMotionBoneName.empty())
+	{
+		const _int iResolved = m_pModelCom->Get_BoneIndex(pDesc->strRootMotionBoneName.c_str());
+
+#ifdef _DEBUG
+		{
+			char szLog[256] = {};
+			sprintf_s(szLog, "[Body] RootBone name=\"%s\" resolved=%d fallback=%u\n",
+				pDesc->strRootMotionBoneName.c_str(), iResolved, pDesc->iRootMotionBoneIndex);
+			OutputDebugStringA(szLog);
+		}
+#endif
+
+		if (iResolved >= 0)
+			iRootBoneIndex = static_cast<_uint>(iResolved);
+	}
+
 	m_pModelCom->Set_RootMotionBoneIndex(pDesc->iRootMotionBoneIndex);
 	m_pModelCom->Set_EnableRootMotion(pDesc->bEnableRootMotion);
 

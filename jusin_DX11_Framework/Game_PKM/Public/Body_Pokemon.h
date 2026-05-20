@@ -19,10 +19,12 @@ private:
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 private:
 	CRenderProfile m_RenderProfile;
+	_uint m_iCurrAnim{};
 
 public:
 	static CBody_Pokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

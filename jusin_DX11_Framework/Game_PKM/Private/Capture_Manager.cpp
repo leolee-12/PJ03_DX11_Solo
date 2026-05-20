@@ -68,7 +68,7 @@ void CCapture_Manager::Update(_float fTimeDelta)
 					m_pBall->Hide();
 				}
 
-				if (nullptr != m_pTarget)
+				if (m_bHitThisThrow && nullptr != m_pTarget)
 					m_pTarget->Begin_Appear();
 
 				m_eResult = CAPTURE_RESULT::NONE;
@@ -201,9 +201,6 @@ void CCapture_Manager::Resolve_Throw()
 	m_eResult = (fRoll < fProb) ? CAPTURE_RESULT::SUCCESS : CAPTURE_RESULT::FAIL_BREAK;
 
 	OutputDebugStringA(nullptr != m_pTarget ? "[Resolve] target ok\n" : "[Resolve] target null\n");
-
-	if (nullptr != m_pTarget)
-		m_pTarget->Begin_Absorb();
 
 	if (nullptr != m_pTarget)
 		m_pTarget->Begin_Absorb();
