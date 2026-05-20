@@ -19,9 +19,6 @@
     <Filter Include="80. Study">
       <UniqueIdentifier>{2167fda7-f196-44e9-b60b-39aea4afdf71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80. Study\02. Monster">
-      <UniqueIdentifier>{b50c0748-6208-4528-99ee-2a9933a6e431}</UniqueIdentifier>
-    </Filter>
     <Filter Include="80. Study\01. Terrain">
       <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
     </Filter>
@@ -49,36 +46,6 @@
     <Filter Include="01. Objects">
       <UniqueIdentifier>{c1e3e017-d7c6-4df1-b41f-25ab3a94bae1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Objects\04. UI">
-      <UniqueIdentifier>{95cb7b9c-7bb3-4c80-b8fd-b4ad2f74e72c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\Controller">
-      <UniqueIdentifier>{a2aef8e3-0ab8-4d10-aaf9-e36c9a2e63b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\Button_Custom">
-      <UniqueIdentifier>{72f9e33e-5c26-4b29-bf2f-e135ac21628c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\KeyNavi">
-      <UniqueIdentifier>{51bf51c4-8b8d-40dc-9142-162fabb24461}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\Image_Custom">
-      <UniqueIdentifier>{5fe30791-b6fd-4f3a-8499-8e2f2bf206e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\02. PartObject">
-      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\02. PartObject\Body">
-      <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\01. GameActor">
-      <UniqueIdentifier>{d772649f-03b1-4208-a21e-800813a55c9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\01. GameActor\00. Player_LGPE">
-      <UniqueIdentifier>{f4477a45-3ec6-4251-97d9-309c0cd15fc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\01. GameActor\01. NPC">
-      <UniqueIdentifier>{ab8b83a2-815e-47e3-a3d4-4fe612e05281}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Objects\00. Environment">
       <UniqueIdentifier>{2ff14eb7-25dd-4762-b3cb-6d4ce4df7f87}</UniqueIdentifier>
     </Filter>
@@ -100,33 +67,6 @@
     <Filter Include="04. Contents">
       <UniqueIdentifier>{5e4f1844-8345-49f5-92a1-645cd4513df6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Contents\00. Battle">
-      <UniqueIdentifier>{da002d15-2ba0-4999-b1c8-58bda8233ff3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\00. Battle_API">
-      <UniqueIdentifier>{8b676e14-ca1a-4d68-8065-f0fba4f88635}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\01. Battler">
-      <UniqueIdentifier>{8f90f69b-c728-47bd-930e-238f0096d93e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\02. Commands">
-      <UniqueIdentifier>{44e307d2-1dd7-4287-8e68-0b72dd5c211e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\03. States">
-      <UniqueIdentifier>{8a27bcc6-1057-49f1-b19e-5423d0c149fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\04. Damage">
-      <UniqueIdentifier>{9b58264a-6657-4c35-8910-02a3eff1cb0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\05. Events">
-      <UniqueIdentifier>{4743ee90-5fd2-4654-8b6e-d72e25d1589e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\06. AI">
-      <UniqueIdentifier>{48bdcdfe-73f9-43e0-a2b6-d120f2553d33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\00. Battle\07. Sequencer">
-      <UniqueIdentifier>{ed0b120f-fc74-4732-965d-62efcb920c4c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Game_API">
       <UniqueIdentifier>{564c7465-cb9d-4b18-9180-4375805faed6}</UniqueIdentifier>
     </Filter>
@@ -135,30 +75,6 @@
     </Filter>
     <Filter Include="02. Game_API\01. PokemonData">
       <UniqueIdentifier>{49e65149-9a89-4cf7-b5ab-50fbe302651d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\01. Capture">
-      <UniqueIdentifier>{9838a4ba-fd25-4a4e-8946-3e2b0a999215}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\Controller\Gameplay">
-      <UniqueIdentifier>{28ef0a5e-607b-42e0-b5ea-e36571d1c969}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\Controller\Battle">
-      <UniqueIdentifier>{d6b751af-1669-4a33-b6b4-1027b50dcbc8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\04. UI\Controller\Capture">
-      <UniqueIdentifier>{ed9b42dc-f08d-4a74-b7c5-eef9dfeb1ae1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\01. GameActor\03. Capture">
-      <UniqueIdentifier>{550aa659-6d0a-4f7d-b12b-2c6e2fcbdf66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\01. GameActor\02. Battle">
-      <UniqueIdentifier>{2d9401fd-e566-40f1-ac84-98ac92b4d63d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\05. Misc">
-      <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. Contents\02. Spawn">
-      <UniqueIdentifier>{492461dc-2dfd-4a4c-b9f4-3c73c61c8dfd}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. Game_API\02. TrainerData">
       <UniqueIdentifier>{618138b5-dfd7-4118-8ed9-efd41789c494}</UniqueIdentifier>
@@ -181,14 +97,98 @@
     <Filter Include="03. Components\00. VIBuffer">
       <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. Effects">
+    <Filter Include="01. Objects\01. PartObject">
+      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\01. PartObject\Body">
+      <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI">
+      <UniqueIdentifier>{95cb7b9c-7bb3-4c80-b8fd-b4ad2f74e72c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\Controller">
+      <UniqueIdentifier>{a2aef8e3-0ab8-4d10-aaf9-e36c9a2e63b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\Controller\Gameplay">
+      <UniqueIdentifier>{28ef0a5e-607b-42e0-b5ea-e36571d1c969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\Controller\Battle">
+      <UniqueIdentifier>{d6b751af-1669-4a33-b6b4-1027b50dcbc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\Controller\Capture">
+      <UniqueIdentifier>{ed9b42dc-f08d-4a74-b7c5-eef9dfeb1ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\Button_Custom">
+      <UniqueIdentifier>{72f9e33e-5c26-4b29-bf2f-e135ac21628c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\KeyNavi">
+      <UniqueIdentifier>{51bf51c4-8b8d-40dc-9142-162fabb24461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\02. UI\Image_Custom">
+      <UniqueIdentifier>{5fe30791-b6fd-4f3a-8499-8e2f2bf206e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\03. Misc">
+      <UniqueIdentifier>{6aaf8b02-8f13-4f9c-8f52-f0e493a04a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\00. GameActor">
+      <UniqueIdentifier>{d772649f-03b1-4208-a21e-800813a55c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\00. GameActor\00. Player_LGPE">
+      <UniqueIdentifier>{f4477a45-3ec6-4251-97d9-309c0cd15fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\00. GameActor\01. NPC">
+      <UniqueIdentifier>{ab8b83a2-815e-47e3-a3d4-4fe612e05281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\00. GameActor\03. Capture">
+      <UniqueIdentifier>{550aa659-6d0a-4f7d-b12b-2c6e2fcbdf66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\00. GameActor\02. Battle">
+      <UniqueIdentifier>{2d9401fd-e566-40f1-ac84-98ac92b4d63d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle">
+      <UniqueIdentifier>{da002d15-2ba0-4999-b1c8-58bda8233ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\01. Battler">
+      <UniqueIdentifier>{8f90f69b-c728-47bd-930e-238f0096d93e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\02. Commands">
+      <UniqueIdentifier>{44e307d2-1dd7-4287-8e68-0b72dd5c211e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\03. States">
+      <UniqueIdentifier>{8a27bcc6-1057-49f1-b19e-5423d0c149fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\04. Damage">
+      <UniqueIdentifier>{9b58264a-6657-4c35-8910-02a3eff1cb0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\05. Events">
+      <UniqueIdentifier>{4743ee90-5fd2-4654-8b6e-d72e25d1589e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\06. AI">
+      <UniqueIdentifier>{48bdcdfe-73f9-43e0-a2b6-d120f2553d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\07. Sequencer">
+      <UniqueIdentifier>{ed0b120f-fc74-4732-965d-62efcb920c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\02. Capture">
+      <UniqueIdentifier>{9838a4ba-fd25-4a4e-8946-3e2b0a999215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\03. Spawn">
+      <UniqueIdentifier>{492461dc-2dfd-4a4c-b9f4-3c73c61c8dfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\04. Camera_Directing">
+      <UniqueIdentifier>{373c1197-f9b3-495e-a728-6c362712b4bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\04. Effects">
       <UniqueIdentifier>{911aec86-4d94-417b-a60f-60175478b046}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. Effects\Particle">
+    <Filter Include="01. Objects\04. Effects\Particle">
       <UniqueIdentifier>{0d0cbdf4-df1b-493e-bd14-4b072d988d3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Contents\03. Camera">
-      <UniqueIdentifier>{373c1197-f9b3-495e-a728-6c362712b4bd}</UniqueIdentifier>
+    <Filter Include="01. Objects\99. Monster%28Dummy%29">
+      <UniqueIdentifier>{b50c0748-6208-4528-99ee-2a9933a6e431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\01. Battle\00. Battle_API">
+      <UniqueIdentifier>{8b676e14-ca1a-4d68-8065-f0fba4f88635}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +223,7 @@
       <Filter>01. Objects\00. Environment\01. Camera\Free</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
-      <Filter>80. Study\02. Monster</Filter>
+      <Filter>01. Objects\99. Monster%28Dummy%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Tags.h">
       <Filter>99. Defines</Filter>
@@ -232,7 +232,7 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ForkLift.h">
-      <Filter>80. Study\02. Monster</Filter>
+      <Filter>01. Objects\99. Monster%28Dummy%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Player.h">
       <Filter>80. Study\00. Player</Filter>
@@ -247,7 +247,7 @@
       <Filter>01. Objects\00. Environment\03. Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_LGPE.h">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+      <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Game_PKM_Enum.h">
       <Filter>99. Defines</Filter>
@@ -259,25 +259,25 @@
       <Filter>80. Study\03. Particles</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Star.h">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
       <Filter>03. Components\00. VIBuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
+      <Filter>01. Objects\02. UI\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIButton_Layered.h">
-      <Filter>01. Objects\04. UI\Button_Custom</Filter>
+      <Filter>01. Objects\02. UI\Button_Custom</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIButton_Glow.h">
-      <Filter>01. Objects\04. UI\Button_Custom</Filter>
+      <Filter>01. Objects\02. UI\Button_Custom</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIButton_Group.h">
-      <Filter>01. Objects\04. UI\KeyNavi</Filter>
+      <Filter>01. Objects\02. UI\KeyNavi</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController_Hub.h">
-      <Filter>01. Objects\04. UI\Controller</Filter>
+      <Filter>01. Objects\02. UI\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SharedTexture_Manager.h">
       <Filter>02. Game_API\00. SharedTexture</Filter>
@@ -289,10 +289,10 @@
       <Filter>02. Game_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Status.h">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+      <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Manager.h">
-      <Filter>04. Contents\00. Battle</Filter>
+      <Filter>04. Contents\01. Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Battle.h">
       <Filter>00. Levels\03. Battle</Filter>
@@ -301,106 +301,103 @@
       <Filter>02. Game_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body.h">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Pokemon.h">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battler.h">
-      <Filter>04. Contents\00. Battle\01. Battler</Filter>
+      <Filter>04. Contents\01. Battle\01. Battler</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IBattleCommand.h">
-      <Filter>04. Contents\00. Battle\02. Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CommandQueue.h">
-      <Filter>04. Contents\00. Battle</Filter>
+      <Filter>04. Contents\01. Battle\02. Commands</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Context.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Data.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Layout.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Math.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Session.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Stream.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Targeting.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Commands.h">
-      <Filter>04. Contents\00. Battle\02. Commands</Filter>
+      <Filter>04. Contents\01. Battle\02. Commands</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IBattleState.h">
-      <Filter>04. Contents\00. Battle\03. States</Filter>
+      <Filter>04. Contents\01. Battle\03. States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_States.h">
-      <Filter>04. Contents\00. Battle\03. States</Filter>
+      <Filter>04. Contents\01. Battle\03. States</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Damage_Pipe.h">
-      <Filter>04. Contents\00. Battle\04. Damage</Filter>
+      <Filter>04. Contents\01. Battle\04. Damage</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IDamageModifier.h">
-      <Filter>04. Contents\00. Battle\04. Damage</Filter>
+      <Filter>04. Contents\01. Battle\04. Damage</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Damage_Calculator.h">
-      <Filter>04. Contents\00. Battle\04. Damage</Filter>
+      <Filter>04. Contents\01. Battle\04. Damage</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Damage_Modifiers.h">
-      <Filter>04. Contents\00. Battle\04. Damage</Filter>
+      <Filter>04. Contents\01. Battle\04. Damage</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Events.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IBattleEventListener.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_EventDispatcher.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_EventListenerBase.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IBattleAI.h">
-      <Filter>04. Contents\00. Battle\06. AI</Filter>
+      <Filter>04. Contents\01. Battle\06. AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_AI.h">
-      <Filter>04. Contents\00. Battle\06. AI</Filter>
+      <Filter>04. Contents\01. Battle\06. AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_MsgListener.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_InputDirector.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\RenderRule_Manager.h">
       <Filter>02. Game_API\03. RenderRule</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\IBattleAction_Step.h">
-      <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
+      <Filter>04. Contents\01. Battle\07. Sequencer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_ActionSequencer.h">
-      <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
+      <Filter>04. Contents\01. Battle\07. Sequencer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Action_Steps.h">
-      <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
+      <Filter>04. Contents\01. Battle\07. Sequencer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_AnimDef.h">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_PokemonListener.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIImage_FadeBattle.h">
-      <Filter>01. Objects\04. UI\Image_Custom</Filter>
+      <Filter>01. Objects\02. UI\Image_Custom</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interaction.h">
       <Filter>03. Components\01. Interaction</Filter>
@@ -412,124 +409,127 @@
       <Filter>03. Components\01. Interaction</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Human.h">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor.h">
-      <Filter>01. Objects\01. GameActor</Filter>
+      <Filter>04. Contents\00. GameActor</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor_NPC.h">
-      <Filter>01. Objects\01. GameActor\01. NPC</Filter>
+      <Filter>04. Contents\00. GameActor\01. NPC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor_WildPokemon.h">
-      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
+      <Filter>04. Contents\00. GameActor\03. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Actor_CaptureTarget.h">
-      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
+      <Filter>04. Contents\00. GameActor\03. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interaction_BallHit.h">
       <Filter>03. Components\01. Interaction</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Capture_Session.h">
-      <Filter>04. Contents\01. Capture</Filter>
+      <Filter>04. Contents\02. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Capture.h">
       <Filter>00. Levels\04. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Capture_Manager.h">
-      <Filter>04. Contents\01. Capture</Filter>
+      <Filter>04. Contents\02. Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Menu.h">
-      <Filter>01. Objects\04. UI\Controller\Gameplay</Filter>
+      <Filter>01. Objects\02. UI\Controller\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BattlePlate.h">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_CommandMenu.h">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_MoveMenu.h">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BattleMsg.h">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Capture_Menu.h">
-      <Filter>01. Objects\04. UI\Controller\Capture</Filter>
+      <Filter>01. Objects\02. UI\Controller\Capture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MonsterBall.h">
-      <Filter>01. Objects\05. Misc</Filter>
+      <Filter>01. Objects\03. Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Trainer.h">
-      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+      <Filter>04. Contents\00. GameActor\02. Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Pokemon.h">
-      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+      <Filter>04. Contents\00. GameActor\02. Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CaptureRing.h">
-      <Filter>01. Objects\05. Misc</Filter>
+      <Filter>01. Objects\03. Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Data.h">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+      <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Spawn_Defines.h">
-      <Filter>04. Contents\02. Spawn</Filter>
+      <Filter>04. Contents\03. Spawn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Spawn_Manager.h">
-      <Filter>04. Contents\02. Spawn</Filter>
+      <Filter>04. Contents\03. Spawn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TrainerData_Manager.h">
       <Filter>02. Game_API\02. TrainerData</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Test_Single.h">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_ExpGainListener.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h">
       <Filter>03. Components\00. VIBuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Defines.h">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Manager.h">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_PlateListener.h">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ParticleEmitter.h">
-      <Filter>05. Effects\Particle</Filter>
+      <Filter>01. Objects\04. Effects\Particle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Particle.h">
-      <Filter>05. Effects\Particle</Filter>
+      <Filter>01. Objects\04. Effects\Particle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ParticleCurve.h">
-      <Filter>05. Effects\Particle</Filter>
+      <Filter>01. Objects\04. Effects\Particle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Director.h">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Defines.h">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Sequence.h">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Shake.h">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Hero.h">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Camera_Steps.h">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Interaction_DialogueBattle.h">
       <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CommandQueue.h">
+      <Filter>04. Contents\01. Battle\02. Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -561,10 +561,10 @@
       <Filter>01. Objects\00. Environment\01. Camera\Free</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>80. Study\02. Monster</Filter>
+      <Filter>01. Objects\99. Monster%28Dummy%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
-      <Filter>80. Study\02. Monster</Filter>
+      <Filter>01. Objects\99. Monster%28Dummy%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Player.cpp">
       <Filter>80. Study\00. Player</Filter>
@@ -579,7 +579,7 @@
       <Filter>01. Objects\00. Environment\03. Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_LGPE.cpp">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+      <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Snow.cpp">
       <Filter>80. Study\03. Particles</Filter>
@@ -588,7 +588,7 @@
       <Filter>80. Study\03. Particles</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Star.cpp">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
       <Filter>03. Components\00. VIBuffer</Filter>
@@ -597,19 +597,19 @@
       <Filter>02. Game_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIController.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
+      <Filter>01. Objects\02. UI\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIButton_Glow.cpp">
-      <Filter>01. Objects\04. UI\Button_Custom</Filter>
+      <Filter>01. Objects\02. UI\Button_Custom</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIButton_Layered.cpp">
-      <Filter>01. Objects\04. UI\Button_Custom</Filter>
+      <Filter>01. Objects\02. UI\Button_Custom</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIButton_Group.cpp">
-      <Filter>01. Objects\04. UI\KeyNavi</Filter>
+      <Filter>01. Objects\02. UI\KeyNavi</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIController_Hub.cpp">
-      <Filter>01. Objects\04. UI\Controller</Filter>
+      <Filter>01. Objects\02. UI\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SharedTexture_Manager.cpp">
       <Filter>02. Game_API\00. SharedTexture</Filter>
@@ -618,82 +618,79 @@
       <Filter>02. Game_API\01. PokemonData</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Status.cpp">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+      <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Manager.cpp">
-      <Filter>04. Contents\00. Battle</Filter>
+      <Filter>04. Contents\01. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Battle.cpp">
       <Filter>00. Levels\03. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Pokemon.cpp">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battler.cpp">
-      <Filter>04. Contents\00. Battle\01. Battler</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CommandQueue.cpp">
-      <Filter>04. Contents\00. Battle</Filter>
+      <Filter>04. Contents\01. Battle\01. Battler</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Data.cpp">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Math.cpp">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Session.cpp">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Stream.cpp">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Targeting.cpp">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Commands.cpp">
-      <Filter>04. Contents\00. Battle\02. Commands</Filter>
+      <Filter>04. Contents\01. Battle\02. Commands</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_States.cpp">
-      <Filter>04. Contents\00. Battle\03. States</Filter>
+      <Filter>04. Contents\01. Battle\03. States</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Damage_Calculator.cpp">
-      <Filter>04. Contents\00. Battle\04. Damage</Filter>
+      <Filter>04. Contents\01. Battle\04. Damage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Damage_Modifiers.cpp">
-      <Filter>04. Contents\00. Battle\04. Damage</Filter>
+      <Filter>04. Contents\01. Battle\04. Damage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_EventDispatcher.cpp">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_AI.cpp">
-      <Filter>04. Contents\00. Battle\06. AI</Filter>
+      <Filter>04. Contents\01. Battle\06. AI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_MsgListener.cpp">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_InputDirector.cpp">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\RenderRule_Manager.cpp">
       <Filter>02. Game_API\03. RenderRule</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_ActionSequencer.cpp">
-      <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
+      <Filter>04. Contents\01. Battle\07. Sequencer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Action_Steps.cpp">
-      <Filter>04. Contents\00. Battle\07. Sequencer</Filter>
+      <Filter>04. Contents\01. Battle\07. Sequencer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_AnimDef.cpp">
-      <Filter>04. Contents\00. Battle\00. Battle_API</Filter>
+      <Filter>04. Contents\01. Battle\00. Battle_API</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_PokemonListener.cpp">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIImage_FadeBattle.cpp">
-      <Filter>01. Objects\04. UI\Image_Custom</Filter>
+      <Filter>01. Objects\02. UI\Image_Custom</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interaction.cpp">
       <Filter>03. Components\01. Interaction</Filter>
@@ -705,19 +702,19 @@
       <Filter>03. Components\01. Interaction</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Human.cpp">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor.cpp">
-      <Filter>01. Objects\01. GameActor</Filter>
+      <Filter>04. Contents\00. GameActor</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor_NPC.cpp">
-      <Filter>01. Objects\01. GameActor\01. NPC</Filter>
+      <Filter>04. Contents\00. GameActor\01. NPC</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor_WildPokemon.cpp">
-      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
+      <Filter>04. Contents\00. GameActor\03. Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Actor_CaptureTarget.cpp">
-      <Filter>01. Objects\01. GameActor\03. Capture</Filter>
+      <Filter>04. Contents\00. GameActor\03. Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interaction_BallHit.cpp">
       <Filter>03. Components\01. Interaction</Filter>
@@ -726,88 +723,91 @@
       <Filter>00. Levels\04. Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Capture_Manager.cpp">
-      <Filter>04. Contents\01. Capture</Filter>
+      <Filter>04. Contents\02. Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Menu.cpp">
-      <Filter>01. Objects\04. UI\Controller\Gameplay</Filter>
+      <Filter>01. Objects\02. UI\Controller\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_CommandMenu.cpp">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_MoveMenu.cpp">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BattleMsg.cpp">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BattlePlate.cpp">
-      <Filter>01. Objects\04. UI\Controller\Battle</Filter>
+      <Filter>01. Objects\02. UI\Controller\Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Capture_Menu.cpp">
-      <Filter>01. Objects\04. UI\Controller\Capture</Filter>
+      <Filter>01. Objects\02. UI\Controller\Capture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonsterBall.cpp">
-      <Filter>01. Objects\05. Misc</Filter>
+      <Filter>01. Objects\03. Misc</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Pokemon.cpp">
-      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+      <Filter>04. Contents\00. GameActor\02. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Trainer.cpp">
-      <Filter>01. Objects\01. GameActor\02. Battle</Filter>
+      <Filter>04. Contents\00. GameActor\02. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CaptureRing.cpp">
-      <Filter>01. Objects\05. Misc</Filter>
+      <Filter>01. Objects\03. Misc</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Data.cpp">
-      <Filter>01. Objects\01. GameActor\00. Player_LGPE</Filter>
+      <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Spawn_Manager.cpp">
-      <Filter>04. Contents\02. Spawn</Filter>
+      <Filter>04. Contents\03. Spawn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TrainerData_Manager.cpp">
       <Filter>02. Game_API\02. TrainerData</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Test_Single.cpp">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_ExpGainListener.cpp">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp">
       <Filter>03. Components\00. VIBuffer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Manager.cpp">
-      <Filter>05. Effects</Filter>
+      <Filter>01. Objects\04. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_PlateListener.cpp">
-      <Filter>04. Contents\00. Battle\05. Events</Filter>
+      <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Particle.cpp">
-      <Filter>05. Effects\Particle</Filter>
+      <Filter>01. Objects\04. Effects\Particle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ParticleEmitter.cpp">
-      <Filter>05. Effects\Particle</Filter>
+      <Filter>01. Objects\04. Effects\Particle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Director.cpp">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Sequence.cpp">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Shake.cpp">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Hero.cpp">
-      <Filter>01. Objects\02. PartObject\Body</Filter>
+      <Filter>01. Objects\01. PartObject\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Camera_Steps.cpp">
-      <Filter>04. Contents\03. Camera</Filter>
+      <Filter>04. Contents\04. Camera_Directing</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Interaction_DialogueBattle.cpp">
       <Filter>03. Components\01. Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CommandQueue.cpp">
+      <Filter>04. Contents\01. Battle\02. Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
