@@ -59,8 +59,6 @@ void CCapture_Manager::Update(_float fTimeDelta)
 	case CAPTURE_PHASE::RESULT:
 		if (m_fPhaseElapsed >= RESULT_DURATION)
 		{
-			/* 성공이면 세션 종료, 실패면 AIMING 으로 복귀해 재던지기.
-			   m_eResult 는 THROWING 중 ball이 DONE 에 도달했을 때 Resolve_Throw() 에서 확정된다. */
 			switch (m_eResult)
 			{
 			case CAPTURE_RESULT::FAIL_BREAK:
@@ -69,6 +67,9 @@ void CCapture_Manager::Update(_float fTimeDelta)
 					m_pBall->Reset();
 					m_pBall->Hide();
 				}
+
+				if (nullptr != m_pTarget)
+					m_pTarget->Begin_Appear();
 
 				m_eResult = CAPTURE_RESULT::NONE;
 				Goto_Phase(CAPTURE_PHASE::AIMING);
@@ -185,6 +186,8 @@ _float CCapture_Manager::Calc_Capture_Probability() const
 
 void CCapture_Manager::Resolve_Throw()
 {
+	OutputDebugStringA(m_bHitThisThrow ? "[Resolve] enter hit=1\n" : "[Resolve] enter hit=0\n");
+
 	if (!m_bHitThisThrow)
 	{
 		m_eResult = CAPTURE_RESULT::FAIL_BREAK;
@@ -196,6 +199,14 @@ void CCapture_Manager::Resolve_Throw()
 	const _float fProb = Calc_Capture_Probability();
 
 	m_eResult = (fRoll < fProb) ? CAPTURE_RESULT::SUCCESS : CAPTURE_RESULT::FAIL_BREAK;
+
+	OutputDebugStringA(nullptr != m_pTarget ? "[Resolve] target ok\n" : "[Resolve] target null\n");
+
+	if (nullptr != m_pTarget)
+		m_pTarget->Begin_Absorb();
+
+	if (nullptr != m_pTarget)
+		m_pTarget->Begin_Absorb();
 
 	wchar_t szLog[128] = {};
 	swprintf_s(szLog, L"[Capture_Manager] Resolve hit=%u roll=%.3f prob=%.3f result=%u\n",

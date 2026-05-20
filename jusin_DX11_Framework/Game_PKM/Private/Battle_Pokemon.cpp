@@ -5,6 +5,7 @@
 #include "RenderRule_Manager.h"
 #include "Battle_Manager.h"
 #include "Battle_AnimDef.h"
+#include "Effect_Manager.h"
 
 CBattle_Pokemon::CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CContainerObject{ pDevice, pContext }
@@ -45,6 +46,7 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 	m_iDefaultAnim = pDesc->iDefaultAnim;
 	m_bLoop = pDesc->bLoop;
 	m_fScale = pDesc->fScale;
+	m_bBattleVisible = pDesc->bStartVisible;
 
 	if (m_iSide >= g_kBattleSideCount)
 		return E_FAIL;
@@ -91,6 +93,9 @@ void CBattle_Pokemon::Priority_Update(_float fTimeDelta)
 
 void CBattle_Pokemon::Update(_float fTimeDelta)
 {
+	if (false == m_bBattleVisible)
+		return;
+
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
 			if (nullptr != Pair.second)
@@ -108,6 +113,9 @@ void CBattle_Pokemon::Update(_float fTimeDelta)
 
 void CBattle_Pokemon::Late_Update(_float fTimeDelta)
 {
+	if (false == m_bBattleVisible)
+		return;
+
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
 			if (nullptr != Pair.second)
@@ -243,6 +251,28 @@ void CBattle_Pokemon::Return_To_Idle()
 	}
 }
 
+void CBattle_Pokemon::Begin_SendOutAppear()
+{
+	if (false == m_bBattleVisible)
+		m_bBattleVisible = true;
+
+	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
+	if (nullptr != pEffectMgr)
+	{
+		CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
+		tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
+
+		pEffectMgr->Spawn(
+			"ball_absorb",
+			Get_SendOutEffectPos(),
+			ETOUI(LEVEL::BATTLE),
+			LAYER_EFFECT,
+			tAttach);
+	}
+
+	Play_Enter();
+}
+
 void CBattle_Pokemon::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
 {
 	if (nullptr == m_pBody)
@@ -286,7 +316,15 @@ HRESULT CBattle_Pokemon::Ready_PartObjects()
 	return S_OK;
 }
 
+_float3 CBattle_Pokemon::Get_SendOutEffectPos() const
+{
+	_float3 vPos{};
+	_vector vCenter = m_pTransformCom->Get_State(STATE::POSITION)
+		+ XMVectorSet(0.f, 0.75f, 0.f, 0.f);
 
+	XMStoreFloat3(&vPos, vCenter);
+	return vPos;
+}
 
 CBattle_Pokemon* CBattle_Pokemon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

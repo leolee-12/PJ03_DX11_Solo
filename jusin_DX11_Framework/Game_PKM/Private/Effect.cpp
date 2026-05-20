@@ -64,13 +64,10 @@ HRESULT CEffect::Initialize(void* pArg)
 		CParticleEmitter::EMITTER_DESC emDesc = Make_EmitterDesc(emDef, _float3(0.f, 0.f, 0.f));
 		emDesc.pParentTransform = m_pTransformCom;
 
-		emDesc.iTextureProtoLevel =
-			(emDesc.strTextureProtoTag == PROTO_COM_TEX_DUMMY_WHITE)
-			? ETOUI(LEVEL::STATIC)
-			: m_tDesc.iSpawnLevel;
+		emDesc.iTextureProtoLevel = ETOUI(LEVEL::STATIC);
 
 		CBase* pCloned = m_pGameInstance->Clone_Prototype(
-			PROTOTYPE::GAMEOBJECT, m_tDesc.iSpawnLevel,
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC),
 			PROTO_OBJ_PARTICLE_EMITTER, &emDesc);
 
 		if (nullptr == pCloned)
@@ -149,30 +146,18 @@ void CEffect::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_State(STATE::POSITION, mFinal.r[3]);
 	}
 
-	/* 3) Stop 상태에서 모든 emitter alive=0 → self Set_Dead. */
-	if (m_bStopped)
+	_bool bAllDead = true;
+	for (CParticleEmitter* pEm : m_Emitters)
 	{
-		_bool bAllEmpty = true;
-		for (CParticleEmitter* pEm : m_Emitters)
+		if (nullptr != pEm && !pEm->Is_Dead())
 		{
-			if (nullptr != pEm && pEm->Get_AliveCount() > 0)
-			{
-				bAllEmpty = false;
-				break;
-			}
-		}
-
-		if (bAllEmpty)
-		{
-			for (CParticleEmitter* pEm : m_Emitters)
-			{
-				if (nullptr != pEm)
-					pEm->Set_Dead();
-			}
-
-			Set_Dead();
+			bAllDead = false;
+			break;
 		}
 	}
+
+	if (bAllDead)
+		Set_Dead();
 }
 
 HRESULT CEffect::Render()
@@ -183,7 +168,6 @@ HRESULT CEffect::Render()
 
 void CEffect::Stop()
 {
-	m_bStopped = true;
 	for (CParticleEmitter* pEm : m_Emitters)
 	{
 		if (nullptr != pEm)

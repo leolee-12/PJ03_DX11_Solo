@@ -8,6 +8,7 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 class CInteraction_BallHit;
+class CEffect;
 
 class CActor_CaptureTarget final : public CActor
 {
@@ -46,6 +47,10 @@ public:
 	_float  Get_CaptureRadius() const { return m_fCaptureRadius; }
 	_float3 Get_CaptureCenter() const;
 
+	void    Begin_Absorb();
+	void    Begin_Appear();
+	_bool   Is_Absorbing() const { return m_bAbsorbing; }
+
 private:
 	CInteraction_BallHit* m_pBallHit = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
@@ -57,10 +62,22 @@ private:
 	_float  m_fCaptureRadius = { 0.6f };
 	_float3 m_vCaptureCenter = { 0.f, 0.5f, 0.f };
 
+	_bool   m_bAbsorbing = { false };
+	_bool   m_bAbsorbReverse = { false };
+	_float  m_fAbsorbElapsed = { 0.f };
+	_float  m_fAbsorbDuration = { 0.8f };
+	CEffect* m_pAbsorbEffect = { nullptr };
+
+	_bool   m_bBasisCached = { false };
+	_float3 m_vRightUnit = { 1.f, 0.f, 0.f };
+	_float3 m_vUpUnit = { 0.f, 1.f, 0.f };
+	_float3 m_vLookUnit = { 0.f, 0.f, 1.f };
+
 private:
 	HRESULT Ready_Components(const ACTOR_CAPTURE_DESC* pDesc);
 	HRESULT Ready_PartObjects(const ACTOR_CAPTURE_DESC* pDesc);
 	void    Cache_Members();
+	void    Cache_BasisIfNeeded();
 
 public:
 	static CActor_CaptureTarget* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

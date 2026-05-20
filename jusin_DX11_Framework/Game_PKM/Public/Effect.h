@@ -48,7 +48,6 @@ private:
 	EFFECT_DESC m_tDesc = {};
 	const EFFECT_DEFINITION* m_pDefinition = nullptr;
 	vector<CParticleEmitter*> m_Emitters;   // borrowed (Layer가 ref 보유)
-	_bool m_bStopped = false;
 	EFFECT_DESC::ATTACH_INFO m_tAttach = {};
 	const _float4x4* m_pAttachMatrix = nullptr;  // BONE/MATRIX 모드에서 deref하는 weak 포인터
 

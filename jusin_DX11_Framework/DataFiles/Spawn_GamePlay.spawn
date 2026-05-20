@@ -47,9 +47,10 @@
 
     SpawnRect {
         ID = 203
-        Kind = NPC
+        Kind = Trainer
         NPCProfile = Shortpants
         DialogueKey = dialogue_trainer_shortpants
+        TrainerID = 1
         Center = 26.5, 0.0, 10.0
         Size = 1.0, 1.0
         RotationY = 1.5708
@@ -64,7 +65,7 @@
         Kind = NPC
         NPCProfile = Nurse
         DialogueKey = dialogue_npc_nurse
-        Center = 15.5, 3.0, 53.0
+        Center = 15.5, 3.0, 51.5
         Size = 1.0, 1.0
         RotationY = 3.1416
         MaxAliveCount = 1
@@ -75,9 +76,10 @@
 
     SpawnRect {
         ID = 205
-        Kind = NPC
+        Kind = Trainer
         NPCProfile = Rock
         DialogueKey = dialogue_trainer_rock
+        TrainerID = 2
         Center = 13.5, 3.0, 62.2
         Size = 1.0, 1.0
         RotationY = 3.1416
@@ -86,6 +88,21 @@
         SpawnOnLoad = true
         Respawn = false
     }
+
+      SpawnRect {
+          ID = 206
+          Kind = Trainer
+          NPCProfile = Water
+          DialogueKey = dialogue_trainer_water
+          TrainerID = 3
+          Center = 15.5, 3.0, 62.2
+          Size = 1.0, 1.0
+          RotationY = 3.1416
+          MaxAliveCount = 1
+          ProjectRadius = 2.0
+          SpawnOnLoad = true
+          Respawn = false
+      }
 
     SpawnRect {
         ID = 300
@@ -128,8 +145,8 @@ SpawnRect {
         MaxAliveCount = 3
         ProjectRadius = 3.0
         LeashRadius = 8.0
-        MinDistanceFromPlayer = 4.0
-        MaxDistanceFromPlayer = 35.0
+        MinDistanceFromPlayer = 6.0
+        MaxDistanceFromPlayer = 15.0
         RequireReachable = true
         SpawnOnLoad = true
         Respawn = true
@@ -148,7 +165,7 @@ SpawnRect {
         ProjectRadius = 3.0
         LeashRadius = 10.0
         MinDistanceFromPlayer = 6.0
-        MaxDistanceFromPlayer = 40.0
+        MaxDistanceFromPlayer = 15.0
         RequireReachable = true
         SpawnOnLoad = false
         Respawn = true
@@ -159,7 +176,7 @@ SpawnRect {
         ID = 12
         Kind = WildPokemon
         Center = 24.5, 0.0, 28.45
-        Size = 6.2, 6.3
+        Size = 6.0, 6.0
         RotationY = 0.0
         SpeciesID = 41
         Level = 4
@@ -167,7 +184,7 @@ SpawnRect {
         ProjectRadius = 3.0
         LeashRadius = 10.0
         MinDistanceFromPlayer = 6.0
-        MaxDistanceFromPlayer = 40.0
+        MaxDistanceFromPlayer = 15.0
         RequireReachable = true
         SpawnOnLoad = false
         Respawn = true

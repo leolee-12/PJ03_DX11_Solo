@@ -2,10 +2,8 @@
 #include "Body.h"
 #include "Interaction_BallHit.h"
 
-
-#include "Collider.h"
-#include "Bounding_Sphere.h"
 #include "GameInstance.h"
+#include "Effect_Manager.h"
 
 CActor_CaptureTarget::CActor_CaptureTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CActor{ pDevice, pContext }
@@ -58,6 +56,28 @@ void CActor_CaptureTarget::Priority_Update(_float fTimeDelta)
 
 void CActor_CaptureTarget::Update(_float fTimeDelta)
 {
+    if (m_bAbsorbing)
+    {
+        m_fAbsorbElapsed += fTimeDelta;
+
+        const _float fT = (m_fAbsorbDuration > 1e-6f)
+            ? min(m_fAbsorbElapsed / m_fAbsorbDuration, 1.f)
+            : 1.f;
+
+        const _float fScale = m_bAbsorbReverse ? fT : (1.f - fT);
+
+        const _vector vR = XMLoadFloat3(&m_vRightUnit) * fScale;
+        const _vector vU = XMLoadFloat3(&m_vUpUnit) * fScale;
+        const _vector vL = XMLoadFloat3(&m_vLookUnit) * fScale;
+
+        m_pTransformCom->Set_State(STATE::RIGHT, vR);
+        m_pTransformCom->Set_State(STATE::UP, vU);
+        m_pTransformCom->Set_State(STATE::LOOK, vL);
+
+        if (fT >= 1.f)
+            m_bAbsorbing = false;
+    }
+
     __super::Update(fTimeDelta);
 
     if (nullptr != m_pColliderCom)
@@ -95,6 +115,54 @@ _float3 CActor_CaptureTarget::Get_CaptureCenter() const
     _float3 vCenter{};
     XMStoreFloat3(&vCenter, m_pTransformCom->Get_State(STATE::POSITION) + vOffset);
     return vCenter;
+}
+
+void CActor_CaptureTarget::Begin_Absorb()
+{
+    if (m_bAbsorbing)
+        return;
+
+    Cache_BasisIfNeeded();
+
+    m_bAbsorbing = true;
+    m_bAbsorbReverse = false;
+    m_fAbsorbElapsed = 0.f;
+
+    CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
+    tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
+
+    m_pAbsorbEffect = CEffect_Manager::GetInstance()->Spawn(
+        "ball_absorb",
+        Get_CaptureCenter(),
+        ETOUI(LEVEL::CAPTURE),
+        LAYER_EFFECT,
+        tAttach);
+
+    OutputDebugStringA(m_pAbsorbEffect ? "[Absorb] effect ok\n" : "[Absorb] effect null\n");
+}
+
+void CActor_CaptureTarget::Begin_Appear()
+{
+    if (m_bAbsorbing)
+        return;
+
+    Cache_BasisIfNeeded();
+
+    m_bAbsorbing = true;
+    m_bAbsorbReverse = true;
+    m_fAbsorbElapsed = 0.f;
+
+    CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
+    tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
+
+    m_pAbsorbEffect = CEffect_Manager::GetInstance()->Spawn(
+        "ball_absorb",
+        Get_CaptureCenter(),
+        ETOUI(LEVEL::CAPTURE),
+        LAYER_EFFECT,
+        tAttach);
+
+    OutputDebugStringA(m_pAbsorbEffect ? "[Appear] effect ok\n" : "[Appear] effect null\n");
 }
 
 HRESULT CActor_CaptureTarget::Ready_Components(const ACTOR_CAPTURE_DESC* pDesc)
@@ -136,6 +204,18 @@ void CActor_CaptureTarget::Cache_Members()
     m_pBody = Get_Part<CBody>(PART_BODY);
 }
 
+void CActor_CaptureTarget::Cache_BasisIfNeeded()
+{
+    if (m_bBasisCached)
+        return;
+
+    XMStoreFloat3(&m_vRightUnit, XMVector3Normalize(m_pTransformCom->Get_State(STATE::RIGHT)));
+    XMStoreFloat3(&m_vUpUnit, XMVector3Normalize(m_pTransformCom->Get_State(STATE::UP)));
+    XMStoreFloat3(&m_vLookUnit, XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK)));
+
+    m_bBasisCached = true;
+}
+
 CActor_CaptureTarget* CActor_CaptureTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
     CActor_CaptureTarget* pInstance = new CActor_CaptureTarget(pDevice, pContext);
@@ -164,6 +244,8 @@ CGameObject* CActor_CaptureTarget::Clone(void* pArg)
 
 void CActor_CaptureTarget::Free()
 {
+    m_pAbsorbEffect = nullptr;
+
     Safe_Release(m_pBallHit);
     Safe_Release(m_pColliderCom);
 

@@ -26,6 +26,7 @@ public:
 		_uint iDefaultAnim = { 0 };
 		_bool bLoop = { true };
 		_float fScale = { 1.f };
+		_bool bStartVisible = { true };
 
 		_float3 vPos = { 0.f, 0.f, 0.f };
 		_float fYaw = { 0.f };
@@ -55,6 +56,10 @@ public:
 	void  Return_To_Idle();
 	_bool Is_Anim_Finished() const { return ANIM_KIND::IDLE == m_eCurrentKind || ANIM_KIND::FAINT == m_eCurrentKind; }
 
+	void  Begin_SendOutAppear();
+	void  Set_BattleVisible(_bool bVisible) { m_bBattleVisible = bVisible; }
+	_bool Is_BattleVisible() const { return m_bBattleVisible; }
+
 private:
 	POKEMON_INSTANCE* m_pInstance = { nullptr };
 	_uint m_iSide = { g_kBattleSide_Player };
@@ -74,10 +79,12 @@ private:
 	_float     m_fAnimTimer = { 0.f };
 	_float     m_fAnimDuration = { 0.f };  // 0 = loop, >0 = 시간 만료 후 자동 IDLE
 	_bool      m_bLockHeld = { false };
+	_bool m_bBattleVisible = { true };
 
 private:
 	HRESULT Ready_PartObjects();
 	void    Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration);
+	_float3 Get_SendOutEffectPos() const;
 
 public:
 	static CBattle_Pokemon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

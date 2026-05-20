@@ -38,6 +38,8 @@ HRESULT CParticleEmitter::Initialize(void* pArg)
 	m_fSpawnAccumulator = 0.f;
 	m_bEmitting = true;
 	m_bBurstSpawned = false;
+	m_fDelayAccum = 0.f;
+	m_bDelayElapsed = (m_tDesc.fStartDelay <= 0.f);
 
 	if (m_tDesc.curveAlpha.IsEmpty())
 	{
@@ -61,13 +63,29 @@ void CParticleEmitter::Update(_float fTimeDelta)
 	if (Is_Dead())
 		return;
 
-	if (m_bEmitting)
+	if (!m_bDelayElapsed)
+	{
+		m_fDelayAccum += fTimeDelta;
+		if (m_fDelayAccum >= m_tDesc.fStartDelay)
+			m_bDelayElapsed = true;
+	}
+
+	if (m_bDelayElapsed && m_bEmitting)
 	{
 		Spawn_Burst_Once();
 		Spawn_FromAccumulator(fTimeDelta);
 	}
 
 	Update_Particles(fTimeDelta);
+
+	if (m_tDesc.bAutoDestroyOnEmpty && m_bDelayElapsed && 0 == m_iAliveCount)
+	{
+		const _bool bNoMoreSpawn = !m_bEmitting
+			|| (m_bBurstSpawned && m_tDesc.fSpawnRate <= 0.f);
+
+		if (bNoMoreSpawn)
+			Set_Dead();
+	}
 }
 
 void CParticleEmitter::Late_Update(_float fTimeDelta)
@@ -159,6 +177,10 @@ HRESULT CParticleEmitter::Bind_ShaderGlobals()
 		&m_tDesc.vBillboardFixedAxis, sizeof(_float3))))
 		return E_FAIL;
 
+	const _uint iMirrorUV = m_tDesc.bMirrorUV ? 1u : 0u;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iMirrorUV", &iMirrorUV, sizeof(_uint))))
+		return E_FAIL;
+
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
@@ -183,7 +205,26 @@ void CParticleEmitter::Build_Instances()
 		v.vAgeLife = _float2(p.fAge, p.fLifeTime);
 		v._pad1 = _float2(0.f, 0.f);
 
-		v.vAtlasUV = _float4(0.f, 0.f, 1.f, 1.f);   // M6+ 에서 의미 부여
+		const _uint iCols = max(1u, m_tDesc.iAtlasCols);
+		const _uint iRows = max(1u, m_tDesc.iAtlasRows);
+
+		if (iCols * iRows <= 1)
+		{
+			v.vAtlasUV = _float4(0.f, 0.f, 1.f, 1.f);
+		}
+		else
+		{
+			const _float fScaleU = 1.f / static_cast<_float>(iCols);
+			const _float fScaleV = 1.f / static_cast<_float>(iRows);
+			const _uint  iCellX = p.iAtlasIndex % iCols;
+			const _uint  iCellY = p.iAtlasIndex / iCols;
+
+			v.vAtlasUV = _float4(
+				static_cast<_float>(iCellX) * fScaleU,
+				static_cast<_float>(iCellY) * fScaleV,
+				fScaleU,
+				fScaleV);
+		}
 	}
 
 	m_pVIBufferCom->Update_Particle3D_Instances(m_InstanceScratch.data(), m_iAliveCount);
@@ -247,6 +288,7 @@ void CParticleEmitter::Spawn_One()
 	Particle.fRotationSpeed = 0.f;
 	Particle.fRandomSeed = m_pGameInstance->Random(0.f, 1.f);
 	Particle.vColor = _float4(1.f, 1.f, 0.f, 1.f);
+	Particle.iAtlasIndex = 0;
 
 	++m_iAliveCount;
 }
@@ -296,6 +338,22 @@ void CParticleEmitter::Update_Particles(_float fTimeDelta)
 
 		if (!m_tDesc.curveAlpha.IsEmpty())
 			Particle.vColor.w *= m_tDesc.curveAlpha.Sample(t01);
+
+		const _uint iCols = max(1u, m_tDesc.iAtlasCols);
+		const _uint iRows = max(1u, m_tDesc.iAtlasRows);
+		const _uint iTotal = iCols * iRows;
+
+		if (iTotal > 1 && m_tDesc.fAtlasFps > 0.f)
+		{
+			const _uint iRaw = static_cast<_uint>(Particle.fAge * m_tDesc.fAtlasFps);
+			Particle.iAtlasIndex = m_tDesc.bAtlasLoop
+				? (iRaw % iTotal)
+				: min(iRaw, iTotal - 1);
+		}
+		else
+		{
+			Particle.iAtlasIndex = 0;
+		}
 
 		++i;
 	}

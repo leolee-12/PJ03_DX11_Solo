@@ -124,7 +124,19 @@ WNAME_TAG(PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MASK003_M, L"Prototype_Component_T
 WNAME_TAG(PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MA_STAR001_SML_M, L"Prototype_Component_Texture_Effect_Capture_Success_0_Ma_Star001_Sml_M");
 WNAME_TAG(PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_1_CIRCLE001_SML_M, L"Prototype_Component_Texture_Effect_Capture_Success_1_Circle001_Sml_M");
 
+WNAME_TAG(PROTO_COM_TEX_EFT_HIT_0_LINE701_O, L"Prototype_Component_Texture_Effect_Hit_0_Line701_O");
+WNAME_TAG(PROTO_COM_TEX_EFT_HIT_0_RING001_M, L"Prototype_Component_Texture_Effect_Hit_0_Ring001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_HIT_1_CIRCLE002_M, L"Prototype_Component_Texture_Effect_Hit_1_Circle002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_HIT_1_CIRCLE004_M, L"Prototype_Component_Texture_Effect_Hit_1_Circle004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_HIT_2_HIT014_M, L"Prototype_Component_Texture_Effect_Hit_2_Hit014_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_HIT_2_WIND001_M, L"Prototype_Component_Texture_Effect_Hit_2_Wind001_M");
 
+WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_HIT009_M, L"Prototype_Component_Texture_Effect_Thunder_2_Hit009_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_HIT014_M, L"Prototype_Component_Texture_Effect_Thunder_2_Hit014_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER009_M, L"Prototype_Component_Texture_Effect_Thunder_2_Thunder009_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER010_M, L"Prototype_Component_Texture_Effect_Thunder_2_Thunder010_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER702_O, L"Prototype_Component_Texture_Effect_Thunder_2_Thunder702_O");
+WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER703_O, L"Prototype_Component_Texture_Effect_Thunder_2_Thunder703_O");
 
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
@@ -188,6 +200,7 @@ WNAME_TAG(PROTO_COM_MODEL_MAP_TOWN02, L"Prototype_Component_Model_Map_Town02");
 WNAME_TAG(PROTO_COM_MODEL_MAP_ROAD01, L"Prototype_Component_Model_Map_Road01");
 
 WNAME_TAG(PROTO_COM_MODEL_BMAP_TOWN, L"Prototype_Component_Model_BMap_Town");
+WNAME_TAG(PROTO_COM_MODEL_BMAP_GRASS, L"Prototype_Component_Model_BMap_Grass");
 
 WNAME_TAG(PROTO_COM_MODEL_MONSTER_BALL, L"Prototype_Component_Model_Monster_Ball");
 WNAME_TAG(PROTO_COM_MODEL_CAPTURE_RING, L"Prototype_Component_Model_Capture_Ring");
@@ -207,6 +220,7 @@ WNAME_TAG(PROTO_COM_COLLIDER_SPHERE, L"Prototype_Component_Collider_Sphere");
 WNAME_TAG(PROTO_COM_INTERACTION_DIALOGUE, L"Prototype_Component_Interaction_Dialogue");
 WNAME_TAG(PROTO_COM_INTERACTION_ENCOUNTER, L"Prototype_Component_Interaction_Encounter");
 WNAME_TAG(PROTO_COM_INTERACTION_BALLHIT, L"Prototype_Component_Interaction_BallHit");
+WNAME_TAG(PROTO_COM_INTERACTION_DIALOGUE_BATTLE, L"Prototype_Component_Interaction_Dialogue_Battle");
 
 
 
@@ -265,6 +279,7 @@ WNAME_TAG(PROTO_MAP_TOWN01, L"Prototype_MapObject_Town01");
 WNAME_TAG(PROTO_MAP_TOWN02, L"Prototype_MapObject_Town02");
 WNAME_TAG(PROTO_MAP_ROAD01, L"Prototype_MapObject_Road01");
 WNAME_TAG(PROTO_BMAP_TOWN, L"Prototype_BattleMap_Town");
+WNAME_TAG(PROTO_BMAP_GRASS, L"Prototype_BattleMap_Grass");
 
 WNAME_TAG(PROTO_OBJ_MONSTER_BALL, L"Prototype_GameObject_MonsterBall");
 WNAME_TAG(PROTO_OBJ_CAPTURE_RING, L"Prototype_GameObject_CaptureRing");
@@ -280,7 +295,7 @@ WNAME_TAG(COM_TEXTURE_NOISE, L"Com_Texture_Noise");
 WNAME_TAG(COM_INTERACTION_DIALOGUE, L"Com_Interaction_Dialogue");
 WNAME_TAG(COM_INTERACTION_ENCOUNTER, L"Com_Interaction_Encounter");
 WNAME_TAG(COM_INTERACTION_BALLHIT, L"Com_Interaction_BallHit");
-
+WNAME_TAG(COM_INTERACTION_DIALOGUE_BATTLE, L"Com_Interaction_Dialogue_Battle");
 
 
 // Part

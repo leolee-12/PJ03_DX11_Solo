@@ -1,4 +1,4 @@
-#include "Panel_Effect.h"
+﻿#include "Panel_Effect.h"
 #include "EditInstance.h"
 #include "EffectEditorSession.h"
 
@@ -451,6 +451,52 @@ HRESULT CPanel_Effect::Render()
 				static_cast<CParticleEmitter::EMITTER_DESC::BLEND_MODE>(iBlend);
 			m_pSession->Mark_Dirty("Emitter blend changed");
 		}
+	}
+
+	if (ImGui::Checkbox("Auto Destroy On Empty", &pEmitter->bAutoDestroyOnEmpty))
+		m_pSession->Mark_Dirty("Emitter auto destroy flag changed");
+
+	if (ImGui::DragFloat("Start Delay", &pEmitter->fStartDelay, 0.01f, 0.f, 30.f, "%.3f"))
+	{
+		pEmitter->fStartDelay = max(0.f, pEmitter->fStartDelay);
+		m_pSession->Mark_Dirty("Emitter start delay changed");
+	}
+
+	{
+		_int iCols = static_cast<_int>(pEmitter->iAtlasCols);
+		if (ImGui::InputInt("Atlas Cols", &iCols))
+		{
+			pEmitter->iAtlasCols = static_cast<_uint>(max(1, iCols));
+			m_pSession->Mark_Dirty("Emitter atlas cols changed");
+		}
+	}
+
+	{
+		_int iRows = static_cast<_int>(pEmitter->iAtlasRows);
+		if (ImGui::InputInt("Atlas Rows", &iRows))
+		{
+			pEmitter->iAtlasRows = static_cast<_uint>(max(1, iRows));
+			m_pSession->Mark_Dirty("Emitter atlas rows changed");
+		}
+	}
+
+	if (ImGui::DragFloat("Atlas FPS", &pEmitter->fAtlasFps, 0.5f, 0.f, 240.f, "%.2f"))
+	{
+		pEmitter->fAtlasFps = max(0.f, pEmitter->fAtlasFps);
+		m_pSession->Mark_Dirty("Emitter atlas fps changed");
+	}
+
+	if (ImGui::Checkbox("Atlas Loop", &pEmitter->bAtlasLoop))
+		m_pSession->Mark_Dirty("Emitter atlas loop changed");
+
+	if (ImGui::Checkbox("Mirror UV", &pEmitter->bMirrorUV))
+		m_pSession->Mark_Dirty("Emitter mirror uv changed");
+
+	if (pEmitter->bMirrorUV
+		&& (pEmitter->iAtlasCols > 1 || pEmitter->iAtlasRows > 1))
+	{
+		ImGui::TextColored(ImVec4(1.f, 0.6f, 0.2f, 1.f),
+			"[!] Mirror UV is active — atlas settings are ignored.");
 	}
 
 	const auto& TextureOptions = Game_PKM::g_EffectTextureOptions;

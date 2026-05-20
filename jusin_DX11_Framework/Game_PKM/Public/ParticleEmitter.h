@@ -41,6 +41,15 @@ public:
 
 		enum class SPAWN_OVERFLOW_POLICY { DROP_NEW, DROP_OLDEST };
 		SPAWN_OVERFLOW_POLICY eOverflow = SPAWN_OVERFLOW_POLICY::DROP_NEW;
+		
+		_bool bAutoDestroyOnEmpty = true;
+		_float fStartDelay = 0.f;
+
+		_uint  iAtlasCols = 1;
+		_uint  iAtlasRows = 1;
+		_float fAtlasFps = 0.f;
+		_bool  bAtlasLoop = false;
+		_bool  bMirrorUV = false;
 
 		_bool bSimulateInLocalAtSpawn = false;
 		WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
@@ -88,6 +97,8 @@ private:
 
 	_bool m_bEmitting = true;
 	_bool m_bBurstSpawned = false;
+	_bool m_bDelayElapsed = true;
+	_float m_fDelayAccum = 0.f;
 
 	CTransform* m_pParentTransform = nullptr;
 	CTexture* m_pTextureCom = { nullptr };

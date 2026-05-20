@@ -109,34 +109,42 @@ HRESULT CEffect_Manager::Load_Definitions(const _char* pFolderPath)
 CEffect* CEffect_Manager::Spawn(const _string& strID, const _float3& vSpawnPos,
     _uint iLevel, WNameID strLayerTag, const CEffect::EFFECT_DESC::ATTACH_INFO& tAttach)
 {
-	const EFFECT_DEFINITION* pDef = Find_Definition(strID);
-	if (nullptr == pDef)
-		return nullptr;
+    const EFFECT_DEFINITION* pDef = Find_Definition(strID);
+    if (nullptr == pDef)
+    {
+        OutputDebugStringA("[EffectMgr] Spawn fail: definition not found\n");
+        return nullptr;
+    }
 
-	CEffect::EFFECT_DESC desc{};
-	desc.vSpawnPos = vSpawnPos;
-	desc.pDefinition = pDef;
-	desc.iSpawnLevel = iLevel;
-	desc.strLayerTag = strLayerTag;
+    CEffect::EFFECT_DESC desc{};
+    desc.vSpawnPos = vSpawnPos;
+    desc.pDefinition = pDef;
+    desc.iSpawnLevel = iLevel;
+    desc.strLayerTag = strLayerTag;
     desc.tAttach = tAttach;
 
-	CGameInstance* pGI = CGameInstance::GetInstance();
+    CGameInstance* pGI = CGameInstance::GetInstance();
 
-	CBase* pCloned = pGI->Clone_Prototype(
-		PROTOTYPE::GAMEOBJECT, iLevel, PROTO_OBJ_EFFECT, &desc);
+    CBase* pCloned = pGI->Clone_Prototype(
+        PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_OBJ_EFFECT, &desc);
 
-	if (nullptr == pCloned)
-		return nullptr;
+    if (nullptr == pCloned)
+    {
+        OutputDebugStringA("[EffectMgr] Spawn fail: Clone_Prototype(EFFECT) returned null\n");
+        return nullptr;
+    }
 
-	CEffect* pEffect = static_cast<CEffect*>(pCloned);
+    CEffect* pEffect = static_cast<CEffect*>(pCloned);
 
-	if (FAILED(pGI->Add_GameObject_Ex(iLevel, strLayerTag, pEffect)))
-	{
-		Safe_Release(pEffect);
-		return nullptr;
-	}
+    if (FAILED(pGI->Add_GameObject_Ex(iLevel, strLayerTag, pEffect)))
+    {
+        OutputDebugStringA("[EffectMgr] Spawn fail: Add_GameObject_Ex failed\n");
+        Safe_Release(pEffect);
+        return nullptr;
+    }
 
-	return pEffect;   // borrowed
+    OutputDebugStringA("[EffectMgr] Spawn ok\n");
+    return pEffect;
 }
 
 void CEffect_Manager::Free()

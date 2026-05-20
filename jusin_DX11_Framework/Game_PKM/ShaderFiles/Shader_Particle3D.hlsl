@@ -7,11 +7,12 @@ float4x4 g_ViewInvMatrix;     // 카메라 basis (world space) 추출용
 
 float3   g_vFixedAxis = float3(0.f, 1.f, 0.f);
 uint     g_iBillboardMode = 0;   // 0=VIEW_ALIGNED, 1=AXIS_LOCKED, 2=FIXED_NORMAL
+uint     g_iMirrorUV = 0;        // 0=off, 1=quadrant mirror (atlas 무시)
 
 texture2D g_Texture;
 
-/* 공용 hlsli에 없는 state - 셰이더 파일 내부 local 정의.
-   Engine_Shader_Defines.hlsli는 비수정(공용 자산). */
+
+
 DepthStencilState DSS_DepthReadNoWrite
 {
 	DepthEnable = true;
@@ -97,8 +98,11 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vPos = mul(mul(float4(vWorldPos, 1.f), g_ViewMatrix), g_ProjMatrix);
 
-	/* 5) atlas UV - M4 시점은 vAtlasUV=(0,0,1,1) 로 보내므로 결과적으로 vTex 그대로 */
-	Out.vTex = In.vTex * In.vAtlasUV.zw + In.vAtlasUV.xy;
+	if (g_iMirrorUV != 0)
+		Out.vTex = In.vTex * 2.0f;
+	else
+		Out.vTex = In.vTex * In.vAtlasUV.zw + In.vAtlasUV.xy;
+
 	Out.vColor = In.vColor;
 	Out.vAgeLife = In.vAgeLifePad.xy;
 	return Out;
@@ -106,9 +110,11 @@ VS_OUT VS_MAIN(VS_IN In)
 
 float4 PS_MAIN(VS_OUT In) : SV_TARGET0
 {
-	float4 vTex = g_Texture.Sample(LinearSampler, In.vTex);
-/* M6: instance vColor 가 이미 커브 평가된 색·알파를 담는다. PS는 텍스처×색만 처리. */
-return vTex * In.vColor;
+	  float4 vTex = (g_iMirrorUV != 0)
+			  ? g_Texture.Sample(MirrorSampler, In.vTex)
+			  : g_Texture.Sample(LinearSampler, In.vTex);
+
+	  return vTex * In.vColor;
 }
 
 technique11 DefaultTechnique

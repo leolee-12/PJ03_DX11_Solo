@@ -32,6 +32,7 @@
 #include "Interaction_Dialogue.h"
 #include "Interaction_Encounter.h"
 #include "Interaction_BallHit.h"
+#include "Interaction_DialogueBattle.h"
 #include "MonsterBall.h"
 #include "CaptureRing.h"
 #include "Effect_Test_Single.h"
@@ -617,6 +618,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CInteraction_BallHit::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_Interaction_BallHit"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_DIALOGUE_BATTLE,
+		[this] { return CInteraction_DialogueBattle::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_Interaction_Dialogue_Battle"));
+
 	// ---------- Objects ----------
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,
 		[this] { return CPlayer_LGPE::Create(m_pDevice, m_pContext); },
@@ -646,15 +651,15 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CUIImage_FadeBattle::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_UIImage_FadeBattle"));
 
-	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT_TEST_SINGLE,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_EFFECT_TEST_SINGLE,
 		[this] { return CEffect_Test_Single::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Effect_Test_Single"));
 
-	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PARTICLE_EMITTER,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_PARTICLE_EMITTER,
 		[this] { return CParticleEmitter::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Particle_Emitter"));
 
-	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_EFFECT,
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_EFFECT,
 		[this] { return CEffect::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Effect"));
 
@@ -857,6 +862,10 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/battle_town/battle_town.wmodel"); },
 		TEXT("Prototype_Component_Model_Town01"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_BMAP_GRASS,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/battle/map_battle.wmodel"); },
+		TEXT("Prototype_Component_Model_Grass"));
+
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
 	tMapDesc.strModelTag = PROTO_COM_MODEL_BMAP_TOWN;
@@ -864,6 +873,13 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_TOWN,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_BattleMap_Town"));
+
+	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
+	tMapDesc.strModelTag = PROTO_COM_MODEL_BMAP_GRASS;
+	tMapDesc.pRenderRule = CRenderRule_Manager::GetInstance()->Find_OrLoadMappingRule("../../Resources/LGPE_Map/battle/map_battle_mapping.json");
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_GRASS,
+		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
+		TEXT("Prototype_BattleMap_Grass"));
 
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
 		[this] { return CBattle_Trainer::Create(m_pDevice, m_pContext); },
@@ -954,7 +970,7 @@ HRESULT CLoader::Ready_Resources_For_Effect()
 		if (nullptr == Desc.pTextureFilePath)
 			continue;
 
-		Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), Desc.strTag,
+		Enqueue_Prototype(ETOUI(LEVEL::STATIC), Desc.strTag,
 			[this, pTextureFilePath = Desc.pTextureFilePath]
 			{
 				return CTexture::Create(m_pDevice, m_pContext, pTextureFilePath, 1);
