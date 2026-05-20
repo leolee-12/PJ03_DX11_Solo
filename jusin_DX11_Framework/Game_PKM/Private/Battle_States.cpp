@@ -58,11 +58,11 @@ void CIntroState::OnEnter(const BATTLE_CONTEXT& ctx)
         };
 
     Push(SDelay::Create(0.2f));
-    Push(SBattleText::Create(strTrainerName + TEXT("가 승부를 걸어왔다!")));
+    Push(SBattleText::Create(strTrainerName + TEXT("이(가) 승부를 걸어왔다!")));
     Push(SCloseMsg::Create());
     Push(SDelay::Create(0.2f));
 
-    Push(SBattleText::Create(strTrainerName + TEXT("는 ") + strOpponentPokemon + TEXT("을(를) 내보냈다!")));
+    Push(SBattleText::Create(strTrainerName + TEXT("은(는) ") + strOpponentPokemon + TEXT("을(를) 내보냈다!")));
     Push(STrainerThrow::Create(g_kBattleSide_Opponent));
     Push(SPokemonEnter::Create(g_kBattleSide_Opponent));
     Push(SCloseMsg::Create());

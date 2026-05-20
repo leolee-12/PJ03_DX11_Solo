@@ -180,6 +180,8 @@ struct TRAINER_DATA
 	WNameID strBodyProtoTag = {};
 	WNameID strModelProtoTag = {};
 	WNameID strShaderProtoTag = {};
+
+	_char szMappingPath[256] = {};
 };
 
 _ushort	Calc_HP_Stat(_ushort iBase, _ubyte iIV, _ubyte iEV, _ubyte iLevel);

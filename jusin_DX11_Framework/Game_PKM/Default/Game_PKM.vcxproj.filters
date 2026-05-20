@@ -528,6 +528,9 @@
     <ClInclude Include="..\Public\Battle_Camera_Steps.h">
       <Filter>04. Contents\03. Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Interaction_DialogueBattle.h">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -802,6 +805,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Camera_Steps.cpp">
       <Filter>04. Contents\03. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction_DialogueBattle.cpp">
+      <Filter>03. Components\01. Interaction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

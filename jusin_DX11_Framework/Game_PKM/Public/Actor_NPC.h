@@ -3,8 +3,8 @@
 #include "Body.h"
 
 NS_BEGIN(Game_PKM)
-
 class CInteraction_Dialogue;
+class CInteraction_DialogueBattle;
 
 class CActor_NPC final : public CActor
 {
@@ -21,6 +21,13 @@ public:
 		_uint   iSpawnRectID = { 0 };
 		_bool   bApplyInitialRotation = { false };
 		_float  fInitialRotationY = { 0.f };   // 라디안
+
+		_bool            bStartBattleAfterDialogue = { false };
+		_uint            iTrainerID = { 0 };
+		ENVIRONMENT_TYPE eBattleEnvironment = { ENVIRONMENT_TYPE::GRASS };
+		BATTLE_RULE      eBattleRule = { BATTLE_RULE::TRAINER_SINGLE };
+		_uint            iBGResourceID = { 0 };
+		_uint            iZoneID = { 0 };
 	};
 
 private:
@@ -42,6 +49,7 @@ public:
 
 private:
 	CInteraction_Dialogue* m_pDialogue = { nullptr };
+	CInteraction_DialogueBattle* m_pDialogueBattle = { nullptr };
 	_uint m_iSpawnRectID = { 0 };
 
 	_bool   m_bFaceTurnActive = { false };

@@ -1,7 +1,6 @@
 #include "Body_Human.h"
 
-#include "Model.h"
-#include "Shader.h"
+#include "GameInstance.h"
 
 CBody_Human::CBody_Human(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBody{ pDevice, pContext }
@@ -32,6 +31,18 @@ HRESULT CBody_Human::Initialize(void* pArg)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CBody_Human::Update(_float fTimeDelta)
+{
+	if (m_pGameInstance->Key_Down(DIK_1))
+	{
+		m_iCurrAnim++;
+		if (m_iCurrAnim >= m_pModelCom->Get_NumAnimations()) m_iCurrAnim = 0;
+		m_pModelCom->Set_AnimationIndex(m_iCurrAnim, false, 0.2f);
+	}
+
+	__super::Update(fTimeDelta);
 }
 
 HRESULT CBody_Human::Render()

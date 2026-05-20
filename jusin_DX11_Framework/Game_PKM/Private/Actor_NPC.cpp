@@ -1,6 +1,7 @@
 ﻿#include "Actor_NPC.h"
 #include "Body.h"
 #include "Interaction_Dialogue.h"
+#include "Interaction_DialogueBattle.h"
 
 CActor_NPC::CActor_NPC(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CActor{ pDevice, pContext }
@@ -79,12 +80,30 @@ void XM_CALLCONV CActor_NPC::Face_To(_fvector vTargetPos)
 
 HRESULT CActor_NPC::Ready_Components(const ACTOR_NPC_DESC* pDesc)
 {
-	CInteraction_Dialogue::INTERACTION_DIALOGUE_DESC DialogueDesc;
-	DialogueDesc.strDialogueKey = pDesc->strDialogueKey;
+	if (true == pDesc->bStartBattleAfterDialogue)
+	{
+		CInteraction_DialogueBattle::INTERACTION_DIALOGUE_BATTLE_DESC DialogueBattleDesc;
+		DialogueBattleDesc.strDialogueKey = pDesc->strDialogueKey;
+		DialogueBattleDesc.iTrainerID = pDesc->iTrainerID;
+		DialogueBattleDesc.eEnvironment = pDesc->eBattleEnvironment;
+		DialogueBattleDesc.eRule = pDesc->eBattleRule;
+		DialogueBattleDesc.iBGResourceID = pDesc->iBGResourceID;
+		DialogueBattleDesc.iZoneID = pDesc->iZoneID;
+		/* bCanRun / bCanCapture / bExpGain / bOneShot 은 desc 의 기본값 사용. */
 
-	if (FAILED(__super::Add_Component(pDesc->iComponentLevel, PROTO_COM_INTERACTION_DIALOGUE,
-		COM_INTERACTION_DIALOGUE, reinterpret_cast<CComponent**>(&m_pDialogue), &DialogueDesc)))
-		return E_FAIL;
+		if (FAILED(__super::Add_Component(pDesc->iComponentLevel, PROTO_COM_INTERACTION_DIALOGUE_BATTLE,
+			COM_INTERACTION_DIALOGUE_BATTLE, reinterpret_cast<CComponent**>(&m_pDialogueBattle), &DialogueBattleDesc)))
+			return E_FAIL;
+
+		return S_OK;
+	}
+
+	CInteraction_Dialogue::INTERACTION_DIALOGUE_DESC DialogueDesc;
+		DialogueDesc.strDialogueKey = pDesc->strDialogueKey;
+
+		if (FAILED(__super::Add_Component(pDesc->iComponentLevel, PROTO_COM_INTERACTION_DIALOGUE,
+			COM_INTERACTION_DIALOGUE, reinterpret_cast<CComponent**>(&m_pDialogue), &DialogueDesc)))
+			return E_FAIL;
 
 	return S_OK;
 }
@@ -191,6 +210,7 @@ CGameObject* CActor_NPC::Clone(void* pArg)
 void CActor_NPC::Free()
 {
 	Safe_Release(m_pDialogue);
+	Safe_Release(m_pDialogueBattle);
 
 	__super::Free();
 }

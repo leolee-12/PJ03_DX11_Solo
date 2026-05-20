@@ -19,12 +19,12 @@ namespace
 
 		{ PROTO_COM_MODEL_HERO,				{ 17, 76, 17, 17, 17, 17, 17, 17 } },
 		{ PROTO_COM_MODEL_HEROINE,			{ 17, 76, 17, 17, 17, 17, 17, 17 } },
-		{ PROTO_COM_MODEL_DOCTOR,			{ 0, 1, 0, 0, 0, 0, 0, 0 } },
-		{ PROTO_COM_MODEL_PPL_JUVENILES,	{ 0, 1, 0, 0, 0, 0, 0, 0 } },
-		{ PROTO_COM_MODEL_PPL_FAT,			{ 0, 1, 0, 0, 0, 0, 0, 0 } },
-		{ PROTO_COM_MODEL_PPL_SHORTPANTS,	{ 0, 1, 0, 0, 0, 0, 0, 0 } },
-		{ PROTO_COM_MODEL_PPL_NURSE,		{ 0, 1, 0, 0, 0, 0, 0, 0 } },
-		{ PROTO_COM_MODEL_PPL_ROCK,			{ 0, 1, 0, 0, 0, 0, 0, 0 } },
+		{ PROTO_COM_MODEL_DOCTOR,			{ 0, 17, 5, 0, 0, 0, 0, 0 } },
+		{ PROTO_COM_MODEL_PPL_JUVENILES,	{ 2, 11, 7, 0, 0, 0, 0, 0 } },
+		{ PROTO_COM_MODEL_PPL_FAT,			{ 0, 1, 2, 0, 0, 0, 0, 0 } },
+		{ PROTO_COM_MODEL_PPL_SHORTPANTS,	{ 3, 5, 3, 0, 0, 0, 12, 14 } },	// 7 Throw, 11 order, 15 Focus
+		{ PROTO_COM_MODEL_PPL_NURSE,		{ 3, 8, 5, 0, 0, 0, 0, 0 } }, // 6 give
+		{ PROTO_COM_MODEL_PPL_ROCK,			{ 11, 10, 8, 0, 0, 0, 14, 6 } },	// 1 order 17 throw
 		{ PROTO_COM_MODEL_PPL_WATER,		{ 0, 1, 0, 0, 0, 0, 0, 0 } },
 	};
 
@@ -33,7 +33,7 @@ namespace
 		0, // IDLE
 		1, // WALK
 		0, // TALK
-		1, // ATTACK_PHYSICAL
+		1, // ATTACK_PHYSICAL 
 		1, // ATTACK_SPECIAL
 		2, // HURT
 		3, // FAINT

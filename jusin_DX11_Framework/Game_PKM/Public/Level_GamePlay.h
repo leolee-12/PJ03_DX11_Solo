@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Game_PKM_Defines.h"
 #include "Game_LevelEntry.h"
+#include "Battle_Session.h"
 #include "Capture_Session.h"
 #include "Level.h"
 
@@ -31,6 +32,7 @@ public:
 	virtual void OnPause() override;
 	virtual void OnResume() override;
 
+	_bool Request_Battle(const BATTLE_ENV& tEnv);
 	void Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTarget);
 	_bool Start_Dialogue(const _wstring& strDialogueKey);
 	_bool Start_Dialogue_Text(const _wstring& strMessage);

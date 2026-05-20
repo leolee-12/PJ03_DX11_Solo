@@ -94,6 +94,7 @@
     <ClInclude Include="..\Public\IBattleState.h" />
     <ClInclude Include="..\Public\IDamageModifier.h" />
     <ClInclude Include="..\Public\Interaction.h" />
+    <ClInclude Include="..\Public\Interaction_DialogueBattle.h" />
     <ClInclude Include="..\Public\Interaction_Encounter.h" />
     <ClInclude Include="..\Public\Level_Battle.h" />
     <ClInclude Include="..\Public\Level_Capture.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\Private\Battle_Stream.cpp" />
     <ClCompile Include="..\Private\Game_PresetTable.cpp" />
     <ClCompile Include="..\Private\Interaction.cpp" />
+    <ClCompile Include="..\Private\Interaction_DialogueBattle.cpp" />
     <ClCompile Include="..\Private\Interaction_Encounter.cpp" />
     <ClCompile Include="..\Private\Level_Battle.cpp" />
     <ClCompile Include="..\Private\Level_Capture.cpp" />

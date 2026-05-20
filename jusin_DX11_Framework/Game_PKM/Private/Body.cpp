@@ -56,6 +56,8 @@ HRESULT CBody::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->ScaleTo(pDesc->fScale, pDesc->fScale, pDesc->fScale);
+	m_pTransformCom->Set_State(STATE::POSITION,
+		XMVectorSet(pDesc->vLocalOffset.x, pDesc->vLocalOffset.y, pDesc->vLocalOffset.z, 1.f));
 	m_pModelCom->Set_AnimationIndex(pDesc->iDefaultAnim, pDesc->bLoop);
 	m_pModelCom->Set_RootMotionBoneIndex(pDesc->iRootMotionBoneIndex);
 	m_pModelCom->Set_EnableRootMotion(pDesc->bEnableRootMotion);

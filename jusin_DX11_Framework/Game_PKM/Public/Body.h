@@ -19,6 +19,7 @@ public:
 		_uint iDefaultAnim = { 0 };
 		_bool bLoop = { true };
 		_float fScale = { 1.f };
+		_float3 vLocalOffset = {};
 		_bool bEnableRootMotion = { false };
 		_uint iRootMotionBoneIndex = { 0 };
 		const _uint* pParentState = { nullptr };

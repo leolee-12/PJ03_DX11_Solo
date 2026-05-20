@@ -1,5 +1,6 @@
 #include "Battle_Trainer.h"
-#include "Body.h"
+#include "Body_Human.h"
+#include "RenderRule_Manager.h"
 
 CBattle_Trainer::CBattle_Trainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CContainerObject{ pDevice, pContext }
@@ -85,21 +86,51 @@ void CBattle_Trainer::Play_Throw()
 
 HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 {
-	CBody::BODY_DESC BodyDesc{};
-	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.strModelProtoTag = pDesc->strModelProtoTag;
-	BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
-		? pDesc->strShaderProtoTag
-		: PROTO_COM_SHADER_VTXANIMMESH;
-	BodyDesc.iDefaultAnim = pDesc->iDefaultAnim;
-	BodyDesc.bLoop = pDesc->bLoop;
-	BodyDesc.fScale = pDesc->fScale;
-	BodyDesc.bEnableRootMotion = false;
-	BodyDesc.iRootMotionBoneIndex = 0;
+	if (PROTO_OBJ_BODY_HUMAN == m_strBodyProtoTag && '\0' != pDesc->szMappingPath[0])
+	{
+		CRenderRule_Manager* pRuleMgr = CRenderRule_Manager::GetInstance();
+		if (nullptr == pRuleMgr)
+			return E_FAIL;
 
-	if (FAILED(__super::Add_PartObject(
-		ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
-		return E_FAIL;
+		const CRenderRule* pRenderRule = pRuleMgr->Find_OrLoadMappingRule(pDesc->szMappingPath);
+			if (nullptr == pRenderRule)
+				return E_FAIL;
+
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		BodyDesc.strModelProtoTag = pDesc->strModelProtoTag;
+		BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
+			? pDesc->strShaderProtoTag
+			: PROTO_COM_SHADER_HUMAN;
+		BodyDesc.iDefaultAnim = pDesc->iDefaultAnim;
+		BodyDesc.bLoop = pDesc->bLoop;
+		BodyDesc.fScale = pDesc->fScale;
+		BodyDesc.bEnableRootMotion = false;
+		BodyDesc.iRootMotionBoneIndex = 0;
+		BodyDesc.pRenderRule = pRenderRule;
+
+		if (FAILED(__super::Add_PartObject(
+			ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
+			return E_FAIL;
+	}
+	else
+	{
+		CBody::BODY_DESC BodyDesc{};
+		BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+		BodyDesc.strModelProtoTag = pDesc->strModelProtoTag;
+		BodyDesc.strShaderProtoTag = (0 != pDesc->strShaderProtoTag)
+			? pDesc->strShaderProtoTag
+			: PROTO_COM_SHADER_VTXANIMMESH;
+		BodyDesc.iDefaultAnim = pDesc->iDefaultAnim;
+		BodyDesc.bLoop = pDesc->bLoop;
+		BodyDesc.fScale = pDesc->fScale;
+		BodyDesc.bEnableRootMotion = false;
+		BodyDesc.iRootMotionBoneIndex = 0;
+
+		if (FAILED(__super::Add_PartObject(
+			ETOUI(LEVEL::STATIC), m_strBodyProtoTag, PART_BODY, &BodyDesc)))
+			return E_FAIL;
+	}
 
 	m_pBody = Get_Part<CBody>(PART_BODY);
 	if (nullptr == m_pBody)

@@ -309,6 +309,7 @@ void CCamera_Director::Stop_Sequence()
 		Set_Mode(CAMERA_MODE::BATTLE_DEFAULT);
 
 	m_ActiveShotPose = {};
+	m_eCurrentSequenceID = CAMERA_SEQUENCE_ID::NONE;
 }
 
 CAMERA_SHOT_TYPE CCamera_Director::Get_CurrentShotType() const

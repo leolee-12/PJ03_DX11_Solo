@@ -46,9 +46,11 @@ enum class SPAWN_NPC_PROFILE : _ubyte
 struct SPAWN_RECT_DESC
 {
 	_uint       iSpawnID = { 0 };                          // 0 = unassigned
+
 	SPAWN_KIND  eSpawnKind = { SPAWN_KIND::WILD_POKEMON };
 	SPAWN_NPC_PROFILE eNpcProfile = { SPAWN_NPC_PROFILE::NONE };
-	_tchar     szDialogueKey[64] = {};
+	_tchar		szDialogueKey[64] = {};
+	_uint		iTrainerID = { 0 };
 
 	_float3     vCenter = {};                             // 월드 좌표. Y 는 검증 시 NavMesh 투영 결과로 덮임
 	_float2     vSize = { 1.f, 1.f };

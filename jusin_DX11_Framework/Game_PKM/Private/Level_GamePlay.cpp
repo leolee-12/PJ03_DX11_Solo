@@ -47,9 +47,9 @@ namespace
 				{ L"dialogue_npc_fat", L"과학의 힘이란 대단해!" },
 				{ L"dialogue_npc_nurse", L"안녕하세요. 포켓몬을 회복시켜 드리겠습니다." },
 
-				{ L"dialogue_trainer_shortpants", L"눈이 마주치면 포켓몬 배틀! 그것이 규칙이야." },
-				{ L"dialogue_trainer_rock", L"눈이 마주쳤군! 포켓몬 배틀을 시작하자!" },
-				{ L"dialogue_trainer_water", L"물 타입 포켓몬의 힘을 보여주지!" },
+				{ L"dialogue_trainer_shortpants", L"포켓몬 트레이너끼리\n눈과 눈이 마주쳤다!\f내가 좋아하는 포켓몬과 승부하자!" },
+				{ L"dialogue_trainer_rock", L"왔구나!\n나는 회색시티 포켓몬체육관의 관장인 웅이야!\f나의 굳은 의지는 내 포켓몬에게서도 드러나지!\n단단하고 참을성이 강해.\f좋아!\n자 덤벼라!" },
+				{ L"dialogue_trainer_water", L"너!\f너는 포켓몬을 키울 때\n너만의 방침이 있니?\f나의 방침은 말이지...\n물타입 포켓몬으로 공격하고 ...또 공격하는거야!\f자! 세계의 미소녀\n이슬님이 상대해줄게!\f가라!\n내 귀염둥이!" },
 
 				{ L"dialogue_pokemon_pm0001_00", L"이상해씨가 조용히 햇빛을 받고 있다." },
 				{ L"dialogue_pokemon_pm0004_00", L"파이리가 꼬리의 불꽃을 살랑이고 있다." },
@@ -306,12 +306,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_P))
 	{
-		/* UI 열린 상태면 트리거 무시. Fade 시퀀스 미보유면 진입 불가. */
-		if (UI_Is_AnyOpen())
-			return;
-		if (nullptr == m_pFadeBattleSeq)
-			return;
-
 		BATTLE_ENV tEnv = {};
 		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
 		tEnv.eRule = BATTLE_RULE::TRAINER_SINGLE;
@@ -319,30 +313,10 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		tEnv.iBGResourceID = 0;
 		tEnv.iZoneID = 0;
 
-		m_PendingEntryDesc.Clear();
-		m_PendingEntryDesc.eNextLevelID = LEVEL::BATTLE;
-
-		if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv,
-			sizeof(BATTLE_ENV))))
-			return;
-
-		/* Fade 시작과 동시에 BATTLE BGM 시작. 실제 Push_Level 은 본 함수 상단의 경과 임계값 초과 시 호출됨. */
-		m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
-
-		m_pFadeBattleSeq->Set_Visible(true);
-		m_pFadeBattleSeq->Play();
-
-		/* 트랜지션 동안 게임 객체 수준 입력 전체 차단(WASD/마우스 등).
-		   SYSTEM 키는 LOCKED 에서도 통과하나, 본 함수 상단 BUSY 가드가 추가 방어. */
-		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
-
-		m_eTransition = TRANSITION_STATE::BUSY;
-		m_fTransitionElapsed = 0.f;
-
+		Request_Battle(tEnv);
 		return;
 	}
 
-	/* 등록된 모든 UI 컨트롤러에 Update 전파. 닫혀 있으면 베이스가 즉시 return. */
 	UI_Update_All(fTimeDelta);
 }
 
@@ -387,6 +361,44 @@ void CLevel_GamePlay::OnResume()
 			}
 		}
 	}
+}
+
+_bool CLevel_GamePlay::Request_Battle(const BATTLE_ENV& tEnv)
+{
+	/* 트랜지션 BUSY 중에는 재진입 차단. Capture_Manager::Request_Capture 의 가드 순서와 일관. */
+	if (TRANSITION_STATE::IDLE != m_eTransition)
+		return false;
+
+	/* 대화 활성 중에는 배틀 진입 금지. M1 Start_Dialogue 와의 충돌 방지. */
+	if (true == m_bDialogueActive)
+		return false;
+
+	/* UI 가 하나라도 열려 있으면 무시. 대화 UI 가 닫힌 다음 프레임 이후 호출되어야 함. */
+	if (true == UI_Is_AnyOpen())
+		return false;
+
+	/* Fade 시퀀스 미보유면 진입 불가. Ready_Layer_UI 에서 등록되지 못한 경우 방어. */
+	if (nullptr == m_pFadeBattleSeq)
+		return false;
+
+	m_PendingEntryDesc.Clear();
+	m_PendingEntryDesc.eNextLevelID = LEVEL::BATTLE;
+
+	if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv,
+		sizeof(BATTLE_ENV))))
+		return false;
+
+	m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
+
+	m_pFadeBattleSeq->Set_Visible(true);
+	m_pFadeBattleSeq->Play();
+
+	m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
+
+	m_eTransition = TRANSITION_STATE::BUSY;
+	m_fTransitionElapsed = 0.f;
+
+	return true;
 }
 
 void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTarget)
@@ -591,38 +603,38 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 {
-	const list<CGameObject*>* pPlayerList =
-		m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER);
-
-	if (nullptr == pPlayerList || pPlayerList->empty())
-		return S_OK;
-
-	CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pPlayerList->front());
-	if (nullptr == pPlayer)
-		return S_OK;
-
-	CBody_Hero* pBody = pPlayer->Get_Part<CBody_Hero>(PART_BODY);
-	if (nullptr == pBody)
-		return S_OK;
-
-	CEffect::EFFECT_DESC::ATTACH_INFO attachInfo{};
-	attachInfo.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::BONE;
-	attachInfo.pOwner = pBody;
-	attachInfo.strBoneName = "Waist";
-	XMStoreFloat4x4(&attachInfo.mLocalOffset, XMMatrixIdentity());
-
-	CEffect* pEffect = CEffect_Manager::GetInstance()->Spawn(
-		"MAGIC_FIRE",
-		_float3(0.f, 0.f, 0.f),
-		ETOUI(LEVEL::GAMEPLAY),
-		strLayerTag,
-		attachInfo);
-
-	if (nullptr == pEffect)
-		return E_FAIL;
-
-	m_pDebugEffect = pEffect;
-	m_pDebugEffectOwner = pBody;
+	//const list<CGameObject*>* pPlayerList =
+	//	m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER);
+	//
+	//if (nullptr == pPlayerList || pPlayerList->empty())
+	//	return S_OK;
+	//
+	//CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pPlayerList->front());
+	//if (nullptr == pPlayer)
+	//	return S_OK;
+	//
+	//CBody_Hero* pBody = pPlayer->Get_Part<CBody_Hero>(PART_BODY);
+	//if (nullptr == pBody)
+	//	return S_OK;
+	//
+	//CEffect::EFFECT_DESC::ATTACH_INFO attachInfo{};
+	//attachInfo.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::BONE;
+	//attachInfo.pOwner = pBody;
+	//attachInfo.strBoneName = "Waist";
+	//XMStoreFloat4x4(&attachInfo.mLocalOffset, XMMatrixIdentity());
+	//
+	//CEffect* pEffect = CEffect_Manager::GetInstance()->Spawn(
+	//	"MAGIC_FIRE",
+	//	_float3(0.f, 0.f, 0.f),
+	//	ETOUI(LEVEL::GAMEPLAY),
+	//	strLayerTag,
+	//	attachInfo);
+	//
+	//if (nullptr == pEffect)
+	//	return E_FAIL;
+	//
+	//m_pDebugEffect = pEffect;
+	//m_pDebugEffectOwner = pBody;
 
 	return S_OK;
 }

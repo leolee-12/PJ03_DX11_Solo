@@ -22,6 +22,8 @@ public:
 
         _float3 vPos = { 0.f, 0.f, 0.f };
         _float fYaw = { 0.f };
+
+        _char szMappingPath[256] = {};
     };
 
 protected:

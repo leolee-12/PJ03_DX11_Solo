@@ -94,6 +94,9 @@ namespace
 		const _char* pMappingPath = { nullptr };
 		const wchar_t* pDefaultDialogueKey = { nullptr };
 		_float fScale = { 1.f };
+		_float fBodyOffsetX = { 0.f };
+		_float fBodyOffsetY = { 0.f };
+		_float fBodyOffsetZ = { 0.f };
 	};
 
 	const NPC_PROFILE_INFO* Find_NpcProfile_(SPAWN_NPC_PROFILE eProfile)
@@ -104,7 +107,7 @@ namespace
 			{ SPAWN_NPC_PROFILE::JUVENILES, false, PROTO_COM_MODEL_PPL_JUVENILES, "../../Resources/Models/people/juveniles/juveniles_mapping.json", L"dialogue_npc_juveniles", 1.f },
 			{ SPAWN_NPC_PROFILE::FAT, false, PROTO_COM_MODEL_PPL_FAT, "../../Resources/Models/people/fat/fat_mapping.json", L"dialogue_npc_fat", 1.f },
 			{ SPAWN_NPC_PROFILE::SHORTPANTS, false, PROTO_COM_MODEL_PPL_SHORTPANTS, "../../Resources/Models/people/shortpants/shortpants_mapping.json", L"dialogue_trainer_shortpants", 1.f },
-			{ SPAWN_NPC_PROFILE::NURSE, false, PROTO_COM_MODEL_PPL_NURSE, "../../Resources/Models/people/nurse/nurse_mapping.json", L"dialogue_npc_nurse", 1.f },
+			{ SPAWN_NPC_PROFILE::NURSE, false, PROTO_COM_MODEL_PPL_NURSE, "../../Resources/Models/people/nurse/nurse_mapping.json", L"dialogue_npc_nurse", 1.f, 0.f, 0.f, -1.3f },
 			{ SPAWN_NPC_PROFILE::ROCK, false, PROTO_COM_MODEL_PPL_ROCK, "../../Resources/Models/people/rock/rock_mapping.json", L"dialogue_trainer_rock", 1.f },
 			{ SPAWN_NPC_PROFILE::WATER, false, PROTO_COM_MODEL_PPL_WATER, "../../Resources/Models/people/water/water_mapping.json", L"dialogue_trainer_water", 1.f },
 
@@ -246,6 +249,7 @@ HRESULT CSpawn_Manager::Load_From_File(const _tchar* pFilePath)
 		else if (key == "RespawnDelay")          tCur.fRespawnDelay = std::stof(val);
 		else if (key == "NPCProfile")            tCur.eNpcProfile = Parse_NpcProfile_(val);
 		else if (key == "DialogueKey")           Copy_Wide_(tCur.szDialogueKey, val);
+		else if (key == "TrainerID")             tCur.iTrainerID = static_cast<_uint>(std::stoul(val));
 	}
 
 	return S_OK;
@@ -493,6 +497,14 @@ _bool CSpawn_Manager::Spawn_NPC(SPAWN_RECT_RUNTIME& tRuntime)
 	NpcDesc.bApplyInitialRotation = true;
 	NpcDesc.fInitialRotationY = tDesc.fRotationY;
 
+	if (SPAWN_KIND::TRAINER == tDesc.eSpawnKind)
+	{
+		NpcDesc.bStartBattleAfterDialogue = true;
+		NpcDesc.iTrainerID = tDesc.iTrainerID;
+		/* eBattleEnvironment / eBattleRule / iBGResourceID / iZoneID 는 ACTOR_NPC_DESC 기본값
+		   (GRASS / TRAINER_SINGLE / 0 / 0). 외부 데이터 파서 추가는 후속. */
+	}
+
 	if (pProfile->bPokemon)
 	{
 		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
@@ -501,6 +513,10 @@ _bool CSpawn_Manager::Spawn_NPC(SPAWN_RECT_RUNTIME& tRuntime)
 		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pProfile->strModelProtoTag, ANIM_KIND::IDLE);
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = pProfile->fScale;
+		BodyDesc.vLocalOffset = _float3(
+			pProfile->fBodyOffsetX,
+			pProfile->fBodyOffsetY,
+			pProfile->fBodyOffsetZ);
 		BodyDesc.pRenderRule = pRenderRule;
 
 		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
@@ -519,6 +535,10 @@ _bool CSpawn_Manager::Spawn_NPC(SPAWN_RECT_RUNTIME& tRuntime)
 		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pProfile->strModelProtoTag, ANIM_KIND::IDLE);
 		BodyDesc.bLoop = true;
 		BodyDesc.fScale = pProfile->fScale;
+		BodyDesc.vLocalOffset = _float3(
+			pProfile->fBodyOffsetX,
+			pProfile->fBodyOffsetY,
+			pProfile->fBodyOffsetZ);
 		BodyDesc.pRenderRule = pRenderRule;
 
 		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;

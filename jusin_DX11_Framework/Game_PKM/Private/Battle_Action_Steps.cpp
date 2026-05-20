@@ -256,7 +256,7 @@ void SPokemonEnter::OnEnter(const BATTLE_CONTEXT& ctx)
 		dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(m_iSide));
 
 	if (nullptr != pPokemon)
-		pPokemon->Play_Enter();
+		pPokemon->Begin_SendOutAppear();
 }
 
 void SPokemonEnter::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)

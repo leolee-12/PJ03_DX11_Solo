@@ -368,7 +368,7 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_Battle::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_TOWN, ETOUI(LEVEL::BATTLE), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_GRASS, ETOUI(LEVEL::BATTLE), strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
@@ -398,6 +398,7 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 			tDesc.strBodyProtoTag = pTrainerData->strBodyProtoTag;
 			tDesc.strModelProtoTag = pTrainerData->strModelProtoTag;
 			tDesc.strShaderProtoTag = pTrainerData->strShaderProtoTag;
+			strcpy_s(tDesc.szMappingPath, sizeof(tDesc.szMappingPath), pTrainerData->szMappingPath);
 		}
 		else
 		{
@@ -443,6 +444,7 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		tDesc.iDefaultAnim = 0;
 		tDesc.bLoop = true;
 		tDesc.fScale = 1.f;
+		tDesc.bStartVisible = false;
 		tDesc.vPos = m_pBattleManager->Get_PokemonPos(iSide);
 		tDesc.fYaw = m_pBattleManager->Get_PokemonYaw(iSide);
 
