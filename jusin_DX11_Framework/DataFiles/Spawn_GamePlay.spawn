@@ -161,7 +161,7 @@ SpawnRect {
         RotationY = 0.0
         SpeciesID = 43
         Level = 3
-        MaxAliveCount = 2
+        MaxAliveCount = 3
         ProjectRadius = 3.0
         LeashRadius = 10.0
         MinDistanceFromPlayer = 6.0

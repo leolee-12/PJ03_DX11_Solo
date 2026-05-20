@@ -76,6 +76,15 @@ namespace
 		if (v == "Water")        return SPAWN_NPC_PROFILE::WATER;
 		if (v == "PM0001_00")    return SPAWN_NPC_PROFILE::PM0001_00;
 		if (v == "PM0004_00")    return SPAWN_NPC_PROFILE::PM0004_00;
+		if (v == "PM0007_00")    return SPAWN_NPC_PROFILE::PM0007_00;
+		if (v == "PM0010_00")    return SPAWN_NPC_PROFILE::PM0010_00;
+		if (v == "PM0025_00")    return SPAWN_NPC_PROFILE::PM0025_00;
+		if (v == "PM0041_00")    return SPAWN_NPC_PROFILE::PM0041_00;
+		if (v == "PM0043_00")    return SPAWN_NPC_PROFILE::PM0043_00;
+		if (v == "PM0059_00")    return SPAWN_NPC_PROFILE::PM0059_00;
+		if (v == "PM0074_00")    return SPAWN_NPC_PROFILE::PM0074_00;
+		if (v == "PM0095_00")    return SPAWN_NPC_PROFILE::PM0095_00;
+		if (v == "PM0121_00")    return SPAWN_NPC_PROFILE::PM0121_00;
 		return SPAWN_NPC_PROFILE::NONE;
 	}
 
@@ -113,6 +122,15 @@ namespace
 
 			{ SPAWN_NPC_PROFILE::PM0001_00, true, PROTO_COM_MODEL_PM0001_00, "../../Resources/Models/pkm/pm0001_00/pm0001_00_mapping.json", L"dialogue_pokemon_pm0001_00", 1.f },
 			{ SPAWN_NPC_PROFILE::PM0004_00, true, PROTO_COM_MODEL_PM0004_00, "../../Resources/Models/pkm/pm0004_00/pm0004_00_mapping.json", L"dialogue_pokemon_pm0004_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0007_00, true, PROTO_COM_MODEL_PM0007_00, "../../Resources/Models/pkm/pm0007_00/pm0007_00_mapping.json", L"dialogue_pokemon_pm0007_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0010_00, true, PROTO_COM_MODEL_PM0010_00, "../../Resources/Models/pkm/pm0010_00/pm0010_00_mapping.json", L"dialogue_pokemon_pm0010_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0025_00, true, PROTO_COM_MODEL_PM0025_00, "../../Resources/Models/pkm/pm0025_00/pm0025_00_mapping.json", L"dialogue_pokemon_pm0025_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0041_00, true, PROTO_COM_MODEL_PM0041_00, "../../Resources/Models/pkm/pm0041_00/pm0041_00_mapping.json", L"dialogue_pokemon_pm0041_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0043_00, true, PROTO_COM_MODEL_PM0043_00, "../../Resources/Models/pkm/pm0043_00/pm0043_00_mapping.json", L"dialogue_pokemon_pm0043_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0059_00, true, PROTO_COM_MODEL_PM0059_00, "../../Resources/Models/pkm/pm0059_00/pm0059_00_mapping.json", L"dialogue_pokemon_pm0059_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0074_00, true, PROTO_COM_MODEL_PM0074_00, "../../Resources/Models/pkm/pm0074_00/pm0074_00_mapping.json", L"dialogue_pokemon_pm0074_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0095_00, true, PROTO_COM_MODEL_PM0095_00, "../../Resources/Models/pkm/pm0095_00/pm0095_00_mapping.json", L"dialogue_pokemon_pm0095_00", 1.f },
+			{ SPAWN_NPC_PROFILE::PM0121_00, true, PROTO_COM_MODEL_PM0121_00, "../../Resources/Models/pkm/pm0121_00/pm0121_00_mapping.json", L"dialogue_pokemon_pm0121_00", 1.f },
 		};
 
 		for (const NPC_PROFILE_INFO& Profile : Profiles)
@@ -429,7 +447,7 @@ _bool CSpawn_Manager::Try_SpawnWildPokemon(SPAWN_RECT_RUNTIME& tRuntime)
 		BodyDesc.fScale = 1.f;
 		BodyDesc.bEnableRootMotion = true;
 		BodyDesc.iRootMotionBoneIndex = 0;
-		BodyDesc.strRootMotionBoneName = "Waist";
+		BodyDesc.strRootMotionBoneName = "Origin";
 		BodyDesc.pRenderRule = pRenderRule;
 
 		CActor_WildPokemon::ACTOR_WILD_DESC WildDesc{};

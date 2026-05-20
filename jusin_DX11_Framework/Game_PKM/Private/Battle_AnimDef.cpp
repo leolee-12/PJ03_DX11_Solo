@@ -18,7 +18,7 @@ namespace
 		{ PROTO_COM_MODEL_PM0007_00,		{ 0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PM0010_00,		{ 4,	8,	9,	0,	6,	7,	2,	0,	0,	0,	0,	3,	5,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PM0025_00,		{ 0,	5,	6,	0,	36,	41,	14,	0,	0,	0,	0,	31,	32,	1,	20,	27} },
-		{ PROTO_COM_MODEL_PM0041_00,		{ 11,	9,	10,	0,	6,	7,	1,	0,	0,	0,	0,	4,	5,	0,	0,	0} },
+		{ PROTO_COM_MODEL_PM0041_00,		{ 2,	8,	9,	0,	5,	6,	1,	0,	0,	0,	0,	3,	4,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PM0043_00,		{ 0,	6,	7,	0,	37,	42,	10,	0,	0,	0,	0,	31,	33,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PM0059_00,		{ 1,	6,	7,	0,	33,	38,	10,	0,	0,	0,	0,	28,	29,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PM0074_00,		{ 0,	6,	7,	0,	33,	38,	10,	0,	0,	0,	0,	28,	29,	0,	0,	0} },
@@ -35,17 +35,30 @@ namespace
 		{ PROTO_COM_MODEL_PPL_WATER,		{ 3,	19,	0,	6,	12,	2,	14,	8,	1,	7,	1,	0,	0,	0,	0,	0} },	// 8,9에서 x축 90도 회전 필요
 	};
 
-	constexpr _uint s_DefaultIndex[ETOUI(ANIM_KIND::END)] =
+	constexpr _uint s_DefaultIndex[ETOUI(ANIM_KIND::END)] = {};
+
+	struct ROOT_MOTION_SCALE_ENTRY
 	{
-		0, // IDLE
-		1, // WALK
-		0, // TALK
-		1, // ATTACK_PHYSICAL 
-		1, // ATTACK_SPECIAL
-		2, // HURT
-		3, // FAINT
-		4, // ENTER
+		WNameID strModelTag;
+		_float  fScale;
 	};
+
+	const constexpr ROOT_MOTION_SCALE_ENTRY s_RootMotionScaleTable[] =
+	{
+			{ PROTO_COM_MODEL_PM0001_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0004_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0007_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0010_00, 0.2f   },
+			{ PROTO_COM_MODEL_PM0025_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0041_00, 0.013f },
+			{ PROTO_COM_MODEL_PM0043_00, 0.4f   },
+			{ PROTO_COM_MODEL_PM0059_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0074_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0095_00, 0.3f   },
+			{ PROTO_COM_MODEL_PM0121_00, 0.3f   },
+	};
+
+	constexpr _float kDefaultRootMotionScale = 0.3f;
 }
 
 _uint BattleAnim::Find_AnimIndex(WNameID strModelTag, ANIM_KIND eKind)
@@ -80,4 +93,14 @@ ANIM_KIND BattleAnim::Resolve_MoveAnimKind(MOVE_CATEGORY eCategory)
 	default:
 		return ANIM_KIND::ATTACK_PHYSICAL;
 	}
+}
+
+_float BattleAnim::Find_RootMotionScale(WNameID strModelTag)
+{
+	for (const auto& tEntry : s_RootMotionScaleTable)
+	{
+		if (tEntry.strModelTag == strModelTag)
+			return tEntry.fScale;
+	}
+	return kDefaultRootMotionScale;
 }

@@ -78,7 +78,7 @@ HRESULT CBody::Initialize(void* pArg)
 			iRootBoneIndex = static_cast<_uint>(iResolved);
 	}
 
-	m_pModelCom->Set_RootMotionBoneIndex(pDesc->iRootMotionBoneIndex);
+	m_pModelCom->Set_RootMotionBoneIndex(iRootBoneIndex);
 	m_pModelCom->Set_EnableRootMotion(pDesc->bEnableRootMotion);
 
 	return S_OK;

@@ -52,7 +52,7 @@ HRESULT CActor_WildPokemon::Initialize(void* pArg)
     m_iCurrentCellIndex = pDesc->iCurrentCellIndex;
     m_tSpawnRectDesc = pDesc->tSpawnRectDesc;
     m_strBodyModelProtoTag = pDesc->strBodyModelProtoTag;
-
+    m_Tuning.fRootMotionScale = BattleAnim::Find_RootMotionScale(m_strBodyModelProtoTag);
     m_pTransformCom->Set_State(STATE::POSITION,
         XMVectorSet(pDesc->vSpawnPos.x, pDesc->vSpawnPos.y, pDesc->vSpawnPos.z, 1.f));
 
@@ -100,7 +100,6 @@ HRESULT CActor_WildPokemon::Ready_Components(const ACTOR_WILD_DESC* pDesc)
         COM_INTERACTION_ENCOUNTER, reinterpret_cast<CComponent**>(&m_pEncounter), &EncDesc)))
         return E_FAIL;
 
-    // SPHERE Collider - TOUCH 트리거용
     CBounding_Sphere::BOUNDING_SPHERE_DESC SphereDesc{};
     SphereDesc.vCenter = _float3(0.f, 0.5f, 0.f);
     SphereDesc.fRadius = 0.6f;
@@ -109,8 +108,6 @@ HRESULT CActor_WildPokemon::Ready_Components(const ACTOR_WILD_DESC* pDesc)
         COM_COLLIDER_SPHERE, reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
         return E_FAIL;
 
-    // S3 추가 - Navigation 컴포넌트
-    // INVALID_NAV_CELL 을 _int 로 cast 하면 -1 이 되어 CNavigation::Set_CurrentCellIndex 가 invalid 처리.
     CNavigation::NAVIGATION_DESC NaviDesc{ static_cast<_int>(pDesc->iCurrentCellIndex) };
 
     if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
@@ -215,19 +212,16 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
         true);
 
 #ifdef _DEBUG
-    if (bHasInput)
-    {
-        const _float3& vDelta = m_pBody->Get_RootMotionDelta();
-        char szLog[256] = {};
-        sprintf_s(szLog, "[Wild] anim=%u delta=(%.6f, %.6f, %.6f)\n",
-            BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, ANIM_KIND::WALK),
-            vDelta.x, vDelta.y, vDelta.z);
-        OutputDebugStringA(szLog);
-    }
+    //if (bHasInput)
+    //{
+    //    const _float3& vDelta = m_pBody->Get_RootMotionDelta();
+    //    char szLog[256] = {};
+    //    sprintf_s(szLog, "[Wild] anim=%u delta=(%.6f, %.6f, %.6f)\n",
+    //        BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, ANIM_KIND::WALK),
+    //        vDelta.x, vDelta.y, vDelta.z);
+    //    OutputDebugStringA(szLog);
+    //}
 #endif
-
-    Tick_RootMotionMovement(vMoveDir, bHasInput,
-        m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
 
     Tick_RootMotionMovement(vMoveDir, bHasInput,
         m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);

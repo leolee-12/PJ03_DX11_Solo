@@ -10,7 +10,7 @@ private:
 	virtual ~CBone() = default;
 
 public:
-	_bool Compare_Name(const _char* pBoneName) { return !strcmp(pBoneName, m_szName); }
+	_bool Compare_Name(const _char* pBoneName) { return !_stricmp(pBoneName, m_szName); }
 	_int Get_ParentIndex() { return m_iParentIndex; }
 	const _float4x4& Get_BindPoseMatrix() const { return m_BindPoseMatrix; }
 	const _float4x4& Get_TransformationMatrix() const { return m_TransformationMatrix; }
