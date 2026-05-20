@@ -420,6 +420,23 @@ HRESULT CPanel_Effect::Render()
 		m_pSession->Mark_Dirty("Emitter size changed");
 	}
 
+	if (ImGui::DragFloat2("Rotation", &pEmitter->vRotationRange.x, 0.01f, -XM_2PI, XM_2PI, "%.2f"))
+	{
+		if (pEmitter->vRotationRange.x > pEmitter->vRotationRange.y)
+			std::swap(pEmitter->vRotationRange.x, pEmitter->vRotationRange.y);
+
+		m_pSession->Mark_Dirty("Emitter rotation changed");
+	}
+
+	if (ImGui::DragFloat2("Rotation Speed", &pEmitter->vRotationSpeedRange.x, 0.01f, -20.f, 20.f,
+		"%.2f"))
+	{
+		if (pEmitter->vRotationSpeedRange.x > pEmitter->vRotationSpeedRange.y)
+			std::swap(pEmitter->vRotationSpeedRange.x, pEmitter->vRotationSpeedRange.y);
+
+		m_pSession->Mark_Dirty("Emitter rotation speed changed");
+	}
+
 	if (ImGui::DragFloat3("Emit Direction", &pEmitter->vEmitDirection.x, 0.01f, -1.f, 1.f, "%.2f"))
 		m_pSession->Mark_Dirty("Emitter direction changed");
 
@@ -452,6 +469,9 @@ HRESULT CPanel_Effect::Render()
 			m_pSession->Mark_Dirty("Emitter blend changed");
 		}
 	}
+
+	if (ImGui::Checkbox("Ignore Depth", &pEmitter->bIgnoreDepth))
+		m_pSession->Mark_Dirty("Emitter ignore depth flag changed");
 
 	if (ImGui::Checkbox("Auto Destroy On Empty", &pEmitter->bAutoDestroyOnEmpty))
 		m_pSession->Mark_Dirty("Emitter auto destroy flag changed");

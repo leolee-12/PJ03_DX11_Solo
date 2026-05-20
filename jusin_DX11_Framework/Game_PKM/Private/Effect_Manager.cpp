@@ -25,6 +25,31 @@ namespace
             return E_FAIL;
         }
     }
+
+    _uint Resolve_EffectSpawnLevel(_uint iLevel)
+    {
+        if (INVALID_INDEX != iLevel)
+        {
+            if (iLevel >= ETOUI(LEVEL::END))
+                return INVALID_INDEX;
+
+            return iLevel;
+        }
+
+        CGameInstance* pGameInstance = CGameInstance::GetInstance();
+        if (nullptr == pGameInstance)
+            return INVALID_INDEX;
+
+        const _int iCurrentLevel = pGameInstance->Get_CurrentLevel();
+        if (iCurrentLevel < 0)
+            return INVALID_INDEX;
+
+        const _uint iResolvedLevel = static_cast<_uint>(iCurrentLevel);
+        if (iResolvedLevel >= ETOUI(LEVEL::END))
+            return INVALID_INDEX;
+
+        return iResolvedLevel;
+    }
 }
 
 CEffect_Manager::CEffect_Manager()
@@ -145,6 +170,41 @@ CEffect* CEffect_Manager::Spawn(const _string& strID, const _float3& vSpawnPos,
 
     OutputDebugStringA("[EffectMgr] Spawn ok\n");
     return pEffect;
+}
+
+CEffect* CEffect_Manager::PlayAt(const _string& strID, const _float3& vWorldPos,
+    _uint iLevel, WNameID strLayerTag)
+{
+    const _uint iResolvedLevel = Resolve_EffectSpawnLevel(iLevel);
+    if (INVALID_INDEX == iResolvedLevel)
+    {
+        OutputDebugStringA("[EffectMgr] PlayAt fail: invalid spawn level\n");
+        return nullptr;
+    }
+
+    CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
+    tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
+
+    return Spawn(strID, vWorldPos, iResolvedLevel, strLayerTag, tAttach);
+}
+
+CEffect* CEffect_Manager::PlayAttached(const _string& strID,
+    const CEffect::EFFECT_DESC::ATTACH_INFO& tAttach,
+    _uint iLevel, WNameID strLayerTag)
+{
+    const _uint iResolvedLevel = Resolve_EffectSpawnLevel(iLevel);
+    if (INVALID_INDEX == iResolvedLevel)
+    {
+        OutputDebugStringA("[EffectMgr] PlayAttached fail: invalid spawn level\n");
+        return nullptr;
+    }
+
+#ifdef _DEBUG
+    if (CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE == tAttach.eKind)
+        OutputDebugStringA("[EffectMgr] PlayAttached warning: attach kind is NONE\n");
+#endif
+
+    return Spawn(strID, _float3{}, iResolvedLevel, strLayerTag, tAttach);
 }
 
 void CEffect_Manager::Free()

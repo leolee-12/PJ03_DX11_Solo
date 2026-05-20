@@ -259,18 +259,17 @@ void CBattle_Pokemon::Begin_SendOutAppear()
 	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
 	if (nullptr != pEffectMgr)
 	{
-		CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
-		tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
-
-		pEffectMgr->Spawn(
+		pEffectMgr->PlayAt(
 			"ball_absorb",
-			Get_SendOutEffectPos(),
-			ETOUI(LEVEL::BATTLE),
-			LAYER_EFFECT,
-			tAttach);
+			Get_EffectPivot());
 	}
 
 	Play_Enter();
+}
+
+_float3 CBattle_Pokemon::Get_EffectPivot() const
+{
+	return Get_SendOutEffectPos();
 }
 
 void CBattle_Pokemon::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)

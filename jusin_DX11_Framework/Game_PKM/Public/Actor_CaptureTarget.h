@@ -8,7 +8,6 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 class CInteraction_BallHit;
-class CEffect;
 
 class CActor_CaptureTarget final : public CActor
 {
@@ -46,6 +45,7 @@ public:
 	CCollider* Get_Collider() const { return m_pColliderCom; }
 	_float  Get_CaptureRadius() const { return m_fCaptureRadius; }
 	_float3 Get_CaptureCenter() const;
+	_float3 Get_EffectPivot() const;
 
 	void    Begin_Absorb();
 	void    Begin_Appear();
@@ -66,7 +66,6 @@ private:
 	_bool   m_bAbsorbReverse = { false };
 	_float  m_fAbsorbElapsed = { 0.f };
 	_float  m_fAbsorbDuration = { 0.8f };
-	CEffect* m_pAbsorbEffect = { nullptr };
 
 	_bool   m_bBasisCached = { false };
 	_float3 m_vRightUnit = { 1.f, 0.f, 0.f };

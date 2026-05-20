@@ -236,7 +236,7 @@ HRESULT CEffectEditorSession::Spawn_Preview()
 
 	Game_PKM::CEffect_Manager::GetInstance()->Register_Definition(m_Doc);
 
-	m_pPreviewEffect = Game_PKM::CEffect_Manager::GetInstance()->Spawn(
+	m_pPreviewEffect = Game_PKM::CEffect_Manager::GetInstance()->PlayAt(
 		m_Doc.strID,
 		m_vPreviewPosition,
 		iLevel,

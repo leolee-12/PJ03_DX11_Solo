@@ -20,6 +20,8 @@ struct EMITTER_DEFINITION
 	_float2 vLifeTimeRange = { 1.f, 2.f };
 	_float2 vSpeedRange = { 1.f, 3.f };
 	_float2 vSizeRange = { 0.2f, 0.5f };
+	_float2 vRotationRange = { 0.f, 0.f };
+	_float2 vRotationSpeedRange = { 0.f, 0.f };
 	_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 	_float  fEmitConeHalfAngle = 0.f;
 
@@ -151,6 +153,8 @@ inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION&
 	desc.vLifeTimeRange = def.vLifeTimeRange;
 	desc.vSpeedRange = def.vSpeedRange;
 	desc.vSizeRange = def.vSizeRange;
+	desc.vRotationRange = def.vRotationRange;
+	desc.vRotationSpeedRange = def.vRotationSpeedRange;
 	desc.vEmitDirection = def.vEmitDirection;
 	desc.fEmitConeHalfAngle = def.fEmitConeHalfAngle;
 	desc.eBillboard = def.eBillboard;
@@ -312,6 +316,10 @@ inline HRESULT Effect_ParseEmitterJson(const json& je, EMITTER_DEFINITION& out)
 		Effect_ReadFloat2(je["speedRange"], out.vSpeedRange);
 	if (je.contains("sizeRange"))
 		Effect_ReadFloat2(je["sizeRange"], out.vSizeRange);
+	if (je.contains("rotationRange"))
+		Effect_ReadFloat2(je["rotationRange"], out.vRotationRange);
+	if (je.contains("rotationSpeedRange"))
+		Effect_ReadFloat2(je["rotationSpeedRange"], out.vRotationSpeedRange);
 	if (je.contains("emitDirection"))
 		Effect_ReadFloat3(je["emitDirection"], out.vEmitDirection);
 
@@ -405,6 +413,8 @@ inline json Effect_SerializeEmitterJson(const EMITTER_DEFINITION& emitter)
 	j["lifeTimeRange"] = { emitter.vLifeTimeRange.x, emitter.vLifeTimeRange.y };
 	j["speedRange"] = { emitter.vSpeedRange.x, emitter.vSpeedRange.y };
 	j["sizeRange"] = { emitter.vSizeRange.x, emitter.vSizeRange.y };
+	j["rotationRange"] = { emitter.vRotationRange.x, emitter.vRotationRange.y };
+	j["rotationSpeedRange"] = { emitter.vRotationSpeedRange.x, emitter.vRotationSpeedRange.y };
 	j["emitDirection"] = { emitter.vEmitDirection.x, emitter.vEmitDirection.y,
 emitter.vEmitDirection.z };
 	j["emitConeHalfAngle"] = emitter.fEmitConeHalfAngle;

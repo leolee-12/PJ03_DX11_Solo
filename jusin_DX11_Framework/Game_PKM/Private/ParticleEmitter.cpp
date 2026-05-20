@@ -78,12 +78,15 @@ void CParticleEmitter::Update(_float fTimeDelta)
 
 	Update_Particles(fTimeDelta);
 
-	if (m_tDesc.bAutoDestroyOnEmpty && m_bDelayElapsed && 0 == m_iAliveCount)
+	if (m_bDelayElapsed && 0 == m_iAliveCount)
 	{
-		const _bool bNoMoreSpawn = !m_bEmitting
-			|| (m_bBurstSpawned && m_tDesc.fSpawnRate <= 0.f);
+		const _bool bStopped = !m_bEmitting;
+		const _bool bOneShotFinished =
+			m_tDesc.bAutoDestroyOnEmpty &&
+			m_bBurstSpawned &&
+			m_tDesc.fSpawnRate <= 0.f;
 
-		if (bNoMoreSpawn)
+		if (bStopped || bOneShotFinished)
 			Set_Dead();
 	}
 }
@@ -287,10 +290,12 @@ void CParticleEmitter::Spawn_One()
 	Particle.fSize = m_pGameInstance->Random(m_tDesc.vSizeRange.x, m_tDesc.vSizeRange.y);
 	Particle.fAge = 0.f;
 	Particle.fLifeTime = max(m_pGameInstance->Random(m_tDesc.vLifeTimeRange.x, m_tDesc.vLifeTimeRange.y), 0.001f);
-	Particle.fRotation = 0.f;
-	Particle.fRotationSpeed = 0.f;
+	Particle.fRotation = m_pGameInstance->Random(m_tDesc.vRotationRange.x, m_tDesc.vRotationRange.y);
+	Particle.fRotationSpeed = m_pGameInstance->Random(m_tDesc.vRotationSpeedRange.x, m_tDesc.vRotationSpeedRange.y);
 	Particle.fRandomSeed = m_pGameInstance->Random(0.f, 1.f);
 	Particle.vColor = _float4(1.f, 1.f, 0.f, 1.f);
+	Particle.vColorStart = Particle.vColor;
+	Particle.vColorEnd = Particle.vColor;
 	Particle.iAtlasIndex = 0;
 
 	++m_iAliveCount;
@@ -321,6 +326,7 @@ void CParticleEmitter::Update_Particles(_float fTimeDelta)
 		Particle.vPosition.y += Particle.vVelocity.y * fTimeDelta;
 		Particle.vPosition.z += Particle.vVelocity.z * fTimeDelta;
 
+		Particle.fRotation += Particle.fRotationSpeed * fTimeDelta;
 		Particle.fAge += fTimeDelta;
 
 		if (Particle.fAge >= Particle.fLifeTime)
@@ -336,11 +342,15 @@ void CParticleEmitter::Update_Particles(_float fTimeDelta)
 		if (!m_tDesc.curveSize.IsEmpty())
 			Particle.fSize = m_tDesc.curveSize.Sample(t01);
 
+		_float4 vEvaluatedColor = Particle.vColorStart;
+
 		if (!m_tDesc.curveColor.IsEmpty())
-			Particle.vColor = m_tDesc.curveColor.Sample(t01);
+			vEvaluatedColor = m_tDesc.curveColor.Sample(t01);
 
 		if (!m_tDesc.curveAlpha.IsEmpty())
-			Particle.vColor.w *= m_tDesc.curveAlpha.Sample(t01);
+			vEvaluatedColor.w *= m_tDesc.curveAlpha.Sample(t01);
+
+		Particle.vColor = vEvaluatedColor;
 
 		const _uint iCols = max(1u, m_tDesc.iAtlasCols);
 		const _uint iRows = max(1u, m_tDesc.iAtlasRows);

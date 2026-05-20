@@ -57,6 +57,7 @@ public:
 	_bool Is_Anim_Finished() const { return ANIM_KIND::IDLE == m_eCurrentKind || ANIM_KIND::FAINT == m_eCurrentKind; }
 
 	void  Begin_SendOutAppear();
+	_float3 Get_EffectPivot() const;
 	void  Set_BattleVisible(_bool bVisible) { m_bBattleVisible = bVisible; }
 	_bool Is_BattleVisible() const { return m_bBattleVisible; }
 

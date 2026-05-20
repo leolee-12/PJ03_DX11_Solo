@@ -24,6 +24,8 @@ public:
 		_float2 vLifeTimeRange = { 1.f, 2.f };
 		_float2 vSpeedRange = { 1.f, 3.f };
 		_float2 vSizeRange = { 0.2f, 0.5f };
+		_float2 vRotationRange = { 0.f, 0.f };
+		_float2 vRotationSpeedRange = { 0.f, 0.f };
 
 		_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 		_float  fEmitConeHalfAngle = 0.f;

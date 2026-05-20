@@ -58,6 +58,9 @@ HRESULT CLevel_Capture::Initialize()
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_BackGround(LAYER_BACKGROUND)))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Battler(LAYER_MONSTER)))
 		return E_FAIL;
 
@@ -194,6 +197,14 @@ HRESULT CLevel_Capture::Ready_Layer_Camera(WNameID strLayerTag)
 	}
 
 	m_pCaptureCamera = pCamera;
+
+	return S_OK;
+}
+
+HRESULT CLevel_Capture::Ready_Layer_BackGround(WNameID strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_GRASS, ETOUI(LEVEL::CAPTURE), strLayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }

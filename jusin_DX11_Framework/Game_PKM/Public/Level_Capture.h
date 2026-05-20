@@ -38,6 +38,7 @@ private:
 
 private:
 	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
+	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
 	HRESULT Ready_Layer_Battler(WNameID strLayerTag);
 	HRESULT Ready_Layer_Ball(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);

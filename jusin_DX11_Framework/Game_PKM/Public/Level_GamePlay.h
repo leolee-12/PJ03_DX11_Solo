@@ -16,7 +16,6 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 class CMenu;
-class CEffect;
 class CBattleMsg;
 
 class CLevel_GamePlay : public CLevel
@@ -61,8 +60,6 @@ private:
 	LEVEL_ENTRY_DESC m_PendingEntryDesc;
 	CGameObject* m_pPendingDeleteWild = { nullptr };   // weak - Push 직전 Set_Dead 호출 후 nullptr 초기화
 	static constexpr _float TRANSITION_PUSH_AT_SEC = 5.0f;
-	CEffect* m_pDebugEffect = { nullptr }; // weak - M8 Stop/Destroy 검증용
-	CGameObject* m_pDebugEffectOwner = { nullptr }; // weak - M8 owner death 검증용
 
 private:
 	HRESULT Ready_Lights();

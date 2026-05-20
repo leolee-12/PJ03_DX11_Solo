@@ -11,7 +11,6 @@
 #include "Level_Capture.h"
 #include "Game_LevelEntry.h"
 #include "Battle_Session.h"
-#include "Body_Hero.h"
 #include "Body_Human.h"
 #include "Body_Pokemon.h"
 #include "Actor_NPC.h"
@@ -19,9 +18,6 @@
 #include "RenderRule_Manager.h"
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
-#include "Effect_Test_Single.h"
-#include "ParticleEmitter.h"
-#include "Effect_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -281,27 +277,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			m_pMenu->Close();
 		else
 			m_pMenu->Open();
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F5) && nullptr != m_pDebugEffect)
-	{
-		m_pDebugEffect->Stop();
-		m_pDebugEffect = nullptr;
-		m_pDebugEffectOwner = nullptr;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F6) && nullptr != m_pDebugEffect)
-	{
-		m_pDebugEffect->Destroy();
-		m_pDebugEffect = nullptr;
-		m_pDebugEffectOwner = nullptr;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F7) && nullptr != m_pDebugEffectOwner)
-	{
-		m_pDebugEffectOwner->Set_Dead();
-		m_pDebugEffect = nullptr;
-		m_pDebugEffectOwner = nullptr;
 	}
 
 	//if (m_pGameInstance->Key_Down(DIK_P))
@@ -603,39 +578,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wild(WNameID strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(WNameID strLayerTag)
 {
-	//const list<CGameObject*>* pPlayerList =
-	//	m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER);
-	//
-	//if (nullptr == pPlayerList || pPlayerList->empty())
-	//	return S_OK;
-	//
-	//CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pPlayerList->front());
-	//if (nullptr == pPlayer)
-	//	return S_OK;
-	//
-	//CBody_Hero* pBody = pPlayer->Get_Part<CBody_Hero>(PART_BODY);
-	//if (nullptr == pBody)
-	//	return S_OK;
-	//
-	//CEffect::EFFECT_DESC::ATTACH_INFO attachInfo{};
-	//attachInfo.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::BONE;
-	//attachInfo.pOwner = pBody;
-	//attachInfo.strBoneName = "Waist";
-	//XMStoreFloat4x4(&attachInfo.mLocalOffset, XMMatrixIdentity());
-	//
-	//CEffect* pEffect = CEffect_Manager::GetInstance()->Spawn(
-	//	"MAGIC_FIRE",
-	//	_float3(0.f, 0.f, 0.f),
-	//	ETOUI(LEVEL::GAMEPLAY),
-	//	strLayerTag,
-	//	attachInfo);
-	//
-	//if (nullptr == pEffect)
-	//	return E_FAIL;
-	//
-	//m_pDebugEffect = pEffect;
-	//m_pDebugEffectOwner = pBody;
-
 	return S_OK;
 }
 
@@ -819,7 +761,6 @@ void CLevel_GamePlay::Free()
 	m_pFadeBattleSeq = nullptr;
 	m_pMenu = nullptr;
 	m_pRuntimeUI = nullptr;
-	m_pDebugEffect = nullptr;
-	m_pDebugEffectOwner = nullptr;
+
 	__super::Free();
 }

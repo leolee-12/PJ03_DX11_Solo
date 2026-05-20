@@ -117,6 +117,11 @@ _float3 CActor_CaptureTarget::Get_CaptureCenter() const
     return vCenter;
 }
 
+_float3 CActor_CaptureTarget::Get_EffectPivot() const
+{
+    return Get_CaptureCenter();
+}
+
 void CActor_CaptureTarget::Begin_Absorb()
 {
     if (m_bAbsorbing)
@@ -128,17 +133,11 @@ void CActor_CaptureTarget::Begin_Absorb()
     m_bAbsorbReverse = false;
     m_fAbsorbElapsed = 0.f;
 
-    CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
-    tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
-
-    m_pAbsorbEffect = CEffect_Manager::GetInstance()->Spawn(
+    CEffect* pEffect = CEffect_Manager::GetInstance()->PlayAt(
         "ball_absorb",
-        Get_CaptureCenter(),
-        ETOUI(LEVEL::CAPTURE),
-        LAYER_EFFECT,
-        tAttach);
+        Get_EffectPivot());
 
-    OutputDebugStringA(m_pAbsorbEffect ? "[Absorb] effect ok\n" : "[Absorb] effect null\n");
+    OutputDebugStringA(pEffect ? "[Absorb] effect ok\n" : "[Absorb] effect null\n");
 }
 
 void CActor_CaptureTarget::Begin_Appear()
@@ -152,17 +151,11 @@ void CActor_CaptureTarget::Begin_Appear()
     m_bAbsorbReverse = true;
     m_fAbsorbElapsed = 0.f;
 
-    CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
-    tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::NONE;
-
-    m_pAbsorbEffect = CEffect_Manager::GetInstance()->Spawn(
+    CEffect* pEffect = CEffect_Manager::GetInstance()->PlayAt(
         "ball_absorb",
-        Get_CaptureCenter(),
-        ETOUI(LEVEL::CAPTURE),
-        LAYER_EFFECT,
-        tAttach);
+        Get_EffectPivot());
 
-    OutputDebugStringA(m_pAbsorbEffect ? "[Appear] effect ok\n" : "[Appear] effect null\n");
+    OutputDebugStringA(pEffect ? "[Appear] effect ok\n" : "[Appear] effect null\n");
 }
 
 HRESULT CActor_CaptureTarget::Ready_Components(const ACTOR_CAPTURE_DESC* pDesc)
@@ -244,8 +237,6 @@ CGameObject* CActor_CaptureTarget::Clone(void* pArg)
 
 void CActor_CaptureTarget::Free()
 {
-    m_pAbsorbEffect = nullptr;
-
     Safe_Release(m_pBallHit);
     Safe_Release(m_pColliderCom);
 
