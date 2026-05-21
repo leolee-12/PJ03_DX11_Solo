@@ -141,6 +141,111 @@ namespace
 
 		return nullptr;
 	}
+
+	HRESULT Spawn_NPC_Object_(
+		CGameInstance* pGameInstance,
+		const NPC_PROFILE_INFO& Profile,
+		const _float3& vSpawnPos,
+		_float fRotationY,
+		const _tchar* pDialogueKey,
+		const _tchar* pEventSequenceID,
+		_bool bTrainer,
+		_uint iSpawnRectID,
+		_uint iTrainerID,
+		CActor_NPC** ppOutActor)
+	{
+		if (nullptr != ppOutActor)
+			*ppOutActor = nullptr;
+
+		if (nullptr == pGameInstance)
+			return E_FAIL;
+
+		CRenderRule_Manager* pRuleMgr = CRenderRule_Manager::GetInstance();
+		if (nullptr == pRuleMgr)
+			return E_FAIL;
+
+		const CRenderRule* pRenderRule = pRuleMgr->Find_OrLoadMappingRule(Profile.pMappingPath);
+		if (nullptr == pRenderRule)
+			return E_FAIL;
+
+		CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
+		NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
+		NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
+		NpcDesc.vSpawnPos = vSpawnPos;
+		NpcDesc.strDialogueKey = (nullptr != pDialogueKey && L'\0' != pDialogueKey[0])
+			? pDialogueKey
+			: Profile.pDefaultDialogueKey;
+		NpcDesc.strEventSequenceID = (nullptr != pEventSequenceID) ? pEventSequenceID : L"";
+		NpcDesc.fRotationPerSec = XMConvertToRadians(720.f);
+		NpcDesc.bIsTrainer = bTrainer;
+		NpcDesc.iSpawnRectID = iSpawnRectID;
+		NpcDesc.bApplyInitialRotation = true;
+		NpcDesc.fInitialRotationY = fRotationY;
+
+		if (true == bTrainer)
+		{
+			NpcDesc.bStartBattleAfterDialogue = true;
+			NpcDesc.iTrainerID = iTrainerID;
+		}
+
+		if (Profile.bPokemon)
+		{
+			CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
+			BodyDesc.strModelProtoTag = Profile.strModelProtoTag;
+			BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
+			BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(Profile.strModelProtoTag, ANIM_KIND::IDLE);
+			BodyDesc.bLoop = true;
+			BodyDesc.fScale = Profile.fScale;
+			BodyDesc.vLocalOffset = _float3(Profile.fBodyOffsetX, Profile.fBodyOffsetY, Profile.fBodyOffsetZ);
+			BodyDesc.pRenderRule = pRenderRule;
+
+			NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
+			NpcDesc.pBodyDesc = &BodyDesc;
+
+			CActor_NPC* pNPC = dynamic_cast<CActor_NPC*>(pGameInstance->Clone_Prototype(
+				PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC, &NpcDesc));
+			if (nullptr == pNPC)
+				return E_FAIL;
+
+			if (FAILED(pGameInstance->Add_GameObject_Ex(ETOUI(LEVEL::GAMEPLAY), LAYER_NPC, pNPC)))
+			{
+				Safe_Release(pNPC);
+				return E_FAIL;
+			}
+
+			if (nullptr != ppOutActor)
+				*ppOutActor = pNPC;
+
+			return S_OK;
+		}
+
+		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
+		BodyDesc.strModelProtoTag = Profile.strModelProtoTag;
+		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(Profile.strModelProtoTag, ANIM_KIND::IDLE);
+		BodyDesc.bLoop = true;
+		BodyDesc.fScale = Profile.fScale;
+		BodyDesc.vLocalOffset = _float3(Profile.fBodyOffsetX, Profile.fBodyOffsetY, Profile.fBodyOffsetZ);
+		BodyDesc.pRenderRule = pRenderRule;
+
+		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
+		NpcDesc.pBodyDesc = &BodyDesc;
+
+		CActor_NPC* pNPC = dynamic_cast<CActor_NPC*>(pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC, &NpcDesc));
+		if (nullptr == pNPC)
+			return E_FAIL;
+
+		if (FAILED(pGameInstance->Add_GameObject_Ex(ETOUI(LEVEL::GAMEPLAY), LAYER_NPC, pNPC)))
+		{
+			Safe_Release(pNPC);
+			return E_FAIL;
+		}
+
+		if (nullptr != ppOutActor)
+			*ppOutActor = pNPC;
+
+		return S_OK;
+	}
 }
 
 NS_END
@@ -267,10 +372,39 @@ HRESULT CSpawn_Manager::Load_From_File(const _tchar* pFilePath)
 		else if (key == "RespawnDelay")          tCur.fRespawnDelay = std::stof(val);
 		else if (key == "NPCProfile")            tCur.eNpcProfile = Parse_NpcProfile_(val);
 		else if (key == "DialogueKey")           Copy_Wide_(tCur.szDialogueKey, val);
+		else if (key == "EventSequenceID")       Copy_Wide_(tCur.szEventSequenceID, val);
 		else if (key == "TrainerID")             tCur.iTrainerID = static_cast<_uint>(std::stoul(val));
 	}
 
 	return S_OK;
+}
+
+HRESULT CSpawn_Manager::Spawn_NPC_Immediate(const EVENT_NPC_SPAWN_DESC& tDesc, CActor_NPC** ppOutActor)
+{
+	if (nullptr != ppOutActor)
+		*ppOutActor = nullptr;
+
+	if (!m_bInitialized)
+		return E_FAIL;
+
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
+
+	const NPC_PROFILE_INFO* pProfile = Find_NpcProfile_(tDesc.eNpcProfile);
+	if (nullptr == pProfile)
+		return E_FAIL;
+
+	return Spawn_NPC_Object_(
+		m_pGameInstance,
+		*pProfile,
+		tDesc.vPosition,
+		tDesc.fRotationY,
+		tDesc.szDialogueKey,
+		tDesc.szEventSequenceID,
+		false,
+		0,
+		0,
+		ppOutActor);
 }
 
 HRESULT CSpawn_Manager::Begin()
@@ -498,79 +632,22 @@ _bool CSpawn_Manager::Spawn_NPC(SPAWN_RECT_RUNTIME& tRuntime)
 	if (nullptr == pProfile)
 		return false;
 
-	CRenderRule_Manager* pRuleMgr = CRenderRule_Manager::GetInstance();
-	if (nullptr == pRuleMgr)
+	const _tchar* pDialogueKey = (L'\0' != tDesc.szDialogueKey[0])
+		? tDesc.szDialogueKey
+		: pProfile->pDefaultDialogueKey;
+
+	if (FAILED(Spawn_NPC_Object_(
+		m_pGameInstance,
+		*pProfile,
+		tRuntime.vProjectedCenter,
+		tDesc.fRotationY,
+		pDialogueKey,
+		tDesc.szEventSequenceID,
+		SPAWN_KIND::TRAINER == tDesc.eSpawnKind,
+		tDesc.iSpawnID,
+		tDesc.iTrainerID,
+		nullptr)))
 		return false;
-
-	const CRenderRule* pRenderRule = pRuleMgr->Find_OrLoadMappingRule(pProfile->pMappingPath);
-	if (nullptr == pRenderRule)
-		return false;
-
-	CActor_NPC::ACTOR_NPC_DESC NpcDesc{};
-	NpcDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
-	NpcDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
-	NpcDesc.vSpawnPos = tRuntime.vProjectedCenter;
-	NpcDesc.strDialogueKey = (L'\0' != tDesc.szDialogueKey[0]) ? tDesc.szDialogueKey : pProfile->pDefaultDialogueKey;
-	NpcDesc.fRotationPerSec = XMConvertToRadians(720.f);
-	NpcDesc.bIsTrainer = (SPAWN_KIND::TRAINER == tDesc.eSpawnKind);
-	NpcDesc.iSpawnRectID = tDesc.iSpawnID;
-	NpcDesc.bApplyInitialRotation = true;
-	NpcDesc.fInitialRotationY = tDesc.fRotationY;
-
-	if (SPAWN_KIND::TRAINER == tDesc.eSpawnKind)
-	{
-		NpcDesc.bStartBattleAfterDialogue = true;
-		NpcDesc.iTrainerID = tDesc.iTrainerID;
-		/* eBattleEnvironment / eBattleRule / iBGResourceID / iZoneID 는 ACTOR_NPC_DESC 기본값
-		   (GRASS / TRAINER_SINGLE / 0 / 0). 외부 데이터 파서 추가는 후속. */
-	}
-
-	if (pProfile->bPokemon)
-	{
-		CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = pProfile->strModelProtoTag;
-		BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pProfile->strModelProtoTag, ANIM_KIND::IDLE);
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = pProfile->fScale;
-		BodyDesc.vLocalOffset = _float3(
-			pProfile->fBodyOffsetX,
-			pProfile->fBodyOffsetY,
-			pProfile->fBodyOffsetZ);
-		BodyDesc.pRenderRule = pRenderRule;
-
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
-		NpcDesc.pBodyDesc = &BodyDesc;
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
-			ETOUI(LEVEL::GAMEPLAY), LAYER_NPC,
-			&NpcDesc)))
-			return false;
-	}
-	else
-	{
-		CBody_Human::BODY_HUMAN_DESC BodyDesc{};
-		BodyDesc.strModelProtoTag = pProfile->strModelProtoTag;
-		BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pProfile->strModelProtoTag, ANIM_KIND::IDLE);
-		BodyDesc.bLoop = true;
-		BodyDesc.fScale = pProfile->fScale;
-		BodyDesc.vLocalOffset = _float3(
-			pProfile->fBodyOffsetX,
-			pProfile->fBodyOffsetY,
-			pProfile->fBodyOffsetZ);
-		BodyDesc.pRenderRule = pRenderRule;
-
-		NpcDesc.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
-		NpcDesc.pBodyDesc = &BodyDesc;
-
-		if (FAILED(m_pGameInstance->Add_GameObject(
-			ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_ACTOR_NPC,
-			ETOUI(LEVEL::GAMEPLAY), LAYER_NPC,
-			&NpcDesc)))
-			return false;
-	}
-
 	++tRuntime.iAliveCount;
 	tRuntime.bHasEverSpawned = true;
 	tRuntime.fRespawnTimer = 0.f;

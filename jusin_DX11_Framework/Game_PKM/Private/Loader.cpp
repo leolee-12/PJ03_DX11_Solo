@@ -33,6 +33,7 @@
 #include "Interaction_Encounter.h"
 #include "Interaction_BallHit.h"
 #include "Interaction_DialogueBattle.h"
+#include "Interaction_EventSequence.h"
 #include "MonsterBall.h"
 #include "CaptureRing.h"
 #include "Effect_Test_Single.h"
@@ -621,6 +622,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_DIALOGUE_BATTLE,
 		[this] { return CInteraction_DialogueBattle::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_Interaction_Dialogue_Battle"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_INTERACTION_EVENT_SEQUENCE,
+		[this] { return CInteraction_EventSequence::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_Interaction_EventSequence"));
 
 	// ---------- Objects ----------
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_PLAYER_LGPE,

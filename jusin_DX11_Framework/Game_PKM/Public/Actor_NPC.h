@@ -5,6 +5,7 @@
 NS_BEGIN(Game_PKM)
 class CInteraction_Dialogue;
 class CInteraction_DialogueBattle;
+class CInteraction_EventSequence;
 
 class CActor_NPC final : public CActor
 {
@@ -28,6 +29,10 @@ public:
 		BATTLE_RULE      eBattleRule = { BATTLE_RULE::TRAINER_SINGLE };
 		_uint            iBGResourceID = { 0 };
 		_uint            iZoneID = { 0 };
+
+		_wstring strEventSequenceID;
+		INTERACTION_EVENT eEventSequenceTrigger = { INTERACTION_EVENT::TALK };
+		_int iEventSequencePriority = { 150 };
 	};
 
 private:
@@ -50,6 +55,8 @@ public:
 private:
 	CInteraction_Dialogue* m_pDialogue = { nullptr };
 	CInteraction_DialogueBattle* m_pDialogueBattle = { nullptr };
+	CInteraction_EventSequence* m_pEventSequence = { nullptr };
+
 	_uint m_iSpawnRectID = { 0 };
 
 	_bool   m_bFaceTurnActive = { false };

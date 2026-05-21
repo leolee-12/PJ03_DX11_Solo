@@ -18,6 +18,7 @@
 #include "RenderRule_Manager.h"
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
+#include "Event_Manager.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -131,6 +132,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UI(LAYER_UI)))
 		return E_FAIL;
 
+	if (FAILED(Ready_EventSystem()))
+		return E_FAIL;
+
 	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
 	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
 	pCamera->Set_FollowTarget(pPlayer->Get_Transform());
@@ -177,6 +181,13 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			}
 		}
 
+		return;
+	}
+
+	if (nullptr != m_pEventMgr && true == m_pEventMgr->Is_Playing())
+	{
+		m_pEventMgr->Update(fTimeDelta);
+		UI_Update_All(fTimeDelta);
 		return;
 	}
 
@@ -277,6 +288,15 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			m_pMenu->Close();
 		else
 			m_pMenu->Open();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F8) && nullptr != m_pEventMgr)
+	{
+		EVENT_CONTEXT tContext{};
+		tContext.pGameInstance = m_pGameInstance;
+		tContext.pLevelGamePlay = this;
+
+		m_pEventMgr->Start_Sequence(L"TestSpawn", tContext);
 	}
 
 	//if (m_pGameInstance->Key_Down(DIK_P))
@@ -460,6 +480,11 @@ _bool CLevel_GamePlay::Is_Dialogue_Done() const
 	return nullptr == m_pDialogueMsg ? true : m_pDialogueMsg->Is_Done();
 }
 
+_bool CLevel_GamePlay::Is_Event_Playing() const
+{
+	return nullptr != m_pEventMgr && true == m_pEventMgr->Is_Playing();
+}
+
 void CLevel_GamePlay::Close_Dialogue()
 {
 	if (nullptr != m_pDialogueMsg)
@@ -470,7 +495,10 @@ void CLevel_GamePlay::Close_Dialogue()
 	m_DialoguePages.clear();
 	m_iDialoguePageIndex = 0;
 
-	m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+	if (nullptr != m_pEventMgr && true == m_pEventMgr->Is_Playing())
+		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
+	else
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
 }
 
 HRESULT CLevel_GamePlay::Ready_Lights()
@@ -734,6 +762,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_EventSystem()
+{
+	m_pEventMgr = CEvent_Manager::Create(this);
+	if (nullptr == m_pEventMgr)
+		return E_FAIL;
+
+	if (FAILED(m_pEventMgr->Load_From_File(TEXT("../../DataFiles/Event/Event_GamePlay.event"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CLevel_GamePlay* pInstance = new CLevel_GamePlay(pDevice, pContext);
@@ -749,6 +789,11 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 
 void CLevel_GamePlay::Free()
 {
+	if (nullptr != m_pEventMgr)
+		m_pEventMgr->Cancel_ActiveSequence();
+
+	Safe_Release(m_pEventMgr);
+
 	/* Hub 의 cursor weak 를 UI_Close_All 보다 먼저 끊어 안전성 확보.
 	   (Hub::Update_Cursor 가 다음 프레임에 호출되더라도 m_pCursor == nullptr 분기로 빠짐.) */
 	UI_Set_Cursor_Sequence(nullptr);

@@ -59,6 +59,7 @@ struct SPAWN_RECT_DESC
 	SPAWN_KIND  eSpawnKind = { SPAWN_KIND::WILD_POKEMON };
 	SPAWN_NPC_PROFILE eNpcProfile = { SPAWN_NPC_PROFILE::NONE };
 	_tchar		szDialogueKey[64] = {};
+	_tchar		szEventSequenceID[64] = {};
 	_uint		iTrainerID = { 0 };
 
 	_float3     vCenter = {};                             // 월드 좌표. Y 는 검증 시 NavMesh 투영 결과로 덮임
@@ -86,6 +87,20 @@ struct SPAWN_RECT_DESC
 
 	_float      fRespawnDelay = { 10.f };
 };
+
+struct EVENT_NPC_SPAWN_DESC
+{
+	SPAWN_NPC_PROFILE eNpcProfile = { SPAWN_NPC_PROFILE::NONE };
+
+	_float3 vPosition = {};
+	_float fRotationY = { 0.f };
+
+	_tchar szDialogueKey[64] = {};
+	_tchar szEventSequenceID[64] = {};
+};
+
+static_assert(std::is_trivially_copyable_v<EVENT_NPC_SPAWN_DESC>,
+	"EVENT_NPC_SPAWN_DESC must remain trivially copyable.");
 
 struct SPAWN_RECT_RUNTIME
 {

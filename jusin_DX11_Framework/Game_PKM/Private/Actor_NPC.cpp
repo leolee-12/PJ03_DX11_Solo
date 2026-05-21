@@ -2,6 +2,7 @@
 #include "Body.h"
 #include "Interaction_Dialogue.h"
 #include "Interaction_DialogueBattle.h"
+#include "Interaction_EventSequence.h"
 
 CActor_NPC::CActor_NPC(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CActor{ pDevice, pContext }
@@ -80,6 +81,19 @@ void XM_CALLCONV CActor_NPC::Face_To(_fvector vTargetPos)
 
 HRESULT CActor_NPC::Ready_Components(const ACTOR_NPC_DESC* pDesc)
 {
+	if (false == pDesc->strEventSequenceID.empty())
+	{
+		CInteraction_EventSequence::INTERACTION_EVENT_SEQUENCE_DESC EventSequenceDesc;
+		EventSequenceDesc.strSequenceID = pDesc->strEventSequenceID;
+		EventSequenceDesc.eTrigger = pDesc->eEventSequenceTrigger;
+		EventSequenceDesc.iPriority = pDesc->iEventSequencePriority;
+
+		if (FAILED(__super::Add_Component(pDesc->iComponentLevel, PROTO_COM_INTERACTION_EVENT_SEQUENCE,
+			COM_INTERACTION_EVENTSEQUENCE, reinterpret_cast<CComponent**>(&m_pEventSequence),
+			&EventSequenceDesc)))
+			return E_FAIL;
+	}
+
 	if (true == pDesc->bStartBattleAfterDialogue)
 	{
 		CInteraction_DialogueBattle::INTERACTION_DIALOGUE_BATTLE_DESC DialogueBattleDesc;
@@ -211,6 +225,7 @@ void CActor_NPC::Free()
 {
 	Safe_Release(m_pDialogue);
 	Safe_Release(m_pDialogueBattle);
+	Safe_Release(m_pEventSequence);
 
 	__super::Free();
 }

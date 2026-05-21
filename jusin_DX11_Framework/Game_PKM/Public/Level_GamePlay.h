@@ -17,6 +17,7 @@ NS_END
 NS_BEGIN(Game_PKM)
 class CMenu;
 class CBattleMsg;
+class CEvent_Manager;
 
 class CLevel_GamePlay : public CLevel
 {
@@ -37,13 +38,17 @@ public:
 	_bool Start_Dialogue_Text(const _wstring& strMessage);
 	_bool Is_Dialogue_Playing() const;
 	_bool Is_Dialogue_Done() const;
+	_bool Is_Event_Playing() const;
 	void Close_Dialogue();
+
+	CEvent_Manager* Get_EventManager() const { return m_pEventMgr; }
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
 	CUISequence* m_pFadeBattleSeq = { nullptr };
 	CMenu* m_pMenu = { nullptr };
+	CEvent_Manager* m_pEventMgr = { nullptr };
 
 	CUISequence* m_pDialogueSeq = { nullptr };   // weak
 	CBattleMsg* m_pDialogueMsg = { nullptr };    // weak - Hub owns
@@ -71,6 +76,7 @@ private:
 	HRESULT Ready_Layer_Wild(WNameID strLayerTag);
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
+	HRESULT Ready_EventSystem();
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

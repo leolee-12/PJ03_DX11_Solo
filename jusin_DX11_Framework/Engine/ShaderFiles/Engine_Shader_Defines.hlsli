@@ -5,6 +5,14 @@ sampler ClampSampler = sampler_state
     AddressV = clamp;
 };
 
+sampler ClampSamplerBias = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = clamp;
+    AddressV = clamp;
+    MipLODBias = 1.f;
+};
+
 sampler LinearSampler = sampler_state
 {
     filter = min_mag_mip_linear;

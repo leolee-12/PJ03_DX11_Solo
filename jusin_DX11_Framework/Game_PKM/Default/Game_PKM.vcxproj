@@ -72,6 +72,13 @@
     <ClInclude Include="..\Public\Effect_Defines.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Effect_Test_Single.h" />
+    <ClInclude Include="..\Public\EventAction.h" />
+    <ClInclude Include="..\Public\Event_Definition.h" />
+    <ClInclude Include="..\Public\EventSequence_Parser.h" />
+    <ClInclude Include="..\Public\EventSequence_Player.h" />
+    <ClInclude Include="..\Public\Event_Context.h" />
+    <ClInclude Include="..\Public\Event_Defines.h" />
+    <ClInclude Include="..\Public\Event_Manager.h" />
     <ClInclude Include="..\Public\Interaction_BallHit.h" />
     <ClInclude Include="..\Public\Interaction_Dialogue.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
@@ -96,6 +103,7 @@
     <ClInclude Include="..\Public\Interaction.h" />
     <ClInclude Include="..\Public\Interaction_DialogueBattle.h" />
     <ClInclude Include="..\Public\Interaction_Encounter.h" />
+    <ClInclude Include="..\Public\Interaction_EventSequence.h" />
     <ClInclude Include="..\Public\Level_Battle.h" />
     <ClInclude Include="..\Public\Level_Capture.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
@@ -173,12 +181,17 @@
     <ClCompile Include="..\Private\CaptureRing.cpp" />
     <ClCompile Include="..\Private\Capture_Menu.cpp" />
     <ClCompile Include="..\Private\Capture_Manager.cpp" />
+    <ClCompile Include="..\Private\EventAction.cpp" />
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
     <ClCompile Include="..\Private\Damage_Modifiers.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Effect_Test_Single.cpp" />
+    <ClCompile Include="..\Private\Event_Definition.cpp" />
+    <ClCompile Include="..\Private\EventSequence_Parser.cpp" />
+    <ClCompile Include="..\Private\EventSequence_Player.cpp" />
+    <ClCompile Include="..\Private\Event_Manager.cpp" />
     <ClCompile Include="..\Private\Interaction_BallHit.cpp" />
     <ClCompile Include="..\Private\Interaction_Dialogue.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
@@ -192,6 +205,7 @@
     <ClCompile Include="..\Private\Interaction.cpp" />
     <ClCompile Include="..\Private\Interaction_DialogueBattle.cpp" />
     <ClCompile Include="..\Private\Interaction_Encounter.cpp" />
+    <ClCompile Include="..\Private\Interaction_EventSequence.cpp" />
     <ClCompile Include="..\Private\Level_Battle.cpp" />
     <ClCompile Include="..\Private\Level_Capture.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />

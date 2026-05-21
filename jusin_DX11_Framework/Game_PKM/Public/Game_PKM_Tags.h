@@ -221,7 +221,7 @@ WNAME_TAG(PROTO_COM_INTERACTION_DIALOGUE, L"Prototype_Component_Interaction_Dial
 WNAME_TAG(PROTO_COM_INTERACTION_ENCOUNTER, L"Prototype_Component_Interaction_Encounter");
 WNAME_TAG(PROTO_COM_INTERACTION_BALLHIT, L"Prototype_Component_Interaction_BallHit");
 WNAME_TAG(PROTO_COM_INTERACTION_DIALOGUE_BATTLE, L"Prototype_Component_Interaction_Dialogue_Battle");
-
+WNAME_TAG(PROTO_COM_INTERACTION_EVENT_SEQUENCE, L"Prototype_Component_Interaction_EventSequence");
 
 
 // Layer
@@ -296,7 +296,7 @@ WNAME_TAG(COM_INTERACTION_DIALOGUE, L"Com_Interaction_Dialogue");
 WNAME_TAG(COM_INTERACTION_ENCOUNTER, L"Com_Interaction_Encounter");
 WNAME_TAG(COM_INTERACTION_BALLHIT, L"Com_Interaction_BallHit");
 WNAME_TAG(COM_INTERACTION_DIALOGUE_BATTLE, L"Com_Interaction_Dialogue_Battle");
-
+WNAME_TAG(COM_INTERACTION_EVENTSEQUENCE, L"Com_Interaction_EventSequence");
 
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");

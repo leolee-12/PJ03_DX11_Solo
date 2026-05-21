@@ -9,6 +9,7 @@ class CNavigation;
 NS_END
 
 NS_BEGIN(Game_PKM)
+class CActor_NPC;
 
 /* -----------------------------------------------------------
    CSpawn_Manager - 사각형(SpawnRect) 등록/검증/스폰 진행 관리
@@ -47,6 +48,7 @@ public:
 
 	HRESULT Register_SpawnRect(const SPAWN_RECT_DESC& tDesc);
 	HRESULT Load_From_File(const _tchar* pFilePath);
+	HRESULT Spawn_NPC_Immediate(const EVENT_NPC_SPAWN_DESC& tDesc, CActor_NPC** ppOutActor = nullptr);
 
 	const vector<SPAWN_RECT_RUNTIME>& Get_Runtimes() const { return m_Runtimes; }
 

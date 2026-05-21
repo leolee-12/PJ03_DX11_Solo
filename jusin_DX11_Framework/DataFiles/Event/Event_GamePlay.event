@@ -1,0 +1,46 @@
+  Sequence TestDebug
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = DebugLog; Text = TestDebug Begin }
+      Step { Action = WaitSeconds; Duration = 1.0 }
+      Step { Action = DebugLog; Text = TestDebug Mid }
+      Step { Action = WaitSeconds; Duration = 0.5 }
+      Step { Action = DebugLog; Text = TestDebug End }
+      Step { Action = RestoreInput }
+  }
+
+  Sequence TestMessage
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = MessageText; Text = Event message test; Wait = true }
+      Step { Action = WaitSeconds; Duration = 0.3 }
+      Step { Action = DebugLog; Text = TestMessage End }
+      Step { Action = RestoreInput }
+  }
+
+  Sequence TestCamera
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = CameraPush }
+      Step { Action = CameraBlendToActor; Actor = Player; EyeOffset = 0,2,-4; LookOffset = 0,1.2,0; Duration = 0.6; Ease = SmoothStep }
+      Step { Action = MessageText; Text = Camera event test; Wait = true }
+      Step { Action = CameraPop; Duration = 0.35 }
+      Step { Action = RestoreInput }
+  }
+
+  Sequence TestSpawn
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = SpawnNPC; NPCProfile = Doctor; Position = 12,0,25; RotationY = 3.14; DialogueKey = dialogue_npc_doctor; Alias = DoctorA }
+      Step { Action = MessageText; Text = SpawnNPC event test; Wait = true }
+      Step { Action = DespawnActor; Actor = DoctorA }
+      Step { Action = RestoreInput }
+  }

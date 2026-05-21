@@ -8,6 +8,7 @@
         Kind = NPC
         NPCProfile = Doctor
         DialogueKey = dialogue_npc_doctor
+      	EventSequenceID = TestCamera
         Center = 20.0, 0.0, -2.5
         Size = 1.0, 1.0
         RotationY = 3.1416

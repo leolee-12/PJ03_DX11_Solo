@@ -190,6 +190,12 @@
     <Filter Include="04. Contents\01. Battle\00. Battle_API">
       <UniqueIdentifier>{8b676e14-ca1a-4d68-8065-f0fba4f88635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Contents\05. Event">
+      <UniqueIdentifier>{24c8f97f-e31c-4209-bac0-4a261b63aa8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\05. Event\EventSequence">
+      <UniqueIdentifier>{4e4eac28-1806-4221-b5d1-3c3897f438d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -531,6 +537,30 @@
     <ClInclude Include="..\Public\CommandQueue.h">
       <Filter>04. Contents\01. Battle\02. Commands</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Event_Defines.h">
+      <Filter>04. Contents\05. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_Context.h">
+      <Filter>04. Contents\05. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventAction.h">
+      <Filter>04. Contents\05. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventSequence_Player.h">
+      <Filter>04. Contents\05. Event\EventSequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_Definition.h">
+      <Filter>04. Contents\05. Event\EventSequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventSequence_Parser.h">
+      <Filter>04. Contents\05. Event\EventSequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_Manager.h">
+      <Filter>04. Contents\05. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Interaction_EventSequence.h">
+      <Filter>03. Components\01. Interaction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -808,6 +838,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\CommandQueue.cpp">
       <Filter>04. Contents\01. Battle\02. Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventAction.cpp">
+      <Filter>04. Contents\05. Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_Definition.cpp">
+      <Filter>04. Contents\05. Event\EventSequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventSequence_Player.cpp">
+      <Filter>04. Contents\05. Event\EventSequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventSequence_Parser.cpp">
+      <Filter>04. Contents\05. Event\EventSequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_Manager.cpp">
+      <Filter>04. Contents\05. Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Interaction_EventSequence.cpp">
+      <Filter>03. Components\01. Interaction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
