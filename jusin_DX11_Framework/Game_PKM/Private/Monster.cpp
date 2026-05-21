@@ -27,6 +27,10 @@ HRESULT CMonster::Initialize(void* pArg)
 		m_iComponentLevel = pDesc->iComponentLevel;
 		m_strShaderProtoTag = pDesc->strShaderProtoTag;
 		m_strModelProtoTag = pDesc->strModelProtoTag;
+
+		m_fIdleVariantBaseInterval =
+			(pDesc->fIdleVariantBaseInterval > 0.f) ? pDesc->fIdleVariantBaseInterval : 4.f;
+		m_fIdleVariantJitter = max(0.f, pDesc->fIdleVariantJitter);
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -52,11 +56,15 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (pDesc)
 		m_pTransformCom->ScaleTo(pDesc->fScale, pDesc->fScale, pDesc->fScale);
 
-	m_pModelCom->Set_AnimationIndex(m_iCurrAnim, true);
+	Return_To_Idle();
 
 	m_pTransformCom->ScaleTo(2.f, 2.f, 2.f);
 	m_pTransformCom->Rotation(XMConvertToRadians(-5.f), XMConvertToRadians(190.f), 0.f);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.5f, -1.f, -2.8f, 1.f));
+	
+	if (nullptr != pDesc && pDesc->bActivateOnCreate)
+		Activate(pDesc->eInitialSpecialKind);
+
 	return S_OK;
 }
 
@@ -67,19 +75,23 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
-	// 0 : Idle
-	// 19 : Sleep_Loop
-	// 20 : Sleep_End
+	const _bool bAnimFinished = m_pModelCom->Play_Animation(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_1))
+	if (ANIM_KIND::IDLE != m_eCurrentAnimKind)
 	{
-		m_iCurrAnim++;
-		if (m_iCurrAnim >= m_pModelCom->Get_NumAnimations()) m_iCurrAnim = 0;
-		m_pModelCom->Set_AnimationIndex(m_iCurrAnim, false, 0.2f);
+		if (bAnimFinished)
+			Return_To_Idle();
+
+		return;
 	}
 
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10; // 중단점용 임시 코드
+	if (m_bActive)
+	{
+		m_fIdleVariantElapsed += fTimeDelta;
+
+		if (m_fIdleVariantElapsed >= m_fNextIdleVariantTime)
+			Play_RandomIdleVariant();
+	}
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
@@ -106,6 +118,41 @@ HRESULT CMonster::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CMonster::Activate(ANIM_KIND eInitialSpecialKind)
+{
+	m_bActive = true;
+	Schedule_NextIdleVariant();
+	m_fIdleVariantElapsed = 0.f;
+
+	if (ANIM_KIND::END != eInitialSpecialKind)
+		Play_SpecialAnim(eInitialSpecialKind);
+}
+
+void CMonster::Deactivate()
+{
+	m_bActive = false;
+	m_fIdleVariantElapsed = 0.f;
+	m_fNextIdleVariantTime = 0.f;
+}
+
+_bool CMonster::Play_SpecialAnim(ANIM_KIND eKind)
+{
+	if (ANIM_KIND::EVENT_1 != eKind &&
+		ANIM_KIND::EVENT_2 != eKind &&
+		ANIM_KIND::EVENT_3 != eKind)
+		return false;
+
+	if (!Is_CustomAnimDefined(eKind))
+		return false;
+
+	const _uint iIndex = BattleAnim::Find_AnimIndex(m_strModelProtoTag, eKind);
+	m_pModelCom->Set_AnimationIndex(iIndex, false, 0.2f);
+
+	m_eCurrentAnimKind = eKind;
+	m_fIdleVariantElapsed = 0.f;
+	return true;
 }
 
 HRESULT CMonster::Ready_Components()
@@ -140,6 +187,88 @@ HRESULT CMonster::Bind_ShaderResources()
 	return S_OK;
 }
 
+_bool CMonster::Play_IdleVariant(ANIM_KIND eKind)
+{
+	if (ANIM_KIND::IDLE_1 != eKind &&
+		ANIM_KIND::IDLE_2 != eKind &&
+		ANIM_KIND::IDLE_3 != eKind)
+		return false;
+
+	if (!Is_CustomAnimDefined(eKind))
+		return false;
+
+	const _uint iIndex = BattleAnim::Find_AnimIndex(m_strModelProtoTag, eKind);
+	m_pModelCom->Set_AnimationIndex(iIndex, false, 0.2f);
+
+	m_eCurrentAnimKind = eKind;
+	m_fIdleVariantElapsed = 0.f;
+	return true;
+}
+
+_bool CMonster::Play_RandomIdleVariant()
+{
+	static const ANIM_KIND kPool[] =
+	{
+			ANIM_KIND::IDLE_1,
+			ANIM_KIND::IDLE_2,
+			ANIM_KIND::IDLE_3
+	};
+
+	ANIM_KIND eCandidates[_countof(kPool)] = {};
+	_uint iCandidateCount = 0;
+
+	for (ANIM_KIND eKind : kPool)
+	{
+		if (Is_CustomAnimDefined(eKind))
+			eCandidates[iCandidateCount++] = eKind;
+	}
+
+	if (0 == iCandidateCount)
+	{
+		Schedule_NextIdleVariant();
+		m_fIdleVariantElapsed = 0.f;
+		return false;
+	}
+
+	const _uint iRoll = static_cast<_uint>(
+		m_pGameInstance->Random(0.f, static_cast<_float>(iCandidateCount) - 0.0001f));
+	const _uint iPick = (iRoll < iCandidateCount) ? iRoll : 0u;
+
+	return Play_IdleVariant(eCandidates[iPick]);
+}
+
+void CMonster::Return_To_Idle()
+{
+	if (nullptr == m_pModelCom)
+		return;
+
+	const _uint iIdle = BattleAnim::Find_AnimIndex(m_strModelProtoTag, ANIM_KIND::IDLE);
+
+	const _float fBlendDuration =
+		(m_pModelCom->Get_CurrAnimIndex() < m_pModelCom->Get_NumAnimations()) ? 0.2f : 0.f;
+
+	m_pModelCom->Set_AnimationIndex(iIdle, true, fBlendDuration);
+
+	m_eCurrentAnimKind = ANIM_KIND::IDLE;
+	m_fIdleVariantElapsed = 0.f;
+
+	if (m_bActive)
+		Schedule_NextIdleVariant();
+}
+
+_bool CMonster::Is_CustomAnimDefined(ANIM_KIND eKind) const
+{
+	return 0 != BattleAnim::Find_AnimIndex(m_strModelProtoTag, eKind);
+}
+
+void CMonster::Schedule_NextIdleVariant()
+{
+	const _float fJitter = (m_fIdleVariantJitter > 0.f)
+		? m_pGameInstance->Random(-m_fIdleVariantJitter, m_fIdleVariantJitter)
+		: 0.f;
+
+	m_fNextIdleVariantTime = max(0.5f, m_fIdleVariantBaseInterval + fJitter);
+}
 
 CMonster* CMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

@@ -57,6 +57,7 @@ namespace Engine
 		BGM_PLAY,		// bound BGM slot fire
 		BGM_STOP,		// bound BGM slot release
 		SFX_PLAY,		// bound SFX slot fire
+		SIGNAL_FIRE,    // bound signal slot fire
 		END
 	};
 
@@ -146,6 +147,7 @@ namespace Engine
 			{ UI_SEQ_STEP_KIND::BGM_PLAY,     "BGM_PLAY"     },
 			{ UI_SEQ_STEP_KIND::BGM_STOP,     "BGM_STOP"     },
 			{ UI_SEQ_STEP_KIND::SFX_PLAY,     "SFX_PLAY"     },
+			{ UI_SEQ_STEP_KIND::SIGNAL_FIRE,  "SIGNAL_FIRE"  },
 		};
 
 		inline constexpr EnumStringPair<UI_ANCHOR> kAnchor[] =

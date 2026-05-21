@@ -58,7 +58,17 @@
     {
       "joinPrev": false,
       "kind": "WAIT",
-      "waitSec": 3.0
+      "waitSec": 2.75
+    },
+    {
+      "joinPrev": false,
+      "kind": "SIGNAL_FIRE",
+      "slotId": "activate_pika"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.25
     },
     {
       "animName": "logo_t2",

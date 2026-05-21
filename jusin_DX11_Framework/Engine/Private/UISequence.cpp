@@ -161,6 +161,7 @@ namespace
 				break;
 			case UI_SEQ_STEP_KIND::EFFECT_PLAY:
 			case UI_SEQ_STEP_KIND::SFX_PLAY:
+			case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
 				if (!s.strTargetId.empty() && mapWidgetAnims.find(s.strTargetId) == mapWidgetAnims.end())
 					s.strTargetId.clear();
 				break;
@@ -322,6 +323,7 @@ void CUISequence::Update(_float fTimeDelta)
 			case UI_SEQ_STEP_KIND::EFFECT_PLAY:
 			case UI_SEQ_STEP_KIND::BGM_PLAY:
 			case UI_SEQ_STEP_KIND::SFX_PLAY:
+			case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
 				Fire_Slot(s);
 				break;
 
@@ -352,6 +354,7 @@ void CUISequence::Update(_float fTimeDelta)
 		case UI_SEQ_STEP_KIND::BGM_PLAY:
 		case UI_SEQ_STEP_KIND::BGM_STOP:
 		case UI_SEQ_STEP_KIND::SFX_PLAY:
+		case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
 			bStepDone = true;   // 즉발형
 			break;
 
@@ -477,6 +480,11 @@ void CUISequence::Bind_BGM(const _string& strSlotId, UISEQ_SLOT_FUNC fnFire, UIS
 void CUISequence::Bind_SFX(const _string& strSlotId, UISEQ_SLOT_FUNC fnFire)
 {
 	Bind_Slot(strSlotId, UISEQ_SLOT_CATEGORY::SFX, fnFire, nullptr);
+}
+
+void CUISequence::Bind_Signal(const _string& strSlotId, UISEQ_SLOT_FUNC fnFire)
+{
+	Bind_Slot(strSlotId, UISEQ_SLOT_CATEGORY::SIGNAL, fnFire, nullptr);
 }
 
 void CUISequence::Unbind_Slot(const _string& strSlotId)
@@ -669,14 +677,16 @@ HRESULT CUISequence::Build_FromFile(const _string& strPath, _uint iProtoLevel)
 
 		const _bool bOptionalTarget =
 			sn.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
-			sn.eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+			sn.eKind == UI_SEQ_STEP_KIND::SFX_PLAY ||
+			sn.eKind == UI_SEQ_STEP_KIND::SIGNAL_FIRE;
 
 		const _bool bSlotStep =
 			sn.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
 			sn.eKind == UI_SEQ_STEP_KIND::EFFECT_STOP ||
 			sn.eKind == UI_SEQ_STEP_KIND::BGM_PLAY ||
 			sn.eKind == UI_SEQ_STEP_KIND::BGM_STOP ||
-			sn.eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+			sn.eKind == UI_SEQ_STEP_KIND::SFX_PLAY ||
+			sn.eKind == UI_SEQ_STEP_KIND::SIGNAL_FIRE;
 
 		if (bNeedTarget && sn.strTargetId.empty()) continue;
 		if (sn.eKind == UI_SEQ_STEP_KIND::PLAY_ANIM && sn.strAnimName.empty()) continue;
@@ -823,7 +833,8 @@ _bool CUISequence::Is_SlotPlayKind(UI_SEQ_STEP_KIND eKind) const
 {
 	return eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY
 		|| eKind == UI_SEQ_STEP_KIND::BGM_PLAY
-		|| eKind == UI_SEQ_STEP_KIND::SFX_PLAY;
+		|| eKind == UI_SEQ_STEP_KIND::SFX_PLAY
+		|| eKind == UI_SEQ_STEP_KIND::SIGNAL_FIRE;
 }
 
 _bool CUISequence::Is_SlotStopKind(UI_SEQ_STEP_KIND eKind) const

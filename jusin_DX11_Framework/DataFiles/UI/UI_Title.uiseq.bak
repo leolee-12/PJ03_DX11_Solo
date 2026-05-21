@@ -73,8 +73,18 @@
     },
     {
       "joinPrev": false,
+      "kind": "SIGNAL_FIRE",
+      "slotId": "activate_pika"
+    },
+    {
+      "joinPrev": false,
       "kind": "WAIT",
-      "waitSec": 1.25
+      "waitSec": 0.5
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 0.75
     },
     {
       "animName": "bg",
@@ -735,7 +745,7 @@
         "sharedTextures": [],
         "spriteAnim": {
           "enabled": true,
-          "frameDuration": 0.05000000074505806
+          "frameDuration": 0.033330000936985016
         },
         "texture": {
           "index": 0,

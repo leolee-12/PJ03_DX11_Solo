@@ -18,12 +18,15 @@ enum class ANIM_KIND : _ubyte
     SWITCH = 10,
     ATTACK_PHYSICAL = 11,
     ATTACK_SPECIAL = 12,
-    EVENT1 = 13,
-    EVENT2 = 14,
-    EVENT3 = 15,
+    IDLE_1 = 13,
+    IDLE_2 = 14,
+    IDLE_3 = 15,
+    EVENT_1 = 16,
+    EVENT_2 = 17,
+    EVENT_3 = 18,
 
     ATTACK = ATTACK_PHYSICAL, // 기존 호출 호환용
-    END = 16
+    END = 19
 };
 
 namespace BattleAnim

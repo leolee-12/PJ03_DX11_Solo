@@ -426,6 +426,12 @@ UISEQ_STEP_NODE CUIEditorSession::Make_DefaultStep(UI_SEQ_STEP_KIND eKind, _bool
 			tStep.strTargetId = pWidget->strId;
 		break;
 
+	case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
+		tStep.strSlotId = Make_NextSlotId("sig");
+		if (nullptr != pWidget)
+			tStep.strTargetId = pWidget->strId;
+		break;
+
 	default:
 		break;
 	}
@@ -532,6 +538,7 @@ _bool CUIEditorSession::Sanitize_DocReferences()
 
 		case UI_SEQ_STEP_KIND::EFFECT_PLAY:
 		case UI_SEQ_STEP_KIND::SFX_PLAY:
+		case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
 			if (!tStep.strTargetId.empty() && nullptr == Find_WidgetById(tStep.strTargetId))
 			{
 				tStep.strTargetId.clear();
@@ -659,7 +666,8 @@ _bool CUIEditorSession::Apply_StepTargetFallback(UISEQ_STEP_NODE& tStep) const
 	_bool bChanged = false;
 
 	if (tStep.eKind == UI_SEQ_STEP_KIND::EFFECT_PLAY ||
-		tStep.eKind == UI_SEQ_STEP_KIND::SFX_PLAY)
+		tStep.eKind == UI_SEQ_STEP_KIND::SFX_PLAY ||
+		tStep.eKind == UI_SEQ_STEP_KIND::SIGNAL_FIRE)
 	{
 		if (!tStep.strTargetId.empty() && nullptr == Find_WidgetById(tStep.strTargetId))
 		{

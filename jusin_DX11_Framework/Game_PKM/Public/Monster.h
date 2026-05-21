@@ -1,5 +1,6 @@
 #pragma once
 #include "Game_PKM_Defines.h"
+#include "Battle_AnimDef.h"
 #include "GameObject.h"
 #include "RenderProfile.h"
 
@@ -21,6 +22,11 @@ public:
 		const CRenderRule* pRenderRule = { nullptr };
 		const _char* pRenderMappingPath = { nullptr };
 		_float fScale = { 1.f };
+
+		_bool  bActivateOnCreate = { false };
+		_float fIdleVariantBaseInterval = { 4.0f };
+		_float fIdleVariantJitter = { 1.5f };
+		ANIM_KIND eInitialSpecialKind = { ANIM_KIND::END };
 	};
 
 protected:
@@ -39,6 +45,12 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	void Activate(ANIM_KIND eInitialSpecialKind = ANIM_KIND::END);
+	void Deactivate();
+	_bool Is_Active() const { return m_bActive; }
+
+	_bool Play_SpecialAnim(ANIM_KIND eKind);
+	void Return_To_Idle();
 
 private:
 	CShader* m_pShaderCom = { nullptr };
@@ -53,11 +65,24 @@ private:
 
 	_float m_fAlpha = { };
 	_float m_fDir = { 3.f };
-	_uint m_iCurrAnim = { 0 };
+
+	_bool m_bActive = { false };
+	ANIM_KIND m_eCurrentAnimKind = { ANIM_KIND::IDLE };
+
+	_float m_fIdleVariantElapsed = { 0.f };
+	_float m_fNextIdleVariantTime = { 0.f };
+
+	_float m_fIdleVariantBaseInterval = { 4.0f };
+	_float m_fIdleVariantJitter = { 1.5f };
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+
+	_bool Play_IdleVariant(ANIM_KIND eKind);
+	_bool Play_RandomIdleVariant();
+	_bool Is_CustomAnimDefined(ANIM_KIND eKind) const;
+	void Schedule_NextIdleVariant();
 
 public:
 	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -8,6 +8,7 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 class CEffect_Star;
+class CMonster;
 
 class CLevel_Logo : public CLevel
 {
@@ -19,6 +20,9 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+private:
+	CMonster* m_pLogoMonster = { nullptr }; // weak
 
 private:
 	HRESULT Ready_Lights();

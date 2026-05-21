@@ -24,10 +24,18 @@ const _float3& CBody::Get_RootMotionDelta() const
 	return m_pModelCom->Get_RootMotionDelta();
 }
 
-void CBody::Set_Anim(_uint iAnimIdx, _bool isLoop, _float fBlendDuration)
+_bool CBody::Set_Anim(_uint iAnimIdx, _bool isLoop, _float fBlendDuration)
 {
-	if (nullptr != m_pModelCom)
-		m_pModelCom->Set_AnimationIndex(iAnimIdx, isLoop, fBlendDuration);
+	if (nullptr == m_pModelCom)
+		return false;
+
+	if (iAnimIdx >= m_pModelCom->Get_NumAnimations())
+		return false;
+
+	m_pModelCom->Set_AnimationIndex(iAnimIdx, isLoop, fBlendDuration);
+	m_bAnimFinishedThisFrame = false;
+
+	return true;
 }
 
 HRESULT CBody::Initialize_Prototype()
@@ -90,8 +98,10 @@ void CBody::Priority_Update(_float fTimeDelta)
 
 void CBody::Update(_float fTimeDelta)
 {
+	m_bAnimFinishedThisFrame = false;
+
 	if (nullptr != m_pModelCom)
-		m_pModelCom->Play_Animation(fTimeDelta);
+		m_bAnimFinishedThisFrame = m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CBody::Late_Update(_float fTimeDelta)

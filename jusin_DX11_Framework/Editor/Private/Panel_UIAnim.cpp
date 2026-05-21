@@ -342,6 +342,8 @@ void CPanel_UIAnim::Draw_Timeline()
 	if (ImGui::Button("+ BGM_STOP"))     AddStep(UI_SEQ_STEP_KIND::BGM_STOP, false);
 
 	if (ImGui::Button("+ SFX_PLAY"))     AddStep(UI_SEQ_STEP_KIND::SFX_PLAY, false);
+	ImGui::SameLine();
+	if (ImGui::Button("+ SIGNAL"))		AddStep(UI_SEQ_STEP_KIND::SIGNAL_FIRE, false);
 
 	const _int iStep = m_pSession->Get_SelectedStep();
 	const _bool bHasSel = (iStep >= 0 && iStep < static_cast<_int>(tDoc.vSteps.size()));
@@ -523,6 +525,7 @@ void CPanel_UIAnim::Draw_StepInspector(UISEQ_STEP_NODE& tStep)
 
 	case UI_SEQ_STEP_KIND::EFFECT_PLAY:
 	case UI_SEQ_STEP_KIND::SFX_PLAY:
+	case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
 	{
 		if (Edit_StringField<256>("Slot Id", tStep.strSlotId))
 			MarkUpdated();

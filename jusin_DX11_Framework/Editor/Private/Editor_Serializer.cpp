@@ -425,6 +425,13 @@ namespace Helper
 			if (s.bRequired)
 				j["required"] = s.bRequired;
 			break;
+		case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
+			j["slotId"] = s.strSlotId;
+			if (!s.strTargetId.empty())
+				j["targetId"] = s.strTargetId;
+			if (s.bRequired)
+				j["required"] = s.bRequired;
+			break;
 		default:
 			break;
 		}
@@ -547,6 +554,7 @@ namespace Helper
 
 			case UI_SEQ_STEP_KIND::EFFECT_PLAY:
 			case UI_SEQ_STEP_KIND::SFX_PLAY:
+			case UI_SEQ_STEP_KIND::SIGNAL_FIRE:
 				if (!step.strTargetId.empty() && nullptr == Find_Widget_ById(tDoc, step.strTargetId))
 					step.strTargetId.clear();
 				break;

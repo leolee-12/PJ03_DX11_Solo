@@ -6,7 +6,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUISequence : public CUIContainer
 {
 public:
-	enum class UISEQ_SLOT_CATEGORY { EFFECT, BGM, SFX, END };
+	enum class UISEQ_SLOT_CATEGORY { EFFECT, BGM, SFX, SIGNAL, END };
 
 	struct UISEQ_EVENT_CONTEXT
 	{
@@ -100,6 +100,10 @@ public:
 		UISEQ_SLOT_FUNC fnRelease = nullptr);
 
 	void Bind_SFX(
+		const _string& strSlotId,
+		UISEQ_SLOT_FUNC fnFire);
+
+	void Bind_Signal(
 		const _string& strSlotId,
 		UISEQ_SLOT_FUNC fnFire);
 

@@ -35,7 +35,8 @@ public:
 	const _float4x4* Get_CombinedWorldMatrixPtr() const { return &m_CombinedWorldMatrix; }
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	const _float3& Get_RootMotionDelta() const;
-	void Set_Anim(_uint iAnimIdx, _bool isLoop = false, _float fBlendDuration = g_kDefaultBlendDuration);
+	_bool Was_AnimFinishedThisFrame() const { return m_bAnimFinishedThisFrame; }
+	_bool Set_Anim(_uint iAnimIdx, _bool isLoop = false, _float fBlendDuration = g_kDefaultBlendDuration);
 
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -49,6 +50,8 @@ protected:
 	WNameID m_strModelProtoTag = {};
 	WNameID m_strShaderProtoTag = {};
 	const _uint* m_pParentState = { nullptr };
+
+	_bool m_bAnimFinishedThisFrame = { false };
 
 protected:
 	HRESULT Ready_Components();

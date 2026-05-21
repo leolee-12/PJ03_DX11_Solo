@@ -12,6 +12,10 @@ namespace
     constexpr _float kArriveEpsilon = 0.15f;
     constexpr _float kRectTooSmallArea = 1.0f;
     constexpr _float kMoveTimeoutSec = 5.0f;   // 루트모션 delta=0 / 막힘 케이스 회피
+
+    constexpr _float kIdleVariantMinSec = 5.0f;
+    constexpr _float kIdleVariantMaxSec = 9.0f;
+    constexpr _float kIdleVariantBlendDuration = 0.2f;
 }
 
 CActor_WildPokemon::CActor_WildPokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -58,6 +62,7 @@ HRESULT CActor_WildPokemon::Initialize(void* pArg)
 
     Cache_Members();
     Rebuild_InteractionCache();
+    Schedule_NextIdleVariant();
 
     return S_OK;
 }
@@ -140,6 +145,16 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
 {
     if (nullptr == m_pNavigationCom || nullptr == m_pBody) return;
 
+    if (m_bIdleVariantPlaying)
+    {
+        if (m_pBody->Was_AnimFinishedThisFrame())
+            Finish_IdleVariant();
+
+        Tick_RootMotionMovement(XMVectorZero(), false,
+            m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
+        return;
+    }
+
     _vector vMoveDir = XMVectorZero();
     _bool   bHasInput = false;
 
@@ -147,8 +162,16 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
     {
     case WANDER_STATE::IDLE:
     {
-        m_fWanderTimer -= fTimeDelta;
         m_fMoveDuration = 0.f;
+
+        m_fIdleVariantElapsed += fTimeDelta;
+        if (m_fIdleVariantElapsed >= m_fNextIdleVariantTime)
+        {
+            if (Try_StartIdleVariant())
+                break;
+        }
+
+        m_fWanderTimer -= fTimeDelta;
 
         if (m_fWanderTimer <= 0.f)
         {
@@ -157,7 +180,7 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
             else
                 m_fWanderTimer = SpawnMath::RandomFloat(kIdleMinSec, kIdleMaxSec);
         }
-        // IDLE: vMoveDir = 0, bHasInput = false -> Tick_RootMotionMovement 가 정지 분기로 빠짐.
+
         break;
     }
 
@@ -166,12 +189,12 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
         const _vector vCurPos = m_pTransformCom->Get_State(STATE::POSITION);
         const _vector vTargetPos = XMVectorSetW(XMLoadFloat3(&m_vMoveTarget), 1.f);
 
-        // XZ 평면 거리로 도착 판정 (Y 는 NavMesh 투영으로 자동 보정되므로 비교 제외)
         const _vector vDeltaXZ = XMVectorSet(
             XMVectorGetX(vTargetPos) - XMVectorGetX(vCurPos),
             0.f,
             XMVectorGetZ(vTargetPos) - XMVectorGetZ(vCurPos),
             0.f);
+
         const _float fDistSq = XMVectorGetX(XMVector3LengthSq(vDeltaXZ));
 
         if (fDistSq < kArriveEpsilon * kArriveEpsilon)
@@ -182,7 +205,6 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
             break;
         }
 
-        // 루트모션 delta=0 / 막힘 케이스 - 일정 시간 안에 도착 못 하면 새 타깃 시도
         m_fMoveDuration += fTimeDelta;
         if (m_fMoveDuration > kMoveTimeoutSec)
         {
@@ -192,36 +214,26 @@ void CActor_WildPokemon::Tick_Movement(_float fTimeDelta)
             break;
         }
 
-        // 의도 방향 - Face_Direction 가 XZ 만 사용. 정규화는 Tick_RootMotionMovement 내부에서 수행됨.
         vMoveDir = vDeltaXZ;
         bHasInput = true;
         break;
     }
 
-    default: break;
+    default:
+        break;
     }
 
-    /* IDLE/WALK 애니메이션 전환 - bHasInput && !Pivoting 일 때 WALK, 아니면 IDLE.
-       Player_LGPE::Update_AnimState 와 동일 패턴. 같은 인덱스 재설정은 CModel::Set_AnimationIndex 가 초기 가드로 무시. */
-    const ANIM_KIND eKind =
-        (bHasInput && !m_MoveState.Pivoting)
-        ? ANIM_KIND::WALK
-        : ANIM_KIND::IDLE;
-    m_pBody->Set_Anim(
-        BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, eKind),
-        true);
+    if (false == m_bIdleVariantPlaying)
+    {
+        const ANIM_KIND eKind =
+            (bHasInput && !m_MoveState.Pivoting)
+            ? ANIM_KIND::WALK
+            : ANIM_KIND::IDLE;
 
-#ifdef _DEBUG
-    //if (bHasInput)
-    //{
-    //    const _float3& vDelta = m_pBody->Get_RootMotionDelta();
-    //    char szLog[256] = {};
-    //    sprintf_s(szLog, "[Wild] anim=%u delta=(%.6f, %.6f, %.6f)\n",
-    //        BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, ANIM_KIND::WALK),
-    //        vDelta.x, vDelta.y, vDelta.z);
-    //    OutputDebugStringA(szLog);
-    //}
-#endif
+        m_pBody->Set_Anim(
+            BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, eKind),
+            true);
+    }
 
     Tick_RootMotionMovement(vMoveDir, bHasInput,
         m_pBody->Get_RootMotionDelta(), m_pNavigationCom, fTimeDelta);
@@ -275,6 +287,84 @@ _bool CActor_WildPokemon::Choose_WanderTarget()
         return true;
     }
     return false;
+}
+
+void CActor_WildPokemon::Schedule_NextIdleVariant()
+{
+    m_fIdleVariantElapsed = 0.f;
+    m_fNextIdleVariantTime = SpawnMath::RandomFloat(kIdleVariantMinSec, kIdleVariantMaxSec);
+}
+
+_bool CActor_WildPokemon::Try_StartIdleVariant()
+{
+    if (nullptr == m_pBody)
+        return false;
+
+    static const ANIM_KIND kIdleVariants[] =
+    {
+        ANIM_KIND::IDLE_1,
+        ANIM_KIND::IDLE_2,
+        ANIM_KIND::IDLE_3,
+    };
+
+    ANIM_KIND eCandidates[_countof(kIdleVariants)] = {};
+    _uint iCandidateCount = 0;
+
+    for (_uint i = 0; i < _countof(kIdleVariants); ++i)
+    {
+        const _uint iAnimIndex = BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag,
+            kIdleVariants[i]);
+
+        // IDLE variant가 0이면 기본 IDLE과 구분되지 않으므로 정의되지 않은 것으로 본다.
+        if (0 == iAnimIndex)
+            continue;
+
+        eCandidates[iCandidateCount++] = kIdleVariants[i];
+    }
+
+    if (0 == iCandidateCount)
+    {
+        Schedule_NextIdleVariant();
+        return false;
+    }
+
+    _uint iRoll = static_cast<_uint>(
+        SpawnMath::RandomFloat(0.f, static_cast<_float>(iCandidateCount) - 0.0001f));
+
+    if (iRoll >= iCandidateCount)
+        iRoll = iCandidateCount - 1;
+
+    const ANIM_KIND eSelectedKind = eCandidates[iRoll];
+    const _uint iAnimIndex = BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, eSelectedKind);
+
+    if (false == m_pBody->Set_Anim(iAnimIndex, false, kIdleVariantBlendDuration))
+    {
+        m_eIdleVariantKind = ANIM_KIND::IDLE;
+        m_bIdleVariantPlaying = false;
+        Schedule_NextIdleVariant();
+        return false;
+    }
+
+    m_eIdleVariantKind = eSelectedKind;
+    m_bIdleVariantPlaying = true;
+    m_fIdleVariantElapsed = 0.f;
+
+    return true;
+}
+
+void CActor_WildPokemon::Finish_IdleVariant()
+{
+    if (nullptr != m_pBody)
+    {
+        m_pBody->Set_Anim(
+            BattleAnim::Find_AnimIndex(m_strBodyModelProtoTag, ANIM_KIND::IDLE),
+            true,
+            kIdleVariantBlendDuration);
+    }
+
+    m_bIdleVariantPlaying = false;
+    m_eIdleVariantKind = ANIM_KIND::IDLE;
+    Schedule_NextIdleVariant();
 }
 
 CActor_WildPokemon* CActor_WildPokemon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

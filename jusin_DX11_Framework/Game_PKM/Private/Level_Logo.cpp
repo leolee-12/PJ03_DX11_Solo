@@ -33,8 +33,8 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_Monster(LAYER_MONSTER)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Layer_UI(LAYER_UI)))
-	//	return E_FAIL;
+	if (FAILED(Ready_Layer_UI(LAYER_UI)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -145,10 +145,25 @@ HRESULT CLevel_Logo::Ready_Layer_Monster(WNameID strLayerTag)
 	MonsterDesc.pRenderMappingPath = "../../Resources/Models/pkm/PM0025_00/pm0025_00_mapping.json";
 	MonsterDesc.fScale = 1.f;
 
+	MonsterDesc.bActivateOnCreate = false;
+	MonsterDesc.fIdleVariantBaseInterval = 4.f;
+	MonsterDesc.fIdleVariantJitter = 1.5f;
+	MonsterDesc.eInitialSpecialKind = ANIM_KIND::END;
+
 	if (FAILED(m_pGameInstance->Add_GameObject(
 		CURRENT_LEVEL, PROTO_OBJ_LOGO_MONSTER,
 		CURRENT_LEVEL, strLayerTag,
 		&MonsterDesc)))
+		return E_FAIL;
+
+	const list<CGameObject*>* pList =
+		m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, strLayerTag);
+
+	if (nullptr == pList || pList->empty())
+		return E_FAIL;
+
+	m_pLogoMonster = dynamic_cast<CMonster*>(pList->back());
+	if (nullptr == m_pLogoMonster)
 		return E_FAIL;
 
 	return S_OK;
@@ -294,6 +309,14 @@ void CLevel_Logo::Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& 
 				L"SFX/025 - Pikachu (01).wav",
 				CHANNELID::SFX,
 				0.6f);
+		});
+
+	pTitleUI->Bind_Signal(
+		"activate_pika",
+		[pMonster = m_pLogoMonster](const CUISequence::UISEQ_EVENT_CONTEXT&)
+		{
+			if (nullptr != pMonster)
+				pMonster->Activate(ANIM_KIND::EVENT_1);
 		});
 }
 
