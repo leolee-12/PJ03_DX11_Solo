@@ -204,6 +204,14 @@ void CBattle_Pokemon::Play_Attack(ANIM_KIND eAttackKind)
 
 void CBattle_Pokemon::Play_Hurt()
 {
+	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
+	if (nullptr != pEffectMgr)
+	{
+		pEffectMgr->PlayAt(
+			"thunder_shock",
+			Get_EffectPivot());
+	}
+
 	Play_Anim_NonLoop(ANIM_KIND::HURT, 2.4f);
 }
 
