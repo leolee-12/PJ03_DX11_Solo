@@ -60,6 +60,8 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_strSpeciesModelTag = pSpecies->strModelTag;
+	if (0 == m_iDefaultAnim)
+		m_iDefaultAnim = BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::IDLE);
 
 	m_pRenderRule = pDesc->pRenderRule;
 	if (nullptr == m_pRenderRule)
@@ -174,6 +176,7 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 	m_pInstance = pNewInstance;
 	m_strSpeciesModelTag = pSpecies->strModelTag;
 	m_pRenderRule = pRenderRule;
+	m_iDefaultAnim = BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::IDLE);
 
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;

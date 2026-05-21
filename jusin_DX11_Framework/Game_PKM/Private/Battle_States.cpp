@@ -8,6 +8,7 @@
 #include "Battle_EventDispatcher.h"
 #include "Battle_ActionSequencer.h"
 #include "Battle_Action_Steps.h"
+#include "Battle_Trainer.h"
 
 #include "GameInstance.h"
 
@@ -443,12 +444,10 @@ void CCheckEndState::Free()
 #pragma endregion
 
 #pragma region ForcedSwitchState
-// [미사용] 싱글배틀 기본 흐름에서는 사용하지 않는 상태.
-// KO 후 강제 교체 또는 더블 배틀 도입 시 재활용 예정이므로 클래스만 유지한다.
+// KO 후 강제 교체 등
 // - CBattle_Manager::Create_State 의 switch 에 해당 case 없음 (생성 경로 없음).
 // - CCheckEndState 도 이 상태로의 분기를 가지지 않음.
-// - Get_Phase 가 BATTLE_PHASE::CHECK_END 를 반환하는 것은 임시값이며,
-//   정식 도입 시 별도 phase enum 값(FORCED_SWITCH 등) 추가 후 교체할 것.
+// - Get_Phase 가 BATTLE_PHASE::CHECK_END 를 반환하는 것은 임시값
 CForcedSwitchState::CForcedSwitchState()
 {
 }
@@ -493,7 +492,7 @@ void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
         const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
         const _wstring strTrainerName = (nullptr != pTrainer)
             ? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
-        strSendOutMsg = strTrainerName + TEXT("는 ") + strPokemonName + TEXT("을(를) 내보냈다!");
+        strSendOutMsg = strTrainerName + TEXT("은(는) ") + strPokemonName + TEXT("을(를) 내보냈다!");
     }
     else
     {
@@ -510,6 +509,15 @@ void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
         };
 
     Push(SBattleText::Create(strSendOutMsg));
+
+    const BATTLE_ENV& tEnv = ctx.pManager->Get_Env();
+    const bool bTrainerRule =
+        BATTLE_RULE::TRAINER_SINGLE == tEnv.eRule ||
+        BATTLE_RULE::TRAINER_DOUBLE == tEnv.eRule;
+
+    if (bTrainerRule)
+        Push(STrainerThrow::Create(iSide));
+
     Push(SPokemonEnter::Create(iSide));
     Push(SCloseMsg::Create());
     Push(SDelay::Create(0.2f));
@@ -607,9 +615,20 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
             Safe_Release(pStep);
         };
 
+    const _uint iLoserSide =
+        (g_kBattleSide_Player == tEvent.iWinnerSide)
+        ? g_kBattleSide_Opponent
+        : g_kBattleSide_Player;
+
+    if (CBattle_Trainer* pLoser =
+        dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(iLoserSide)))
+    {
+        pLoser->Play_Faint();
+    }
+
     if (g_kBattleSide_Player == tEvent.iWinnerSide)
     {
-        Push(SBattleText::Create(strTrainerName + TEXT("와의 승부에서 이겼다!")));
+        Push(SBattleText::Create(strTrainerName + TEXT("과(와)의 승부에서 이겼다!")));
         Push(SCloseMsg::Create());
         Push(SDelay::Create(0.2f));
 

@@ -444,7 +444,8 @@ HRESULT CPanel_Effect::Render()
 		m_pSession->Mark_Dirty("Emitter cone changed");
 
 	{
-		const char* pBillboardLabels[] = { "VIEW_ALIGNED", "AXIS_LOCKED", "FIXED_NORMAL" };
+		const char* pBillboardLabels[] = { "VIEW_ALIGNED", "AXIS_LOCKED", "FIXED_NORMAL", "VELOCITY_ALIGNED" };
+
 		_int iBillboard = static_cast<_int>(pEmitter->eBillboard);
 
 		if (ImGui::Combo("Billboard", &iBillboard, pBillboardLabels, IM_ARRAYSIZE(pBillboardLabels)))

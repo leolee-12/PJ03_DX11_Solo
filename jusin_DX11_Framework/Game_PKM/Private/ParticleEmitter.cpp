@@ -205,7 +205,7 @@ void CParticleEmitter::Build_Instances()
 		v.vCenter = p.vPosition;       // emitter local
 		v.fSize = p.fSize;
 		v.fRotation = p.fRotation;
-		v._pad0 = _float3(0.f, 0.f, 0.f);
+		v.vVelocity = p.vVelocity;
 
 		v.vColor = p.vColor;
 		v.vAgeLife = _float2(p.fAge, p.fLifeTime);
@@ -293,7 +293,7 @@ void CParticleEmitter::Spawn_One()
 	Particle.fRotation = m_pGameInstance->Random(m_tDesc.vRotationRange.x, m_tDesc.vRotationRange.y);
 	Particle.fRotationSpeed = m_pGameInstance->Random(m_tDesc.vRotationSpeedRange.x, m_tDesc.vRotationSpeedRange.y);
 	Particle.fRandomSeed = m_pGameInstance->Random(0.f, 1.f);
-	Particle.vColor = _float4(1.f, 1.f, 0.f, 1.f);
+	Particle.vColor = _float4(1.f, 1.f, 1.f, 1.f);
 	Particle.vColorStart = Particle.vColor;
 	Particle.vColorEnd = Particle.vColor;
 	Particle.iAtlasIndex = 0;

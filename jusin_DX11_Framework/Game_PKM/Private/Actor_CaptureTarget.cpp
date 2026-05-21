@@ -31,6 +31,9 @@ HRESULT CActor_CaptureTarget::Initialize(void* pArg)
     m_iLevel = pDesc->iLevel;
     m_bCaughtBefore = pDesc->bCaughtBefore;
 
+    if (nullptr != pDesc->pBodyDesc)
+        m_strModelTag = pDesc->pBodyDesc->strModelProtoTag;
+
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -45,6 +48,8 @@ HRESULT CActor_CaptureTarget::Initialize(void* pArg)
 
     Cache_Members();
     Rebuild_InteractionCache();
+
+    Play_IdleAnim();
 
     return S_OK;
 }
@@ -82,6 +87,13 @@ void CActor_CaptureTarget::Update(_float fTimeDelta)
 
     if (nullptr != m_pColliderCom)
         m_pColliderCom->Update(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
+
+    if (m_fAnimDuration > 0.f)
+    {
+        m_fAnimTimer += fTimeDelta;
+        if (m_fAnimTimer >= m_fAnimDuration)
+            Play_IdleAnim();
+    }
 }
 
 void CActor_CaptureTarget::Late_Update(_float fTimeDelta)
@@ -155,7 +167,31 @@ void CActor_CaptureTarget::Begin_Appear()
         "ball_absorb",
         Get_EffectPivot());
 
+    Play_AppearAnim();
+
     OutputDebugStringA(pEffect ? "[Appear] effect ok\n" : "[Appear] effect null\n");
+}
+
+void CActor_CaptureTarget::Play_IdleAnim()
+{
+    if (nullptr == m_pBody)
+        return;
+
+    m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, ANIM_KIND::IDLE), true);
+    m_eAnimKind = ANIM_KIND::IDLE;
+    m_fAnimTimer = 0.f;
+    m_fAnimDuration = 0.f;
+}
+
+void CActor_CaptureTarget::Play_AppearAnim()
+{
+    if (nullptr == m_pBody)
+        return;
+
+    m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, ANIM_KIND::INTRO), false);
+    m_eAnimKind = ANIM_KIND::INTRO;
+    m_fAnimTimer = 0.f;
+    m_fAnimDuration = 1.6f;
 }
 
 HRESULT CActor_CaptureTarget::Ready_Components(const ACTOR_CAPTURE_DESC* pDesc)

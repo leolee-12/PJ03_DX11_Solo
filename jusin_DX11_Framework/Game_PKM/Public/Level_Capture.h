@@ -2,6 +2,8 @@
 #include "Game_PKM_Defines.h"
 #include "Capture_Session.h"
 #include "Game_LevelEntry.h"
+#include "BattleMsg.h"
+#include "Effect_Manager.h"
 
 #include "Level.h"
 
@@ -15,6 +17,7 @@ class CCapture_Menu;
 class CMonsterBall;
 class CCamera_Free;
 class CActor_CaptureTarget;
+class CBattleMsg;
 
 class CLevel_Capture final : public CLevel
 {
@@ -36,15 +39,45 @@ private:
 	CMonsterBall* m_pMonsterBall = { nullptr };   // weak - 레이어가 owner
 	CActor_CaptureTarget* m_pCaptureTarget = { nullptr };  // weak - layer owns
 
+	_float3 m_vStageCameraStartEye = {};
+	_float3 m_vStageCameraStartAt = {};
+	_bool   m_bStageCameraActive = false;
+
+	_float3 m_vStageBallAirCenter = {};
+	_float3 m_vStageBallGroundCenter = {};
+	_float3 m_vStageCameraTargetEye = {};
+	_float3 m_vStageCameraTargetAt = {};
+
+	_int    m_iAppliedShakeIndex = { -1 };
+
+	CBattleMsg* m_pCaptureMsg = { nullptr };      // weak - UI Hub owns
+	_bool   m_bCaptureIntroMessageActive = { false };
+	_bool   m_bCaptureIntroMessageFinished = { false };
+	_float  m_fCaptureIntroMessageDoneElapsed = { 0.f };
+
 private:
+	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
 	HRESULT Ready_Layer_BackGround(WNameID strLayerTag);
 	HRESULT Ready_Layer_Battler(WNameID strLayerTag);
 	HRESULT Ready_Layer_Ball(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
-	void Update_AimPose();
-	void Set_AimingCameraControl(_bool bEnabled);
+	void    Update_AimPose();
+	void    Update_IntroBallPose();
+	void    Set_AimingCameraControl(_bool bEnabled);
+	void	Reset_CaptureCameraPose();
+	void    Begin_StageDrop();
+	void    Begin_StageCamera();
+	void    Apply_StageCameraPose();
+
+	void    Begin_CaptureIntroView();
+	void    Tick_CaptureIntroView(_float fTimeDelta);
+	_wstring Build_CaptureIntroMessage() const;
+
+	void Tick_CaptureSuccessView();
+	void    Begin_CaptureSuccessView();
+	_wstring Build_CaptureSuccessMessage() const;
 
 public:
 	static CLevel_Capture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LEVEL_ENTRY_DESC* pEntryDesc);

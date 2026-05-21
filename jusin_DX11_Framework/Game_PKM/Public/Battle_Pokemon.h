@@ -76,11 +76,11 @@ private:
 	CBattle_Manager* m_pManager = { nullptr };  // weak
 	CBody* m_pBody = { nullptr };  // weak - Container owns
 
-	ANIM_KIND  m_eCurrentKind = { ANIM_KIND::IDLE };
-	_float     m_fAnimTimer = { 0.f };
-	_float     m_fAnimDuration = { 0.f };  // 0 = loop, >0 = 시간 만료 후 자동 IDLE
-	_bool      m_bLockHeld = { false };
-	_bool m_bBattleVisible = { true };
+	ANIM_KIND	m_eCurrentKind = { ANIM_KIND::IDLE };
+	_float		m_fAnimTimer = { 0.f };
+	_float		m_fAnimDuration = { 0.f };  // 0 = loop, >0 = 시간 만료 후 자동 IDLE
+	_bool		m_bLockHeld = { false };
+	_bool		m_bBattleVisible = { true };
 
 private:
 	HRESULT Ready_PartObjects();

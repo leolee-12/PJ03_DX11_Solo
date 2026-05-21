@@ -102,6 +102,58 @@ inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
 		TEXT("../../Resources/Effects/Ball_hit/fxpt_1_circle003_sml_m.png"), "Prototype_Component_Texture_Effect_Ball_Hit_1_Circle003_Sml_M"),
 	EFFECT_TEXTURE_OPTION_ROW("Ball Hit 1 Flash001 Sml", PROTO_COM_TEX_EFT_BALL_HIT_1_FLASH001_SML_M,
 		TEXT("../../Resources/Effects/Ball_hit/fxpt_1_flash001_sml_m.png"), "Prototype_Component_Texture_Effect_Ball_Hit_1_Flash001_Sml_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 0 Blur003 Sml", PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_BLUR003_SML_M,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_0_blur003_sml_m.png"), "Prototype_Component_Texture_Effect_Capture_Failed_0_Blur003_Sml_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 0 Line701", PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_LINE701_O,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_0_line701_o.png"), "Prototype_Component_Texture_Effect_Capture_Failed_0_Line701_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 0 Mask702", PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_MASK702_O,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_0_mask702_o.png"), "Prototype_Component_Texture_Effect_Capture_Failed_0_Mask702_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 0 Smoke702", PROTO_COM_TEX_EFT_CAPTURE_FAILED_0_SMOKE702_O,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_0_smoke702_o.png"), "Prototype_Component_Texture_Effect_Capture_Failed_0_Smoke702_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 1 Circle004 Sml", PROTO_COM_TEX_EFT_CAPTURE_FAILED_1_CIRCLE004_SML_M,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_1_circle004_sml_m.png"), "Prototype_Component_Texture_Effect_Capture_Failed_1_Circle004_Sml_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 1 Circle005 Sml", PROTO_COM_TEX_EFT_CAPTURE_FAILED_1_CIRCLE005_SML_M,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_1_circle005_sml_m.png"), "Prototype_Component_Texture_Effect_Capture_Failed_1_Circle005_Sml_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 2 Dust701", PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_DUST701_O,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_2_dust701_o.png"), "Prototype_Component_Texture_Effect_Capture_Failed_2_Dust701_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 2 Hit011", PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_HIT011_M,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_2_hit011_m.png"), "Prototype_Component_Texture_Effect_Capture_Failed_2_Hit011_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 2 Smoke703", PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_SMOKE703_O,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_2_smoke703_o.png"), "Prototype_Component_Texture_Effect_Capture_Failed_2_Smoke703_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Failed 2 Water009", PROTO_COM_TEX_EFT_CAPTURE_FAILED_2_WATER009_M,
+		TEXT("../../Resources/Effects/Capture_failed/fxpt_2_water009_m.png"), "Prototype_Component_Texture_Effect_Capture_Failed_2_Water009_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 0 Line702", PROTO_COM_TEX_EFT_CAPTURE_HIT_0_LINE702_O,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_0_line702_o.png"), "Prototype_Component_Texture_Effect_Capture_Hit_0_Line702_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 0 Mask702", PROTO_COM_TEX_EFT_CAPTURE_HIT_0_MASK702_O,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_0_mask702_o.png"), "Prototype_Component_Texture_Effect_Capture_Hit_0_Mask702_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 0 Mask703", PROTO_COM_TEX_EFT_CAPTURE_HIT_0_MASK703_O,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_0_mask703_o.png"), "Prototype_Component_Texture_Effect_Capture_Hit_0_Mask703_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 0 Smoke702", PROTO_COM_TEX_EFT_CAPTURE_HIT_0_SMOKE702_O,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_0_smoke702_o.png"), "Prototype_Component_Texture_Effect_Capture_Hit_0_Smoke702_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 1 Circle005", PROTO_COM_TEX_EFT_CAPTURE_HIT_1_CIRCLE005_M,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_1_circle005_m.png"), "Prototype_Component_Texture_Effect_Capture_Hit_1_Circle005_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 1 Flash001 Sml", PROTO_COM_TEX_EFT_CAPTURE_HIT_1_FLASH001_SML_M,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_1_flash001_sml_m.png"), "Prototype_Component_Texture_Effect_Capture_Hit_1_Flash001_Sml_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 2 Dust701", PROTO_COM_TEX_EFT_CAPTURE_HIT_2_DUST701_O,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_2_dust701_o.png"), "Prototype_Component_Texture_Effect_Capture_Hit_2_Dust701_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 2 Smoke001", PROTO_COM_TEX_EFT_CAPTURE_HIT_2_SMOKE001_M,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_2_smoke001_m.png"), "Prototype_Component_Texture_Effect_Capture_Hit_2_Smoke001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 2 Transform001", PROTO_COM_TEX_EFT_CAPTURE_HIT_2_TRANSFORM001_M,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_2_transform001_m.png"), "Prototype_Component_Texture_Effect_Capture_Hit_2_Transform001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Hit 3 Cloud001", PROTO_COM_TEX_EFT_CAPTURE_HIT_3_CLOUD001_M,
+		TEXT("../../Resources/Effects/Capture_hit/fxpt_3_cloud001_m.png"), "Prototype_Component_Texture_Effect_Capture_Hit_3_Cloud001_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Capture Success 0 Line701", PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_LINE701_O,
+		TEXT("../../Resources/Effects/Capture_success/fxpt_0_line701_o.png"), "Prototype_Component_Texture_Effect_Capture_Success_0_Line701_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Success 0 Mask003", PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MASK003_M,
+		TEXT("../../Resources/Effects/Capture_success/fxpt_0_mask003_m.png"), "Prototype_Component_Texture_Effect_Capture_Success_0_Mask003_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Success 0 Ma Star001 Sml", PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_0_MA_STAR001_SML_M,
+		TEXT("../../Resources/Effects/Capture_success/fxpt_0_ma_star001_sml_m.png"), "Prototype_Component_Texture_Effect_Capture_Success_0_Ma_Star001_Sml_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Capture Success 1 Circle001 Sml", PROTO_COM_TEX_EFT_CAPTURE_SUCCESS_1_CIRCLE001_SML_M,
+		TEXT("../../Resources/Effects/Capture_success/fxpt_1_circle001_sml_m.png"), "Prototype_Component_Texture_Effect_Capture_Success_1_Circle001_Sml_M"),
+
 	EFFECT_TEXTURE_OPTION_ROW("Hit 0 Line701", PROTO_COM_TEX_EFT_HIT_0_LINE701_O,
 		TEXT("../../Resources/Effects/Hit/fxpt_0_line701_o.png"), "Prototype_Component_Texture_Effect_Hit_0_Line701_O"),
 	EFFECT_TEXTURE_OPTION_ROW("Hit 0 Ring001", PROTO_COM_TEX_EFT_HIT_0_RING001_M,
@@ -114,6 +166,7 @@ inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
 		TEXT("../../Resources/Effects/Hit/fxpt_2_hit014_m.png"), "Prototype_Component_Texture_Effect_Hit_2_Hit014_M"),
 	EFFECT_TEXTURE_OPTION_ROW("Hit 2 Wind001", PROTO_COM_TEX_EFT_HIT_2_WIND001_M,
 		TEXT("../../Resources/Effects/Hit/fxpt_2_wind001_m.png"), "Prototype_Component_Texture_Effect_Hit_2_Wind001_M"),
+
 	EFFECT_TEXTURE_OPTION_ROW("Thunder 2 Hit009", PROTO_COM_TEX_EFT_THUNDER_2_HIT009_M,
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_hit009_m.png"), "Prototype_Component_Texture_Effect_Thunder_2_Hit009_M"),
 	EFFECT_TEXTURE_OPTION_ROW("Thunder 2 Hit014", PROTO_COM_TEX_EFT_THUNDER_2_HIT014_M,
@@ -126,6 +179,7 @@ inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_thunder702_o.png"), "Prototype_Component_Texture_Effect_Thunder_2_Thunder702_O"),
 	EFFECT_TEXTURE_OPTION_ROW("Thunder 2 Thunder703", PROTO_COM_TEX_EFT_THUNDER_2_THUNDER703_O,
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_thunder703_o.png"), "Prototype_Component_Texture_Effect_Thunder_2_Thunder703_O"),
+
 };
 
 #undef EFFECT_TEXTURE_OPTION_ROW
@@ -183,6 +237,8 @@ inline _string Effect_BillboardToString(CParticleEmitter::EMITTER_DESC::BILLBOAR
 		return "AXIS_LOCKED";
 	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::FIXED_NORMAL:
 		return "FIXED_NORMAL";
+	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VELOCITY_ALIGNED:
+		return "VELOCITY_ALIGNED";
 	default:
 		return "VIEW_ALIGNED";
 	}
@@ -194,6 +250,8 @@ inline CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE Effect_BillboardFromString
 		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::AXIS_LOCKED;
 	if (strValue == "FIXED_NORMAL")
 		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::FIXED_NORMAL;
+	if (strValue == "VELOCITY_ALIGNED")
+		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VELOCITY_ALIGNED;
 
 	return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VIEW_ALIGNED;
 }

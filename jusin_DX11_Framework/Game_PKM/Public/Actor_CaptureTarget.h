@@ -1,4 +1,5 @@
 #pragma once
+#include "Battle_AnimDef.h"
 #include "Actor.h"
 #include "Body.h"
 
@@ -51,6 +52,9 @@ public:
 	void    Begin_Appear();
 	_bool   Is_Absorbing() const { return m_bAbsorbing; }
 
+	void    Play_IdleAnim();
+	void    Play_AppearAnim();
+
 private:
 	CInteraction_BallHit* m_pBallHit = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
@@ -59,13 +63,18 @@ private:
 	_uint m_iLevel = { 1 };
 	_bool m_bCaughtBefore = { false };
 
+	WNameID   m_strModelTag = {};
+	ANIM_KIND m_eAnimKind = { ANIM_KIND::IDLE };
+	_float    m_fAnimTimer = { 0.f };
+	_float    m_fAnimDuration = { 0.f };
+
 	_float  m_fCaptureRadius = { 0.6f };
 	_float3 m_vCaptureCenter = { 0.f, 0.5f, 0.f };
 
 	_bool   m_bAbsorbing = { false };
 	_bool   m_bAbsorbReverse = { false };
 	_float  m_fAbsorbElapsed = { 0.f };
-	_float  m_fAbsorbDuration = { 0.8f };
+	_float  m_fAbsorbDuration = { 0.28f };
 
 	_bool   m_bBasisCached = { false };
 	_float3 m_vRightUnit = { 1.f, 0.f, 0.f };

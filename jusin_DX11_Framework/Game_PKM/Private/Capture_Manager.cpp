@@ -6,8 +6,14 @@
 
 namespace
 {
-	constexpr _float RESULT_DURATION = 2.0f;
 	constexpr _float CAPTURE_BASE_PROBABILITY = 0.6f;
+
+	constexpr _float MISS_VIEW_DURATION = 0.5f;
+	constexpr _float STAGE_DURATION = 0.6f;
+	constexpr _float DROP_DURATION = 0.45f;
+	constexpr _float SHAKE_DURATION = 0.8f;
+	constexpr _float SHAKE_GAP_DURATION = 0.25f;
+	constexpr _float BREAK_VIEW_DURATION = 0.8f;
 }
 
 CCapture_Manager::CCapture_Manager()
@@ -20,6 +26,8 @@ HRESULT CCapture_Manager::Initialize(const CAPTURE_ENV& tEnv)
 	m_ePhase = CAPTURE_PHASE::INTRO;
 	m_eResult = CAPTURE_RESULT::NONE;
 	m_fPhaseElapsed = 0.f;
+	m_iShakeIdx = 0;
+	m_fPerShakeProb = 0.f;
 
 	return S_OK;
 }
@@ -43,50 +51,37 @@ void CCapture_Manager::Update(_float fTimeDelta)
 	switch (m_ePhase)
 	{
 	case CAPTURE_PHASE::INTRO:
-		/* 메뉴 주도 - INTRO 에서는 시간 경과 자동 전이 안 함.
-		   메뉴 "준비한다" Activate 가 Enter_Aiming() 을 호출해야 AIMING 으로 전이. */
 		break;
 
 	case CAPTURE_PHASE::AIMING:
-		/* 진행 트리거는 Level_Capture::Update -> Try_Throw() 경로.
-		   여기서는 시간 진행 없음. */
 		break;
 
 	case CAPTURE_PHASE::THROWING:
 		Tick_Throwing();
 		break;
 
-	case CAPTURE_PHASE::RESULT:
-		if (m_fPhaseElapsed >= RESULT_DURATION)
-		{
-			switch (m_eResult)
-			{
-			case CAPTURE_RESULT::FAIL_BREAK:
-				if (nullptr != m_pBall)
-				{
-					m_pBall->Reset();
-					m_pBall->Hide();
-				}
+	case CAPTURE_PHASE::MISS_VIEW:
+		Tick_MissView();
+		break;
 
-				if (m_bHitThisThrow && nullptr != m_pTarget)
-					m_pTarget->Begin_Appear();
+	case CAPTURE_PHASE::STAGE:
+		Tick_Stage();
+		break;
 
-				m_eResult = CAPTURE_RESULT::NONE;
-				Goto_Phase(CAPTURE_PHASE::AIMING);
-				break;
+	case CAPTURE_PHASE::DROP:
+		Tick_Drop();
+		break;
 
-			case CAPTURE_RESULT::FAIL_RUN:
-				m_eResult = CAPTURE_RESULT::NONE;
-				Goto_Phase(CAPTURE_PHASE::AIMING);
-				break;
+	case CAPTURE_PHASE::SHAKE:
+		Tick_Shake();
+		break;
 
-			case CAPTURE_RESULT::SUCCESS:
-			case CAPTURE_RESULT::NONE:
-			default:
-				Goto_Phase(CAPTURE_PHASE::DONE);
-				break;
-			}
-		}
+	case CAPTURE_PHASE::SUCCESS_VIEW:
+		Tick_SuccessView();
+		break;
+
+	case CAPTURE_PHASE::BREAK_VIEW:
+		Tick_BreakView();
 		break;
 
 	default:
@@ -135,6 +130,17 @@ void CCapture_Manager::Set_Combatants(CActor_CaptureTarget* pTarget, CMonsterBal
 	m_pBall = pBall;
 }
 
+void CCapture_Manager::Confirm_SuccessView()
+{
+	if (CAPTURE_PHASE::SUCCESS_VIEW != m_ePhase)
+		return;
+
+	if (CAPTURE_RESULT::SUCCESS != m_eResult)
+		return;
+
+	Goto_Phase(CAPTURE_PHASE::DONE);
+}
+
 void CCapture_Manager::Goto_Phase(CAPTURE_PHASE ePhase)
 {
 	m_ePhase = ePhase;
@@ -150,12 +156,9 @@ void CCapture_Manager::Tick_Throwing()
 {
 	if (nullptr == m_pBall)
 	{
-		/* 충돌은 throw 당 1회만 기록한다.
-			- 결과 확정은 충돌 순간이 아니라 ball 의 IMPACT/OPEN 흐름이 끝나 DONE 이 된 뒤 수행한다. */
-
 		OutputDebugStringW(L"[Capture_Manager] Throwing failed: ball is null\n");
-		m_eResult = CAPTURE_RESULT::FAIL_BREAK;
-		Goto_Phase(CAPTURE_PHASE::RESULT);
+		m_bHitThisThrow = false;
+		Goto_Phase(CAPTURE_PHASE::MISS_VIEW);
 		return;
 	}
 
@@ -171,12 +174,99 @@ void CCapture_Manager::Tick_Throwing()
 		{
 			m_bHitThisThrow = true;
 			m_pBall->Trigger_Impact(m_pTarget->Get_CaptureCenter());
+
+			/* 적중 즉시 몬스터 축소 퇴장 + 이펙트 시작 */
+			m_pTarget->Begin_Absorb();
+
 			OutputDebugStringW(L"[Capture_Manager] Hit detected\n");
 		}
 	}
 
 	if (CMonsterBall::BALL_STATE::DONE == m_pBall->Get_State())
 		Resolve_Throw();
+}
+
+void CCapture_Manager::Tick_MissView()
+{
+	if (m_fPhaseElapsed < MISS_VIEW_DURATION)
+		return;
+
+	m_eResult = CAPTURE_RESULT::NONE;
+	Goto_Phase(CAPTURE_PHASE::INTRO);
+}
+
+void CCapture_Manager::Tick_Stage()
+{
+	if (m_fPhaseElapsed < STAGE_DURATION)
+		return;
+
+	Goto_Phase(CAPTURE_PHASE::DROP);
+}
+
+void CCapture_Manager::Tick_Drop()
+{
+	if (m_fPhaseElapsed < DROP_DURATION)
+		return;
+
+	Goto_Phase(CAPTURE_PHASE::SHAKE);
+}
+
+void CCapture_Manager::Tick_Shake()
+{
+	const _float fOneCycle = SHAKE_DURATION + SHAKE_GAP_DURATION;
+	if (m_fPhaseElapsed < fOneCycle)
+		return;
+
+	const _float fRoll = CGameInstance::GetInstance()->Random(0.f, 1.f);
+	const _bool bPass = (fRoll < m_fPerShakeProb);
+
+	wchar_t szLog[160] = {};
+	swprintf_s(szLog, L"[Capture_Manager] Shake %d/%d roll=%.3f prob=%.3f pass=%u\n",
+		m_iShakeIdx + 1, m_iShakeMax, fRoll, m_fPerShakeProb, static_cast<_uint>(bPass));
+	OutputDebugStringW(szLog);
+
+	if (!bPass)
+	{
+		m_eResult = CAPTURE_RESULT::FAIL_BREAK;
+		Goto_Phase(CAPTURE_PHASE::BREAK_VIEW);
+		return;
+	}
+
+	++m_iShakeIdx;
+	if (m_iShakeIdx >= m_iShakeMax)
+	{
+		m_eResult = CAPTURE_RESULT::SUCCESS;
+		Goto_Phase(CAPTURE_PHASE::SUCCESS_VIEW);
+		return;
+	}
+
+	/* 동일 SHAKE 페이즈에 머무르며 다음 회만 시작 - 타이머 리셋. */
+	m_fPhaseElapsed = 0.f;
+}
+
+void CCapture_Manager::Tick_SuccessView()
+{
+	// SUCCESS_VIEW는 Level_Capture의 메시지 입력 확정으로만 DONE 전이한다.
+}
+
+void CCapture_Manager::Tick_BreakView()
+{
+	if (m_fPhaseElapsed < BREAK_VIEW_DURATION)
+		return;
+
+	if (nullptr != m_pBall)
+	{
+		m_pBall->Reset();
+		m_pBall->Hide();
+	}
+
+	/* 적중 후 실패였을 때만 몬스터 복원. 미스(MISS_VIEW)는 이 경로를 안 거침. */
+	if (m_bHitThisThrow && nullptr != m_pTarget)
+		m_pTarget->Begin_Appear();
+
+	m_bHitThisThrow = false;
+	m_eResult = CAPTURE_RESULT::NONE;
+	Goto_Phase(CAPTURE_PHASE::INTRO);
 }
 
 _float CCapture_Manager::Calc_Capture_Probability() const
@@ -190,28 +280,22 @@ void CCapture_Manager::Resolve_Throw()
 
 	if (!m_bHitThisThrow)
 	{
-		m_eResult = CAPTURE_RESULT::FAIL_BREAK;
-		Goto_Phase(CAPTURE_PHASE::RESULT);
+		Goto_Phase(CAPTURE_PHASE::MISS_VIEW);
 		return;
 	}
 
-	const _float fRoll = CGameInstance::GetInstance()->Random(0.f, 1.f);
+	/* 회당 통과 확률 = P^(1/N). 실제 굴림은 SHAKE 회 종료 시점에 수행. */
 	const _float fProb = Calc_Capture_Probability();
+	const _float fInvN = (m_iShakeMax > 0) ? (1.f / static_cast<_float>(m_iShakeMax)) : 1.f;
+	m_fPerShakeProb = powf(max(fProb, 0.f), fInvN);
+	m_iShakeIdx = 0;
 
-	m_eResult = (fRoll < fProb) ? CAPTURE_RESULT::SUCCESS : CAPTURE_RESULT::FAIL_BREAK;
-
-	OutputDebugStringA(nullptr != m_pTarget ? "[Resolve] target ok\n" : "[Resolve] target null\n");
-
-	if (nullptr != m_pTarget)
-		m_pTarget->Begin_Absorb();
-
-	wchar_t szLog[128] = {};
-	swprintf_s(szLog, L"[Capture_Manager] Resolve hit=%u roll=%.3f prob=%.3f result=%u\n",
-		static_cast<_uint>(m_bHitThisThrow), fRoll, fProb,
-		static_cast<_uint>(m_eResult));
+	wchar_t szLog[160] = {};
+	swprintf_s(szLog, L"[Capture_Manager] Resolve hit=1 P=%.3f P_one=%.3f shakes=%d\n",
+		fProb, m_fPerShakeProb, m_iShakeMax);
 	OutputDebugStringW(szLog);
 
-	Goto_Phase(CAPTURE_PHASE::RESULT);
+	Goto_Phase(CAPTURE_PHASE::STAGE);
 }
 
 CCapture_Manager* CCapture_Manager::Create(const CAPTURE_ENV& tEnv)

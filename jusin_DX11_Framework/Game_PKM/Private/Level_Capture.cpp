@@ -1,23 +1,38 @@
 ﻿#include "Level_Capture.h"
+#include "Game_API.h"
+#include "Battle_AnimDef.h"
+#include "PokemonData_Manager.h"
+#include "RenderRule_Manager.h"
 #include "Capture_Manager.h"
+#include "Capture_Menu.h"
 #include "Camera_Free.h"
+#include "Player_Status.h"
 #include "Actor_CaptureTarget.h"
 #include "Body_Pokemon.h"
-#include "PokemonData_Manager.h"
-#include "Capture_Menu.h"
-#include "Game_API.h"
 #include "MonsterBall.h"
-#include "RenderRule_Manager.h"
-#include "Player_Status.h"
+#include "MapObject.h"
 
 #include "GameInstance.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::CAPTURE);
 
+static constexpr _float CAPTURE_INTRO_MESSAGE_HOLD = 0.5f;
+
 static const _float3 CAPTURE_TARGET_POS = { 0.f, 0.f, 0.f };
 static const _float3 CAPTURE_CAMERA_EYE = { 0.f, 3.282f, -4.345f };
 static const _float3 CAPTURE_CAMERA_AT = { 0.f, 0.65f, 0.f };
+
+static constexpr _float STAGE_DROP_DURATION = 0.45f;
+
+static constexpr _float STAGE_SCENE_CAMERA_BACK_DISTANCE = 3.8f;
+static constexpr _float STAGE_SCENE_CAMERA_HEIGHT_OFFSET = 0.65f;
+static constexpr _float STAGE_SCENE_CAMERA_LOOK_UP_OFFSET = 0.35f;
+static constexpr _float STAGE_SCENE_BALL_GROUND_CENTER_Y = 0.2f;
+static constexpr _float STAGE_SCENE_BALL_AIR_CENTER_Y = 2.6f;
+
+static constexpr _float STAGE_SHAKE_DURATION = 0.8f;
+static constexpr _float STAGE_SHAKE_ANGLE_DEG = 20.f;
 
 namespace
 {
@@ -55,6 +70,9 @@ HRESULT CLevel_Capture::Initialize()
 	if (nullptr == m_pCaptureManager)
 		return E_FAIL;
 
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA)))
 		return E_FAIL;
 
@@ -75,6 +93,17 @@ HRESULT CLevel_Capture::Initialize()
 
 	m_pCaptureManager->Set_Combatants(m_pCaptureTarget, m_pMonsterBall);
 	m_pCaptureManager->Begin();
+
+	Reset_CaptureCameraPose();
+
+	if (nullptr != m_pMonsterBall)
+	{
+		m_pMonsterBall->Reset();
+		Update_IntroBallPose();
+		m_pMonsterBall->Show();
+	}
+
+	Begin_CaptureIntroView();
 
 	return S_OK;
 }
@@ -115,6 +144,62 @@ void CLevel_Capture::Update(_float fTimeDelta)
 
 	const CAPTURE_PHASE ePhaseAfterUpdate = m_pCaptureManager->Get_Phase();
 
+	if (CAPTURE_PHASE::INTRO != ePhaseBeforeUpdate
+		&& CAPTURE_PHASE::INTRO == ePhaseAfterUpdate)
+	{
+		Set_AimingCameraControl(false);
+		Reset_CaptureCameraPose();
+
+		if (nullptr != m_pMonsterBall)
+		{
+			m_pMonsterBall->Reset();
+			Update_IntroBallPose();
+			m_pMonsterBall->Show();
+		}
+
+		if (nullptr != m_pCaptureMenu)
+			m_pCaptureMenu->Open(true);
+	}
+
+	if (CAPTURE_PHASE::STAGE != ePhaseBeforeUpdate
+		&& CAPTURE_PHASE::STAGE == ePhaseAfterUpdate)
+	{
+		if (nullptr != m_pMonsterBall)
+			m_pMonsterBall->Hide();
+
+		Begin_StageCamera();
+	}
+
+	if (CAPTURE_PHASE::DROP != ePhaseBeforeUpdate
+		&& CAPTURE_PHASE::DROP == ePhaseAfterUpdate)
+	{
+		Apply_StageCameraPose();
+		Begin_StageDrop();
+	}
+
+	if (CAPTURE_PHASE::SHAKE == ePhaseAfterUpdate)
+	{
+		const _int iShakeIndex = m_pCaptureManager->Get_ShakeIndex();
+
+		if (m_iAppliedShakeIndex != iShakeIndex
+			&& nullptr != m_pMonsterBall
+			&& CMonsterBall::BALL_STATE::DONE == m_pMonsterBall->Get_State())
+		{
+			m_pMonsterBall->Begin_OneShake(STAGE_SHAKE_DURATION, STAGE_SHAKE_ANGLE_DEG);
+			m_iAppliedShakeIndex = iShakeIndex;
+		}
+	}
+	else
+	{
+		m_iAppliedShakeIndex = -1;
+	}
+
+	if (CAPTURE_PHASE::SUCCESS_VIEW != ePhaseBeforeUpdate
+		&& CAPTURE_PHASE::SUCCESS_VIEW == ePhaseAfterUpdate)
+	{
+		Begin_CaptureSuccessView();
+	}
+
 	if (CAPTURE_PHASE::AIMING != ePhaseBeforeUpdate
 		&& CAPTURE_PHASE::AIMING == ePhaseAfterUpdate)
 	{
@@ -123,6 +208,9 @@ void CLevel_Capture::Update(_float fTimeDelta)
 	}
 
 	UI_Update_All(fTimeDelta);
+
+	Tick_CaptureIntroView(fTimeDelta);
+	Tick_CaptureSuccessView();
 
 	if (m_pCaptureManager->Is_Done())
 	{
@@ -168,6 +256,36 @@ HRESULT CLevel_Capture::Render()
 	return S_OK;
 }
 
+HRESULT CLevel_Capture::Ready_Lights()
+{
+	m_pGameInstance->Clear_Lights();
+
+	LIGHT_DESC      LightDesc{};
+
+	LightDesc.eType = LIGHT::DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);  // 중성 화이트 (RGB 균일), 살짝 감소
+	LightDesc.vAmbient = _float4(0.70f, 0.70f, 0.70f, 1.f);  // 중성 화이트, 강화 -> 평평·푸른 끼 제거
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);  // 변화 없음
+	LightDesc.vDirection = _float4(0.5f, -0.5f, 0.5f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	SHADOW_LIGHT_DESC ShadowDesc{};
+	ShadowDesc.vEye = _float4(0.f, 8.f, 0.f, 1.f);
+	ShadowDesc.vAt = _float4(5.f, 0.f, 5.f, 1.f);
+	ShadowDesc.fFovy = XMConvertToRadians(60.f);
+	ShadowDesc.fNear = 0.1f;
+	ShadowDesc.fFar = 200.f;
+
+	if (FAILED(m_pGameInstance->Set_ShadowLight(ShadowDesc)))
+		return E_FAIL;
+
+	m_pGameInstance->Set_UseShadow(true);
+
+	return S_OK;
+}
+
 HRESULT CLevel_Capture::Ready_Layer_Camera(WNameID strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
@@ -203,8 +321,25 @@ HRESULT CLevel_Capture::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_Capture::Ready_Layer_BackGround(WNameID strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_GRASS, ETOUI(LEVEL::CAPTURE), strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY, ETOUI(LEVEL::CAPTURE), strLayerTag)))
 		return E_FAIL;
+
+	CMapObject* pMap = static_cast<CMapObject*>(
+		m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::GAMEPLAY),
+			PROTO_MAP_ROAD01));
+
+	if (nullptr == pMap)
+		return E_FAIL;
+
+	pMap->Get_Component<CTransform>(COM_TRANSFORM)->Set_State(STATE::POSITION, XMVectorSet(-20.f, 0.f, -5.f, 1.f));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pMap)))
+	{
+		Safe_Release(pMap);
+		return E_FAIL;
+	}
+
 
 	return S_OK;
 }
@@ -227,7 +362,7 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	CBody_Pokemon::BODY_POKEMON_DESC BodyDesc{};
 	BodyDesc.strModelProtoTag = pSpecies->strModelTag;
 	BodyDesc.strShaderProtoTag = PROTO_COM_SHADER_POKEMON;
-	BodyDesc.iDefaultAnim = 0;
+	BodyDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(pSpecies->strModelTag, ANIM_KIND::IDLE);
 	BodyDesc.bLoop = true;
 	BodyDesc.fScale = 1.f;
 	BodyDesc.pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
@@ -320,6 +455,44 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 	}
 
 	{
+		CUISequence::UISEQUENCE_DESC tMsgDesc{};
+		tMsgDesc.strPath = "../../DataFiles/UI/UI_BattleMsg.uiseq";
+		tMsgDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pMsgSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tMsgDesc));
+		if (nullptr == pMsgSeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pMsgSeq)))
+		{
+			Safe_Release(pMsgSeq);
+			return E_FAIL;
+		}
+
+		CBattleMsg* pCaptureMsg = CBattleMsg::Create();
+		if (nullptr == pCaptureMsg)
+			return E_FAIL;
+
+		if (FAILED(pCaptureMsg->Initialize(pMsgSeq)))
+		{
+			Safe_Release(pCaptureMsg);
+			return E_FAIL;
+		}
+
+		pCaptureMsg->Close();
+
+		if (FAILED(UI_Register(pCaptureMsg, ETOUI(LEVEL::CAPTURE))))
+		{
+			Safe_Release(pCaptureMsg);
+			return E_FAIL;
+		}
+
+		m_pCaptureMsg = pCaptureMsg;      // weak - UI Hub owns
+		Safe_Release(pCaptureMsg);
+	}
+
+	{
 		CCapture_Menu* pMenu = CCapture_Menu::Create();
 		if (nullptr == pMenu)
 			return E_FAIL;
@@ -396,10 +569,9 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 		Safe_Release(pMenu);
 	}
 
-	/* Director 가 범위 외 -> 등록 직후 직접 Open (Battle 의 BattlePlate 양식과 동일).
-	   Open 안 하면 m_bOpen=false 라 입력 무시. */
+	/* 캡처 진입 메시지가 먼저 출력되므로 메뉴는 닫힌 상태로 시작한다. */
 	if (nullptr != m_pCaptureMenu)
-		m_pCaptureMenu->Open();
+		m_pCaptureMenu->Close();
 
 	/* ===== 커서 시퀀스 - Hub 가 단일 인스턴스로 공유 =====
 	   다른 UI 시퀀스 등록을 모두 마친 뒤 마지막에 추가해 최상위에 그려지도록 함. */
@@ -480,6 +652,294 @@ void CLevel_Capture::Update_AimPose()
 	m_pMonsterBall->Set_AimPose(vStartPosF, vTargetPosF);
 }
 
+void CLevel_Capture::Update_IntroBallPose()
+{
+	if (nullptr == m_pCaptureCamera || nullptr == m_pMonsterBall)
+		return;
+
+	CTransform* pCamTransform = m_pCaptureCamera->Get_Transform();
+	if (nullptr == pCamTransform)
+		return;
+
+	_vector vCamPos = pCamTransform->Get_State(STATE::POSITION);
+	_vector vLook = pCamTransform->Get_State(STATE::LOOK);
+	_vector vUp = pCamTransform->Get_State(STATE::UP);
+	_vector vRight = pCamTransform->Get_State(STATE::RIGHT);
+
+	if (XMVectorGetX(XMVector3LengthSq(vLook)) <= 0.000001f)
+		return;
+
+	vLook = XMVector3Normalize(vLook);
+	vUp = XMVector3Normalize(vUp);
+	vRight = XMVector3Normalize(vRight);
+
+	//constexpr _float INTRO_START_FORWARD = 1.8f;
+	//constexpr _float INTRO_START_DOWN = 0.35f;
+	//constexpr _float INTRO_START_RIGHT = 0.f;
+	constexpr _float INTRO_START_FORWARD = 1.15f;
+	constexpr _float INTRO_START_DOWN = 1.00f;
+	constexpr _float INTRO_START_RIGHT = 0.f;
+	constexpr _float INTRO_MIN_DISTANCE = 3.f;
+	constexpr _float INTRO_FALLBACK_DISTANCE = 10.f;
+
+	_vector vTargetPos = vCamPos + vLook * INTRO_FALLBACK_DISTANCE;
+
+	if (nullptr != m_pCaptureTarget)
+	{
+		const _float3 vCaptureCenterF = m_pCaptureTarget->Get_CaptureCenter();
+		const _vector vCaptureCenter = XMLoadFloat3(&vCaptureCenterF);
+
+		_float fDistance = XMVectorGetX(XMVector3Dot(vCaptureCenter - vCamPos, vLook));
+		if (fDistance < INTRO_MIN_DISTANCE)
+			fDistance = INTRO_MIN_DISTANCE;
+
+		vTargetPos = vCamPos + vLook * fDistance;
+	}
+
+	const _vector vStartPos =
+		vCamPos
+		+ vLook * INTRO_START_FORWARD
+		- vUp * INTRO_START_DOWN
+		+ vRight * INTRO_START_RIGHT;
+
+	_float3 vStartPosF{};
+	_float3 vTargetPosF{};
+	XMStoreFloat3(&vStartPosF, vStartPos);
+	XMStoreFloat3(&vTargetPosF, vTargetPos);
+
+	m_pMonsterBall->Set_AimPose(vStartPosF, vTargetPosF);
+}
+
+void CLevel_Capture::Reset_CaptureCameraPose()
+{
+	if (nullptr == m_pCaptureCamera)
+		return;
+
+	CTransform* pCamTransform = m_pCaptureCamera->Get_Transform();
+	if (nullptr == pCamTransform)
+		return;
+
+	pCamTransform->Set_State(
+		STATE::POSITION,
+		XMVectorSetW(XMLoadFloat3(&CAPTURE_CAMERA_EYE), 1.f));
+
+	pCamTransform->LookAt(
+		XMVectorSetW(XMLoadFloat3(&CAPTURE_CAMERA_AT), 1.f));
+
+	m_vStageBallAirCenter = {};
+	m_vStageBallGroundCenter = {};
+	m_vStageCameraTargetEye = {};
+	m_vStageCameraTargetAt = {};
+	m_iAppliedShakeIndex = { -1 };
+}
+
+void CLevel_Capture::Begin_StageDrop()
+{
+	if (nullptr == m_pMonsterBall)
+		return;
+
+	Set_AimingCameraControl(false);
+
+	m_pMonsterBall->Begin_StageDrop(
+		m_vStageBallAirCenter,
+		m_vStageBallGroundCenter,
+		m_vStageCameraTargetEye,
+		STAGE_DROP_DURATION);
+}
+
+void CLevel_Capture::Begin_StageCamera()
+{
+	if (nullptr == m_pCaptureCamera || nullptr == m_pCaptureTarget)
+		return;
+
+	CTransform* pCamTransform = m_pCaptureCamera->Get_Transform();
+	if (nullptr == pCamTransform)
+		return;
+
+	const _float3 vPivotF = m_pCaptureTarget->Get_EffectPivot();
+	const _vector vPivot = XMLoadFloat3(&vPivotF);
+
+	_vector vLookFlat = pCamTransform->Get_State(STATE::LOOK);
+	vLookFlat = XMVectorSetY(vLookFlat, 0.f);
+
+	if (XMVectorGetX(XMVector3LengthSq(vLookFlat)) <= 0.000001f)
+		vLookFlat = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+	vLookFlat = XMVector3Normalize(vLookFlat);
+
+	const _vector vGroundCenter = XMVectorSet(
+		vPivotF.x,
+		STAGE_SCENE_BALL_GROUND_CENTER_Y,
+		vPivotF.z,
+		0.f);
+
+	const _vector vAirCenter = XMVectorSet(
+		vPivotF.x,
+		STAGE_SCENE_BALL_AIR_CENTER_Y,
+		vPivotF.z,
+		0.f);
+
+	const _vector vTargetAt =
+		vPivot + XMVectorSet(0.f, STAGE_SCENE_CAMERA_LOOK_UP_OFFSET, 0.f, 0.f);
+
+	const _vector vTargetEye =
+		vTargetAt
+		- vLookFlat * STAGE_SCENE_CAMERA_BACK_DISTANCE
+		+ XMVectorSet(0.f, STAGE_SCENE_CAMERA_HEIGHT_OFFSET, 0.f, 0.f);
+
+	XMStoreFloat3(&m_vStageBallGroundCenter, vGroundCenter);
+	XMStoreFloat3(&m_vStageBallAirCenter, vAirCenter);
+	XMStoreFloat3(&m_vStageCameraTargetAt, vTargetAt);
+	XMStoreFloat3(&m_vStageCameraTargetEye, vTargetEye);
+
+	Set_AimingCameraControl(false);
+	Apply_StageCameraPose();
+}
+
+void CLevel_Capture::Apply_StageCameraPose()
+{
+	if (nullptr == m_pCaptureCamera)
+		return;
+
+	CTransform* pCamTransform = m_pCaptureCamera->Get_Transform();
+	if (nullptr == pCamTransform)
+		return;
+
+	pCamTransform->Set_State(
+		STATE::POSITION,
+		XMVectorSetW(XMLoadFloat3(&m_vStageCameraTargetEye), 1.f));
+
+	pCamTransform->LookAt(
+		XMVectorSetW(XMLoadFloat3(&m_vStageCameraTargetAt), 1.f));
+}
+
+void CLevel_Capture::Begin_CaptureIntroView()
+{
+	if (m_bCaptureIntroMessageActive || m_bCaptureIntroMessageFinished)
+		return;
+
+	if (nullptr != m_pCaptureMenu)
+		m_pCaptureMenu->Close();
+
+	if (nullptr == m_pCaptureMsg)
+	{
+		if (nullptr != m_pCaptureMenu)
+			m_pCaptureMenu->Open(true);
+
+		m_bCaptureIntroMessageFinished = true;
+		return;
+	}
+
+	m_pCaptureMsg->Set_Message(Build_CaptureIntroMessage());
+	m_pCaptureMsg->Open(true);
+
+	m_bCaptureIntroMessageActive = true;
+	m_fCaptureIntroMessageDoneElapsed = 0.f;
+}
+
+void CLevel_Capture::Tick_CaptureIntroView(_float fTimeDelta)
+{
+	if (false == m_bCaptureIntroMessageActive)
+		return;
+
+	if (nullptr != m_pCaptureManager
+		&& CAPTURE_PHASE::INTRO != m_pCaptureManager->Get_Phase())
+	{
+		m_bCaptureIntroMessageActive = false;
+		m_bCaptureIntroMessageFinished = true;
+		return;
+	}
+
+	if (nullptr != m_pCaptureMsg && false == m_pCaptureMsg->Is_Done())
+		return;
+
+	m_fCaptureIntroMessageDoneElapsed += fTimeDelta;
+	if (m_fCaptureIntroMessageDoneElapsed < CAPTURE_INTRO_MESSAGE_HOLD)
+		return;
+
+	if (nullptr != m_pCaptureMsg)
+		m_pCaptureMsg->Close();
+
+	if (nullptr != m_pCaptureMenu)
+		m_pCaptureMenu->Open(true);
+
+	m_bCaptureIntroMessageActive = false;
+	m_bCaptureIntroMessageFinished = true;
+}
+
+_wstring CLevel_Capture::Build_CaptureIntroMessage() const
+{
+	const CPokemonData_Manager* pDataMgr = CPokemonData_Manager::GetInstance();
+	const SPECIES_DATA* pSpecies = (nullptr != pDataMgr)
+		? pDataMgr->Find_Species(m_tEnv.iSpeciesID)
+		: nullptr;
+
+	_wstring strName = (nullptr != pSpecies) ? pSpecies->szName : TEXT("포켓몬");
+	return TEXT("앗! 야생 ") + strName + TEXT("이(가)\n 튀어나왔다!");
+}
+
+void CLevel_Capture::Tick_CaptureSuccessView()
+{
+	if (nullptr == m_pCaptureManager)
+		return;
+
+	if (CAPTURE_PHASE::SUCCESS_VIEW != m_pCaptureManager->Get_Phase())
+		return;
+
+	const _bool bConfirm =
+		m_pGameInstance->Key_Down(DIK_RETURN) ||
+		m_pGameInstance->Key_Down(DIK_SPACE);
+
+	if (false == bConfirm)
+		return;
+
+	if (nullptr != m_pCaptureMsg &&
+		m_pCaptureMsg->Is_Open() &&
+		false == m_pCaptureMsg->Is_Done())
+	{
+		m_pCaptureMsg->Complete();
+		return;
+	}
+
+	if (nullptr != m_pCaptureMsg)
+		m_pCaptureMsg->Close();
+
+	m_pCaptureManager->Confirm_SuccessView();
+}
+
+void CLevel_Capture::Begin_CaptureSuccessView()
+{
+	Set_AimingCameraControl(false);
+
+	if (nullptr != m_pMonsterBall)
+	{
+		CEffect* pEffect = CEffect_Manager::GetInstance()->PlayAt(
+			"capture_success",
+			m_pMonsterBall->Get_CenterPosition());
+
+		OutputDebugStringA(pEffect ? "[Capture] success effect ok\n" : "[Capture] success effect null\n");
+	}
+
+	if (nullptr != m_pCaptureMsg)
+	{
+		m_pCaptureMsg->Set_Message(Build_CaptureSuccessMessage());
+		m_pCaptureMsg->Open(true);
+	}
+}
+
+_wstring CLevel_Capture::Build_CaptureSuccessMessage() const
+{
+	const CPokemonData_Manager* pDataMgr = CPokemonData_Manager::GetInstance();
+	const SPECIES_DATA* pSpecies = (nullptr != pDataMgr)
+		? pDataMgr->Find_Species(m_tEnv.iSpeciesID)
+		: nullptr;
+
+	m_pGameInstance->Play_BGM(L"BGM/1-19. Successful Catch! (Wild Pokemon).mp3", 0.3f);
+
+	_wstring strName = (nullptr != pSpecies) ? pSpecies->szName : TEXT("포켓몬");
+	return strName + TEXT("을 잡았다!");
+}
+
 CLevel_Capture* CLevel_Capture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LEVEL_ENTRY_DESC* pEntryDesc)
 {
 	if (nullptr == pEntryDesc)
@@ -516,6 +976,7 @@ void CLevel_Capture::Free()
 	m_pCursorSeq = nullptr;
 	m_pCaptureMenu = nullptr;
 	m_pCaptureTarget = nullptr;
+	m_pCaptureMsg = nullptr;
 
 	Safe_Release(m_pCaptureManager);
 

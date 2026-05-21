@@ -93,8 +93,8 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 		tData.iRewardMoney = 1920;
 		tData.iRewardItemID = 0;
 		wcscpy_s(tData.szEncounterDialog, TEXT("왔구나!\n나는 회색시티 포켓몬체육관의 관장인 웅이야!\f나의 굳은 의지는 내 포켓몬에게서도 드러나지!\n단단하고 참을성이 강해.\f좋아!\n자 덤벼라!"));
-		wcscpy_s(tData.szVictoryDialog, TEXT("너를 얕잡아 본 것 같군"));
-		wcscpy_s(tData.szDefeatDialog, TEXT("바위처럼 단단한 승부였지!"));
+		wcscpy_s(tData.szVictoryDialog, TEXT("바위처럼 단단한 승부였지!"));
+		wcscpy_s(tData.szDefeatDialog, TEXT("너를 얕잡아 본 것 같군"));
 
 		tData.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		tData.strModelProtoTag = PROTO_COM_MODEL_PPL_ROCK;
@@ -120,8 +120,8 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 		tData.iRewardMoney = 3040;
 		tData.iRewardItemID = 0;
 		wcscpy_s(tData.szEncounterDialog, TEXT("너!\f너는 포켓몬을 키울 때\n너만의 방침이 있니?\f나의 방침은 말이지...\n물타입 포켓몬으로 공격하고 ...또 공격하는거야!\f자! 세계의 미소녀\n이슬님이 상대해줄게!\f가라!\n내 귀염둥이!"));
-		wcscpy_s(tData.szVictoryDialog, TEXT("으~응...!\n내가 져버렸네"));
-		wcscpy_s(tData.szDefeatDialog, TEXT("파도처럼 휩쓸어 줬다!"));
+		wcscpy_s(tData.szVictoryDialog, TEXT("파도처럼 휩쓸어 줬다!"));
+		wcscpy_s(tData.szDefeatDialog, TEXT("으~응...!\n내가 져버렸네"));
 
 		tData.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		tData.strModelProtoTag = PROTO_COM_MODEL_PPL_WATER;

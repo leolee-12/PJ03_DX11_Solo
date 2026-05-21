@@ -197,7 +197,14 @@ void CEffectEditorSession::Mark_Dirty(const char* pReason)
 	m_strStatus = (nullptr != pReason) ? pReason : "Modified";
 
 	if (bRefreshPreview)
+	{
 		m_bPreviewRefreshPending = true;
+	}
+	else
+	{
+		/* Preview refresh is only automatic while a preview instance is alive. */
+		m_strStatus += " (press Spawn Preview to apply)";
+	}
 }
 
 HRESULT CEffectEditorSession::Spawn_Preview()

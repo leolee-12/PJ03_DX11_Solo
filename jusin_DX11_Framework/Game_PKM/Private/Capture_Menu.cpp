@@ -18,6 +18,18 @@ void CCapture_Menu::Bind(CActor_CaptureTarget* pTarget)
 	Refresh_Target();
 }
 
+void CCapture_Menu::Open()
+{
+	__super::Open();
+	Restore_VisibleWidgets();
+}
+
+void CCapture_Menu::Open(_bool bForceReset)
+{
+	__super::Open(bForceReset);
+	Restore_VisibleWidgets();
+}
+
 CCapture_Menu::MENU CCapture_Menu::Get_FocusedMENU() const
 {
 	if (nullptr == m_pGroup)
@@ -165,6 +177,20 @@ void CCapture_Menu::Apply_TwoDigitImage(CUIImage* (&pDigits)[2], _uint iValue, _
 
 	pDigits[1]->Set_Visible(true);
 	pDigits[1]->Set_Texture(pDigits[1]->Get_TextureTag(), iOnes);
+}
+
+void CCapture_Menu::Restore_VisibleWidgets()
+{
+	if (nullptr != m_pSequence)
+	{
+		for (auto* pChild : m_pSequence->Get_Children())
+		{
+			if (nullptr != pChild)
+				pChild->Set_Visible(true);
+		}
+	}
+
+	Refresh_Target();
 }
 
 CCapture_Menu* CCapture_Menu::Create()

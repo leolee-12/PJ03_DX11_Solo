@@ -6,7 +6,7 @@ float4x4 g_ProjMatrix;
 float4x4 g_ViewInvMatrix;     // 카메라 basis (world space) 추출용
 
 float3   g_vFixedAxis = float3(0.f, 1.f, 0.f);
-uint     g_iBillboardMode = 0;   // 0=VIEW_ALIGNED, 1=AXIS_LOCKED, 2=FIXED_NORMAL
+uint     g_iBillboardMode = 0;   // 0=VIEW_ALIGNED, 1=AXIS_LOCKED, 2=FIXED_NORMAL, 3=VELOCITY_ALIGNED
 uint     g_iMirrorUV = 0;        // 0=off, 1=quadrant mirror (atlas 무시)
 
 texture2D g_Texture;
@@ -44,7 +44,7 @@ struct VS_IN
 	float2 vTex : TEXCOORD0;
 
 	float4 vCenterSize : TEXCOORD1;       // .xyz=vCenter (emitter local), .w=fSize
-	float4 vRotPad : TEXCOORD2;       // .x=fRotation, .yzw=pad
+	float4 vRotVel : TEXCOORD2;       // .x=fRotation, .yzw=vVelocity (emitter local)
 	float4 vColor : TEXCOORD3;
 	float4 vAgeLifePad : TEXCOORD4;       // .xy=(age,life), .zw=pad
 	float4 vAtlasUV : TEXCOORD5;       // (offsetU, offsetV, scaleU, scaleV)
@@ -65,7 +65,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	/* 1) emitter local center -> world center */
 	float3 vCenter_W = mul(float4(In.vCenterSize.xyz, 1.f), g_WorldMatrix).xyz;
 	float  fSize = In.vCenterSize.w;
-	float  fRotation = In.vRotPad.x;
+	float  fRotation = In.vRotVel.x;
 
 	/* 2) 카메라 basis (월드 공간) - view 의 inverse 상단 3x3 */
 	float3 vCamRight_W = g_ViewInvMatrix._11_12_13;
@@ -85,10 +85,31 @@ VS_OUT VS_MAIN(VS_IN In)
 		float3 vToCam = normalize(vCamPos_W - vCenter_W);
 		vRight = normalize(cross(vUp, vToCam));
 	}
-	else                              // FIXED_NORMAL - 월드 평면 고정 (XY 평면)
+	else if (g_iBillboardMode == 2)   // FIXED_NORMAL - 월드 평면 고정 (XY 평면)
 	{
 		vRight = float3(1.f, 0.f, 0.f);
 		vUp = float3(0.f, 1.f, 0.f);
+	}
+	else                              // VELOCITY_ALIGNED - 진행방향이 quad의 +Y
+	{
+		float3 vCamFwd_W = g_ViewInvMatrix._31_32_33;
+		float3 vVel_W = mul(In.vRotVel.yzw, (float3x3)g_WorldMatrix);
+		float3 vVelProj = vVel_W - dot(vVel_W, vCamFwd_W) * vCamFwd_W;
+		float  fProjLen = length(vVelProj);
+
+		if (fProjLen < 1e-4f)
+		{
+			// velocity=0 또는 카메라 forward와 평행 -> VIEW_ALIGNED fallback
+			vRight = vCamRight_W;
+			vUp = vCamUp_W;
+		}
+		else
+		{
+			vUp = vVelProj / fProjLen;
+			vRight = normalize(cross(vUp, vCamFwd_W));
+		}
+
+		fRotation = 0.f;
 	}
 
 	/* 3) 빌보드 평면 안에서 fRotation 회전 */
@@ -116,11 +137,20 @@ VS_OUT VS_MAIN(VS_IN In)
 
 float4 PS_MAIN(VS_OUT In) : SV_TARGET0
 {
-	  float4 vTex = (g_iMirrorUV != 0)
+	float4 vTex = (g_iMirrorUV != 0)
 			  ? g_Texture.Sample(MirrorSampler, In.vTex)
 			  : g_Texture.Sample(LinearSampler, In.vTex);
 
-	  return vTex * In.vColor;
+	const bool bSingleChannelMask = 
+		(vTex.g <= 0.0001f && vTex.b <= 0.0001f && vTex.a >= 0.999f);
+
+	if (bSingleChannelMask)
+	{
+		const float fMask = vTex.r;
+		return float4(In.vColor.rgb * fMask, In.vColor.a * fMask);
+	}
+	
+	return vTex * In.vColor;
 }
 
 technique11 DefaultTechnique

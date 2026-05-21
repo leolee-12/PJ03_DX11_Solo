@@ -408,8 +408,8 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 			tDesc.strShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
 		}
 
-		tDesc.iDefaultAnim = 17;
-		tDesc.bLoop = true;
+		tDesc.iDefaultAnim = BattleAnim::Find_AnimIndex(tDesc.strModelProtoTag, ANIM_KIND::INTRO);
+		tDesc.bLoop = false;
 		tDesc.fScale = 1.f;
 		tDesc.vPos = m_pBattleManager->Get_TrainerPos(iSide);
 		tDesc.fYaw = m_pBattleManager->Get_TrainerYaw(iSide);
@@ -426,7 +426,11 @@ HRESULT CLevel_Battle::Ready_Layer_Battler(WNameID strLayerTag)
 		if (nullptr == pList || pList->empty())
 			return E_FAIL;
 
-		m_pBattleManager->Register_TrainerObj(iSide, pList->back());
+		CGameObject* pTrainerObj = pList->back();
+		m_pBattleManager->Register_TrainerObj(iSide, pTrainerObj);
+
+		if (CBattle_Trainer* pTrainer = dynamic_cast<CBattle_Trainer*>(pTrainerObj))
+			pTrainer->Play_Intro();
 	}
 
 	for (_uint iSide = 0; iSide < g_kBattleSideCount; ++iSide)

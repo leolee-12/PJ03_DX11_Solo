@@ -17,6 +17,7 @@ namespace
 	constexpr _float IMPACT_BOUNCE_DISTANCE = 0.65f;
 	constexpr _float IMPACT_BOUNCE_DURATION = 0.32f;
 	constexpr _float IMPACT_BOUNCE_UP_BIAS = 0.25f;
+	constexpr _float IMPACT_OPEN_CLOSE_WAIT = 0.50f;
 	constexpr _float MISS_BOUNCE_FORWARD = 0.65f;
 	constexpr _float MISS_BOUNCE_HEIGHT = 0.45f;
 	constexpr _float MISS_BOUNCE_DURATION = 0.42f;
@@ -112,6 +113,14 @@ void CMonsterBall::Update(_float fTimeDelta)
 		Update_Impact(fTimeDelta);
 		break;
 
+	case BALL_STATE::STAGE_DROP:
+		Update_StageDrop(fTimeDelta);
+		break;
+
+	case BALL_STATE::STAGE_SHAKE:
+		Update_StageShake(fTimeDelta);
+		break;
+
 	case BALL_STATE::DONE:
 		Update_Done(fTimeDelta);
 		break;
@@ -165,7 +174,10 @@ HRESULT CMonsterBall::Render()
 
 void CMonsterBall::Set_AimPose(const _float3& vStartPos, const _float3& vTargetPos)
 {
-	if (BALL_STATE::FLYING == m_eState || BALL_STATE::IMPACT == m_eState)
+	if (BALL_STATE::FLYING == m_eState
+		|| BALL_STATE::IMPACT == m_eState
+		|| BALL_STATE::STAGE_DROP == m_eState
+		|| BALL_STATE::STAGE_SHAKE == m_eState)
 		return;
 
 	m_vStartPos = vStartPos;
@@ -185,10 +197,24 @@ void CMonsterBall::Launch()
 	m_eState = BALL_STATE::FLYING;
 	m_fElapsed = 0.f;
 	m_bVisible = true;   // 발사 시 무조건 가시화 (이전 Hide 가 있어도 복귀)
+	m_bWaitCloseAfterOpen = false;
+
 	m_eBounceMode = BOUNCE_MODE::NONE;
 	m_fBounceTime = 0.f;
 	m_fBounceDuration = 0.f;
 	m_fBounceHeight = 0.f;
+
+	m_bStageDropFinished = false;
+	m_fStageDropTime = 0.f;
+	m_fStageDropDuration = 0.f;
+
+	m_vShakeCenter = {};
+	m_vShakePivotPos = {};
+	m_fShakeTime = 0.f;
+	m_fShakeDuration = 0.f;
+	m_fShakeAngleRad = 0.f;
+	m_bShakeFinished = false;
+
 	OutputDebugStringW(L"[MonsterBall] READY -> FLYING (Show)\n");
 }
 
@@ -196,10 +222,23 @@ void CMonsterBall::Reset()
 {
 	m_eState = BALL_STATE::READY;
 	m_fElapsed = 0.f;
+	m_bWaitCloseAfterOpen = false;
+
 	m_eBounceMode = BOUNCE_MODE::NONE;
 	m_fBounceTime = 0.f;
 	m_fBounceDuration = 0.f;
 	m_fBounceHeight = 0.f;
+
+	m_bStageDropFinished = false;
+	m_fStageDropTime = 0.f;
+	m_fStageDropDuration = 0.f;
+
+	m_vShakeCenter = {};
+	m_vShakePivotPos = {};
+	m_fShakeTime = 0.f;
+	m_fShakeDuration = 0.f;
+	m_fShakeAngleRad = 0.f;
+	m_bShakeFinished = false;
 
 	Set_CenterPosition(m_vStartPos);
 
@@ -255,6 +294,40 @@ void CMonsterBall::Trigger_Impact(const _float3& vTargetCenter)
 
 	Face_CenterTo(vStartCenter, vTargetCenter);
 	Begin_Bounce(BOUNCE_MODE::IMPACT_RECOIL, vStartCenter, vEndCenter, IMPACT_BOUNCE_DURATION, 0.f);
+}
+
+void CMonsterBall::Begin_StageDrop(
+	const _float3& vAirCenter,
+	const _float3& vGroundCenter,
+	const _float3& vFaceTarget,
+	_float fDuration)
+{
+	m_eState = BALL_STATE::STAGE_DROP;
+	m_fElapsed = 0.f;
+
+	m_eBounceMode = BOUNCE_MODE::NONE;
+	m_bWaitCloseAfterOpen = false;
+
+	m_vStageDropStartCenter = vAirCenter;
+	m_vStageDropEndCenter = vGroundCenter;
+	m_fStageDropTime = 0.f;
+	m_fStageDropDuration = max(fDuration, 0.001f);
+	m_bStageDropFinished = false;
+
+	m_vShakeCenter = {};
+	m_vShakePivotPos = {};
+	m_fShakeTime = 0.f;
+	m_fShakeDuration = 0.f;
+	m_fShakeAngleRad = 0.f;
+	m_bShakeFinished = false;
+
+	m_bVisible = true;
+
+	Face_CenterToYaw(m_vStageDropStartCenter, vFaceTarget);
+	Set_CenterPosition(m_vStageDropStartCenter);
+	Update_Collider();
+
+	OutputDebugStringW(L"[MonsterBall] Begin_StageDrop\n");
 }
 
 HRESULT CMonsterBall::Ready_Components()
@@ -361,15 +434,47 @@ void CMonsterBall::Update_Impact(_float fTimeDelta)
 		return;
 	}
 
+	if (m_bWaitCloseAfterOpen)
+	{
+		if (m_fElapsed < IMPACT_OPEN_CLOSE_WAIT)
+			return;
+
+		m_bWaitCloseAfterOpen = false;
+		m_fElapsed = 0.f;
+
+		if (nullptr != m_pModelCom)
+		{
+			m_pModelCom->Set_AnimationIndex(ETOUI(ANIM::CLOSE), false);
+			m_pModelCom->Play_Animation(0.f);
+		}
+
+		OutputDebugStringW(L"[MonsterBall] IMPACT wait -> CLOSE\n");
+		return;
+	}
+
 	if (nullptr != m_pModelCom
 		&& ETOUI(ANIM::OPEN) == m_pModelCom->Get_CurrAnimIndex())
+	{
+		if (m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_bWaitCloseAfterOpen = true;
+			m_fElapsed = 0.f;
+
+			OutputDebugStringW(L"[MonsterBall] IMPACT OPEN finished -> wait\n");
+		}
+
+		return;
+	}
+
+	if (nullptr != m_pModelCom
+		&& ETOUI(ANIM::CLOSE) == m_pModelCom->Get_CurrAnimIndex())
 	{
 		if (m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			m_eState = BALL_STATE::DONE;
 			m_fElapsed = 0.f;
 
-			OutputDebugStringW(L"[MonsterBall] IMPACT -> DONE (open anim finished)\n");
+			OutputDebugStringW(L"[MonsterBall] IMPACT -> DONE (close anim finished)\n");
 		}
 
 		return;
@@ -382,6 +487,113 @@ void CMonsterBall::Update_Impact(_float fTimeDelta)
 
 		OutputDebugStringW(L"[MonsterBall] IMPACT -> DONE\n");
 	}
+}
+
+void CMonsterBall::Update_StageDrop(_float fTimeDelta)
+{
+	m_fStageDropTime += fTimeDelta;
+
+	const _float fT = (m_fStageDropDuration > 1e-6f)
+		? min(m_fStageDropTime / m_fStageDropDuration, 1.f)
+		: 1.f;
+
+	const _float fDropT = fT * fT;
+
+	const _vector vStart = XMLoadFloat3(&m_vStageDropStartCenter);
+	const _vector vEnd = XMLoadFloat3(&m_vStageDropEndCenter);
+
+	_vector vCenter = XMVectorLerp(vStart, vEnd, fT);
+	vCenter = XMVectorSetY(
+		vCenter,
+		m_vStageDropStartCenter.y + (m_vStageDropEndCenter.y - m_vStageDropStartCenter.y) * fDropT);
+
+	_float3 vCenterF{};
+	XMStoreFloat3(&vCenterF, vCenter);
+	Set_CenterPosition(vCenterF);
+
+	if (fT < 1.f)
+		return;
+
+	Set_CenterPosition(m_vStageDropEndCenter);
+
+	m_eState = BALL_STATE::DONE;
+	m_fElapsed = 0.f;
+	m_bStageDropFinished = true;
+
+	OutputDebugStringW(L"[MonsterBall] STAGE_DROP -> DONE\n");
+}
+
+void CMonsterBall::Update_StageShake(_float fTimeDelta)
+{
+	m_fShakeTime += fTimeDelta;
+
+	const _float fT = (m_fShakeDuration > 1e-6f)
+		? min(m_fShakeTime / m_fShakeDuration, 1.f)
+		: 1.f;
+
+	_float fRoll = 0.f;
+
+	if (fT < 0.375f)
+	{
+		const _float fSegT = fT / 0.375f;
+		fRoll = -m_fShakeAngleRad * fSegT;
+	}
+	else if (fT < 0.75f)
+	{
+		const _float fSegT = (fT - 0.375f) / 0.375f;
+		fRoll = -m_fShakeAngleRad + (2.f * m_fShakeAngleRad * fSegT);
+	}
+	else
+	{
+		const _float fSegT = (fT - 0.75f) / 0.25f;
+		fRoll = m_fShakeAngleRad * (1.f - fSegT);
+	}
+
+	Apply_ShakeRoll(fRoll);
+
+	if (fT < 1.f)
+		return;
+
+	Apply_ShakeRoll(0.f);
+
+	m_eState = BALL_STATE::DONE;
+	m_fElapsed = 0.f;
+	m_bShakeFinished = true;
+
+	OutputDebugStringW(L"[MonsterBall] STAGE_SHAKE -> DONE\n");
+}
+
+void CMonsterBall::Begin_OneShake(_float fDuration, _float fAngleDeg)
+{
+	m_eState = BALL_STATE::STAGE_SHAKE;
+	m_fElapsed = 0.f;
+
+	m_eBounceMode = BOUNCE_MODE::NONE;
+	m_bWaitCloseAfterOpen = false;
+
+	m_vShakeCenter = m_vCenterPos;
+
+	const _vector vPivotPos = m_pTransformCom->Get_State(STATE::POSITION);
+	XMStoreFloat3(&m_vShakePivotPos, vPivotPos);
+
+	m_fShakeTime = 0.f;
+	m_fShakeDuration = max(fDuration, 0.001f);
+	m_fShakeAngleRad = XMConvertToRadians(fAngleDeg);
+	m_bShakeFinished = false;
+
+	Reset_UprightBasisFromCurrentYaw();
+	m_pTransformCom->Set_State(
+		STATE::POSITION,
+		XMVectorSetW(XMLoadFloat3(&m_vShakePivotPos), 1.f));
+
+	const _vector vLocalCenter = XMLoadFloat3(&m_vLocalCenter);
+	const _vector vCenter =
+		vPivotPos + XMVectorSet(0.f, XMVectorGetY(vLocalCenter), XMVectorGetZ(vLocalCenter), 0.f);
+	XMStoreFloat3(&m_vCenterPos, vCenter);
+
+	Update_Collider();
+
+	OutputDebugStringW(L"[MonsterBall] Begin_OneShake\n");
 }
 
 void CMonsterBall::Update_Done(_float fTimeDelta)
@@ -456,8 +668,114 @@ void CMonsterBall::Face_CenterTo(const _float3& vCenterPos, const _float3& vTarg
 	m_pTransformCom->Set_State(STATE::LOOK, vLook * vScale.z);
 }
 
+void CMonsterBall::Face_CenterToYaw(const _float3& vCenterPos, const _float3& vTargetCenter)
+{
+	_vector vLook = XMLoadFloat3(&vTargetCenter) - XMLoadFloat3(&vCenterPos);
+	vLook = XMVectorSetY(vLook, 0.f);
+
+	if (XMVectorGetX(XMVector3LengthSq(vLook)) <= 0.000001f)
+		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+
+	const _float3 vScale = m_pTransformCom->Get_Scaled();
+
+	const _vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector vRight = XMVector3Cross(vUp, vLook);
+
+	if (XMVectorGetX(XMVector3LengthSq(vRight)) <= 0.000001f)
+		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+
+	vRight = XMVector3Normalize(vRight);
+
+	m_pTransformCom->Set_State(STATE::RIGHT, vRight * vScale.x);
+	m_pTransformCom->Set_State(STATE::UP, vUp * vScale.y);
+	m_pTransformCom->Set_State(STATE::LOOK, vLook * vScale.z);
+}
+
+void CMonsterBall::Reset_UprightBasisFromCurrentYaw()
+{
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	vLook = XMVectorSetY(vLook, 0.f);
+
+	if (XMVectorGetX(XMVector3LengthSq(vLook)) <= 0.000001f)
+		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+
+	const _float3 vScale = m_pTransformCom->Get_Scaled();
+
+	const _vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector vRight = XMVector3Cross(vUp, vLook);
+
+	if (XMVectorGetX(XMVector3LengthSq(vRight)) <= 0.000001f)
+		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+
+	vRight = XMVector3Normalize(vRight);
+
+	m_pTransformCom->Set_State(STATE::RIGHT, vRight * vScale.x);
+	m_pTransformCom->Set_State(STATE::UP, vUp * vScale.y);
+	m_pTransformCom->Set_State(STATE::LOOK, vLook * vScale.z);
+}
+
+void CMonsterBall::Reset_UprightBasis()
+{
+	const _float3 vScale = m_pTransformCom->Get_Scaled();
+
+	m_pTransformCom->Set_State(STATE::RIGHT, XMVectorSet(vScale.x, 0.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(STATE::UP, XMVectorSet(0.f, vScale.y, 0.f, 0.f));
+	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(0.f, 0.f, vScale.z, 0.f));
+}
+
+void CMonsterBall::Apply_ShakeRoll(_float fRollRad)
+{
+	const _float3 vScale = m_pTransformCom->Get_Scaled();
+	const _float fCos = cosf(fRollRad);
+	const _float fSin = sinf(fRollRad);
+
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	vLook = XMVectorSetY(vLook, 0.f);
+
+	if (XMVectorGetX(XMVector3LengthSq(vLook)) <= 0.000001f)
+		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
+	vLook = XMVector3Normalize(vLook);
+
+	const _vector vUpBase = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector vRightBase = XMVector3Cross(vUpBase, vLook);
+
+	if (XMVectorGetX(XMVector3LengthSq(vRightBase)) <= 0.000001f)
+		vRightBase = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+
+	vRightBase = XMVector3Normalize(vRightBase);
+
+	const _vector vRight = vRightBase * fCos + vUpBase * fSin;
+	const _vector vUp = -vRightBase * fSin + vUpBase * fCos;
+
+	m_pTransformCom->Set_State(STATE::RIGHT, vRight * vScale.x);
+	m_pTransformCom->Set_State(STATE::UP, vUp * vScale.y);
+	m_pTransformCom->Set_State(STATE::LOOK, vLook * vScale.z);
+
+	const _vector vPivotPos = XMVectorSetW(XMLoadFloat3(&m_vShakePivotPos), 1.f);
+	m_pTransformCom->Set_State(STATE::POSITION, vPivotPos);
+
+	const _vector vLocalCenter = XMLoadFloat3(&m_vLocalCenter);
+	const _vector vCenter =
+		vPivotPos +
+		vRight * XMVectorGetX(vLocalCenter) +
+		vUp * XMVectorGetY(vLocalCenter) +
+		vLook * XMVectorGetZ(vLocalCenter);
+
+	XMStoreFloat3(&m_vCenterPos, vCenter);
+	Update_Collider();
+}
+
 void CMonsterBall::Begin_Bounce(BOUNCE_MODE eMode, const _float3& vStartCenter, const _float3& vEndCenter, _float fDuration, _float fHeight)
 {
+	m_eState = BALL_STATE::IMPACT;
+	m_fElapsed = 0.f;
+	m_bWaitCloseAfterOpen = false;
+
 	m_vBounceStartCenter = vStartCenter;
 	m_vBounceEndCenter = vEndCenter;
 	m_fBounceTime = 0.f;
@@ -465,8 +783,16 @@ void CMonsterBall::Begin_Bounce(BOUNCE_MODE eMode, const _float3& vStartCenter, 
 	m_fBounceHeight = fHeight;
 	m_eBounceMode = eMode;
 
-	m_eState = BALL_STATE::IMPACT;
-	m_fElapsed = 0.f;
+	m_bStageDropFinished = false;
+	m_fStageDropTime = 0.f;
+	m_fStageDropDuration = 0.f;
+
+	m_vShakeCenter = {};
+	m_vShakePivotPos = {};
+	m_fShakeTime = 0.f;
+	m_fShakeDuration = 0.f;
+	m_fShakeAngleRad = 0.f;
+	m_bShakeFinished = false;
 
 	Set_CenterPosition(m_vBounceStartCenter);
 	Update_Collider();

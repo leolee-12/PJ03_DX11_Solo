@@ -34,6 +34,7 @@ HRESULT CBattle_Trainer::Initialize(void* pArg)
 		: PROTO_OBJ_BODY_HERO;
 
 	m_strModelProtoTag = pDesc->strModelProtoTag;
+	m_strModelTag = pDesc->strModelProtoTag;
 
 	if (m_iSide >= g_kBattleSideCount)
 		return E_FAIL;
@@ -78,10 +79,26 @@ HRESULT CBattle_Trainer::Render()
 	return S_OK;
 }
 
+void CBattle_Trainer::Play_Intro()
+{
+	// INTRO는 loop가 아니라 마지막 자세에서 hold.
+	// THROW가 시작되기 전까지 이 자세를 유지한다.
+	Play_Anim_NonLoop(ANIM_KIND::INTRO, 0.f);
+}
+
 void CBattle_Trainer::Play_Throw()
 {
-	if (nullptr != m_pBody)
-		m_pBody->Set_Anim(17, false);
+	Play_Anim_NonLoop(ANIM_KIND::THROW, 0.8f);
+}
+
+void CBattle_Trainer::Play_Focus()
+{
+	Return_To_Focus();
+}
+
+void CBattle_Trainer::Play_Faint()
+{
+	Play_Anim_NonLoop(ANIM_KIND::FAINT, 0.f);
 }
 
 HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
@@ -139,6 +156,38 @@ HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 	return S_OK;
 }
 
+void CBattle_Trainer::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
+{
+	if (nullptr == m_pBody)
+		return;
+
+	m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, eKind), false);
+	m_eCurrentKind = eKind;
+	m_fAnimTimer = 0.f;
+	m_fAnimDuration = (fDuration > 0.f) ? fDuration : 0.f;
+}
+
+void CBattle_Trainer::Play_Anim_Loop(ANIM_KIND eKind)
+{
+	if (nullptr == m_pBody)
+		return;
+
+	m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, eKind), true);
+	m_eCurrentKind = eKind;
+	m_fAnimTimer = 0.f;
+	m_fAnimDuration = 0.f;
+}
+
+void CBattle_Trainer::Return_To_Focus()
+{
+	if (nullptr == m_pBody)
+		return;
+
+	m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, ANIM_KIND::FOCUS), true);
+	m_eCurrentKind = ANIM_KIND::FOCUS;
+	m_fAnimTimer = 0.f;
+	m_fAnimDuration = 0.f;
+}
 
 CBattle_Trainer* CBattle_Trainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

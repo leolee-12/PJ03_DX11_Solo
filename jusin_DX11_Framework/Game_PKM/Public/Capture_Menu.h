@@ -26,9 +26,10 @@ private:
 	virtual ~CCapture_Menu() = default;
 
 public:
-	/* m_pGroup->Get_FocusedIndex() 를 enum 으로 변환. 범위 밖이면 BTN::END 반환. */
 	MENU Get_FocusedMENU() const;
 	void Bind(CActor_CaptureTarget* pTarget);
+	virtual void Open() override;
+	virtual void Open(_bool bForceReset) override;
 
 protected:
 	/* 베이스 Initialize() 가 호출하는 훅 - 직접 호출 금지 */
@@ -48,6 +49,7 @@ private:
 private:
 	void Refresh_Target();
 	void Apply_TwoDigitImage(CUIImage* (&pDigits)[2], _uint iValue, _bool bHideLeadingZero);
+	void Restore_VisibleWidgets();
 
 public:
 	static CCapture_Menu* Create();

@@ -22,7 +22,20 @@ struct CAPTURE_ENV
 	_uint iZoneID;             // 포획 확률 보정용 존 ID (0 = 보정 없음)
 };
 
-enum class CAPTURE_PHASE : _ubyte { INTRO, AIMING, THROWING, RESULT, DONE, END };
+enum class CAPTURE_PHASE : _ubyte
+{
+    INTRO,
+    AIMING,
+    THROWING,
+    MISS_VIEW,
+    STAGE,
+    DROP,
+    SHAKE,
+    SUCCESS_VIEW,
+    BREAK_VIEW,
+    DONE,
+    END
+};
 
 NS_END
 

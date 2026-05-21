@@ -83,7 +83,7 @@ struct VTXPARTICLE3D_INSTANCE
 	_float3 vCenter;        // emitter local 좌표
 	_float  fSize;
 	_float  fRotation;      // 빌보드 평면 내 회전 (radian)
-	_float3 _pad0;
+	_float3 vVelocity;      // emitter local 좌표. VELOCITY_ALIGNED 빌보드에서만 사용
 	_float4 vColor;         // RGBA
 	_float2 vAgeLife;       // (age, lifeTime)
 	_float2 _pad1;

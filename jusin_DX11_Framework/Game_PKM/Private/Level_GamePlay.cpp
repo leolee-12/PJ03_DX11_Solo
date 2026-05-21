@@ -397,6 +397,8 @@ void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTar
 	   UI 열린 상태 등에서 무시된 호출은 WildPokemon 도 그대로 두는 정합성 확보. */
 	m_pPendingDeleteWild = pTarget;   // weak
 
+	m_pGameInstance->Play_BGM(L"BGM/1-18. Catch! (Wild Pokemon).mp3", 0.3f);
+
 	/* Fade 시퀀스는 BATTLE 과 공유. CAPTURE 전용 Fade·BGM 분기는 후속에서 결정. */
 	m_pFadeBattleSeq->Set_Visible(true);
 	m_pFadeBattleSeq->Play();

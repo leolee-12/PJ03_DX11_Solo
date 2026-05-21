@@ -24,7 +24,8 @@ public:
 	const CAPTURE_ENV&	Get_Env() const { return m_tEnv; }
 	CAPTURE_PHASE		Get_Phase() const { return m_ePhase; }
 	CAPTURE_RESULT		Get_Result() const { return m_eResult; }
-
+	_float				Get_PhaseElapsed() const { return m_fPhaseElapsed; }
+	_int				Get_ShakeIndex() const { return m_iShakeIdx; }
 
 	HRESULT Initialize(const CAPTURE_ENV& tEnv);
 
@@ -34,6 +35,7 @@ public:
 	void    Try_Throw();      // AIMING 일 때 마우스 좌클릭으로 호출 -> THROWING 전이.
 	void    Request_Run();    // 메뉴 "도망간다" / ESC 로 호출 -> m_eResult=FAIL_RUN, DONE 전이. 이 DONE 이면 무시.
 	void    Set_Combatants(CActor_CaptureTarget* pTarget, CMonsterBall* pBall);
+	void	Confirm_SuccessView();
 
 private:
 	CAPTURE_ENV    m_tEnv = {};
@@ -45,9 +47,21 @@ private:
 	CMonsterBall* m_pBall = { nullptr };     // weak
 	_bool m_bHitThisThrow = { false };
 
+	/* SHAKE 회당 통과 확률 = P^(1/m_iShakeMax). 회 끝마다 굴려 도중 실패 시 BREAK_VIEW. */
+	_int    m_iShakeIdx = { 0 };
+	_int    m_iShakeMax = { 3 };
+	_float  m_fPerShakeProb = { 0.f };
+
 private:
 	void    Goto_Phase(CAPTURE_PHASE ePhase);
 	void    Tick_Throwing();
+	void    Tick_MissView();
+	void    Tick_Stage();
+	void    Tick_Drop();
+	void    Tick_Shake();
+	void    Tick_SuccessView();
+	void    Tick_BreakView();
+
 	_float  Calc_Capture_Probability() const;
 	void    Resolve_Throw();
 

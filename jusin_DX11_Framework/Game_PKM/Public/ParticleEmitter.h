@@ -30,7 +30,7 @@ public:
 		_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 		_float  fEmitConeHalfAngle = 0.f;
 
-		enum class BILLBOARD_MODE { VIEW_ALIGNED, AXIS_LOCKED, FIXED_NORMAL };
+		enum class BILLBOARD_MODE { VIEW_ALIGNED, AXIS_LOCKED, FIXED_NORMAL, VELOCITY_ALIGNED };
 		BILLBOARD_MODE eBillboard = BILLBOARD_MODE::VIEW_ALIGNED;
 		_float3        vBillboardFixedAxis = { 0.f, 1.f, 0.f };
 
