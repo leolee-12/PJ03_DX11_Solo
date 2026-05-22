@@ -160,6 +160,9 @@
     <Filter Include="06. Renderer\RenderRule">
       <UniqueIdentifier>{c1fd74de-d72d-4e69-a9e2-d25532242368}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. Component\VIBuffer\QuadTree">
+      <UniqueIdentifier>{c48cfea4-aa87-4739-96cf-aa8216979c87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -393,6 +396,9 @@
     <ClInclude Include="..\Public\Build_Mode.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\QuadTree.h">
+      <Filter>07. Component\VIBuffer\QuadTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -592,6 +598,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\RenderRule.cpp">
       <Filter>06. Renderer\RenderRule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\QuadTree.cpp">
+      <Filter>07. Component\VIBuffer\QuadTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

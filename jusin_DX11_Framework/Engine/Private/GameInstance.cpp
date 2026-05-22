@@ -563,9 +563,19 @@ HRESULT CGameInstance::Bind_Shadow_FarZ(CShader* pShader)
 #pragma endregion
 
 #pragma region FRUSTUM	
+void XM_CALLCONV CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix)
+{
+	m_pFrustum->Transform_ToLocalSpace(WorldMatrix);
+}
+
 _bool XM_CALLCONV CGameInstance::isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange)
 {
 	return m_pFrustum->isIn_WorldSpace(vWorldPos, fRange);
+}
+
+_bool XM_CALLCONV CGameInstance::isIn_Frustum_LocalSpace(_fvector vLocalPos, _float fRange)
+{
+	return m_pFrustum->isIn_LocalSpace(vLocalPos, fRange);
 }
 #pragma endregion
 

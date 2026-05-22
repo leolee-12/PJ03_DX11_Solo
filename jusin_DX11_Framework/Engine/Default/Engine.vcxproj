@@ -221,6 +221,7 @@
     <ClInclude Include="..\Public\Picking.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Prototype_Manager.h" />
+    <ClInclude Include="..\Public\QuadTree.h" />
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\Public\RenderProfile.h" />
     <ClInclude Include="..\Public\RenderRule.h" />
@@ -295,6 +296,7 @@
     <ClCompile Include="..\Private\Picking.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
+    <ClCompile Include="..\Private\QuadTree.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
     <ClCompile Include="..\Private\RenderProfile.cpp" />
     <ClCompile Include="..\Private\RenderRule.cpp" />

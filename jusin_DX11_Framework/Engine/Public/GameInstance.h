@@ -163,8 +163,10 @@ public:
 	void Set_GroupVolume(CHANNELID eChannelID, _float fVolume);
 #pragma endregion
 
-#pragma region FRUSTUM	
+#pragma region FRUSTUM
+	void XM_CALLCONV Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
 	_bool XM_CALLCONV isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange = 0.f);
+	_bool XM_CALLCONV isIn_Frustum_LocalSpace(_fvector vLocalPos, _float fRange = 0.f);
 #pragma endregion
 
 private:
