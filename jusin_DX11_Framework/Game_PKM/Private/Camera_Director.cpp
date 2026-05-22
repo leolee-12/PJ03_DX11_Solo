@@ -41,8 +41,8 @@ namespace
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::ATTACKER;
-		shot.vPositionOffset = _float3(2.0f, 2.0f, -2.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		shot.vPositionOffset = _float3(1.4f, 1.4f, -1.4f);
+		shot.vLookAtOffset = _float3(0.0f, 0.5f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
@@ -50,8 +50,8 @@ namespace
 		shot.fBlendTime = 0.25f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = _float3(-1.0f, 2.0f, -4.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		shot.vPositionOffset = _float3(-0.7f, 1.4f, -2.8f);
+		shot.vLookAtOffset = _float3(0.0f, 0.5f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
@@ -59,8 +59,8 @@ namespace
 		shot.fBlendTime = 0.18f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = _float3(0.5f, 1.5f, -2.5f);
-		shot.vLookAtOffset = _float3(0.0f, 0.9f, 0.0f);
+		shot.vPositionOffset = _float3(0.35f, 1.05f, -1.75f);
+		shot.vLookAtOffset = _float3(0.0f, 0.4f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		return pSeq;
@@ -79,8 +79,8 @@ namespace
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = _float3(-2.5f, 2.2f, -3.5f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		shot.vPositionOffset = _float3(-1.75f, 1.54f, -2.45f);
+		shot.vLookAtOffset = _float3(0.0f, 0.5f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		shot = {};
@@ -89,8 +89,8 @@ namespace
 		shot.fBlendTime = 0.25f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = _float3(0.0f, 2.0f, -5.0f);
-		shot.vLookAtOffset = _float3(0.0f, 1.0f, 0.0f);
+		shot.vPositionOffset = _float3(0.0f, 1.4f, -3.5f);
+		shot.vLookAtOffset = _float3(0.0f, 0.5f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		shot = {};
@@ -99,8 +99,8 @@ namespace
 		shot.fBlendTime = 0.18f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = _float3(-1.2f, 1.6f, -2.2f);
-		shot.vLookAtOffset = _float3(0.0f, 0.9f, 0.0f);
+		shot.vPositionOffset = _float3(-0.84f, 1.12f, -1.54f);
+		shot.vLookAtOffset = _float3(0.0f, 0.4f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		return pSeq;
@@ -119,8 +119,8 @@ namespace
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.vPositionOffset = _float3(0.0f, 4.8f, -6.2f);
-		shot.vLookAtOffset = _float3(0.0f, 0.8f, 0.0f);
+		shot.vPositionOffset = _float3(0.0f, 3.36f, -4.34f);
+		shot.vLookAtOffset = _float3(0.0f, 0.4f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		shot = {};
@@ -129,8 +129,8 @@ namespace
 		shot.fBlendTime = 0.35f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.vPositionOffset = _float3(0.0f, 5.6f, -7.0f);
-		shot.vLookAtOffset = _float3(0.0f, 0.7f, 0.0f);
+		shot.vPositionOffset = _float3(0.0f, 3.92f, -4.9f);
+		shot.vLookAtOffset = _float3(0.0f, 0.3f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		shot = {};
@@ -139,8 +139,8 @@ namespace
 		shot.fBlendTime = 0.25f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.vPositionOffset = _float3(-3.2f, 3.0f, -6.0f);
-		shot.vLookAtOffset = _float3(0.0f, 0.8f, 0.0f);
+		shot.vPositionOffset = _float3(-2.24f, 2.1f, -4.2f);
+		shot.vLookAtOffset = _float3(0.0f, 0.4f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		return pSeq;

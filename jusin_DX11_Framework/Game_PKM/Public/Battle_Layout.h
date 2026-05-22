@@ -17,14 +17,14 @@ namespace BattleLayout
 {
 	inline constexpr _float3 vSingleTrainerPos[g_kBattleSideCount] =
 	{
-		/* PLAYER   */ { -3.5f, 0.f, -5.0f },
-		/* OPPONENT */ {  3.5f, 0.f,  5.0f },
+		/* PLAYER   */ { -2.45f, 0.f, -3.5f },
+		/* OPPONENT */ {  2.45f, 0.f,  3.5f },
 	};
 
 	inline constexpr _float3 vSinglePokemonPos[g_kBattleSideCount] =
 	{
-		/* PLAYER   */ { -2.0f, 0.f, -2.5f },
-		/* OPPONENT */ {  2.0f, 0.f,  2.5f },
+		/* PLAYER   */ { -1.4f, 0.f, -1.75f },
+		/* OPPONENT */ {  1.4f, 0.f,  1.75f },
 	};
 
 	inline constexpr _float fSingleTrainerYaw[g_kBattleSideCount] =

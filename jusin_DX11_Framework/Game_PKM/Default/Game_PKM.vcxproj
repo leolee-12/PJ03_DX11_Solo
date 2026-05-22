@@ -71,6 +71,7 @@
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\Effect_Defines.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
+    <ClInclude Include="..\Public\Effect_Mesh.h" />
     <ClInclude Include="..\Public\Effect_Test_Single.h" />
     <ClInclude Include="..\Public\EventAction.h" />
     <ClInclude Include="..\Public\Event_Definition.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="..\Public\UIController.h" />
     <ClInclude Include="..\Public\UIController_Hub.h" />
     <ClInclude Include="..\Public\UIImage_FadeBattle.h" />
+    <ClInclude Include="..\Public\UI_Defines.h" />
     <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\Weapon.h" />
@@ -181,6 +183,7 @@
     <ClCompile Include="..\Private\CaptureRing.cpp" />
     <ClCompile Include="..\Private\Capture_Menu.cpp" />
     <ClCompile Include="..\Private\Capture_Manager.cpp" />
+    <ClCompile Include="..\Private\Effect_Mesh.cpp" />
     <ClCompile Include="..\Private\EventAction.cpp" />
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
@@ -242,12 +245,14 @@
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\ShaderFiles\Shader_Effect_Beam.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Effect_M1.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Particle3D.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Player_LGPE.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Trail.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl" />

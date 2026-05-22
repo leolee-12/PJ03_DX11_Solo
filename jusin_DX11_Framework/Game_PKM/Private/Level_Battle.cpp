@@ -320,7 +320,7 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc = {};
 
-	CameraDesc.vEye = _float3(-1.3f, 3.2f, -7.3f);
+	CameraDesc.vEye = _float3(-0.11f, 1.74f, -5.11f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fFovy = XMConvertToRadians(35.f);
 	CameraDesc.fNear = 0.1f;
@@ -353,8 +353,8 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 	   호출 순서 — Set_Mode 가 먼저여야 Set_Default_Battle_Pose 가 즉시 Apply 됨
 	   (Camera_Director.cpp:Set_Default_Battle_Pose 의 mode 가드 참고). */
 	CAMERA_POSE def = {};
-	def.vPosition = _float3(-4.0f, 3.0f, -7.0f);   // §4.5: 분석서 §8.1 권장치와 현재값 절충
-	def.vLookAt = _float3(0.0f, 0.8f, 0.0f);
+	def.vPosition = _float3(-2.0f, 1.84f, -4.9f);
+	def.vLookAt = _float3(-0.3f, 0.0f, 0.0f);
 	def.vUp = _float3(0.0f, 1.0f, 0.0f);
 	def.fFovY = 0.f;                            // M1: FOV 변경 없음 (§4.3)
 

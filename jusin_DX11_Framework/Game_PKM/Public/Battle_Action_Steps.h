@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "IBattleAction_Step.h"
+#include "Effect_Defines.h"
 
 NS_BEGIN(Game_PKM)
 
@@ -325,6 +326,42 @@ private:
 
 public:
     static SPrizeMoney* Create(_uint iAmount, _float fHoldSeconds = 0.4f);
+
+private:
+    virtual void Free() override;
+};
+
+/* SPlayEffect
+     - ActionData 의 actor/target side 로 CBattle_Pokemon 을 찾아
+       Get_EffectPivot(slot, offset) 위치에서 strID 이펙트 1회 출력.
+     - duration 0 (즉시 완료). 페이싱은 앞뒤 SDelay 가 담당. */
+class SPlayEffect final : public IBattleAction_Step
+{
+private:
+    SPlayEffect();
+    virtual ~SPlayEffect() = default;
+
+public:
+    HRESULT Initialize(const _string& strEffectID,
+        EFFECT_VFX_TARGET eTarget,
+        EFFECT_SLOT eSlot,
+        const _float3& vOffset);
+
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _string             m_strEffectID = {};
+    EFFECT_VFX_TARGET   m_eTarget = { EFFECT_VFX_TARGET::ATTACKER };
+    EFFECT_SLOT         m_eSlot = { EFFECT_SLOT::CENTER };
+    _float3             m_vOffset = {};
+
+public:
+    static SPlayEffect* Create(const _string& strEffectID,
+        EFFECT_VFX_TARGET eTarget,
+        EFFECT_SLOT eSlot = EFFECT_SLOT::CENTER,
+        const _float3& vOffset = {});
 
 private:
     virtual void Free() override;

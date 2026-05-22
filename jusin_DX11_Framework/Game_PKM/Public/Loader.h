@@ -67,6 +67,8 @@ private:
 	HRESULT Ready_Resources_For_GamePlay();
 	HRESULT Ready_Resources_For_Battle();
 	HRESULT Ready_Resources_For_Capture();
+
+	HRESULT Ready_Resources_For_UI();
 	HRESULT Ready_Resources_For_Effect();
 
 public:

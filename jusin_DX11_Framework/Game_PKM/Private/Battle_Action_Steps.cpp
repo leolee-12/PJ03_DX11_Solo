@@ -10,6 +10,7 @@
 #include "Battle_Pokemon.h"
 #include "Battle_Trainer.h"
 #include "Player_Status.h"
+#include "Effect_Manager.h"
 
 #pragma region SDelay
 SDelay::SDelay()
@@ -815,6 +816,84 @@ SPrizeMoney* SPrizeMoney::Create(_uint iAmount, _float fHoldSeconds)
 }
 
 void SPrizeMoney::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SPlayEffect
+SPlayEffect::SPlayEffect()
+{
+}
+
+HRESULT SPlayEffect::Initialize(const _string& strEffectID,
+	EFFECT_VFX_TARGET eTarget,
+	EFFECT_SLOT eSlot,
+	const _float3& vOffset)
+{
+	if (strEffectID.empty())
+		return E_FAIL;
+
+	m_strEffectID = strEffectID;
+	m_eTarget = eTarget;
+	m_eSlot = eSlot;
+	m_vOffset = vOffset;
+	return S_OK;
+}
+
+void SPlayEffect::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	if (nullptr == ctx.pManager)
+		return;
+
+	const CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+	if (nullptr == pSeq)
+		return;
+
+	const BATTLE_ACTION_DATA& tData = pSeq->Get_ActionData();
+	const _uint iSide = (EFFECT_VFX_TARGET::ATTACKER == m_eTarget)
+		? tData.iActorSide
+		: tData.iTargetSide;
+
+	CGameObject* pObj = ctx.pManager->Get_BattlerObj(iSide);
+	CBattle_Pokemon* pPokemon = dynamic_cast<CBattle_Pokemon*>(pObj);
+	if (nullptr == pPokemon)
+		return;
+
+	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
+	if (nullptr == pEffectMgr)
+		return;
+
+	pEffectMgr->PlayAt(m_strEffectID, pPokemon->Get_EffectPivot(m_eSlot, m_vOffset));
+}
+
+void SPlayEffect::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	(void)fTimeDelta;
+}
+
+_bool SPlayEffect::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return true;
+}
+
+SPlayEffect* SPlayEffect::Create(const _string& strEffectID,
+	EFFECT_VFX_TARGET eTarget,
+	EFFECT_SLOT eSlot,
+	const _float3& vOffset)
+{
+	SPlayEffect* pInstance = new SPlayEffect();
+	if (FAILED(pInstance->Initialize(strEffectID, eTarget, eSlot, vOffset)))
+	{
+		MSG_BOX("Failed to Created : SPlayEffect");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void SPlayEffect::Free()
 {
 	__super::Free();
 }

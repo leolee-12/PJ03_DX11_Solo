@@ -1,4 +1,4 @@
-#ifndef Editor_UI_h__
+ï»¿#ifndef Editor_UI_h__
 #define Editor_UI_h__
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -6,6 +6,7 @@
 #include "UIButton.h"
 #include "UIProgressBar.h"
 #include "UITween.h"
+#include "UI_Defines.h"
 
 NS_BEGIN(Editor)
 
@@ -18,12 +19,12 @@ struct UISEQ_ANIMATION_NODE
 struct UISEQ_STEP_NODE
 {
 	UI_SEQ_STEP_KIND eKind{ UI_SEQ_STEP_KIND::WAIT };
-	_string strTargetId;             // UTF-8 (UISEQ_WIDGET_NODE::strId ÂüÁ¶)
-	_string strSlotId;               // ¿ÜºÎ ½½·Ô ID
+	_string strTargetId;             // UTF-8 (UISEQ_WIDGET_NODE::strId ì°¸ì¡°)
+	_string strSlotId;               // ì™¸ë¶€ ìŠ¬ë¡¯ ID
 	_wstring strAnimName;
 	_float fWaitSec{ 0.f };
 	_bool bVisible{ true };
-	_string strCallbackId;           // ¿¹¾à
+	_string strCallbackId;           // ì˜ˆì•½
 	_bool bJoinPrev{ false };
 	_bool bRequired{ false };
 };
@@ -57,7 +58,7 @@ struct UISEQ_WIDGET_NODE
 	}
 };
 
-// ÆÄÀÏ ´ÜÀ§ ¹®¼­
+// íŒŒì¼ ë‹¨ìœ„ ë¬¸ì„œ
 struct UISEQ_DOC
 {
 	_int iVersion{ 2 };
@@ -73,7 +74,7 @@ struct UISEQ_DOC
 
 
 
-/* -------- »ó¼ö ÄŞº¸ ¶óº§ -------- */
+/* -------- ìƒìˆ˜ ì½¤ë³´ ë¼ë²¨ -------- */
 template <typename Pair, size_t N, size_t... Is>
 constexpr auto Make_Names_Impl(const Pair(&t)[N], std::index_sequence<Is...>)
 {
@@ -209,6 +210,61 @@ inline _bool Edit_TagField(const char* pszLabel, WNameID& strTag)
 	return true;
 }
 
+inline _bool Combo_UITexture(const char* pszLabel, WNameID& strTag)
+{
+	const Game_PKM::UI_TEXTURE_OPTION* pCurrent = Game_PKM::UI_FindTextureOption(strTag);
+
+	_string strPreview;
+	if (INVALID_TAG == strTag)
+		strPreview = "(none)";
+	else if (nullptr != pCurrent)
+		strPreview = pCurrent->pLabel;
+	else
+	{
+		const _string strLookup = TagToString(strTag);
+		strPreview = strLookup.empty() ? "(unknown)" : ("(unknown: " + strLookup + ")");
+	}
+
+	if (!ImGui::BeginCombo(pszLabel, strPreview.c_str()))
+		return false;
+
+	_bool bChanged = false;
+
+	{
+		const _bool bSel = (INVALID_TAG == strTag);
+		if (ImGui::Selectable("(none)", bSel) && !bSel)
+		{
+			strTag = INVALID_TAG;
+			bChanged = true;
+		}
+		if (bSel)
+			ImGui::SetItemDefaultFocus();
+	}
+
+	/* ì¹´íƒˆë¡œê·¸ì— ì—†ëŠ” íƒœê·¸ëŠ” ë¹„í™œì„± ë¼ì¸ìœ¼ë¡œë§Œ ë…¸ì¶œ â€” ì˜ë„ì¹˜ ì•Šì€ ë®ì–´ì“°ê¸° ë°©ì§€ */
+	if (INVALID_TAG != strTag && nullptr == pCurrent)
+	{
+		ImGui::BeginDisabled();
+		ImGui::Selectable(strPreview.c_str(), true);
+		ImGui::EndDisabled();
+	}
+
+	for (const auto& opt : Game_PKM::g_UITextureOptions)
+	{
+		const _bool bSel = (opt.strTag == strTag);
+		if (ImGui::Selectable(opt.pLabel, bSel) && !bSel)
+		{
+			strTag = opt.strTag;
+			bChanged = true;
+		}
+		if (bSel)
+			ImGui::SetItemDefaultFocus();
+	}
+
+	ImGui::EndCombo();
+	return bChanged;
+}
+
 inline _bool Edit_UIntField(const char* pszLabel, _uint& iValue)
 {
 	_int iTemp = (INVALID_INDEX == iValue) ? -1 : static_cast<_int>(iValue);
@@ -229,7 +285,7 @@ inline void Draw_ReadOnlyString(const char* pszLabel, const _string& strValue)
 
 
 
-/* -------- variant<5Á¾> -> CUIObject::UIOBJECT_DESC& ÃßÃâ -------- */
+/* -------- variant<5ì¢…> -> CUIObject::UIOBJECT_DESC& ì¶”ì¶œ -------- */
 inline CUIObject::UIOBJECT_DESC& Get_BaseDesc(UISEQ_WIDGET_NODE& tWidget)
 {
 	return std::visit([](auto& tDesc) -> CUIObject::UIOBJECT_DESC&

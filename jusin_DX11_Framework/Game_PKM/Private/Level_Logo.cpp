@@ -49,7 +49,13 @@ void CLevel_Logo::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_F8))
 	{
-		if (SUCCEEDED(m_pGameInstance->Change_Level(ETOI(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
+		LEVEL_ENTRY_DESC tEntry{};
+		tEntry.eNextLevelID = LEVEL::GAMEPLAY;
+		tEntry.bAutoAdvance = true;   // 풀 시퀀스 검증 시 자동 전이. 수동 SPACE 동작이 필요하면 false.
+
+		if (SUCCEEDED(m_pGameInstance->Change_Level(
+			ETOI(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY, &tEntry))))
 			return;
 	}
 }

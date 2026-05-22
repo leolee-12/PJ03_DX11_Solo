@@ -19,12 +19,14 @@ struct LEVEL_ENTRY_DESC
 	LEVEL_ENTRY_PAYLOAD ePayload = { LEVEL_ENTRY_PAYLOAD::NONE };
 	_uint iPayloadSize = {};
 	_byte byPayload[g_kLevelEntryPayloadBytes] = {};
+	_bool bAutoAdvance = { false };
 
 	void Clear()
 	{
 		eNextLevelID = LEVEL::END;
 		ePayload = LEVEL_ENTRY_PAYLOAD::NONE;
 		iPayloadSize = 0;
+		bAutoAdvance = false;
 		memset(byPayload, 0, sizeof(byPayload));
 	}
 

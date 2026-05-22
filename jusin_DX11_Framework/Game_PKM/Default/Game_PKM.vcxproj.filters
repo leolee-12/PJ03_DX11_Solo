@@ -196,6 +196,9 @@
     <Filter Include="04. Contents\05. Event\EventSequence">
       <UniqueIdentifier>{4e4eac28-1806-4221-b5d1-3c3897f438d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Objects\04. Effects\Effect_Mesh">
+      <UniqueIdentifier>{693615c7-94da-40bf-ae80-90974dd0f917}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -561,6 +564,12 @@
     <ClInclude Include="..\Public\Interaction_EventSequence.h">
       <Filter>03. Components\01. Interaction</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Defines.h">
+      <Filter>01. Objects\02. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Mesh.h">
+      <Filter>01. Objects\04. Effects\Effect_Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -857,6 +866,9 @@
     <ClCompile Include="..\Private\Interaction_EventSequence.cpp">
       <Filter>03. Components\01. Interaction</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect_Mesh.cpp">
+      <Filter>01. Objects\04. Effects\Effect_Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl">
@@ -911,6 +923,12 @@
       <Filter>98. ShaderFiles\03. Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Particle3D.hlsl">
+      <Filter>98. ShaderFiles\03. Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Trail.hlsl">
+      <Filter>98. ShaderFiles\03. Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Effect_Beam.hlsl">
       <Filter>98. ShaderFiles\03. Effect</Filter>
     </FxCompile>
   </ItemGroup>

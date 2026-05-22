@@ -2,6 +2,7 @@
 #include "Game_PKM_Defines.h"
 #include "Battle_Session.h"
 #include "Battle_AnimDef.h"
+#include "Effect_Defines.h"
 
 #include "ContainerObject.h"
 
@@ -58,6 +59,7 @@ public:
 
 	void  Begin_SendOutAppear();
 	_float3 Get_EffectPivot() const;
+	_float3 Get_EffectPivot(EFFECT_SLOT eSlot, const _float3& vExtraOffset = {}) const;
 	void  Set_BattleVisible(_bool bVisible) { m_bBattleVisible = bVisible; }
 	_bool Is_BattleVisible() const { return m_bBattleVisible; }
 

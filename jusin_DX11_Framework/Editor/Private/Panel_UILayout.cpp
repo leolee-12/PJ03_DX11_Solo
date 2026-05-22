@@ -382,7 +382,7 @@ void CPanel_UILayout::Draw_Inspector()
 
 			if constexpr (std::is_same_v<T, CUIImage::UIIMAGE_DESC>)
 			{
-				if (Edit_TagField<256>("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
+				if (Combo_UITexture("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Level", tDesc.iTextureLevel)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Index", tDesc.iTextureIndex)) MarkWidgetUpdated();
 
@@ -483,7 +483,7 @@ void CPanel_UILayout::Draw_Inspector()
 			}
 			else if constexpr (std::is_same_v<T, CUIButton::UIBUTTON_DESC>)
 			{
-				if (Edit_TagField<256>("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
+				if (Combo_UITexture("Texture Tag", tDesc.strTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Texture Level", tDesc.iTextureLevel)) MarkWidgetUpdated();
 
 				if (Edit_TagField<256>("Shader Tag", tDesc.strShaderTag)) MarkWidgetUpdated();
@@ -504,10 +504,10 @@ void CPanel_UILayout::Draw_Inspector()
 			}
 			else if constexpr (std::is_same_v<T, CUIProgressBar::UIPROGRESSBAR_DESC>)
 			{
-				if (Edit_TagField<256>("Back Texture Tag", tDesc.strBackTextureTag)) MarkWidgetUpdated();
+				if (Combo_UITexture("Back Texture Tag", tDesc.strBackTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Back Texture Level", tDesc.iBackTextureLevel)) MarkWidgetUpdated();
 				if (Edit_UIntField("Back Texture Index", tDesc.iBackTextureIndex)) MarkWidgetUpdated();
-				if (Edit_TagField<256>("Fill Texture Tag", tDesc.strFillTextureTag)) MarkWidgetUpdated();
+				if (Combo_UITexture("Fill Texture Tag", tDesc.strFillTextureTag)) MarkWidgetUpdated();
 				if (Edit_UIntField("Fill Texture Level", tDesc.iFillTextureLevel)) MarkWidgetUpdated();
 				if (Edit_UIntField("Fill Texture Index", tDesc.iFillTextureIndex)) MarkWidgetUpdated();
 				if (Edit_TagField<256>("Shader Tag", tDesc.strShaderTag)) MarkWidgetUpdated();

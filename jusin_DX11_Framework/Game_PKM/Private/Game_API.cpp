@@ -25,7 +25,11 @@ NS_BEGIN(Game_PKM)
 #pragma region 공용 로직
 HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eStartLevelID)
 {
-	CLevel* pPreLevel = CLevel_Loading::Create(pDevice, pContext, eStartLevelID);
+	LEVEL_ENTRY_DESC tEntry{};
+	tEntry.eNextLevelID = eStartLevelID;
+	tEntry.bAutoAdvance = true;   // 앱 시작 로딩 자동 전이. SPACE 수동 진행이 필요하면 false.
+
+	CLevel* pPreLevel = CLevel_Loading::Create(pDevice, pContext, eStartLevelID, &tEntry);
 
 	if (nullptr == pPreLevel)
 		return E_FAIL;
@@ -35,6 +39,7 @@ HRESULT Start_Level(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL 
 
 	return S_OK;
 }
+
 HRESULT Ready_PersistentObjects(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	auto* pGameInstance = CGameInstance::GetInstance();

@@ -31,7 +31,10 @@ HRESULT CLevel_Loading::Initialize()
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_SPACE) && m_pLoader->Is_Finished())
+	const _bool bAdvance =
+		m_tEntryDesc.bAutoAdvance || m_pGameInstance->Key_Down(DIK_SPACE);
+
+	if (bAdvance && m_pLoader->Is_Finished())
 	{
 		if (m_pLoader->Has_Error())
 		{

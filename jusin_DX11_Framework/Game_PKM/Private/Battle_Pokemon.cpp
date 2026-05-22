@@ -148,6 +148,9 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 	if (nullptr == pSpecies || 0 == pSpecies->strModelTag)
 		return E_FAIL;
 
+	// SPokemonEnter (Begin_SendOutAppear) 가 visible=true 로 다시 켤 때까지 숨김
+	m_bBattleVisible = false;
+
 	if (pSpecies->strModelTag == m_strSpeciesModelTag)
 	{
 		m_pInstance = pNewInstance;
@@ -192,8 +195,6 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 	m_fAnimTimer = 0.f;
 	m_fAnimDuration = 0.f;
 
-	Play_Enter();
-
 	return S_OK;
 }
 
@@ -204,14 +205,6 @@ void CBattle_Pokemon::Play_Attack(ANIM_KIND eAttackKind)
 
 void CBattle_Pokemon::Play_Hurt()
 {
-	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
-	if (nullptr != pEffectMgr)
-	{
-		pEffectMgr->PlayAt(
-			"thunder_shock",
-			Get_EffectPivot());
-	}
-
 	Play_Anim_NonLoop(ANIM_KIND::HURT, 2.4f);
 }
 
@@ -281,6 +274,17 @@ void CBattle_Pokemon::Begin_SendOutAppear()
 _float3 CBattle_Pokemon::Get_EffectPivot() const
 {
 	return Get_SendOutEffectPos();
+}
+
+_float3 CBattle_Pokemon::Get_EffectPivot(EFFECT_SLOT eSlot, const _float3& vExtraOffset) const
+{
+	(void)eSlot;
+
+	const _float3 vBase = Get_SendOutEffectPos();
+	return _float3(
+		vBase.x + vExtraOffset.x,
+		vBase.y + vExtraOffset.y,
+		vBase.z + vExtraOffset.z);
 }
 
 void CBattle_Pokemon::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
