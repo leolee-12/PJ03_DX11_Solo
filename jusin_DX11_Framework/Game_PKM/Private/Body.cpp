@@ -57,6 +57,15 @@ HRESULT CBody::Initialize(void* pArg)
 		PROTO_COM_SHADER_VTXANIMMESH;
 	m_pParentState = pDesc->pParentState;
 
+	if (PROTO_COM_SHADER_POKEMON == m_strShaderProtoTag)
+		m_iOutlineMaskPass = 11;
+	else if (PROTO_COM_SHADER_HUMAN == m_strShaderProtoTag)
+		m_iOutlineMaskPass = 4;
+	else if (PROTO_COM_SHADER_PLAYER_LGPE == m_strShaderProtoTag)
+		m_iOutlineMaskPass = 4;
+	else
+		m_bUseOutline = false;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -109,12 +118,40 @@ void CBody::Late_Update(_float fTimeDelta)
 	__super::Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
 
 
-	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
+	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42,
+		m_CombinedWorldMatrix._43, 1.f);
 	if (true == m_pGameInstance->isIn_Frustum_WorldSpace(vPos, 5.f))
 	{
 		m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
 		m_pGameInstance->Add_RenderGroup(RENDERID::SHADOW, this);
+
+		if (m_bUseOutline)
+			m_pGameInstance->Add_RenderGroup(RENDERID::OUTLINEMASK, this);
 	}
+}
+
+HRESULT CBody::Render_OutlineMask()
+{
+	if (0 == m_iOutlineMaskPass)
+		return S_OK;
+
+	if (FAILED(Bind_ShaderResources_Common()))
+		return E_FAIL;
+
+	_uint iNumMeshes = static_cast<_uint>(m_pModelCom->Get_NumMeshes());
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(m_iOutlineMaskPass)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 HRESULT CBody::Ready_Components()

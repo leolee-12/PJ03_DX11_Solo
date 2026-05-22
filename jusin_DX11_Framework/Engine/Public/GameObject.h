@@ -35,13 +35,14 @@ public:
 	void Reset_Flag(_uint iFlag) { m_iFlag &= ~iFlag; }
 	_bool Check_Flag(_uint iFlag) const { return (m_iFlag & iFlag) != 0; }
 
-	virtual HRESULT Initialize_Prototype();
-	virtual HRESULT Initialize(void* pArg);
-	virtual void Priority_Update(_float fTimeDelta);
-	virtual void Update(_float fTimeDelta);
-	virtual void Late_Update(_float fTimeDelta);
-	virtual HRESULT Render();
-	virtual HRESULT Render_Shadow() { return S_OK; };
+	virtual HRESULT	Initialize_Prototype();
+	virtual HRESULT	Initialize(void* pArg);
+	virtual void	Priority_Update(_float fTimeDelta);
+	virtual void	Update(_float fTimeDelta);
+	virtual void	Late_Update(_float fTimeDelta);
+	virtual HRESULT	Render();
+	virtual HRESULT	Render_Shadow() { return S_OK; };
+	virtual HRESULT	Render_OutlineMask() { return S_OK; };
 
 	CComponent* Find_Component(WNameID strComTag);
 

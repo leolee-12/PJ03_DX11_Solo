@@ -10,31 +10,6 @@ float4   g_vColor = float4(1.f, 1.f, 1.f, 1.f);
 texture2D g_Texture;
 
 
-DepthStencilState DSS_DepthReadNoWrite
-{
-    DepthEnable = true;
-    DepthWriteMask = ZERO;
-    DepthFunc = LESS_EQUAL;
-};
-
-DepthStencilState DSS_DepthOff
-{
-    DepthEnable = false;
-    DepthWriteMask = ZERO;
-};
-
-BlendState BS_Additive
-{
-    BlendEnable[0] = true;
-    SrcBlend = ONE;
-    DestBlend = ONE;
-    BlendOp = ADD;
-    SrcBlendAlpha = ONE;
-    DestBlendAlpha = ONE;
-    BlendOpAlpha = ADD;
-    RenderTargetWriteMask[0] = 0x0F;
-};
-
 
 struct VS_IN
 {

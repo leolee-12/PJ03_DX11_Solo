@@ -41,13 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_F2))
-		m_pGameInstance->Toggle_CameraFollow();
-
-	if (m_pGameInstance->Key_Down(DIK_F3))
-		m_pGameInstance->Toggle_Debug();
-
-	if (m_pGameInstance->Key_Down(DIK_F8))
+	if (m_pGameInstance->Key_Down(DIK_RETURN))
 	{
 		LEVEL_ENTRY_DESC tEntry{};
 		tEntry.eNextLevelID = LEVEL::GAMEPLAY;
@@ -58,6 +52,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY, &tEntry))))
 			return;
 	}
+
+#ifdef _DEBUG
+	Debug_Common();
+#endif
 }
 
 HRESULT CLevel_Logo::Render()
@@ -325,6 +323,26 @@ void CLevel_Logo::Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& 
 				pMonster->Activate(ANIM_KIND::EVENT_1);
 		});
 }
+
+#ifdef _DEBUG
+void CLevel_Logo::Debug_Common()
+{
+	if (m_pGameInstance->Key_Down(DIK_F2))
+	{
+		m_pGameInstance->Toggle_CameraFollow();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F3))
+	{
+		m_pGameInstance->Toggle_Debug();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F4))
+	{
+
+	}
+}
+#endif
 
 CLevel_Logo* CLevel_Logo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

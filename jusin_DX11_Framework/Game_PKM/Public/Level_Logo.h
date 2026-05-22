@@ -35,6 +35,10 @@ private:
 	CEffect_Star* Create_StarEffect(void* pStarDesc);
 	void Bind_TitleSlots(CUISequence* pTitleUI, vector<CEffect_Star*>& Effects);
 
+#ifdef _DEBUG
+	void Debug_Common();
+#endif
+
 public:
 	static CLevel_Logo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 

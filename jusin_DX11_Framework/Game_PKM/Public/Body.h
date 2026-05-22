@@ -44,6 +44,9 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual HRESULT Render_OutlineMask() override;
+
+	void Set_UseOutline(_bool b) { m_bUseOutline = b; }
 
 protected:
 	CShader* m_pShaderCom = { nullptr };
@@ -53,6 +56,8 @@ protected:
 	const _uint* m_pParentState = { nullptr };
 
 	_bool m_bAnimFinishedThisFrame = { false };
+	_bool m_bUseOutline = { true };
+	_uint m_iOutlineMaskPass = { 0 };
 
 protected:
 	HRESULT Ready_Components();

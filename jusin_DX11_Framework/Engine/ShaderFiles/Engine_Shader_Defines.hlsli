@@ -90,6 +90,20 @@ DepthStencilState DSS_Z_Disable
     DepthWriteMask = ZERO;
 };
 
+DepthStencilState DSS_DepthReadNoWrite
+{
+    DepthEnable = TRUE;
+    DepthWriteMask = ZERO;
+    DepthFunc = LESS_EQUAL;
+    StencilEnable = FALSE;
+};
+
+DepthStencilState DSS_DepthOff
+{
+    DepthEnable = false;
+    DepthWriteMask = ZERO;
+};
+
 BlendState BS_Default
 {
     BlendEnable[0] = false;
@@ -113,4 +127,16 @@ BlendState BS_Blend
     SrcBlend = One;
     DestBlend = One;
     BlendOp = Add;
+};
+
+BlendState BS_Additive
+{
+    BlendEnable[0] = true;
+    SrcBlend = ONE;
+    DestBlend = ONE;
+    BlendOp = ADD;
+    SrcBlendAlpha = ONE;
+    DestBlendAlpha = ONE;
+    BlendOpAlpha = ADD;
+    RenderTargetWriteMask[0] = 0x0F;
 };

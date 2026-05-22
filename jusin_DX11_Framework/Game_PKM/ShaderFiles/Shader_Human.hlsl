@@ -137,6 +137,11 @@ PS_OUT_SHADOW PS_SHADOW(PS_IN In)
 	return Out;
 }
 
+float4 PS_OUTLINEMASK(PS_IN In) : SV_TARGET	// 4
+{
+	return float4(1.f, 0.f, 0.f, 0.f);
+}
+
 technique11 DefaultTechnique
 {
 	pass Pass_Default		// 0. Default - DSA
@@ -178,5 +183,15 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DIFF();
+	}
+	pass OutlineMask	// 4
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_DepthReadNoWrite, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_OUTLINEMASK();
 	}
 };

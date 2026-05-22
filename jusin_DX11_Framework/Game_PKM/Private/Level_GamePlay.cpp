@@ -275,12 +275,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 	CSpawn_Manager::GetInstance()->Update(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_F2))
-		m_pGameInstance->Toggle_CameraFollow();
-
-	if (m_pGameInstance->Key_Down(DIK_F3))
-		m_pGameInstance->Toggle_Debug();
-
 	/* F4 - 메뉴 열기/닫기 토글. Open() 이 시퀀스 Play 도 같이 트리거. */
 	if (m_pGameInstance->Key_Down(DIK_F4) && nullptr != m_pMenu)
 	{
@@ -290,27 +284,11 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 			m_pMenu->Open();
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_F8) && nullptr != m_pEventMgr)
-	{
-		EVENT_CONTEXT tContext{};
-		tContext.pGameInstance = m_pGameInstance;
-		tContext.pLevelGamePlay = this;
-
-		m_pEventMgr->Start_Sequence(L"TestActor", tContext);
-	}
-
-	//if (m_pGameInstance->Key_Down(DIK_P))
-	//{
-	//	BATTLE_ENV tEnv = {};
-	//	tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
-	//	tEnv.eRule = BATTLE_RULE::TRAINER_SINGLE;
-	//	tEnv.iOpponentTrainerID = 1;
-	//	tEnv.iBGResourceID = 0;
-	//	tEnv.iZoneID = 0;
-	//
-	//	Request_Battle(tEnv);
-	//	return;
-	//}
+#ifdef _DEBUG
+	Debug_Common();
+	Debug_Outline();
+	//Debug_Event();
+#endif
 
 	UI_Update_All(fTimeDelta);
 }
@@ -773,6 +751,81 @@ HRESULT CLevel_GamePlay::Ready_EventSystem()
 
 	return S_OK;
 }
+#ifdef _DEBUG
+void CLevel_GamePlay::Debug_Common()
+{
+	if (m_pGameInstance->Key_Down(DIK_F2))
+	{
+		m_pGameInstance->Toggle_CameraFollow();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F3))
+	{
+		m_pGameInstance->Toggle_Debug();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F4))
+	{
+
+	}
+}
+
+void CLevel_GamePlay::Debug_Outline()
+{
+	if (m_pGameInstance->Key_Down(DIK_F6))
+	{
+		m_DebugOutlineParam.bEnable = true;
+		m_DebugOutlineParam.iMode = (m_DebugOutlineParam.iMode + 1) % 6;
+		m_pGameInstance->Set_OutlineParam(m_DebugOutlineParam);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F7))
+	{
+		m_DebugOutlineParam.fStrength += 0.1f;
+		if (m_DebugOutlineParam.fStrength > 1.0f)
+			m_DebugOutlineParam.fStrength = 0.f;
+		m_pGameInstance->Set_OutlineParam(m_DebugOutlineParam);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F8))
+	{
+		m_DebugOutlineParam.fThresholdLow += 0.01f;
+		if (m_DebugOutlineParam.fThresholdLow > 0.10f)
+			m_DebugOutlineParam.fThresholdLow = 0.f;
+		m_DebugOutlineParam.fThresholdHigh = m_DebugOutlineParam.fThresholdLow + 0.06f;
+		m_pGameInstance->Set_OutlineParam(m_DebugOutlineParam);
+	}
+}
+
+void CLevel_GamePlay::Debug_Event()
+{
+	if (m_pGameInstance->Key_Down(DIK_F6) && nullptr != m_pEventMgr)
+	{
+		EVENT_CONTEXT tContext{};
+		tContext.pGameInstance = m_pGameInstance;
+		tContext.pLevelGamePlay = this;
+	
+		m_pEventMgr->Start_Sequence(L"TestActor", tContext);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F7))
+	{
+		BATTLE_ENV tEnv = {};
+		tEnv.eEnvironment = ENVIRONMENT_TYPE::GRASS;
+		tEnv.eRule = BATTLE_RULE::TRAINER_SINGLE;
+		tEnv.iOpponentTrainerID = 1;
+		tEnv.iBGResourceID = 0;
+		tEnv.iZoneID = 0;
+	
+		Request_Battle(tEnv);
+		return;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F8))
+	{
+	}
+}
+#endif
 
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

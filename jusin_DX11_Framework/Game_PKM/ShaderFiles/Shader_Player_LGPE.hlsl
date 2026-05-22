@@ -42,10 +42,10 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	In.vBlendWeight.w = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
 
-	float4x4 BoneMatrix =	g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
-							g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
-							g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
-							g_BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
+	float4x4 BoneMatrix = g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
+		g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
+		g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
+		g_BoneMatrices[In.vBlendIndex.w] * In.vBlendWeight.w;
 
 	float4 vPosition = mul(float4(In.vPos, 1.f), BoneMatrix);
 	float3 vNormal = mul(float4(In.vNorm, 0.f), BoneMatrix).xyz;
@@ -53,7 +53,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	float4x4 matWV, matWVP;
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
-	
+
 	Out.vPos = mul(vPosition, matWVP);
 	Out.vNorm = float4(normalize(mul(vNormal, (float3x3)g_WITMatrix)), 0.f);
 	Out.vTex = In.vTex;
@@ -85,11 +85,11 @@ struct PS_OUT
 PS_OUT PS_DS(PS_IN In)	// 0번 패스
 {
 	PS_OUT Out;
-	
+
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 	if (vMtrlDiff.a < 0.1f)
 		discard;
-	
+
 	Out.vDiff = vector(vMtrlDiff.rgb, 1.f);
 	Out.vNorm = vector(normalize(In.vNorm.xyz) * 0.5f + 0.5f, 1.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFarZ, 0.f, 0.f);
@@ -102,7 +102,7 @@ PS_OUT PS_DSEL(PS_IN In)	// 1번 패스
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 	vector vMtrlEmit = float4(0.f, 0.f, 0.f, 1.f);
-	
+
 	if (vMtrlDiff.a < 0.1f)
 	{
 		float2 vTexEyes = float2(In.vTex.x * 2.f, In.vTex.y * 4.f);
@@ -143,6 +143,11 @@ PS_OUT_SHADOW PS_SHADOW(PS_IN In)
 	Out.vLightDepth = vector(In.vProjPos.z / In.vProjPos.w, 0.f, 0.f, 0.f);
 
 	return Out;
+}
+
+float4 PS_OUTLINEMASK(PS_IN In) : SV_TARGET	// 4
+{
+	return float4(1.f, 0.f, 0.f, 0.f);
 }
 
 technique11 DefaultTechnique
@@ -186,5 +191,15 @@ technique11 DefaultTechnique
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_SHADOW();
+	}
+	pass OutlineMask	// 4
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DSS_DepthReadNoWrite, 0);
+		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		PixelShader = compile ps_5_0 PS_OUTLINEMASK();
 	}
 };

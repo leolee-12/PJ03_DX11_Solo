@@ -66,6 +66,10 @@ private:
 	CGameObject* m_pPendingDeleteWild = { nullptr };   // weak - Push 직전 Set_Dead 호출 후 nullptr 초기화
 	static constexpr _float TRANSITION_PUSH_AT_SEC = 5.0f;
 
+#ifdef _DEBUG
+	OUTLINE_PARAM m_DebugOutlineParam{};
+#endif
+
 private:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(WNameID strLayerTag);
@@ -77,6 +81,12 @@ private:
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 	HRESULT Ready_EventSystem();
+
+#ifdef _DEBUG
+	void Debug_Common();
+	void Debug_Outline();
+	void Debug_Event();
+#endif
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

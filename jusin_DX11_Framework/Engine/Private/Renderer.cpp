@@ -21,6 +21,10 @@ HRESULT CRenderer::Initialize()
 	if (nullptr == m_pShader)
 		return E_FAIL;
 
+	m_pShader_PostProcess = CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_PostProcess.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements);
+	if (nullptr == m_pShader_PostProcess)
+		return E_FAIL;
+
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
@@ -46,10 +50,16 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_NonBlend()))
 		return E_FAIL;
 
+	if (FAILED(Render_OutlineMask()))
+		return E_FAIL;
+
 	if (FAILED(Render_Lights()))
 		return E_FAIL;
 
 	if (FAILED(Render_Combined(m_bUseShadow)))
+		return E_FAIL;
+
+	if (FAILED(Render_PostProcess()))
 		return E_FAIL;
 
 	if (FAILED(Render_NonLight()))
@@ -100,9 +110,14 @@ HRESULT CRenderer::Resize()
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_LIGHTDEPTH, g_iMaxWidth, g_iMaxHeight,
 		DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_COMBINED, iNewWidth, iNewHeight,
+		DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_OUTLINEMASK, iNewWidth, iNewHeight,
+		DXGI_FORMAT_R8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
 	if (FAILED(Ready_DepthStencil_Buffer()))
 		return E_FAIL;
-
 	// MRT·Î ¹­±â
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DIFFUSE)))
 		return E_FAIL;
@@ -119,6 +134,10 @@ HRESULT CRenderer::Resize()
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_LIGHTACC, TARGET_SPECULAR)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_SHADOWOBJECTS, TARGET_LIGHTDEPTH)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_POSTPROCESS_IN, TARGET_COMBINED)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(MRT_OUTLINEMASK, TARGET_OUTLINEMASK)))
 		return E_FAIL;
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(vViewportDesc.x, vViewportDesc.y, 1.f));
@@ -140,6 +159,10 @@ HRESULT CRenderer::Resize()
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_SPECULAR, fSizeX * 1.5f, fSizeY * 1.5f, fSizeX, fSizeY)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_LIGHTDEPTH, fSizeX * 1.5f, fSizeY * 2.5f, fSizeX, fSizeY)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_COMBINED, fSizeX * 0.5f, fSizeY * 3.5f, fSizeX, fSizeY)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TARGET_OUTLINEMASK, fSizeX * 1.5f, fSizeY * 3.5f, fSizeX, fSizeY)))
 		return E_FAIL;
 #endif
 
@@ -219,6 +242,27 @@ HRESULT CRenderer::Render_NonBlend()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_OutlineMask()
+{
+	if (FAILED(m_pGameInstance->Begin_MRT(MRT_OUTLINEMASK)))
+		return E_FAIL;
+
+	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::OUTLINEMASK)])
+	{
+		if (nullptr != pRenderObject)
+			pRenderObject->Render_OutlineMask();
+
+		Safe_Release(pRenderObject);
+	}
+
+	m_RenderObjects[ETOUI(RENDERID::OUTLINEMASK)].clear();
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Lights()
 {
 	if (FAILED(m_pGameInstance->Begin_MRT(MRT_LIGHTACC)))
@@ -260,6 +304,9 @@ HRESULT CRenderer::Render_Lights()
 
 HRESULT CRenderer::Render_Combined(_bool m_bUseShadow)
 {
+	if (FAILED(m_pGameInstance->Begin_MRT(MRT_POSTPROCESS_IN)))
+		return E_FAIL;
+
 	_uint iShaderPass = ETOUI(DEFERRED::COMBINED);
 
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DIFFUSE, m_pShader, "g_TexDiff")))
@@ -296,6 +343,78 @@ HRESULT CRenderer::Render_Combined(_bool m_bUseShadow)
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Begin(iShaderPass)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_PostProcess()
+{
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_COMBINED, m_pShader_PostProcess, "g_TexCombined")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_NORMAL, m_pShader_PostProcess, "g_TexNorm")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_DEPTH, m_pShader_PostProcess, "g_TexDepth")))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_OUTLINEMASK, m_pShader_PostProcess, "g_TexOutlineMask")))
+		return E_FAIL;
+
+	if (FAILED(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	_float2 vViewportSize = m_pGameInstance->Get_ViewportSize();
+	_float2 vTexelSize = _float2(1.f / vViewportSize.x, 1.f / vViewportSize.y);
+
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_vTexelSize", &vTexelSize, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fFarZ", m_pGameInstance->Get_FarZPtr(), sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_iOutlineMode", &m_OutlineParam.iMode, sizeof(_int))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineStrength", &m_OutlineParam.fStrength, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineDepthStrength",
+		&m_OutlineParam.fDepthStrength, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineNormalStrength",
+		&m_OutlineParam.fNormalStrength, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineThresholdLow",
+		&m_OutlineParam.fThresholdLow, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineThresholdHigh",
+		&m_OutlineParam.fThresholdHigh, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineThicknessPx",
+		&m_OutlineParam.fThicknessPx, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineDarkenFactor",
+		&m_OutlineParam.fDarkenFactor, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader_PostProcess->Bind_RawValue("g_fOutlineMaskBias",
+		&m_OutlineParam.fMaskBias,sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Bind_Resources()))
+		return E_FAIL;
+
+	_uint iShaderPass = 0;
+	if (m_OutlineParam.bEnable && 1 <= m_OutlineParam.iMode && m_OutlineParam.iMode <= 3)
+		iShaderPass = 1;
+	else if (m_OutlineParam.bEnable && 4 <= m_OutlineParam.iMode && m_OutlineParam.iMode <= 5)
+		iShaderPass = 2;
+
+	if (FAILED(m_pShader_PostProcess->Begin(iShaderPass)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -427,6 +546,8 @@ HRESULT CRenderer::Render_Debug()
 		m_pGameInstance->Render_RT_Debug(MRT_GAMEOBJECTS, m_pShader, m_pVIBuffer);
 		m_pGameInstance->Render_RT_Debug(MRT_LIGHTACC, m_pShader, m_pVIBuffer);
 		m_pGameInstance->Render_RT_Debug(MRT_SHADOWOBJECTS, m_pShader, m_pVIBuffer);
+		m_pGameInstance->Render_RT_Debug(MRT_POSTPROCESS_IN, m_pShader, m_pVIBuffer);
+		m_pGameInstance->Render_RT_Debug(MRT_OUTLINEMASK, m_pShader, m_pVIBuffer);
 	}
 	return S_OK;
 }
@@ -449,8 +570,6 @@ CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 void CRenderer::Free()
 {
-	__super::Free();
-
 	for (auto& RenderObjects : m_RenderObjects)
 	{
 		for (auto& pRenderObject : RenderObjects)
@@ -461,8 +580,11 @@ void CRenderer::Free()
 
 	Safe_Release(m_pMaxDSV);
 	Safe_Release(m_pShader);
+	Safe_Release(m_pShader_PostProcess);
 	Safe_Release(m_pVIBuffer);
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	__super::Free();
 }

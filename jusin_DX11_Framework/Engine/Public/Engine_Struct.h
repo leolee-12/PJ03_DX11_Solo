@@ -297,6 +297,21 @@ namespace Engine
 		bool Pivoting = { false };
 		XMFLOAT3 vSmoothedLocalDelta = {};
 	};
+
+	struct OUTLINE_PARAM
+	{
+		bool      bEnable			= { true };
+		int       iMode				= { 5 };
+		float     fStrength			= { 0.25f };
+		float     fDepthStrength	= { 1.0f };
+		float     fNormalStrength	= { 0.5f };
+		float     fThresholdLow		= { 0.02f };
+		float     fThresholdHigh	= { 0.08f };
+		float     fDarkenFactor		= { 0.65f };
+		float     fThicknessPx		= { 1.0f };
+		float     fMaskBias			= { 0.5f };
+		XMFLOAT4  vColor			= { 0.12f, 0.10f, 0.08f, 1.0f };
+	};
 }
 
 #endif // Engine_Struct_h__

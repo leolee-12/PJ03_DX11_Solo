@@ -335,6 +335,11 @@ void CGameInstance::Set_UseShadow(_bool b)
 	m_pRenderer->Set_UseShadow(b);
 }
 
+void CGameInstance::Set_OutlineParam(const OUTLINE_PARAM& Param)
+{
+	m_pRenderer->Set_OutlineParam(Param);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Add_DebugComponent(CComponent* pComponent)
 {

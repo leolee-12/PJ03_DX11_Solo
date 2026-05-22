@@ -9,6 +9,10 @@
 
 
 NS_BEGIN(Engine)
+class CGameInstance;
+class CGameObject;
+class CShader;
+class CVIBuffer_Rect;
 
 class CRenderer final : public CBase
 {
@@ -17,12 +21,13 @@ private:
 	virtual ~CRenderer() = default;
 
 public:
-	HRESULT		Initialize();
-	void		Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
-	HRESULT		Draw();
-	HRESULT		Resize();
+	HRESULT	Initialize();
+	void	Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
+	HRESULT	Draw();
+	HRESULT	Resize();
 
-	void		Set_UseShadow(_bool b) { m_bUseShadow = b; }
+	void	Set_UseShadow(_bool b) { m_bUseShadow = b; }
+	void	Set_OutlineParam(const OUTLINE_PARAM& Param) { m_OutlineParam = Param; }
 
 #ifdef _DEBUG
 	void Add_DebugComponent(class CComponent* pComponent);
@@ -31,14 +36,18 @@ public:
 private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
-
-	class CGameInstance*		m_pGameInstance = { nullptr };
-	list<class CGameObject*>	m_RenderObjects[ETOUI(RENDERID::END)];
-
-	class CShader*				m_pShader = { nullptr };
-	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
-	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
 	ID3D11DepthStencilView*		m_pMaxDSV = { nullptr };
+
+	CGameInstance*		m_pGameInstance = { nullptr };
+	list<CGameObject*>	m_RenderObjects[ETOUI(RENDERID::END)];
+
+	CShader*			m_pShader = { nullptr };
+	CShader*			m_pShader_PostProcess = { nullptr };
+	CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
+
+	_float4x4			m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
+	_bool				m_bUseShadow = { true };
+	OUTLINE_PARAM		m_OutlineParam{};
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponents;
@@ -48,14 +57,13 @@ private:
 	HRESULT Render_Priority();
 	HRESULT Render_Shadow();
 	HRESULT Render_NonBlend();
+	HRESULT Render_OutlineMask();
 	HRESULT Render_Lights();
 	HRESULT Render_Combined(_bool m_bUseShadow);
+	HRESULT Render_PostProcess();
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
-
-private:
-	_bool m_bUseShadow = { true };
 
 private:
 	HRESULT Ready_DepthStencil_Buffer();

@@ -33,6 +33,15 @@ HRESULT CMonster::Initialize(void* pArg)
 		m_fIdleVariantJitter = max(0.f, pDesc->fIdleVariantJitter);
 	}
 
+	if (PROTO_COM_SHADER_POKEMON == m_strShaderProtoTag)
+		m_iOutlineMaskPass = 11;
+	else if (PROTO_COM_SHADER_HUMAN == m_strShaderProtoTag)
+		m_iOutlineMaskPass = 4;
+	else if (PROTO_COM_SHADER_PLAYER_LGPE == m_strShaderProtoTag)
+		m_iOutlineMaskPass = 4;
+	else
+		m_bUseOutline = false;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -97,6 +106,9 @@ void CMonster::Update(_float fTimeDelta)
 void CMonster::Late_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
+
+	if (m_bUseOutline)
+		m_pGameInstance->Add_RenderGroup(RENDERID::OUTLINEMASK, this);
 }
 
 HRESULT CMonster::Render()
@@ -116,6 +128,30 @@ HRESULT CMonster::Render()
 
 	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots, "g_BoneMatrices")))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMonster::Render_OutlineMask()
+{
+	if (0 == m_iOutlineMaskPass)
+		return S_OK;
+
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
+	_uint iNumMeshes = static_cast<_uint>(m_pModelCom->Get_NumMeshes());
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(m_iOutlineMaskPass)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

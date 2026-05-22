@@ -44,6 +44,9 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_OutlineMask() override;
+
+	void Set_UseOutline(_bool b) { m_bUseOutline = b; }
 
 	void Activate(ANIM_KIND eInitialSpecialKind = ANIM_KIND::END);
 	void Deactivate();
@@ -74,6 +77,9 @@ private:
 
 	_float m_fIdleVariantBaseInterval = { 4.0f };
 	_float m_fIdleVariantJitter = { 1.5f };
+
+	_bool m_bUseOutline = { true };
+	_uint m_iOutlineMaskPass = { 0 };
 
 private:
 	HRESULT Ready_Components();
