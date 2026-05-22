@@ -140,6 +140,10 @@ enum class RENDER_RULE_KEY : _uint
 	END
 };
 
+enum class BLEND_MODE { ALPHA, ADDITIVE };
+
+enum class BILLBOARD_MODE { VIEW_ALIGNED, AXIS_LOCKED, FIXED_NORMAL, VELOCITY_ALIGNED };
+
 NS_END
 
 #endif // Game_PKM_Enum_h__

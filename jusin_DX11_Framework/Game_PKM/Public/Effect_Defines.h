@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Game_PKM_Defines.h"
 #include "ParticleCurve.h"
 #include "ParticleEmitter.h"
@@ -6,17 +6,34 @@
 
 NS_BEGIN(Game_PKM)
 
+enum class EFFECT_SLOT : _ubyte
+{
+	CENTER,
+	HEAD,
+	CHEST,
+	FOOT,
+	MUZZLE,
+	END
+};
+
+enum class EFFECT_VFX_TARGET : _ubyte
+{
+	ATTACKER,
+	DEFENDER,
+	END
+};
+
 struct EMITTER_DEFINITION
 {
-	/* �ĺ� */
+	/* 식별 */
 	_string strName = "";
 
-	/* ���� Ǯ / spawn */
+	/* 입자 풀 / spawn */
 	_uint   iCapacity = 256;
 	_float  fSpawnRate = 50.f;
 	_uint   iBurstCount = 0;
 
-	/* �ʱ� ���� */
+	/* 초기 분포 */
 	_float2 vLifeTimeRange = { 1.f, 2.f };
 	_float2 vSpeedRange = { 1.f, 3.f };
 	_float2 vSizeRange = { 0.2f, 0.5f };
@@ -25,13 +42,11 @@ struct EMITTER_DEFINITION
 	_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 	_float  fEmitConeHalfAngle = 0.f;
 
-	/* ���� ��� */
-	CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE eBillboard =
-		CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VIEW_ALIGNED;
+	/* 렌더 모드 */
+	BILLBOARD_MODE eBillboard = BILLBOARD_MODE::VIEW_ALIGNED;
 	_float3 vBillboardFixedAxis = { 0.f, 1.f, 0.f };
 
-	CParticleEmitter::EMITTER_DESC::BLEND_MODE eBlend =
-		CParticleEmitter::EMITTER_DESC::BLEND_MODE::ADDITIVE;
+	BLEND_MODE eBlend = BLEND_MODE::ADDITIVE;
 
 	_bool bAutoDestroyOnEmpty = true;
 	_float fStartDelay = 0.f;
@@ -43,7 +58,7 @@ struct EMITTER_DEFINITION
 	_bool  bMirrorUV = false;
 	_bool  bIgnoreDepth = false;
 
-	/* �ð� Ŀ�� */
+	/* 시간 커브 */
 	CCurveFloat  curveSize;
 	CCurveColor  curveColor;
 	CCurveFloat  curveAlpha;
@@ -51,10 +66,36 @@ struct EMITTER_DEFINITION
 	WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
 };
 
+struct MESH_EFFECT_DEFINITION
+{
+	enum class SCALE_AXIS { Z_ONLY, UNIFORM };
+
+	_string strName = "";
+
+	/* INVALID_TAG 기본값은 g_EffectMeshOptions[]의 "None" 행과 매칭된다.
+	   strShaderProtoTag INVALID_TAG 시 CEffect_Mesh::Initialize가 PROTO_COM_SHADER_EFFECT_BEAM으로
+fallback. */
+	WNameID strModelProtoTag = { INVALID_TAG };
+	WNameID strShaderProtoTag = { INVALID_TAG };
+	WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
+
+	BLEND_MODE eBlend = BLEND_MODE::ADDITIVE;
+	_bool   bIgnoreDepth = false;
+
+	SCALE_AXIS  eScaleAxis = SCALE_AXIS::Z_ONLY;
+
+	CCurveFloat curveScale;
+	CCurveColor curveColor;
+	CCurveFloat curveAlpha;
+
+	_float  fLifeTime = 1.f;
+};
+
 struct EFFECT_DEFINITION
 {
 	_string strID = "";
-	vector<EMITTER_DEFINITION> Emitters;
+	vector<EMITTER_DEFINITION>     Emitters;
+	vector<MESH_EFFECT_DEFINITION> Meshes;
 };
 
 struct EFFECT_TEXTURE_OPTION
@@ -66,15 +107,24 @@ struct EFFECT_TEXTURE_OPTION
 	const _tchar* pDebugName;
 };
 
+struct EFFECT_MESH_OPTION
+{
+	const char* pLabel;
+	WNameID      strTag;
+	const char* pProtoTag;
+	const _char* pModelFilePath;   /* CModel::Create는 narrow path */
+	const _tchar* pDebugName;
+};
+
 #define EFFECT_TEXTURE_OPTION_ROW(label, tag, path, proto) \
         { label, tag, proto, path, TEXT(proto) }
 
 inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
 {
-	  EFFECT_TEXTURE_OPTION_ROW("Dummy White", PROTO_COM_TEX_DUMMY_WHITE, nullptr, "Prototype_Component_Texture_Dummy_White"),
+	EFFECT_TEXTURE_OPTION_ROW("Dummy White", PROTO_COM_TEX_DUMMY_WHITE, nullptr, "Prototype_Component_Texture_Dummy_White"),
 
-	  EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 0 Line702 Sml", PROTO_COM_TEX_EFT_BALL_ABSORB_0_LINE702_SML_O,
-		  TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_line702_sml_o.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_0_Line702_Sml_O"),
+	EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 0 Line702 Sml", PROTO_COM_TEX_EFT_BALL_ABSORB_0_LINE702_SML_O,
+		TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_line702_sml_o.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_0_Line702_Sml_O"),
 	EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 0 Mask702", PROTO_COM_TEX_EFT_BALL_ABSORB_0_MASK702_O,
 		TEXT("../../Resources/Effects/Ball_absorb/Ball_absorb_0_mask702_o.png"), "Prototype_Component_Texture_Effect_Ball_Absorb_0_Mask702_O"),
 	EFFECT_TEXTURE_OPTION_ROW("Ball Absorb 1 Circle004 Sml", PROTO_COM_TEX_EFT_BALL_ABSORB_1_CIRCLE004_SML_M,
@@ -179,10 +229,46 @@ inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_thunder702_o.png"), "Prototype_Component_Texture_Effect_Thunder_2_Thunder702_O"),
 	EFFECT_TEXTURE_OPTION_ROW("Thunder 2 Thunder703", PROTO_COM_TEX_EFT_THUNDER_2_THUNDER703_O,
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_thunder703_o.png"), "Prototype_Component_Texture_Effect_Thunder_2_Thunder703_O"),
-
 };
 
 #undef EFFECT_TEXTURE_OPTION_ROW
+
+#define EFFECT_MESH_OPTION_ROW(label, tag, path, proto) \
+          { label, tag, proto, path, TEXT(proto) }
+
+/* "None" 행은 MESH_EFFECT_DEFINITION::strModelProtoTag = INVALID_TAG 기본값과 매칭되는 placeholder.
+   실제 빔/실드 mesh 행은 §4-E에서 g_EffectMeshOptions[]에 추가한다. */
+inline constexpr EFFECT_MESH_OPTION g_EffectMeshOptions[] =
+{
+	EFFECT_MESH_OPTION_ROW("None", INVALID_TAG, nullptr, ""),
+
+	EFFECT_MESH_OPTION_ROW("At Beam", PROTO_COM_MODEL_STATIC_AT_BEAM, "../../Resources/Models/StaticMeshs/at_beam.wmodel",
+		"Prototype_Component_Model_Static_At_Beam"),
+	EFFECT_MESH_OPTION_ROW("Ball", PROTO_COM_MODEL_STATIC_BALL, "../../Resources/Models/StaticMeshs/ball.wmodel",
+		"Prototype_Component_Model_Static_Ball"),
+	EFFECT_MESH_OPTION_ROW("Balloon", PROTO_COM_MODEL_STATIC_BALLOON, "../../Resources/Models/StaticMeshs/balloon.wmodel",
+		"Prototype_Component_Model_Static_Balloon"),
+	EFFECT_MESH_OPTION_ROW("Cone", PROTO_COM_MODEL_STATIC_CONE, "../../Resources/Models/StaticMeshs/cone.wmodel",
+		"Prototype_Component_Model_Static_Cone"),
+	EFFECT_MESH_OPTION_ROW("Cube", PROTO_COM_MODEL_STATIC_CUBE, "../../Resources/Models/StaticMeshs/cube.wmodel",
+		"Prototype_Component_Model_Static_Cube"),
+	EFFECT_MESH_OPTION_ROW("Cylinder", PROTO_COM_MODEL_STATIC_CYLINDER, "../../Resources/Models/StaticMeshs/cylinder.wmodel",
+		"Prototype_Component_Model_Static_Cylinder"),
+	EFFECT_MESH_OPTION_ROW("Df Beam", PROTO_COM_MODEL_STATIC_DF_BEAM, "../../Resources/Models/StaticMeshs/df_beam.wmodel",
+		"Prototype_Component_Model_Static_Df_Beam"),
+	EFFECT_MESH_OPTION_ROW("Ring", PROTO_COM_MODEL_STATIC_RING, "../../Resources/Models/StaticMeshs/ring.wmodel",
+		"Prototype_Component_Model_Static_Ring"),
+	EFFECT_MESH_OPTION_ROW("Sonic", PROTO_COM_MODEL_STATIC_SONIC, "../../Resources/Models/StaticMeshs/sonic.wmodel",
+		"Prototype_Component_Model_Static_Sonic"),
+	EFFECT_MESH_OPTION_ROW("Sphere", PROTO_COM_MODEL_STATIC_SPHERE, "../../Resources/Models/StaticMeshs/sphere.wmodel",
+		"Prototype_Component_Model_Static_Sphere"),
+	EFFECT_MESH_OPTION_ROW("Stone", PROTO_COM_MODEL_STATIC_STONE, "../../Resources/Models/StaticMeshs/stone.wmodel",
+		"Prototype_Component_Model_Static_Stone"),
+	EFFECT_MESH_OPTION_ROW("Surf", PROTO_COM_MODEL_STATIC_SURF, "../../Resources/Models/StaticMeshs/surf.wmodel",
+		"Prototype_Component_Model_Static_Surf"),
+};
+
+#undef EFFECT_MESH_OPTION_ROW
 
 inline const EFFECT_TEXTURE_OPTION* Effect_FindTextureOption(WNameID strTag)
 {
@@ -195,8 +281,18 @@ inline const EFFECT_TEXTURE_OPTION* Effect_FindTextureOption(WNameID strTag)
 	return nullptr;
 }
 
-/* helper: EMITTER_DEFINITION �� CParticleEmitter::EMITTER_DESC ��ȯ.
-   vSpawnPos�� CEffect�� root ��ġ�� �����Ͽ� emitter�鿡 ����. */
+inline const EFFECT_MESH_OPTION* Effect_FindMeshOption(WNameID strTag)
+{
+	for (const auto& option : g_EffectMeshOptions)
+	{
+		if (option.strTag == strTag)
+			return &option;
+	}
+	return nullptr;
+}
+
+/* helper: EMITTER_DEFINITION → CParticleEmitter::EMITTER_DESC 변환.
+   vSpawnPos는 CEffect가 root 위치를 결정하여 emitter들에 전달. */
 inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION& def, const _float3& vSpawnPos)
 {
 	CParticleEmitter::EMITTER_DESC desc{};
@@ -229,45 +325,59 @@ inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION&
 	return desc;
 }
 
-inline _string Effect_BillboardToString(CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE eMode)
+inline _string Effect_BillboardToString(BILLBOARD_MODE eMode)
 {
 	switch (eMode)
 	{
-	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::AXIS_LOCKED:
+	case BILLBOARD_MODE::AXIS_LOCKED:
 		return "AXIS_LOCKED";
-	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::FIXED_NORMAL:
+	case BILLBOARD_MODE::FIXED_NORMAL:
 		return "FIXED_NORMAL";
-	case CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VELOCITY_ALIGNED:
+	case BILLBOARD_MODE::VELOCITY_ALIGNED:
 		return "VELOCITY_ALIGNED";
 	default:
 		return "VIEW_ALIGNED";
 	}
 }
 
-inline CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE Effect_BillboardFromString(const _string& strValue)
+inline BILLBOARD_MODE Effect_BillboardFromString(const _string& strValue)
 {
 	if (strValue == "AXIS_LOCKED")
-		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::AXIS_LOCKED;
+		return BILLBOARD_MODE::AXIS_LOCKED;
 	if (strValue == "FIXED_NORMAL")
-		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::FIXED_NORMAL;
+		return BILLBOARD_MODE::FIXED_NORMAL;
 	if (strValue == "VELOCITY_ALIGNED")
-		return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VELOCITY_ALIGNED;
+		return BILLBOARD_MODE::VELOCITY_ALIGNED;
 
-	return CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE::VIEW_ALIGNED;
+	return BILLBOARD_MODE::VIEW_ALIGNED;
 }
 
-inline _string Effect_BlendToString(CParticleEmitter::EMITTER_DESC::BLEND_MODE eMode)
+inline _string Effect_BlendToString(BLEND_MODE eMode)
 {
-	return (eMode == CParticleEmitter::EMITTER_DESC::BLEND_MODE::ALPHA)
+	return (eMode == BLEND_MODE::ALPHA)
 		? "ALPHA"
 		: "ADDITIVE";
 }
 
-inline CParticleEmitter::EMITTER_DESC::BLEND_MODE Effect_BlendFromString(const _string& strValue)
+inline BLEND_MODE Effect_BlendFromString(const _string& strValue)
 {
 	return (strValue == "ALPHA")
-		? CParticleEmitter::EMITTER_DESC::BLEND_MODE::ALPHA
-		: CParticleEmitter::EMITTER_DESC::BLEND_MODE::ADDITIVE;
+		? BLEND_MODE::ALPHA
+		: BLEND_MODE::ADDITIVE;
+}
+
+inline _string Effect_ScaleAxisToString(MESH_EFFECT_DEFINITION::SCALE_AXIS eAxis)
+{
+	return (MESH_EFFECT_DEFINITION::SCALE_AXIS::UNIFORM == eAxis)
+		? "UNIFORM"
+		: "Z_ONLY";
+}
+
+inline MESH_EFFECT_DEFINITION::SCALE_AXIS Effect_ScaleAxisFromString(const _string& strValue)
+{
+	return ("UNIFORM" == strValue)
+		? MESH_EFFECT_DEFINITION::SCALE_AXIS::UNIFORM
+		: MESH_EFFECT_DEFINITION::SCALE_AXIS::Z_ONLY;
 }
 
 inline json Effect_SerializeCurveFloat(const CCurveFloat& curve)
@@ -421,6 +531,57 @@ inline HRESULT Effect_ParseEmitterJson(const json& je, EMITTER_DEFINITION& out)
 	return S_OK;
 }
 
+inline HRESULT Effect_ParseMeshEmitterJson(const json& jm, MESH_EFFECT_DEFINITION& out)
+{
+	if (!jm.is_object())
+		return E_FAIL;
+
+	Effect_GetOpt(jm, "name", out.strName);
+
+	if (jm.contains("modelProtoTag"))
+	{
+		const _string strTag = jm["modelProtoTag"].get<_string>();
+		if (!strTag.empty())
+			out.strModelProtoTag = WNAME(StoW(strTag));
+	}
+	if (jm.contains("shaderProtoTag"))
+	{
+		const _string strTag = jm["shaderProtoTag"].get<_string>();
+		if (!strTag.empty())
+			out.strShaderProtoTag = WNAME(StoW(strTag));
+	}
+	if (jm.contains("textureProtoTag"))
+	{
+		const _string strTag = jm["textureProtoTag"].get<_string>();
+		if (!strTag.empty())
+			out.strTextureProtoTag = WNAME(StoW(strTag));
+	}
+
+	if (jm.contains("blend"))
+		out.eBlend = Effect_BlendFromString(jm["blend"].get<_string>());
+
+	Effect_GetOpt(jm, "ignoreDepth", out.bIgnoreDepth);
+
+	if (jm.contains("scaleAxis"))
+		out.eScaleAxis = Effect_ScaleAxisFromString(jm["scaleAxis"].get<_string>());
+
+	Effect_GetOpt(jm, "lifeTime", out.fLifeTime);
+
+	if (jm.contains("curves") && jm["curves"].is_object())
+	{
+		const json& jCurves = jm["curves"];
+
+		if (jCurves.contains("scale"))
+			Effect_ParseCurveFloat(jCurves["scale"], out.curveScale);
+		if (jCurves.contains("color"))
+			Effect_ParseCurveColor(jCurves["color"], out.curveColor);
+		if (jCurves.contains("alpha"))
+			Effect_ParseCurveFloat(jCurves["alpha"], out.curveAlpha);
+	}
+
+	return S_OK;
+}
+
 inline HRESULT Effect_ParseDefinitionJson(const json& jRoot, EFFECT_DEFINITION& out)
 {
 	if (!jRoot.is_object())
@@ -445,6 +606,19 @@ inline HRESULT Effect_ParseDefinitionJson(const json& jRoot, EFFECT_DEFINITION& 
 		}
 	}
 
+	if (jRoot.contains("meshes") && jRoot["meshes"].is_array())
+	{
+		for (const auto& jm : jRoot["meshes"])
+		{
+			MESH_EFFECT_DEFINITION mesh{};
+
+			if (FAILED(Effect_ParseMeshEmitterJson(jm, mesh)))
+				continue;
+
+			out.Meshes.push_back(mesh);
+		}
+	}
+
 	return S_OK;
 }
 
@@ -452,6 +626,19 @@ inline _string Effect_TextureTagToString(WNameID strTag)
 {
 	if (const EFFECT_TEXTURE_OPTION* pOption = Effect_FindTextureOption(strTag))
 		return pOption->pProtoTag;
+
+#ifdef _DEBUG
+	const _string strLookup = WtoS(_wstring(Engine::WNameRegistry::Lookup(strTag)));
+	return (strLookup == "<unknown>") ? _string{} : strLookup;
+#else
+	return {};
+#endif
+}
+
+inline _string Effect_MeshTagToString(WNameID strTag)
+{
+	if (const EFFECT_MESH_OPTION* pOption = Effect_FindMeshOption(strTag))
+		return (nullptr != pOption->pProtoTag) ? pOption->pProtoTag : _string{};
 
 #ifdef _DEBUG
 	const _string strLookup = WtoS(_wstring(Engine::WNameRegistry::Lookup(strTag)));
@@ -506,6 +693,44 @@ emitter.vBillboardFixedAxis.z };
 	return j;
 }
 
+inline json Effect_SerializeMeshEmitterJson(const MESH_EFFECT_DEFINITION& mesh)
+{
+	json j;
+	j["name"] = mesh.strName;
+
+	const _string strModelTag = Effect_MeshTagToString(mesh.strModelProtoTag);
+	if (!strModelTag.empty())
+		j["modelProtoTag"] = strModelTag;
+
+	/* shader / texture는 텍스처 카탈로그 lookup으로 통일.
+	   beam 셰이더는 텍스처 카탈로그가 아니므로 fallback registry lookup이 동작해야 release에서도
+유실 없음 — §4-E 등록 시 같은 카탈로그 적용. */
+	const _string strShaderTag = Effect_TextureTagToString(mesh.strShaderProtoTag);
+	if (!strShaderTag.empty())
+		j["shaderProtoTag"] = strShaderTag;
+
+	const _string strTextureTag = Effect_TextureTagToString(mesh.strTextureProtoTag);
+	if (!strTextureTag.empty())
+		j["textureProtoTag"] = strTextureTag;
+
+	j["blend"] = Effect_BlendToString(mesh.eBlend);
+	j["ignoreDepth"] = mesh.bIgnoreDepth;
+	j["scaleAxis"] = Effect_ScaleAxisToString(mesh.eScaleAxis);
+	j["lifeTime"] = mesh.fLifeTime;
+
+	json jCurves;
+	if (!mesh.curveScale.IsEmpty())
+		jCurves["scale"] = Effect_SerializeCurveFloat(mesh.curveScale);
+	if (!mesh.curveColor.IsEmpty())
+		jCurves["color"] = Effect_SerializeCurveColor(mesh.curveColor);
+	if (!mesh.curveAlpha.IsEmpty())
+		jCurves["alpha"] = Effect_SerializeCurveFloat(mesh.curveAlpha);
+	if (!jCurves.empty())
+		j["curves"] = jCurves;
+
+	return j;
+}
+
 inline json Effect_SerializeDefinitionJson(const EFFECT_DEFINITION& def)
 {
 	json root;
@@ -514,6 +739,14 @@ inline json Effect_SerializeDefinitionJson(const EFFECT_DEFINITION& def)
 
 	for (const auto& emitter : def.Emitters)
 		root["emitters"].push_back(Effect_SerializeEmitterJson(emitter));
+
+	/* 빈 meshes 배열은 출력하지 않는다 — 기존 emitter-only JSON 재저장 시 회귀 0. */
+	if (!def.Meshes.empty())
+	{
+		root["meshes"] = json::array();
+		for (const auto& mesh : def.Meshes)
+			root["meshes"].push_back(Effect_SerializeMeshEmitterJson(mesh));
+	}
 
 	return root;
 }

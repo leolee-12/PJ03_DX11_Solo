@@ -118,12 +118,13 @@ HRESULT CEffectEditorSession::Load(const _string& strPath)
 	m_Doc = std::move(loaded);
 	m_strDocPath = strPath;
 	m_iSelectedEmitter = -1;
+	m_iSelectedMesh = -1;
 	Normalize_Selection();
 	Clear_Dirty();
 
 	m_strStatus = "Loaded: " + strPath;
 
-	if (bPreviewWasAlive && !m_Doc.Emitters.empty())
+	if (bPreviewWasAlive && (!m_Doc.Emitters.empty() || !m_Doc.Meshes.empty()))
 		m_bPreviewRefreshPending = true;
 
 	return S_OK;
@@ -149,6 +150,12 @@ void CEffectEditorSession::Set_SelectedEmitter(_int iIndex)
 	Normalize_Selection();
 }
 
+void CEffectEditorSession::Set_SelectedMesh(_int iIndex)
+{
+	m_iSelectedMesh = iIndex;
+	Normalize_Selection();
+}
+
 void CEffectEditorSession::New_Doc()
 {
 	Destroy_Preview();
@@ -156,6 +163,7 @@ void CEffectEditorSession::New_Doc()
 	m_Doc = {};
 	m_Doc.strID = "NEW_EFFECT";
 	m_iSelectedEmitter = -1;
+	m_iSelectedMesh = -1;
 	m_bDirty = false;
 	m_strStatus = "New effect document";
 }
@@ -189,6 +197,35 @@ EMITTER_DEFINITION* CEffectEditorSession::Get_SelectedEmitterMutable()
 	return &m_Doc.Emitters[m_iSelectedEmitter];
 }
 
+void CEffectEditorSession::Add_Mesh()
+{
+	MESH_EFFECT_DEFINITION mesh{};
+	mesh.strName = "mesh";
+	m_Doc.Meshes.push_back(mesh);
+	m_iSelectedMesh = static_cast<_int>(m_Doc.Meshes.size()) - 1;
+	Mark_Dirty("Mesh added");
+}
+
+void CEffectEditorSession::Erase_SelectedMesh()
+{
+	if (m_iSelectedMesh < 0 ||
+		m_iSelectedMesh >= static_cast<_int>(m_Doc.Meshes.size()))
+		return;
+
+	m_Doc.Meshes.erase(m_Doc.Meshes.begin() + m_iSelectedMesh);
+	Normalize_Selection();
+	Mark_Dirty("Mesh removed");
+}
+
+MESH_EFFECT_DEFINITION* CEffectEditorSession::Get_SelectedMeshMutable()
+{
+	if (m_iSelectedMesh < 0 ||
+		m_iSelectedMesh >= static_cast<_int>(m_Doc.Meshes.size()))
+		return nullptr;
+
+	return &m_Doc.Meshes[m_iSelectedMesh];
+}
+
 void CEffectEditorSession::Mark_Dirty(const char* pReason)
 {
 	const _bool bRefreshPreview = Is_PreviewAlive();
@@ -218,9 +255,9 @@ HRESULT CEffectEditorSession::Spawn_Preview()
 		return E_FAIL;
 	}
 
-	if (m_Doc.Emitters.empty())
+	if (m_Doc.Emitters.empty() && m_Doc.Meshes.empty())
 	{
-		m_strStatus = "Preview failed: no emitter";
+		m_strStatus = "Preview failed: no emitter or mesh";
 		return E_FAIL;
 	}
 
@@ -234,10 +271,23 @@ HRESULT CEffectEditorSession::Spawn_Preview()
 	}
 
 	const _uint iProtoLevel = ETOUI(LEVEL::STATIC);
-	if (!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_EFFECT) ||
+	if (!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_EFFECT))
+	{
+		m_strStatus = "Preview failed: effect prototype is not loaded";
+		return E_FAIL;
+	}
+
+	if (!m_Doc.Emitters.empty() &&
 		!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_PARTICLE_EMITTER))
 	{
-		m_strStatus = "Preview failed: effect prototypes are not loaded";
+		m_strStatus = "Preview failed: particle emitter prototype is not loaded";
+		return E_FAIL;
+	}
+
+	if (!m_Doc.Meshes.empty() &&
+		!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_EFFECT_MESH))
+	{
+		m_strStatus = "Preview failed: effect mesh prototype is not loaded";
 		return E_FAIL;
 	}
 
@@ -309,15 +359,30 @@ void CEffectEditorSession::Normalize_Selection()
 	if (m_Doc.Emitters.empty())
 	{
 		m_iSelectedEmitter = -1;
-		return;
+	}
+	else
+	{
+		if (m_iSelectedEmitter < 0)
+			m_iSelectedEmitter = 0;
+
+		const _int iLastEmitter = static_cast<_int>(m_Doc.Emitters.size()) - 1;
+		if (m_iSelectedEmitter > iLastEmitter)
+			m_iSelectedEmitter = iLastEmitter;
 	}
 
-	if (m_iSelectedEmitter < 0)
-		m_iSelectedEmitter = 0;
+	if (m_Doc.Meshes.empty())
+	{
+		m_iSelectedMesh = -1;
+	}
+	else
+	{
+		if (m_iSelectedMesh < 0)
+			m_iSelectedMesh = 0;
 
-	const _int iLast = static_cast<_int>(m_Doc.Emitters.size()) - 1;
-	if (m_iSelectedEmitter > iLast)
-		m_iSelectedEmitter = iLast;
+		const _int iLastMesh = static_cast<_int>(m_Doc.Meshes.size()) - 1;
+		if (m_iSelectedMesh > iLastMesh)
+			m_iSelectedMesh = iLastMesh;
+	}
 }
 
 CEffectEditorSession* CEffectEditorSession::Create()

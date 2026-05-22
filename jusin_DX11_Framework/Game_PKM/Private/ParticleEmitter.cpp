@@ -112,7 +112,7 @@ HRESULT CParticleEmitter::Render()
 	if (FAILED(Bind_ShaderGlobals()))
 		return E_FAIL;
 
-	_uint iPass = (EMITTER_DESC::BLEND_MODE::ALPHA == m_tDesc.eBlend) ? 0u : 1u;
+	_uint iPass = (BLEND_MODE::ALPHA == m_tDesc.eBlend) ? 0u : 1u;
 	if (m_tDesc.bIgnoreDepth)
 		iPass += 2u;
 

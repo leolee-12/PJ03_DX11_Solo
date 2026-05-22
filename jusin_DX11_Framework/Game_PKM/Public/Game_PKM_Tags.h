@@ -158,6 +158,8 @@ WNAME_TAG(PROTO_COM_SHADER_UIIMAGE, L"Prototype_Component_Shader_UIImage");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_GLOW, L"Prototype_Component_Shader_UI_Button_Glow");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_LAYERED, L"Prototype_Component_Shader_UI_Button_Layered");
 WNAME_TAG(PROTO_COM_SHADER_PARTICLE3D, L"Prototype_Component_Shader_Particle3D");
+WNAME_TAG(PROTO_COM_SHADER_EFFECT_BEAM, L"Prototype_Component_Shader_Effect_Beam");
+
 
 
 // VIBuffer & Model
@@ -205,7 +207,18 @@ WNAME_TAG(PROTO_COM_MODEL_BMAP_GRASS, L"Prototype_Component_Model_BMap_Grass");
 WNAME_TAG(PROTO_COM_MODEL_MONSTER_BALL, L"Prototype_Component_Model_Monster_Ball");
 WNAME_TAG(PROTO_COM_MODEL_CAPTURE_RING, L"Prototype_Component_Model_Capture_Ring");
 
-
+WNAME_TAG(PROTO_COM_MODEL_STATIC_AT_BEAM, L"Prototype_Component_Model_Static_At_Beam");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_BALL, L"Prototype_Component_Model_Static_Ball");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_BALLOON, L"Prototype_Component_Model_Static_Balloon");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_CONE, L"Prototype_Component_Model_Static_Cone");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_CUBE, L"Prototype_Component_Model_Static_Cube");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_CYLINDER, L"Prototype_Component_Model_Static_Cylinder");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_DF_BEAM, L"Prototype_Component_Model_Static_Df_Beam");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_RING, L"Prototype_Component_Model_Static_Ring");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_SONIC, L"Prototype_Component_Model_Static_Sonic");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_SPHERE, L"Prototype_Component_Model_Static_Sphere");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_STONE, L"Prototype_Component_Model_Static_Stone");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_SURF, L"Prototype_Component_Model_Static_Surf");
 
 // Navigation & Collider
 WNAME_TAG(PROTO_COM_NAVIGATION_TERRAIN, L"Prototype_Component_Navigation_Terrain");
@@ -284,7 +297,7 @@ WNAME_TAG(PROTO_BMAP_GRASS, L"Prototype_BattleMap_Grass");
 WNAME_TAG(PROTO_OBJ_MONSTER_BALL, L"Prototype_GameObject_MonsterBall");
 WNAME_TAG(PROTO_OBJ_CAPTURE_RING, L"Prototype_GameObject_CaptureRing");
 WNAME_TAG(PROTO_OBJ_EFFECT, L"Prototype_GameObject_Effect");
-
+WNAME_TAG(PROTO_OBJ_EFFECT_MESH, L"Prototype_GameObject_Effect_Mesh");
 
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");

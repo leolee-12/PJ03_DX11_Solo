@@ -5,6 +5,7 @@
 
 NS_BEGIN(Game_PKM)
 class CParticleEmitter;
+class CEffect_Mesh;
 
 class CEffect final : public CGameObject
 {
@@ -47,9 +48,10 @@ public:
 private:
 	EFFECT_DESC m_tDesc = {};
 	const EFFECT_DEFINITION* m_pDefinition = nullptr;
-	vector<CParticleEmitter*> m_Emitters;   // borrowed (Layer가 ref 보유)
+	vector<CParticleEmitter*> m_Emitters;       // borrowed (Layer가 ref 보유)
+	vector<CEffect_Mesh*>     m_MeshEmitters;   // borrowed
 	EFFECT_DESC::ATTACH_INFO m_tAttach = {};
-	const _float4x4* m_pAttachMatrix = nullptr;  // BONE/MATRIX 모드에서 deref하는 weak 포인터
+	const _float4x4* m_pAttachMatrix = nullptr;
 
 private:
 	void Resolve_Attach_Once();

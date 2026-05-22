@@ -33,11 +33,16 @@ public:
 
 	_int Get_SelectedEmitter() const { return m_iSelectedEmitter; }
 	void Set_SelectedEmitter(_int iIndex);
+	_int Get_SelectedMesh() const { return m_iSelectedMesh; }
+	void Set_SelectedMesh(_int iIndex);
 
 	void New_Doc();
 	void Add_Emitter();
 	void Erase_SelectedEmitter();
 	EMITTER_DEFINITION* Get_SelectedEmitterMutable();
+	void Add_Mesh();
+	void Erase_SelectedMesh();
+	MESH_EFFECT_DEFINITION* Get_SelectedMeshMutable();
 
 	void Mark_Dirty(const char* pReason);
 
@@ -52,6 +57,7 @@ public:
 private:
 	EFFECT_DEFINITION m_Doc = {};
 	_int m_iSelectedEmitter = { -1 };
+	_int m_iSelectedMesh = { -1 };
 	_bool m_bDirty = { false };
 	_string m_strDocPath = { "../../Resources/Effects/new_effect.effect.json" };
 	_string m_strStatus = {};

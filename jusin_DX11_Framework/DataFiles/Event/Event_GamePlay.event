@@ -44,3 +44,19 @@
       Step { Action = DespawnActor; Actor = DoctorA }
       Step { Action = RestoreInput }
   }
+
+  Sequence TestActor
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = SpawnNPC; NPCProfile = Doctor; Position = 15,0,-7; RotationY = 3.14; Alias = DoctorA }
+      Step { Action = WaitSeconds; Duration = 0.3 }
+      Step { Action = ActorFace; Actor = DoctorA; Target = Player; Wait = true }
+      Step { Action = ActorSetAnim; Actor = DoctorA; AnimKind = TALK; Loop = true; Blend = 0.2 }
+      Step { Action = MessageText; Text = Actor anim test; Wait = true }
+      Step { Action = ActorSetAnim; Actor = DoctorA; AnimKind = WALK; Loop = true }
+      Step { Action = ActorMoveTo; Actor = DoctorA; Position = 16,0,25; Speed = 2.0; ArrivalRadius = 0.2; EndAnim = IDLE }
+      Step { Action = DespawnActor; Actor = DoctorA }
+      Step { Action = RestoreInput }
+  }

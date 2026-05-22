@@ -1,5 +1,6 @@
 ﻿#include "Effect.h"
 #include "ParticleEmitter.h"
+#include "Effect_Mesh.h"
 #include "Body.h"
 
 #include "GameInstance.h"
@@ -85,6 +86,50 @@ HRESULT CEffect::Initialize(void* pArg)
 		m_Emitters.push_back(pEmitter);
 	}
 
+	/* mesh 자식 spawn — Meshes 빈 vector면 자연 skip (기존 emitter-only 정의 회귀 0) */
+	m_MeshEmitters.reserve(m_pDefinition->Meshes.size());
+
+	for (const MESH_EFFECT_DEFINITION& mDef : m_pDefinition->Meshes)
+	{
+		CEffect_Mesh::MESH_EFFECT_DESC mDesc{};
+		mDesc.vSpawnPos = _float3(0.f, 0.f, 0.f);
+		mDesc.pParentTransform = m_pTransformCom;
+
+		mDesc.strModelProtoTag = mDef.strModelProtoTag;
+		mDesc.strShaderProtoTag = (INVALID_TAG == mDef.strShaderProtoTag)
+			? PROTO_COM_SHADER_EFFECT_BEAM
+			: mDef.strShaderProtoTag;
+		mDesc.strTextureProtoTag = mDef.strTextureProtoTag;
+		mDesc.iTextureProtoLevel = ETOUI(LEVEL::STATIC);
+
+		mDesc.eBlend = mDef.eBlend;
+		mDesc.bIgnoreDepth = mDef.bIgnoreDepth;
+		mDesc.eScaleAxis = mDef.eScaleAxis;
+
+		mDesc.curveScale = mDef.curveScale;
+		mDesc.curveColor = mDef.curveColor;
+		mDesc.curveAlpha = mDef.curveAlpha;
+		mDesc.fLifeTime = mDef.fLifeTime;
+
+		CBase* pCloned = m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC),
+			PROTO_OBJ_EFFECT_MESH, &mDesc);
+
+		if (nullptr == pCloned)
+			return E_FAIL;
+
+		CEffect_Mesh* pMesh = static_cast<CEffect_Mesh*>(pCloned);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(
+			m_tDesc.iSpawnLevel, m_tDesc.strLayerTag, pMesh)))
+		{
+			Safe_Release(pMesh);
+			return E_FAIL;
+		}
+
+		m_MeshEmitters.push_back(pMesh);
+	}
+
 	return S_OK;
 }
 
@@ -155,6 +200,17 @@ void CEffect::Late_Update(_float fTimeDelta)
 			break;
 		}
 	}
+	if (bAllDead)
+	{
+		for (CEffect_Mesh* pMesh : m_MeshEmitters)
+		{
+			if (nullptr != pMesh && !pMesh->Is_Dead())
+			{
+				bAllDead = false;
+				break;
+			}
+		}
+	}
 
 	if (bAllDead)
 		Set_Dead();
@@ -173,6 +229,7 @@ void CEffect::Stop()
 		if (nullptr != pEm)
 			pEm->Set_Emitting(false);
 	}
+	/* mesh는 spawn 개념 없음 — lifetime 자연 진행으로 종료 */
 }
 
 void CEffect::Destroy()
@@ -251,7 +308,8 @@ CGameObject* CEffect::Clone(void* pArg)
 
 void CEffect::Free()
 {
-	/* m_Emitters는 borrowed — Layer가 ref 보유. Release 하지 않는다. */
+	/* borrowed pointers — Layer가 ref 보유. Release 하지 않는다. */
 	m_Emitters.clear();
+	m_MeshEmitters.clear();
 	__super::Free();
 }

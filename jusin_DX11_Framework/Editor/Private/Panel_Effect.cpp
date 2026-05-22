@@ -320,7 +320,7 @@ HRESULT CPanel_Effect::Render()
 	if (ImGui::Button("Reset Preview Position"))
 		m_pSession->Reset_PreviewPosition();
 
-	ImGui::SameLine();
+
 
 	if (ImGui::Button("Add Emitter"))
 		m_pSession->Add_Emitter();
@@ -331,6 +331,19 @@ HRESULT CPanel_Effect::Render()
 	ImGui::BeginDisabled(!bHasSelection);
 	if (ImGui::Button("Remove Emitter"))
 		m_pSession->Erase_SelectedEmitter();
+	ImGui::EndDisabled();
+
+
+
+	if (ImGui::Button("Add Mesh"))
+		m_pSession->Add_Mesh();
+
+	ImGui::SameLine();
+
+	const _bool bHasMeshSelection = (m_pSession->Get_SelectedMesh() >= 0);
+	ImGui::BeginDisabled(!bHasMeshSelection);
+	if (ImGui::Button("Remove Mesh"))
+		m_pSession->Erase_SelectedMesh();
 	ImGui::EndDisabled();
 
 	ImGui::Separator();
@@ -357,250 +370,435 @@ HRESULT CPanel_Effect::Render()
 	if (nullptr == pEmitter)
 	{
 		ImGui::TextDisabled("No emitter selected.");
-		End_Panel();
-		return S_OK;
 	}
-
+	else
 	{
-		_char szName[128] = {};
-		strcpy_s(szName, pEmitter->strName.c_str());
 
-		if (ImGui::InputText("Name", szName, IM_ARRAYSIZE(szName)))
 		{
-			pEmitter->strName = szName;
-			m_pSession->Mark_Dirty("Emitter name changed");
-		}
-	}
+			_char szName[128] = {};
+			strcpy_s(szName, pEmitter->strName.c_str());
 
-	{
-		_int iCapacity = static_cast<_int>(pEmitter->iCapacity);
-		if (ImGui::InputInt("Capacity", &iCapacity))
+			if (ImGui::InputText("Name", szName, IM_ARRAYSIZE(szName)))
+			{
+				pEmitter->strName = szName;
+				m_pSession->Mark_Dirty("Emitter name changed");
+			}
+		}
+
 		{
-			pEmitter->iCapacity = static_cast<_uint>(max(1, iCapacity));
-			m_pSession->Mark_Dirty("Emitter capacity changed");
+			_int iCapacity = static_cast<_int>(pEmitter->iCapacity);
+			if (ImGui::InputInt("Capacity", &iCapacity))
+			{
+				pEmitter->iCapacity = static_cast<_uint>(max(1, iCapacity));
+				m_pSession->Mark_Dirty("Emitter capacity changed");
+			}
 		}
-	}
 
-	if (ImGui::InputFloat("Spawn Rate", &pEmitter->fSpawnRate, 1.f, 10.f, "%.2f"))
-	{
-		pEmitter->fSpawnRate = max(0.f, pEmitter->fSpawnRate);
-		m_pSession->Mark_Dirty("Emitter spawn rate changed");
-	}
-
-	{
-		_int iBurstCount = static_cast<_int>(pEmitter->iBurstCount);
-		if (ImGui::InputInt("Burst Count", &iBurstCount))
+		if (ImGui::InputFloat("Spawn Rate", &pEmitter->fSpawnRate, 1.f, 10.f, "%.2f"))
 		{
-			pEmitter->iBurstCount = static_cast<_uint>(max(0, iBurstCount));
-			m_pSession->Mark_Dirty("Emitter burst count changed");
+			pEmitter->fSpawnRate = max(0.f, pEmitter->fSpawnRate);
+			m_pSession->Mark_Dirty("Emitter spawn rate changed");
 		}
-	}
 
-	if (ImGui::DragFloat2("Life Time", &pEmitter->vLifeTimeRange.x, 0.01f, 0.01f, 60.f, "%.2f"))
-	{
-		if (pEmitter->vLifeTimeRange.x > pEmitter->vLifeTimeRange.y)
-			std::swap(pEmitter->vLifeTimeRange.x, pEmitter->vLifeTimeRange.y);
-
-		m_pSession->Mark_Dirty("Emitter lifetime changed");
-	}
-
-	if (ImGui::DragFloat2("Speed", &pEmitter->vSpeedRange.x, 0.01f, 0.f, 100.f, "%.2f"))
-	{
-		if (pEmitter->vSpeedRange.x > pEmitter->vSpeedRange.y)
-			std::swap(pEmitter->vSpeedRange.x, pEmitter->vSpeedRange.y);
-
-		m_pSession->Mark_Dirty("Emitter speed changed");
-	}
-
-	if (ImGui::DragFloat2("Size", &pEmitter->vSizeRange.x, 0.01f, 0.f, 100.f, "%.2f"))
-	{
-		if (pEmitter->vSizeRange.x > pEmitter->vSizeRange.y)
-			std::swap(pEmitter->vSizeRange.x, pEmitter->vSizeRange.y);
-
-		m_pSession->Mark_Dirty("Emitter size changed");
-	}
-
-	if (ImGui::DragFloat2("Rotation", &pEmitter->vRotationRange.x, 0.01f, -XM_2PI, XM_2PI, "%.2f"))
-	{
-		if (pEmitter->vRotationRange.x > pEmitter->vRotationRange.y)
-			std::swap(pEmitter->vRotationRange.x, pEmitter->vRotationRange.y);
-
-		m_pSession->Mark_Dirty("Emitter rotation changed");
-	}
-
-	if (ImGui::DragFloat2("Rotation Speed", &pEmitter->vRotationSpeedRange.x, 0.01f, -20.f, 20.f,
-		"%.2f"))
-	{
-		if (pEmitter->vRotationSpeedRange.x > pEmitter->vRotationSpeedRange.y)
-			std::swap(pEmitter->vRotationSpeedRange.x, pEmitter->vRotationSpeedRange.y);
-
-		m_pSession->Mark_Dirty("Emitter rotation speed changed");
-	}
-
-	if (ImGui::DragFloat3("Emit Direction", &pEmitter->vEmitDirection.x, 0.01f, -1.f, 1.f, "%.2f"))
-		m_pSession->Mark_Dirty("Emitter direction changed");
-
-	if (ImGui::DragFloat("Cone Half Angle", &pEmitter->fEmitConeHalfAngle, 0.01f, 0.f, XM_PI, "%.3f"))
-		m_pSession->Mark_Dirty("Emitter cone changed");
-
-	{
-		const char* pBillboardLabels[] = { "VIEW_ALIGNED", "AXIS_LOCKED", "FIXED_NORMAL", "VELOCITY_ALIGNED" };
-
-		_int iBillboard = static_cast<_int>(pEmitter->eBillboard);
-
-		if (ImGui::Combo("Billboard", &iBillboard, pBillboardLabels, IM_ARRAYSIZE(pBillboardLabels)))
 		{
-			pEmitter->eBillboard =
-				static_cast<CParticleEmitter::EMITTER_DESC::BILLBOARD_MODE>(iBillboard);
-			m_pSession->Mark_Dirty("Emitter billboard changed");
+			_int iBurstCount = static_cast<_int>(pEmitter->iBurstCount);
+			if (ImGui::InputInt("Burst Count", &iBurstCount))
+			{
+				pEmitter->iBurstCount = static_cast<_uint>(max(0, iBurstCount));
+				m_pSession->Mark_Dirty("Emitter burst count changed");
+			}
 		}
-	}
 
-	if (ImGui::DragFloat3("Fixed Axis", &pEmitter->vBillboardFixedAxis.x, 0.01f, -1.f, 1.f, "%.2f"))
-		m_pSession->Mark_Dirty("Emitter fixed axis changed");
-
-	{
-		const char* pBlendLabels[] = { "ALPHA", "ADDITIVE" };
-		_int iBlend = static_cast<_int>(pEmitter->eBlend);
-
-		if (ImGui::Combo("Blend", &iBlend, pBlendLabels, IM_ARRAYSIZE(pBlendLabels)))
+		if (ImGui::DragFloat2("Life Time", &pEmitter->vLifeTimeRange.x, 0.01f, 0.01f, 60.f, "%.2f"))
 		{
-			pEmitter->eBlend =
-				static_cast<CParticleEmitter::EMITTER_DESC::BLEND_MODE>(iBlend);
-			m_pSession->Mark_Dirty("Emitter blend changed");
+			if (pEmitter->vLifeTimeRange.x > pEmitter->vLifeTimeRange.y)
+				std::swap(pEmitter->vLifeTimeRange.x, pEmitter->vLifeTimeRange.y);
+
+			m_pSession->Mark_Dirty("Emitter lifetime changed");
 		}
-	}
 
-	if (ImGui::Checkbox("Ignore Depth", &pEmitter->bIgnoreDepth))
-		m_pSession->Mark_Dirty("Emitter ignore depth flag changed");
-
-	if (ImGui::Checkbox("Auto Destroy On Empty", &pEmitter->bAutoDestroyOnEmpty))
-		m_pSession->Mark_Dirty("Emitter auto destroy flag changed");
-
-	if (ImGui::DragFloat("Start Delay", &pEmitter->fStartDelay, 0.01f, 0.f, 30.f, "%.3f"))
-	{
-		pEmitter->fStartDelay = max(0.f, pEmitter->fStartDelay);
-		m_pSession->Mark_Dirty("Emitter start delay changed");
-	}
-
-	{
-		_int iCols = static_cast<_int>(pEmitter->iAtlasCols);
-		if (ImGui::InputInt("Atlas Cols", &iCols))
+		if (ImGui::DragFloat2("Speed", &pEmitter->vSpeedRange.x, 0.01f, 0.f, 100.f, "%.2f"))
 		{
-			pEmitter->iAtlasCols = static_cast<_uint>(max(1, iCols));
-			m_pSession->Mark_Dirty("Emitter atlas cols changed");
-		}
-	}
+			if (pEmitter->vSpeedRange.x > pEmitter->vSpeedRange.y)
+				std::swap(pEmitter->vSpeedRange.x, pEmitter->vSpeedRange.y);
 
-	{
-		_int iRows = static_cast<_int>(pEmitter->iAtlasRows);
-		if (ImGui::InputInt("Atlas Rows", &iRows))
+			m_pSession->Mark_Dirty("Emitter speed changed");
+		}
+
+		if (ImGui::DragFloat2("Size", &pEmitter->vSizeRange.x, 0.01f, 0.f, 100.f, "%.2f"))
 		{
-			pEmitter->iAtlasRows = static_cast<_uint>(max(1, iRows));
-			m_pSession->Mark_Dirty("Emitter atlas rows changed");
+			if (pEmitter->vSizeRange.x > pEmitter->vSizeRange.y)
+				std::swap(pEmitter->vSizeRange.x, pEmitter->vSizeRange.y);
+
+			m_pSession->Mark_Dirty("Emitter size changed");
 		}
-	}
 
-	if (ImGui::DragFloat("Atlas FPS", &pEmitter->fAtlasFps, 0.5f, 0.f, 240.f, "%.2f"))
-	{
-		pEmitter->fAtlasFps = max(0.f, pEmitter->fAtlasFps);
-		m_pSession->Mark_Dirty("Emitter atlas fps changed");
-	}
-
-	if (ImGui::Checkbox("Atlas Loop", &pEmitter->bAtlasLoop))
-		m_pSession->Mark_Dirty("Emitter atlas loop changed");
-
-	if (ImGui::Checkbox("Mirror UV", &pEmitter->bMirrorUV))
-		m_pSession->Mark_Dirty("Emitter mirror uv changed");
-
-	if (pEmitter->bMirrorUV
-		&& (pEmitter->iAtlasCols > 1 || pEmitter->iAtlasRows > 1))
-	{
-		ImGui::TextColored(ImVec4(1.f, 0.6f, 0.2f, 1.f),
-			"[!] Mirror UV is active — atlas settings are ignored.");
-	}
-
-	const auto& TextureOptions = Game_PKM::g_EffectTextureOptions;
-
-	_int iTexture = 0;
-	for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
-	{
-		if (TextureOptions[i].strTag == pEmitter->strTextureProtoTag)
+		if (ImGui::DragFloat2("Rotation", &pEmitter->vRotationRange.x, 0.01f, -XM_2PI, XM_2PI, "%.2f"))
 		{
-			iTexture = i;
-			break;
-		}
-	}
+			if (pEmitter->vRotationRange.x > pEmitter->vRotationRange.y)
+				std::swap(pEmitter->vRotationRange.x, pEmitter->vRotationRange.y);
 
-	if (ImGui::BeginCombo("Texture", TextureOptions[iTexture].pLabel))
-	{
+			m_pSession->Mark_Dirty("Emitter rotation changed");
+		}
+
+		if (ImGui::DragFloat2("Rotation Speed", &pEmitter->vRotationSpeedRange.x, 0.01f, -20.f, 20.f,
+			"%.2f"))
+		{
+			if (pEmitter->vRotationSpeedRange.x > pEmitter->vRotationSpeedRange.y)
+				std::swap(pEmitter->vRotationSpeedRange.x, pEmitter->vRotationSpeedRange.y);
+
+			m_pSession->Mark_Dirty("Emitter rotation speed changed");
+		}
+
+		if (ImGui::DragFloat3("Emit Direction", &pEmitter->vEmitDirection.x, 0.01f, -1.f, 1.f, "%.2f"))
+			m_pSession->Mark_Dirty("Emitter direction changed");
+
+		if (ImGui::DragFloat("Cone Half Angle", &pEmitter->fEmitConeHalfAngle, 0.01f, 0.f, XM_PI, "%.3f"))
+			m_pSession->Mark_Dirty("Emitter cone changed");
+
+		{
+			const char* pBillboardLabels[] = { "VIEW_ALIGNED", "AXIS_LOCKED", "FIXED_NORMAL", "VELOCITY_ALIGNED" };
+
+			_int iBillboard = static_cast<_int>(pEmitter->eBillboard);
+
+			if (ImGui::Combo("Billboard", &iBillboard, pBillboardLabels, IM_ARRAYSIZE(pBillboardLabels)))
+			{
+				pEmitter->eBillboard =
+					static_cast<BILLBOARD_MODE>(iBillboard);
+				m_pSession->Mark_Dirty("Emitter billboard changed");
+			}
+		}
+
+		if (ImGui::DragFloat3("Fixed Axis", &pEmitter->vBillboardFixedAxis.x, 0.01f, -1.f, 1.f, "%.2f"))
+			m_pSession->Mark_Dirty("Emitter fixed axis changed");
+
+		{
+			const char* pBlendLabels[] = { "ALPHA", "ADDITIVE" };
+			_int iBlend = static_cast<_int>(pEmitter->eBlend);
+
+			if (ImGui::Combo("Blend", &iBlend, pBlendLabels, IM_ARRAYSIZE(pBlendLabels)))
+			{
+				pEmitter->eBlend =
+					static_cast<BLEND_MODE>(iBlend);
+				m_pSession->Mark_Dirty("Emitter blend changed");
+			}
+		}
+
+		if (ImGui::Checkbox("Ignore Depth", &pEmitter->bIgnoreDepth))
+			m_pSession->Mark_Dirty("Emitter ignore depth flag changed");
+
+		if (ImGui::Checkbox("Auto Destroy On Empty", &pEmitter->bAutoDestroyOnEmpty))
+			m_pSession->Mark_Dirty("Emitter auto destroy flag changed");
+
+		if (ImGui::DragFloat("Start Delay", &pEmitter->fStartDelay, 0.01f, 0.f, 30.f, "%.3f"))
+		{
+			pEmitter->fStartDelay = max(0.f, pEmitter->fStartDelay);
+			m_pSession->Mark_Dirty("Emitter start delay changed");
+		}
+
+		{
+			_int iCols = static_cast<_int>(pEmitter->iAtlasCols);
+			if (ImGui::InputInt("Atlas Cols", &iCols))
+			{
+				pEmitter->iAtlasCols = static_cast<_uint>(max(1, iCols));
+				m_pSession->Mark_Dirty("Emitter atlas cols changed");
+			}
+		}
+
+		{
+			_int iRows = static_cast<_int>(pEmitter->iAtlasRows);
+			if (ImGui::InputInt("Atlas Rows", &iRows))
+			{
+				pEmitter->iAtlasRows = static_cast<_uint>(max(1, iRows));
+				m_pSession->Mark_Dirty("Emitter atlas rows changed");
+			}
+		}
+
+		if (ImGui::DragFloat("Atlas FPS", &pEmitter->fAtlasFps, 0.5f, 0.f, 240.f, "%.2f"))
+		{
+			pEmitter->fAtlasFps = max(0.f, pEmitter->fAtlasFps);
+			m_pSession->Mark_Dirty("Emitter atlas fps changed");
+		}
+
+		if (ImGui::Checkbox("Atlas Loop", &pEmitter->bAtlasLoop))
+			m_pSession->Mark_Dirty("Emitter atlas loop changed");
+
+		if (ImGui::Checkbox("Mirror UV", &pEmitter->bMirrorUV))
+			m_pSession->Mark_Dirty("Emitter mirror uv changed");
+
+		if (pEmitter->bMirrorUV
+			&& (pEmitter->iAtlasCols > 1 || pEmitter->iAtlasRows > 1))
+		{
+			ImGui::TextColored(ImVec4(1.f, 0.6f, 0.2f, 1.f),
+				"[!] Mirror UV is active — atlas settings are ignored.");
+		}
+
+		const auto& TextureOptions = Game_PKM::g_EffectTextureOptions;
+
+		_int iTexture = 0;
 		for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
 		{
-			const _bool bSelected = (iTexture == i);
-			if (ImGui::Selectable(TextureOptions[i].pLabel, bSelected))
+			if (TextureOptions[i].strTag == pEmitter->strTextureProtoTag)
 			{
-				pEmitter->strTextureProtoTag = TextureOptions[i].strTag;
-				m_pSession->Mark_Dirty("Emitter texture changed");
+				iTexture = i;
+				break;
+			}
+		}
+
+		if (ImGui::BeginCombo("Texture", TextureOptions[iTexture].pLabel))
+		{
+			for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
+			{
+				const _bool bSelected = (iTexture == i);
+				if (ImGui::Selectable(TextureOptions[i].pLabel, bSelected))
+				{
+					pEmitter->strTextureProtoTag = TextureOptions[i].strTag;
+					m_pSession->Mark_Dirty("Emitter texture changed");
+				}
+
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
 			}
 
-			if (bSelected)
-				ImGui::SetItemDefaultFocus();
+			ImGui::EndCombo();
 		}
 
-		ImGui::EndCombo();
+		if (ImGui::CollapsingHeader("Curves", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			Plot_FloatCurve("Size Curve", pEmitter->curveSize);
+
+			if (ImGui::Button("Size Pop"))
+			{
+				Set_SizePopCurve(pEmitter->curveSize);
+				m_pSession->Mark_Dirty("Size curve preset changed");
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear Size"))
+			{
+				pEmitter->curveSize.Clear();
+				m_pSession->Mark_Dirty("Size curve cleared");
+			}
+			Draw_FloatCurveKeys("Size Keys", pEmitter->curveSize, m_pSession, "Size curve key changed", 0.f, 2.f);
+			Plot_ColorCurve("Color Curve", pEmitter->curveColor);
+
+			if (ImGui::Button("Fire Color"))
+			{
+				Set_FireColorCurve(pEmitter->curveColor);
+				m_pSession->Mark_Dirty("Color curve preset changed");
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear Color"))
+			{
+				pEmitter->curveColor.Clear();
+				m_pSession->Mark_Dirty("Color curve cleared");
+			}
+			Draw_ColorCurveKeys("Color Keys", pEmitter->curveColor, m_pSession, "Color curve key changed");
+			Plot_FloatCurve("Alpha Curve", pEmitter->curveAlpha);
+
+			if (ImGui::Button("Fade Alpha"))
+			{
+				Set_FadeAlphaCurve(pEmitter->curveAlpha);
+				m_pSession->Mark_Dirty("Alpha curve preset changed");
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Clear Alpha"))
+			{
+				pEmitter->curveAlpha.Clear();
+				m_pSession->Mark_Dirty("Alpha curve cleared");
+			}
+
+			Draw_FloatCurveKeys("Alpha Keys", pEmitter->curveAlpha, m_pSession, "Alpha curve key changed", 0.f, 1.f);
+		}
 	}
 
-	if (ImGui::CollapsingHeader("Curves", ImGuiTreeNodeFlags_DefaultOpen))
+	ImGui::Separator();
+	ImGui::Text("Meshes: %d", static_cast<_int>(doc.Meshes.size()));
+
+	for (_int i = 0; i < static_cast<_int>(doc.Meshes.size()); ++i)
 	{
-		Plot_FloatCurve("Size Curve", pEmitter->curveSize);
+		const MESH_EFFECT_DEFINITION& mesh = doc.Meshes[i];
 
-		if (ImGui::Button("Size Pop"))
+		_string label = mesh.strName.empty()
+			? ("Mesh " + std::to_string(i))
+			: mesh.strName;
+
+		/* emitter Selectable과 ID 충돌 회피 */
+		ImGui::PushID(i + 10000);
+
+		const _bool bSelected = (m_pSession->Get_SelectedMesh() == i);
+		if (ImGui::Selectable(label.c_str(), bSelected))
+			m_pSession->Set_SelectedMesh(i);
+
+		ImGui::PopID();
+	}
+
+	ImGui::Separator();
+	ImGui::TextUnformatted("Mesh Inspector");
+
+	MESH_EFFECT_DEFINITION* pMesh = m_pSession->Get_SelectedMeshMutable();
+	if (nullptr == pMesh)
+	{
+		ImGui::TextDisabled("No mesh selected.");
+	}
+	else
+	{
 		{
-			Set_SizePopCurve(pEmitter->curveSize);
-			m_pSession->Mark_Dirty("Size curve preset changed");
+			_char szName[128] = {};
+			strcpy_s(szName, pMesh->strName.c_str());
+
+			if (ImGui::InputText("Name##Mesh", szName, IM_ARRAYSIZE(szName)))
+			{
+				pMesh->strName = szName;
+				m_pSession->Mark_Dirty("Mesh name changed");
+			}
 		}
 
-		ImGui::SameLine();
-
-		if (ImGui::Button("Clear Size"))
 		{
-			pEmitter->curveSize.Clear();
-			m_pSession->Mark_Dirty("Size curve cleared");
-		}
-		Draw_FloatCurveKeys("Size Keys", pEmitter->curveSize, m_pSession, "Size curve key changed", 0.f, 2.f);
-		Plot_ColorCurve("Color Curve", pEmitter->curveColor);
+			const auto& MeshOptions = Game_PKM::g_EffectMeshOptions;
 
-		if (ImGui::Button("Fire Color"))
-		{
-			Set_FireColorCurve(pEmitter->curveColor);
-			m_pSession->Mark_Dirty("Color curve preset changed");
-		}
+			_int iModel = 0;
+			for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(MeshOptions)); ++i)
+			{
+				if (MeshOptions[i].strTag == pMesh->strModelProtoTag)
+				{
+					iModel = i;
+					break;
+				}
+			}
 
-		ImGui::SameLine();
-
-		if (ImGui::Button("Clear Color"))
-		{
-			pEmitter->curveColor.Clear();
-			m_pSession->Mark_Dirty("Color curve cleared");
-		}
-		Draw_ColorCurveKeys("Color Keys", pEmitter->curveColor, m_pSession, "Color curve key changed");
-		Plot_FloatCurve("Alpha Curve", pEmitter->curveAlpha);
-
-		if (ImGui::Button("Fade Alpha"))
-		{
-			Set_FadeAlphaCurve(pEmitter->curveAlpha);
-			m_pSession->Mark_Dirty("Alpha curve preset changed");
+			if (ImGui::BeginCombo("Model", MeshOptions[iModel].pLabel))
+			{
+				for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(MeshOptions)); ++i)
+				{
+					const _bool bSelected = (iModel == i);
+					if (ImGui::Selectable(MeshOptions[i].pLabel, bSelected))
+					{
+						pMesh->strModelProtoTag = MeshOptions[i].strTag;
+						m_pSession->Mark_Dirty("Mesh model changed");
+					}
+					if (bSelected) ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
 		}
 
-		ImGui::SameLine();
-
-		if (ImGui::Button("Clear Alpha"))
 		{
-			pEmitter->curveAlpha.Clear();
-			m_pSession->Mark_Dirty("Alpha curve cleared");
+			const auto& TextureOptions = Game_PKM::g_EffectTextureOptions;
+
+			_int iTexture = 0;
+			for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
+			{
+				if (TextureOptions[i].strTag == pMesh->strTextureProtoTag)
+				{
+					iTexture = i;
+					break;
+				}
+			}
+
+			if (ImGui::BeginCombo("Texture##Mesh", TextureOptions[iTexture].pLabel))
+			{
+				for (_int i = 0; i < static_cast<_int>(IM_ARRAYSIZE(TextureOptions)); ++i)
+				{
+					const _bool bSelected = (iTexture == i);
+					if (ImGui::Selectable(TextureOptions[i].pLabel, bSelected))
+					{
+						pMesh->strTextureProtoTag = TextureOptions[i].strTag;
+						m_pSession->Mark_Dirty("Mesh texture changed");
+					}
+					if (bSelected) ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
 		}
 
-		Draw_FloatCurveKeys("Alpha Keys", pEmitter->curveAlpha, m_pSession, "Alpha curve key changed", 0.f, 1.f);
+		{
+			const char* pBlendLabels[] = { "ALPHA", "ADDITIVE" };
+			_int iBlend = static_cast<_int>(pMesh->eBlend);
+
+			if (ImGui::Combo("Blend##Mesh", &iBlend, pBlendLabels, IM_ARRAYSIZE(pBlendLabels)))
+			{
+				pMesh->eBlend = static_cast<BLEND_MODE>(iBlend);
+				m_pSession->Mark_Dirty("Mesh blend changed");
+			}
+		}
+
+		if (ImGui::Checkbox("Ignore Depth##Mesh", &pMesh->bIgnoreDepth))
+			m_pSession->Mark_Dirty("Mesh ignore depth flag changed");
+
+		{
+			const char* pScaleAxisLabels[] = { "Z_ONLY", "UNIFORM" };
+			_int iScaleAxis = static_cast<_int>(pMesh->eScaleAxis);
+
+			if (ImGui::Combo("Scale Axis", &iScaleAxis, pScaleAxisLabels,
+				IM_ARRAYSIZE(pScaleAxisLabels)))
+			{
+				pMesh->eScaleAxis = static_cast<MESH_EFFECT_DEFINITION::SCALE_AXIS>(iScaleAxis);
+				m_pSession->Mark_Dirty("Mesh scale axis changed");
+			}
+		}
+
+		if (ImGui::DragFloat("Life Time##Mesh", &pMesh->fLifeTime, 0.01f, 0.01f, 60.f, "%.2f"))
+		{
+			pMesh->fLifeTime = max(0.01f, pMesh->fLifeTime);
+			m_pSession->Mark_Dirty("Mesh life time changed");
+		}
+
+		if (ImGui::CollapsingHeader("Curves##Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			Plot_FloatCurve("Scale Curve", pMesh->curveScale);
+
+			if (ImGui::Button("Size Pop##MeshScale"))
+			{
+				Set_SizePopCurve(pMesh->curveScale);
+				m_pSession->Mark_Dirty("Mesh scale curve preset changed");
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Clear Scale"))
+			{
+				pMesh->curveScale.Clear();
+				m_pSession->Mark_Dirty("Mesh scale curve cleared");
+			}
+			Draw_FloatCurveKeys("Scale Keys##Mesh", pMesh->curveScale, m_pSession,
+				"Mesh scale curve key changed", 0.f, 5.f);
+
+			Plot_ColorCurve("Color Curve##Mesh", pMesh->curveColor);
+
+			if (ImGui::Button("Fire Color##Mesh"))
+			{
+				Set_FireColorCurve(pMesh->curveColor);
+				m_pSession->Mark_Dirty("Mesh color curve preset changed");
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Clear Color##Mesh"))
+			{
+				pMesh->curveColor.Clear();
+				m_pSession->Mark_Dirty("Mesh color curve cleared");
+			}
+			Draw_ColorCurveKeys("Color Keys##Mesh", pMesh->curveColor, m_pSession,
+				"Mesh color curve key changed");
+
+			Plot_FloatCurve("Alpha Curve##Mesh", pMesh->curveAlpha);
+
+			if (ImGui::Button("Fade Alpha##Mesh"))
+			{
+				Set_FadeAlphaCurve(pMesh->curveAlpha);
+				m_pSession->Mark_Dirty("Mesh alpha curve preset changed");
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Clear Alpha##Mesh"))
+			{
+				pMesh->curveAlpha.Clear();
+				m_pSession->Mark_Dirty("Mesh alpha curve cleared");
+			}
+			Draw_FloatCurveKeys("Alpha Keys##Mesh", pMesh->curveAlpha, m_pSession,
+				"Mesh alpha curve key changed", 0.f, 1.f);
+		}
 	}
 
 	End_Panel();
