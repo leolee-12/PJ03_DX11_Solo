@@ -229,5 +229,8 @@ CComponent* CVIBuffer_Terrain::Clone(void* pArg)
 }
 void CVIBuffer_Terrain::Free()
 {
+	Safe_Release(m_pQuadTree);
+	Safe_Delete_Array(m_pVtxPos);
+
 	__super::Free();
 }
