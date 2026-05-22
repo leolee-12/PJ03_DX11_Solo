@@ -37,6 +37,7 @@ public:
 	const _float3& Get_RootMotionDelta() const;
 	_bool Was_AnimFinishedThisFrame() const { return m_bAnimFinishedThisFrame; }
 	_bool Set_Anim(_uint iAnimIdx, _bool isLoop = false, _float fBlendDuration = g_kDefaultBlendDuration);
+	WNameID Get_ModelProtoTag() const { return m_strModelProtoTag; }
 
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

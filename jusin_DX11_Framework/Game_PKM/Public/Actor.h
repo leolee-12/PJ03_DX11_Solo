@@ -20,9 +20,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual void Tick_Movement(_float fTimeDelta);
 
-public:
 	_bool CanInteract(const INTERACTION_CONTEXT& ctx) const;
 	_bool TryInteract(const INTERACTION_CONTEXT& ctx);
+	CBody* Get_Body() const { return m_pBody; }
 
 protected:
 	CBody* m_pBody = { nullptr };

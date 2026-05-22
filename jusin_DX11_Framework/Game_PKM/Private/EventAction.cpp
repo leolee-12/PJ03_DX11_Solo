@@ -3,6 +3,7 @@
 #include "Camera_Free.h"
 #include "Spawn_Manager.h"
 #include "Actor_NPC.h"
+#include "Battle_AnimDef.h"
 
 #include "GameInstance.h"
 
@@ -99,6 +100,31 @@ namespace
 		return SPAWN_NPC_PROFILE::NONE;
 	}
 
+	ANIM_KIND Parse_AnimKind_(const _string& strValue)
+	{
+		if ("IDLE" == strValue)            return ANIM_KIND::IDLE;
+		if ("WALK" == strValue)            return ANIM_KIND::WALK;
+		if ("RUN" == strValue)             return ANIM_KIND::RUN;
+		if ("TALK" == strValue)            return ANIM_KIND::TALK;
+		if ("HURT" == strValue)            return ANIM_KIND::HURT;
+		if ("FAINT" == strValue)           return ANIM_KIND::FAINT;
+		if ("INTRO" == strValue)           return ANIM_KIND::INTRO;
+		if ("FOCUS" == strValue)           return ANIM_KIND::FOCUS;
+		if ("ORDER" == strValue)           return ANIM_KIND::ORDER;
+		if ("THROW" == strValue)           return ANIM_KIND::THROW;
+		if ("SWITCH" == strValue)          return ANIM_KIND::SWITCH;
+		if ("ATTACK_PHYSICAL" == strValue) return ANIM_KIND::ATTACK_PHYSICAL;
+		if ("ATTACK_SPECIAL" == strValue)  return ANIM_KIND::ATTACK_SPECIAL;
+		if ("IDLE_1" == strValue)          return ANIM_KIND::IDLE_1;
+		if ("IDLE_2" == strValue)          return ANIM_KIND::IDLE_2;
+		if ("IDLE_3" == strValue)          return ANIM_KIND::IDLE_3;
+		if ("EVENT_1" == strValue)         return ANIM_KIND::EVENT_1;
+		if ("EVENT_2" == strValue)         return ANIM_KIND::EVENT_2;
+		if ("EVENT_3" == strValue)         return ANIM_KIND::EVENT_3;
+
+		return ANIM_KIND::END;
+	}
+
 	template<size_t N>
 	void Copy_Wide_To_Buffer_(_tchar(&szOut)[N], const _wstring& strValue)
 	{
@@ -188,6 +214,11 @@ namespace
 			{
 				tContext.ePrevInputState = tContext.pGameInstance->Get_InputState();
 				tContext.bInputLockedByEvent = true;
+
+#ifdef _DEBUG
+				OutputDebugStringA(("[Event] LockInput saved PrevInputState=" +
+					std::to_string(static_cast<_int>(tContext.ePrevInputState)) + "\n").c_str());
+#endif
 			}
 
 			tContext.pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
@@ -212,6 +243,10 @@ namespace
 
 			if (true == tContext.bInputLockedByEvent)
 			{
+#ifdef _DEBUG
+				OutputDebugStringA(("[Event] RestoreInput restoring to=" +
+					std::to_string(static_cast<_int>(tContext.ePrevInputState)) + "\n").c_str());
+#endif
 				tContext.pGameInstance->Set_InputState(tContext.ePrevInputState);
 				tContext.bInputLockedByEvent = false;
 			}
@@ -759,6 +794,279 @@ namespace
 	private:
 		_wstring m_strActorAlias;
 	};
+
+	class CEventAction_ActorFace final : public CEventAction
+	{
+	public:
+		virtual EVENT_ACTION_KIND Get_Kind() const override { return EVENT_ACTION_KIND::ACTOR_FACE; }
+
+		virtual HRESULT Initialize(const EVENT_STEP_DESC& tDesc) override
+		{
+			m_strActorAlias = To_Wide_(Read_String_(tDesc.Params, "Actor", "Target"));
+			m_strTargetAlias = To_Wide_(Read_String_(tDesc.Params, "Target", "Caller"));
+			m_bWait = Read_Bool_(tDesc.Params, "Wait", false);
+			return S_OK;
+		}
+
+		virtual HRESULT Start(EVENT_CONTEXT& tContext) override
+		{
+			CGameObject* pActor = Resolve_Actor_(tContext, m_strActorAlias);
+			CGameObject* pTarget = Resolve_Actor_(tContext, m_strTargetAlias);
+
+			if (nullptr == pActor || nullptr == pTarget ||
+				true == pActor->Is_Dead() || true == pTarget->Is_Dead())
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorFace: alias unresolved/dead "
+					"(Actor/Target nullptr or Is_Dead)\n");
+#endif
+				return E_FAIL;
+			}
+
+			CActor_NPC* pNPC = dynamic_cast<CActor_NPC*>(pActor);
+			if (nullptr == pNPC)
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorFace: Actor is not CActor_NPC\n");
+#endif
+				return E_FAIL;
+			}
+
+			if (nullptr == pTarget->Get_Transform())
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorFace: Target has no Transform\n");
+#endif
+				return E_FAIL;
+			}
+
+			const _vector vTargetPos = pTarget->Get_Transform()->Get_State(STATE::POSITION);
+			pNPC->Face_To(vTargetPos);
+
+			m_pTrackedNPC = pNPC;
+			return S_OK;
+		}
+
+		virtual EVENT_PLAY_STATE Update(EVENT_CONTEXT&, _float) override
+		{
+			if (false == m_bWait)
+				return EVENT_PLAY_STATE::FINISHED;
+
+			if (nullptr == m_pTrackedNPC || true == m_pTrackedNPC->Is_Dead())
+				return EVENT_PLAY_STATE::FINISHED;
+
+			return true == m_pTrackedNPC->Is_FaceTurnActive()
+				? EVENT_PLAY_STATE::WAITING
+				: EVENT_PLAY_STATE::FINISHED;
+		}
+
+	private:
+		_wstring m_strActorAlias;
+		_wstring m_strTargetAlias;
+		_bool m_bWait = { false };
+		CActor_NPC* m_pTrackedNPC = { nullptr }; // weak
+	};
+
+	class CEventAction_ActorSetAnim final : public CEventAction
+	{
+	public:
+		virtual EVENT_ACTION_KIND Get_Kind() const override { return EVENT_ACTION_KIND::ACTOR_SET_ANIM; }
+
+		virtual HRESULT Initialize(const EVENT_STEP_DESC& tDesc) override
+		{
+			m_strActorAlias = To_Wide_(Read_String_(tDesc.Params, "Actor", "Target"));
+			m_eAnimKind = Parse_AnimKind_(Read_String_(tDesc.Params, "AnimKind", ""));
+			m_bLoop = Read_Bool_(tDesc.Params, "Loop", true);
+
+			if (false == Parse_Float_(tDesc.Params, "Blend", m_fBlend))
+				m_fBlend = 0.2f;
+
+			if (ANIM_KIND::END == m_eAnimKind)
+				return E_FAIL;
+
+			return S_OK;
+		}
+
+		virtual HRESULT Start(EVENT_CONTEXT& tContext) override
+		{
+			CGameObject* pActor = Resolve_Actor_(tContext, m_strActorAlias);
+			if (nullptr == pActor || true == pActor->Is_Dead())
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorSetAnim: alias unresolved or Is_Dead\n");
+#endif
+				return E_FAIL;
+			}
+
+			CActor* pActorBase = dynamic_cast<CActor*>(pActor);
+			if (nullptr == pActorBase || nullptr == pActorBase->Get_Body())
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorSetAnim: dynamic_cast<CActor*> or Get_Body() nullptr\n");
+#endif
+				return E_FAIL;
+			}
+
+			CBody* pBody = pActorBase->Get_Body();
+			const _uint iIndex = BattleAnim::Find_AnimIndex(pBody->Get_ModelProtoTag(), m_eAnimKind);
+			pBody->Set_Anim(iIndex, m_bLoop, m_fBlend);
+
+			return S_OK;
+		}
+
+		virtual EVENT_PLAY_STATE Update(EVENT_CONTEXT&, _float) override
+		{
+			return EVENT_PLAY_STATE::FINISHED;
+		}
+
+	private:
+		_wstring m_strActorAlias;
+		ANIM_KIND m_eAnimKind = { ANIM_KIND::END };
+		_bool m_bLoop = { true };
+		_float m_fBlend = { 0.2f };
+	};
+
+	class CEventAction_ActorMoveTo final : public CEventAction
+	{
+	public:
+		virtual EVENT_ACTION_KIND Get_Kind() const override { return EVENT_ACTION_KIND::ACTOR_MOVE_TO; }
+
+		virtual HRESULT Initialize(const EVENT_STEP_DESC& tDesc) override
+		{
+			m_strActorAlias = To_Wide_(Read_String_(tDesc.Params, "Actor", "Target"));
+
+			if (false == Parse_Float3_(tDesc.Params, "Position", m_vTargetPos))
+				return E_FAIL;
+
+			if (false == Parse_Float_(tDesc.Params, "Speed", m_fSpeed))
+				m_fSpeed = 3.f;
+
+			if (false == Parse_Float_(tDesc.Params, "ArrivalRadius", m_fArrivalRadius))
+				m_fArrivalRadius = 0.15f;
+
+			m_eWalkKind = Parse_AnimKind_(Read_String_(tDesc.Params, "WalkAnim", "WALK"));
+			m_eEndKind = Parse_AnimKind_(Read_String_(tDesc.Params, "EndAnim", "IDLE"));
+
+			if (false == Parse_Float_(tDesc.Params, "Blend", m_fBlend))
+				m_fBlend = 0.2f;
+
+			return S_OK;
+		}
+
+		virtual HRESULT Start(EVENT_CONTEXT& tContext) override
+		{
+			CGameObject* pActor = Resolve_Actor_(tContext, m_strActorAlias);
+			if (nullptr == pActor || true == pActor->Is_Dead() || nullptr == pActor->Get_Transform())
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorMoveTo: alias unresolved/dead or no Transform\n");
+#endif
+				return E_FAIL;
+			}
+
+			m_pTrackedActor = dynamic_cast<CActor*>(pActor);
+			if (nullptr == m_pTrackedActor)
+			{
+#ifdef _DEBUG
+				OutputDebugStringA("[Event Warn] ActorMoveTo: Actor is not CActor\n");
+#endif
+				return E_FAIL;
+			}
+
+			if (ANIM_KIND::END != m_eWalkKind && nullptr != m_pTrackedActor->Get_Body())
+			{
+				CBody* pBody = m_pTrackedActor->Get_Body();
+				const _uint iIndex = BattleAnim::Find_AnimIndex(pBody->Get_ModelProtoTag(), m_eWalkKind);
+				pBody->Set_Anim(iIndex, true, m_fBlend);
+			}
+
+			return S_OK;
+		}
+
+		virtual EVENT_PLAY_STATE Update(EVENT_CONTEXT&, _float fTimeDelta) override
+		{
+			if (nullptr == m_pTrackedActor || true == m_pTrackedActor->Is_Dead())
+				return EVENT_PLAY_STATE::FAILED;
+
+			CTransform* pTransform = m_pTrackedActor->Get_Transform();
+			if (nullptr == pTransform)
+				return EVENT_PLAY_STATE::FAILED;
+
+			const _vector vCurPos = pTransform->Get_State(STATE::POSITION);
+			const _vector vTargetPos = XMLoadFloat3(&m_vTargetPos);
+
+			_float3 vDeltaXZ{};
+			XMStoreFloat3(&vDeltaXZ, XMVectorSubtract(vTargetPos, vCurPos));
+			vDeltaXZ.y = 0.f;
+
+			const _float fDistance = sqrtf(vDeltaXZ.x * vDeltaXZ.x + vDeltaXZ.z * vDeltaXZ.z);
+
+			if (fDistance <= m_fArrivalRadius)
+			{
+				pTransform->Set_State(STATE::POSITION, XMVectorSetW(vTargetPos, 1.f));
+
+				if (ANIM_KIND::END != m_eEndKind && nullptr != m_pTrackedActor->Get_Body())
+				{
+					CBody* pBody = m_pTrackedActor->Get_Body();
+					const _uint iIndex = BattleAnim::Find_AnimIndex(pBody->Get_ModelProtoTag(),
+						m_eEndKind);
+					pBody->Set_Anim(iIndex, true, m_fBlend);
+				}
+
+				return EVENT_PLAY_STATE::FINISHED;
+			}
+
+			const _float fInvDistance = 1.f / fDistance;
+			const _float3 vDirF3 = { vDeltaXZ.x * fInvDistance, 0.f, vDeltaXZ.z * fInvDistance };
+			const _vector vDir = XMLoadFloat3(&vDirF3);
+
+			const _float fStepRaw = m_fSpeed * fTimeDelta;
+			const _float fStep = fStepRaw < fDistance ? fStepRaw : fDistance;
+			const _vector vNewPos = XMVectorAdd(vCurPos, XMVectorScale(vDir, fStep));
+
+			pTransform->Set_State(STATE::POSITION, XMVectorSetW(vNewPos, 1.f));
+			pTransform->LookAt(XMVectorSetW(XMVectorAdd(vNewPos, vDir), 1.f));
+
+			return EVENT_PLAY_STATE::WAITING;
+		}
+
+	private:
+		_wstring m_strActorAlias;
+		_float3 m_vTargetPos = {};
+		_float m_fSpeed = { 3.f };
+		_float m_fArrivalRadius = { 0.15f };
+		ANIM_KIND m_eWalkKind = { ANIM_KIND::WALK };
+		ANIM_KIND m_eEndKind = { ANIM_KIND::IDLE };
+		_float m_fBlend = { 0.2f };
+		CActor* m_pTrackedActor = { nullptr }; // weak
+	};
+}
+
+const _char* Game_PKM::Get_ActionKindName(EVENT_ACTION_KIND eKind)
+{
+	switch (eKind)
+	{
+	case EVENT_ACTION_KIND::NONE:					return "NONE";
+	case EVENT_ACTION_KIND::LOCK_INPUT:				return "LockInput";
+	case EVENT_ACTION_KIND::RESTORE_INPUT:			return "RestoreInput";
+	case EVENT_ACTION_KIND::WAIT_SECONDS:			return "WaitSeconds";
+	case EVENT_ACTION_KIND::WAIT_DIALOGUE:			return "WaitDialogue";
+	case EVENT_ACTION_KIND::MESSAGE_KEY:			return "MessageKey";
+	case EVENT_ACTION_KIND::MESSAGE_TEXT:			return "MessageText";
+	case EVENT_ACTION_KIND::CAMERA_PUSH:			return "CameraPush";
+	case EVENT_ACTION_KIND::CAMERA_POP:				return "CameraPop";
+	case EVENT_ACTION_KIND::CAMERA_BLEND_TO_ACTOR:	return "CameraBlendToActor";
+	case EVENT_ACTION_KIND::CAMERA_FOLLOW_ACTOR:	return "CameraFollowActor";
+	case EVENT_ACTION_KIND::ACTOR_FACE:				return "ActorFace";
+	case EVENT_ACTION_KIND::ACTOR_MOVE_TO:			return "ActorMoveTo";
+	case EVENT_ACTION_KIND::ACTOR_SET_ANIM:			return "ActorSetAnim";
+	case EVENT_ACTION_KIND::ACTOR_SET_VISIBLE:		return "ActorSetVisible";
+	case EVENT_ACTION_KIND::SPAWN_NPC:				return "SpawnNPC";
+	case EVENT_ACTION_KIND::DESPAWN_ACTOR:			return "DespawnActor";
+	case EVENT_ACTION_KIND::REQUEST_BATTLE:			return "RequestBattle";
+	case EVENT_ACTION_KIND::DEBUG_LOG:				return "DebugLog";
+	default:										return "Unknown";
+	}
 }
 
 CEventAction* CEventAction::Create_Action(const EVENT_STEP_DESC& tDesc)
@@ -813,6 +1121,18 @@ CEventAction* CEventAction::Create_Action(const EVENT_STEP_DESC& tDesc)
 
 	case EVENT_ACTION_KIND::DESPAWN_ACTOR:
 		pAction = new CEventAction_DespawnActor;
+		break;
+
+	case EVENT_ACTION_KIND::ACTOR_FACE:
+		pAction = new CEventAction_ActorFace;
+		break;
+
+	case EVENT_ACTION_KIND::ACTOR_SET_ANIM:
+		pAction = new CEventAction_ActorSetAnim;
+		break;
+
+	case EVENT_ACTION_KIND::ACTOR_MOVE_TO:
+		pAction = new CEventAction_ActorMoveTo;
 		break;
 
 	default:

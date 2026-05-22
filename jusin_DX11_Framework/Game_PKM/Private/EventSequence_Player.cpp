@@ -101,10 +101,26 @@ EVENT_PLAY_STATE CEventSequence_Player::Update(_float fTimeDelta)
     if (nullptr == m_pCurrentAction)
     {
         const EVENT_STEP_DESC& tStep = tGroup.Steps[m_iStepIndex];
+
+#ifdef _DEBUG
+        {
+            _string strLog = "[Event] Step Begin group=" + to_string(m_iGroupIndex) +
+                " step=" + to_string(m_iStepIndex) +
+                " kind=" + Get_ActionKindName(tStep.eKind) +
+                " params=" + to_string(tStep.Params.size()) + "\n";
+            OutputDebugStringA(strLog.c_str());
+        }
+#endif
+
         m_pCurrentAction = CEventAction::Create_Action(tStep);
 
         if (nullptr == m_pCurrentAction)
         {
+#ifdef _DEBUG
+            _string strLog = "[Event Warn] Create_Action returned nullptr (kind=" +
+                _string(Get_ActionKindName(tStep.eKind)) + ")\n";
+            OutputDebugStringA(strLog.c_str());
+#endif
             m_eState = EVENT_PLAY_STATE::FAILED;
             return m_eState;
         }
@@ -116,6 +132,11 @@ EVENT_PLAY_STATE CEventSequence_Player::Update(_float fTimeDelta)
     {
         if (FAILED(m_pCurrentAction->Start(m_tContext)))
         {
+#ifdef _DEBUG
+            _string strLog = "[Event Warn] Action Start FAILED (kind=" +
+                _string(Get_ActionKindName(m_pCurrentAction->Get_Kind())) + ")\n";
+            OutputDebugStringA(strLog.c_str());
+#endif
             m_eState = EVENT_PLAY_STATE::FAILED;
             return m_eState;
         }
@@ -128,12 +149,25 @@ EVENT_PLAY_STATE CEventSequence_Player::Update(_float fTimeDelta)
     if (EVENT_PLAY_STATE::FAILED == eActionState ||
         EVENT_PLAY_STATE::CANCELED == eActionState)
     {
+#ifdef _DEBUG
+        _string strLog = (EVENT_PLAY_STATE::FAILED == eActionState
+            ? "[Event Warn] Action Update FAILED (kind="
+            : "[Event] Action Update CANCELED (kind=") +
+            _string(Get_ActionKindName(m_pCurrentAction->Get_Kind())) + ")\n";
+        OutputDebugStringA(strLog.c_str());
+#endif
         m_eState = eActionState;
         return m_eState;
     }
 
     if (EVENT_PLAY_STATE::FINISHED == eActionState)
     {
+#ifdef _DEBUG
+        _string strLog = "[Event] Step Finish group=" + to_string(m_iGroupIndex) +
+            " step=" + to_string(m_iStepIndex) +
+            " kind=" + Get_ActionKindName(m_pCurrentAction->Get_Kind()) + "\n";
+        OutputDebugStringA(strLog.c_str());
+#endif
         Release_CurrentAction();
         ++m_iStepIndex;
         m_eState = EVENT_PLAY_STATE::PLAYING;
@@ -144,19 +178,25 @@ EVENT_PLAY_STATE CEventSequence_Player::Update(_float fTimeDelta)
     return m_eState;
 }
 
-void CEventSequence_Player::Cancel()
+void CEventSequence_Player::Cancel(_bool bSkipGameInstanceCalls)
 {
+    if (true == bSkipGameInstanceCalls)
+        m_bShuttingDown = true;
+
     if (nullptr != m_pCurrentAction)
         m_pCurrentAction->Cancel(m_tContext);
 
     Release_CurrentAction();
 
-    Restore_CameraSnapshot_(m_tContext);
-
-    if (nullptr != m_tContext.pGameInstance && true == m_tContext.bInputLockedByEvent)
+    if (false == m_bShuttingDown)
     {
-        m_tContext.pGameInstance->Set_InputState(m_tContext.ePrevInputState);
-        m_tContext.bInputLockedByEvent = false;
+        Restore_CameraSnapshot_(m_tContext);
+
+        if (nullptr != m_tContext.pGameInstance && true == m_tContext.bInputLockedByEvent)
+        {
+            m_tContext.pGameInstance->Set_InputState(m_tContext.ePrevInputState);
+            m_tContext.bInputLockedByEvent = false;
+        }
     }
 
     m_eState = EVENT_PLAY_STATE::CANCELED;
@@ -184,8 +224,7 @@ CEventSequence_Player* CEventSequence_Player::Create(const CEvent_Definition* pS
 
 void CEventSequence_Player::Free()
 {
-    Cancel();
-
+    Cancel(true);   // 셧다운 모드: GameInstance/Input_Device 호출 skip
     m_pSequence = nullptr;
 
     __super::Free();

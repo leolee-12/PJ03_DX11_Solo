@@ -51,6 +51,7 @@ public:
 	virtual HRESULT Render() override;
 
 	void XM_CALLCONV Face_To(_fvector vTargetPos);
+	_bool Is_FaceTurnActive() const { return m_bFaceTurnActive; }
 
 private:
 	CInteraction_Dialogue* m_pDialogue = { nullptr };

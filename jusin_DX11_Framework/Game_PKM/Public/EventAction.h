@@ -25,4 +25,6 @@ protected:
 	virtual void Free() override;
 };
 
+const _char* Get_ActionKindName(EVENT_ACTION_KIND eKind);
+
 NS_END

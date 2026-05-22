@@ -16,7 +16,7 @@ public:
 	HRESULT Initialize(const CEvent_Definition* pSequence, const EVENT_CONTEXT& tContext);
 
 	EVENT_PLAY_STATE Update(_float fTimeDelta);
-	void Cancel();
+	void Cancel(_bool bSkipGameInstanceCalls = false);
 
 	EVENT_PLAY_STATE Get_State() const { return m_eState; }
 	const EVENT_CONTEXT& Get_Context() const { return m_tContext; }
@@ -37,6 +37,7 @@ private:
 
 	CEventAction* m_pCurrentAction = { nullptr };
 	_bool m_bCurrentStarted = { false };
+	_bool m_bShuttingDown = { false };
 
 	EVENT_PLAY_STATE m_eState = { EVENT_PLAY_STATE::IDLE };
 

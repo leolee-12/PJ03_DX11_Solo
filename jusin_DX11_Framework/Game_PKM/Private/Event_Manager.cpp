@@ -76,7 +76,14 @@ void CEvent_Manager::Update(_float fTimeDelta)
 			OutputDebugStringA("[Event Warn] Sequence Failed\n");
 		else
 			OutputDebugStringA("[Event] Sequence Canceled\n");
+
+		if (nullptr != m_pGameInstance)
+		{
+			OutputDebugStringA(("[Event] After sequence end, InputState=" +
+				std::to_string(static_cast<_int>(m_pGameInstance->Get_InputState())) + "\n").c_str());
+		}
 #endif
+
 		Safe_Release(m_pActivePlayer);
 	}
 }

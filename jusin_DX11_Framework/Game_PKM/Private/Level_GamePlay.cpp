@@ -296,7 +296,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		tContext.pGameInstance = m_pGameInstance;
 		tContext.pLevelGamePlay = this;
 
-		m_pEventMgr->Start_Sequence(L"TestSpawn", tContext);
+		m_pEventMgr->Start_Sequence(L"TestActor", tContext);
 	}
 
 	//if (m_pGameInstance->Key_Down(DIK_P))
@@ -789,8 +789,21 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 
 void CLevel_GamePlay::Free()
 {
+#ifdef _DEBUG
+	OutputDebugStringA("[Event] Level_GamePlay::Free entered\n");
+#endif
+
 	if (nullptr != m_pEventMgr)
 		m_pEventMgr->Cancel_ActiveSequence();
+
+	if (nullptr != m_pGameInstance)
+	{
+#ifdef _DEBUG
+		OutputDebugStringA(("[Event] Pre-Free InputState=" +
+			std::to_string(static_cast<_int>(m_pGameInstance->Get_InputState())) + "\n").c_str());
+#endif
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+	}
 
 	Safe_Release(m_pEventMgr);
 
