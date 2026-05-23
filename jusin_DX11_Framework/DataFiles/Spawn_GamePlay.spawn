@@ -37,7 +37,7 @@
         Kind = NPC
         NPCProfile = Fat
         DialogueKey = dialogue_npc_fat
-        Center = 23.0, 0.0, -18.0
+        Center = 21.0, 0.0, -18.0
         Size = 1.0, 1.0
         RotationY = 3.1416
         MaxAliveCount = 1
@@ -124,9 +124,9 @@
         Kind = NPC
         NPCProfile = PM0004_00
         DialogueKey = dialogue_pokemon_pm0004_00
-        Center = 24.0, 0.0, -18.0
+        Center = 22.0, 0.0, -18.0
         Size = 1.0, 1.0
-        RotationY = 1.5708
+        RotationY = -1.5708
         MaxAliveCount = 1
         ProjectRadius = 3.1416
         SpawnOnLoad = true
@@ -157,8 +157,8 @@ SpawnRect {
     SpawnRect {
         ID = 11
         Kind = WildPokemon
-        Center = 20.75, 0.0, 16.6
-        Size = 12.5, 2.2
+        Center = 24.75, 1.0, 15.45
+        Size = 5.5, 4.7
         RotationY = 0.0
         SpeciesID = 43
         Level = 3
@@ -176,8 +176,8 @@ SpawnRect {
     SpawnRect {
         ID = 12
         Kind = WildPokemon
-        Center = 24.5, 0.0, 28.45
-        Size = 6.0, 6.0
+        Center = 24.5, 0.0, 29.45
+        Size = 6.5, 4.0
         RotationY = 0.0
         SpeciesID = 41
         Level = 4

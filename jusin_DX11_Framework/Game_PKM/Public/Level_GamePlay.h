@@ -12,6 +12,7 @@ class CUIProgressBar;
 class CUIText;
 class CUISequence;
 class CGameObject;
+class CTexture;
 NS_END
 
 NS_BEGIN(Game_PKM)
@@ -69,6 +70,9 @@ private:
 	CGameObject* m_pPendingDeleteWild = { nullptr };   // weak - Push 직전 Set_Dead 호출 후 nullptr 초기화
 	static constexpr _float TRANSITION_PUSH_AT_SEC = 5.0f;
 
+	CTexture* m_pCloudTexture = { nullptr };
+	DECAL_PARAM m_CloudParam{};
+
 #ifdef _DEBUG
 	OUTLINE_PARAM m_DebugOutlineParam{};
 
@@ -91,6 +95,7 @@ private:
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 	HRESULT Ready_EventSystem();
 	HRESULT Ready_MainCamera();
+	HRESULT Ready_Cloud();
 
 	_bool Tick_Dialogue(_float fTimeDelta);
 	_bool Tick_Event(_float fTimeDelta);
@@ -102,6 +107,8 @@ private:
 	void Debug_Common();
 	void Debug_Outline();
 	void Debug_Event();
+	void Debug_Culling();
+	void Debug_Decal();
 	void Debug_TickFPS(_float fTimeDelta);
 	void Debug_RenderFPS();
 #endif

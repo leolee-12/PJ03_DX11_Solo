@@ -77,6 +77,26 @@ void XM_CALLCONV CActor_NPC::Face_To(_fvector vTargetPos)
 {
 	XMStoreFloat3(&m_vFaceTurnTarget, vTargetPos);
 	m_bFaceTurnActive = true;
+
+#ifdef _DEBUG
+	_float3 vTarget{};
+	XMStoreFloat3(&vTarget, vTargetPos);
+
+	_float3 vPos{};
+	XMStoreFloat3(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+
+	_float3 vLook{};
+	XMStoreFloat3(&vLook, XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK)));
+
+	char szLog[256] = {};
+	sprintf_s(szLog,
+		"[NPC Face] Start SpawnID=%u Pos=(%.2f,%.2f,%.2f) Look=(%.2f,%.2f,%.2f) Target=(%.2f,%.2f,%.2f)\n",
+		m_iSpawnRectID,
+		vPos.x, vPos.y, vPos.z,
+		vLook.x, vLook.y, vLook.z,
+		vTarget.x, vTarget.y, vTarget.z);
+	OutputDebugStringA(szLog);
+#endif
 }
 
 HRESULT CActor_NPC::Ready_Components(const ACTOR_NPC_DESC* pDesc)
@@ -156,6 +176,11 @@ void CActor_NPC::Update_FaceTurn(_float fTimeDelta)
 	if (XMVectorGetX(XMVector3LengthSq(vTargetDir)) <= 0.0001f)
 	{
 		m_bFaceTurnActive = false;
+
+#ifdef _DEBUG
+		OutputDebugStringA("[NPC Face] Finish: target too close\n");
+#endif
+
 		return;
 	}
 
@@ -167,6 +192,11 @@ void CActor_NPC::Update_FaceTurn(_float fTimeDelta)
 	if (XMVectorGetX(XMVector3LengthSq(vCurLook)) <= 0.0001f)
 	{
 		m_bFaceTurnActive = false;
+
+#ifdef _DEBUG
+		OutputDebugStringA("[NPC Face] Finish: invalid current look\n");
+#endif
+
 		return;
 	}
 
@@ -184,6 +214,16 @@ void CActor_NPC::Update_FaceTurn(_float fTimeDelta)
 
 	const _float fStep = m_fFaceTurnRadiansPerSec * fTimeDelta;
 
+#ifdef _DEBUG
+	{
+		char szLog[256] = {};
+		sprintf_s(szLog,
+			"[NPC Face] Tick SpawnID=%u CurYaw=%.3f TargetYaw=%.3f Delta=%.3f Step=%.3f\n",
+			m_iSpawnRectID, fCurYaw, fTargetYaw, fDeltaYaw, fStep);
+		OutputDebugStringA(szLog);
+	}
+#endif
+
 	if (fabsf(fDeltaYaw) <= fStep || fabsf(fDeltaYaw) <= XMConvertToRadians(1.f))
 	{
 		m_pTransformCom->Rotation(0.f, fTargetYaw, 0.f);
@@ -193,6 +233,10 @@ void CActor_NPC::Update_FaceTurn(_float fTimeDelta)
 
 	const _float fNextYaw = fCurYaw + (fDeltaYaw > 0.f ? fStep : -fStep);
 	m_pTransformCom->Rotation(0.f, fNextYaw, 0.f);
+
+#ifdef _DEBUG
+	OutputDebugStringA("[NPC Face] Finish: reached target yaw\n");
+#endif
 }
 
 CActor_NPC* CActor_NPC::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

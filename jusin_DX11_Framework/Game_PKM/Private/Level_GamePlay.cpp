@@ -159,6 +159,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_MainCamera()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Cloud()))
+		return E_FAIL;
+
 	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 
 	return S_OK;
@@ -761,6 +764,33 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	  return S_OK;
   }
 
+  HRESULT CLevel_GamePlay::Ready_Cloud()
+  {
+	  m_pCloudTexture = static_cast<CTexture*>(
+		  m_pGameInstance->Clone_Prototype(
+			  PROTOTYPE::COMPONENT,
+			  ETOUI(LEVEL::GAMEPLAY),
+			  PROTO_COM_TEX_CLOUD));
+
+	  if (nullptr == m_pCloudTexture)
+		  return E_FAIL;
+
+	  m_CloudParam.bEnable = true;
+	  m_CloudParam.fStrength = 0.7f;
+	  m_CloudParam.fTiling = 0.025f;
+	  m_CloudParam.fSpeed = 0.015f;
+	  m_CloudParam.vScrollDir = XMFLOAT2(-1.f, 1.f);
+	  m_CloudParam.fCoverageLow = 0.00f;
+	  m_CloudParam.fCoverageHigh = 0.40f;
+	  m_CloudParam.fDarkness = 0.72f;
+	  m_CloudParam.fTime = 0.f;
+
+	  m_pGameInstance->Set_DecalParam(m_CloudParam);
+	  m_pGameInstance->Set_DecalTexture(m_pCloudTexture, 0);
+
+	  return S_OK;
+  }
+
 HRESULT CLevel_GamePlay::Ready_EventSystem()
 {
 	m_pEventMgr = CEvent_Manager::Create(this);
@@ -908,28 +938,17 @@ void CLevel_GamePlay::Tick_Gameplay(_float fTimeDelta)
 #ifdef _DEBUG
 	Debug_Common();
 	//Debug_Outline();
-	Debug_Event();
+	//Debug_Event();
+	//Debug_Culling();
+	Debug_Decal();
 #endif
 
+	m_CloudParam.fTime += fTimeDelta;
+	m_pGameInstance->Set_DecalParam(m_CloudParam);
 	UI_Update_All(fTimeDelta);
 }
 
-void Reset_PlayerTouchCache();
 
-m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, LAYER_PLAYER);
-
-if (nullptr == pPlayerList)
-return;
-
-for (CGameObject* pObject : *pPlayerList)
-{
-	if (CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pObject))
-	{
-		pPlayer->Clear_TouchSet();
-		break;
-	}
-}
-  }
 
 #ifdef _DEBUG
 void CLevel_GamePlay::Debug_Common()
@@ -942,16 +961,6 @@ void CLevel_GamePlay::Debug_Common()
 	if (m_pGameInstance->Key_Down(DIK_F3))
 	{
 		m_pGameInstance->Toggle_Debug();
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F4))
-	{
-		CMapObject::Debug_ToggleCulling();
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_F5))
-	{
-		CMapObject::Debug_ToggleCullLog();
 	}
 }
 
@@ -1008,6 +1017,37 @@ void CLevel_GamePlay::Debug_Event()
 
 	if (m_pGameInstance->Key_Down(DIK_F8))
 	{
+	}
+}
+
+void CLevel_GamePlay::Debug_Culling()
+{
+	if (m_pGameInstance->Key_Down(DIK_F6))
+	{
+		CMapObject::Debug_ToggleCulling();
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F7))
+	{
+		CMapObject::Debug_ToggleCullLog();
+	}
+}
+
+void CLevel_GamePlay::Debug_Decal()
+{
+	if (m_pGameInstance->Key_Down(DIK_F6))
+	{
+		m_CloudParam.bEnable = !m_CloudParam.bEnable;
+		m_pGameInstance->Set_DecalParam(m_CloudParam);
+
+#ifdef _DEBUG
+		OutputDebugStringA(m_CloudParam.bEnable ? "[CloudDecal] ON\n" : "[CloudDecal] OFF\n");
+#endif
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_F7))
+	{
+
 	}
 }
 
@@ -1085,7 +1125,9 @@ void CLevel_GamePlay::Free()
 	}
 
 	Safe_Release(m_pEventMgr);
-
+	m_pGameInstance->Set_DecalTexture(nullptr, 0);
+	m_pGameInstance->Set_DecalParam(DECAL_PARAM{});
+	Safe_Release(m_pCloudTexture);
 	/* Hub 의 cursor weak 를 UI_Close_All 보다 먼저 끊어 안전성 확보.
 	   (Hub::Update_Cursor 가 다음 프레임에 호출되더라도 m_pCursor == nullptr 분기로 빠짐.) */
 	UI_Set_Cursor_Sequence(nullptr);

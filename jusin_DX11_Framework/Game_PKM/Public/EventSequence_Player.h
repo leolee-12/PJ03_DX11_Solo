@@ -27,6 +27,8 @@ public:
 
 private:
 	void Release_CurrentAction();
+	void Release_ParallelActions();
+	EVENT_PLAY_STATE Update_ParallelGroup(const EVENT_STEP_GROUP& tGroup, _float fTimeDelta);
 
 private:
 	const CEvent_Definition* m_pSequence = { nullptr };   // weak - EventManager owns definitions
@@ -40,6 +42,8 @@ private:
 	_bool m_bShuttingDown = { false };
 
 	EVENT_PLAY_STATE m_eState = { EVENT_PLAY_STATE::IDLE };
+	vector<CEventAction*> m_ParallelActions;
+	vector<_bool> m_ParallelStarted;
 
 private:
 	virtual void Free() override;

@@ -83,7 +83,9 @@ EVENT_PLAY_STATE CEventSequence_Player::Update(_float fTimeDelta)
 
     const EVENT_STEP_GROUP& tGroup = Groups[m_iGroupIndex];
 
-    /* E1에서는 SEQUENTIAL만 처리한다. PARALLEL은 E6에서 확장. */
+    if (EVENT_STEP_MODE::PARALLEL == tGroup.eMode)
+        return Update_ParallelGroup(tGroup, fTimeDelta);
+
     if (EVENT_STEP_MODE::SEQUENTIAL != tGroup.eMode)
     {
         m_eState = EVENT_PLAY_STATE::FAILED;
@@ -188,6 +190,14 @@ void CEventSequence_Player::Cancel(_bool bSkipGameInstanceCalls)
 
     Release_CurrentAction();
 
+    for (CEventAction* pAction : m_ParallelActions)
+    {
+        if (nullptr != pAction)
+            pAction->Cancel(m_tContext);
+    }
+
+    Release_ParallelActions();
+
     if (false == m_bShuttingDown)
     {
         Restore_CameraSnapshot_(m_tContext);
@@ -206,6 +216,93 @@ void CEventSequence_Player::Release_CurrentAction()
 {
     Safe_Release(m_pCurrentAction);
     m_bCurrentStarted = false;
+}
+
+void CEventSequence_Player::Release_ParallelActions()
+{
+    for (CEventAction*& pAction : m_ParallelActions)
+        Safe_Release(pAction);
+
+    m_ParallelActions.clear();
+    m_ParallelStarted.clear();
+}
+
+EVENT_PLAY_STATE CEventSequence_Player::Update_ParallelGroup(const EVENT_STEP_GROUP& tGroup, _float
+    fTimeDelta)
+{
+    Release_CurrentAction();
+
+    if (true == tGroup.Steps.empty())
+    {
+        ++m_iGroupIndex;
+        m_iStepIndex = 0;
+        m_eState = EVENT_PLAY_STATE::PLAYING;
+        return m_eState;
+    }
+
+    if (true == m_ParallelActions.empty())
+    {
+        m_ParallelActions.resize(tGroup.Steps.size(), nullptr);
+        m_ParallelStarted.assign(tGroup.Steps.size(), false);
+
+        for (size_t i = 0; i < tGroup.Steps.size(); ++i)
+        {
+            m_ParallelActions[i] = CEventAction::Create_Action(tGroup.Steps[i]);
+
+            if (nullptr == m_ParallelActions[i])
+            {
+                m_eState = EVENT_PLAY_STATE::FAILED;
+                return m_eState;
+            }
+        }
+    }
+
+    _bool bAllFinished = true;
+
+    for (size_t i = 0; i < m_ParallelActions.size(); ++i)
+    {
+        CEventAction* pAction = m_ParallelActions[i];
+        if (nullptr == pAction)
+            continue;
+
+        if (false == m_ParallelStarted[i])
+        {
+            if (FAILED(pAction->Start(m_tContext)))
+            {
+                m_eState = EVENT_PLAY_STATE::FAILED;
+                return m_eState;
+            }
+
+            m_ParallelStarted[i] = true;
+        }
+
+        const EVENT_PLAY_STATE eActionState = pAction->Update(m_tContext, fTimeDelta);
+
+        if (EVENT_PLAY_STATE::FAILED == eActionState ||
+            EVENT_PLAY_STATE::CANCELED == eActionState)
+        {
+            m_eState = eActionState;
+            return m_eState;
+        }
+
+        if (EVENT_PLAY_STATE::FINISHED == eActionState)
+            Safe_Release(m_ParallelActions[i]);
+        else
+            bAllFinished = false;
+    }
+
+    if (true == bAllFinished)
+    {
+        Release_ParallelActions();
+
+        ++m_iGroupIndex;
+        m_iStepIndex = 0;
+        m_eState = EVENT_PLAY_STATE::PLAYING;
+        return m_eState;
+    }
+
+    m_eState = EVENT_PLAY_STATE::WAITING;
+    return m_eState;
 }
 
 CEventSequence_Player* CEventSequence_Player::Create(const CEvent_Definition* pSequence, const

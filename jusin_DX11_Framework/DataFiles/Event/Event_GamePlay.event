@@ -60,3 +60,80 @@
       Step { Action = DespawnActor; Actor = DoctorA }
       Step { Action = RestoreInput }
   }
+
+  Sequence TestParallel
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = CameraPush }
+      StepGroup
+	{ Mode = Parallel
+      		Step { Action = CameraBlendToActor; Actor = Player; EyeOffset = 0,2,-4; LookOffset = 0,1.2,0; Duration = 0.8; Ease = SmoothStep }
+      		Step { Action = WaitSeconds; Duration = 0.8 }
+   	}
+      Step { Action = MessageText; Text = Parallel group test; Wait = true }
+      Step { Action = CameraPop; Duration = 0.35 }
+      Step { Action = RestoreInput }
+  }
+
+  Sequence TestBattle
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = MessageText; Text = Event battle test; Wait = true }
+      Step { Action = RequestBattle; Environment = GRASS; Rule = TRAINER_SINGLE; TrainerID = 1; BGResourceID = 0; ZoneID = 0; CanRun = false; CanCapture = false; ExpGain = true }
+  }
+
+  Sequence TestCameraWorldMove
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = CameraPush }
+      Step { Action = CameraSetPose; Eye = 18,3,-8; LookAt = 20,1.2,-2 }
+      Step { Action = CameraMoveTo; Eye = 24,3,-4; LookAt = 26,1.2,0; Duration = 1.0; Ease = SmoothStep }
+      Step { Action = WaitSeconds; Duration = 0.5 }
+      Step { Action = CameraPop; Duration = 1.0 }
+      Step { Action = RestoreInput }
+  }
+
+  Sequence TestScene_NPC_CameraMove
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = CameraPush }
+      Step { Action = BindActorBySpawnID; SpawnID = 200; Alias = NPC_A }
+      Step { Action = BindActorBySpawnID; SpawnID = 201; Alias = NPC_B }
+
+      Step { Action = CameraSetPose; Eye = 14.3,3,-10.5; LookAt = 15.3,0,-6.5; Ease = Linear }
+      Step { Action = CameraMoveTo; Eye = 13.4,4.8,-13.9; LookAt = 15.3,0,-6.5; Duration = 2.0; Ease = SmoothStep }
+
+      Step { Action = CameraSetPose; Eye = 12.8,1.3,-17.1; LookAt = 15,0,-12; Ease = Linear }
+
+      StepGroup { Mode = Parallel
+          Step { Action = CameraMoveTo; Eye = 15.8,1.3,-18.1; LookAt = 18,0,-13; Duration = 3.0; Ease = SmoothStep }
+          Step { Action = ActorFace; Actor = NPC_A; Target = Player; Wait = true }
+      }
+
+      Step { Action = ActorSetAnim; Actor = NPC_A; AnimKind = TALK; Loop = false; Blend = 0.2 }
+      Step { Action = WaitSeconds; Duration = 1.0 }
+      Step { Action = ActorFaceYaw; Actor = NPC_A; Yaw = 3.1416; Wait = true }
+
+      Step { Action = CameraSetPose; Eye = 29.2,0.9,-21.3; LookAt = 22.7,1.85,-12.95; Ease = Linear }
+
+      StepGroup { Mode = Parallel
+          Step { Action = CameraMoveTo; Eye = 28.3,0.9,-21.95; LookAt = 21.8,1.85,-13.6; Duration = 3.0; Ease = SmoothStep }
+          Step { Action = ActorFaceCamera; Actor = NPC_B; Wait = true }
+      }
+
+      Step { Action = ActorFaceCamera; Actor = NPC_B; Wait = true }
+
+      Step { Action = CameraSetPose; Eye = 15.35,7.98,-16.179; LookAt = 15.35, 0,-6.46; Ease = Linear }
+          Step { Action = CameraMoveTo; Eye = 15.35,6.5,-13.96; LookAt = 15.35, 1.5,-6.46; Duration = 3.0; Ease = SmoothStep }
+      Step { Action = CameraPop; Duration = 1.0 }
+
+      Step { Action = RestoreInput }
+  }

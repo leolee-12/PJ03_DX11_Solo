@@ -52,6 +52,7 @@ public:
 
 	void XM_CALLCONV Face_To(_fvector vTargetPos);
 	_bool Is_FaceTurnActive() const { return m_bFaceTurnActive; }
+	_uint Get_SpawnRectID() const { return m_iSpawnRectID; }
 
 private:
 	CInteraction_Dialogue* m_pDialogue = { nullptr };

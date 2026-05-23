@@ -76,11 +76,20 @@ void CEvent_Manager::Update(_float fTimeDelta)
 			OutputDebugStringA("[Event Warn] Sequence Failed\n");
 		else
 			OutputDebugStringA("[Event] Sequence Canceled\n");
+#endif
 
+		if (EVENT_PLAY_STATE::FAILED == eState ||
+			EVENT_PLAY_STATE::CANCELED == eState)
+		{
+			m_pActivePlayer->Cancel();
+		}
+
+#ifdef _DEBUG
 		if (nullptr != m_pGameInstance)
 		{
 			OutputDebugStringA(("[Event] After sequence end, InputState=" +
-				std::to_string(static_cast<_int>(m_pGameInstance->Get_InputState())) + "\n").c_str());
+				std::to_string(static_cast<_int>(m_pGameInstance->Get_InputState())) +
+				"\n").c_str());
 		}
 #endif
 
