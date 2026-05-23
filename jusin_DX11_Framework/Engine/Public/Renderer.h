@@ -13,6 +13,7 @@ class CGameInstance;
 class CGameObject;
 class CShader;
 class CVIBuffer_Rect;
+class CTexture;
 
 class CRenderer final : public CBase
 {
@@ -28,6 +29,8 @@ public:
 
 	void	Set_UseShadow(_bool b) { m_bUseShadow = b; }
 	void	Set_OutlineParam(const OUTLINE_PARAM& Param) { m_OutlineParam = Param; }
+	void	Set_DecalParam(const DECAL_PARAM& Param) { m_DecalParam = Param; }
+	void	Set_DecalTexture(CTexture* pTexture, _uint iTextureIndex = 0);
 
 #ifdef _DEBUG
 	void Add_DebugComponent(class CComponent* pComponent);
@@ -48,6 +51,11 @@ private:
 	_float4x4			m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
 	_bool				m_bUseShadow = { true };
 	OUTLINE_PARAM		m_OutlineParam{};
+
+	_int				m_iBoundUseDecal = { 0 };
+	DECAL_PARAM			m_DecalParam{};
+	CTexture*			m_pDecalTexture = { nullptr };
+	_uint				m_iDecalTextureIndex = { 0 };
 
 #ifdef _DEBUG
 	list<class CComponent*>		m_DebugComponents;

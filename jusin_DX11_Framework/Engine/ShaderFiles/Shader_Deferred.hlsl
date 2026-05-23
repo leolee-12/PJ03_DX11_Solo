@@ -12,6 +12,7 @@ texture2D g_TexSpec;
 texture2D g_TexAmbt;
 texture2D g_TexShade;
 texture2D g_TexLightDepth;
+texture2D g_TexDecal;
 
 float g_fFarZ;
 vector g_vCamPos;
@@ -28,6 +29,16 @@ vector g_vMtrlAmbt = 1.f;
 vector g_vMtrlSpec = 1.f;
 
 float g_fShadowFarZ;
+
+int g_iUseDecal = 0;
+float g_fDecalStrength = 0.f;
+float g_fDecalTiling = 1.f;
+float g_fDecalTime = 0.f;
+float2 g_vDecalScrollDir = float2(1.f, 0.f);
+float g_fDecalSpeed = 0.f;
+float g_fDecalCoverageLow = 0.35f;
+float g_fDecalCoverageHigh = 0.75f;
+float g_fDecalDarkness = 0.78f;
 
 
 
@@ -286,6 +297,42 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	return Out;
 }
 
+float3 RestoreWorldPosition(float2 vTex, vector vDepthDesc)
+{
+	float fViewZ = vDepthDesc.y * g_fFarZ;
+
+	vector vWorldPos;
+	vWorldPos.x = vTex.x * 2.f - 1.f;
+	vWorldPos.y = vTex.y * -2.f + 1.f;
+	vWorldPos.z = vDepthDesc.x;
+	vWorldPos.w = 1.f;
+
+	vWorldPos *= fViewZ;
+	vWorldPos = mul(vWorldPos, g_ProjInvMatrix);
+	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
+
+	return vWorldPos.xyz;
+}
+
+float ComputeDecalFactor(float3 vWorldPos)
+{
+	float2 vDir = g_vDecalScrollDir;
+	float fDirLen = max(length(vDir), 0.0001f);
+	vDir /= fDirLen;
+
+	float2 vDecalUV =
+		vWorldPos.xz * g_fDecalTiling +
+		vDir * (g_fDecalTime * g_fDecalSpeed);
+
+	float fMask = g_TexDecal.Sample(LinearSampler, vDecalUV).r;
+	float fShadowMask = saturate(1.f - fMask);
+	float fCoverage = smoothstep(g_fDecalCoverageLow, g_fDecalCoverageHigh, fShadowMask);
+	fCoverage = fCoverage * fCoverage * (3.f - 2.f * fCoverage);
+	float fAmount = saturate(fCoverage * g_fDecalStrength);
+
+	return lerp(1.f, g_fDecalDarkness, fAmount);
+}
+
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
 	PS_OUT_BACKBUFFER Out;
@@ -298,6 +345,13 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 	vector vShade = g_TexShade.Sample(PointSampler, In.vTex);
 	vector vSpec = g_TexSpec.Sample(PointSampler, In.vTex);
 	Out.vBackBuffer = vDiffuse * vShade + vSpec;
+
+	if (0 != g_iUseDecal)
+	{
+		vector vDepthDesc = g_TexDepth.Sample(PointSampler, In.vTex);
+		float3 vWorldPos = RestoreWorldPosition(In.vTex, vDepthDesc);
+		Out.vBackBuffer.rgb *= ComputeDecalFactor(vWorldPos);
+	}
 
 	return Out;
 }
@@ -333,6 +387,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED_SHADOW(PS_IN In)
 
 	// - 월드 스페이스 위치 -> 광원 시점 Clip 스페이스
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
+	float3 vDecalWorldPos = vWorldPos.xyz;
 	vWorldPos = mul(vWorldPos, g_SLViewMatrix);
 	vWorldPos = mul(vWorldPos, g_SLProjMatrix);
 
@@ -366,6 +421,9 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED_SHADOW(PS_IN In)
 	// Contrast remap: 깊은 그림자/완전 빛은 클램프, 경계만 S-커브로 부드럽게
 	fLitFactor = smoothstep(0.f, 1.f, fLitFactor);
 	Out.vBackBuffer = Out.vBackBuffer * lerp(0.65f, 1.0f, fLitFactor);
+
+	if (0 != g_iUseDecal)
+		Out.vBackBuffer.rgb *= ComputeDecalFactor(vDecalWorldPos);
 
 	return Out;
 }

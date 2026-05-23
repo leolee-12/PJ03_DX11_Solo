@@ -312,6 +312,19 @@ namespace Engine
 		float     fMaskBias			= { 0.5f };
 		XMFLOAT4  vColor			= { 0.12f, 0.10f, 0.08f, 1.0f };
 	};
+
+	struct DECAL_PARAM
+	{
+		bool bEnable = { false };
+		float fStrength = { 0.f };
+		float fTiling = { 0.08f };
+		float fSpeed = { 0.03f };
+		XMFLOAT2 vScrollDir = { 1.f, 0.35f };
+		float fCoverageLow = { 0.35f };
+		float fCoverageHigh = { 0.75f };
+		float fDarkness = { 0.78f };
+		float fTime = { 0.f };
+	};
 }
 
 #endif // Engine_Struct_h__

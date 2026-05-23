@@ -368,6 +368,22 @@ void CGameInstance::Set_OutlineParam(const OUTLINE_PARAM& Param)
 	m_pRenderer->Set_OutlineParam(Param);
 }
 
+void CGameInstance::Set_DecalParam(const DECAL_PARAM& Param)
+{
+	if (nullptr == m_pRenderer)
+		return;
+
+	m_pRenderer->Set_DecalParam(Param);
+}
+
+void CGameInstance::Set_DecalTexture(CTexture* pTexture, _uint iTextureIndex)
+{
+	if (nullptr == m_pRenderer)
+		return;
+
+	m_pRenderer->Set_DecalTexture(pTexture, iTextureIndex);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Add_DebugComponent(CComponent* pComponent)
 {

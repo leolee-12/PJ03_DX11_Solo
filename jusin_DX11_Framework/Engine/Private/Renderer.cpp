@@ -169,6 +169,18 @@ HRESULT CRenderer::Resize()
 	return S_OK;
 }
 
+void CRenderer::Set_DecalTexture(CTexture* pTexture, _uint iTextureIndex)
+{
+	if (m_pDecalTexture == pTexture && m_iDecalTextureIndex == iTextureIndex)
+		return;
+
+	Safe_AddRef(pTexture);
+	Safe_Release(m_pDecalTexture);
+
+	m_pDecalTexture = pTexture;
+	m_iDecalTextureIndex = iTextureIndex;
+}
+
 #ifdef _DEBUG
 void CRenderer::Add_DebugComponent(CComponent* pComponent)
 {
@@ -324,6 +336,53 @@ HRESULT CRenderer::Render_Combined(_bool m_bUseShadow)
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
+
+	const _bool bUseDecal =
+		true == m_DecalParam.bEnable && nullptr != m_pDecalTexture && 0.f < m_DecalParam.fStrength;
+
+	if (m_bUseShadow || bUseDecal)
+	{
+		if (FAILED(m_pShader->Bind_Matrix("g_ViewInvMatrix", m_pGameInstance->Get_Transform_Inverse(D3DTS::VIEW))))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Bind_Matrix("g_ProjInvMatrix", m_pGameInstance->Get_Transform_Inverse(D3DTS::PROJ))))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Bind_RawValue("g_fFarZ", m_pGameInstance->Get_FarZPtr(), sizeof(_float))))
+			return E_FAIL;
+	}
+
+	const _int iUseDecal = bUseDecal ? 1 : 0;
+
+	if (m_iBoundUseDecal != iUseDecal)
+	{
+		if (FAILED(m_pShader->Bind_RawValue("g_iUseDecal", &iUseDecal, sizeof(_int))))
+			return E_FAIL;
+
+		m_iBoundUseDecal = iUseDecal;
+	}
+
+	if (bUseDecal)
+	{
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalStrength", &m_DecalParam.fStrength, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalTiling", &m_DecalParam.fTiling, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalTime", &m_DecalParam.fTime, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_vDecalScrollDir", &m_DecalParam.vScrollDir, sizeof(_float2))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalSpeed", &m_DecalParam.fSpeed, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalCoverageLow", &m_DecalParam.fCoverageLow, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalCoverageHigh", &m_DecalParam.fCoverageHigh, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pShader->Bind_RawValue("g_fDecalDarkness", &m_DecalParam.fDarkness, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pDecalTexture->Bind_ShaderResource(m_pShader, "g_TexDecal", m_iDecalTextureIndex)))
+			return E_FAIL;
+	}
 
 	if (m_bUseShadow)
 	{
@@ -578,6 +637,7 @@ void CRenderer::Free()
 		RenderObjects.clear();
 	}
 
+	Safe_Release(m_pDecalTexture);
 	Safe_Release(m_pMaxDSV);
 	Safe_Release(m_pShader);
 	Safe_Release(m_pShader_PostProcess);

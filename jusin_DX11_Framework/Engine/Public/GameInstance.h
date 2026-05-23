@@ -77,6 +77,8 @@ public:
 	void Add_RenderGroup(RENDERID eGroupID, class CGameObject* pGameObject);
 	void Set_UseShadow(_bool b);
 	void Set_OutlineParam(const OUTLINE_PARAM& Param);
+	void Set_DecalParam(const DECAL_PARAM& Param);
+	void Set_DecalTexture(CTexture* pTexture, _uint iTextureIndex = 0);
 #ifdef _DEBUG
 	void Add_DebugComponent(class CComponent* pComponent);
 #endif
