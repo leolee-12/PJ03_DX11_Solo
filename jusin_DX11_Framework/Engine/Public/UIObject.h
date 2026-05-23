@@ -49,7 +49,7 @@ public:
 	_float2 Get_Center() const { return _float2(m_fResolvedCenterX, m_fResolvedCenterY); }
 	_float2 Get_Size() const { return _float2(m_fSizeX, m_fSizeY); }
 	_int Get_ZOrder() const { return m_iZOrder; }
-	_bool Get_Visible() { return m_bVisible; }
+	_bool Get_Visible() const { return m_bVisible; }
 	const UILAYOUT_SLOT_DESC& Get_LayoutSlot() const { return m_tLayoutSlot; }
 	UI_ANCHOR Get_Anchor() { return (m_tAnchorDesc.bUseAnchoredPos ? m_tAnchorDesc.eAnchor : UI_ANCHOR::END); }
 	CUIObject* Get_ParentUI() const { return m_pParentUI; }

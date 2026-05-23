@@ -47,15 +47,26 @@ HRESULT CRenderProfile::Build(CModel* pModel, const CRenderRule* pRule)
 HRESULT CRenderProfile::Bind_AndDraw(
 	CShader* pShader,
 	const vector<MATERIAL_SLOT>& Slots,
-	const _char* pBoneMatricesConstName)
+	const _char* pBoneMatricesConstName,
+	const vector<_bool>* pVisibleMask,
+	_uint* pDrawnMeshCount)
 {
 	if (nullptr == m_pModel || nullptr == pShader)
 		return E_FAIL;
 
 	const size_t iNumMeshes = m_pModel->Get_NumMeshes();
 
+	if (nullptr != pDrawnMeshCount)
+		*pDrawnMeshCount = 0;
+
+	const _bool bUseVisibleMask =
+		nullptr != pVisibleMask && pVisibleMask->size() == iNumMeshes;
+
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
+		if (true == bUseVisibleMask && false == (*pVisibleMask)[i])
+			continue;
+
 		const _uint iMatIdx = m_pModel->Get_MeshMaterialIndex(i);
 		if (iMatIdx >= m_Table.passes.size() || iMatIdx >= m_Table.variants.size())
 			return E_FAIL;
@@ -114,6 +125,9 @@ HRESULT CRenderProfile::Bind_AndDraw(
 
 		if (FAILED(m_pModel->Render(i)))
 			return E_FAIL;
+
+		if (nullptr != pDrawnMeshCount)
+			++(*pDrawnMeshCount);
 	}
 
 	return S_OK;

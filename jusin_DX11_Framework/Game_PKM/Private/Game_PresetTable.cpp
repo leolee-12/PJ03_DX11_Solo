@@ -66,4 +66,29 @@ CUIButton_Layered::LAYEREDBUTTON_DESC Get_LayeredButtonPreset(LAYERED_BUTTON_PRE
 	return tDesc;
 }
 
+CUIButton_Entry::ENTRYBUTTON_DESC Get_EntryButtonPreset(ENTRY_BUTTON_PRESET ePreset)
+{
+	CUIButton_Entry::ENTRYBUTTON_DESC tDesc{};
+
+	tDesc.iBaseTextureIndex = 0u;
+	tDesc.iLineTextureIndex = 1u;
+	tDesc.iGlowTextureIndex = 2u;
+
+	tDesc.vColDiff = _float4{ 1.f, 1.f, 1.f, 1.f };
+	tDesc.vColLine = _float4{ 1.f, 1.f, 1.f, 1.f };
+
+	tDesc.iShaderPass = 0u;
+
+	switch (ePreset)
+	{
+	case ENTRY_BUTTON_PRESET::PLATE:
+		break;
+
+	default:
+		break;
+	}
+
+	return tDesc;
+}
+
 NS_END

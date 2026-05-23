@@ -3,6 +3,7 @@
 #include "SharedTexture_Manager.h"
 #include "UIButton_Glow.h"
 #include "UIButton_Layered.h"
+#include "UIButton_Entry.h"
 #include "UIController.h"
 #include "UIController_Hub.h"
 #include "PokemonData_Manager.h"
@@ -139,6 +140,12 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 			VTXTEX::Elements, VTXTEX::iNumElements))))
 		return E_FAIL;
 
+	/* Prototype_Component_Shader_UI_Button_Entry */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIBUTTON_ENTRY,
+		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UIButton_Entry.hlsl"),
+			VTXTEX::Elements, VTXTEX::iNumElements))))
+		return E_FAIL;
+
 	/* UI Objects */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_UI_CONTAINER,
 		CUIContainer::Create(pDevice, pContext))))
@@ -186,6 +193,12 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 	tLayeredDesc = Get_LayeredButtonPreset(LAYERED_BUTTON_PRESET::BATTLE_COMMAND);
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_LAYERED_BTL_COMMAND,
 		CUIButton_Layered::Create(pDevice, pContext, tLayeredDesc))))
+		return E_FAIL;
+
+	/* Prototype_Button_Entry_Plate */
+	auto tEntryDesc = Get_EntryButtonPreset(ENTRY_BUTTON_PRESET::PLATE);
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_BTN_ENTRY_PLATE,
+		CUIButton_Entry::Create(pDevice, pContext, tEntryDesc))))
 		return E_FAIL;
 
 	return S_OK;

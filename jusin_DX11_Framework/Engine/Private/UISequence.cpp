@@ -108,7 +108,7 @@ namespace
 	}
 
 	// -- 정책 B: 텍스처 미싱 시 실패 --
-	HRESULT Validate_RequiredResources(const DescVariant& tDesc, UI_TYPE eType);
+	HRESULT Validate_RequiredResources(DescVariant& tDesc, UI_TYPE eType);
 
 	// -- prototype 매핑 --
 	WNameID Map_DefaultPrototypeTag(UI_TYPE eType)
@@ -1196,24 +1196,29 @@ namespace
 		return S_OK;
 	}
 
-	// -- 정책 B: 텍스처 미싱 시 실패 --
-	HRESULT Validate_RequiredResources(const DescVariant& tDesc, UI_TYPE eType)
+	HRESULT Validate_RequiredResources(DescVariant& tDesc, UI_TYPE eType)
 	{
-		return std::visit([eType](const auto& d) -> HRESULT
+		static const WNameID s_strDummyWhite = WNAME(L"Prototype_Component_Texture_Dummy_White");
+
+		return std::visit([](auto& d) -> HRESULT
 			{
 				using T = std::decay_t<decltype(d)>;
 				if constexpr (std::is_same_v<T, CUIImage::UIIMAGE_DESC>)
 				{
-					if (d.strTextureTag == INVALID_TAG) return E_FAIL;
+					if (d.strTextureTag == INVALID_TAG)
+						d.strTextureTag = s_strDummyWhite;
 				}
 				else if constexpr (std::is_same_v<T, CUIButton::UIBUTTON_DESC>)
 				{
-					if (d.strTextureTag == INVALID_TAG) return E_FAIL;
+					if (d.strTextureTag == INVALID_TAG)
+						d.strTextureTag = s_strDummyWhite;
 				}
 				else if constexpr (std::is_same_v<T, CUIProgressBar::UIPROGRESSBAR_DESC>)
 				{
-					if (d.strBackTextureTag == INVALID_TAG) return E_FAIL;
-					if (d.strFillTextureTag == INVALID_TAG) return E_FAIL;
+					if (d.strBackTextureTag == INVALID_TAG)
+						d.strBackTextureTag = s_strDummyWhite;
+					if (d.strFillTextureTag == INVALID_TAG)
+						d.strFillTextureTag = s_strDummyWhite;
 				}
 				else if constexpr (std::is_same_v<T, CUIText::UITEXT_DESC>)
 				{

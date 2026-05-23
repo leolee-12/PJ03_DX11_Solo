@@ -49,9 +49,6 @@
     <Filter Include="07. Component\VIBuffer\Cube">
       <UniqueIdentifier>{71a99488-e5f9-448f-873b-f8c49a3e158c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07. Component\VIBuffer\Model">
-      <UniqueIdentifier>{342dae11-30e7-4b61-825d-49336956ae1c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="07. Component\Shader">
       <UniqueIdentifier>{47b1699d-ae02-4687-a990-e2c998d6f236}</UniqueIdentifier>
     </Filter>

@@ -23,7 +23,9 @@ public:
 	HRESULT Bind_AndDraw(
 		CShader* pShader,
 		const vector<MATERIAL_SLOT>& Slots,
-		const _char* pBoneMatricesConstName = nullptr);
+		const _char* pBoneMatricesConstName = nullptr,
+		const vector<_bool>* pVisibleMask = nullptr,
+		_uint* pDrawnMeshCount = nullptr);
 
 	void Set_Pass(_uint iMatIdx, _uint iPass);
 	void Set_Variant(_uint iMatIdx, MATERIAL_TYPE eType, _uint iSlot);

@@ -46,12 +46,6 @@ public:
 	void Set_KeyBinding(NAVKEY eNav, _ubyte byDIK);
 
 private:
-	NAVKEY Read_Direction_Key() const;
-	_int Compute_Next_Index(NAVKEY eNav) const;
-	void Apply_Focus_Change(_int iNewIndex);
-	void Apply_Press_Pulse(_int iIndex);
-
-private:
 	CGameInstance* m_pGameInstance{ nullptr };
 
 	vector<CUIButton*> m_Buttons;
@@ -80,6 +74,13 @@ private:
 
 	_int m_iPressPulseIndex{ -1 };
 	_float m_fPressPulseTimer{ 0.f };
+
+private:
+	NAVKEY Read_Direction_Key() const;
+	_int Compute_Next_Index(NAVKEY eNav) const;
+	_bool Is_Selectable(_int iIdx) const;
+	void Apply_Focus_Change(_int iNewIndex);
+	void Apply_Press_Pulse(_int iIndex);
 
 public:
 	static CUIButton_Group* Create();

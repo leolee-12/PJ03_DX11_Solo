@@ -231,10 +231,10 @@ inline _bool Combo_UITexture(const char* pszLabel, WNameID& strTag)
 	_bool bChanged = false;
 
 	{
-		const _bool bSel = (INVALID_TAG == strTag);
+		const _bool bSel = (PROTO_COM_TEX_DUMMY_WHITE == strTag);
 		if (ImGui::Selectable("(none)", bSel) && !bSel)
 		{
-			strTag = INVALID_TAG;
+			strTag = PROTO_COM_TEX_DUMMY_WHITE;
 			bChanged = true;
 		}
 		if (bSel)

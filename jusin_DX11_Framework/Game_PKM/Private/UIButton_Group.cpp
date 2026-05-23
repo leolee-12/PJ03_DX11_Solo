@@ -1,4 +1,4 @@
-#include "UIButton_Group.h"
+﻿#include "UIButton_Group.h"
 #include "GameInstance.h"
 
 CUIButton_Group::CUIButton_Group()
@@ -103,7 +103,10 @@ void CUIButton_Group::Update(_float fTimeDelta)
 			if (m_iPressPulseIndex < static_cast<_int>(m_Buttons.size()) &&
 				nullptr != m_Buttons[m_iPressPulseIndex])
 			{
-				m_Buttons[m_iPressPulseIndex]->Set_State(BUTTON_STATE::HOVER);
+				// pulse 버튼이 여전히 포커스면 HOVER, 아니면 NORMAL — 비포커스 잔존 glow 방지
+				const BUTTON_STATE eRestore = (m_iPressPulseIndex == m_iFocusedIndex)
+					? BUTTON_STATE::HOVER : BUTTON_STATE::NORMAL;
+				m_Buttons[m_iPressPulseIndex]->Set_State(eRestore);
 			}
 
 			m_iPressPulseIndex = -1;
@@ -162,6 +165,18 @@ CUIButton_Group::NAVKEY CUIButton_Group::Read_Direction_Key() const
 	return NAVKEY::END;
 }
 
+_bool CUIButton_Group::Is_Selectable(_int iIdx) const
+{
+	if (iIdx < 0 || iIdx >= static_cast<_int>(m_Buttons.size()))
+		return false;
+
+	CUIButton* pBtn = m_Buttons[iIdx];
+	if (nullptr == pBtn)
+		return false;
+
+	return pBtn->Get_Visible() && pBtn->Is_Interactable();
+}
+
 _int CUIButton_Group::Compute_Next_Index(NAVKEY eNav) const
 {
 	const _int iSize = static_cast<_int>(m_Buttons.size());
@@ -178,14 +193,22 @@ _int CUIButton_Group::Compute_Next_Index(NAVKEY eNav) const
 		else if (NAVKEY::DOWN == eNav || NAVKEY::RIGHT == eNav)
 			iDelta = 1;
 
-		_int iNext = m_iFocusedIndex + iDelta;
+		_int iCursor = m_iFocusedIndex;
+		for (_int iAttempt = 0; iAttempt < iSize; ++iAttempt)
+		{
+			_int iCandidate = iCursor + iDelta;
 
-		if (m_bWrapAround)
-			iNext = (iNext % iSize + iSize) % iSize;
-		else
-			iNext = clamp(iNext, 0, iSize - 1);
+			if (m_bWrapAround)
+				iCandidate = (iCandidate % iSize + iSize) % iSize;
+			else if (iCandidate < 0 || iCandidate >= iSize)
+				return m_iFocusedIndex;
 
-		return iNext;
+			iCursor = iCandidate;
+			if (Is_Selectable(iCursor))
+				return iCursor;
+		}
+
+		return m_iFocusedIndex;
 	}
 
 	if (0 == m_iRows || 0 == m_iCols)
