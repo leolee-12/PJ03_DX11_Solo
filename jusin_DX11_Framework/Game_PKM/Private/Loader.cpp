@@ -22,6 +22,8 @@
 #include "Snow.h"
 #include "Explosion.h"
 #include "VIBuffer_UI_Instance.h"
+#include "VIBuffer_Particle3D_Instance.h"
+#include "VIBuffer_XZPlane.h"
 #include "Effect_Star.h"
 #include "Battle_Trainer.h"
 #include "Body_Pokemon.h"
@@ -40,11 +42,11 @@
 #include "CaptureRing.h"
 #include "Effect_Test_Single.h"
 #include "ParticleEmitter.h"
-#include "VIBuffer_Particle3D_Instance.h"
 #include "Effect.h"
 #include "Effect_Mesh.h"
 #include "Effect_Manager.h"
 #include "Camera_Director.h"
+#include "WaterPlane.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -290,6 +292,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	// ---------- Texture ----------
 	if (FAILED(Ready_Resources_For_UI()))
 		return E_FAIL;
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_WATER,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/LGPE_Map/area02/sea%02d_com.png"), 5); },
+			TEXT("Prototype_Component_Texture_Water_Net02"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_CLOUD,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/LGPE_Map/area02/cloud01.png"), 1); },
+			TEXT("Prototype_Component_Texture_Cloud"));
 	
 	// ---------- Shader ----------
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXNORTEX,
@@ -345,6 +355,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_UIImage.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements); },
 		TEXT("Prototype_Component_Shader_UIImage"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_WATER,
+		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Water.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements); },
+		TEXT("Prototype_Component_Shader_Water"));
+
 
 
 	// ---------- VIBuffer ----------
@@ -376,6 +390,12 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_PARTICLE3D,
 		[this, Particle3DVBDesc]() mutable { return CVIBuffer_Particle3D_Instance::Create(m_pDevice, m_pContext, &Particle3DVBDesc); },
 		TEXT("Prototype_Component_VIBuffer_Instance_Particle3D"));
+
+	/* Prototype_Component_VIBuffer_XZPlane */
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_XZPLANE,
+		[this] { return CVIBuffer_XZPlane::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_VIBuffer_XZPlane"));
+
 
 
 	// ---------- Model ----------
@@ -578,6 +598,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01,
 		[this, tMapDesc] { return CMapObject::Create(m_pDevice, m_pContext, tMapDesc); },
 		TEXT("Prototype_MapObject_Road01"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WATERPLANE,
+		[this] { return CWaterPlane::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_WaterPlane"));
 
 
 

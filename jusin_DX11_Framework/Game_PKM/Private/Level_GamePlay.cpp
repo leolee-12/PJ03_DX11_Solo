@@ -22,6 +22,7 @@
 #include "Player_Status.h"
 #include "Entry.h"
 #include "MapObject.h"
+#include "WaterPlane.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -304,7 +305,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	{
 		if (m_pMenu->Is_Open())
 			m_pMenu->Close();
-		else
+		else if (!UI_Is_AnyOpen())     // Entry 등 다른 UI가 떠 있으면 Menu 차단
 			m_pMenu->Open();
 	}
 
@@ -571,6 +572,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_MAP_ROAD01, ETOUI(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
+
+	CWaterPlane::WATER_PLANE_DESC WaterDesc{};
+	WaterDesc.vSpawnPos = _float3(15.f, -0.5f, -25.f);
+	WaterDesc.fWidth = 260.f;
+	WaterDesc.fDepth = 260.f;
+	WaterDesc.fScale = 0.1f;
+	WaterDesc.fTileU = 12.f;
+	WaterDesc.fTileV = 12.f;
+	WaterDesc.fTimeScale = 0.18f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WATERPLANE,
+		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &WaterDesc)))
 		return E_FAIL;
 
 	return S_OK;

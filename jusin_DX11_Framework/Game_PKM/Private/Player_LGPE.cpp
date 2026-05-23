@@ -4,6 +4,7 @@
 #include "Interaction.h"
 #include "Level_GamePlay.h"
 #include "Battle_AnimDef.h"
+#include "Game_API.h"
 
 #include "GameInstance.h"
 
@@ -190,6 +191,9 @@ HRESULT CPlayer_LGPE::Bind_ShaderResources()
 
 _vector CPlayer_LGPE::Read_MoveInput() const
 {
+	if (UI_Is_AnyOpen())
+		return XMVectorZero();
+
 	_vector vMoveDir = XMVectorZero();
 
 	_float x = 0.f;

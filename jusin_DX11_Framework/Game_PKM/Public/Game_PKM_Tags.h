@@ -15,6 +15,9 @@ WNAME_TAG(PROTO_COM_TEX_TERRAIN_BRUSH, L"Prototype_Component_Texture_Terrain_Bru
 WNAME_TAG(PROTO_COM_TEX_SKY, L"Prototype_Component_Texture_Sky");
 WNAME_TAG(PROTO_COM_TEX_SNOW, L"Prototype_Component_Texture_Snow");
 
+WNAME_TAG(PROTO_COM_TEX_WATER, L"Prototype_Component_Texture_Water");
+WNAME_TAG(PROTO_COM_TEX_CLOUD, L"Prototype_Component_Texture_Cloud");
+
 WNAME_TAG(PROTO_COM_TEX_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
 WNAME_TAG(PROTO_COM_TEX_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
 WNAME_TAG(PROTO_COM_TEX_TITLE_PBTN_DIFF, L"Prototype_Component_Texture_Title_pbtn_Diff");
@@ -157,8 +160,10 @@ WNAME_TAG(PROTO_COM_SHADER_VTXUIINST, L"Prototype_Component_Shader_VtxUIInstance
 WNAME_TAG(PROTO_COM_SHADER_UIIMAGE, L"Prototype_Component_Shader_UIImage");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_GLOW, L"Prototype_Component_Shader_UI_Button_Glow");
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_LAYERED, L"Prototype_Component_Shader_UI_Button_Layered");
+WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_ENTRY, L"Prototype_Component_Shader_UI_Button_Entry");
 WNAME_TAG(PROTO_COM_SHADER_PARTICLE3D, L"Prototype_Component_Shader_Particle3D");
 WNAME_TAG(PROTO_COM_SHADER_EFFECT_BEAM, L"Prototype_Component_Shader_Effect_Beam");
+WNAME_TAG(PROTO_COM_SHADER_WATER, L"Prototype_Component_Shader_Water");
 
 
 
@@ -171,6 +176,7 @@ WNAME_TAG(PROTO_COM_VIBUFFER_INST_EXPLOSION, L"Prototype_Component_VIBuffer_Inst
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_STAR, L"Prototype_Component_VIBuffer_Instance_Star");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_EFFECT, L"Prototype_Component_VIBuffer_Instance_Effect");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_PARTICLE3D, L"Prototype_Component_VIBuffer_Instance_Particle3D");
+WNAME_TAG(PROTO_COM_VIBUFFER_XZPLANE, L"Prototype_Component_VIBuffer_XZPlane");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
@@ -254,6 +260,7 @@ WNAME_TAG(LAYER_UI, L"Layer_UI");
 WNAME_TAG(PROTO_OBJ_BACKGROUND, L"Prototype_GameObject_BackGround");
 WNAME_TAG(PROTO_OBJ_TITLE_BG, L"Prototype_GameObject_Title_BG");
 WNAME_TAG(PROTO_OBJ_LOGO_MONSTER, L"Prototype_GameObject_Logo_Monster");
+WNAME_TAG(PROTO_OBJ_WATERPLANE, L"Prototype_GameObject_WaterPlane");
 
 WNAME_TAG(PROTO_OBJ_TERRAIN, L"Prototype_GameObject_Terrain");
 WNAME_TAG(PROTO_OBJ_CAMERA_FREE, L"Prototype_GameObject_Camera_Free");
@@ -275,6 +282,7 @@ WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
 WNAME_TAG(PROTO_BTN_LAYERED_GET, L"Prototype_UIButton_Layered_Get");
 WNAME_TAG(PROTO_BTN_LAYERED_BTL_COMMAND, L"Prototype_UIButton_Layered_Battle_Command");
+WNAME_TAG(PROTO_BTN_ENTRY_PLATE, L"Prototype_UIButton_Entry_Plate");
 WNAME_TAG(PROTO_IMG_FADEBATTLE, L"Prototype_UIImage_FadeBattle");
 
 WNAME_TAG(PROTO_OBJ_PLAYER_LGPE, L"Prototype_GameObject_Player_LGPE");

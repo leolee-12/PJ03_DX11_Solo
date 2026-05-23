@@ -73,6 +73,7 @@
     <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Effect_Mesh.h" />
     <ClInclude Include="..\Public\Effect_Test_Single.h" />
+    <ClInclude Include="..\Public\Entry.h" />
     <ClInclude Include="..\Public\EventAction.h" />
     <ClInclude Include="..\Public\Event_Definition.h" />
     <ClInclude Include="..\Public\EventSequence_Parser.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="..\Public\Spawn_Manager.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TrainerData_Manager.h" />
+    <ClInclude Include="..\Public\UIButton_Entry.h" />
     <ClInclude Include="..\Public\UIButton_Glow.h" />
     <ClInclude Include="..\Public\UIButton_Group.h" />
     <ClInclude Include="..\Public\UIButton_Layered.h" />
@@ -141,6 +143,8 @@
     <ClInclude Include="..\Public\UI_Defines.h" />
     <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_XZPlane.h" />
+    <ClInclude Include="..\Public\WaterPlane.h" />
     <ClInclude Include="..\Public\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +188,7 @@
     <ClCompile Include="..\Private\Capture_Menu.cpp" />
     <ClCompile Include="..\Private\Capture_Manager.cpp" />
     <ClCompile Include="..\Private\Effect_Mesh.cpp" />
+    <ClCompile Include="..\Private\Entry.cpp" />
     <ClCompile Include="..\Private\EventAction.cpp" />
     <ClCompile Include="..\Private\CommandQueue.cpp" />
     <ClCompile Include="..\Private\Damage_Calculator.cpp" />
@@ -234,6 +239,7 @@
     <ClCompile Include="..\Private\Spawn_Manager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TrainerData_Manager.cpp" />
+    <ClCompile Include="..\Private\UIButton_Entry.cpp" />
     <ClCompile Include="..\Private\UIButton_Glow.cpp" />
     <ClCompile Include="..\Private\UIButton_Group.cpp" />
     <ClCompile Include="..\Private\UIButton_Layered.cpp" />
@@ -242,6 +248,8 @@
     <ClCompile Include="..\Private\UIImage_FadeBattle.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_XZPlane.cpp" />
+    <ClCompile Include="..\Private\WaterPlane.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +262,7 @@
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Trail.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_UIButton_Entry.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_UIImage.hlsl" />
@@ -267,6 +276,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxUIInstance.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_Water.hlsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

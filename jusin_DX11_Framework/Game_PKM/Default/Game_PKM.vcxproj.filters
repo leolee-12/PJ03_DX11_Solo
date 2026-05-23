@@ -85,12 +85,6 @@
     <Filter Include="98. ShaderFiles\01. Body">
       <UniqueIdentifier>{8801ab90-8eee-404d-aa1f-eb99cd9cea89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. ShaderFiles\02. UI">
-      <UniqueIdentifier>{eb3ed17d-22b4-460f-9b7f-c0492c7f36ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. ShaderFiles\03. Effect">
-      <UniqueIdentifier>{cc50901e-7524-4cae-9772-5603c55f38f6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98. ShaderFiles\00. Basic">
       <UniqueIdentifier>{0722cd0d-6b8c-4e96-b0ff-2d42f5377627}</UniqueIdentifier>
     </Filter>
@@ -199,6 +193,27 @@
     <Filter Include="01. Objects\04. Effects\Effect_Mesh">
       <UniqueIdentifier>{693615c7-94da-40bf-ae80-90974dd0f917}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Objects\02. UI\Controller\Entry">
+      <UniqueIdentifier>{37f3db85-5bf1-4f83-902e-54c76f776098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\00. VIBuffer\XZPlane">
+      <UniqueIdentifier>{007c5c2e-94c1-4a05-bbcf-094bd8a1a618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\00. VIBuffer\Particle3D_Inst">
+      <UniqueIdentifier>{3929d45b-06a5-4579-8bf2-86b9aa5c382d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\00. VIBuffer\UI_Inst">
+      <UniqueIdentifier>{a275b0e7-1507-4746-8e46-fcb11282851d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\02. Map">
+      <UniqueIdentifier>{0336189d-ac0b-4981-8d8d-23351ee298bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\03. UI">
+      <UniqueIdentifier>{eb3ed17d-22b4-460f-9b7f-c0492c7f36ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ShaderFiles\04. Effect">
+      <UniqueIdentifier>{cc50901e-7524-4cae-9772-5603c55f38f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -269,9 +284,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Star.h">
       <Filter>01. Objects\04. Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
-      <Filter>03. Components\00. VIBuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController.h">
       <Filter>01. Objects\02. UI\Controller</Filter>
@@ -492,9 +504,6 @@
     <ClInclude Include="..\Public\Battle_ExpGainListener.h">
       <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h">
-      <Filter>03. Components\00. VIBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect_Defines.h">
       <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
@@ -570,6 +579,24 @@
     <ClInclude Include="..\Public\Effect_Mesh.h">
       <Filter>01. Objects\04. Effects\Effect_Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIButton_Entry.h">
+      <Filter>01. Objects\02. UI\Button_Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Entry.h">
+      <Filter>01. Objects\02. UI\Controller\Entry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h">
+      <Filter>03. Components\00. VIBuffer\Particle3D_Inst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_UI_Instance.h">
+      <Filter>03. Components\00. VIBuffer\UI_Inst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_XZPlane.h">
+      <Filter>03. Components\00. VIBuffer\XZPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WaterPlane.h">
+      <Filter>01. Objects\03. Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -628,9 +655,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Star.cpp">
       <Filter>01. Objects\04. Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
-      <Filter>03. Components\00. VIBuffer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Game_PresetTable.cpp">
       <Filter>02. Game_API</Filter>
@@ -809,9 +833,6 @@
     <ClCompile Include="..\Private\Battle_ExpGainListener.cpp">
       <Filter>04. Contents\01. Battle\05. Events</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp">
-      <Filter>03. Components\00. VIBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
       <Filter>01. Objects\04. Effects</Filter>
     </ClCompile>
@@ -869,19 +890,37 @@
     <ClCompile Include="..\Private\Effect_Mesh.cpp">
       <Filter>01. Objects\04. Effects\Effect_Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIButton_Entry.cpp">
+      <Filter>01. Objects\02. UI\Button_Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Entry.cpp">
+      <Filter>01. Objects\02. UI\Controller\Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp">
+      <Filter>03. Components\00. VIBuffer\Particle3D_Inst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp">
+      <Filter>03. Components\00. VIBuffer\UI_Inst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_XZPlane.cpp">
+      <Filter>03. Components\00. VIBuffer\XZPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaterPlane.cpp">
+      <Filter>01. Objects\03. Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Glow.hlsl">
-      <Filter>98. ShaderFiles\02. UI</Filter>
+      <Filter>98. ShaderFiles\03. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UI.hlsl">
-      <Filter>98. ShaderFiles\02. UI</Filter>
+      <Filter>98. ShaderFiles\03. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIButton_Layered.hlsl">
-      <Filter>98. ShaderFiles\02. UI</Filter>
+      <Filter>98. ShaderFiles\03. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_UIImage.hlsl">
-      <Filter>98. ShaderFiles\02. UI</Filter>
+      <Filter>98. ShaderFiles\03. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Pokemon.hlsl">
       <Filter>98. ShaderFiles\01. Body</Filter>
@@ -890,9 +929,6 @@
       <Filter>98. ShaderFiles\01. Body</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl">
-      <Filter>98. ShaderFiles\01. Body</Filter>
-    </FxCompile>
-    <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl">
       <Filter>98. ShaderFiles\01. Body</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxAnimMesh.hlsl">
@@ -911,25 +947,34 @@
       <Filter>98. ShaderFiles\00. Basic</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxUIInstance.hlsl">
-      <Filter>98. ShaderFiles\02. UI</Filter>
+      <Filter>98. ShaderFiles\03. UI</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxRectInstance.hlsl">
-      <Filter>98. ShaderFiles\03. Effect</Filter>
+      <Filter>98. ShaderFiles\04. Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_VtxPointInstance.hlsl">
-      <Filter>98. ShaderFiles\03. Effect</Filter>
+      <Filter>98. ShaderFiles\04. Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Effect_M1.hlsl">
-      <Filter>98. ShaderFiles\03. Effect</Filter>
+      <Filter>98. ShaderFiles\04. Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Particle3D.hlsl">
-      <Filter>98. ShaderFiles\03. Effect</Filter>
+      <Filter>98. ShaderFiles\04. Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Trail.hlsl">
-      <Filter>98. ShaderFiles\03. Effect</Filter>
+      <Filter>98. ShaderFiles\04. Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Effect_Beam.hlsl">
-      <Filter>98. ShaderFiles\03. Effect</Filter>
+      <Filter>98. ShaderFiles\04. Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_UIButton_Entry.hlsl">
+      <Filter>98. ShaderFiles\03. UI</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl">
+      <Filter>98. ShaderFiles\02. Map</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_Water.hlsl">
+      <Filter>98. ShaderFiles\02. Map</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
