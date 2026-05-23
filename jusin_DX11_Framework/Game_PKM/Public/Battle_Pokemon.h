@@ -1,10 +1,10 @@
 ﻿#pragma once
+#include "Actor.h"
 #include "Game_PKM_Defines.h"
 #include "Battle_Session.h"
 #include "Battle_AnimDef.h"
 #include "Effect_Defines.h"
 
-#include "ContainerObject.h"
 
 NS_BEGIN(Engine)
 class CRenderRule;
@@ -12,9 +12,8 @@ NS_END
 
 NS_BEGIN(Game_PKM)
 class CBattle_Manager;
-class CBody;
 
-class CBattle_Pokemon final : public CContainerObject
+class CBattle_Pokemon final : public CActor
 {
 public:
 	struct POKEMON_DESC : public CGameObject::GAMEOBJECT_DESC
@@ -45,7 +44,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual void Tick_Movement(_float fTimeDelta) override;
 
 	// P7-B 신규: anim 제어 + 페이싱 락 연동
 	void  Set_Manager(CBattle_Manager* pManager);
@@ -76,7 +75,6 @@ private:
 
 	// P7-B 신규
 	CBattle_Manager* m_pManager = { nullptr };  // weak
-	CBody* m_pBody = { nullptr };  // weak - Container owns
 
 	ANIM_KIND	m_eCurrentKind = { ANIM_KIND::IDLE };
 	_float		m_fAnimTimer = { 0.f };

@@ -18,6 +18,7 @@ NS_BEGIN(Game_PKM)
 class CMenu;
 class CBattleMsg;
 class CEvent_Manager;
+class CEntry;
 
 class CLevel_GamePlay : public CLevel
 {
@@ -48,6 +49,8 @@ private:
 	CUISequence* m_pCursorSeq = { nullptr };
 	CUISequence* m_pFadeBattleSeq = { nullptr };
 	CMenu* m_pMenu = { nullptr };
+	CEntry* m_pEntry = { nullptr };
+	CUISequence* m_pEntrySeq = { nullptr };
 	CEvent_Manager* m_pEventMgr = { nullptr };
 
 	CUISequence* m_pDialogueSeq = { nullptr };   // weak
@@ -68,6 +71,12 @@ private:
 
 #ifdef _DEBUG
 	OUTLINE_PARAM m_DebugOutlineParam{};
+
+	_float m_fDebugFpsAccum = { 0.f };
+	_uint  m_iDebugFpsFrames = { 0 };
+	_float m_fDebugFps = { 0.f };
+	_float m_fDebugRendererMSAccum = { 0.f };
+	_float m_fDebugRendererMS = { 0.f };
 #endif
 
 private:
@@ -86,6 +95,8 @@ private:
 	void Debug_Common();
 	void Debug_Outline();
 	void Debug_Event();
+	void Debug_TickFPS(_float fTimeDelta);
+	void Debug_RenderFPS();
 #endif
 
 public:

@@ -19,12 +19,32 @@
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
 #include "Event_Manager.h"
+#include "Player_Status.h"
+#include "Entry.h"
+#include "MapObject.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
+
+namespace
+{
+	static CPlayer_Status* Find_PlayerState(CGameInstance* pGameInstance)
+	{
+		if (nullptr == pGameInstance)
+			return nullptr;
+
+		const list<CGameObject*>* pObjects =
+			pGameInstance->Get_ObjectList(ETOUI(LEVEL::STATIC), LAYER_PERSISTENT);
+
+		if (nullptr == pObjects || pObjects->empty())
+			return nullptr;
+
+		return static_cast<CPlayer_Status*>(pObjects->front());
+	}
+}
 NS_END
 
 namespace
@@ -150,6 +170,10 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Debug_TickFPS(fTimeDelta);
+#endif
+
 	if (m_bDialogueActive)
 	{
 		UI_Update_All(fTimeDelta);
@@ -276,7 +300,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	CSpawn_Manager::GetInstance()->Update(fTimeDelta);
 
 	/* F4 - 메뉴 열기/닫기 토글. Open() 이 시퀀스 Play 도 같이 트리거. */
-	if (m_pGameInstance->Key_Down(DIK_F4) && nullptr != m_pMenu)
+	if (m_pGameInstance->Key_Down(DIK_TAB) && nullptr != m_pMenu)
 	{
 		if (m_pMenu->Is_Open())
 			m_pMenu->Close();
@@ -300,6 +324,8 @@ HRESULT CLevel_GamePlay::Render()
 
 	if (CSpawn_Manager* pSpawnMgr = CSpawn_Manager::GetInstance())
 		pSpawnMgr->Render_Debug();
+
+	Debug_RenderFPS();
 #endif
 
 	return S_OK;
@@ -319,6 +345,10 @@ void CLevel_GamePlay::OnResume()
 
 	/* GAMEPLAY BGM 복원. BGM 키/볼륨은 Initialize 와 동일 값. */
 	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
+
+	/* Capture/Battle 종료 시 UI_Set_Cursor_Sequence(nullptr) 로 Hub 커서가 해제됨 → GamePlay 커서 재주입. */
+	if (nullptr != m_pCursorSeq)
+		UI_Set_Cursor_Sequence(m_pCursorSeq);
 
 	/* Pause 동안 LAYER_INTERACTABLE 의 액터가 소멸·재배치됐을 수 있으므로
 	   Player 의 직전-overlap 캐시를 비워 다음 접촉을 정상적인 Enter 로 처리. */
@@ -703,7 +733,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	}
 
 	/* 활성화 콜백 - 어떤 항목이 선택됐는지 OutputDebugString 으로 확인 */
-	pMenu->Set_OnActivate([](_int iIndex)
+	pMenu->Set_OnActivate([this](_int iIndex)
 		{
 			static constexpr const _char* s_Names[] =
 			{
@@ -718,6 +748,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 			else
 			{
 				OutputDebugStringA("[Menu] Activated: index out of range\n");
+			}
+
+			if (iIndex == static_cast<_int>(CMenu::MENU_ENTRY::ENTRY))
+			{
+				if (m_pMenu)
+					m_pMenu->Close();
+				if (m_pEntry)
+					m_pEntry->Open();
 			}
 		});
 
@@ -737,8 +775,56 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	m_pMenu = pMenu;        // weak - Hub 가 owner
 	Safe_Release(pMenu);    // local ref-- (Hub 가 ref 보유 중이라 안전)
 
+	/* ===== Entry 컨트롤러 등록 ===== */
+	{
+		CUISequence::UISEQUENCE_DESC tEntryDesc{};
+		tEntryDesc.strPath = "../../DataFiles/UI/UI_Entry.uiseq";
+		tEntryDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pEntrySeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tEntryDesc));
+		if (nullptr == pEntrySeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pEntrySeq)))
+		{
+			Safe_Release(pEntrySeq);
+			return E_FAIL;
+		}
+
+		pEntrySeq->Set_Visible(false);   // Open 호출 전까지 숨김
+		m_pEntrySeq = pEntrySeq;         // weak (Add_GameObject_Ex 가 owner)
+
+		CEntry* pEntry = CEntry::Create();
+		if (nullptr == pEntry)
+			return E_FAIL;
+
+		if (FAILED(pEntry->Initialize(pEntrySeq)))
+		{
+			Safe_Release(pEntry);
+			return E_FAIL;
+		}
+
+		pEntry->Bind(Find_PlayerState(m_pGameInstance));
+
+		pEntry->Set_OnCancel([this]()
+			{
+				if (m_pMenu)
+					m_pMenu->Open();
+			});
+
+		if (FAILED(UI_Register(pEntry, ETOUI(LEVEL::GAMEPLAY))))
+		{
+			Safe_Release(pEntry);
+			return E_FAIL;
+		}
+
+		m_pEntry = pEntry;          // weak - Hub 가 owner
+		Safe_Release(pEntry);       // local ref--
+	}
+
 	return S_OK;
-}
+  }
 
 HRESULT CLevel_GamePlay::Ready_EventSystem()
 {
@@ -766,7 +852,12 @@ void CLevel_GamePlay::Debug_Common()
 
 	if (m_pGameInstance->Key_Down(DIK_F4))
 	{
+		CMapObject::Debug_ToggleCulling();
+	}
 
+	if (m_pGameInstance->Key_Down(DIK_F5))
+	{
+		CMapObject::Debug_ToggleCullLog();
 	}
 }
 
@@ -825,6 +916,47 @@ void CLevel_GamePlay::Debug_Event()
 	{
 	}
 }
+
+void CLevel_GamePlay::Debug_TickFPS(_float fTimeDelta)
+{
+	m_fDebugFpsAccum += fTimeDelta;
+	++m_iDebugFpsFrames;
+
+	m_fDebugRendererMSAccum += m_pGameInstance->Get_DebugRendererMS();
+
+	if (m_fDebugFpsAccum >= 0.5f)
+	{
+		const _uint iFrames = (0 == m_iDebugFpsFrames ? 1 : m_iDebugFpsFrames);
+
+		m_fDebugFps = static_cast<_float>(iFrames) / m_fDebugFpsAccum;
+		m_fDebugRendererMS = m_fDebugRendererMSAccum / iFrames;
+
+		m_fDebugFpsAccum = 0.f;
+		m_iDebugFpsFrames = 0;
+		m_fDebugRendererMSAccum = 0.f;
+	}
+}
+
+void CLevel_GamePlay::Debug_RenderFPS()
+{
+	wchar_t szText[80] = {};
+	swprintf_s(
+		szText,
+		L"FPS %.1f | Render %.3f ms | Cull %ls | Log %ls",
+		m_fDebugFps,
+		m_fDebugRendererMS,
+		CMapObject::Debug_IsCullingEnabled() ? L"ON" : L"OFF",
+		CMapObject::Debug_IsCullLogEnabled() ? L"ON" : L"OFF");
+
+	m_pGameInstance->Draw_Text(
+		FONT_MALGUN,
+		szText,
+		_float2(128.f, 16.f),
+		XMVectorSet(1.f, 0.f, 0.f, 1.f),
+		0.f,
+		_float2(0.f, 0.f),
+		_float2(0.75f, 0.75f));
+}
 #endif
 
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -873,7 +1005,8 @@ void CLevel_GamePlay::Free()
 	m_pCursorSeq = nullptr;
 	m_pFadeBattleSeq = nullptr;
 	m_pMenu = nullptr;
-	m_pRuntimeUI = nullptr;
+	m_pEntry = nullptr;
+	m_pEntrySeq = nullptr;
 
 	__super::Free();
 }

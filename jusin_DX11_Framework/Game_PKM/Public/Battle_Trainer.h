@@ -1,14 +1,13 @@
 #pragma once
+#include "Actor.h"
 #include "Game_PKM_Defines.h"
 #include "Battle_Session.h"
 #include "Battle_AnimDef.h"
 
-#include "ContainerObject.h"
 
 NS_BEGIN(Game_PKM)
-class CBody;
 
-class CBattle_Trainer final : public CContainerObject
+class CBattle_Trainer final : public CActor
 {
 public:
     struct BATTLE_TRAINER_DESC : public CGameObject::GAMEOBJECT_DESC
@@ -38,9 +37,7 @@ public:
     virtual HRESULT Initialize_Prototype() override;
     virtual HRESULT Initialize(void* pArg) override;
     virtual void Priority_Update(_float fTimeDelta) override;
-    virtual void Update(_float fTimeDelta) override;
-    virtual void Late_Update(_float fTimeDelta) override;
-    virtual HRESULT Render() override;
+    virtual void Tick_Movement(_float fTimeDelta) override;
 
     void Play_Intro();
     void Play_Throw();
@@ -48,8 +45,6 @@ public:
     void Play_Faint();
 
 private:
-    CBody* m_pBody = { nullptr }; // weak
-
     _uint m_iSide = { g_kBattleSide_Player };
     WNameID m_strBodyProtoTag = {};
     WNameID m_strModelProtoTag = {};

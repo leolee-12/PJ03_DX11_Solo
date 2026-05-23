@@ -118,8 +118,9 @@ void CActor::Rebuild_InteractionCache()
 
 void CActor::Free()
 {
-	__super::Free();
-
+	m_pBody = nullptr;
 	// m_Interactions / m_pBody는 캐시이므로 별도 release 없음 (소유는 m_Components / m_PartObject)
 	m_Interactions.clear();
+
+	__super::Free();
 }

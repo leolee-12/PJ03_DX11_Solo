@@ -3,13 +3,13 @@
 #include "RenderRule_Manager.h"
 
 CBattle_Trainer::CBattle_Trainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CContainerObject{ pDevice, pContext }
+	: CActor{ pDevice, pContext }
 {
 	m_strName = L"Battle_Trainer";
 }
 
 CBattle_Trainer::CBattle_Trainer(const CBattle_Trainer& Prototype)
-	: CContainerObject{ Prototype }
+	: CActor{ Prototype }
 {
 }
 
@@ -56,27 +56,8 @@ void CBattle_Trainer::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CBattle_Trainer::Update(_float fTimeDelta)
+void CBattle_Trainer::Tick_Movement(_float fTimeDelta)
 {
-	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
-		{
-			if (nullptr != Pair.second)
-				Pair.second->Update(fTimeDelta);
-		});
-}
-
-void CBattle_Trainer::Late_Update(_float fTimeDelta)
-{
-	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
-		{
-			if (nullptr != Pair.second)
-				Pair.second->Late_Update(fTimeDelta);
-		});
-}
-
-HRESULT CBattle_Trainer::Render()
-{
-	return S_OK;
 }
 
 void CBattle_Trainer::Play_Intro()

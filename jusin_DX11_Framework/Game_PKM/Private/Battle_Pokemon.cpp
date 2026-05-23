@@ -8,13 +8,13 @@
 #include "Effect_Manager.h"
 
 CBattle_Pokemon::CBattle_Pokemon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CContainerObject{ pDevice, pContext }
+	: CActor{ pDevice, pContext }
 {
 	m_strName = { L"Pokemon_Default" };
 }
 
 CBattle_Pokemon::CBattle_Pokemon(const CBattle_Pokemon& Prototype)
-	: CContainerObject{ Prototype }
+	: CActor{ Prototype }
 {
 }
 
@@ -98,13 +98,8 @@ void CBattle_Pokemon::Update(_float fTimeDelta)
 	if (false == m_bBattleVisible)
 		return;
 
-	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
-		{
-			if (nullptr != Pair.second)
-				Pair.second->Update(fTimeDelta);
-		});
+	__super::Update(fTimeDelta);
 
-	// 비-loop anim 진행 중이면 타이머 누적 + 만료 시 자동 IDLE 복귀
 	if (m_fAnimDuration > 0.f)
 	{
 		m_fAnimTimer += fTimeDelta;
@@ -118,16 +113,11 @@ void CBattle_Pokemon::Late_Update(_float fTimeDelta)
 	if (false == m_bBattleVisible)
 		return;
 
-	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
-		{
-			if (nullptr != Pair.second)
-				Pair.second->Late_Update(fTimeDelta);
-		});
+	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CBattle_Pokemon::Render()
+void CBattle_Pokemon::Tick_Movement(_float fTimeDelta)
 {
-	return S_OK;
 }
 
 void CBattle_Pokemon::Set_Manager(CBattle_Manager* pManager)
@@ -375,7 +365,6 @@ void CBattle_Pokemon::Free()
 	}
 
 	m_pManager = nullptr;
-	m_pBody = nullptr;
 
 	__super::Free();
 }
