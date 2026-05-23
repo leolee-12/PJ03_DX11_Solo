@@ -37,6 +37,12 @@ public:
 
 	ID3D11Device* Get_Device() const;
 	ID3D11DeviceContext* Get_Context() const;
+
+#ifdef _DEBUG
+	_float Get_DebugRendererMS() const { return m_fDebugRendererMS; }
+	_float Get_DebugLevelRenderMS() const { return m_fDebugLevelRenderMS; }
+	_float Get_DebugDrawMS() const { return m_fDebugDrawMS; }
+#endif
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -167,6 +173,7 @@ public:
 #pragma region FRUSTUM
 	void XM_CALLCONV Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrix);
 	_bool XM_CALLCONV isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange = 0.f);
+	_bool isIn_Frustum_WorldSpace_AABB(const _float3* pWorldCorners, _uint iNumCorners);
 	_bool XM_CALLCONV isIn_Frustum_LocalSpace(_fvector vLocalPos, _float fRange = 0.f);
 #pragma endregion
 
@@ -192,7 +199,13 @@ private:
 
 	_float2						m_vViewportSize{};
 	_bool						m_bDebug = { false };
-	float						m_fDummy = { 500.f };
+	_float						m_fDummy = { 500.f };
+
+#ifdef _DEBUG
+	_float m_fDebugRendererMS = { 0.f };
+	_float m_fDebugLevelRenderMS = { 0.f };
+	_float m_fDebugDrawMS = { 0.f };
+#endif
 
 private:
 	virtual void Free() override;

@@ -32,7 +32,7 @@ namespace
 		{ PROTO_COM_MODEL_PPL_NURSE,		{ 3,	8,	4,	27,	0,	0,	0,	0,	0,	0,	0,	0,	0,	6,	5,	0,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PPL_SHORTPANTS,	{ 3,	5,	0,	27,	13,	16,	15,	18,	11,	7,	12,	0,	0,	0,	0,	0,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PPL_ROCK,			{ 11,	10,	21,	8,	0,	14,	22,	7,	1,	17,	0,	0,	0,	0,	0,	0,	0,	0,	0} },
-		{ PROTO_COM_MODEL_PPL_WATER,		{ 3,	19,	0,	6,	12,	2,	14,	8,	1,	7,	1,	0,	0,	0,	0,	0,	0,	0,	0} },	// 8,9에서 x축 90도 회전 필요
+		{ PROTO_COM_MODEL_PPL_WATER,		{ 3,	19,	0,	6,	12,	2,	14,	8,	1,	7,	1,	0,	0,	0,	0,	0,	0,	0,	0} },	// 일부 모델 anim 회전은 s_AnimRotationCorrections에서 임시 보정
 	};
 
 	constexpr _uint s_DefaultIndex[ETOUI(ANIM_KIND::END)] = {};
@@ -49,6 +49,7 @@ namespace
 
 	const constexpr ANIM_ROTATION_CORRECTION_ENTRY s_AnimRotationCorrections[] =
 	{
+		// INTRO -> THROW 전환 중 스냅은 카메라 연출로 가린다.
 		{ PROTO_COM_MODEL_PPL_WATER, 7, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 7번 Anim : THROW
 		{ PROTO_COM_MODEL_PPL_WATER, 8, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 8번 Anim : FOCUS
 	};

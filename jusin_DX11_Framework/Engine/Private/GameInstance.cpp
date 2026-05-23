@@ -18,6 +18,17 @@
 
 #include "Camera.h"
 
+#ifdef _DEBUG
+namespace
+{
+	_float Debug_ElapsedMS(const LARGE_INTEGER& Begin, const LARGE_INTEGER& End, const
+		LARGE_INTEGER& Freq)
+	{
+		return static_cast<_float>((End.QuadPart - Begin.QuadPart) * 1000.0 / Freq.QuadPart);
+	}
+}
+#endif
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -131,11 +142,28 @@ HRESULT CGameInstance::Begin_Draw()
 
 HRESULT CGameInstance::Draw()
 {
+#ifdef _DEBUG
+	LARGE_INTEGER Freq{}, Begin{}, AfterRenderer{}, AfterLevel{};
+	QueryPerformanceFrequency(&Freq);
+	QueryPerformanceCounter(&Begin);
+#endif
+
 	if (FAILED(m_pRenderer->Draw()))
 		return E_FAIL;
 
+#ifdef _DEBUG
+	QueryPerformanceCounter(&AfterRenderer);
+	m_fDebugRendererMS = Debug_ElapsedMS(Begin, AfterRenderer, Freq);
+#endif
+
 	if (FAILED(m_pLevel_Manager->Render()))
 		return E_FAIL;
+
+#ifdef _DEBUG
+	QueryPerformanceCounter(&AfterLevel);
+	m_fDebugLevelRenderMS = Debug_ElapsedMS(AfterRenderer, AfterLevel, Freq);
+	m_fDebugDrawMS = Debug_ElapsedMS(Begin, AfterLevel, Freq);
+#endif
 
 	return S_OK;
 }
@@ -576,6 +604,11 @@ void XM_CALLCONV CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMat
 _bool XM_CALLCONV CGameInstance::isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange)
 {
 	return m_pFrustum->isIn_WorldSpace(vWorldPos, fRange);
+}
+
+_bool CGameInstance::isIn_Frustum_WorldSpace_AABB(const _float3* pWorldCorners, _uint iNumCorners)
+{
+	return m_pFrustum->isIn_WorldSpace_AABB(pWorldCorners, iNumCorners);
 }
 
 _bool XM_CALLCONV CGameInstance::isIn_Frustum_LocalSpace(_fvector vLocalPos, _float fRange)

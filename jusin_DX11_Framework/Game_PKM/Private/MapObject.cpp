@@ -1,5 +1,62 @@
 #include "MapObject.h"
+
 #include "GameInstance.h"
+#include "Mesh.h"
+
+#ifdef _DEBUG
+_bool CMapObject::s_bDebugCullingEnabled = true;
+_bool CMapObject::s_bDebugCullLogEnabled = false;
+#endif
+
+namespace
+{
+	_bool XM_CALLCONV Is_MeshAABBVisible(CGameInstance* pGI, const BoundingBox& LocalAABB, _fmatrix WorldMatrix)
+	{
+		if (nullptr == pGI)
+			return true;
+
+		XMFLOAT3 LocalCorners[BoundingBox::CORNER_COUNT] = {};
+		XMFLOAT3 WorldCorners[BoundingBox::CORNER_COUNT] = {};
+
+		LocalAABB.GetCorners(LocalCorners);
+
+		for (_uint i = 0; i < BoundingBox::CORNER_COUNT; ++i)
+		{
+			XMStoreFloat3(
+				&WorldCorners[i],
+				XMVector3TransformCoord(XMLoadFloat3(&LocalCorners[i]), WorldMatrix));
+		}
+
+		return pGI->isIn_Frustum_WorldSpace_AABB(WorldCorners, BoundingBox::CORNER_COUNT);
+	}
+
+#ifdef _DEBUG
+	void Debug_LogMapCull(WNameID strModelTag, _uint iTotal, _uint iVisible, _uint iDrawn)
+	{
+		if (false == CMapObject::Debug_IsCullLogEnabled())
+			return;
+
+		static unordered_map<WNameID, _uint> s_LogFrameByModel;
+
+		_uint& iFrame = s_LogFrameByModel[strModelTag];
+		if ((iFrame++ % 120) != 0)
+			return;
+
+		wchar_t szLog[256] = {};
+		swprintf_s(
+			szLog,
+			L"[MapCull] model=%ls(%u) visible=%u/%u drawn=%u skipped=%u\n",
+			Engine::WNameRegistry::Lookup(strModelTag),
+			strModelTag,
+			iVisible,
+			iTotal,
+			iDrawn,
+			iTotal - iDrawn);
+
+		OutputDebugStringW(szLog);
+	}
+#endif
+}
 
 CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const MAPOBJECT_DESC& tDesc)
 	: CGameObject{ pDevice, pContext }
@@ -54,6 +111,30 @@ HRESULT CMapObject::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	const size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	_uint iVisibleMeshes = 0;
+
+	vector<_bool> VisibleMask;
+	VisibleMask.assign(iNumMeshes, true);
+
+	_matrix WorldMatrix = XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr());
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		CMesh* pMesh = m_pModelCom->Get_Mesh(i);
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		VisibleMask[i] = Is_MeshAABBVisible(
+			m_pGameInstance,
+			pMesh->Get_LocalAABB(),
+			WorldMatrix);
+
+		if (true == VisibleMask[i])
+			++iVisibleMeshes;
+	}
+
 	vector<CRenderProfile::MATERIAL_SLOT> Slots =
 	{
 		{ MATERIAL_TYPE::DIFFUSE, "g_TexDiff", 0 },
@@ -65,8 +146,30 @@ HRESULT CMapObject::Render()
 		{ MATERIAL_TYPE::UNKNOWN, "g_TexMask" },
 	};
 
-	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots)))
+	_uint iDrawnMeshes = 0;
+
+#ifdef _DEBUG
+	const vector<_bool>* pVisibleMask =
+		(true == s_bDebugCullingEnabled ? &VisibleMask : nullptr);
+#else
+	const vector<_bool>* pVisibleMask = &VisibleMask;
+#endif
+
+	if (FAILED(m_RenderProfile.Bind_AndDraw(
+		m_pShaderCom,
+		Slots,
+		nullptr,
+		pVisibleMask,
+		&iDrawnMeshes)))
 		return E_FAIL;
+
+#ifdef _DEBUG
+	Debug_LogMapCull(
+		m_tDesc.strModelTag,
+		static_cast<_uint>(iNumMeshes),
+		iVisibleMeshes,
+		iDrawnMeshes);
+#endif
 
 	return S_OK;
 }

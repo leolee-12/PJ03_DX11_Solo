@@ -27,6 +27,14 @@ protected:
 public:
 	class Engine::CModel* Get_Model() const { return m_pModelCom; }
 
+#ifdef _DEBUG
+	static void Debug_ToggleCulling() { s_bDebugCullingEnabled = !s_bDebugCullingEnabled; }
+	static _bool Debug_IsCullingEnabled() { return s_bDebugCullingEnabled; }
+
+	static void Debug_ToggleCullLog() { s_bDebugCullLogEnabled = !s_bDebugCullLogEnabled; }
+	static _bool Debug_IsCullLogEnabled() { return s_bDebugCullLogEnabled; }
+#endif
+
 	virtual _string Get_TypeName() const { return "Map"; }
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -42,6 +50,12 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CRenderProfile m_RenderProfile;
+
+#ifdef _DEBUG
+private:
+	static _bool s_bDebugCullingEnabled;
+	static _bool s_bDebugCullLogEnabled;
+#endif
 
 private:
 	HRESULT Ready_Components();

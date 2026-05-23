@@ -63,6 +63,31 @@ _bool XM_CALLCONV CFrustum::isIn_WorldSpace(_fvector vWorldPos, _float fRange)
 	return true;
 }
 
+_bool CFrustum::isIn_WorldSpace_AABB(const _float3* pWorldCorners, _uint iNumCorners)
+{
+	if (nullptr == pWorldCorners || 0 == iNumCorners)
+		return true;
+
+	for (size_t i = 0; i < 6; ++i)
+	{
+		_uint iOutsideCount = 0;
+		_vector vPlane = XMLoadFloat4(&m_vWorldPlanes[i]);
+
+		for (_uint j = 0; j < iNumCorners; ++j)
+		{
+			_vector vCorner = XMVectorSetW(XMLoadFloat3(&pWorldCorners[j]), 1.f);
+
+			if (0.f <= XMVectorGetX(XMPlaneDotCoord(vPlane, vCorner)))
+				++iOutsideCount;
+		}
+
+		if (iOutsideCount == iNumCorners)
+			return false;
+	}
+
+	return true;
+}
+
 _bool XM_CALLCONV CFrustum::isIn_LocalSpace(_fvector vLocalPos, _float fRange)
 {
 	for (size_t i = 0; i < 6; i++)

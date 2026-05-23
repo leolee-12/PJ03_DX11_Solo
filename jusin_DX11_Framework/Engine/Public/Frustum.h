@@ -16,6 +16,7 @@ public:
 public:
 	void XM_CALLCONV Transform_ToLocalSpace(_fmatrix WorldMatrix);
 	_bool XM_CALLCONV isIn_WorldSpace(_fvector vWorldPos, _float fRange = 0.f);
+	_bool isIn_WorldSpace_AABB(const _float3* pWorldCorners, _uint iNumCorners);
 	_bool XM_CALLCONV isIn_LocalSpace(_fvector vLocalPos, _float fRange = 0.f);
 
 private:
