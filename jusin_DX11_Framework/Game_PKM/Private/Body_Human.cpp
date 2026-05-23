@@ -1,6 +1,8 @@
 #include "Body_Human.h"
+#include "Battle_AnimDef.h"
 
 #include "GameInstance.h"
+#include "Model.h"
 
 CBody_Human::CBody_Human(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBody{ pDevice, pContext }
@@ -61,6 +63,20 @@ HRESULT CBody_Human::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_matrix CBody_Human::Resolve_ShaderWorldMatrix() const
+{
+	_matrix WorldMatrix = __super::Resolve_ShaderWorldMatrix();
+
+	if (nullptr == m_pModelCom)
+		return WorldMatrix;
+
+	const _uint iCurrAnimIndex = m_pModelCom->Get_CurrAnimIndex();
+	const _matrix CorrectionMatrix =
+		BattleAnim::Find_AnimRotationCorrection(m_strModelProtoTag, iCurrAnimIndex);
+
+	return CorrectionMatrix * WorldMatrix;
 }
 
 CBody_Human* CBody_Human::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

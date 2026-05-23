@@ -27,6 +27,9 @@ private:
 
 	_uint m_iCurrAnim = {};
 
+private:
+	virtual _matrix Resolve_ShaderWorldMatrix() const override;
+
 public:
 	static CBody_Human* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

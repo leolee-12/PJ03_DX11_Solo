@@ -34,6 +34,7 @@ namespace BattleAnim
     _uint Find_AnimIndex(WNameID strModelTag, ANIM_KIND eKind);
     ANIM_KIND Resolve_MoveAnimKind(MOVE_CATEGORY eCategory);
     _float Find_RootMotionScale(WNameID strModelTag);
+    _matrix Find_AnimRotationCorrection(WNameID strModelTag, _uint iAnimIndex);
 }
 
 NS_END

@@ -161,7 +161,14 @@ void CBattle_Trainer::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
 	if (nullptr == m_pBody)
 		return;
 
-	m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, eKind), false);
+	const _uint iAnimIndex = BattleAnim::Find_AnimIndex(m_strModelTag, eKind);
+
+	_float fBlendDuration = g_kDefaultBlendDuration;
+	if (PROTO_COM_MODEL_PPL_WATER == m_strModelTag && ANIM_KIND::THROW == eKind)
+		fBlendDuration = 0.f;
+
+	m_pBody->Set_Anim(iAnimIndex, false, fBlendDuration);
+
 	m_eCurrentKind = eKind;
 	m_fAnimTimer = 0.f;
 	m_fAnimDuration = (fDuration > 0.f) ? fDuration : 0.f;

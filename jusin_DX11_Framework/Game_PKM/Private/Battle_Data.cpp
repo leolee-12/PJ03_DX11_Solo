@@ -220,4 +220,16 @@ _uint PartyOps::Find_First_Alive(const PARTY& tParty)
 	return g_kMaxPartySize;
 }
 
+_bool PartyOps::Swap(PARTY& tParty, _uint iA, _uint iB)
+{
+	if (iA == iB)
+		return false;
+
+	if (iA >= tParty.iCount || iB >= tParty.iCount)
+		return false;
+
+	std::swap(tParty.arrSlots[iA], tParty.arrSlots[iB]);
+	return true;
+}
+
 NS_END

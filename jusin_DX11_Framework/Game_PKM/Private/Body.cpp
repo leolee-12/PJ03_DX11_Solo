@@ -169,10 +169,14 @@ HRESULT CBody::Ready_Components()
 
 HRESULT CBody::Bind_ShaderResources_Common()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
+	const _matrix ShaderWorldMatrix = Resolve_ShaderWorldMatrix();
+
+	_float4x4 ShaderWorldFloat4x4{};
+	XMStoreFloat4x4(&ShaderWorldFloat4x4, ShaderWorldMatrix);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &ShaderWorldFloat4x4)))
 		return E_FAIL;
-	if (FAILED(m_pTransformCom->Bind_ShaderResourceCombinedWIT(m_pShaderCom, "g_WITMatrix",
-		XMLoadFloat4x4(&m_CombinedWorldMatrix))))
+	if (FAILED(m_pTransformCom->Bind_ShaderResourceCombinedWIT(m_pShaderCom, "g_WITMatrix", ShaderWorldMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform(D3DTS::VIEW))))
 		return E_FAIL;
@@ -182,6 +186,11 @@ HRESULT CBody::Bind_ShaderResources_Common()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_matrix CBody::Resolve_ShaderWorldMatrix() const
+{
+	return XMLoadFloat4x4(&m_CombinedWorldMatrix);
 }
 
 void CBody::Free()

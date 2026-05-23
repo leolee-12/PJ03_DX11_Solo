@@ -203,8 +203,9 @@ POKEMON_INSTANCE* Get(PARTY& tParty, _uint iSlot);
 const POKEMON_INSTANCE* Get(const PARTY& tParty, _uint iSlot);
 _bool Has_Empty_Slot(const PARTY& tParty);
 _uint Find_First_Alive(const PARTY& tParty);
+_bool Swap(PARTY& tParty, _uint iA, _uint iB);
 NS_END	// PartyOps
 
 NS_END	// Game_PKM
 
-#endif // Battle_Data_h__
+#endif	// Battle_Data_h__

@@ -62,6 +62,7 @@ protected:
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources_Common();
+	virtual _matrix Resolve_ShaderWorldMatrix() const;
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

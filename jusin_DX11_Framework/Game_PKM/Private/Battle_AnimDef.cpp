@@ -37,6 +37,22 @@ namespace
 
 	constexpr _uint s_DefaultIndex[ETOUI(ANIM_KIND::END)] = {};
 
+	enum class ANIM_ROTATION_AXIS : _ubyte { X, Y, Z };
+
+	struct ANIM_ROTATION_CORRECTION_ENTRY
+	{
+		WNameID strModelTag;
+		_uint iAnimIndex;
+		ANIM_ROTATION_AXIS eAxis;
+		_float fDegree;
+	};
+
+	const constexpr ANIM_ROTATION_CORRECTION_ENTRY s_AnimRotationCorrections[] =
+	{
+		{ PROTO_COM_MODEL_PPL_WATER, 7, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 7번 Anim : THROW
+		{ PROTO_COM_MODEL_PPL_WATER, 8, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 8번 Anim : FOCUS
+	};
+
 	struct ROOT_MOTION_SCALE_ENTRY
 	{
 		WNameID strModelTag;
@@ -103,4 +119,32 @@ _float BattleAnim::Find_RootMotionScale(WNameID strModelTag)
 			return tEntry.fScale;
 	}
 	return kDefaultRootMotionScale;
+}
+
+_matrix BattleAnim::Find_AnimRotationCorrection(WNameID strModelTag, _uint iAnimIndex)
+{
+	for (const auto& tEntry : s_AnimRotationCorrections)
+	{
+		if (tEntry.strModelTag != strModelTag || tEntry.iAnimIndex != iAnimIndex)
+			continue;
+
+		const _float fRadian = XMConvertToRadians(tEntry.fDegree);
+
+		switch (tEntry.eAxis)
+		{
+		case ANIM_ROTATION_AXIS::X:
+			return XMMatrixRotationX(fRadian);
+
+		case ANIM_ROTATION_AXIS::Y:
+			return XMMatrixRotationY(fRadian);
+
+		case ANIM_ROTATION_AXIS::Z:
+			return XMMatrixRotationZ(fRadian);
+
+		default:
+			return XMMatrixIdentity();
+		}
+	}
+
+	return XMMatrixIdentity();
 }
