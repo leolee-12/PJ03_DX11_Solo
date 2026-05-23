@@ -23,6 +23,7 @@
 #include "Explosion.h"
 #include "VIBuffer_UI_Instance.h"
 #include "VIBuffer_Particle3D_Instance.h"
+#include "VIBuffer_FieldGrass_Instance.h"
 #include "VIBuffer_XZPlane.h"
 #include "Effect_Star.h"
 #include "Battle_Trainer.h"
@@ -47,6 +48,8 @@
 #include "Effect_Manager.h"
 #include "Camera_Director.h"
 #include "WaterPlane.h"
+#include "FieldGrass.h"
+#include "FieldGrassBatch.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -300,6 +303,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_CLOUD,
 		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/LGPE_Map/area02/cloud01.png"), 1); },
 			TEXT("Prototype_Component_Texture_Cloud"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_TEX_FIELD_GRASS,
+		[this] { return CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Models/grass/kusamura.png"), 1); },
+		TEXT("Prototype_Component_Texture_FieldGrass"));
 	
 	// ---------- Shader ----------
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_VTXNORTEX,
@@ -359,6 +366,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Water.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements); },
 		TEXT("Prototype_Component_Shader_Water"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_FIELD_GRASS,
+		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_FieldGrass.hlsl"), VTXFIELDGRASS_INSTANCE_DESC::Elements, VTXFIELDGRASS_INSTANCE_DESC::iNumElements); },
+			TEXT("Prototype_Component_Shader_FieldGrass"));
+
 
 
 	// ---------- VIBuffer ----------
@@ -390,6 +401,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_INST_PARTICLE3D,
 		[this, Particle3DVBDesc]() mutable { return CVIBuffer_Particle3D_Instance::Create(m_pDevice, m_pContext, &Particle3DVBDesc); },
 		TEXT("Prototype_Component_VIBuffer_Instance_Particle3D"));
+
+	CVIBuffer_FieldGrass_Instance::FIELDGRASS_INSTANCE_DESC FieldGrassVBDesc{};
+	FieldGrassVBDesc.iNumInstance = 1024;
+	FieldGrassVBDesc.pModelFilePath = "../../Resources/Models/grass/grass.wmodel";
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_FIELD_GRASS_INST,
+		[this, FieldGrassVBDesc]() mutable { return CVIBuffer_FieldGrass_Instance::Create(m_pDevice, m_pContext, &FieldGrassVBDesc); },
+		TEXT("Prototype_Component_VIBuffer_FieldGrass_Instance"));
 
 	/* Prototype_Component_VIBuffer_XZPlane */
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_XZPLANE,
@@ -479,7 +498,9 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/shortpants/shortpants.wmodel"); },
 			TEXT("Prototype_Component_Model_People_Shortpants"));
 
-
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_FIELD_GRASS,
+		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/grass/grass.wmodel"); },
+			TEXT("Prototype_Component_Model_FieldGrass"));
 
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_COM_MODEL_MAP_TOWN01,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/LGPE_Map/area02/town01_2.wmodel"); },
@@ -602,6 +623,14 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_WATERPLANE,
 		[this] { return CWaterPlane::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_WaterPlane"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FIELD_GRASS,
+		[this] { return CFieldGrass::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_FieldGrass"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FIELD_GRASS_BATCH,
+		[this] { return CFieldGrassBatch::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_FieldGrassBatch"));
 
 
 

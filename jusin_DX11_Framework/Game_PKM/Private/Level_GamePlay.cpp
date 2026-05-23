@@ -15,7 +15,6 @@
 #include "Body_Pokemon.h"
 #include "Actor_NPC.h"
 #include "Actor_WildPokemon.h"
-#include "RenderRule_Manager.h"
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
 #include "Event_Manager.h"
@@ -23,6 +22,7 @@
 #include "Entry.h"
 #include "MapObject.h"
 #include "WaterPlane.h"
+#include "FieldGrassBatch.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
@@ -156,13 +156,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_EventSystem()))
 		return E_FAIL;
 
-	CCamera* pCamera = static_cast<CCamera*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA)->begin()));
-	CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(*(m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER)->begin()));
-	pCamera->Set_FollowTarget(pPlayer->Get_Transform());
-	pCamera->Set_FollowOffset({ 0.f, 6.5f, -7.5f });
-	m_pGameInstance->Set_MainCamera(pCamera);
-	pCamera->Set_Following(true);
-	pCamera->Set_ControlEnabled(true);
+	if (FAILED(Ready_MainCamera()))
+		return E_FAIL;
 
 	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 
@@ -175,147 +170,16 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	Debug_TickFPS(fTimeDelta);
 #endif
 
-	if (m_bDialogueActive)
-	{
-		UI_Update_All(fTimeDelta);
-
-		if (m_pGameInstance->Key_Down(DIK_RETURN) ||
-			m_pGameInstance->Key_Down(DIK_SPACE))
-		{
-			if (nullptr == m_pDialogueMsg)
-			{
-				Close_Dialogue();
-				return;
-			}
-
-			if (false == m_pDialogueMsg->Is_Done())
-			{
-				m_pDialogueMsg->Complete();
-			}
-			else
-			{
-				if (m_iDialoguePageIndex + 1 < m_DialoguePages.size())
-				{
-					++m_iDialoguePageIndex;
-					m_pDialogueMsg->Set_Message(m_DialoguePages[m_iDialoguePageIndex]);
-				}
-				else
-				{
-					Close_Dialogue();
-				}
-			}
-		}
-
+	if (Tick_Dialogue(fTimeDelta))
 		return;
-	}
 
-	if (nullptr != m_pEventMgr && true == m_pEventMgr->Is_Playing())
-	{
-		m_pEventMgr->Update(fTimeDelta);
-		UI_Update_All(fTimeDelta);
+	if (Tick_Event(fTimeDelta))
 		return;
-	}
 
-	/* 트랜지션 진행 중이면 입력 분기 전부 차단. 경과 누적 후 임계값 도달 시 Push_Level. */
-	if (TRANSITION_STATE::BUSY == m_eTransition)
-	{
-		m_fTransitionElapsed += fTimeDelta;
-
-		if (m_fTransitionElapsed >= TRANSITION_PUSH_AT_SEC)
-		{
-			/* Push 직전 시퀀스 가시화 해제. (Paused 동안 GAMEPLAY 는 렌더되지 않아 어차피
-			   Pop 으로 OnResume 됐을 때 다음 트리거를 위해 깨끗한 상태로 둠.) */
-			if (nullptr != m_pFadeBattleSeq)
-				m_pFadeBattleSeq->Set_Visible(false);
-
-			/* CAPTURE 진입: CLevel_Capture Push. */
-			if (LEVEL::CAPTURE == m_PendingEntryDesc.eNextLevelID)
-			{
-				CLevel_Capture* pCapture = CLevel_Capture::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
-				if (nullptr == pCapture)
-				{
-					m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-					m_eTransition = TRANSITION_STATE::IDLE;
-					m_fTransitionElapsed = 0.f;
-					return;
-				}
-
-				/* Push 직전 - Fade 가림 상태에서 충돌 트리거 WildPokemon 을 deferred 삭제.
-				   Layer 가 다음 Update 사이클에서 Safe_Release + 리스트 제거 ->
-				   Pop 후 OnResume 시점에 collider 검사 대상에서 자동 빠짐 -> 무한 루프 방지. */
-				if (nullptr != m_pPendingDeleteWild)
-				{
-					m_pPendingDeleteWild->Set_Dead();
-					m_pPendingDeleteWild = nullptr;   // weak 초기화 - dangling 차단
-				}
-
-				if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::CAPTURE), pCapture)))
-				{
-					Safe_Release(pCapture);
-					m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-					m_eTransition = TRANSITION_STATE::IDLE;
-					m_fTransitionElapsed = 0.f;
-					return;
-				}
-
-				/* Push 직후 입력 상태 복귀. CAPTURE 측에서 별도 상태가 필요하면 Initialize 에서 덮어쓰면 됨. */
-				m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-
-				m_eTransition = TRANSITION_STATE::IDLE;
-				m_fTransitionElapsed = 0.f;
-				return;
-			}
-
-			CLevel_Battle* pBattle = CLevel_Battle::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
-			if (nullptr == pBattle)
-			{
-				m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-				m_eTransition = TRANSITION_STATE::IDLE;
-				m_fTransitionElapsed = 0.f;
-				return;
-			}
-
-			if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::BATTLE), pBattle)))
-			{
-				Safe_Release(pBattle);
-				m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-				m_eTransition = TRANSITION_STATE::IDLE;
-				m_fTransitionElapsed = 0.f;
-				return;
-			}
-
-			/* Push 직후 입력 상태를 GAMEPLAY 로 복귀.
-			   BATTLE 측에서 별도 상태(MENU 등)를 원하면 Initialize 에서 덮어쓰면 됨. */
-			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
-
-			/* Push 성공. GAMEPLAY 는 paused 상태로 전환되어 본 Update 는 더 이상 호출되지 않음 */
-			m_eTransition = TRANSITION_STATE::IDLE;
-			m_fTransitionElapsed = 0.f;
-			return;
-		}
-
-		UI_Update_All(fTimeDelta);
+	if (Tick_Transition(fTimeDelta))
 		return;
-	}
 
-	CSpawn_Manager::GetInstance()->Update(fTimeDelta);
-
-	/* F4 - 메뉴 열기/닫기 토글. Open() 이 시퀀스 Play 도 같이 트리거. */
-	if (m_pGameInstance->Key_Down(DIK_TAB) && nullptr != m_pMenu)
-	{
-		if (m_pMenu->Is_Open())
-			m_pMenu->Close();
-		else if (!UI_Is_AnyOpen())     // Entry 등 다른 UI가 떠 있으면 Menu 차단
-			m_pMenu->Open();
-	}
-
-#ifdef _DEBUG
-	Debug_Common();
-	Debug_Outline();
-	//Debug_Event();
-#endif
-
-	UI_Update_All(fTimeDelta);
+	Tick_Gameplay(fTimeDelta);
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -587,6 +451,38 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(WNameID strLayerTag)
 		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &WaterDesc)))
 		return E_FAIL;
 
+	vector<_float3> GrassPositions;
+	GrassPositions.reserve(512);
+
+	auto AppendGrassGrid = [&GrassPositions](_float fStartX, _float fY, _float fStartZ,
+											_uint iCountX, _uint iCountZ, _float fStepX, _float fStepZ)
+		{
+			for (_uint z = 0; z < iCountZ; ++z)
+			{
+				for (_uint x = 0; x < iCountX; ++x)
+				{
+					GrassPositions.emplace_back(
+						fStartX + static_cast<_float>(x) * fStepX,
+						fY,
+						fStartZ + static_cast<_float>(z) * fStepZ);
+				}
+			}
+		};
+
+	AppendGrassGrid(19.2f, 0.0f, -0.6f, 6, 8, 0.5f, 0.5f);
+	AppendGrassGrid(22.5f, 0.0f, 7.3f, 20, 8, 0.5f, -0.5f);
+	AppendGrassGrid(14.5f, 0.0f, 7.3f, 8, 8, 0.5f, -0.5f);
+	AppendGrassGrid(22.2f, 1.0f, 17.5f, 8, 8, 0.5f, -0.5f);
+	AppendGrassGrid(22.0f, 2.5f, 31.5f, 12, 8, 0.5f, -0.5f);
+
+	CFieldGrassBatch::FIELDGRASS_BATCH_DESC GrassBatchDesc{};
+	GrassBatchDesc.pPositions = GrassPositions.data();
+	GrassBatchDesc.iNumPositions = static_cast<_uint>(GrassPositions.size());
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_FIELD_GRASS_BATCH,
+		ETOUI(LEVEL::GAMEPLAY), strLayerTag, &GrassBatchDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -840,6 +736,31 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 	return S_OK;
   }
 
+  HRESULT CLevel_GamePlay::Ready_MainCamera()
+  {
+	  const list<CGameObject*>* pCameraList =
+		  m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_CAMERA);
+	  const list<CGameObject*>* pPlayerList =
+		  m_pGameInstance->Get_ObjectList(ETOUI(LEVEL::GAMEPLAY), LAYER_PLAYER);
+
+	  if (nullptr == pCameraList || true == pCameraList->empty())
+		  return E_FAIL;
+
+	  if (nullptr == pPlayerList || true == pPlayerList->empty())
+		  return E_FAIL;
+
+	  CCamera* pCamera = static_cast<CCamera*>(pCameraList->front());
+	  CPlayer_LGPE* pPlayer = static_cast<CPlayer_LGPE*>(pPlayerList->front());
+
+	  pCamera->Set_FollowTarget(pPlayer->Get_Transform());
+	  pCamera->Set_FollowOffset({ 0.f, 6.5f, -7.5f });
+	  m_pGameInstance->Set_MainCamera(pCamera);
+	  pCamera->Set_Following(true);
+	  pCamera->Set_ControlEnabled(true);
+
+	  return S_OK;
+  }
+
 HRESULT CLevel_GamePlay::Ready_EventSystem()
 {
 	m_pEventMgr = CEvent_Manager::Create(this);
@@ -851,6 +772,165 @@ HRESULT CLevel_GamePlay::Ready_EventSystem()
 
 	return S_OK;
 }
+
+_bool CLevel_GamePlay::Tick_Dialogue(_float fTimeDelta)
+{
+	if (false == m_bDialogueActive)
+		return false;
+
+	UI_Update_All(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_RETURN) ||
+		m_pGameInstance->Key_Down(DIK_SPACE))
+	{
+		if (nullptr == m_pDialogueMsg)
+		{
+			Close_Dialogue();
+			return true;
+		}
+
+		if (false == m_pDialogueMsg->Is_Done())
+		{
+			m_pDialogueMsg->Complete();
+		}
+		else
+		{
+			if (m_iDialoguePageIndex + 1 < m_DialoguePages.size())
+			{
+				++m_iDialoguePageIndex;
+				m_pDialogueMsg->Set_Message(m_DialoguePages[m_iDialoguePageIndex]);
+			}
+			else
+			{
+				Close_Dialogue();
+			}
+		}
+	}
+
+	return true;
+}
+
+_bool CLevel_GamePlay::Tick_Event(_float fTimeDelta)
+{
+	if (nullptr == m_pEventMgr || false == m_pEventMgr->Is_Playing())
+		return false;
+
+	m_pEventMgr->Update(fTimeDelta);
+	UI_Update_All(fTimeDelta);
+
+	return true;
+}
+
+_bool CLevel_GamePlay::Tick_Transition(_float fTimeDelta)
+{
+	if (TRANSITION_STATE::BUSY != m_eTransition)
+		return false;
+
+	m_fTransitionElapsed += fTimeDelta;
+
+	if (m_fTransitionElapsed < TRANSITION_PUSH_AT_SEC)
+	{
+		UI_Update_All(fTimeDelta);
+		return true;
+	}
+
+	if (nullptr != m_pFadeBattleSeq)
+		m_pFadeBattleSeq->Set_Visible(false);
+
+	if (LEVEL::CAPTURE == m_PendingEntryDesc.eNextLevelID)
+	{
+		CLevel_Capture* pCapture = CLevel_Capture::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
+		if (nullptr == pCapture)
+		{
+			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+			Reset_Transition();
+			return true;
+		}
+
+		if (nullptr != m_pPendingDeleteWild)
+		{
+			m_pPendingDeleteWild->Set_Dead();
+			m_pPendingDeleteWild = nullptr;
+		}
+
+		if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::CAPTURE), pCapture)))
+		{
+			Safe_Release(pCapture);
+			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+			Reset_Transition();
+			return true;
+		}
+
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+		Reset_Transition();
+		return true;
+	}
+
+	CLevel_Battle* pBattle = CLevel_Battle::Create(m_pDevice, m_pContext, &m_PendingEntryDesc);
+	if (nullptr == pBattle)
+	{
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+		Reset_Transition();
+		return true;
+	}
+
+	if (FAILED(m_pGameInstance->Push_Level(ETOI(LEVEL::BATTLE), pBattle)))
+	{
+		Safe_Release(pBattle);
+		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+		Reset_Transition();
+		return true;
+	}
+
+	m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+	Reset_Transition();
+	return true;
+}
+
+void CLevel_GamePlay::Reset_Transition()
+{
+	m_eTransition = TRANSITION_STATE::IDLE;
+	m_fTransitionElapsed = 0.f;
+}
+
+void CLevel_GamePlay::Tick_Gameplay(_float fTimeDelta)
+{
+	CSpawn_Manager::GetInstance()->Update(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_TAB) && nullptr != m_pMenu)
+	{
+		if (m_pMenu->Is_Open())
+			m_pMenu->Close();
+		else if (!UI_Is_AnyOpen())
+			m_pMenu->Open();
+	}
+
+#ifdef _DEBUG
+	Debug_Common();
+	//Debug_Outline();
+	Debug_Event();
+#endif
+
+	UI_Update_All(fTimeDelta);
+}
+
+void Reset_PlayerTouchCache();
+
+m_pGameInstance->Get_ObjectList(CURRENT_LEVEL, LAYER_PLAYER);
+
+if (nullptr == pPlayerList)
+return;
+
+for (CGameObject* pObject : *pPlayerList)
+{
+	if (CPlayer_LGPE* pPlayer = dynamic_cast<CPlayer_LGPE*>(pObject))
+	{
+		pPlayer->Clear_TouchSet();
+		break;
+	}
+}
+  }
+
 #ifdef _DEBUG
 void CLevel_GamePlay::Debug_Common()
 {
@@ -910,7 +990,7 @@ void CLevel_GamePlay::Debug_Event()
 		tContext.pGameInstance = m_pGameInstance;
 		tContext.pLevelGamePlay = this;
 	
-		m_pEventMgr->Start_Sequence(L"TestActor", tContext);
+		m_pEventMgr->Start_Sequence(L"TestScene_NPC_CameraMove", tContext);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_F7))

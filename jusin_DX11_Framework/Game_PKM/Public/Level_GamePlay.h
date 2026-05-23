@@ -90,6 +90,13 @@ private:
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 	HRESULT Ready_EventSystem();
+	HRESULT Ready_MainCamera();
+
+	_bool Tick_Dialogue(_float fTimeDelta);
+	_bool Tick_Event(_float fTimeDelta);
+	_bool Tick_Transition(_float fTimeDelta);
+	void Reset_Transition();
+	void Tick_Gameplay(_float fTimeDelta);
 
 #ifdef _DEBUG
 	void Debug_Common();

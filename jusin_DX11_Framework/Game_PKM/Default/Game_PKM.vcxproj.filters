@@ -214,6 +214,21 @@
     <Filter Include="98. ShaderFiles\04. Effect">
       <UniqueIdentifier>{cc50901e-7524-4cae-9772-5603c55f38f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Objects\03. Misc\MonsterBall">
+      <UniqueIdentifier>{9c363091-5ab4-4c1d-913f-463839c049f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\03. Misc\CaptureRing">
+      <UniqueIdentifier>{e8b88cd0-8803-4981-8886-e69e89946b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\03. Misc\WaterPlane">
+      <UniqueIdentifier>{bfedba33-c57b-457b-811a-33d64ffdb63e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\03. Misc\FieldGrass">
+      <UniqueIdentifier>{b42adccf-4e05-499b-86d3-8ce9770634e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Components\00. VIBuffer\FieldGrass_Instance">
+      <UniqueIdentifier>{cf9a9c0d-576c-482c-b8f1-f103b04c255b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -474,17 +489,11 @@
     <ClInclude Include="..\Public\Capture_Menu.h">
       <Filter>01. Objects\02. UI\Controller\Capture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MonsterBall.h">
-      <Filter>01. Objects\03. Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Battle_Trainer.h">
       <Filter>04. Contents\00. GameActor\02. Battle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Battle_Pokemon.h">
       <Filter>04. Contents\00. GameActor\02. Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CaptureRing.h">
-      <Filter>01. Objects\03. Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Data.h">
       <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
@@ -594,8 +603,23 @@
     <ClInclude Include="..\Public\VIBuffer_XZPlane.h">
       <Filter>03. Components\00. VIBuffer\XZPlane</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MonsterBall.h">
+      <Filter>01. Objects\03. Misc\MonsterBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CaptureRing.h">
+      <Filter>01. Objects\03. Misc\CaptureRing</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\WaterPlane.h">
-      <Filter>01. Objects\03. Misc</Filter>
+      <Filter>01. Objects\03. Misc\WaterPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FieldGrass.h">
+      <Filter>01. Objects\03. Misc\FieldGrass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_FieldGrass_Instance.h">
+      <Filter>03. Components\00. VIBuffer\FieldGrass_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FieldGrassBatch.h">
+      <Filter>01. Objects\03. Misc\FieldGrass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -806,17 +830,11 @@
     <ClCompile Include="..\Private\Capture_Menu.cpp">
       <Filter>01. Objects\02. UI\Controller\Capture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MonsterBall.cpp">
-      <Filter>01. Objects\03. Misc</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Battle_Pokemon.cpp">
       <Filter>04. Contents\00. GameActor\02. Battle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Battle_Trainer.cpp">
       <Filter>04. Contents\00. GameActor\02. Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CaptureRing.cpp">
-      <Filter>01. Objects\03. Misc</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_Data.cpp">
       <Filter>04. Contents\00. GameActor\00. Player_LGPE</Filter>
@@ -905,8 +923,23 @@
     <ClCompile Include="..\Private\VIBuffer_XZPlane.cpp">
       <Filter>03. Components\00. VIBuffer\XZPlane</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\MonsterBall.cpp">
+      <Filter>01. Objects\03. Misc\MonsterBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CaptureRing.cpp">
+      <Filter>01. Objects\03. Misc\CaptureRing</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\WaterPlane.cpp">
-      <Filter>01. Objects\03. Misc</Filter>
+      <Filter>01. Objects\03. Misc\WaterPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FieldGrass.cpp">
+      <Filter>01. Objects\03. Misc\FieldGrass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_FieldGrass_Instance.cpp">
+      <Filter>03. Components\00. VIBuffer\FieldGrass_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FieldGrassBatch.cpp">
+      <Filter>01. Objects\03. Misc\FieldGrass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -974,6 +1007,9 @@
       <Filter>98. ShaderFiles\02. Map</Filter>
     </FxCompile>
     <FxCompile Include="..\ShaderFiles\Shader_Water.hlsl">
+      <Filter>98. ShaderFiles\02. Map</Filter>
+    </FxCompile>
+    <FxCompile Include="..\ShaderFiles\Shader_FieldGrass.hlsl">
       <Filter>98. ShaderFiles\02. Map</Filter>
     </FxCompile>
   </ItemGroup>

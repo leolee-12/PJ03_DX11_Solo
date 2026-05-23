@@ -141,8 +141,8 @@ void CPlayer_LGPE::Clear_TouchSet()
 HRESULT CPlayer_LGPE::Ready_Components()
 {
 	/* For.Com_Navigation */
-	//CNavigation::NAVIGATION_DESC NaviDesc{ 67 };	// Pallet Town
-	CNavigation::NAVIGATION_DESC NaviDesc{ 669 };	// Gym
+	CNavigation::NAVIGATION_DESC NaviDesc{ 67 };	// Pallet Town
+	//CNavigation::NAVIGATION_DESC NaviDesc{ 669 };	// Gym
 
 	if (FAILED(__super::Add_Component(ETOUI(LEVEL::STATIC), PROTO_COM_NAVIGATION_MAP,
 		COM_NAVIGATION, reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))

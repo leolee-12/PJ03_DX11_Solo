@@ -81,6 +81,8 @@
     <ClInclude Include="..\Public\Event_Context.h" />
     <ClInclude Include="..\Public\Event_Defines.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
+    <ClInclude Include="..\Public\FieldGrass.h" />
+    <ClInclude Include="..\Public\FieldGrassBatch.h" />
     <ClInclude Include="..\Public\Interaction_BallHit.h" />
     <ClInclude Include="..\Public\Interaction_Dialogue.h" />
     <ClInclude Include="..\Public\Effect_Star.h" />
@@ -141,6 +143,7 @@
     <ClInclude Include="..\Public\UIController_Hub.h" />
     <ClInclude Include="..\Public\UIImage_FadeBattle.h" />
     <ClInclude Include="..\Public\UI_Defines.h" />
+    <ClInclude Include="..\Public\VIBuffer_FieldGrass_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_XZPlane.h" />
@@ -200,6 +203,8 @@
     <ClCompile Include="..\Private\EventSequence_Parser.cpp" />
     <ClCompile Include="..\Private\EventSequence_Player.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
+    <ClCompile Include="..\Private\FieldGrass.cpp" />
+    <ClCompile Include="..\Private\FieldGrassBatch.cpp" />
     <ClCompile Include="..\Private\Interaction_BallHit.cpp" />
     <ClCompile Include="..\Private\Interaction_Dialogue.cpp" />
     <ClCompile Include="..\Private\Effect_Star.cpp" />
@@ -246,6 +251,7 @@
     <ClCompile Include="..\Private\UIController.cpp" />
     <ClCompile Include="..\Private\UIController_Hub.cpp" />
     <ClCompile Include="..\Private\UIImage_FadeBattle.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_FieldGrass_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_XZPlane.cpp" />
@@ -255,6 +261,7 @@
   <ItemGroup>
     <FxCompile Include="..\ShaderFiles\Shader_Effect_Beam.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Effect_M1.hlsl" />
+    <FxCompile Include="..\ShaderFiles\Shader_FieldGrass.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Map.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Human.hlsl" />
     <FxCompile Include="..\ShaderFiles\Shader_Particle3D.hlsl" />

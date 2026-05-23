@@ -17,6 +17,7 @@ WNAME_TAG(PROTO_COM_TEX_SNOW, L"Prototype_Component_Texture_Snow");
 
 WNAME_TAG(PROTO_COM_TEX_WATER, L"Prototype_Component_Texture_Water");
 WNAME_TAG(PROTO_COM_TEX_CLOUD, L"Prototype_Component_Texture_Cloud");
+WNAME_TAG(PROTO_COM_TEX_FIELD_GRASS, L"Prototype_Component_Texture_FieldGrass");
 
 WNAME_TAG(PROTO_COM_TEX_TITLE_PBGF_DIFF, L"Prototype_Component_Texture_Title_pbgf_Diff");
 WNAME_TAG(PROTO_COM_TEX_TITLE_LOGO_DIFF, L"Prototype_Component_Texture_Title_Logo_Diff");
@@ -164,6 +165,7 @@ WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_ENTRY, L"Prototype_Component_Shader_UI_Butto
 WNAME_TAG(PROTO_COM_SHADER_PARTICLE3D, L"Prototype_Component_Shader_Particle3D");
 WNAME_TAG(PROTO_COM_SHADER_EFFECT_BEAM, L"Prototype_Component_Shader_Effect_Beam");
 WNAME_TAG(PROTO_COM_SHADER_WATER, L"Prototype_Component_Shader_Water");
+WNAME_TAG(PROTO_COM_SHADER_FIELD_GRASS, L"Prototype_Component_Shader_FieldGrass");
 
 
 
@@ -177,6 +179,7 @@ WNAME_TAG(PROTO_COM_VIBUFFER_INST_STAR, L"Prototype_Component_VIBuffer_Instance_
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_EFFECT, L"Prototype_Component_VIBuffer_Instance_Effect");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_PARTICLE3D, L"Prototype_Component_VIBuffer_Instance_Particle3D");
 WNAME_TAG(PROTO_COM_VIBUFFER_XZPLANE, L"Prototype_Component_VIBuffer_XZPlane");
+WNAME_TAG(PROTO_COM_VIBUFFER_FIELD_GRASS_INST, L"Prototype_Component_VIBuffer_FieldGrass_Instance");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
 WNAME_TAG(PROTO_COM_MODEL_FORKLIFT, L"Prototype_Component_Model_ForkLift");
 
@@ -212,6 +215,7 @@ WNAME_TAG(PROTO_COM_MODEL_BMAP_GRASS, L"Prototype_Component_Model_BMap_Grass");
 
 WNAME_TAG(PROTO_COM_MODEL_MONSTER_BALL, L"Prototype_Component_Model_Monster_Ball");
 WNAME_TAG(PROTO_COM_MODEL_CAPTURE_RING, L"Prototype_Component_Model_Capture_Ring");
+WNAME_TAG(PROTO_COM_MODEL_FIELD_GRASS, L"Prototype_Component_Model_FieldGrass");
 
 WNAME_TAG(PROTO_COM_MODEL_STATIC_AT_BEAM, L"Prototype_Component_Model_Static_At_Beam");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_BALL, L"Prototype_Component_Model_Static_Ball");
@@ -304,6 +308,8 @@ WNAME_TAG(PROTO_BMAP_GRASS, L"Prototype_BattleMap_Grass");
 
 WNAME_TAG(PROTO_OBJ_MONSTER_BALL, L"Prototype_GameObject_MonsterBall");
 WNAME_TAG(PROTO_OBJ_CAPTURE_RING, L"Prototype_GameObject_CaptureRing");
+WNAME_TAG(PROTO_OBJ_FIELD_GRASS, L"Prototype_GameObject_FieldGrass");
+WNAME_TAG(PROTO_OBJ_FIELD_GRASS_BATCH, L"Prototype_GameObject_FieldGrassBatch");
 WNAME_TAG(PROTO_OBJ_EFFECT, L"Prototype_GameObject_Effect");
 WNAME_TAG(PROTO_OBJ_EFFECT_MESH, L"Prototype_GameObject_Effect_Mesh");
 
