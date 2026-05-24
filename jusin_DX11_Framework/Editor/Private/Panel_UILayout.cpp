@@ -407,6 +407,9 @@ void CPanel_UILayout::Draw_Inspector()
 						MarkWidgetUpdated();
 					}
 
+					if (ImGui::Checkbox("Loop", &tDesc.bSpriteAnimLoop))
+						MarkWidgetUpdated();
+
 					if (ImGui::DragFloat("Frame Duration (s)", &tDesc.fSpriteFrameDuration,
 						0.001f, 0.f, 10.f, "%.4f"))
 					{

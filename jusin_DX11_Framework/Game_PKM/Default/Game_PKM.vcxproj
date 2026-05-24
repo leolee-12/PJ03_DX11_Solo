@@ -31,6 +31,7 @@
     <ClInclude Include="..\Public\Battle_Action_Steps.h" />
     <ClInclude Include="..\Public\Battle_AI.h" />
     <ClInclude Include="..\Public\Battle_AnimDef.h" />
+    <ClInclude Include="..\Public\Battle_Ball.h" />
     <ClInclude Include="..\Public\Battle_Camera_Steps.h" />
     <ClInclude Include="..\Public\Battle_CommandMenu.h" />
     <ClInclude Include="..\Public\Battle_Commands.h" />
@@ -127,6 +128,8 @@
     <ClInclude Include="..\Public\Player_LGPE.h" />
     <ClInclude Include="..\Public\Battle_Pokemon.h" />
     <ClInclude Include="..\Public\PokemonData_Manager.h" />
+    <ClInclude Include="..\Public\Region_Defines.h" />
+    <ClInclude Include="..\Public\Region_Manager.h" />
     <ClInclude Include="..\Public\RenderRule_Manager.h" />
     <ClInclude Include="..\Public\SharedTexture_Manager.h" />
     <ClInclude Include="..\Public\Sky.h" />
@@ -134,6 +137,7 @@
     <ClInclude Include="..\Public\Spawn_Defines.h" />
     <ClInclude Include="..\Public\Spawn_Manager.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\Trail.h" />
     <ClInclude Include="..\Public\TrainerData_Manager.h" />
     <ClInclude Include="..\Public\UIButton_Entry.h" />
     <ClInclude Include="..\Public\UIButton_Glow.h" />
@@ -145,6 +149,7 @@
     <ClInclude Include="..\Public\UI_Defines.h" />
     <ClInclude Include="..\Public\VIBuffer_FieldGrass_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Particle3D_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Trail.h" />
     <ClInclude Include="..\Public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_XZPlane.h" />
     <ClInclude Include="..\Public\WaterPlane.h" />
@@ -163,6 +168,7 @@
     <ClCompile Include="..\Private\Battle_Action_Steps.cpp" />
     <ClCompile Include="..\Private\Battle_AI.cpp" />
     <ClCompile Include="..\Private\Battle_AnimDef.cpp" />
+    <ClCompile Include="..\Private\Battle_Ball.cpp" />
     <ClCompile Include="..\Private\Battle_Camera_Steps.cpp" />
     <ClCompile Include="..\Private\Battle_CommandMenu.cpp" />
     <ClCompile Include="..\Private\Battle_Commands.cpp" />
@@ -237,12 +243,14 @@
     <ClCompile Include="..\Private\Player_LGPE.cpp" />
     <ClCompile Include="..\Private\Battle_Pokemon.cpp" />
     <ClCompile Include="..\Private\PokemonData_Manager.cpp" />
+    <ClCompile Include="..\Private\Region_Manager.cpp" />
     <ClCompile Include="..\Private\RenderRule_Manager.cpp" />
     <ClCompile Include="..\Private\SharedTexture_Manager.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Snow.cpp" />
     <ClCompile Include="..\Private\Spawn_Manager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Trail.cpp" />
     <ClCompile Include="..\Private\TrainerData_Manager.cpp" />
     <ClCompile Include="..\Private\UIButton_Entry.cpp" />
     <ClCompile Include="..\Private\UIButton_Glow.cpp" />
@@ -253,6 +261,7 @@
     <ClCompile Include="..\Private\UIImage_FadeBattle.cpp" />
     <ClCompile Include="..\Private\VIBuffer_FieldGrass_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Particle3D_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Trail.cpp" />
     <ClCompile Include="..\Private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_XZPlane.cpp" />
     <ClCompile Include="..\Private\WaterPlane.cpp" />

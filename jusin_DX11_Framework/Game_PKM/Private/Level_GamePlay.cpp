@@ -18,14 +18,17 @@
 #include "PokemonData_Manager.h"
 #include "Spawn_Manager.h"
 #include "Event_Manager.h"
+#include "Region_Manager.h"
 #include "Player_Status.h"
 #include "Entry.h"
 #include "MapObject.h"
 #include "WaterPlane.h"
 #include "FieldGrassBatch.h"
+#include "Battle_Trainer.h"
 
 #include "GameInstance.h"
 #include "UISequence.h"
+#include "UIText.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
@@ -156,13 +159,14 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_EventSystem()))
 		return E_FAIL;
 
+	if (FAILED(Ready_RegionSystem()))
+		return E_FAIL;
+
 	if (FAILED(Ready_MainCamera()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Cloud()))
 		return E_FAIL;
-
-	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
 
 	return S_OK;
 }
@@ -211,8 +215,9 @@ void CLevel_GamePlay::OnResume()
 	   BATTLE 측에서 LOCKED 이나 MENU 로 두고 종료했더라도 안전. */
 	m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
 
-	/* GAMEPLAY BGM 복원. BGM 키/볼륨은 Initialize 와 동일 값. */
-	m_pGameInstance->Play_BGM(L"BGM/1-04. Pallet Town Theme.mp3", 0.3f);
+	/* GAMEPLAY BGM 복원. 배틀/캡처 진입 전 지역 BGM 으로 되돌린다. */
+	if (nullptr != m_pRegionMgr)
+		m_pRegionMgr->Play_Current_BGM();
 
 	/* Capture/Battle 종료 시 UI_Set_Cursor_Sequence(nullptr) 로 Hub 커서가 해제됨 → GamePlay 커서 재주입. */
 	if (nullptr != m_pCursorSeq)
@@ -505,6 +510,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(WNameID strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_NPC(WNameID strLayerTag)
 {
 	(void)strLayerTag;
+
 	return S_OK;
 }
 
@@ -571,6 +577,35 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 
 		pFadeSeq->Set_Visible(false);   // 트리거 전까지 숨김
 		m_pFadeBattleSeq = pFadeSeq;    // weak (Add_GameObject_Ex 가 owner)
+	}
+
+	/* Region Banner */
+	{
+		CUISequence::UISEQUENCE_DESC tRegionDesc{};
+		tRegionDesc.strPath = "../../DataFiles/UI/UI_Region.uiseq";
+		tRegionDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pRegionSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tRegionDesc));
+		if (nullptr == pRegionSeq)
+			return E_FAIL;
+
+		CUIText* pRegionNameText = dynamic_cast<CUIText*>(pRegionSeq->Find_Widget("widget_002"));
+		if (nullptr == pRegionNameText)
+		{
+			Safe_Release(pRegionSeq);
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pRegionSeq)))
+		{
+			Safe_Release(pRegionSeq);
+			return E_FAIL;
+		}
+
+		pRegionSeq->Set_Visible(false);
+		m_pRegionSeq = pRegionSeq;                 // weak
+		m_pRegionNameText = pRegionNameText;       // weak - RegionSeq owns widget
 	}
 
 	/* MsgBox */
@@ -803,6 +838,74 @@ HRESULT CLevel_GamePlay::Ready_EventSystem()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_RegionSystem()
+{
+	m_pRegionMgr = CRegion_Manager::Create();
+	if (nullptr == m_pRegionMgr)
+		return E_FAIL;
+
+	// 좌표/크기/BGM 키는 실제 맵 배치에 맞춰 채운다. (아래는 형식 예시)
+	{
+		REGION_RECT_DESC tRegion{};
+		tRegion.iRegionID = 1;
+		wcscpy_s(tRegion.szRegionName, L"태초 마을");
+		wcscpy_s(tRegion.szBGM, L"BGM/1-04. Pallet Town Theme.mp3");
+		tRegion.fBGMVolume = 0.3f;
+		tRegion.vCenter = { 0.f, 0.f, -25.f };
+		tRegion.vSize = { 50.f, 50.f };
+		tRegion.fRotationY = 0.f;
+		tRegion.iPriority = 0;
+		if (FAILED(m_pRegionMgr->Register_Region(tRegion)))
+			return E_FAIL;
+	}
+
+	{
+		REGION_RECT_DESC tRegion{};
+		tRegion.iRegionID = 2;
+		wcscpy_s(tRegion.szRegionName, L"1번 도로");
+		wcscpy_s(tRegion.szBGM, L"BGM/1-09. Road to Viridian City - From Pallet Town.mp3");
+		tRegion.fBGMVolume = 0.3f;
+		tRegion.vCenter = { 0.f, 0.f, 20.f };
+		tRegion.vSize = { 50.f, 40.f };
+		tRegion.fRotationY = 0.f;
+		tRegion.iPriority = 0;
+		if (FAILED(m_pRegionMgr->Register_Region(tRegion)))
+			return E_FAIL;
+	}
+
+	{
+		REGION_RECT_DESC tRegion{};
+		tRegion.iRegionID = 3;
+		wcscpy_s(tRegion.szRegionName, L"회색 시티");
+		wcscpy_s(tRegion.szBGM, L"BGM/1-22. Pewter City Theme.mp3");
+		tRegion.fBGMVolume = 0.3f;
+		tRegion.vCenter = { 0.f, 0.f, 65.f };
+		tRegion.vSize = { 50.f, 50.f };
+		tRegion.fRotationY = 0.f;
+		tRegion.iPriority = 0;
+		if (FAILED(m_pRegionMgr->Register_Region(tRegion)))
+			return E_FAIL;
+	}
+
+	// 추가 지역은 같은 형식으로 Register_Region 반복 (iRegionID 는 1 이상 고유값).
+
+	m_pRegionMgr->Set_OnRegionChanged(
+		[this](const REGION_RECT_DESC* pPrevRegion, const REGION_RECT_DESC& tNewRegion)
+		{
+			(void)pPrevRegion;
+
+			if (nullptr == m_pRegionSeq || nullptr == m_pRegionNameText)
+				return;
+
+			m_pRegionNameText->Set_Text(tNewRegion.szRegionName);
+			m_pRegionSeq->Set_Visible(true);
+			m_pRegionSeq->Play();
+		});
+
+	m_pRegionMgr->Resolve_Initial();   // 초기 지역 확정 + BGM (배너 없음)
+	return S_OK;
+}
+
 _bool CLevel_GamePlay::Tick_Dialogue(_float fTimeDelta)
 {
 	if (false == m_bDialogueActive)
@@ -927,6 +1030,9 @@ void CLevel_GamePlay::Tick_Gameplay(_float fTimeDelta)
 {
 	CSpawn_Manager::GetInstance()->Update(fTimeDelta);
 
+	if (nullptr != m_pRegionMgr)
+		m_pRegionMgr->Update();
+
 	if (m_pGameInstance->Key_Down(DIK_TAB) && nullptr != m_pMenu)
 	{
 		if (m_pMenu->Is_Open())
@@ -938,9 +1044,9 @@ void CLevel_GamePlay::Tick_Gameplay(_float fTimeDelta)
 #ifdef _DEBUG
 	Debug_Common();
 	//Debug_Outline();
-	//Debug_Event();
+	Debug_Event();
 	//Debug_Culling();
-	Debug_Decal();
+	//Debug_Decal();
 #endif
 
 	m_CloudParam.fTime += fTimeDelta;
@@ -1125,6 +1231,7 @@ void CLevel_GamePlay::Free()
 	}
 
 	Safe_Release(m_pEventMgr);
+	Safe_Release(m_pRegionMgr);
 	m_pGameInstance->Set_DecalTexture(nullptr, 0);
 	m_pGameInstance->Set_DecalParam(DECAL_PARAM{});
 	Safe_Release(m_pCloudTexture);
@@ -1143,6 +1250,8 @@ void CLevel_GamePlay::Free()
 	m_pMenu = nullptr;
 	m_pEntry = nullptr;
 	m_pEntrySeq = nullptr;
+	m_pRegionSeq = nullptr;
+	m_pRegionNameText = nullptr;
 
 	__super::Free();
 }

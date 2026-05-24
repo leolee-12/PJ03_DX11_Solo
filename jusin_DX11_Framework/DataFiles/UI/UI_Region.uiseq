@@ -1,0 +1,461 @@
+{
+  "meta": {
+    "designHeight": 720.0,
+    "designWidth": 1280.0,
+    "name": "HUD_Layout",
+    "scalePolicy": "UNIFORM_FIT",
+    "version": 2
+  },
+  "timeline": [
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_002",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_003",
+      "visible": true
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_004",
+      "visible": true
+    },
+    {
+      "animName": "Enter",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "animName": "Enter",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Enter",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "Enter",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_004"
+    },
+    {
+      "joinPrev": false,
+      "kind": "WAIT",
+      "waitSec": 3.0
+    },
+    {
+      "animName": "Exit",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_001"
+    },
+    {
+      "animName": "Exit",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_002"
+    },
+    {
+      "animName": "Exit",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_003"
+    },
+    {
+      "animName": "Exit",
+      "joinPrev": false,
+      "kind": "PLAY_ANIM",
+      "targetId": "widget_004"
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_001",
+      "visible": false
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_002",
+      "visible": false
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_003",
+      "visible": false
+    },
+    {
+      "joinPrev": false,
+      "kind": "SET_VISIBLE",
+      "targetId": "widget_004",
+      "visible": false
+    }
+  ],
+  "widgets": [
+    {
+      "animations": [
+        {
+          "name": "Exit",
+          "tracks": [
+            {
+              "duration": 0.5,
+              "ease": "EASE_OUT_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Enter",
+          "tracks": [
+            {
+              "duration": 0.3330000042915344,
+              "ease": "EASE_IN_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BC",
+          "offsetX": 0.0,
+          "offsetY": -70.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          0.7058823704719543
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": true,
+          "frameDuration": 0.0833333358168602,
+          "loop": false
+        },
+        "texture": {
+          "index": 0,
+          "level": 3,
+          "tag": "Prototype_Component_Texture_Place_Name"
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 512.0,
+          "sizeY": 76.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "BG",
+      "id": "widget_001",
+      "type": "IMAGE"
+    },
+    {
+      "animations": [
+        {
+          "name": "Enter",
+          "tracks": [
+            {
+              "duration": 1.0,
+              "ease": "EASE_OUT_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            }
+          ]
+        },
+        {
+          "name": "Exit",
+          "tracks": [
+            {
+              "duration": 0.3330000042915344,
+              "ease": "EASE_OUT_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "align": "CENTER",
+        "anchor": {
+          "kind": "BC",
+          "offsetX": 0.0,
+          "offsetY": -70.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        "font": "Font_Malgun",
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "text": "Region Name",
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 240.0,
+          "sizeY": 48.0,
+          "visible": true,
+          "zOrder": 0
+        }
+      },
+      "displayName": "RegionName",
+      "id": "widget_002",
+      "type": "TEXT"
+    },
+    {
+      "animations": [
+        {
+          "name": "Enter",
+          "tracks": [
+            {
+              "duration": 0.3330000042915344,
+              "ease": "EASE_IN_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.3330000042915344,
+              "ease": "LINEAR",
+              "end": -105.0,
+              "loop": "NONE",
+              "start": -70.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Exit",
+          "tracks": [
+            {
+              "duration": 0.3330000042915344,
+              "ease": "EASE_IN_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BC",
+          "offsetX": 0.0,
+          "offsetY": -70.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          0.23529411852359772
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0,
+          "loop": true
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": ""
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 720.0,
+          "sizeY": 1.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Bar1",
+      "id": "widget_003",
+      "type": "IMAGE"
+    },
+    {
+      "animations": [
+        {
+          "name": "Enter",
+          "tracks": [
+            {
+              "duration": 0.3330000042915344,
+              "ease": "EASE_IN_SINE",
+              "end": 1.0,
+              "loop": "NONE",
+              "start": 0.0,
+              "target": "COLOR_A"
+            },
+            {
+              "duration": 0.3330000042915344,
+              "ease": "LINEAR",
+              "end": -35.0,
+              "loop": "NONE",
+              "start": -70.0,
+              "target": "ANCHOR_OFFSET_Y"
+            }
+          ]
+        },
+        {
+          "name": "Exit",
+          "tracks": [
+            {
+              "duration": 0.33329999446868896,
+              "ease": "EASE_OUT_SINE",
+              "end": 0.0,
+              "loop": "NONE",
+              "start": 1.0,
+              "target": "COLOR_A"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "anchor": {
+          "kind": "BC",
+          "offsetX": 0.0,
+          "offsetY": -70.0,
+          "useAnchoredPos": true
+        },
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          0.23529411852359772
+        ],
+        "layoutSlot": {
+          "desiredX": 0.0,
+          "desiredY": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "shader": {
+          "level": 0,
+          "pass": 0,
+          "tag": "Prototype_Component_Shader_UI"
+        },
+        "sharedTextures": [],
+        "spriteAnim": {
+          "enabled": false,
+          "frameDuration": 0.0,
+          "loop": true
+        },
+        "texture": {
+          "index": 0,
+          "level": 0,
+          "tag": ""
+        },
+        "transform": {
+          "centerX": 640.0,
+          "centerY": 360.0,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "sizeX": 720.0,
+          "sizeY": 1.0,
+          "visible": true,
+          "zOrder": 0
+        },
+        "viBuffer": {
+          "level": 0,
+          "tag": "Prototype_Component_VIBuffer_Rect"
+        }
+      },
+      "displayName": "Bar2",
+      "id": "widget_004",
+      "type": "IMAGE"
+    }
+  ]
+}

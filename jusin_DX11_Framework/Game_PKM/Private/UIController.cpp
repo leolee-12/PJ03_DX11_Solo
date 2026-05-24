@@ -158,6 +158,61 @@ void CUIController::Set_KeyBinding(CUIButton_Group::NAVKEY eNav, _ubyte byDIK)
 	m_pGroup->Set_KeyBinding(eNav, byDIK);
 }
 
+void CUIController::Hide_AllContents()
+{
+	if (nullptr == m_pSequence || true == m_bContentsHidden)
+		return;
+
+	m_VisibilitySnapshot.clear();
+
+	vector<CUIObject*> Widgets;
+	Collect_Widgets(m_pSequence, Widgets);
+
+	for (CUIObject* pWidget : Widgets)
+	{
+		if (nullptr == pWidget)
+			continue;
+
+		m_VisibilitySnapshot.emplace_back(pWidget, pWidget->Get_Visible());
+		pWidget->Set_Visible(false);
+	}
+
+	m_bContentsHidden = true;
+}
+
+void CUIController::Show_AllContents()
+{
+	if (false == m_bContentsHidden)
+		return;
+
+	for (auto& Pair : m_VisibilitySnapshot)
+	{
+		if (nullptr != Pair.first)
+			Pair.first->Set_Visible(Pair.second);
+	}
+
+	m_VisibilitySnapshot.clear();
+	m_bContentsHidden = false;
+}
+
+void CUIController::Collect_Widgets(CUIObject* pRoot, vector<CUIObject*>& out) const
+{
+	CUIContainer* pContainer = dynamic_cast<CUIContainer*>(pRoot);
+	if (nullptr == pContainer)
+		return;
+
+	// 위젯이 렌더러에 개별 등록(플랫)되므로, 루트만 토글하면 중첩 위젯이 남는다.
+	// 트리를 재귀로 훑어 모든 위젯을 수집한다.
+	for (CUIObject* pChild : pContainer->Get_Children())
+	{
+		if (nullptr == pChild)
+			continue;
+
+		out.push_back(pChild);
+		Collect_Widgets(pChild, out);
+	}
+}
+
 void CUIController::Free()
 {
 	__super::Free();

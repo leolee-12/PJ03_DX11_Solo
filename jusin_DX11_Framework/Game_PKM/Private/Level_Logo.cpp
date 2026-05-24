@@ -45,7 +45,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	{
 		LEVEL_ENTRY_DESC tEntry{};
 		tEntry.eNextLevelID = LEVEL::GAMEPLAY;
-		tEntry.bAutoAdvance = true;   // 풀 시퀀스 검증 시 자동 전이. 수동 SPACE 동작이 필요하면 false.
+		tEntry.bAutoAdvance = false;   // 풀 시퀀스 검증 시 자동 전이. 수동 SPACE 동작이 필요하면 false.
 
 		if (SUCCEEDED(m_pGameInstance->Change_Level(
 			ETOI(LEVEL::LOADING),

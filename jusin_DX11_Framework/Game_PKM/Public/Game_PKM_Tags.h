@@ -77,6 +77,15 @@ WNAME_TAG(PROTO_COM_TEX_ENTRY_PLATE, L"Prototype_Component_Texture_Entry_Plate")
 
 WNAME_TAG(PROTO_COM_TEX_POKEMON_ICON, L"Prototype_Component_Texture_Pokemon_Icon");
 WNAME_TAG(PROTO_COM_TEX_LOADING_MARK, L"Prototype_Component_Texture_Loading_Mark");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_BG_00, L"Prototype_Component_Texture_Loading_Setting_BG_00");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_BG_01, L"Prototype_Component_Texture_Loading_Setting_BG_01");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_GEAR_00, L"Prototype_Component_Texture_Loading_Setting_Gear_00");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_GEAR_01, L"Prototype_Component_Texture_Loading_Setting_Gear_01");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_GEAR_02, L"Prototype_Component_Texture_Loading_Setting_Gear_02");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_GEAR_03, L"Prototype_Component_Texture_Loading_Setting_Gear_03");
+WNAME_TAG(PROTO_COM_TEX_LOADING_SETTING_GEAR_04, L"Prototype_Component_Texture_Loading_Setting_Gear_04");
+
+WNAME_TAG(PROTO_COM_TEX_PLACE_NAME, L"Prototype_Component_Texture_Place_Name");
 
 WNAME_TAG(PROTO_COM_TEX_MSGBOX_BG, L"Prototype_Component_Texture_MsgBox_BG");
 WNAME_TAG(PROTO_COM_TEX_MSGBOX_ICON, L"Prototype_Component_Texture_MsgBox_Icon");
@@ -142,6 +151,86 @@ WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER010_M, L"Prototype_Component_Textur
 WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER702_O, L"Prototype_Component_Texture_Effect_Thunder_2_Thunder702_O");
 WNAME_TAG(PROTO_COM_TEX_EFT_THUNDER_2_THUNDER703_O, L"Prototype_Component_Texture_Effect_Thunder_2_Thunder703_O");
 
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_0_BUBBLE201_A, L"Prototype_Component_Texture_Effect_Bubble_0_Bubble201_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_0_SMOKE002_M, L"Prototype_Component_Texture_Effect_Bubble_0_Smoke002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_0_SMOKE202_A, L"Prototype_Component_Texture_Effect_Bubble_0_Smoke202_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_1_CIRCLE001_M, L"Prototype_Component_Texture_Effect_Bubble_1_Circle001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_BUBBLE003_M, L"Prototype_Component_Texture_Effect_Bubble_2_Bubble003_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_BUBBLE004_M, L"Prototype_Component_Texture_Effect_Bubble_2_Bubble004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_BUBBLE009_M, L"Prototype_Component_Texture_Effect_Bubble_2_Bubble009_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_HIT015_M, L"Prototype_Component_Texture_Effect_Bubble_2_Hit015_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_LINE002_M, L"Prototype_Component_Texture_Effect_Bubble_2_Line002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_SMOKE001_M, L"Prototype_Component_Texture_Effect_Bubble_2_Smoke001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_WATER004_M, L"Prototype_Component_Texture_Effect_Bubble_2_Water004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_WATER006_M, L"Prototype_Component_Texture_Effect_Bubble_2_Water006_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_WATER011_M, L"Prototype_Component_Texture_Effect_Bubble_2_Water011_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_WATER012_M, L"Prototype_Component_Texture_Effect_Bubble_2_Water012_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BUBBLE_2_WATER013_M, L"Prototype_Component_Texture_Effect_Bubble_2_Water013_M");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_1_CIRCLE004_M, L"Prototype_Component_Texture_Effect_Fire_1_Circle004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_2_FIRE003_M, L"Prototype_Component_Texture_Effect_Fire_2_Fire003_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_2_FIRE005_M, L"Prototype_Component_Texture_Effect_Fire_2_Fire005_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_2_FIRE008_M, L"Prototype_Component_Texture_Effect_Fire_2_Fire008_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_2_FIRE009_M, L"Prototype_Component_Texture_Effect_Fire_2_Fire009_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_2_RING004_M, L"Prototype_Component_Texture_Effect_Fire_2_Ring004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FIRE_3_FLOW005_A, L"Prototype_Component_Texture_Effect_Fire_3_Flow005_A");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_BEAM_3_FLOW006_M, L"Prototype_Component_Texture_Effect_Beam_3_Flow006_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BEAM_3_ICE001_M, L"Prototype_Component_Texture_Effect_Beam_3_Ice001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BEAM_3_LASER001_M, L"Prototype_Component_Texture_Effect_Beam_3_Laser001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BEAM_3_LASER002_M, L"Prototype_Component_Texture_Effect_Beam_3_Laser002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_BEAM_3_SHOCK001_M, L"Prototype_Component_Texture_Effect_Beam_3_Shock001_M");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_0_MASK003_M, L"Prototype_Component_Texture_Effect_Floor_0_Mask003_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_BLUR001_M, L"Prototype_Component_Texture_Effect_Floor_3_Blur001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_CLOUD007_M, L"Prototype_Component_Texture_Effect_Floor_3_Cloud007_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_CLOUD201_A, L"Prototype_Component_Texture_Effect_Floor_3_Cloud201_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_FLOOR204_BIG_A, L"Prototype_Component_Texture_Effect_Floor_3_Floor204_Big_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_FLOOR206_A, L"Prototype_Component_Texture_Effect_Floor_3_Floor206_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_ROCK203_A, L"Prototype_Component_Texture_Effect_Floor_3_Rock203_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_3_WHITE202_A, L"Prototype_Component_Texture_Effect_Floor_3_White202_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_FLOOR_CMN_HT003_M_LTA, L"Prototype_Component_Texture_Effect_Floor_Cmn_Ht003_M_Lta");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_PUNCH_1_CIRCLE001_M, L"Prototype_Component_Texture_Effect_Punch_1_Circle001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_PUNCH_1_CIRCLE005_M, L"Prototype_Component_Texture_Effect_Punch_1_Circle005_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_PUNCH_1_RING009_M, L"Prototype_Component_Texture_Effect_Punch_1_Ring009_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_PUNCH_2_HIT008_M, L"Prototype_Component_Texture_Effect_Punch_2_Hit008_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_PUNCH_2_MARK701_O, L"Prototype_Component_Texture_Effect_Punch_2_Mark701_O");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_0_RING001_M, L"Prototype_Component_Texture_Effect_Rainbow_0_Ring001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_0_RING004_M, L"Prototype_Component_Texture_Effect_Rainbow_0_Ring004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_1_CIRCLE001_M, L"Prototype_Component_Texture_Effect_Rainbow_1_Circle001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_1_CIRCLE004_M, L"Prototype_Component_Texture_Effect_Rainbow_1_Circle004_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_1_CIRCLE005_M, L"Prototype_Component_Texture_Effect_Rainbow_1_Circle005_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_1_RING012_M, L"Prototype_Component_Texture_Effect_Rainbow_1_Ring012_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_2_BOM002_M, L"Prototype_Component_Texture_Effect_Rainbow_2_Bom002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_2_HIT010_M, L"Prototype_Component_Texture_Effect_Rainbow_2_Hit010_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_2_WATER006_M, L"Prototype_Component_Texture_Effect_Rainbow_2_Water006_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_2_WIND001_M, L"Prototype_Component_Texture_Effect_Rainbow_2_Wind001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_RAINBOW_3_COLOR001_M, L"Prototype_Component_Texture_Effect_Rainbow_3_Color001_M");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_SONIC_0_MASK003_M, L"Prototype_Component_Texture_Effect_Sonic_0_Mask003_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_SONIC_0_RING006_M, L"Prototype_Component_Texture_Effect_Sonic_0_Ring006_M");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_SURFBOARD_EW730_SURFBOARD_U, L"Prototype_Component_Texture_Effect_Surfboard_Ew730_Surfboard_U");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_ZIPPY_ZAP_0_MASK005_M, L"Prototype_Component_Texture_Effect_Zippy_Zap_0_Mask005_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_ZIPPY_ZAP_1_CIRCLE005_M, L"Prototype_Component_Texture_Effect_Zippy_Zap_1_Circle005_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_ZIPPY_ZAP_2_HIT014_M, L"Prototype_Component_Texture_Effect_Zippy_Zap_2_Hit014_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_ZIPPY_ZAP_2_THUNDER011_M, L"Prototype_Component_Texture_Effect_Zippy_Zap_2_Thunder011_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_ZIPPY_ZAP_2_THUNDER201_A, L"Prototype_Component_Texture_Effect_Zippy_Zap_2_Thunder201_A");
+
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_0_WATER002_M,	L"Prototype_Component_Texture_Effect_Wave_0_Water002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_0_DAST001_M,	L"Prototype_Component_Texture_Effect_Wave_0_Dast001_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_1_CIRCLE002_M,	L"Prototype_Component_Texture_Effect_Wave_1_Circle002_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_2_WATER009_M,	L"Prototype_Component_Texture_Effect_Wave_2_Water009_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_3_BLUR202_A,	L"Prototype_Component_Texture_Effect_Wave_3_Blur202_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_3_CLOUD204_A,	L"Prototype_Component_Texture_Effect_Wave_3_Cloud204_A");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_3_FLOW011_M,	L"Prototype_Component_Texture_Effect_Wave_3_Flow011_M");
+WNAME_TAG(PROTO_COM_TEX_EFT_WAVE_3_FLOW013_M,	L"Prototype_Component_Texture_Effect_Wave_3_Flow013_M");
+
+
+
 // Shader
 WNAME_TAG(PROTO_COM_SHADER_VTXTEX, L"Prototype_Component_Shader_VtxTex");
 WNAME_TAG(PROTO_COM_SHADER_VTXNORTEX, L"Prototype_Component_Shader_VtxNorTex");
@@ -164,6 +253,7 @@ WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_LAYERED, L"Prototype_Component_Shader_UI_But
 WNAME_TAG(PROTO_COM_SHADER_UIBUTTON_ENTRY, L"Prototype_Component_Shader_UI_Button_Entry");
 WNAME_TAG(PROTO_COM_SHADER_PARTICLE3D, L"Prototype_Component_Shader_Particle3D");
 WNAME_TAG(PROTO_COM_SHADER_EFFECT_BEAM, L"Prototype_Component_Shader_Effect_Beam");
+WNAME_TAG(PROTO_COM_SHADER_TRAIL, L"Prototype_Component_Shader_Trail");
 WNAME_TAG(PROTO_COM_SHADER_WATER, L"Prototype_Component_Shader_Water");
 WNAME_TAG(PROTO_COM_SHADER_FIELD_GRASS, L"Prototype_Component_Shader_FieldGrass");
 
@@ -178,6 +268,7 @@ WNAME_TAG(PROTO_COM_VIBUFFER_INST_EXPLOSION, L"Prototype_Component_VIBuffer_Inst
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_STAR, L"Prototype_Component_VIBuffer_Instance_Star");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_EFFECT, L"Prototype_Component_VIBuffer_Instance_Effect");
 WNAME_TAG(PROTO_COM_VIBUFFER_INST_PARTICLE3D, L"Prototype_Component_VIBuffer_Instance_Particle3D");
+WNAME_TAG(PROTO_COM_VIBUFFER_TRAIL, L"Prototype_Component_VIBuffer_Trail");
 WNAME_TAG(PROTO_COM_VIBUFFER_XZPLANE, L"Prototype_Component_VIBuffer_XZPlane");
 WNAME_TAG(PROTO_COM_VIBUFFER_FIELD_GRASS_INST, L"Prototype_Component_VIBuffer_FieldGrass_Instance");
 WNAME_TAG(PROTO_COM_MODEL_FIONA, L"Prototype_Component_Model_Fiona");
@@ -281,6 +372,7 @@ WNAME_TAG(PROTO_OBJ_EFFECT_TEST_SINGLE, L"Prototype_GameObject_Effect_Test_Singl
 WNAME_TAG(PROTO_OBJ_PARTICLE_EMITTER, L"Prototype_GameObject_Particle_Emitter");
 
 WNAME_TAG(PROTO_OBJ_BATTLE_TRAINER, L"Prototype_GameObject_Battle_Trainer");
+WNAME_TAG(PROTO_OBJ_BATTLE_BALL, L"Prototype_GameObject_Battle_Ball");
 
 WNAME_TAG(PROTO_BTN_GLOW_MENU_PARTNER, L"Prototype_UIButton_Glow_Menu_Partner");
 WNAME_TAG(PROTO_BTN_GLOW_MENU_SQUARE, L"Prototype_UIButton_Glow_Menu_Square");
@@ -312,6 +404,7 @@ WNAME_TAG(PROTO_OBJ_FIELD_GRASS, L"Prototype_GameObject_FieldGrass");
 WNAME_TAG(PROTO_OBJ_FIELD_GRASS_BATCH, L"Prototype_GameObject_FieldGrassBatch");
 WNAME_TAG(PROTO_OBJ_EFFECT, L"Prototype_GameObject_Effect");
 WNAME_TAG(PROTO_OBJ_EFFECT_MESH, L"Prototype_GameObject_Effect_Mesh");
+WNAME_TAG(PROTO_OBJ_TRAIL, L"Prototype_GameObject_Trail");
 
 // Component
 WNAME_TAG(COM_TEXTURE_DIFF, L"Com_Texture_Diffuse");
@@ -327,6 +420,7 @@ WNAME_TAG(COM_INTERACTION_EVENTSEQUENCE, L"Com_Interaction_EventSequence");
 
 // Part
 WNAME_TAG(PART_BODY, L"Part_Body");
+WNAME_TAG(PART_BALL, L"Part_Ball");
 WNAME_TAG(PART_WEAPON, L"Part_Weapon");
 
 

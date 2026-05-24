@@ -22,6 +22,7 @@ public:
 
 		_bool bSpriteAnimEnabled = { false };
 		_float fSpriteFrameDuration = { 0.f };
+		_bool bSpriteAnimLoop = { true };
 
 		vector<UI_SHARED_TEXTURE_BINDING_DESC> SharedTextureBindings;
 	};
@@ -40,7 +41,7 @@ public:
 	void Set_SharedTextureBindings(const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Bindings) { m_SharedTextureBindings = Bindings; }
 
 	// Sprite anim
-	void Set_SpriteAnim(_bool bEnabled, _float fFrameDuration);
+	void Set_SpriteAnim(_bool bEnabled, _float fFrameDuration, _bool bLoop = true);
 	virtual void Set_SpriteTickAllowed(_bool bAllowed) override { m_bSpriteTickAllowed = bAllowed; }
 	/* sprite 프레임 인덱스 / 누적시간을 0 으로 강제 리셋.
    시퀀스 두 번째 재생 시 첫 재생의 끝 프레임에 머무는 현상 방지. */
@@ -80,6 +81,7 @@ protected:
 
 	_bool m_bSpriteAnimEnabled = { false };
 	_float m_fSpriteFrameDuration = { 0.f };
+	_bool m_bSpriteAnimLoop = { true };
 	_uint  m_iSpriteFrameCount = { 0 };
 	_float m_fSpriteAccumTime = { 0.f };
 	_bool  m_bSpriteTickAllowed = { true };

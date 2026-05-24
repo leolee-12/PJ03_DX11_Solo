@@ -12,10 +12,11 @@ NS_END
 NS_BEGIN(Game_PKM)
 class CBattle_Manager;
 class CBattleMsg;
-class CBattle_MsgListener;
+class CEntry;
 class CBattlePlate;
-class CBattle_CommandMenu;
 class CBattle_MoveMenu;
+class CBattle_MsgListener;
+class CBattle_CommandMenu;
 class CBattle_InputDirector;
 class CBattle_PokemonListener;
 class CBattle_ExpGainListener;
@@ -44,17 +45,21 @@ private:
 
 private:
 	BATTLE_ENV m_tEnv = {};
-	CBattle_Manager* m_pBattleManager = { nullptr };
+	
 	CBattleMsg* m_pBattleMsg = { nullptr };
-	CBattle_MsgListener* m_pBattleMsgListener = { nullptr };
+	CUISequence* m_pCursorSeq = { nullptr };
+	CEntry* m_pEntry = { nullptr };
+	CUISequence* m_pEntrySeq = { nullptr };
 	CBattlePlate* m_pBattlePlate = { nullptr };
-	CBattle_CommandMenu* m_pCommandMenu = { nullptr };
 	CBattle_MoveMenu* m_pMoveMenu = { nullptr };
+
+	CBattle_Manager* m_pBattleManager = { nullptr };
+	CBattle_MsgListener* m_pBattleMsgListener = { nullptr };
+	CBattle_CommandMenu* m_pCommandMenu = { nullptr };
 	CBattle_InputDirector* m_pInputDirector = { nullptr };
 	CBattle_PokemonListener* m_pPokemonListeners[g_kBattleSideCount] = { nullptr, nullptr };
 	CBattle_ExpGainListener* m_pExpGainListener = { nullptr };
 	CBattle_PlateListener* m_pBattlePlateListener = { nullptr };
-	CUISequence* m_pCursorSeq = { nullptr };
 	TRAINER_DATA m_tOpponentTrainer = {};
 
 public:

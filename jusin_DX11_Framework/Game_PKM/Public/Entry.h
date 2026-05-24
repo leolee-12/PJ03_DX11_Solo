@@ -15,6 +15,14 @@ class CUIButton_Entry;
 
 class CEntry final : public CUIController
 {
+public:
+	enum class ENTRY_MODE
+	{
+		REORDER,
+		SELECT,
+		END
+	};
+
 private:
 	CEntry();
 	virtual ~CEntry() = default;
@@ -22,6 +30,8 @@ private:
 public:
 	void Bind(CPlayer_Status* pPlayerState);
 	_int Get_SelectedSlot() const { return m_iSelectedSlot; }
+	void Set_Mode(ENTRY_MODE eMode);
+	ENTRY_MODE Get_Mode() const { return m_eMode; }
 
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Open() override;
@@ -58,6 +68,7 @@ private:
 	_int m_iSelectedSlot{ -1 };
 	_int m_iIntroTweenHandle{ 0 };
 	_float m_fOpenInputBlockTimer{ 0.f };
+	ENTRY_MODE m_eMode{ ENTRY_MODE::REORDER };
 
 private:
 	void Apply_PartyToUI();
@@ -65,7 +76,7 @@ private:
 	void Apply_Slot(_uint i, const POKEMON_INSTANCE& tInst);
 	void Apply_Selected_State(_uint i, _bool bSelected);
 
-	void Toggle_Or_Swap(_int iFocusedIndex);
+	void Handle_SlotActivate(_int iFocusedIndex);
 	void Cancel_Or_Close();
 
 	void Play_Intro_Tween();

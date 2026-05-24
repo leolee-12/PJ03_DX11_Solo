@@ -19,6 +19,7 @@ NS_BEGIN(Game_PKM)
 class CMenu;
 class CBattleMsg;
 class CEvent_Manager;
+class CRegion_Manager;
 class CEntry;
 
 class CLevel_GamePlay : public CLevel
@@ -52,10 +53,14 @@ private:
 	CMenu* m_pMenu = { nullptr };
 	CEntry* m_pEntry = { nullptr };
 	CUISequence* m_pEntrySeq = { nullptr };
-	CEvent_Manager* m_pEventMgr = { nullptr };
-
 	CUISequence* m_pDialogueSeq = { nullptr };   // weak
 	CBattleMsg* m_pDialogueMsg = { nullptr };    // weak - Hub owns
+	CUISequence* m_pRegionSeq = { nullptr };
+	CUIText* m_pRegionNameText = { nullptr };
+
+	CEvent_Manager* m_pEventMgr = { nullptr };
+	CRegion_Manager* m_pRegionMgr = { nullptr };
+
 	_bool m_bDialogueActive = { false };
 	_wstring m_strActiveDialogueKey;
 
@@ -94,6 +99,7 @@ private:
 	HRESULT Ready_Layer_Effect(WNameID strLayerTag);
 	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 	HRESULT Ready_EventSystem();
+	HRESULT Ready_RegionSystem();
 	HRESULT Ready_MainCamera();
 	HRESULT Ready_Cloud();
 

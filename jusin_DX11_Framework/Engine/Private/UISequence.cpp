@@ -969,6 +969,8 @@ namespace
 		const auto jSprite = j.value("spriteAnim", json::object());
 		d.bSpriteAnimEnabled = jSprite.value("enabled", false);
 		d.fSpriteFrameDuration = jSprite.value("frameDuration", 0.f);
+		d.bSpriteAnimLoop = jSprite.value("loop", true);
+
 
 		if (d.bSpriteAnimEnabled && d.fSpriteFrameDuration <= 0.f)
 		{

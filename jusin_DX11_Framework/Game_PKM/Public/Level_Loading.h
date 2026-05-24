@@ -4,6 +4,10 @@
 
 #include "Level.h"
 
+NS_BEGIN(Engine)
+class CUISequence;
+NS_END
+
 /* -------------------------------------------------- */
 // 로딩 레벨
 // - 로딩 화면에 필요한 객체(배경, 로딩바, 로딩 텍스트 등)들을 생성
@@ -27,6 +31,10 @@ public:
 private:
 	LEVEL_ENTRY_DESC m_tEntryDesc = {};
 	class CLoader* m_pLoader = { nullptr };
+	CUISequence* m_pLoadingUI = { nullptr };
+
+private:
+	HRESULT Ready_Layer_UI(WNameID strLayerTag);
 
 public:
 	static CLevel_Loading*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID, const LEVEL_ENTRY_DESC* pEntryDesc = nullptr);

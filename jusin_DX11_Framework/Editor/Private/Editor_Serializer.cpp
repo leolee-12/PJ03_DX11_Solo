@@ -136,8 +136,9 @@ namespace Helper
 							{ "level", d.iTextureLevel },
 							{ "index", d.iTextureIndex } };
 		j["color"]		= { d.vColor.x, d.vColor.y, d.vColor.z, d.vColor.w };
-		j["spriteAnim"] = {	{ "enabled",       d.bSpriteAnimEnabled },
-							{ "frameDuration", d.fSpriteFrameDuration } };
+		j["spriteAnim"] = { { "enabled",       d.bSpriteAnimEnabled },
+							{ "frameDuration", d.fSpriteFrameDuration },
+							{ "loop",          d.bSpriteAnimLoop } };
 
 		json jArr = json::array();
 		for (const auto& b : d.SharedTextureBindings)
@@ -176,6 +177,7 @@ namespace Helper
 
 		d.bSpriteAnimEnabled = jSprite.value("enabled", false);
 		d.fSpriteFrameDuration = jSprite.value("frameDuration", 0.f);
+		d.bSpriteAnimLoop = jSprite.value("loop", true);
 
 		d.SharedTextureBindings.clear();
 		for (const auto& jb : j.value("sharedTextures", json::array()))

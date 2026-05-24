@@ -12,10 +12,11 @@ CUIImage::CUIImage(const CUIImage& Prototype)
 {
 }
 
-void CUIImage::Set_SpriteAnim(_bool bEnabled, _float fFrameDuration)
+void CUIImage::Set_SpriteAnim(_bool bEnabled, _float fFrameDuration, _bool bLoop)
 {
 	m_bSpriteAnimEnabled = bEnabled;
 	m_fSpriteFrameDuration = fFrameDuration;
+	m_bSpriteAnimLoop = bLoop;
 	Refresh_SpriteAnimState();
 }
 
@@ -48,6 +49,7 @@ HRESULT CUIImage::Initialize(void* pArg)
 		m_vColor = pDesc->vColor;
 		m_bSpriteAnimEnabled = pDesc->bSpriteAnimEnabled;
 		m_fSpriteFrameDuration = pDesc->fSpriteFrameDuration;
+		m_bSpriteAnimLoop = pDesc->bSpriteAnimLoop;
 		m_SharedTextureBindings = pDesc->SharedTextureBindings;
 
 	}
@@ -77,11 +79,34 @@ void CUIImage::Update(_float fTimeDelta)
 	if (m_iSpriteFrameCount <= 1 || m_fSpriteFrameDuration <= 0.f)
 		return;
 
+	if (INVALID_INDEX == m_iTextureIndex || m_iTextureIndex >= m_iSpriteFrameCount)
+		m_iTextureIndex = 0;
+
+	if (false == m_bSpriteAnimLoop && m_iTextureIndex >= m_iSpriteFrameCount - 1)
+		return;
+
 	m_fSpriteAccumTime += fTimeDelta;
 	while (m_fSpriteAccumTime >= m_fSpriteFrameDuration)
 	{
 		m_fSpriteAccumTime -= m_fSpriteFrameDuration;
-		m_iTextureIndex = (m_iTextureIndex + 1) % m_iSpriteFrameCount;
+
+		if (true == m_bSpriteAnimLoop)
+		{
+			m_iTextureIndex = (m_iTextureIndex + 1) % m_iSpriteFrameCount;
+		}
+		else
+		{
+			const _uint iNextIndex = m_iTextureIndex + 1;
+
+			if (iNextIndex >= m_iSpriteFrameCount)
+			{
+				m_iTextureIndex = m_iSpriteFrameCount - 1;
+				m_fSpriteAccumTime = 0.f;
+				break;
+			}
+
+			m_iTextureIndex = iNextIndex;
+		}
 	}
 }
 
@@ -207,7 +232,11 @@ void CUIImage::Refresh_SpriteAnimState()
 		if (INVALID_INDEX == m_iTextureIndex)
 			m_iTextureIndex = 0;
 		else if (m_iTextureIndex >= m_iSpriteFrameCount)
-			m_iTextureIndex %= m_iSpriteFrameCount;
+		{
+			m_iTextureIndex = (true == m_bSpriteAnimLoop)
+				? (m_iTextureIndex % m_iSpriteFrameCount)
+				: (m_iSpriteFrameCount - 1);
+		}
 	}
 
 	m_fSpriteAccumTime = 0.f;

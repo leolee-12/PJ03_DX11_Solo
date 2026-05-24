@@ -91,12 +91,6 @@
     <Filter Include="03. Components\00. VIBuffer">
       <UniqueIdentifier>{e115b605-0296-4ac3-b6d9-6783b6720420}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Objects\01. PartObject">
-      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Objects\01. PartObject\Body">
-      <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Objects\02. UI">
       <UniqueIdentifier>{95cb7b9c-7bb3-4c80-b8fd-b4ad2f74e72c}</UniqueIdentifier>
     </Filter>
@@ -229,6 +223,24 @@
     <Filter Include="03. Components\00. VIBuffer\FieldGrass_Instance">
       <UniqueIdentifier>{cf9a9c0d-576c-482c-b8f1-f103b04c255b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Components\00. VIBuffer\Trail">
+      <UniqueIdentifier>{de368684-cf54-4e7d-a603-492050bfe6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\04. Effects\Trail">
+      <UniqueIdentifier>{416a4dbf-61a3-46c1-9071-7ccabbd43064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\04. Effects\2D">
+      <UniqueIdentifier>{866ee7dd-201a-4d2d-a040-96e3c4497f4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\01. PartObject">
+      <UniqueIdentifier>{98b84ec7-65a0-49bf-bbbf-8339e7443031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Objects\01. PartObject\Body">
+      <UniqueIdentifier>{5dab305b-f339-4444-8fc3-0b0e17ee84c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\06. Region">
+      <UniqueIdentifier>{604ebcc2-b48c-4f46-8239-7a55b0e13910}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Game_PKM_Defines.h">
@@ -296,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Explosion.h">
       <Filter>80. Study\03. Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Effect_Star.h">
-      <Filter>01. Objects\04. Effects</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIController.h">
       <Filter>01. Objects\02. UI\Controller</Filter>
@@ -621,6 +630,24 @@
     <ClInclude Include="..\Public\FieldGrassBatch.h">
       <Filter>01. Objects\03. Misc\FieldGrass</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Trail.h">
+      <Filter>03. Components\00. VIBuffer\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Star.h">
+      <Filter>01. Objects\04. Effects\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trail.h">
+      <Filter>01. Objects\04. Effects\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Battle_Ball.h">
+      <Filter>04. Contents\00. GameActor\02. Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Region_Defines.h">
+      <Filter>04. Contents\06. Region</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Region_Manager.h">
+      <Filter>04. Contents\06. Region</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Player.cpp">
@@ -676,9 +703,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Explosion.cpp">
       <Filter>80. Study\03. Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Effect_Star.cpp">
-      <Filter>01. Objects\04. Effects</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Game_PresetTable.cpp">
       <Filter>02. Game_API</Filter>
@@ -940,6 +964,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\FieldGrassBatch.cpp">
       <Filter>01. Objects\03. Misc\FieldGrass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Trail.cpp">
+      <Filter>03. Components\00. VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Star.cpp">
+      <Filter>01. Objects\04. Effects\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trail.cpp">
+      <Filter>01. Objects\04. Effects\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Battle_Ball.cpp">
+      <Filter>04. Contents\00. GameActor\02. Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Region_Manager.cpp">
+      <Filter>04. Contents\06. Region</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

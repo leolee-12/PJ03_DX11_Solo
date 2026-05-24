@@ -36,6 +36,10 @@ public:
 
 	_bool   Is_Open() const { return m_bOpen; }
 
+	void    Hide_AllContents();   // 트리 전체 위젯 가시성 스냅샷 후 숨김
+	void    Show_AllContents();   // 스냅샷대로 복원
+	_bool   Is_Contents_Hidden() const { return m_bContentsHidden; }
+
 	void    Set_FocusPolicy(FOCUS_POLICY ePolicy);
 	void    Set_OnActivate(ACTIVATE_CALLBACK fn);
 	void    Set_OnCancel(CANCEL_CALLBACK   fn);
@@ -76,8 +80,13 @@ protected:
 	FOCUS_POLICY      m_eFocusPolicy{ FOCUS_POLICY::RESET_ON_OPEN };
 	_int              m_iLastFocusedIndex{ 0 };
 
+	_bool                            m_bContentsHidden{ false };
+	vector<pair<CUIObject*, _bool>>  m_VisibilitySnapshot;
+
 	ACTIVATE_CALLBACK m_fnOnActivate{};
 	CANCEL_CALLBACK   m_fnOnCancel{};
+
+	void Collect_Widgets(CUIObject* pRoot, vector<CUIObject*>& out) const;
 
 protected:
 	virtual void Free() override;

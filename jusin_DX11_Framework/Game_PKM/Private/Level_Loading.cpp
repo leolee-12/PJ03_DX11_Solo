@@ -1,9 +1,10 @@
 #include "Level_Loading.h"
-#include "GameInstance.h"
 #include "Loader.h"
-
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
+
+#include "GameInstance.h"
+#include "UISequence.h"
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::LOADING);
@@ -22,6 +23,9 @@ CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CLevel_Loading::Initialize()
 {
+	if (FAILED(Ready_Layer_UI(LAYER_UI)))
+		return E_FAIL;
+
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_tEntryDesc.eNextLevelID);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
@@ -74,6 +78,33 @@ HRESULT CLevel_Loading::Render()
 	return S_OK;
 }
 
+HRESULT CLevel_Loading::Ready_Layer_UI(WNameID strLayerTag)
+{
+	CUISequence::UISEQUENCE_DESC tDesc{};
+	tDesc.strPath = "../../DataFiles/UI/UI_Loading.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+	CUISequence* pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT,
+		ETOUI(LEVEL::STATIC),
+		PROTO_UI_SEQUENCE,
+		&tDesc));
+
+	if (nullptr == pSeq)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
+
+	pSeq->Play();
+	m_pLoadingUI = pSeq;
+
+	return S_OK;
+}
+
 CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	LEVEL eNextLevelID, const LEVEL_ENTRY_DESC* pEntryDesc)
 {
@@ -90,7 +121,8 @@ CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 
 void CLevel_Loading::Free()
 {
-	__super::Free();
-
+	m_pLoadingUI = nullptr;
 	Safe_Release(m_pLoader);
+	
+	__super::Free();
 }

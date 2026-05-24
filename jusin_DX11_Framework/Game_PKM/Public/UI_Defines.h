@@ -143,6 +143,23 @@ inline constexpr UI_TEXTURE_OPTION g_UITextureOptions[] =
 		"Prototype_Component_Texture_Get_Line2_Fill", LEVEL::GAMEPLAY, 1u),
 	UI_TEXTURE_OPTION_ROW("Get Line2 Back", PROTO_COM_TEX_GET_LINE2_BACK, TEXT("../../Resources/UI/poke_get/poke_get_info_line2_back.png"),
 		"Prototype_Component_Texture_Get_Line2_Back", LEVEL::GAMEPLAY, 1u),
+
+	UI_TEXTURE_OPTION_ROW("Loading Setting BG 00", PROTO_COM_TEX_LOADING_SETTING_BG_00,	TEXT("../../Resources/UI/loading/setting_bg_00^o.png"),
+		"Prototype_Component_Texture_Loading_Setting_BG_00", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Loading Setting BG 01", PROTO_COM_TEX_LOADING_SETTING_BG_01, TEXT("../../Resources/UI/loading/setting_bg_01^q.png"),
+		"Prototype_Component_Texture_Loading_Setting_BG_01", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Loading Setting Gear 00", PROTO_COM_TEX_LOADING_SETTING_GEAR_00,	TEXT("../../Resources/UI/loading/setting_gear_00^t.png"),
+		"Prototype_Component_Texture_Loading_Setting_Gear_00", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Loading Setting Gear 01", PROTO_COM_TEX_LOADING_SETTING_GEAR_01,	TEXT("../../Resources/UI/loading/setting_gear_01^q.png"),
+		"Prototype_Component_Texture_Loading_Setting_Gear_01", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Loading Setting Gear 02", PROTO_COM_TEX_LOADING_SETTING_GEAR_02,	TEXT("../../Resources/UI/loading/setting_gear_02^q.png"),
+		"Prototype_Component_Texture_Loading_Setting_Gear_02", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Loading Setting Gear 03", PROTO_COM_TEX_LOADING_SETTING_GEAR_03,	TEXT("../../Resources/UI/loading/setting_gear_03^q.png"),
+		"Prototype_Component_Texture_Loading_Setting_Gear_03", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Loading Setting Gear 04", PROTO_COM_TEX_LOADING_SETTING_GEAR_04,	TEXT("../../Resources/UI/loading/setting_gear_04^q.png"),
+		"Prototype_Component_Texture_Loading_Setting_Gear_04", LEVEL::GAMEPLAY, 1u),
+	UI_TEXTURE_OPTION_ROW("Place Name", PROTO_COM_TEX_PLACE_NAME, TEXT("../../Resources/UI/place_name/place_name%02d.png"),
+		"Prototype_Component_Texture_Place_Name", LEVEL::GAMEPLAY, 12u),
 };
 
 #undef UI_TEXTURE_OPTION_ROW

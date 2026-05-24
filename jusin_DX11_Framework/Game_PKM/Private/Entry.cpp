@@ -46,6 +46,17 @@ void CEntry::Bind(CPlayer_Status* pPlayerState)
 	On_Refresh();
 }
 
+void CEntry::Set_Mode(ENTRY_MODE eMode)
+{
+	if (ENTRY_MODE::REORDER != eMode &&
+		ENTRY_MODE::SELECT != eMode)
+		return;
+
+	m_eMode = eMode;
+	m_iSelectedSlot = -1;
+	Apply_PartyToUI();
+}
+
 void CEntry::Update(_float fTimeDelta)
 {
 	// 베이스 Update 는 Cancel 시 무조건 Close. Selected 흡수가 필요하여 분기를 직접 처리.
@@ -76,7 +87,7 @@ void CEntry::Update(_float fTimeDelta)
 	m_pGroup->Update(fTimeDelta);
 
 	if (m_pGroup->Was_Activated_This_Frame())
-		Toggle_Or_Swap(m_pGroup->Get_Activated_Index());
+		Handle_SlotActivate(m_pGroup->Get_Activated_Index());
 
 	if (m_pGroup->Was_Cancelled_This_Frame())
 		Cancel_Or_Close();
@@ -283,7 +294,7 @@ void CEntry::Apply_Selected_State(_uint i, _bool bSelected)
 		m_Slots[i].pPlate->Set_Selected(bSelected);
 }
 
-void CEntry::Toggle_Or_Swap(_int iFocusedIndex)
+void CEntry::Handle_SlotActivate(_int iFocusedIndex)
 {
 	if (nullptr == m_pPlayerState)
 		return;
@@ -293,9 +304,16 @@ void CEntry::Toggle_Or_Swap(_int iFocusedIndex)
 
 	PARTY& tParty = m_pPlayerState->Get_Party();
 
-	// 빈 슬롯은 visible=false 이지만 그룹 입력은 받으므로 입구에서 무시.
 	if (static_cast<_uint>(iFocusedIndex) >= tParty.iCount)
 		return;
+
+	if (ENTRY_MODE::SELECT == m_eMode)
+	{
+		if (m_fnOnActivate)
+			m_fnOnActivate(iFocusedIndex);
+
+		return;
+	}
 
 	if (m_iSelectedSlot < 0)
 	{

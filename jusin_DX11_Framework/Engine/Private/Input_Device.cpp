@@ -195,6 +195,10 @@ void CInput_Device::Ready_KeyGroupMap()
 	m_iKeyGroupMap[DIK_P] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_O] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_F] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_T] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_RBRACKET] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_LBRACKET] = KeyGroup::SYSTEM;
+	m_iKeyGroupMap[DIK_BACKSLASH] = KeyGroup::SYSTEM;
 
 	m_iKeyGroupMap[DIK_1] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_2] = KeyGroup::SYSTEM;
