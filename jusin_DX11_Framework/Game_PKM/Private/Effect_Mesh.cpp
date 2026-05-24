@@ -50,6 +50,23 @@ HRESULT CEffect_Mesh::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION,
 		XMVectorSet(m_tDesc.vSpawnPos.x, m_tDesc.vSpawnPos.y, m_tDesc.vSpawnPos.z, 1.f));
 
+	/* 모션 / debris 초기화 — 인스턴스마다 독립 랜덤 (분산) */
+	m_vLocalPos       = m_tDesc.vStartOffset;
+	m_vVelocity       = Make_RandomVelocity();
+	m_fDelayRemaining = m_tDesc.fStartDelay;
+
+	if (m_tDesc.fSpinSpeedMax > 0.0001f)
+	{
+		_float3 vAxis(m_pGameInstance->Random(-1.f, 1.f),
+			m_pGameInstance->Random(-1.f, 1.f),
+			m_pGameInstance->Random(-1.f, 1.f));
+		_vector v = XMLoadFloat3(&vAxis);
+		if (XMVectorGetX(XMVector3LengthSq(v)) <= 1e-6f)
+			v = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		XMStoreFloat3(&m_vSpinAxis, XMVector3Normalize(v));
+		m_fSpinSpeed = m_pGameInstance->Random(-m_tDesc.fSpinSpeedMax, m_tDesc.fSpinSpeedMax);
+	}
+
 	return S_OK;
 }
 
@@ -62,10 +79,27 @@ void CEffect_Mesh::Update(_float fTimeDelta)
 	if (Is_Dead())
 		return;
 
+	/* startDelay 동안은 등장 전 — age/모션 정지 */
+	if (m_fDelayRemaining > 0.f)
+	{
+		m_fDelayRemaining -= fTimeDelta;
+		return;
+	}
+
 	m_fAge += fTimeDelta;
 
 	if (m_fAge >= m_tDesc.fLifeTime)
+	{
 		Set_Dead();
+		return;
+	}
+
+	/* semi-implicit Euler (입자와 동일 규약) */
+	_vector vVel = XMLoadFloat3(&m_vVelocity) + XMLoadFloat3(&m_tDesc.vGravity) * fTimeDelta;
+	XMStoreFloat3(&m_vVelocity, vVel);
+	XMStoreFloat3(&m_vLocalPos, XMLoadFloat3(&m_vLocalPos) + vVel * fTimeDelta);
+
+	m_fSpinAngle += m_fSpinSpeed * fTimeDelta;
 }
 
 void CEffect_Mesh::Late_Update(_float fTimeDelta)
@@ -73,6 +107,9 @@ void CEffect_Mesh::Late_Update(_float fTimeDelta)
 	(void)fTimeDelta;
 
 	if (Is_Dead())
+		return;
+
+	if (m_fDelayRemaining > 0.f)   // delay 중엔 렌더 안 함
 		return;
 
 	const _float fLife = max(m_tDesc.fLifeTime, 0.0001f);
@@ -149,7 +186,13 @@ HRESULT CEffect_Mesh::Bind_ShaderGlobals()
 		? m_pParentTransform
 		: m_pTransformCom;
 
-	if (FAILED(pSrcTransform->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	/* local 모션(스핀+이동)을 root world에 합성. 스케일은 g_vScale로 셰이더에서 별도 적용. */
+	_matrix mLocal = XMMatrixRotationAxis(XMLoadFloat3(&m_vSpinAxis), m_fSpinAngle)
+		* XMMatrixTranslation(m_vLocalPos.x, m_vLocalPos.y, m_vLocalPos.z);
+	_float4x4 mWorld;
+	XMStoreFloat4x4(&mWorld, mLocal * XMLoadFloat4x4(pSrcTransform->Get_WorldMatrixPtr()));
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &mWorld)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix",
@@ -172,6 +215,35 @@ HRESULT CEffect_Mesh::Bind_ShaderGlobals()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+_float3 CEffect_Mesh::Make_RandomVelocity() const
+{
+	const _float fSpeed = m_pGameInstance->Random(m_tDesc.vSpeedRange.x, m_tDesc.vSpeedRange.y);
+
+	_vector vBase = XMLoadFloat3(&m_tDesc.vEmitDirection);
+	if (XMVectorGetX(XMVector3LengthSq(vBase)) <= 1e-6f)
+		vBase = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	vBase = XMVector3Normalize(vBase);
+
+	_float3 vOut{};
+	if (m_tDesc.fEmitConeHalfAngle <= 0.0001f)
+	{
+		XMStoreFloat3(&vOut, vBase * fSpeed);
+		return vOut;
+	}
+
+	_vector vTmp = (fabsf(XMVectorGetX(XMVector3Dot(vBase, XMVectorSet(0.f, 1.f, 0.f, 0.f)))) > 0.95f)
+		? XMVectorSet(1.f, 0.f, 0.f, 0.f)
+		: XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	_vector vRight = XMVector3Normalize(XMVector3Cross(vTmp, vBase));
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vBase, vRight));
+
+	const _float t = m_pGameInstance->Random(0.f, m_tDesc.fEmitConeHalfAngle);
+	const _float p = m_pGameInstance->Random(0.f, XM_2PI);
+	_vector vDir = vBase * cosf(t) + (vRight * cosf(p) + vUp * sinf(p)) * sinf(t);
+	XMStoreFloat3(&vOut, XMVector3Normalize(vDir) * fSpeed);
+	return vOut;
 }
 
 CEffect_Mesh* CEffect_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

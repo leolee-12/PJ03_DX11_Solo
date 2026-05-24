@@ -18,6 +18,17 @@ public:
 private:
 	CEffectEditorSession* m_pSession = { nullptr };
 
+private:
+	void Render_DocHeader();
+	void Render_Toolbar();
+	void Render_PreviewControls();
+	void Render_EmitterList();
+	void Render_EmitterInspector();
+	void Render_MeshList();
+	void Render_MeshInspector();
+	void Render_TrailList();
+	void Render_TrailInspector();
+
 public:
 	static CPanel_Effect* Create();
 

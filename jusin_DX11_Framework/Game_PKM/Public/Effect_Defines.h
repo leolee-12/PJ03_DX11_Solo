@@ -51,12 +51,13 @@ struct EMITTER_DEFINITION
 	_bool bAutoDestroyOnEmpty = true;
 	_float fStartDelay = 0.f;
 
-	_uint  iAtlasCols = 1;
-	_uint  iAtlasRows = 1;
-	_float fAtlasFps = 0.f;
-	_bool  bAtlasLoop = false;
-	_bool  bMirrorUV = false;
-	_bool  bIgnoreDepth = false;
+	_uint	iAtlasCols = 1;
+	_uint	iAtlasRows = 1;
+	_float	fAtlasFps = 0.f;
+	_bool	bAtlasLoop = false;
+	_bool	bMirrorUV = false;
+	_bool	bIgnoreDepth = false;
+	_bool	bWorldSpace = false;
 
 	/* 시간 커브 */
 	CCurveFloat  curveSize;
@@ -89,6 +90,31 @@ fallback. */
 	CCurveFloat curveAlpha;
 
 	_float  fLifeTime = 1.f;
+
+	/* 모션 / debris (root 기준 local) */
+	_uint   iCount             = 1;
+	_float3 vStartOffset       = { 0.f, 0.f, 0.f };
+	_float3 vEmitDirection     = { 0.f, 1.f, 0.f };
+	_float  fEmitConeHalfAngle = 0.f;
+	_float2 vSpeedRange        = { 0.f, 0.f };
+	_float3 vGravity           = { 0.f, 0.f, 0.f };
+	_float  fSpinSpeedMax      = 0.f;
+	_float  fStartDelay        = 0.f;
+};
+
+struct TRAIL_DEFINITION
+{
+	_string strName = "";
+	_uint   iMaxSegments = 32;
+	_float  fSegmentSpacing = 0.05f;
+	_float  fLifeTimePerSegment = 0.5f;
+	_float  fWidthStart = 0.3f;
+	_float  fWidthEnd = 0.0f;
+	_float3 vUpAxis = { 0.f, 1.f, 0.f };
+	BLEND_MODE eBlend = BLEND_MODE::ADDITIVE;
+	_bool   bIgnoreDepth = false;
+	WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
+	CCurveColor curveColor;
 };
 
 struct EFFECT_DEFINITION
@@ -96,6 +122,7 @@ struct EFFECT_DEFINITION
 	_string strID = "";
 	vector<EMITTER_DEFINITION>     Emitters;
 	vector<MESH_EFFECT_DEFINITION> Meshes;
+	vector<TRAIL_DEFINITION>       Trails;
 };
 
 struct EFFECT_TEXTURE_OPTION
@@ -229,6 +256,84 @@ inline constexpr EFFECT_TEXTURE_OPTION g_EffectTextureOptions[] =
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_thunder702_o.png"), "Prototype_Component_Texture_Effect_Thunder_2_Thunder702_O"),
 	EFFECT_TEXTURE_OPTION_ROW("Thunder 2 Thunder703", PROTO_COM_TEX_EFT_THUNDER_2_THUNDER703_O,
 		TEXT("../../Resources/Effects/Thunder/fxpt_2_thunder703_o.png"), "Prototype_Component_Texture_Effect_Thunder_2_Thunder703_O"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 0 Bubble201 A", PROTO_COM_TEX_EFT_BUBBLE_0_BUBBLE201_A, TEXT("../../Resources/Effects/bubble/fxpt_0_bubble201_a.png"), "Prototype_Component_Texture_Effect_Bubble_0_Bubble201_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 0 Smoke002", PROTO_COM_TEX_EFT_BUBBLE_0_SMOKE002_M, TEXT("../../Resources/Effects/bubble/fxpt_0_smoke002_m.png"), "Prototype_Component_Texture_Effect_Bubble_0_Smoke002_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 0 Smoke202 A", PROTO_COM_TEX_EFT_BUBBLE_0_SMOKE202_A, TEXT("../../Resources/Effects/bubble/fxpt_0_smoke202_a.png"), "Prototype_Component_Texture_Effect_Bubble_0_Smoke202_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 1 Circle001", PROTO_COM_TEX_EFT_BUBBLE_1_CIRCLE001_M, TEXT("../../Resources/Effects/bubble/fxpt_1_circle001_m.png"), "Prototype_Component_Texture_Effect_Bubble_1_Circle001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Bubble003", PROTO_COM_TEX_EFT_BUBBLE_2_BUBBLE003_M, TEXT("../../Resources/Effects/bubble/fxpt_2_bubble003_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Bubble003_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Bubble004", PROTO_COM_TEX_EFT_BUBBLE_2_BUBBLE004_M, TEXT("../../Resources/Effects/bubble/fxpt_2_bubble004_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Bubble004_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Bubble009", PROTO_COM_TEX_EFT_BUBBLE_2_BUBBLE009_M, TEXT("../../Resources/Effects/bubble/fxpt_2_bubble009_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Bubble009_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Hit015", PROTO_COM_TEX_EFT_BUBBLE_2_HIT015_M, TEXT("../../Resources/Effects/bubble/fxpt_2_hit015_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Hit015_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Line002", PROTO_COM_TEX_EFT_BUBBLE_2_LINE002_M, TEXT("../../Resources/Effects/bubble/fxpt_2_line002_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Line002_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Smoke001", PROTO_COM_TEX_EFT_BUBBLE_2_SMOKE001_M, TEXT("../../Resources/Effects/bubble/fxpt_2_smoke001_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Smoke001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Water004", PROTO_COM_TEX_EFT_BUBBLE_2_WATER004_M, TEXT("../../Resources/Effects/bubble/fxpt_2_water004_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Water004_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Water006", PROTO_COM_TEX_EFT_BUBBLE_2_WATER006_M, TEXT("../../Resources/Effects/bubble/fxpt_2_water006_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Water006_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Water011", PROTO_COM_TEX_EFT_BUBBLE_2_WATER011_M, TEXT("../../Resources/Effects/bubble/fxpt_2_water011_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Water011_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Water012", PROTO_COM_TEX_EFT_BUBBLE_2_WATER012_M, TEXT("../../Resources/Effects/bubble/fxpt_2_water012_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Water012_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Bubble 2 Water013", PROTO_COM_TEX_EFT_BUBBLE_2_WATER013_M, TEXT("../../Resources/Effects/bubble/fxpt_2_water013_m.png"), "Prototype_Component_Texture_Effect_Bubble_2_Water013_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Fire 1 Circle004", PROTO_COM_TEX_EFT_FIRE_1_CIRCLE004_M, TEXT("../../Resources/Effects/fire/fxpt_1_circle004_m.png"), "Prototype_Component_Texture_Effect_Fire_1_Circle004_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Fire 2 Fire003", PROTO_COM_TEX_EFT_FIRE_2_FIRE003_M, TEXT("../../Resources/Effects/fire/fxpt_2_fire003_m.png"), "Prototype_Component_Texture_Effect_Fire_2_Fire003_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Fire 2 Fire005", PROTO_COM_TEX_EFT_FIRE_2_FIRE005_M, TEXT("../../Resources/Effects/fire/fxpt_2_fire005_m.png"), "Prototype_Component_Texture_Effect_Fire_2_Fire005_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Fire 2 Fire008", PROTO_COM_TEX_EFT_FIRE_2_FIRE008_M, TEXT("../../Resources/Effects/fire/fxpt_2_fire008_m.png"), "Prototype_Component_Texture_Effect_Fire_2_Fire008_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Fire 2 Fire009", PROTO_COM_TEX_EFT_FIRE_2_FIRE009_M, TEXT("../../Resources/Effects/fire/fxpt_2_fire009_m.png"), "Prototype_Component_Texture_Effect_Fire_2_Fire009_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Fire 2 Ring004", PROTO_COM_TEX_EFT_FIRE_2_RING004_M, TEXT("../../Resources/Effects/fire/fxpt_2_ring004_m.png"), "Prototype_Component_Texture_Effect_Fire_2_Ring004_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Fire 3 Flow005 A", PROTO_COM_TEX_EFT_FIRE_3_FLOW005_A, TEXT("../../Resources/Effects/fire/fxpt_3_flow005_a.png"), "Prototype_Component_Texture_Effect_Fire_3_Flow005_A"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Beam 3 Flow006", PROTO_COM_TEX_EFT_BEAM_3_FLOW006_M, TEXT("../../Resources/Effects/beam/fxmt_3_flow006_m.png"), "Prototype_Component_Texture_Effect_Beam_3_Flow006_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Beam 3 Ice001", PROTO_COM_TEX_EFT_BEAM_3_ICE001_M, TEXT("../../Resources/Effects/beam/fxmt_3_ice001_m.png"), "Prototype_Component_Texture_Effect_Beam_3_Ice001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Beam 3 Laser001", PROTO_COM_TEX_EFT_BEAM_3_LASER001_M, TEXT("../../Resources/Effects/beam/fxmt_3_laser001_m.png"), "Prototype_Component_Texture_Effect_Beam_3_Laser001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Beam 3 Laser002", PROTO_COM_TEX_EFT_BEAM_3_LASER002_M, TEXT("../../Resources/Effects/beam/fxmt_3_laser002_m.png"), "Prototype_Component_Texture_Effect_Beam_3_Laser002_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Beam 3 Shock001", PROTO_COM_TEX_EFT_BEAM_3_SHOCK001_M, TEXT("../../Resources/Effects/beam/fxmt_3_shock001_m.png"), "Prototype_Component_Texture_Effect_Beam_3_Shock001_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Floor 0 Mask003", PROTO_COM_TEX_EFT_FLOOR_0_MASK003_M, TEXT("../../Resources/Effects/floor/fxmt_0_mask003_m.png"), "Prototype_Component_Texture_Effect_Floor_0_Mask003_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 Blur001", PROTO_COM_TEX_EFT_FLOOR_3_BLUR001_M, TEXT("../../Resources/Effects/floor/fxmt_3_blur001_m.png"), "Prototype_Component_Texture_Effect_Floor_3_Blur001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 Cloud007", PROTO_COM_TEX_EFT_FLOOR_3_CLOUD007_M, TEXT("../../Resources/Effects/floor/fxmt_3_cloud007_m.png"), "Prototype_Component_Texture_Effect_Floor_3_Cloud007_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 Cloud201 A", PROTO_COM_TEX_EFT_FLOOR_3_CLOUD201_A, TEXT("../../Resources/Effects/floor/fxmt_3_cloud201_a.png"), "Prototype_Component_Texture_Effect_Floor_3_Cloud201_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 Floor204 Big A", PROTO_COM_TEX_EFT_FLOOR_3_FLOOR204_BIG_A, TEXT("../../Resources/Effects/floor/fxmt_3_floor204_big_a.png"), "Prototype_Component_Texture_Effect_Floor_3_Floor204_Big_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 Floor206 A", PROTO_COM_TEX_EFT_FLOOR_3_FLOOR206_A, TEXT("../../Resources/Effects/floor/fxmt_3_floor206_a.png"), "Prototype_Component_Texture_Effect_Floor_3_Floor206_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 Rock203 A", PROTO_COM_TEX_EFT_FLOOR_3_ROCK203_A, TEXT("../../Resources/Effects/floor/fxmt_3_rock203_a.png"), "Prototype_Component_Texture_Effect_Floor_3_Rock203_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor 3 White202 A", PROTO_COM_TEX_EFT_FLOOR_3_WHITE202_A, TEXT("../../Resources/Effects/floor/fxmt_3_white202_a.png"), "Prototype_Component_Texture_Effect_Floor_3_White202_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Floor Cmn Ht003 M Lta", PROTO_COM_TEX_EFT_FLOOR_CMN_HT003_M_LTA, TEXT("../../Resources/Effects/floor/fxmt_cmn_ht003_m_lta.png"), "Prototype_Component_Texture_Effect_Floor_Cmn_Ht003_M_Lta"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Punch 1 Circle001", PROTO_COM_TEX_EFT_PUNCH_1_CIRCLE001_M, TEXT("../../Resources/Effects/punch/fxpt_1_circle001_m.png"), "Prototype_Component_Texture_Effect_Punch_1_Circle001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Punch 1 Circle005", PROTO_COM_TEX_EFT_PUNCH_1_CIRCLE005_M, TEXT("../../Resources/Effects/punch/fxpt_1_circle005_m.png"), "Prototype_Component_Texture_Effect_Punch_1_Circle005_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Punch 1 Ring009", PROTO_COM_TEX_EFT_PUNCH_1_RING009_M, TEXT("../../Resources/Effects/punch/fxpt_1_ring009_m.png"), "Prototype_Component_Texture_Effect_Punch_1_Ring009_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Punch 2 Hit008", PROTO_COM_TEX_EFT_PUNCH_2_HIT008_M, TEXT("../../Resources/Effects/punch/fxpt_2_hit008_m.png"), "Prototype_Component_Texture_Effect_Punch_2_Hit008_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Punch 2 Mark701", PROTO_COM_TEX_EFT_PUNCH_2_MARK701_O, TEXT("../../Resources/Effects/punch/fxpt_2_mark701_o.png"), "Prototype_Component_Texture_Effect_Punch_2_Mark701_O"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 0 Ring001", PROTO_COM_TEX_EFT_RAINBOW_0_RING001_M, TEXT("../../Resources/Effects/rainbow/fxpt_0_ring001_m.png"), "Prototype_Component_Texture_Effect_Rainbow_0_Ring001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 0 Ring004", PROTO_COM_TEX_EFT_RAINBOW_0_RING004_M, TEXT("../../Resources/Effects/rainbow/fxpt_0_ring004_m.png"), "Prototype_Component_Texture_Effect_Rainbow_0_Ring004_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 1 Circle001", PROTO_COM_TEX_EFT_RAINBOW_1_CIRCLE001_M, TEXT("../../Resources/Effects/rainbow/fxpt_1_circle001_m.png"), "Prototype_Component_Texture_Effect_Rainbow_1_Circle001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 1 Circle004", PROTO_COM_TEX_EFT_RAINBOW_1_CIRCLE004_M, TEXT("../../Resources/Effects/rainbow/fxpt_1_circle004_m.png"), "Prototype_Component_Texture_Effect_Rainbow_1_Circle004_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 1 Circle005", PROTO_COM_TEX_EFT_RAINBOW_1_CIRCLE005_M, TEXT("../../Resources/Effects/rainbow/fxpt_1_circle005_m.png"), "Prototype_Component_Texture_Effect_Rainbow_1_Circle005_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 1 Ring012", PROTO_COM_TEX_EFT_RAINBOW_1_RING012_M, TEXT("../../Resources/Effects/rainbow/fxpt_1_ring012_m.png"), "Prototype_Component_Texture_Effect_Rainbow_1_Ring012_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 2 Bom002", PROTO_COM_TEX_EFT_RAINBOW_2_BOM002_M, TEXT("../../Resources/Effects/rainbow/fxpt_2_bom002_m.png"), "Prototype_Component_Texture_Effect_Rainbow_2_Bom002_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 2 Hit010", PROTO_COM_TEX_EFT_RAINBOW_2_HIT010_M, TEXT("../../Resources/Effects/rainbow/fxpt_2_hit010_m.png"), "Prototype_Component_Texture_Effect_Rainbow_2_Hit010_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 2 Water006", PROTO_COM_TEX_EFT_RAINBOW_2_WATER006_M, TEXT("../../Resources/Effects/rainbow/fxpt_2_water006_m.png"), "Prototype_Component_Texture_Effect_Rainbow_2_Water006_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 2 Wind001", PROTO_COM_TEX_EFT_RAINBOW_2_WIND001_M, TEXT("../../Resources/Effects/rainbow/fxpt_2_wind001_m.png"), "Prototype_Component_Texture_Effect_Rainbow_2_Wind001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Rainbow 3 Color001", PROTO_COM_TEX_EFT_RAINBOW_3_COLOR001_M, TEXT("../../Resources/Effects/rainbow/fxpt_3_color001_m.png"), "Prototype_Component_Texture_Effect_Rainbow_3_Color001_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Sonic 0 Mask003", PROTO_COM_TEX_EFT_SONIC_0_MASK003_M, TEXT("../../Resources/Effects/sonic/fxpt_0_mask003_m.png"), "Prototype_Component_Texture_Effect_Sonic_0_Mask003_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Sonic 0 Ring006", PROTO_COM_TEX_EFT_SONIC_0_RING006_M, TEXT("../../Resources/Effects/sonic/fxpt_0_ring006_m.png"), "Prototype_Component_Texture_Effect_Sonic_0_Ring006_M"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Surfboard Ew730 Surfboard U", PROTO_COM_TEX_EFT_SURFBOARD_EW730_SURFBOARD_U, TEXT("../../Resources/Effects/surfboard/fxmt_ew730_surfboard_u.png"), "Prototype_Component_Texture_Effect_Surfboard_Ew730_Surfboard_U"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Zippy Zap 0 Mask005", PROTO_COM_TEX_EFT_ZIPPY_ZAP_0_MASK005_M, TEXT("../../Resources/Effects/zippyzap/fxpt_0_mask005_m.png"), "Prototype_Component_Texture_Effect_Zippy_Zap_0_Mask005_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Zippy Zap 1 Circle005", PROTO_COM_TEX_EFT_ZIPPY_ZAP_1_CIRCLE005_M, TEXT("../../Resources/Effects/zippyzap/fxpt_1_circle005_m.png"), "Prototype_Component_Texture_Effect_Zippy_Zap_1_Circle005_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Zippy Zap 2 Hit014", PROTO_COM_TEX_EFT_ZIPPY_ZAP_2_HIT014_M, TEXT("../../Resources/Effects/zippyzap/fxpt_2_hit014_m.png"), "Prototype_Component_Texture_Effect_Zippy_Zap_2_Hit014_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Zippy Zap 2 Thunder011", PROTO_COM_TEX_EFT_ZIPPY_ZAP_2_THUNDER011_M, TEXT("../../Resources/Effects/zippyzap/fxpt_2_thunder011_m.png"), "Prototype_Component_Texture_Effect_Zippy_Zap_2_Thunder011_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Zippy Zap 2 Thunder201 A", PROTO_COM_TEX_EFT_ZIPPY_ZAP_2_THUNDER201_A, TEXT("../../Resources/Effects/zippyzap/fxpt_2_thunder201_a.png"), "Prototype_Component_Texture_Effect_Zippy_Zap_2_Thunder201_A"),
+
+	EFFECT_TEXTURE_OPTION_ROW("Wave 0 Water002", PROTO_COM_TEX_EFT_WAVE_0_WATER002_M, TEXT("../../Resources/Effects/wave/fxpt_0_water002_m.png"), "Prototype_Component_Texture_Effect_Wave_0_Water002_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 0 Dast001", PROTO_COM_TEX_EFT_WAVE_0_DAST001_M, TEXT("../../Resources/Effects/wave/fxpt_0_dast001_m.png"), "Prototype_Component_Texture_Effect_Wave_0_Dast001_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 1 Circle002", PROTO_COM_TEX_EFT_WAVE_1_CIRCLE002_M, TEXT("../../Resources/Effects/wave/fxpt_1_circle002_m.png"), "Prototype_Component_Texture_Effect_Wave_1_Circle002_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 2 Water009", PROTO_COM_TEX_EFT_WAVE_2_WATER009_M, TEXT("../../Resources/Effects/wave/fxpt_2_water009_m.png"), "Prototype_Component_Texture_Effect_Wave_2_Water009_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 3 Blur202 A", PROTO_COM_TEX_EFT_WAVE_3_BLUR202_A, TEXT("../../Resources/Effects/wave/fxpt_3_blur202_a.png"), "Prototype_Component_Texture_Effect_Wave_3_Blur202_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 3 Cloud204 A", PROTO_COM_TEX_EFT_WAVE_3_CLOUD204_A, TEXT("../../Resources/Effects/wave/fxpt_3_cloud204_a.png"), "Prototype_Component_Texture_Effect_Wave_3_Cloud204_A"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 3 Flow011", PROTO_COM_TEX_EFT_WAVE_3_FLOW011_M, TEXT("../../Resources/Effects/wave/fxpt_3_flow011_m.png"), "Prototype_Component_Texture_Effect_Wave_3_Flow011_M"),
+	EFFECT_TEXTURE_OPTION_ROW("Wave 3 Flow013", PROTO_COM_TEX_EFT_WAVE_3_FLOW013_M, TEXT("../../Resources/Effects/wave/fxpt_3_flow013_m.png"), "Prototype_Component_Texture_Effect_Wave_3_Flow013_M"),
 };
 
 #undef EFFECT_TEXTURE_OPTION_ROW
@@ -318,6 +423,7 @@ inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION&
 	desc.bAtlasLoop = def.bAtlasLoop;
 	desc.bMirrorUV = def.bMirrorUV;
 	desc.bIgnoreDepth = def.bIgnoreDepth;
+	desc.bWorldSpace = def.bWorldSpace;
 	desc.strTextureProtoTag = def.strTextureProtoTag;
 	desc.curveSize = def.curveSize;
 	desc.curveColor = def.curveColor;
@@ -508,6 +614,7 @@ inline HRESULT Effect_ParseEmitterJson(const json& je, EMITTER_DEFINITION& out)
 	Effect_GetOpt(je, "atlasLoop", out.bAtlasLoop);
 	Effect_GetOpt(je, "mirrorUV", out.bMirrorUV);
 	Effect_GetOpt(je, "ignoreDepth", out.bIgnoreDepth);
+	Effect_GetOpt(je, "worldSpace", out.bWorldSpace);
 
 	if (je.contains("textureProtoTag"))
 	{
@@ -567,6 +674,15 @@ inline HRESULT Effect_ParseMeshEmitterJson(const json& jm, MESH_EFFECT_DEFINITIO
 
 	Effect_GetOpt(jm, "lifeTime", out.fLifeTime);
 
+	Effect_GetOpt(jm, "count", out.iCount);
+	if (jm.contains("startOffset"))   Effect_ReadFloat3(jm["startOffset"],   out.vStartOffset);
+	if (jm.contains("emitDirection")) Effect_ReadFloat3(jm["emitDirection"], out.vEmitDirection);
+	Effect_GetOpt(jm, "coneHalfAngle", out.fEmitConeHalfAngle);
+	if (jm.contains("speedRange"))    Effect_ReadFloat2(jm["speedRange"], out.vSpeedRange);
+	if (jm.contains("gravity"))       Effect_ReadFloat3(jm["gravity"], out.vGravity);
+	Effect_GetOpt(jm, "spinSpeedMax", out.fSpinSpeedMax);
+	Effect_GetOpt(jm, "startDelay",   out.fStartDelay);
+
 	if (jm.contains("curves") && jm["curves"].is_object())
 	{
 		const json& jCurves = jm["curves"];
@@ -579,6 +695,31 @@ inline HRESULT Effect_ParseMeshEmitterJson(const json& jm, MESH_EFFECT_DEFINITIO
 			Effect_ParseCurveFloat(jCurves["alpha"], out.curveAlpha);
 	}
 
+	return S_OK;
+}
+
+inline HRESULT Effect_ParseTrailJson(const json& jt, TRAIL_DEFINITION& out)
+{
+	if (!jt.is_object()) return E_FAIL;
+	Effect_GetOpt(jt, "name", out.strName);
+	Effect_GetOpt(jt, "maxSegments", out.iMaxSegments);
+	Effect_GetOpt(jt, "segmentSpacing", out.fSegmentSpacing);
+	Effect_GetOpt(jt, "lifeTimePerSegment", out.fLifeTimePerSegment);
+	Effect_GetOpt(jt, "widthStart", out.fWidthStart);
+	Effect_GetOpt(jt, "widthEnd", out.fWidthEnd);
+	if (jt.contains("upAxis")) Effect_ReadFloat3(jt["upAxis"], out.vUpAxis);
+	if (jt.contains("blend"))  out.eBlend = Effect_BlendFromString(jt["blend"].get<_string>());
+	Effect_GetOpt(jt, "ignoreDepth", out.bIgnoreDepth);
+	if (jt.contains("textureProtoTag"))
+	{
+		const _string s = jt["textureProtoTag"].get<_string>();
+		if (!s.empty()) out.strTextureProtoTag = WNAME(StoW(s));
+	}
+	if (jt.contains("curves") && jt["curves"].is_object())
+	{
+		const json& jc = jt["curves"];
+		if (jc.contains("color")) Effect_ParseCurveColor(jc["color"], out.curveColor);
+	}
 	return S_OK;
 }
 
@@ -616,6 +757,16 @@ inline HRESULT Effect_ParseDefinitionJson(const json& jRoot, EFFECT_DEFINITION& 
 				continue;
 
 			out.Meshes.push_back(mesh);
+		}
+	}
+
+	if (jRoot.contains("trails") && jRoot["trails"].is_array())
+	{
+		for (const auto& jt : jRoot["trails"])
+		{
+			TRAIL_DEFINITION trail{};
+			if (FAILED(Effect_ParseTrailJson(jt, trail))) continue;
+			out.Trails.push_back(trail);
 		}
 	}
 
@@ -675,6 +826,7 @@ emitter.vBillboardFixedAxis.z };
 	j["atlasLoop"] = emitter.bAtlasLoop;
 	j["mirrorUV"] = emitter.bMirrorUV;
 	j["ignoreDepth"] = emitter.bIgnoreDepth;
+	j["worldSpace"] = emitter.bWorldSpace;
 
 	const _string strTextureTag = Effect_TextureTagToString(emitter.strTextureProtoTag);
 	if (!strTextureTag.empty())
@@ -718,6 +870,15 @@ inline json Effect_SerializeMeshEmitterJson(const MESH_EFFECT_DEFINITION& mesh)
 	j["scaleAxis"] = Effect_ScaleAxisToString(mesh.eScaleAxis);
 	j["lifeTime"] = mesh.fLifeTime;
 
+	j["count"]         = mesh.iCount;
+	j["startOffset"]   = { mesh.vStartOffset.x, mesh.vStartOffset.y, mesh.vStartOffset.z };
+	j["emitDirection"] = { mesh.vEmitDirection.x, mesh.vEmitDirection.y, mesh.vEmitDirection.z };
+	j["coneHalfAngle"] = mesh.fEmitConeHalfAngle;
+	j["speedRange"]    = { mesh.vSpeedRange.x, mesh.vSpeedRange.y };
+	j["gravity"]       = { mesh.vGravity.x, mesh.vGravity.y, mesh.vGravity.z };
+	j["spinSpeedMax"]  = mesh.fSpinSpeedMax;
+	j["startDelay"]    = mesh.fStartDelay;
+
 	json jCurves;
 	if (!mesh.curveScale.IsEmpty())
 		jCurves["scale"] = Effect_SerializeCurveFloat(mesh.curveScale);
@@ -728,6 +889,26 @@ inline json Effect_SerializeMeshEmitterJson(const MESH_EFFECT_DEFINITION& mesh)
 	if (!jCurves.empty())
 		j["curves"] = jCurves;
 
+	return j;
+}
+
+inline json Effect_SerializeTrailJson(const TRAIL_DEFINITION& t)
+{
+	json j;
+	j["name"] = t.strName;
+	j["maxSegments"] = t.iMaxSegments;
+	j["segmentSpacing"] = t.fSegmentSpacing;
+	j["lifeTimePerSegment"] = t.fLifeTimePerSegment;
+	j["widthStart"] = t.fWidthStart;
+	j["widthEnd"] = t.fWidthEnd;
+	j["upAxis"] = { t.vUpAxis.x, t.vUpAxis.y, t.vUpAxis.z };
+	j["blend"] = Effect_BlendToString(t.eBlend);
+	j["ignoreDepth"] = t.bIgnoreDepth;
+	const _string strTex = Effect_TextureTagToString(t.strTextureProtoTag);
+	if (!strTex.empty()) j["textureProtoTag"] = strTex;
+	json jc;
+	if (!t.curveColor.IsEmpty()) jc["color"] = Effect_SerializeCurveColor(t.curveColor);
+	if (!jc.empty()) j["curves"] = jc;
 	return j;
 }
 
@@ -746,6 +927,13 @@ inline json Effect_SerializeDefinitionJson(const EFFECT_DEFINITION& def)
 		root["meshes"] = json::array();
 		for (const auto& mesh : def.Meshes)
 			root["meshes"].push_back(Effect_SerializeMeshEmitterJson(mesh));
+	}
+
+	if (!def.Trails.empty())
+	{
+		root["trails"] = json::array();
+		for (const auto& t : def.Trails)
+			root["trails"].push_back(Effect_SerializeTrailJson(t));
 	}
 
 	return root;

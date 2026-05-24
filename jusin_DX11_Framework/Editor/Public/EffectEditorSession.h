@@ -35,6 +35,8 @@ public:
 	void Set_SelectedEmitter(_int iIndex);
 	_int Get_SelectedMesh() const { return m_iSelectedMesh; }
 	void Set_SelectedMesh(_int iIndex);
+	_int Get_SelectedTrail() const { return m_iSelectedTrail; }
+	void Set_SelectedTrail(_int iIndex);
 
 	void New_Doc();
 	void Add_Emitter();
@@ -43,6 +45,9 @@ public:
 	void Add_Mesh();
 	void Erase_SelectedMesh();
 	MESH_EFFECT_DEFINITION* Get_SelectedMeshMutable();
+	void Add_Trail();
+	void Erase_SelectedTrail();
+	TRAIL_DEFINITION* Get_SelectedTrailMutable();
 
 	void Mark_Dirty(const char* pReason);
 
@@ -58,6 +63,7 @@ private:
 	EFFECT_DEFINITION m_Doc = {};
 	_int m_iSelectedEmitter = { -1 };
 	_int m_iSelectedMesh = { -1 };
+	_int m_iSelectedTrail = { -1 };
 	_bool m_bDirty = { false };
 	_string m_strDocPath = { "../../Resources/Effects/new_effect.effect.json" };
 	_string m_strStatus = {};

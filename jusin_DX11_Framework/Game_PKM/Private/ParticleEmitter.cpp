@@ -152,14 +152,19 @@ HRESULT CParticleEmitter::Ready_Components()
 
 HRESULT CParticleEmitter::Bind_ShaderGlobals()
 {
-	/* M8: parent (effect root) transform이 있으면 그쪽을 g_WorldMatrix로.
-	   없으면 자체 transform (단독 emitter 사용 시 회귀 없음). */
-	CTransform* pSrcTransform = (nullptr != m_pParentTransform)
-		? m_pParentTransform
-		: m_pTransformCom;
-
-	if (FAILED(pSrcTransform->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
+	if (m_tDesc.bWorldSpace)
+	{
+		_float4x4 mIdentity;
+		XMStoreFloat4x4(&mIdentity, XMMatrixIdentity());
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &mIdentity)))
+			return E_FAIL;
+	}
+	else
+	{
+		CTransform* pSrcTransform = (nullptr != m_pParentTransform) ? m_pParentTransform : m_pTransformCom;
+		if (FAILED(pSrcTransform->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+			return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix",
 		m_pGameInstance->Get_Transform(D3DTS::VIEW))))
@@ -286,6 +291,15 @@ void CParticleEmitter::Spawn_One()
 	Particle.vPosition = _float3(0.f, 0.f, 0.f);
 	Particle.vVelocity = Make_RandomVelocity();
 	Particle.vAcceleration = _float3(0.f, 0.f, 0.f);
+
+	if (m_tDesc.bWorldSpace)
+	{
+		CTransform* pSrc = (nullptr != m_pParentTransform) ? m_pParentTransform : m_pTransformCom;
+		const _matrix mWorld = XMLoadFloat4x4(pSrc->Get_WorldMatrixPtr());
+		// 위치: local spawn(0,0,0) → 현재 root world 위치, 속도: emit 방향을 world 회전으로
+		XMStoreFloat3(&Particle.vPosition, XMVector3TransformCoord(XMLoadFloat3(&Particle.vPosition), mWorld));
+		XMStoreFloat3(&Particle.vVelocity, XMVector3TransformNormal(XMLoadFloat3(&Particle.vVelocity), mWorld));
+	}
 
 	Particle.fSize = m_pGameInstance->Random(m_tDesc.vSizeRange.x, m_tDesc.vSizeRange.y);
 	Particle.fAge = 0.f;

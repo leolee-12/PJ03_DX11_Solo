@@ -32,6 +32,15 @@ public:
 		CCurveFloat curveAlpha;
 		_float   fLifeTime = 1.f;
 
+		/* 모션 / debris (root 기준 local) */
+		_float3 vStartOffset       = { 0.f, 0.f, 0.f };
+		_float3 vEmitDirection     = { 0.f, 1.f, 0.f };
+		_float  fEmitConeHalfAngle = 0.f;
+		_float2 vSpeedRange        = { 0.f, 0.f };
+		_float3 vGravity           = { 0.f, 0.f, 0.f };
+		_float  fSpinSpeedMax      = 0.f;
+		_float  fStartDelay        = 0.f;
+
 		CTransform* pParentTransform = nullptr;
 	};
 
@@ -63,6 +72,15 @@ private:
 
 	_float3 m_vCurrentScale = { 1.f, 1.f, 1.f };
 	_float4 m_vCurrentColor = { 1.f, 1.f, 1.f, 1.f };
+
+	_float3 m_vLocalPos       = { 0.f, 0.f, 0.f };
+	_float3 m_vVelocity       = { 0.f, 0.f, 0.f };
+	_float3 m_vSpinAxis       = { 0.f, 1.f, 0.f };
+	_float  m_fSpinSpeed      = 0.f;
+	_float  m_fSpinAngle      = 0.f;
+	_float  m_fDelayRemaining = 0.f;
+
+	_float3 Make_RandomVelocity() const;
 
 public:
 	static CEffect_Mesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -124,7 +124,7 @@ HRESULT CEffectEditorSession::Load(const _string& strPath)
 
 	m_strStatus = "Loaded: " + strPath;
 
-	if (bPreviewWasAlive && (!m_Doc.Emitters.empty() || !m_Doc.Meshes.empty()))
+	if (bPreviewWasAlive && (!m_Doc.Emitters.empty() || !m_Doc.Meshes.empty() || !m_Doc.Trails.empty()))
 		m_bPreviewRefreshPending = true;
 
 	return S_OK;
@@ -153,6 +153,12 @@ void CEffectEditorSession::Set_SelectedEmitter(_int iIndex)
 void CEffectEditorSession::Set_SelectedMesh(_int iIndex)
 {
 	m_iSelectedMesh = iIndex;
+	Normalize_Selection();
+}
+
+void CEffectEditorSession::Set_SelectedTrail(_int iIndex)
+{
+	m_iSelectedTrail = iIndex;
 	Normalize_Selection();
 }
 
@@ -226,6 +232,35 @@ MESH_EFFECT_DEFINITION* CEffectEditorSession::Get_SelectedMeshMutable()
 	return &m_Doc.Meshes[m_iSelectedMesh];
 }
 
+void CEffectEditorSession::Add_Trail()
+{
+	TRAIL_DEFINITION trail{};
+	trail.strName = "trail";
+	m_Doc.Trails.push_back(trail);
+	m_iSelectedTrail = static_cast<_int>(m_Doc.Trails.size()) - 1;
+	Mark_Dirty("Trail added");
+}
+
+void CEffectEditorSession::Erase_SelectedTrail()
+{
+	if (m_iSelectedTrail < 0 ||
+		m_iSelectedTrail >= static_cast<_int>(m_Doc.Trails.size()))
+		return;
+
+	m_Doc.Trails.erase(m_Doc.Trails.begin() + m_iSelectedTrail);
+	Normalize_Selection();
+	Mark_Dirty("Trail removed");
+}
+
+TRAIL_DEFINITION* CEffectEditorSession::Get_SelectedTrailMutable()
+{
+	if (m_iSelectedTrail < 0 ||
+		m_iSelectedTrail >= static_cast<_int>(m_Doc.Trails.size()))
+		return nullptr;
+
+	return &m_Doc.Trails[m_iSelectedTrail];
+}
+
 void CEffectEditorSession::Mark_Dirty(const char* pReason)
 {
 	const _bool bRefreshPreview = Is_PreviewAlive();
@@ -261,6 +296,12 @@ HRESULT CEffectEditorSession::Spawn_Preview()
 		return E_FAIL;
 	}
 
+	if (m_Doc.Emitters.empty() && m_Doc.Meshes.empty() && m_Doc.Trails.empty())
+	{
+		m_strStatus = "Preview failed: no emitter, mesh or trail";
+		return E_FAIL;
+	}
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	const _uint iLevel = static_cast<_uint>(pGameInstance->Get_CurrentLevel());
 
@@ -288,6 +329,13 @@ HRESULT CEffectEditorSession::Spawn_Preview()
 		!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_EFFECT_MESH))
 	{
 		m_strStatus = "Preview failed: effect mesh prototype is not loaded";
+		return E_FAIL;
+	}
+
+	if (!m_Doc.Trails.empty() &&
+		!pGameInstance->Has_Prototype(iProtoLevel, PROTO_OBJ_TRAIL))
+	{
+		m_strStatus = "Preview failed: trail prototype is not loaded";
 		return E_FAIL;
 	}
 
@@ -382,6 +430,20 @@ void CEffectEditorSession::Normalize_Selection()
 		const _int iLastMesh = static_cast<_int>(m_Doc.Meshes.size()) - 1;
 		if (m_iSelectedMesh > iLastMesh)
 			m_iSelectedMesh = iLastMesh;
+	}
+
+	if (m_Doc.Trails.empty())
+	{
+		m_iSelectedTrail = -1;
+	}
+	else
+	{
+		if (m_iSelectedTrail < 0)
+			m_iSelectedTrail = 0;
+
+		const _int iLastTrail = static_cast<_int>(m_Doc.Trails.size()) - 1;
+		if (m_iSelectedTrail > iLastTrail)
+			m_iSelectedTrail = iLastTrail;
 	}
 }
 

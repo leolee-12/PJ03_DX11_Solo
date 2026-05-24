@@ -51,8 +51,8 @@ public:
 		_bool  bAtlasLoop = false;
 		_bool  bMirrorUV = false;
 		_bool  bIgnoreDepth = false;
+		_bool bWorldSpace = false;
 
-		_bool bSimulateInLocalAtSpawn = false;
 		WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
 		_uint   iTextureProtoLevel = ETOUI(LEVEL::STATIC);
 		class CTransform* pParentTransform = nullptr;  // M8: effect root transform °øÀ¯ (nullable)

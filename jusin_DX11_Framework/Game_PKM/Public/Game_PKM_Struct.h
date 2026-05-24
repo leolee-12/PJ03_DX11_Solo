@@ -132,6 +132,25 @@ struct VTXFIELDGRASS_INSTANCE_DESC
 			{"WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
 	};
 };
+
+struct VTXTRAIL
+{
+	_float3 vPosition;
+	_float2 vTexcoord;
+	_float4 vColor;
+};
+
+struct VTXTRAIL_DESC
+{
+	static constexpr unsigned int iNumElements = { 3 };
+	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] =
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+};
+
 #pragma endregion
 
 NS_END

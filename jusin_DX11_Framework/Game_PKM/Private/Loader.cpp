@@ -27,6 +27,7 @@
 #include "VIBuffer_XZPlane.h"
 #include "Effect_Star.h"
 #include "Battle_Trainer.h"
+#include "Battle_Ball.h"
 #include "Body_Pokemon.h"
 #include "RenderRule_Manager.h"
 #include "UIImage_FadeBattle.h"
@@ -50,6 +51,8 @@
 #include "WaterPlane.h"
 #include "FieldGrass.h"
 #include "FieldGrassBatch.h"
+#include "Trail.h"
+#include "VIBuffer_Trail.h"
 
 #include "UIContainer.h"
 #include "UIImage.h"
@@ -370,6 +373,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_FieldGrass.hlsl"), VTXFIELDGRASS_INSTANCE_DESC::Elements, VTXFIELDGRASS_INSTANCE_DESC::iNumElements); },
 			TEXT("Prototype_Component_Shader_FieldGrass"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_TRAIL,
+		[this] { return CShader::Create(m_pDevice, m_pContext, TEXT("../../ShaderFiles/Shader_Trail.hlsl"), VTXTRAIL_DESC::Elements, VTXTRAIL_DESC::iNumElements); },
+		TEXT("Prototype_Component_Shader_Trail"));
+
 
 
 	// ---------- VIBuffer ----------
@@ -410,10 +417,13 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this, FieldGrassVBDesc]() mutable { return CVIBuffer_FieldGrass_Instance::Create(m_pDevice, m_pContext, &FieldGrassVBDesc); },
 		TEXT("Prototype_Component_VIBuffer_FieldGrass_Instance"));
 
-	/* Prototype_Component_VIBuffer_XZPlane */
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_XZPLANE,
 		[this] { return CVIBuffer_XZPlane::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_Component_VIBuffer_XZPlane"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_TRAIL,
+		[this] { return CVIBuffer_Trail::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_Component_VIBuffer_Trail"));
 
 
 
@@ -599,6 +609,10 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CEffect_Mesh::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Effect_Mesh"));
 
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_TRAIL,
+		[this] { return CTrail::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Trail"));
+
 	CMapObject::MAPOBJECT_DESC tMapDesc{};
 	tMapDesc.iModelLevelIndex = ETOUI(LEVEL::GAMEPLAY);
 
@@ -772,6 +786,10 @@ HRESULT CLoader::Ready_Resources_For_Battle()
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_TRAINER,
 		[this] { return CBattle_Trainer::Create(m_pDevice, m_pContext); },
 		TEXT("Prototype_GameObject_Battle_Trainer"));
+
+	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_BALL,
+		[this] { return CBattle_Ball::Create(m_pDevice, m_pContext); },
+		TEXT("Prototype_GameObject_Battle_Ball"));
 
 	return S_OK;
 }

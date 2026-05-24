@@ -2,6 +2,7 @@
 #include "ParticleEmitter.h"
 #include "Effect_Mesh.h"
 #include "Body.h"
+#include "Trail.h" 
 
 #include "GameInstance.h"
 
@@ -111,23 +112,68 @@ HRESULT CEffect::Initialize(void* pArg)
 		mDesc.curveAlpha = mDef.curveAlpha;
 		mDesc.fLifeTime = mDef.fLifeTime;
 
-		CBase* pCloned = m_pGameInstance->Clone_Prototype(
-			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC),
-			PROTO_OBJ_EFFECT_MESH, &mDesc);
+		mDesc.vStartOffset       = mDef.vStartOffset;
+		mDesc.vEmitDirection     = mDef.vEmitDirection;
+		mDesc.fEmitConeHalfAngle = mDef.fEmitConeHalfAngle;
+		mDesc.vSpeedRange        = mDef.vSpeedRange;
+		mDesc.vGravity           = mDef.vGravity;
+		mDesc.fSpinSpeedMax      = mDef.fSpinSpeedMax;
+		mDesc.fStartDelay        = mDef.fStartDelay;
 
-		if (nullptr == pCloned)
-			return E_FAIL;
-
-		CEffect_Mesh* pMesh = static_cast<CEffect_Mesh*>(pCloned);
-
-		if (FAILED(m_pGameInstance->Add_GameObject_Ex(
-			m_tDesc.iSpawnLevel, m_tDesc.strLayerTag, pMesh)))
+		const _uint iMeshCount = max(1u, mDef.iCount);
+		for (_uint c = 0; c < iMeshCount; ++c)
 		{
-			Safe_Release(pMesh);
+			CBase* pCloned = m_pGameInstance->Clone_Prototype(
+				PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC),
+				PROTO_OBJ_EFFECT_MESH, &mDesc);
+
+			if (nullptr == pCloned)
+				return E_FAIL;
+
+			CEffect_Mesh* pMesh = static_cast<CEffect_Mesh*>(pCloned);
+
+			if (FAILED(m_pGameInstance->Add_GameObject_Ex(
+				m_tDesc.iSpawnLevel, m_tDesc.strLayerTag, pMesh)))
+			{
+				Safe_Release(pMesh);
+				return E_FAIL;
+			}
+
+			m_MeshEmitters.push_back(pMesh);
+		}
+	}
+
+	m_Trails.reserve(m_pDefinition->Trails.size());
+
+	for (const TRAIL_DEFINITION& tDef : m_pDefinition->Trails)
+	{
+		CTrail::TRAIL_DESC tDesc{};
+		tDesc.vSpawnPos = _float3(0.f, 0.f, 0.f);
+		tDesc.pParentTransform = m_pTransformCom;
+		tDesc.iMaxSegments = tDef.iMaxSegments;
+		tDesc.fSegmentSpacing = tDef.fSegmentSpacing;
+		tDesc.fLifeTimePerSegment = tDef.fLifeTimePerSegment;
+		tDesc.fWidthStart = tDef.fWidthStart;
+		tDesc.fWidthEnd = tDef.fWidthEnd;
+		tDesc.vUpAxis = tDef.vUpAxis;
+		tDesc.eBlend = tDef.eBlend;
+		tDesc.bIgnoreDepth = tDef.bIgnoreDepth;
+		tDesc.strTextureProtoTag = tDef.strTextureProtoTag;
+		tDesc.iTextureProtoLevel = ETOUI(LEVEL::STATIC);
+		tDesc.curveColor = tDef.curveColor;
+
+		CBase* pCloned = m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_OBJ_TRAIL, &tDesc);
+		if (nullptr == pCloned) return E_FAIL;
+		CTrail* pTrail = static_cast<CTrail*>(pCloned);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(m_tDesc.iSpawnLevel, m_tDesc.strLayerTag,
+			pTrail)))
+		{
+			Safe_Release(pTrail);
 			return E_FAIL;
 		}
-
-		m_MeshEmitters.push_back(pMesh);
+		m_Trails.push_back(pTrail);
 	}
 
 	return S_OK;
@@ -200,11 +246,24 @@ void CEffect::Late_Update(_float fTimeDelta)
 			break;
 		}
 	}
+
 	if (bAllDead)
 	{
 		for (CEffect_Mesh* pMesh : m_MeshEmitters)
 		{
 			if (nullptr != pMesh && !pMesh->Is_Dead())
+			{
+				bAllDead = false;
+				break;
+			}
+		}
+	}
+
+	if (bAllDead)
+	{
+		for (CTrail* pTrail : m_Trails)
+		{
+			if (nullptr != pTrail && !pTrail->Is_Dead())
 			{
 				bAllDead = false;
 				break;
@@ -230,6 +289,9 @@ void CEffect::Stop()
 			pEm->Set_Emitting(false);
 	}
 	/* mesh는 spawn 개념 없음 — lifetime 자연 진행으로 종료 */
+
+	for (CTrail* pTrail : m_Trails)
+		if (nullptr != pTrail) pTrail->Stop();
 }
 
 void CEffect::Destroy()
@@ -242,6 +304,13 @@ void CEffect::Destroy()
 			pEm->Set_Dead();
 		}
 	}
+
+	for (CEffect_Mesh* pMesh : m_MeshEmitters)
+		if (nullptr != pMesh) pMesh->Set_Dead();        // 권장
+
+	for (CTrail* pTrail : m_Trails)
+		if (nullptr != pTrail) pTrail->Set_Dead();      // 필수
+
 	Set_Dead();
 }
 
@@ -311,5 +380,7 @@ void CEffect::Free()
 	/* borrowed pointers — Layer가 ref 보유. Release 하지 않는다. */
 	m_Emitters.clear();
 	m_MeshEmitters.clear();
+	m_Trails.clear();
+
 	__super::Free();
 }
