@@ -32,7 +32,7 @@ namespace
 		{ PROTO_COM_MODEL_PPL_NURSE,		{ 3,	8,	4,	27,	0,	0,	0,	0,	0,	0,	0,	0,	0,	6,	5,	0,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PPL_SHORTPANTS,	{ 3,	5,	0,	27,	13,	16,	15,	18,	11,	7,	12,	0,	0,	0,	0,	0,	0,	0,	0} },
 		{ PROTO_COM_MODEL_PPL_ROCK,			{ 11,	10,	21,	8,	0,	14,	22,	7,	1,	17,	0,	0,	0,	0,	0,	0,	0,	0,	0} },
-		{ PROTO_COM_MODEL_PPL_WATER,		{ 3,	19,	0,	6,	12,	2,	14,	8,	1,	7,	1,	0,	0,	0,	0,	0,	0,	0,	0} },	// 일부 모델 anim 회전은 s_AnimRotationCorrections에서 임시 보정
+		{ PROTO_COM_MODEL_PPL_WATER,		{ 3,	19,	0,	6,	12,	2,	14,	8,	7,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0} },	// 일부 모델 anim 회전은 s_AnimRotationCorrections에서 임시 보정
 	};
 
 	constexpr _uint s_DefaultIndex[ETOUI(ANIM_KIND::END)] = {};
@@ -50,9 +50,32 @@ namespace
 	const constexpr ANIM_ROTATION_CORRECTION_ENTRY s_AnimRotationCorrections[] =
 	{
 		// INTRO -> THROW 전환 중 스냅은 카메라 연출로 가린다.
+		{ PROTO_COM_MODEL_PPL_WATER, 1, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 7번 Anim : THROW
 		{ PROTO_COM_MODEL_PPL_WATER, 7, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 7번 Anim : THROW
 		{ PROTO_COM_MODEL_PPL_WATER, 8, ANIM_ROTATION_AXIS::X, -90.f },	// WATER 8번 Anim : FOCUS
 	};
+
+	enum class BALL_THROW_ROTATION_AXIS : _ubyte { NONE, X, Y, Z };
+
+	struct BALL_THROW_ENTRY
+	{
+		WNameID strModelTag;
+		_uint iAnimIndex;
+		_float fStartDelay;
+		_float3 vLocalOffset;
+		BALL_THROW_ROTATION_AXIS eAxis;
+		_float fDegree;
+	};
+
+	const BALL_THROW_ENTRY s_BallThrowTable[] =
+	{
+		{ PROTO_COM_MODEL_HERO,             INVALID_BALL_THROW_ANIM, 0.f, { 0.f, 0.f, 0.f },	BALL_THROW_ROTATION_AXIS::NONE, 0.f },
+		{ PROTO_COM_MODEL_HEROINE,          INVALID_BALL_THROW_ANIM, 0.f, { 0.f, 0.f, 0.f },	BALL_THROW_ROTATION_AXIS::NONE, 0.f },
+		{ PROTO_COM_MODEL_PPL_SHORTPANTS,   17,                      0.f, { 0.f, 0.f, 0.f },	BALL_THROW_ROTATION_AXIS::NONE, 0.f },
+		{ PROTO_COM_MODEL_PPL_ROCK,         5,                       0.f, { -0.25f, -0.8f, -0.1f },	BALL_THROW_ROTATION_AXIS::NONE, 0.f },
+		{ PROTO_COM_MODEL_PPL_WATER,        25,                      0.f, { 0.f, 0.f, 0.f },	BALL_THROW_ROTATION_AXIS::NONE, 0.f },
+	};
+
 
 	struct ROOT_MOTION_SCALE_ENTRY
 	{
@@ -140,6 +163,55 @@ _matrix BattleAnim::Find_AnimRotationCorrection(WNameID strModelTag, _uint iAnim
 			return XMMatrixRotationY(fRadian);
 
 		case ANIM_ROTATION_AXIS::Z:
+			return XMMatrixRotationZ(fRadian);
+
+		default:
+			return XMMatrixIdentity();
+		}
+	}
+
+	return XMMatrixIdentity();
+}
+
+BALL_THROW_DESC BattleAnim::Find_BallThrow(WNameID strModelTag)
+{
+	for (const auto& tEntry : s_BallThrowTable)
+	{
+		if (tEntry.strModelTag != strModelTag)
+			continue;
+
+		if (INVALID_BALL_THROW_ANIM == tEntry.iAnimIndex)
+			return {};
+
+		BALL_THROW_DESC Desc{};
+		Desc.bValid = true;
+		Desc.iAnimIndex = tEntry.iAnimIndex;
+		Desc.fStartDelay = tEntry.fStartDelay;
+		Desc.vLocalOffset = tEntry.vLocalOffset;
+		return Desc;
+	}
+
+	return {};
+}
+
+_matrix BattleAnim::Find_BallThrowRotationCorrection(WNameID strModelTag)
+{
+	for (const auto& tEntry : s_BallThrowTable)
+	{
+		if (tEntry.strModelTag != strModelTag)
+			continue;
+
+		const _float fRadian = XMConvertToRadians(tEntry.fDegree);
+
+		switch (tEntry.eAxis)
+		{
+		case BALL_THROW_ROTATION_AXIS::X:
+			return XMMatrixRotationX(fRadian);
+
+		case BALL_THROW_ROTATION_AXIS::Y:
+			return XMMatrixRotationY(fRadian);
+
+		case BALL_THROW_ROTATION_AXIS::Z:
 			return XMMatrixRotationZ(fRadian);
 
 		default:

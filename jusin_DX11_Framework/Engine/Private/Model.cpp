@@ -96,10 +96,14 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 		m_isAnimLoop = isLoop;
 
 		_vector vRootStart = m_Animations[iIndex]->Reset_TrackPosition(m_iRootBoneIndex);
+
 		if (m_bEnableRootMotion)
 		{
 			XMStoreFloat3(&m_vPrevRootPos, vRootStart);
-			m_vPrevRootPos.y = 0.f;
+
+			if (!m_bRootMotion3D)
+				m_vPrevRootPos.y = 0.f;
+
 			m_vRootMotionDelta = {};
 		}
 
@@ -179,7 +183,10 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 	if (m_bEnableRootMotion)
 	{
 		XMStoreFloat3(&m_vPrevRootPos, vRootStart);
-		m_vPrevRootPos.y = 0.f;
+
+		if (!m_bRootMotion3D)
+			m_vPrevRootPos.y = 0.f;
+
 		m_vRootMotionDelta = {};
 	}
 }
@@ -198,7 +205,9 @@ void CModel::Set_EnableRootMotion(_bool bEnable)
 
 	_vector vRootStart = m_Animations[m_iCurrentAnimationIndex]->Reset_TrackPosition(m_iRootBoneIndex);
 	XMStoreFloat3(&m_vPrevRootPos, vRootStart);
-	m_vPrevRootPos.y = 0.f;
+
+	if (!m_bRootMotion3D)
+		m_vPrevRootPos.y = 0.f;
 }
 
 HRESULT CModel::Initialize_Prototype()
@@ -265,8 +274,13 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 	if (m_bEnableRootMotion)
 	{
 		// 3-1. 현재 RootPos 추출
-		const _float4x4& rootMat = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
-		_float3 vCurrRootPos = { rootMat._41, 0.f, rootMat._43 };
+		_float4x4& rootMat = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
+		_float3 vCurrRootPos =
+		{
+			rootMat._41,
+			m_bRootMotion3D ? rootMat._42 : 0.f,
+			rootMat._43
+		};
 
 		// 3-2. 델타 계산
 		if (ETOUI(ANIM_UPDATE_RESULT::LOOP_WRAPPED) == iAnimResult)
@@ -276,13 +290,24 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 		else
 		{	// 루프 랩 아닐 때 : 현재 - 이전
 			m_vRootMotionDelta.x = vCurrRootPos.x - m_vPrevRootPos.x;
-			m_vRootMotionDelta.y = 0.f;
+			m_vRootMotionDelta.y = m_bRootMotion3D ? (vCurrRootPos.y - m_vPrevRootPos.y) : 0.f;
 			m_vRootMotionDelta.z = -(vCurrRootPos.z - m_vPrevRootPos.z);
 		}
 
 		// 3-3. 이전 프레임 갱신 및 루트본 로컬 이동 제거
 		m_vPrevRootPos = vCurrRootPos;
-		m_Bones[m_iRootBoneIndex]->Zero_TranslationXZ();
+
+		if (m_bRootMotion3D)
+		{
+			rootMat._41 = 0.f;
+			rootMat._42 = 0.f;
+			rootMat._43 = 0.f;
+		}
+		else
+		{
+			m_Bones[m_iRootBoneIndex]->Zero_TranslationXZ();
+		}
+
 	}
 	else
 		m_vRootMotionDelta = {};

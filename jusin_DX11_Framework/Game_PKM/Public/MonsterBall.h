@@ -30,7 +30,7 @@ public:
 		OPEN = 44u
 	};
 
-	enum class BALL_STATE : _ubyte { READY, FLYING, IMPACT, STAGE_DROP, STAGE_SHAKE, DONE, END };
+	enum class BALL_STATE : _ubyte { READY, FLYING, IMPACT, STAGE_DROP, STAGE_SHAKE, BATTLE_SENDOUT, DONE, END };
 	enum class BOUNCE_MODE : _ubyte { NONE, IMPACT_RECOIL, MISS_GROUND };
 
 	struct MONSTER_BALL_DESC : public CPartObject::PARTOBJECT_DESC
@@ -58,9 +58,11 @@ public:
 	virtual _string Get_TypeName() const override { return "MonsterBall"; }
 	BALL_STATE Get_State() const { return m_eState; }
 	_bool      Is_Done()   const { return BALL_STATE::DONE == m_eState; }
+	_bool      Is_OpenFinished() const { return m_bOpenFinished; }
 	CCollider* Get_Collider() const { return m_pColliderCom; }
 	const _float3& Get_CenterPosition() const { return m_vCenterPos; }
 	void       Set_AimPose(const _float3& vStartPos, const _float3& vTargetPos);
+	void       Play_BattleOpen(const _float3& vCenterPos, const _float3& vFaceTarget);
 
 	void       Launch();   // READY 상태에서만 동작 -> FLYING 전이 + 자동 Show
 	void       Reset();    // 강제로 READY 로 복귀 - 재던지기 진입 시 호출 (가시성 건드리지 않음)
@@ -89,8 +91,9 @@ private:
 	_float  m_fFlightDuration = 1.0f;
 	_float  m_fArcHeight = 2.0f;
 	_float  m_fImpactDuration = 0.5f;
-	_bool   m_bVisible = { true };    // 디폴트 보임. Late_Update 에서 false 시 RenderGroup 등록 생략.
+	_bool   m_bVisible = { true };
 	_bool   m_bWaitCloseAfterOpen = { false };
+	_bool   m_bOpenFinished = { false };
 
 	_float3     m_vBounceStartCenter = {};
 	_float3     m_vBounceEndCenter = {};
@@ -123,6 +126,7 @@ private:
 	void    Update_Impact(_float fTimeDelta);
 	void    Update_StageDrop(_float fTimeDelta);
 	void    Update_StageShake(_float fTimeDelta);
+	void    Update_BattleSendOut(_float fTimeDelta);
 	void    Update_Done(_float fTimeDelta);
 
 	void    Update_Position();    // 현재 t 기반 포물선 좌표 -> Transform 반영

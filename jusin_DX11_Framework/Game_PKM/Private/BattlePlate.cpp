@@ -112,6 +112,9 @@ void CBattlePlate::On_Refresh()
 
 void CBattlePlate::On_Update(_float fTimeDelta)
 {
+	if (Is_Contents_Hidden())   // 숨김 중엔 콘텐츠 갱신/Set_Visible 금지
+		return;
+
 	if (nullptr == m_pManager)
 		return;
 

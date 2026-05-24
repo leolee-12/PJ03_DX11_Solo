@@ -31,6 +31,7 @@ class CBattle_EventDispatcher;
 class IBattleAI;
 class CBattle_ActionSequencer;
 class CBattleMsg;
+class CBattlePlate;
 
 class CBattle_Manager : public CBase
 {
@@ -71,6 +72,8 @@ public:
 	CBattle_ActionSequencer* Get_Sequencer() const { return m_pSequencer; }
 	void Set_BattleMsg(CBattleMsg* pMsg) { m_pBattleMsg = pMsg; }   // weak
 	CBattleMsg* Get_BattleMsg() const { return m_pBattleMsg; }
+	void Set_BattlePlate(CBattlePlate* pPlate) { m_pBattlePlate = pPlate; }   // weak
+	void Set_PlateVisible(_bool bVisible);
 
 	CBattler* Get_Battler(_uint iSide) const;
 	CCommandQueue* Get_Queue() const { return m_pQueue; }
@@ -105,6 +108,7 @@ private:
 	IBattleAI* m_pAI[g_kBattleSideCount] = {};
 	CBattle_ActionSequencer* m_pSequencer = { nullptr };
 	CBattleMsg* m_pBattleMsg = { nullptr };  // weak - Level/UI Hub owns
+	CBattlePlate* m_pBattlePlate = { nullptr };  // weak - UI Hub owns
 
 	_int m_iPacingLocks = { 0 };
 

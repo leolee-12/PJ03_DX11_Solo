@@ -2,6 +2,8 @@
 #include "Battle_Manager.h"
 #include "Battle_CommandMenu.h"
 #include "Battle_MoveMenu.h"
+#include "Entry.h"
+#include "Player_Status.h"
 #include "Battle_EventDispatcher.h"
 #include "CommandQueue.h"
 #include "IBattleCommand.h"
@@ -19,11 +21,13 @@ HRESULT CBattle_InputDirector::Initialize()
 
 void CBattle_InputDirector::Bind(CBattle_Manager* pManager,
 	CBattle_CommandMenu* pCommandMenu,
-	CBattle_MoveMenu* pMoveMenu)
+	CBattle_MoveMenu* pMoveMenu,
+	CEntry* pEntry)
 {
 	m_pManager = pManager;
 	m_pCommandMenu = pCommandMenu;
 	m_pMoveMenu = pMoveMenu;
+	m_pEntry = pEntry;
 
 	// 콜백 등록 - 람다에서 this 캡처. Director 생명주기가 메뉴보다 같거나 짧음을 보장 (Level 이 모두 정리)
 	if (nullptr != m_pCommandMenu)
@@ -36,6 +40,12 @@ void CBattle_InputDirector::Bind(CBattle_Manager* pManager,
 	{
 		m_pMoveMenu->Set_OnActivate([this](_int iIdx) { this->Handle_MoveActivate(iIdx); });
 		m_pMoveMenu->Set_OnCancel([this]() { this->Handle_MoveCancel(); });
+	}
+
+	if (nullptr != m_pEntry)
+	{
+		m_pEntry->Set_OnActivate([this](_int iIdx) { this->Handle_EntryActivate(iIdx); });
+		m_pEntry->Set_OnCancel([this]() { this->Handle_EntryCancel(); });
 	}
 
 	// 초기 상태: 두 메뉴 비활성
@@ -64,6 +74,11 @@ void CBattle_InputDirector::Tick(_float fTimeDelta)
 			m_pMoveMenu->Open();
 		break;
 
+	case MODE::ENTRY:
+		if (nullptr != m_pEntry)
+			m_pEntry->Open();
+		break;
+
 	case MODE::IDLE:
 	default:
 		break;
@@ -88,6 +103,9 @@ void CBattle_InputDirector::Handle_CommandActivate(_int iIndex)
 		break;
 
 	case COMMAND::POKE:
+		Enter_Entry();
+		break;
+
 	case COMMAND::BAG:
 		// 결정 2B: 무반응 + 메뉴 재오픈. 현재 메뉴 그대로 유지.
 		break;
@@ -132,11 +150,26 @@ void CBattle_InputDirector::Handle_MoveCancel()
 	Enter_Main();
 }
 
+void CBattle_InputDirector::Handle_EntryActivate(_int iIndex)
+{
+	if (iIndex < 0 || iIndex >= static_cast<_int>(g_kMaxPartySize))
+		return;
+
+	Submit_Switch(static_cast<_uint>(iIndex));
+}
+
+void CBattle_InputDirector::Handle_EntryCancel()
+{
+	Enter_Main();
+}
+
 void CBattle_InputDirector::Enter_Main()
 {
-	// 즉시 두 메뉴 Close (입력 차단) + 새 메뉴 Open 은 다음 Tick 으로 지연
 	if (nullptr != m_pMoveMenu)
 		m_pMoveMenu->Close();
+
+	if (nullptr != m_pEntry)
+		m_pEntry->Close();
 
 	if (nullptr != m_pCommandMenu)
 		m_pCommandMenu->Close();
@@ -147,9 +180,11 @@ void CBattle_InputDirector::Enter_Main()
 
 void CBattle_InputDirector::Enter_Move()
 {
-	// 즉시 두 메뉴 Close (입력 차단) + 새 메뉴 Open 은 다음 Tick 으로 지연
 	if (nullptr != m_pCommandMenu)
 		m_pCommandMenu->Close();
+
+	if (nullptr != m_pEntry)
+		m_pEntry->Close();
 
 	if (nullptr != m_pMoveMenu)
 		m_pMoveMenu->Close();
@@ -158,6 +193,22 @@ void CBattle_InputDirector::Enter_Move()
 	m_bModeChangePending = true;
 }
 
+void CBattle_InputDirector::Enter_Entry()
+{
+	if (nullptr != m_pCommandMenu)
+		m_pCommandMenu->Close();
+
+	if (nullptr != m_pMoveMenu)
+		m_pMoveMenu->Close();
+
+	if (nullptr != m_pEntry)
+		m_pEntry->Close();
+
+	m_ePendingMode = MODE::ENTRY;
+	m_bModeChangePending = true;
+}
+
+
 void CBattle_InputDirector::Enter_Idle()
 {
 	if (nullptr != m_pCommandMenu)
@@ -165,6 +216,9 @@ void CBattle_InputDirector::Enter_Idle()
 
 	if (nullptr != m_pMoveMenu)
 		m_pMoveMenu->Close();
+
+	if (nullptr != m_pEntry)
+		m_pEntry->Close();
 
 	m_eMode = MODE::IDLE;
 	m_bModeChangePending = false;  // Idle 은 즉시 - 다음 Tick 에 Open 할 메뉴 없음
@@ -187,6 +241,52 @@ HRESULT CBattle_InputDirector::Submit_Move(_uint iMoveSlot)
 	tDesc.iTargetSlot = 0;
 
 	IBattleCommand* pCommand = CMoveCommand::Create(tDesc);
+	if (nullptr == pCommand)
+		return E_FAIL;
+
+	HRESULT hr = pQueue->Push(pCommand);
+	Safe_Release(pCommand);
+
+	if (FAILED(hr))
+		return hr;
+
+	Publish_CommandSelected();
+	Enter_Idle();
+
+	return S_OK;
+}
+
+HRESULT CBattle_InputDirector::Submit_Switch(_uint iPartyIndex)
+{
+	if (nullptr == m_pManager)
+		return E_FAIL;
+
+	CPlayer_Status* pPlayerState = m_pManager->Get_PlayerState();
+	if (nullptr == pPlayerState)
+		return E_FAIL;
+
+	PARTY& tParty = pPlayerState->Get_Party();
+	POKEMON_INSTANCE* pTarget = PartyOps::Get(tParty, iPartyIndex);
+	if (nullptr == pTarget || 0 == pTarget->iSpeciesID || 0 == pTarget->iCurrentHP)
+		return E_FAIL;
+
+	CBattler* pPlayer = m_pManager->Get_Battler(g_kBattleSide_Player);
+	if (nullptr == pPlayer || nullptr == pPlayer->Get_Instance())
+		return E_FAIL;
+
+	if (pPlayer->Get_Instance() == pTarget)
+		return E_FAIL;
+
+	CCommandQueue* pQueue = m_pManager->Get_Queue();
+	if (nullptr == pQueue)
+		return E_FAIL;
+
+	CSwitchCommand::DESC tDesc{};
+	tDesc.iActorSide = g_kBattleSide_Player;
+	tDesc.iActorSlot = 0;
+	tDesc.iTargetPartyIndex = iPartyIndex;
+
+	IBattleCommand* pCommand = CSwitchCommand::Create(tDesc);
 	if (nullptr == pCommand)
 		return E_FAIL;
 
@@ -262,6 +362,8 @@ void CBattle_InputDirector::Free()
 	m_pManager = nullptr;
 	m_pCommandMenu = nullptr;
 	m_pMoveMenu = nullptr;
+	m_pEntry = nullptr;
+
 
 	__super::Free();
 }

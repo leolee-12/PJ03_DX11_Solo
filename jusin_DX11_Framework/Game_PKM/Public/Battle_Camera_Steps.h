@@ -11,7 +11,7 @@ private:
 	virtual ~SCamera_PlaySequence() = default;
 
 public:
-	HRESULT Initialize(CAMERA_SEQUENCE_ID eID);
+	HRESULT Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait);
 
 	virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
 	virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
@@ -22,9 +22,10 @@ private:
 	_float m_fDuration = { 0.f };
 	_float m_fElapsed = { 0.f };
 	_bool  m_bRequested = { false };
+	_bool  m_bWait = { true };   // false면 시퀀스만 트리거하고 즉시 완료 (hold 연출용)
 
 public:
-	static SCamera_PlaySequence* Create(CAMERA_SEQUENCE_ID eID);
+	static SCamera_PlaySequence* Create(CAMERA_SEQUENCE_ID eID, _bool bWait = true);
 
 private:
 	virtual void Free() override;

@@ -9,6 +9,7 @@
 #include "Battle_EventDispatcher.h"
 #include "Battle_AI.h"
 #include "Battle_ActionSequencer.h"
+#include "BattlePlate.h"
 
 #include "GameInstance.h"
 
@@ -169,7 +170,7 @@ void CBattle_Manager::Update(_float fTimeDelta)
 	if (nullptr != m_pCurrentState)
 		m_pCurrentState->Update(ctx, fTimeDelta);
 
-	// State Update Áß Command °¡ ½ÃÄö½º¸¦ ºôµåÇßÀ» ¼ö ÀÖÀ¸¹Ç·Î Sequencer Tick ÁøÇà
+	// State Update ï¿½ï¿½ Command ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ Sequencer Tick ï¿½ï¿½ï¿½ï¿½
 	if (nullptr != m_pSequencer)
 		m_pSequencer->Tick(ctx, fTimeDelta);
 
@@ -201,6 +202,22 @@ const BATTLE_SLOT& CBattle_Manager::Get_Slot(_uint iSide) const
 		return s_tEmptySlot;
 
 	return pBattler->Get_Slot();
+}
+
+void CBattle_Manager::Set_PlateVisible(_bool bVisible)
+{
+	if (nullptr == m_pBattlePlate)
+		return;
+
+	if (bVisible)
+	{
+		m_pBattlePlate->Show_AllContents();
+		m_pBattlePlate->Snap_HPDisplay();   // ï¿½ï¿½Ã¼ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ HP ï¿½ï¿½ï¿½ ï¿½Ý¿ï¿½ (lerp ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ï¿½ï¿½)
+	}
+	else
+	{
+		m_pBattlePlate->Hide_AllContents();
+	}
 }
 
 CBattler* CBattle_Manager::Get_Battler(_uint iSide) const

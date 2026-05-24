@@ -4,6 +4,7 @@
 #include "Battle_Targeting.h"
 #include "Battle_Math.h"
 #include "Battle_Manager.h"
+#include "Player_Status.h"
 #include "Damage_Calculator.h"
 #include "Battle_EventDispatcher.h"
 #include "Battle_ActionSequencer.h"
@@ -30,13 +31,15 @@ namespace
 			break;
 		}
 
+		const _bool bPlayer = (g_kBattleSide_Player == desc.iActorSide);
+
 		switch (move.eCategory)
 		{
 		case MOVE_CATEGORY::PHYSICAL:
-			return CAMERA_SEQUENCE_ID::TACKLE_PHYSICAL;
+			return bPlayer ? CAMERA_SEQUENCE_ID::TACKLE_PHYSICAL : CAMERA_SEQUENCE_ID::TACKLE_PHYSICAL_OPPONENT;
 
 		case MOVE_CATEGORY::SPECIAL:
-			return CAMERA_SEQUENCE_ID::RANGED_ENERGY;
+			return bPlayer ? CAMERA_SEQUENCE_ID::RANGED_ENERGY : CAMERA_SEQUENCE_ID::RANGED_ENERGY_OPPONENT;
 
 		default:
 			return CAMERA_SEQUENCE_ID::NONE;
@@ -302,44 +305,58 @@ HRESULT CSwitchCommand::Execute(const BATTLE_CONTEXT& ctx)
 	if (nullptr == ctx.pManager)
 		return E_FAIL;
 
-	// 즉시 모델 교체 — Apply_Switch 가 visible=false 로 가린 채 새 모델 준비
-	if (FAILED(ctx.pManager->Replace_BattlerSlot(
-		m_tDesc.iActorSide, m_tDesc.iTargetPartyIndex)))
-		return E_FAIL;
-
 	CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
 	if (nullptr == pSeq)
 		return E_FAIL;
 
-	// SPlayEffect 가 ActionData.iActorSide 로 회수/등장 이펙트 위치 결정
-	pSeq->Reset_ActionData();
-	BATTLE_ACTION_DATA& tData = pSeq->Get_ActionData();
-	tData.iActorSide = m_tDesc.iActorSide;
-	tData.iActorSlot = m_tDesc.iActorSlot;
+	CBattler* pOldBattler = ctx.pManager->Get_Battler(m_tDesc.iActorSide);
+	const POKEMON_INSTANCE* pOldInstance =
+		(nullptr != pOldBattler) ? pOldBattler->Get_Instance() : nullptr;
+	const _wstring strOldName =
+		(nullptr != pOldInstance) ? _wstring(pOldInstance->szNickname) : _wstring(TEXT("?"));
 
-	// 새 포켓몬 이름 추출 (CForcedSwitchState 와 동일 패턴 — Battle_States.cpp:484~500)
-	CBattler* pBattler = ctx.pManager->Get_Battler(m_tDesc.iActorSide);
-	const POKEMON_INSTANCE* pInstance = (nullptr != pBattler) ? pBattler->Get_Instance() : nullptr;
-	const _wstring strPokemonName = (nullptr != pInstance)
-		? _wstring(pInstance->szNickname) : _wstring(TEXT("?"));
+	const POKEMON_INSTANCE* pNewInstance = nullptr;
+	if (g_kBattleSide_Player == m_tDesc.iActorSide)
+	{
+		CPlayer_Status* pPlayerState = ctx.pManager->Get_PlayerState();
+		if (nullptr != pPlayerState)
+			pNewInstance = PartyOps::Get(pPlayerState->Get_Party(), m_tDesc.iTargetPartyIndex);
+	}
+	else if (g_kBattleSide_Opponent == m_tDesc.iActorSide)
+	{
+		const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
+		if (nullptr != pTrainer)
+			pNewInstance = PartyOps::Get(pTrainer->tParty, m_tDesc.iTargetPartyIndex);
+	}
+
+	if (nullptr == pNewInstance)
+		return E_FAIL;
+
+	const _wstring strNewName = _wstring(pNewInstance->szNickname);
+	const _wstring strReturnMsg = _wstring(TEXT("돌아와!\n")) + strOldName;
 
 	_wstring strSendOutMsg;
 	if (g_kBattleSide_Opponent == m_tDesc.iActorSide)
 	{
 		const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
-		const _wstring strTrainerName = (nullptr != pTrainer)
-			? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
-		strSendOutMsg = strTrainerName + TEXT("은(는) ") + strPokemonName + TEXT("을(를) 내보냈다!");
+		const _wstring strTrainerName =
+			(nullptr != pTrainer) ? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
+		strSendOutMsg = strTrainerName + TEXT("은(는) ") + strNewName + TEXT("을(를) 내보냈다!");
 	}
 	else
 	{
-		strSendOutMsg = _wstring(TEXT("플레이어는 ")) + strPokemonName + TEXT("을(를) 내보냈다!");
+		strSendOutMsg = _wstring(TEXT("플레이어는 ")) + strNewName + TEXT("을(를) 내보냈다!");
 	}
 
 	const BATTLE_ENV& tEnv = ctx.pManager->Get_Env();
 	const _bool bTrainerRule =
 		BATTLE_RULE::TRAINER_SINGLE == tEnv.eRule ||
 		BATTLE_RULE::TRAINER_DOUBLE == tEnv.eRule;
+
+	pSeq->Reset_ActionData();
+	BATTLE_ACTION_DATA& tData = pSeq->Get_ActionData();
+	tData.iActorSide = m_tDesc.iActorSide;
+	tData.iActorSlot = m_tDesc.iActorSlot;
 
 	auto Push = [pSeq](IBattleAction_Step* pStep)
 		{
@@ -350,25 +367,29 @@ HRESULT CSwitchCommand::Execute(const BATTLE_CONTEXT& ctx)
 			Safe_Release(pStep);
 		};
 
-	// 회수 단계 — 자기 진영 위치에서 ball_absorb 출력 (visible=false 인 새 모델은 안 보임)
-	Push(SPlayEffect::Create(
-		"ball_absorb", EFFECT_VFX_TARGET::ATTACKER,
-		EFFECT_SLOT::CENTER, _float3{}));
-	Push(SDelay::Create(0.3f));
+	Push(SBattleText::Create(strReturnMsg));
+	Push(SCloseMsg::Create());
+	Push(SDelay::Create(0.15f));
+	Push(SSetPlateVisible::Create(false));
+	Push(SPokemonSwitchOut::Create(m_tDesc.iActorSide));
+	Push(SApplySwitch::Create(m_tDesc.iActorSide, m_tDesc.iTargetPartyIndex));
+	Push(SDelay::Create(0.1f));
 
-	// 내보냄 단계 — INTRO / FORCED_SWITCH 와 동일 패턴
 	Push(SBattleText::Create(strSendOutMsg));
-
 	if (bTrainerRule)
-		Push(STrainerThrow::Create(m_tDesc.iActorSide));
+		Push(SSendOutBall::Create(m_tDesc.iActorSide));
 
 	Push(SPokemonEnter::Create(m_tDesc.iActorSide));
+
+	if (bTrainerRule)
+		Push(SRevealTrainers::Create());
+
+	Push(SSetPlateVisible::Create(true));
 	Push(SCloseMsg::Create());
 	Push(SDelay::Create(0.2f));
 	Push(SDone::Create());
 
 	pSeq->Submit();
-
 	return S_OK;
 }
 

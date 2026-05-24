@@ -3,7 +3,8 @@
 #include "Effect_Defines.h"
 
 NS_BEGIN(Game_PKM)
-
+class CMonsterBall;
+class CBattle_Trainer;
 /* SDelay
    - 순수 시간 대기. duration 초 경과 시 완료.
    - 메시지 사이 텀, anim 페이즈 사이 텀 등 페이싱 조절용. */
@@ -101,6 +102,35 @@ private:
     virtual void Free() override;
 };
 
+class SSendOutBall final : public IBattleAction_Step
+{
+private:
+    SSendOutBall();
+    virtual ~SSendOutBall() = default;
+
+public:
+    HRESULT Initialize(_uint iSide, _float fFlightDuration);
+
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint m_iSide = { 0 };
+    _float m_fFlightDuration = { 0.72f };
+    _float m_fElapsed = { 0.f };
+    _bool m_bFinished = { false };
+
+    _float3 m_vTargetPos = {};
+    CMonsterBall* m_pBall = { nullptr }; // weak - Battle layer owns it
+
+public:
+    static SSendOutBall* Create(_uint iSide, _float fFlightDuration = 0.72f);
+
+private:
+    virtual void Free() override;
+};
+
 class SPokemonEnter final : public IBattleAction_Step
 {
 private:
@@ -116,9 +146,134 @@ public:
 private:
     _uint m_iSide = { 0 };
     _float m_fGrace = { 0.f };
+    CBattle_Trainer* m_pHiddenTrainers[g_kBattleSideCount] = {};
+    _bool m_bPrevTrainerVisible[g_kBattleSideCount] = {};
 
 public:
     static SPokemonEnter* Create(_uint iSide);
+
+private:
+    void Restore_Trainers();
+    virtual void Free() override;
+};
+
+class SPokemonSwitchOut final : public IBattleAction_Step
+{
+private:
+    SPokemonSwitchOut();
+    virtual ~SPokemonSwitchOut() = default;
+
+public:
+    HRESULT Initialize(_uint iSide, _float fDuration);
+    virtual void OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint m_iSide = { 0 };
+    _float m_fDuration = { 0.3f };
+    _float m_fElapsed = { 0.f };
+
+public:
+    static SPokemonSwitchOut* Create(_uint iSide, _float fDuration = 0.3f);
+
+private:
+    virtual void Free() override;
+};
+
+class SApplySwitch final : public IBattleAction_Step
+{
+private:
+    SApplySwitch();
+    virtual ~SApplySwitch() = default;
+
+public:
+    HRESULT Initialize(_uint iSide, _uint iPartyIndex);
+    virtual void OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint m_iSide = { 0 };
+    _uint m_iPartyIndex = { 0 };
+    _bool m_bApplied = { false };
+
+public:
+    static SApplySwitch* Create(_uint iSide, _uint iPartyIndex);
+
+private:
+    virtual void Free() override;
+};
+
+/* SSetPlateVisible
+   - 즉시 완료. ctx.pManager->Set_PlateVisible(b) 호출.
+   - 등장/교체 구간에서 플레이트를 숨기고, 끝나면 다시 표시. */
+class SSetPlateVisible final : public IBattleAction_Step
+{
+private:
+    SSetPlateVisible();
+    virtual ~SSetPlateVisible() = default;
+
+public:
+    HRESULT Initialize(_bool bVisible);
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _bool m_bVisible = { false };
+
+public:
+    static SSetPlateVisible* Create(_bool bVisible);
+
+private:
+    virtual void Free() override;
+};
+
+/* SHideTrainers
+     - 즉시 완료. 양측 트레이너를 모두 숨긴다(Set_BattleVisible(false)).
+     - 송출 클로즈업 직전에 호출. */
+class SHideTrainers final : public IBattleAction_Step
+{
+private:
+    SHideTrainers();
+    virtual ~SHideTrainers() = default;
+
+public:
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+public:
+    static SHideTrainers* Create();
+
+private:
+    virtual void Free() override;
+};
+
+/* SRevealTrainers
+   - 카메라가 전역 포즈(BATTLE_DEFAULT)로 복귀하고 시퀀스가 끝난 시점에
+     양측 트레이너를 한꺼번에 노출(Set_BattleVisible(true)+Play_Focus).
+   - 클로즈업 도중 재노출이 잡히지 않도록 대기. 안전 타임아웃 1.5초. */
+class SRevealTrainers final : public IBattleAction_Step
+{
+private:
+    SRevealTrainers();
+    virtual ~SRevealTrainers() = default;
+
+public:
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    void Reveal(const BATTLE_CONTEXT& ctx);
+
+    _float m_fElapsed = { 0.f };
+    _bool  m_bRevealed = { false };
+
+public:
+    static SRevealTrainers* Create();
 
 private:
     virtual void Free() override;

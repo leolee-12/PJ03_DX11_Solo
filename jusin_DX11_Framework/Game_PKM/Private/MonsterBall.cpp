@@ -121,6 +121,10 @@ void CMonsterBall::Update(_float fTimeDelta)
 		Update_StageShake(fTimeDelta);
 		break;
 
+	case BALL_STATE::BATTLE_SENDOUT:
+		Update_BattleSendOut(fTimeDelta);
+		break;
+
 	case BALL_STATE::DONE:
 		Update_Done(fTimeDelta);
 		break;
@@ -211,7 +215,8 @@ void CMonsterBall::Set_AimPose(const _float3& vStartPos, const _float3& vTargetP
 	if (BALL_STATE::FLYING == m_eState
 		|| BALL_STATE::IMPACT == m_eState
 		|| BALL_STATE::STAGE_DROP == m_eState
-		|| BALL_STATE::STAGE_SHAKE == m_eState)
+		|| BALL_STATE::STAGE_SHAKE == m_eState
+		|| BALL_STATE::BATTLE_SENDOUT == m_eState)
 		return;
 
 	m_vStartPos = vStartPos;
@@ -220,6 +225,45 @@ void CMonsterBall::Set_AimPose(const _float3& vStartPos, const _float3& vTargetP
 	Face_CenterTo(m_vStartPos, m_vTargetPos);
 	Set_CenterPosition(m_vStartPos);
 	Update_Collider();
+}
+
+void CMonsterBall::Play_BattleOpen(const _float3& vCenterPos, const _float3& vFaceTarget)
+{
+	m_eState = BALL_STATE::BATTLE_SENDOUT;
+	m_fElapsed = 0.f;
+	m_bVisible = true;
+	m_bWaitCloseAfterOpen = false;
+	m_bOpenFinished = false;
+
+	m_eBounceMode = BOUNCE_MODE::NONE;
+	m_fBounceTime = 0.f;
+	m_fBounceDuration = 0.f;
+	m_fBounceHeight = 0.f;
+
+	m_bStageDropFinished = false;
+	m_fStageDropTime = 0.f;
+	m_fStageDropDuration = 0.f;
+
+	m_vShakeCenter = {};
+	m_vShakePivotPos = {};
+	m_fShakeTime = 0.f;
+	m_fShakeDuration = 0.f;
+	m_fShakeAngleRad = 0.f;
+	m_bShakeFinished = false;
+
+	Face_CenterToYaw(vCenterPos, vFaceTarget);
+	Set_CenterPosition(vCenterPos);
+
+	if (nullptr != m_pModelCom)
+	{
+		m_pModelCom->Set_AnimationIndex(ETOUI(ANIM::CAPTURE_IDLE), true, 0.f);
+		m_pModelCom->Play_Animation(0.f);
+		m_pModelCom->Set_AnimationIndex(ETOUI(ANIM::BATTLE_OPEN), false, 0.f);
+		m_pModelCom->Play_Animation(0.f);
+	}
+
+	Update_Collider();
+	OutputDebugStringW(L"[MonsterBall] BATTLE_SENDOUT -> BATTLE_OPEN\n");
 }
 
 void CMonsterBall::Launch()
@@ -232,6 +276,7 @@ void CMonsterBall::Launch()
 	m_fElapsed = 0.f;
 	m_bVisible = true;   // 발사 시 무조건 가시화 (이전 Hide 가 있어도 복귀)
 	m_bWaitCloseAfterOpen = false;
+	m_bOpenFinished = false;
 
 	m_eBounceMode = BOUNCE_MODE::NONE;
 	m_fBounceTime = 0.f;
@@ -257,6 +302,7 @@ void CMonsterBall::Reset()
 	m_eState = BALL_STATE::READY;
 	m_fElapsed = 0.f;
 	m_bWaitCloseAfterOpen = false;
+	m_bOpenFinished = false;
 
 	m_eBounceMode = BOUNCE_MODE::NONE;
 	m_fBounceTime = 0.f;
@@ -341,6 +387,7 @@ void CMonsterBall::Begin_StageDrop(
 
 	m_eBounceMode = BOUNCE_MODE::NONE;
 	m_bWaitCloseAfterOpen = false;
+	m_bOpenFinished = false;
 
 	m_vStageDropStartCenter = vAirCenter;
 	m_vStageDropEndCenter = vGroundCenter;
@@ -411,6 +458,26 @@ void CMonsterBall::Update_Ready(_float fTimeDelta)
 {
 	if (nullptr != m_pModelCom)
 		m_pModelCom->Play_Animation(fTimeDelta);
+}
+
+void CMonsterBall::Update_BattleSendOut(_float fTimeDelta)
+{
+	m_fElapsed += fTimeDelta;
+
+	if (nullptr == m_pModelCom)
+	{
+		m_bOpenFinished = true;
+		m_eState = BALL_STATE::DONE;
+		return;
+	}
+
+	if (m_pModelCom->Play_Animation(fTimeDelta))
+	{
+		m_bOpenFinished = true;
+		m_eState = BALL_STATE::DONE;
+		m_fElapsed = 0.f;
+		OutputDebugStringW(L"[MonsterBall] BATTLE_OPEN finished -> DONE\n");
+	}
 }
 
 void CMonsterBall::Update_Flying(_float fTimeDelta)
@@ -494,6 +561,7 @@ void CMonsterBall::Update_Impact(_float fTimeDelta)
 	{
 		if (m_pModelCom->Play_Animation(fTimeDelta))
 		{
+			m_bOpenFinished = true;
 			m_bWaitCloseAfterOpen = true;
 			m_fElapsed = 0.f;
 
@@ -607,6 +675,7 @@ void CMonsterBall::Begin_OneShake(_float fDuration, _float fAngleDeg)
 
 	m_eBounceMode = BOUNCE_MODE::NONE;
 	m_bWaitCloseAfterOpen = false;
+	m_bOpenFinished = false;
 
 	m_vShakeCenter = m_vCenterPos;
 
@@ -812,6 +881,7 @@ void CMonsterBall::Begin_Bounce(BOUNCE_MODE eMode, const _float3& vStartCenter, 
 	m_eState = BALL_STATE::IMPACT;
 	m_fElapsed = 0.f;
 	m_bWaitCloseAfterOpen = false;
+	m_bOpenFinished = false;
 
 	m_vBounceStartCenter = vStartCenter;
 	m_vBounceEndCenter = vEndCenter;

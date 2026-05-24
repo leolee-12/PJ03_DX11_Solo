@@ -1,6 +1,9 @@
 #include "Battle_Trainer.h"
 #include "Body_Human.h"
 #include "RenderRule_Manager.h"
+#include "Battle_Ball.h"
+
+#include "GameInstance.h"
 
 CBattle_Trainer::CBattle_Trainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CActor{ pDevice, pContext }
@@ -56,8 +59,21 @@ void CBattle_Trainer::Priority_Update(_float fTimeDelta)
 {
 }
 
+void CBattle_Trainer::Late_Update(_float fTimeDelta)
+{
+	if (false == m_bBattleVisible)
+		return;
+
+	__super::Late_Update(fTimeDelta);
+}
+
 void CBattle_Trainer::Tick_Movement(_float fTimeDelta)
 {
+	Tick_BallThrow(fTimeDelta);
+
+#ifdef _DEBUG
+	Debug_BallThrowTune();
+#endif
 }
 
 void CBattle_Trainer::Play_Intro()
@@ -70,6 +86,28 @@ void CBattle_Trainer::Play_Intro()
 void CBattle_Trainer::Play_Throw()
 {
 	Play_Anim_NonLoop(ANIM_KIND::THROW, 0.8f);
+
+	m_bPendingBallThrow = false;
+
+	const BALL_THROW_DESC BallThrowDesc = BattleAnim::Find_BallThrow(m_strModelTag);
+	if (nullptr == m_pBattleBall || !BallThrowDesc.bValid)
+	{
+		if (nullptr != m_pBattleBall)
+			m_pBattleBall->Hide();
+		return;
+	}
+
+	m_pBattleBall->Set_RotationCorrection(BattleAnim::Find_BallThrowRotationCorrection(m_strModelTag));
+
+	if (BallThrowDesc.fStartDelay <= 0.f)
+	{
+		Start_BallThrow(BallThrowDesc);
+		return;
+	}
+
+	m_tPendingBallThrow = BallThrowDesc;
+	m_fPendingBallThrowDelay = BallThrowDesc.fStartDelay;
+	m_bPendingBallThrow = true;
 }
 
 void CBattle_Trainer::Play_Focus()
@@ -134,6 +172,19 @@ HRESULT CBattle_Trainer::Ready_PartObjects(const BATTLE_TRAINER_DESC* pDesc)
 	if (nullptr == m_pBody)
 		return E_FAIL;
 
+	CBattle_Ball::BATTLE_BALL_DESC BallDesc{};
+	BallDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+
+	if (FAILED(__super::Add_PartObject(
+		ETOUI(LEVEL::STATIC), PROTO_OBJ_BATTLE_BALL, PART_BALL, &BallDesc)))
+		return E_FAIL;
+
+	m_pBattleBall = Get_Part<CBattle_Ball>(PART_BALL);
+	if (nullptr == m_pBattleBall)
+		return E_FAIL;
+
+	m_pBattleBall->Hide();
+
 	return S_OK;
 }
 
@@ -177,6 +228,126 @@ void CBattle_Trainer::Return_To_Focus()
 	m_fAnimDuration = 0.f;
 }
 
+void CBattle_Trainer::Tick_BallThrow(_float fTimeDelta)
+{
+	if (!m_bPendingBallThrow)
+		return;
+
+	m_fPendingBallThrowDelay -= fTimeDelta;
+	if (m_fPendingBallThrowDelay > 0.f)
+		return;
+
+	Start_BallThrow(m_tPendingBallThrow);
+}
+
+void CBattle_Trainer::Start_BallThrow(const BALL_THROW_DESC& Desc)
+{
+	m_bPendingBallThrow = false;
+
+	if (nullptr == m_pBattleBall || !Desc.bValid)
+		return;
+
+	Sync_BallToRightHand(Desc.vLocalOffset);
+
+	if (!m_pBattleBall->Set_Anim(Desc.iAnimIndex, false, 0.f))
+	{
+		m_pBattleBall->Hide();
+		return;
+	}
+
+	m_pBattleBall->Show();
+}
+
+_bool CBattle_Trainer::Sync_BallToRightHand(const _float3& vCorrection)
+{
+	if (nullptr == m_pBody || nullptr == m_pBattleBall)
+		return false;
+
+	m_pBody->Refresh_AnimationPose();
+
+	_float3 vBallWorld{};
+	if (!m_pBody->Get_BoneWorldPosition("loc_ob_ball", &vBallWorld))
+		return false;
+
+	const _matrix TrainerWorld = XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr());
+	const _matrix InvTrainerWorld = XMMatrixInverse(nullptr, TrainerWorld);
+
+	_float3 vBallLocal{};
+	XMStoreFloat3(&vBallLocal,
+		XMVector3TransformCoord(XMLoadFloat3(&vBallWorld), InvTrainerWorld));
+
+	vBallLocal.x += vCorrection.x;
+	vBallLocal.y += vCorrection.y;
+	vBallLocal.z += vCorrection.z;
+
+	m_pBattleBall->Set_LocalOffset(vBallLocal);
+	return true;
+}
+
+#ifdef _DEBUG
+void CBattle_Trainer::Debug_BallThrowTune()
+{
+	if (nullptr == m_pBattleBall)
+		return;
+
+	const _uint iNumAnims = m_pBattleBall->Get_NumAnims();
+	if (0 == iNumAnims)
+		return;
+
+	if (m_iDbgBallAnim >= iNumAnims)
+		m_iDbgBallAnim = 0;
+
+	if (m_pGameInstance->Key_Down(DIK_RBRACKET))
+		m_iDbgBallAnim = (m_iDbgBallAnim + 1) % iNumAnims;
+
+	if (m_pGameInstance->Key_Down(DIK_LBRACKET))
+		m_iDbgBallAnim = (m_iDbgBallAnim + iNumAnims - 1) % iNumAnims;
+
+	if (m_pGameInstance->Key_Down(DIK_BACKSLASH))
+	{
+		if (nullptr != m_pBody)
+		{
+			const _uint iThrowAnim = BattleAnim::Find_AnimIndex(m_strModelTag, ANIM_KIND::THROW);
+			const _uint iFocusAnim = BattleAnim::Find_AnimIndex(m_strModelTag, ANIM_KIND::FOCUS);
+
+			if (iFocusAnim != iThrowAnim)
+				m_pBody->Set_Anim(iFocusAnim, false, 0.f);
+			else
+			{
+				const _uint iIdleAnim = BattleAnim::Find_AnimIndex(m_strModelTag, ANIM_KIND::IDLE);
+				if (iIdleAnim != iThrowAnim)
+					m_pBody->Set_Anim(iIdleAnim, false, 0.f);
+			}
+		}
+
+		Play_Throw();
+
+		_float3 vCorrection{};
+		const BALL_THROW_DESC DebugDesc = BattleAnim::Find_BallThrow(m_strModelTag);
+		if (DebugDesc.bValid)
+			vCorrection = DebugDesc.vLocalOffset;
+
+		if (!Sync_BallToRightHand(vCorrection))
+			OutputDebugStringA("[BallLoc] loc_ob_ball sync failed\n");
+			OutputDebugStringA("[BallLoc] loc_ob_ball sync failed\n");
+
+		m_pBattleBall->Clear_RotationCorrection();
+
+		if (m_pBattleBall->Set_Anim(m_iDbgBallAnim, false, 0.f))
+			m_pBattleBall->Show();
+		else
+			OutputDebugStringA("[BallTune] Set_Anim failed\n");
+
+		_char szLog[160] = {};
+		sprintf_s(szLog, "[BallTune] trainerModel=%u  ballAnim=%u / %u\n",
+			static_cast<unsigned>(m_strModelTag),
+			m_iDbgBallAnim,
+			iNumAnims);
+		OutputDebugStringA(szLog);
+	}
+}
+#endif
+
 CBattle_Trainer* CBattle_Trainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBattle_Trainer* pInstance = new CBattle_Trainer(pDevice, pContext);
@@ -205,5 +376,7 @@ CGameObject* CBattle_Trainer::Clone(void* pArg)
 
 void CBattle_Trainer::Free()
 {
+	m_pBattleBall = nullptr;
+
 	__super::Free();
 }

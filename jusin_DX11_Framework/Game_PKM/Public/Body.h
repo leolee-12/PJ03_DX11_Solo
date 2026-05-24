@@ -34,6 +34,8 @@ protected:
 public:
 	const _float4x4* Get_CombinedWorldMatrixPtr() const { return &m_CombinedWorldMatrix; }
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
+	_bool Get_BoneWorldPosition(const _char* pBoneName, _float3* pOutPosition) const;
+	void Refresh_AnimationPose();
 	const _float3& Get_RootMotionDelta() const;
 	_bool Was_AnimFinishedThisFrame() const { return m_bAnimFinishedThisFrame; }
 	_bool Set_Anim(_uint iAnimIdx, _bool isLoop = false, _float fBlendDuration = g_kDefaultBlendDuration);

@@ -24,6 +24,33 @@ const _float3& CBody::Get_RootMotionDelta() const
 	return m_pModelCom->Get_RootMotionDelta();
 }
 
+_bool CBody::Get_BoneWorldPosition(const _char* pBoneName, _float3* pOutPosition) const
+{
+	if (nullptr == pOutPosition || nullptr == m_pModelCom)
+		return false;
+
+	const _float4x4* pBoneMatrix = m_pModelCom->Get_BoneMatrixPtr(pBoneName);
+	if (nullptr == pBoneMatrix)
+		return false;
+
+	const _matrix BoneMatrix = XMLoadFloat4x4(pBoneMatrix);
+	const _matrix BodyLocalMatrix = XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr());
+	const _matrix ParentWorldMatrix = XMLoadFloat4x4(m_pParentMatrix);
+	const _matrix WorldMatrix = BodyLocalMatrix * ParentWorldMatrix;
+	const _matrix BoneWorldMatrix = BoneMatrix * WorldMatrix;
+
+	XMStoreFloat3(pOutPosition,
+		XMVector3TransformCoord(XMVectorZero(), BoneWorldMatrix));
+
+	return true;
+}
+
+void CBody::Refresh_AnimationPose()
+{
+	if (nullptr != m_pModelCom)
+		m_pModelCom->Play_Animation(0.f);
+}
+
 _bool CBody::Set_Anim(_uint iAnimIdx, _bool isLoop, _float fBlendDuration)
 {
 	if (nullptr == m_pModelCom)

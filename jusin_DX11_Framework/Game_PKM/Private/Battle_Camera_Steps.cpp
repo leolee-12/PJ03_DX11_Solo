@@ -6,7 +6,7 @@ SCamera_PlaySequence::SCamera_PlaySequence()
 {
 }
 
-HRESULT SCamera_PlaySequence::Initialize(CAMERA_SEQUENCE_ID eID)
+HRESULT SCamera_PlaySequence::Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait)
 {
 	if (CAMERA_SEQUENCE_ID::NONE == eID)
 		return E_FAIL;
@@ -15,6 +15,7 @@ HRESULT SCamera_PlaySequence::Initialize(CAMERA_SEQUENCE_ID eID)
 	m_fDuration = 0.f;
 	m_fElapsed = 0.f;
 	m_bRequested = false;
+	m_bWait = bWait;
 
 	return S_OK;
 }
@@ -50,14 +51,17 @@ _bool SCamera_PlaySequence::Is_Complete(const BATTLE_CONTEXT& ctx) const
 	if (false == m_bRequested)
 		return true;
 
+	if (false == m_bWait)
+		return true;
+
 	return m_fElapsed >= m_fDuration;
 }
 
-SCamera_PlaySequence* SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID eID)
+SCamera_PlaySequence* SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID eID, _bool bWait)
 {
 	SCamera_PlaySequence* pInstance = new SCamera_PlaySequence();
 
-	if (FAILED(pInstance->Initialize(eID)))
+	if (FAILED(pInstance->Initialize(eID, bWait)))
 	{
 		MSG_BOX("Failed to Created : SCamera_PlaySequence");
 		Safe_Release(pInstance);

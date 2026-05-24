@@ -27,6 +27,7 @@ public:
 	_int Get_BoneIndex(const _char* pBoneName);
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	const _float3& Get_RootMotionDelta() const { return m_vRootMotionDelta; }
+	void Set_RootMotion3D(_bool bEnable) { m_bRootMotion3D = bEnable; }
 	void Set_AnimationIndex(_uint iIndex, _bool isLoop = false, _float fBlendDuration = 0.f);
 	void Set_RootMotionBoneIndex(_uint iIndex) { m_iRootBoneIndex = iIndex; }
 	void Set_EnableRootMotion(_bool bEnable);
@@ -68,6 +69,7 @@ private:
 
 	_uint m_iRootBoneIndex = { 0 };			// 바이너리화 로직에서 항상 0번으로 등록
 	_bool m_bEnableRootMotion = { false };	// 루트 모션 활성화 플래그
+	_bool m_bRootMotion3D = { false };
 	_float3 m_vRootMotionDelta = {};		// 이번 프레임의 루트 이동 델타(로컬)
 	_float3 m_vPrevRootPos = {};			// 이전 프레임 루트 위치(델타 계산용)
 

@@ -11,6 +11,10 @@
 #include "Battle_Trainer.h"
 #include "Player_Status.h"
 #include "Effect_Manager.h"
+#include "MonsterBall.h"
+#include "Camera_Director.h"
+#include "GameInstance.h"
+#include "Game_PKM_Tags.h"
 
 #pragma region SDelay
 SDelay::SDelay()
@@ -230,6 +234,168 @@ void STrainerThrow::Free()
 }
 #pragma endregion
 
+#pragma region SSendOutBall
+SSendOutBall::SSendOutBall()
+{
+}
+
+HRESULT SSendOutBall::Initialize(_uint iSide, _float fFlightDuration)
+{
+	if (iSide >= g_kBattleSideCount)
+		return E_FAIL;
+
+	m_iSide = iSide;
+	m_fFlightDuration = (fFlightDuration > 0.f) ? fFlightDuration : 0.72f;
+	m_fElapsed = 0.f;
+	m_bFinished = false;
+	m_vTargetPos = {};
+	m_pBall = nullptr;
+
+	return S_OK;
+}
+
+void SSendOutBall::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_fElapsed = 0.f;
+	m_bFinished = false;
+	m_pBall = nullptr;
+	m_vTargetPos = {};
+
+	if (nullptr == ctx.pManager)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	// 송출 클로즈업 동안 양측 트레이너 숨김. 카메라 컷과 동일 틱에 처리해야 글리치가 없다.
+	// 노출은 SRevealTrainers(줌아웃 settle)가 전담한다.
+	for (_uint i = 0; i < g_kBattleSideCount; ++i)
+	{
+		CBattle_Trainer* pTrainer =
+			dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(i));
+		if (nullptr != pTrainer)
+			pTrainer->Set_BattleVisible(false);
+	}
+
+	const CAMERA_SEQUENCE_ID eSequence =
+		(g_kBattleSide_Player == m_iSide)
+		? CAMERA_SEQUENCE_ID::SENDOUT_PLAYER
+		: CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT;
+
+	CCamera_Director::GetInstance()->Play_Sequence(eSequence);
+
+	CBattle_Pokemon* pPokemon =
+		dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(m_iSide));
+
+	if (nullptr == pPokemon)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	m_vTargetPos = pPokemon->Get_EffectPivot();
+
+	const _float fSideSign =
+		(g_kBattleSide_Player == m_iSide) ? -1.f : 1.f;
+
+	const _float3 vStartPos = _float3(
+		m_vTargetPos.x + 0.85f * fSideSign,
+		m_vTargetPos.y + 0.65f,
+		m_vTargetPos.z + 1.35f * fSideSign);
+
+	CMonsterBall::MONSTER_BALL_DESC BallDesc{};
+	BallDesc.vSpawnPos = m_vTargetPos;
+	BallDesc.vTargetPos = m_vTargetPos;
+	BallDesc.fFlightDuration = m_fFlightDuration;
+	BallDesc.fArcHeight = 0.45f;
+	BallDesc.fImpactDuration = 0.5f;
+	BallDesc.fRotationPerSec = XMConvertToRadians(720.f);
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	CMonsterBall* pBall = static_cast<CMonsterBall*>(
+		pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT,
+			ETOUI(LEVEL::GAMEPLAY),
+			PROTO_OBJ_MONSTER_BALL,
+			&BallDesc));
+
+	if (nullptr == pBall)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject_Ex(
+		ETOUI(LEVEL::BATTLE),
+		LAYER_INTERACTABLE,
+		pBall)))
+	{
+		Safe_Release(pBall);
+		m_bFinished = true;
+		return;
+	}
+
+	m_pBall = pBall;
+	m_pBall->Reset();
+	m_pBall->Play_BattleOpen(m_vTargetPos, vStartPos);
+}
+
+void SSendOutBall::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+
+	if (m_bFinished)
+		return;
+
+	m_fElapsed += fTimeDelta;
+
+	if (nullptr == m_pBall)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	if (m_pBall->Is_OpenFinished())
+	{
+		m_pBall->Hide();
+		m_bFinished = true;
+		return;
+	}
+
+	if (m_fElapsed >= m_fFlightDuration + 2.0f)
+	{
+		m_pBall->Hide();
+		m_bFinished = true;
+	}
+}
+
+_bool SSendOutBall::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return m_bFinished;
+}
+
+SSendOutBall* SSendOutBall::Create(_uint iSide, _float fFlightDuration)
+{
+	SSendOutBall* pInstance = new SSendOutBall();
+
+	if (FAILED(pInstance->Initialize(iSide, fFlightDuration)))
+	{
+		MSG_BOX("Failed to Created : SSendOutBall");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void SSendOutBall::Free()
+{
+	m_pBall = nullptr;
+	__super::Free();
+}
+#pragma endregion
+
 #pragma region SPokemonEnter
 SPokemonEnter::SPokemonEnter()
 {
@@ -242,6 +408,11 @@ HRESULT SPokemonEnter::Initialize(_uint iSide)
 
 	m_iSide = iSide;
 	m_fGrace = 0.f;
+	for (_uint i = 0; i < g_kBattleSideCount; ++i)
+	{
+		m_pHiddenTrainers[i] = nullptr;
+		m_bPrevTrainerVisible[i] = true;
+	}
 
 	return S_OK;
 }
@@ -273,6 +444,21 @@ _bool SPokemonEnter::Is_Complete(const BATTLE_CONTEXT& ctx) const
 	return m_fGrace >= 2.f;
 }
 
+void SPokemonEnter::Restore_Trainers()
+{
+	for (_uint i = 0; i < g_kBattleSideCount; ++i)
+	{
+		if (nullptr != m_pHiddenTrainers[i])
+		{
+			m_pHiddenTrainers[i]->Play_Focus();
+			m_pHiddenTrainers[i]->Set_BattleVisible(m_bPrevTrainerVisible[i]);
+		}
+
+		m_pHiddenTrainers[i] = nullptr;
+		m_bPrevTrainerVisible[i] = true;
+	}
+}
+
 SPokemonEnter* SPokemonEnter::Create(_uint iSide)
 {
 	SPokemonEnter* pInstance = new SPokemonEnter();
@@ -287,6 +473,291 @@ SPokemonEnter* SPokemonEnter::Create(_uint iSide)
 }
 
 void SPokemonEnter::Free()
+{
+	Restore_Trainers();
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SPokemonSwitchOut
+SPokemonSwitchOut::SPokemonSwitchOut()
+{
+}
+
+HRESULT SPokemonSwitchOut::Initialize(_uint iSide, _float fDuration)
+{
+	if (iSide >= g_kBattleSideCount)
+		return E_FAIL;
+
+	m_iSide = iSide;
+	m_fDuration = (fDuration > 0.f) ? fDuration : 0.f;
+	m_fElapsed = 0.f;
+
+	return S_OK;
+}
+
+void SPokemonSwitchOut::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_fElapsed = 0.f;
+
+	if (nullptr == ctx.pManager)
+		return;
+
+	CBattle_Pokemon* pPokemon =
+		dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(m_iSide));
+	if (nullptr == pPokemon)
+		return;
+
+	if (CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance())
+		pEffectMgr->PlayAt("ball_absorb", pPokemon->Get_EffectPivot());
+
+	pPokemon->Set_BattleVisible(false);
+}
+
+void SPokemonSwitchOut::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	m_fElapsed += fTimeDelta;
+}
+
+_bool SPokemonSwitchOut::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return m_fElapsed >= m_fDuration;
+}
+
+SPokemonSwitchOut* SPokemonSwitchOut::Create(_uint iSide, _float fDuration)
+{
+	SPokemonSwitchOut* pInstance = new SPokemonSwitchOut();
+
+	if (FAILED(pInstance->Initialize(iSide, fDuration)))
+	{
+		MSG_BOX("Failed to Created : SPokemonSwitchOut");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void SPokemonSwitchOut::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SApplySwitch
+SApplySwitch::SApplySwitch()
+{
+}
+
+HRESULT SApplySwitch::Initialize(_uint iSide, _uint iPartyIndex)
+{
+	if (iSide >= g_kBattleSideCount || iPartyIndex >= g_kMaxPartySize)
+		return E_FAIL;
+
+	m_iSide = iSide;
+	m_iPartyIndex = iPartyIndex;
+	m_bApplied = false;
+
+	return S_OK;
+}
+
+void SApplySwitch::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_bApplied = false;
+
+	if (nullptr == ctx.pManager)
+		return;
+
+	m_bApplied = SUCCEEDED(ctx.pManager->Replace_BattlerSlot(m_iSide, m_iPartyIndex));
+}
+
+void SApplySwitch::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	(void)fTimeDelta;
+}
+
+_bool SApplySwitch::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return true;
+}
+
+SApplySwitch* SApplySwitch::Create(_uint iSide, _uint iPartyIndex)
+{
+	SApplySwitch* pInstance = new SApplySwitch();
+
+	if (FAILED(pInstance->Initialize(iSide, iPartyIndex)))
+	{
+		MSG_BOX("Failed to Created : SApplySwitch");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void SApplySwitch::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SSetPlateVisible
+SSetPlateVisible::SSetPlateVisible()
+{
+}
+
+HRESULT SSetPlateVisible::Initialize(_bool bVisible)
+{
+	m_bVisible = bVisible;
+	return S_OK;
+}
+
+void SSetPlateVisible::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	if (nullptr != ctx.pManager)
+		ctx.pManager->Set_PlateVisible(m_bVisible);
+}
+
+void SSetPlateVisible::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	(void)fTimeDelta;
+}
+
+_bool SSetPlateVisible::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return true;
+}
+
+SSetPlateVisible* SSetPlateVisible::Create(_bool bVisible)
+{
+	SSetPlateVisible* pInstance = new SSetPlateVisible();
+
+	if (FAILED(pInstance->Initialize(bVisible)))
+	{
+		MSG_BOX("Failed to Created : SSetPlateVisible");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void SSetPlateVisible::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SHideTrainers
+SHideTrainers::SHideTrainers()
+{
+}
+
+void SHideTrainers::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	if (nullptr == ctx.pManager)
+		return;
+
+	for (_uint i = 0; i < g_kBattleSideCount; ++i)
+	{
+		CBattle_Trainer* pTrainer =
+			dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(i));
+		if (nullptr != pTrainer)
+			pTrainer->Set_BattleVisible(false);
+	}
+}
+
+void SHideTrainers::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	(void)fTimeDelta;
+}
+
+_bool SHideTrainers::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return true;
+}
+
+SHideTrainers* SHideTrainers::Create()
+{
+	return new SHideTrainers();
+}
+
+void SHideTrainers::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SRevealTrainers
+SRevealTrainers::SRevealTrainers()
+{
+}
+
+void SRevealTrainers::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	(void)ctx;
+	m_fElapsed = 0.f;
+	m_bRevealed = false;
+
+	// 포켓몬만 보이는 타이트 샷 → 전역으로 줌아웃. 트레이너 노출은 타이트 구간(화면 밖)에서 일어난다.
+	CCamera_Director::GetInstance()->Play_Sequence(CAMERA_SEQUENCE_ID::INTRO_SETTLE);
+}
+
+void SRevealTrainers::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	m_fElapsed += fTimeDelta;
+
+	// 타이트 컷이 적용된 뒤(화면 밖)에 노출
+	if (false == m_bRevealed && m_fElapsed >= 0.12f)
+	{
+		Reveal(ctx);
+		m_bRevealed = true;
+	}
+}
+
+_bool SRevealTrainers::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+
+	if (false == m_bRevealed)
+		return false;
+
+	// 줌아웃이 끝날 때까지 대기 (안전 타임아웃 2초)
+	CCamera_Director* pDirector = CCamera_Director::GetInstance();
+	if (nullptr != pDirector && pDirector->Is_Sequence_Playing() && m_fElapsed < 2.0f)
+		return false;
+
+	return true;
+}
+
+void SRevealTrainers::Reveal(const BATTLE_CONTEXT& ctx)
+{
+	if (nullptr == ctx.pManager)
+		return;
+
+	for (_uint i = 0; i < g_kBattleSideCount; ++i)
+	{
+		CBattle_Trainer* pTrainer =
+			dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(i));
+		if (nullptr != pTrainer)
+		{
+			pTrainer->Set_BattleVisible(true);
+			pTrainer->Play_Focus();
+		}
+	}
+}
+
+SRevealTrainers* SRevealTrainers::Create()
+{
+	return new SRevealTrainers();
+}
+
+void SRevealTrainers::Free()
 {
 	__super::Free();
 }

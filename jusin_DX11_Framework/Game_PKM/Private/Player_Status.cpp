@@ -30,7 +30,10 @@ HRESULT CPlayer_Status::Initialize(void* pArg)
 	m_strTrainerShaderProtoTag = PROTO_COM_SHADER_PLAYER_LGPE;
 
 	if (0 == m_tParty.iCount)
+	{
 		Acquire_Pokemon(25, 5, 0);
+		Acquire_Pokemon(59, 5, 0);
+	}
 
 	return S_OK;
 }

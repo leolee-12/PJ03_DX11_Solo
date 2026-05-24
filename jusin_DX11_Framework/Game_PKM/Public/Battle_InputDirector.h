@@ -2,10 +2,10 @@
 #include "Battle_EventListenerBase.h"
 
 NS_BEGIN(Game_PKM)
-
 class CBattle_Manager;
 class CBattle_CommandMenu;
 class CBattle_MoveMenu;
+class CEntry;
 
 /* CBattle_InputDirector
    - 플레이어 입력 흐름 통제 (MAIN ↔ MOVE 모드 전환 + 결정 시 Queue.Push)
@@ -21,7 +21,7 @@ class CBattle_MoveMenu;
 class CBattle_InputDirector final : public CBattle_EventListenerBase
 {
 public:
-	enum class MODE { IDLE, MAIN, MOVE, END };
+	enum class MODE { IDLE, MAIN, MOVE, ENTRY, END };
 
 private:
 	CBattle_InputDirector();
@@ -32,7 +32,8 @@ public:
 
 	void Bind(CBattle_Manager* pManager,
 		CBattle_CommandMenu* pCommandMenu,
-		CBattle_MoveMenu* pMoveMenu);
+		CBattle_MoveMenu* pMoveMenu,
+		CEntry* pEntry);
 
 	/* Level_Battle::Update 의 UI_Update_All 뒤에 호출.
    모드 전환 요청을 한 프레임 지연시켜 같은 프레임 키 입력 race 회피. */
@@ -49,14 +50,18 @@ private:
 	void Handle_CommandCancel();
 	void Handle_MoveActivate(_int iIndex);
 	void Handle_MoveCancel();
+	void Handle_EntryActivate(_int iIndex);
+	void Handle_EntryCancel();
 
 	// 모드 전환
 	void Enter_Main();
 	void Enter_Move();
 	void Enter_Idle();
+	void Enter_Entry();
 
 	// 명령 발행
 	HRESULT Submit_Move(_uint iMoveSlot);
+	HRESULT Submit_Switch(_uint iPartyIndex);
 	HRESULT Submit_Run();
 
 	// COMMAND_SELECTED 발행 헬퍼
@@ -66,6 +71,7 @@ private:
 	CBattle_Manager* m_pManager = { nullptr };			// weak
 	CBattle_CommandMenu* m_pCommandMenu = { nullptr };	// weak (UI Hub owns)
 	CBattle_MoveMenu* m_pMoveMenu = { nullptr };		// weak (UI Hub owns)
+	CEntry* m_pEntry = { nullptr };						// weak (UI Hub owns)
 
 	MODE m_eMode = { MODE::IDLE };
 	MODE m_ePendingMode = { MODE::IDLE };

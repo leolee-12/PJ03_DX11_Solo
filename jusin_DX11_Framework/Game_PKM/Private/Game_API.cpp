@@ -113,6 +113,35 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 		CTexture::Create(pDevice, pContext, TEXT("../../Resources/dummy/dummy_white.png"), 1))))
 		return E_FAIL;
 
+	struct LOADING_UI_TEXTURE_DESC
+	{
+		WNameID strTag;
+		const _tchar* pPath;
+		_uint iCount;
+	};
+
+	const LOADING_UI_TEXTURE_DESC LoadingUITextures[] =
+	{
+			{ PROTO_COM_TEX_LOADING_MARK, TEXT("../../Resources/UI/loading/gokigen_mark_p_%02d.png"), 15u },
+			{ PROTO_COM_TEX_LOADING_SETTING_BG_00, TEXT("../../Resources/UI/loading/setting_bg_00^o.png"), 1u },
+			{ PROTO_COM_TEX_LOADING_SETTING_BG_01, TEXT("../../Resources/UI/loading/setting_bg_01^q.png"), 1u },
+			{ PROTO_COM_TEX_LOADING_SETTING_GEAR_00, TEXT("../../Resources/UI/loading/setting_gear_00^t.png"), 1u },
+			{ PROTO_COM_TEX_LOADING_SETTING_GEAR_01, TEXT("../../Resources/UI/loading/setting_gear_01^q.png"), 1u },
+			{ PROTO_COM_TEX_LOADING_SETTING_GEAR_04, TEXT("../../Resources/UI/loading/setting_gear_04^q.png"), 1u },
+			{ PROTO_COM_TEX_LOADING_SETTING_GEAR_02, TEXT("../../Resources/UI/loading/setting_gear_02^q.png"), 1u },
+			{ PROTO_COM_TEX_LOADING_SETTING_GEAR_03, TEXT("../../Resources/UI/loading/setting_gear_03^q.png"), 1u },
+			{ PROTO_COM_TEX_MSGBOX_BG, TEXT("../../Resources/UI/msgBox/msgBox_BG_%02d.png"), 2u },
+	};
+
+	for (const auto& Desc : LoadingUITextures)
+	{
+		if (FAILED(m_pGameInstance->Add_Prototype(
+			ETOUI(LEVEL::STATIC),
+			Desc.strTag,
+			CTexture::Create(pDevice, pContext, Desc.pPath, Desc.iCount))))
+			return E_FAIL;
+	}
+
 	/* Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_VIBUFFER_RECT,
 		CVIBuffer_Rect::Create(pDevice, pContext))))
@@ -126,6 +155,11 @@ HRESULT Ready_Prototypes_For_Static(ID3D11Device* pDevice, ID3D11DeviceContext* 
 	/* Prototype_Component_Shader_UI */
 	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UI,
 		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UI.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_UIImage */
+	if (FAILED(m_pGameInstance->Add_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_SHADER_UIIMAGE,
+		CShader::Create(pDevice, pContext, TEXT("../../ShaderFiles/Shader_UIImage.hlsl"), VTXTEX::Elements, VTXTEX::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_UI_Button_Glow */

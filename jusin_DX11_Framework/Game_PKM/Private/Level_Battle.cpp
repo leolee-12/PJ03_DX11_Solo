@@ -12,6 +12,7 @@
 #include "Battle_CommandMenu.h"
 #include "Battle_MoveMenu.h"
 #include "Battle_InputDirector.h"
+#include "Entry.h"
 #include "Battle_PokemonListener.h"
 #include "Battle_ExpGainListener.h"
 #include "Battle_PlateListener.h"
@@ -82,6 +83,8 @@ namespace
 		case CAMERA_SEQUENCE_ID::AREA_WIDE: return TEXT("AREA_WIDE");
 		case CAMERA_SEQUENCE_ID::HIT_ONLY: return TEXT("HIT_ONLY");
 		case CAMERA_SEQUENCE_ID::BUFF_SELF: return TEXT("BUFF_SELF");
+		case CAMERA_SEQUENCE_ID::SENDOUT_PLAYER: return TEXT("SENDOUT_PLAYER");
+		case CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT: return TEXT("SENDOUT_OPPONENT");
 		default: return TEXT("NONE");
 		}
 	}
@@ -128,6 +131,11 @@ HRESULT CLevel_Battle::Initialize()
 
 void CLevel_Battle::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Down(DIK_F2))
+	{
+		m_pGameInstance->Toggle_CameraFollow();
+	}
+
 	if (m_pGameInstance->Key_Down(DIK_F3))
 		m_pGameInstance->Toggle_Debug();
 
@@ -341,7 +349,7 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 		return E_FAIL;
 
 	CCamera_Free* pCamera = static_cast<CCamera_Free*>(pCloned);
-
+	pCamera->Set_ControlEnabled(true);
 	if (FAILED(m_pGameInstance->Add_GameObject_Ex(
 		ETOUI(LEVEL::BATTLE), strLayerTag, pCamera)))
 	{
@@ -536,7 +544,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 		}
 
 		pBattlePlate->Bind(m_pBattleManager);
-
+		m_pBattleManager->Set_BattlePlate(pBattlePlate);
 		if (FAILED(UI_Register(pBattlePlate, ETOUI(LEVEL::BATTLE))))
 		{
 			Safe_Release(pBattlePlate);
@@ -618,6 +626,47 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 
 		m_pMoveMenu = pMoveMenu;        // weak - UI Hub owns
 		Safe_Release(pMoveMenu);
+	}
+
+	tDesc.strPath = "../../DataFiles/UI/UI_Entry.uiseq";
+	tDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+	pSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+		PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tDesc));
+	if (nullptr == pSeq)
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pSeq)))
+	{
+		Safe_Release(pSeq);
+		return E_FAIL;
+	}
+
+	pSeq->Set_Visible(false);
+	m_pEntrySeq = pSeq;
+
+	{
+		CEntry* pEntry = CEntry::Create();
+		if (nullptr == pEntry)
+			return E_FAIL;
+
+		if (FAILED(pEntry->Initialize(pSeq)))
+		{
+			Safe_Release(pEntry);
+			return E_FAIL;
+		}
+
+		pEntry->Bind(m_pBattleManager->Get_PlayerState());
+		pEntry->Set_Mode(CEntry::ENTRY_MODE::SELECT);
+
+		if (FAILED(UI_Register(pEntry, ETOUI(LEVEL::BATTLE))))
+		{
+			Safe_Release(pEntry);
+			return E_FAIL;
+		}
+
+		m_pEntry = pEntry;       // weak - UI Hub owns
+		Safe_Release(pEntry);
 	}
 
 	tDesc.strPath = "../../DataFiles/UI/UI_BattleMsg.uiseq";
@@ -712,7 +761,7 @@ HRESULT CLevel_Battle::Ready_Layer_UI(WNameID strLayerTag)
 	if (nullptr == m_pInputDirector)
 		return E_FAIL;
 
-	m_pInputDirector->Bind(m_pBattleManager, m_pCommandMenu, m_pMoveMenu);
+	m_pInputDirector->Bind(m_pBattleManager, m_pCommandMenu, m_pMoveMenu, m_pEntry);
 
 	if (FAILED(pDispatcher->Subscribe(m_pInputDirector)))
 		return E_FAIL;
@@ -808,11 +857,14 @@ void CLevel_Battle::Free()
 
 	UI_Set_Cursor_Sequence(nullptr);
 	UI_Cleanup_Level(ETOUI(LEVEL::BATTLE));
+
 	m_pCursorSeq = nullptr;
+	m_pEntrySeq = nullptr;
 	m_pBattleMsg = nullptr;
 	m_pBattlePlate = nullptr;
 	m_pCommandMenu = nullptr;
 	m_pMoveMenu = nullptr;
+	m_pEntry = nullptr;
 
 	Safe_Release(m_pBattleManager);
 
