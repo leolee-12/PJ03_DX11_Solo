@@ -64,8 +64,8 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 		tData.iRewardMoney = 120;
 		tData.iRewardItemID = 0;
 		wcscpy_s(tData.szEncounterDialog, TEXT("포켓몬 트레이너끼리\n눈과 눈이 마주쳤다!\f내가 좋아하는 포켓몬과 승부하자!"));
-		wcscpy_s(tData.szVictoryDialog, TEXT("강하다 너!"));
-		wcscpy_s(tData.szDefeatDialog, TEXT("내 포켓몬 어때?\n강하지!"));
+		wcscpy_s(tData.szVictoryDialog, TEXT("내 포켓몬 어때?\n강하지!"));
+		wcscpy_s(tData.szDefeatDialog, TEXT("강하다 너!"));
 
 		tData.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		tData.strModelProtoTag = PROTO_COM_MODEL_PPL_SHORTPANTS;
@@ -105,7 +105,7 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 		PartyOps::Clear(tData.tParty);
 		if (FAILED(AddPokemon(tData, 74, 3)))   // 꼬마돌
 			return E_FAIL;
-		if (FAILED(AddPokemon(tData, 95, 4)))   // 롱스톤
+		if (FAILED(AddPokemon(tData, 95, 11)))   // 롱스톤
 			return E_FAIL;
 
 		if (!m_TrainerTable.emplace(tData.iTrainerID, tData).second)

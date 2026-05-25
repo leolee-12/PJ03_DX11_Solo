@@ -58,6 +58,8 @@ namespace
 		if ("WAITDIALOGUE" == strKey)       return EVENT_ACTION_KIND::WAIT_DIALOGUE;
 		if ("MESSAGEKEY" == strKey)         return EVENT_ACTION_KIND::MESSAGE_KEY;
 		if ("MESSAGETEXT" == strKey)        return EVENT_ACTION_KIND::MESSAGE_TEXT;
+		if ("PLAYUISEQUENCE" == strKey)     return EVENT_ACTION_KIND::PLAY_UI_SEQUENCE;
+		if ("PLAYSFX" == strKey)            return EVENT_ACTION_KIND::PLAY_SFX;
 		if ("CAMERAPUSH" == strKey)         return EVENT_ACTION_KIND::CAMERA_PUSH;
 		if ("CAMERAPOP" == strKey)          return EVENT_ACTION_KIND::CAMERA_POP;
 		if ("CAMERASETPOSE" == strKey)      return EVENT_ACTION_KIND::CAMERA_SET_POSE;
@@ -74,6 +76,7 @@ namespace
 		if ("DESPAWNACTOR" == strKey)       return EVENT_ACTION_KIND::DESPAWN_ACTOR;
 		if ("BINDACTORBYSPAWNID" == strKey) return EVENT_ACTION_KIND::BIND_ACTOR_BY_SPAWN_ID;
 		if ("REQUESTBATTLE" == strKey)      return EVENT_ACTION_KIND::REQUEST_BATTLE;
+		if ("HEALPARTY" == strKey)          return EVENT_ACTION_KIND::HEAL_PARTY;
 		if ("DEBUGLOG" == strKey)           return EVENT_ACTION_KIND::DEBUG_LOG;
 
 		return EVENT_ACTION_KIND::NONE;

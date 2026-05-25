@@ -43,6 +43,8 @@ void CLevel_Logo::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_RETURN))
 	{
+		m_pGameInstance->Play(L"SFX/025 - Pikachu (60).wav", CHANNELID::SFX, 0.7f);
+
 		LEVEL_ENTRY_DESC tEntry{};
 		tEntry.eNextLevelID = LEVEL::GAMEPLAY;
 		tEntry.bAutoAdvance = false;   // 풀 시퀀스 검증 시 자동 전이. 수동 SPACE 동작이 필요하면 false.

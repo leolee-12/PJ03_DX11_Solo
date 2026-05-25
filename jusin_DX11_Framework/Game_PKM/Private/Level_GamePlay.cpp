@@ -32,6 +32,7 @@
 
 NS_BEGIN(Game_PKM)
 static constexpr _uint CURRENT_LEVEL = ETOUI(LEVEL::GAMEPLAY);
+static constexpr _uint ROCK_TRAINER_ID = 2;
 
 namespace
 {
@@ -47,6 +48,15 @@ namespace
 			return nullptr;
 
 		return static_cast<CPlayer_Status*>(pObjects->front());
+	}
+
+	static _bool Is_PlayerPartyAlive(CGameInstance* pGameInstance)
+	{
+		CPlayer_Status* pPlayerState = Find_PlayerState(pGameInstance);
+		if (nullptr == pPlayerState)
+			return false;
+
+		return PartyOps::Find_First_Alive(pPlayerState->Get_Party()) < g_kMaxPartySize;
 	}
 }
 NS_END
@@ -83,7 +93,6 @@ namespace
 				{ L"dialogue_pokemon_pm0074_00", L"꼬마돌이 단단한 몸을 굴릴 준비를 한다." },
 				{ L"dialogue_pokemon_pm0095_00", L"롱스톤이 거대한 몸을 낮게 웅크리고 있다." },
 				{ L"dialogue_pokemon_pm0121_00", L"아쿠스타의 보석이 은은하게 빛난다." },
-				{ L"dialogue_pokemon_pm0130_00", L"갸라도스가 위압적으로 포효한다." },
 		};
 
 		for (const DIALOGUE_TEXT& DialogueText : DialogueTexts)
@@ -168,6 +177,20 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Cloud()))
 		return E_FAIL;
 
+	/* Startup cutscene toggle.
+   OFF: 아래 블록 전체를 주석 처리.
+   ON : 아래 블록 주석 해제 상태 유지. */
+	{
+		EVENT_CONTEXT tContext{};
+		tContext.pGameInstance = m_pGameInstance;
+		tContext.pLevelGamePlay = this;
+	
+		if (FAILED(m_pEventMgr->Start_Sequence(L"CutScene_PalletTown", tContext)))
+			return E_FAIL;
+	
+		Prime_CutsceneFadeInBlack();
+	}
+
 	return S_OK;
 }
 
@@ -176,6 +199,8 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Debug_TickFPS(fTimeDelta);
 #endif
+
+	Tick_Outro(fTimeDelta);
 
 	if (Tick_Dialogue(fTimeDelta))
 		return;
@@ -206,7 +231,9 @@ HRESULT CLevel_GamePlay::Render()
 void CLevel_GamePlay::OnPause()
 {
 	/* BATTLE Push 직후 호출. 현재 단계에서는 BGM 변경을 DIK_P 진입 분기에서 처리하므로
-	   여기서는 별도 작업 없음. 후속에서 입력 동결·카메라 일시정지 등을 추가할 자리. */
+	   여기서는 Gameplay 전용 구름 데칼만 렌더러 전역 상태에서 분리한다. */
+	m_pGameInstance->Set_DecalTexture(nullptr, 0);
+	m_pGameInstance->Set_DecalParam(DECAL_PARAM{});
 }
 
 void CLevel_GamePlay::OnResume()
@@ -218,6 +245,12 @@ void CLevel_GamePlay::OnResume()
 	/* GAMEPLAY BGM 복원. 배틀/캡처 진입 전 지역 BGM 으로 되돌린다. */
 	if (nullptr != m_pRegionMgr)
 		m_pRegionMgr->Play_Current_BGM();
+
+	if (nullptr != m_pCloudTexture)
+	{
+		m_pGameInstance->Set_DecalParam(m_CloudParam);
+		m_pGameInstance->Set_DecalTexture(m_pCloudTexture, 0);
+	}
 
 	/* Capture/Battle 종료 시 UI_Set_Cursor_Sequence(nullptr) 로 Hub 커서가 해제됨 → GamePlay 커서 재주입. */
 	if (nullptr != m_pCursorSeq)
@@ -236,6 +269,22 @@ void CLevel_GamePlay::OnResume()
 				break;
 			}
 		}
+	}
+
+	const _bool bRunRockReturnEvent = m_bPendingRockBattleReturnEvent;
+	m_bPendingRockBattleReturnEvent = false;
+
+	if (true == bRunRockReturnEvent &&
+		true == Is_PlayerPartyAlive(m_pGameInstance) &&
+		nullptr != m_pEventMgr &&
+		false == m_pEventMgr->Is_Playing())
+	{
+		EVENT_CONTEXT tContext{};
+		tContext.pGameInstance = m_pGameInstance;
+		tContext.pLevelGamePlay = this;
+
+		if (SUCCEEDED(m_pEventMgr->Start_Sequence(L"Rock_PostBattleVictory", tContext)))
+			Prime_CutsceneFadeInBlack();
 	}
 }
 
@@ -263,6 +312,11 @@ _bool CLevel_GamePlay::Request_Battle(const BATTLE_ENV& tEnv)
 	if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::BATTLE_ENV, &tEnv,
 		sizeof(BATTLE_ENV))))
 		return false;
+
+	m_bPendingRockBattleReturnEvent =
+		(BATTLE_RULE::TRAINER_SINGLE == tEnv.eRule ||
+		 BATTLE_RULE::TRAINER_DOUBLE == tEnv.eRule) &&
+		ROCK_TRAINER_ID == tEnv.iOpponentTrainerID;
 
 	m_pGameInstance->Play_BGM(L"BGM/1-24. Battle! (Gym Leader).mp3", 0.3f);
 
@@ -293,6 +347,8 @@ void CLevel_GamePlay::Request_Capture(const CAPTURE_ENV& tEnv, CGameObject* pTar
 	if (FAILED(m_PendingEntryDesc.Set_Payload(LEVEL_ENTRY_PAYLOAD::CAPTURE_ENV, &tEnv,
 		sizeof(CAPTURE_ENV))))
 		return;
+
+	m_bPendingRockBattleReturnEvent = false;
 
 	/* 트랜지션이 실제 시작될 때만 삭제 대상 보관 - 가드 통과 후로 두어
 	   UI 열린 상태 등에서 무시된 호출은 WildPokemon 도 그대로 두는 정합성 확보. */
@@ -366,6 +422,89 @@ _bool CLevel_GamePlay::Is_Event_Playing() const
 	return nullptr != m_pEventMgr && true == m_pEventMgr->Is_Playing();
 }
 
+void CLevel_GamePlay::Lock_DialogueInput(_float fSeconds)
+{
+	if (fSeconds <= 0.f)
+		return;
+
+	if (m_fDialogueInputLockRemain < fSeconds)
+		m_fDialogueInputLockRemain = fSeconds;
+}
+
+_bool CLevel_GamePlay::Play_CutsceneFade(_bool bFadeOut)
+{
+	CUISequence* pShow = bFadeOut ? m_pFadeCutSceneOutSeq : m_pFadeCutSceneSeq;
+	CUISequence* pHide = bFadeOut ? m_pFadeCutSceneSeq : m_pFadeCutSceneOutSeq;
+
+	if (nullptr == pShow)
+		return false;
+
+	/* 반대편 오버레이를 먼저 끈다. 검정→검정 전환 순간이라 숨겨도 보이지 않는다.
+	   이게 없으면 검정을 유지 중인 FadeOut 오버레이가 FadeIn 위를 그대로 덮어 화면이 밝아지지 않는다. */
+	if (nullptr != pHide)
+	{
+		pHide->Stop();
+		pHide->Set_Visible(false);
+	}
+
+	pShow->Set_Visible(true);
+	pShow->Play();   // m_iCursor=0 으로 리셋되어 매번 처음부터 재생
+
+	return true;
+}
+
+_bool CLevel_GamePlay::Is_CutsceneFade_Playing(_bool bFadeOut) const
+{
+	const CUISequence* pSeq = bFadeOut ? m_pFadeCutSceneOutSeq : m_pFadeCutSceneSeq;
+
+	return nullptr != pSeq && true == pSeq->Is_Playing();
+}
+
+void CLevel_GamePlay::Prime_CutsceneFadeInBlack()
+{
+	if (nullptr != m_pFadeCutSceneOutSeq)
+	{
+		m_pFadeCutSceneOutSeq->Stop();
+		m_pFadeCutSceneOutSeq->Set_Visible(false);
+	}
+
+	if (nullptr == m_pFadeCutSceneSeq)
+		return;
+
+	m_pFadeCutSceneSeq->Stop();
+	m_pFadeCutSceneSeq->Set_Visible(true);
+
+	CUIObject* pFadeWidget = m_pFadeCutSceneSeq->Find_Widget("widget_001");
+	if (nullptr == pFadeWidget)
+		return;
+
+	pFadeWidget->Set_Visible(true);
+	pFadeWidget->Apply_Tween_Target(UI_TWEEN_TARGET::COLOR_A, 1.f);
+}
+
+void CLevel_GamePlay::Tick_Outro(_float fTimeDelta)
+{
+	if (false == m_bOutroFading)
+	{
+		if (m_pGameInstance->Key_Down(DIK_END))
+		{
+			Play_CutsceneFade(true);   // 검정으로 페이드아웃 후 유지
+			m_bOutroFading = true;
+			m_fOutroElapsed = 0.f;
+		}
+		return;
+	}
+
+	m_fOutroElapsed += fTimeDelta;
+
+	_float t = m_fOutroElapsed / OUTRO_FADE_DURATION;
+	if (t > 1.f)
+		t = 1.f;
+
+	// BGM 그룹 볼륨 1→0 램프다운. 그룹 볼륨이라 채널별 볼륨과 무관하게 BGM 전체가 비례 페이드.
+	m_pGameInstance->Set_GroupVolume(CHANNELID::BGM, 1.f - t);
+}
+
 void CLevel_GamePlay::Close_Dialogue()
 {
 	if (nullptr != m_pDialogueMsg)
@@ -375,6 +514,7 @@ void CLevel_GamePlay::Close_Dialogue()
 	m_strActiveDialogueKey.clear();
 	m_DialoguePages.clear();
 	m_iDialoguePageIndex = 0;
+	m_fDialogueInputLockRemain = 0.f;
 
 	if (nullptr != m_pEventMgr && true == m_pEventMgr->Is_Playing())
 		m_pGameInstance->Set_InputState(INPUT_STATE::LOCKED);
@@ -577,6 +717,45 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(WNameID strLayerTag)
 
 		pFadeSeq->Set_Visible(false);   // 트리거 전까지 숨김
 		m_pFadeBattleSeq = pFadeSeq;    // weak (Add_GameObject_Ex 가 owner)
+	}
+
+	/* CutScene Fade (이벤트 PlayUISequence 용) */
+	{
+		CUISequence::UISEQUENCE_DESC tFadeInDesc{};
+		tFadeInDesc.strPath = "../../DataFiles/UI/UI_Fade.uiseq";
+		tFadeInDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pFadeInSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tFadeInDesc));
+		if (nullptr == pFadeInSeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pFadeInSeq)))
+		{
+			Safe_Release(pFadeInSeq);
+			return E_FAIL;
+		}
+
+		pFadeInSeq->Set_Visible(false);
+		m_pFadeCutSceneSeq = pFadeInSeq;   // weak (Add_GameObject_Ex 가 owner)
+
+		CUISequence::UISEQUENCE_DESC tFadeOutDesc{};
+		tFadeOutDesc.strPath = "../../DataFiles/UI/UI_FadeOut.uiseq";
+		tFadeOutDesc.iProtoLevel = ETOUI(LEVEL::STATIC);
+
+		CUISequence* pFadeOutSeq = static_cast<CUISequence*>(m_pGameInstance->Clone_Prototype(
+			PROTOTYPE::GAMEOBJECT, ETOUI(LEVEL::STATIC), PROTO_UI_SEQUENCE, &tFadeOutDesc));
+		if (nullptr == pFadeOutSeq)
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pFadeOutSeq)))
+		{
+			Safe_Release(pFadeOutSeq);
+			return E_FAIL;
+		}
+
+		pFadeOutSeq->Set_Visible(false);
+		m_pFadeCutSceneOutSeq = pFadeOutSeq;   // weak
 	}
 
 	/* Region Banner */
@@ -913,9 +1092,19 @@ _bool CLevel_GamePlay::Tick_Dialogue(_float fTimeDelta)
 
 	UI_Update_All(fTimeDelta);
 
+	if (m_fDialogueInputLockRemain > 0.f)
+	{
+		m_fDialogueInputLockRemain -= fTimeDelta;
+		if (m_fDialogueInputLockRemain < 0.f)
+			m_fDialogueInputLockRemain = 0.f;
+		return true;
+	}
+
 	if (m_pGameInstance->Key_Down(DIK_RETURN) ||
 		m_pGameInstance->Key_Down(DIK_SPACE))
 	{
+		m_pGameInstance->Play(L"SFX/MsgBox_Enter.wav", CHANNELID::UI, 0.7f);
+
 		if (nullptr == m_pDialogueMsg)
 		{
 			Close_Dialogue();
@@ -976,6 +1165,7 @@ _bool CLevel_GamePlay::Tick_Transition(_float fTimeDelta)
 		if (nullptr == pCapture)
 		{
 			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+			m_bPendingRockBattleReturnEvent = false;
 			Reset_Transition();
 			return true;
 		}
@@ -990,6 +1180,7 @@ _bool CLevel_GamePlay::Tick_Transition(_float fTimeDelta)
 		{
 			Safe_Release(pCapture);
 			m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+			m_bPendingRockBattleReturnEvent = false;
 			Reset_Transition();
 			return true;
 		}
@@ -1003,6 +1194,7 @@ _bool CLevel_GamePlay::Tick_Transition(_float fTimeDelta)
 	if (nullptr == pBattle)
 	{
 		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+		m_bPendingRockBattleReturnEvent = false;
 		Reset_Transition();
 		return true;
 	}
@@ -1011,6 +1203,7 @@ _bool CLevel_GamePlay::Tick_Transition(_float fTimeDelta)
 	{
 		Safe_Release(pBattle);
 		m_pGameInstance->Set_InputState(INPUT_STATE::GAMEPLAY);
+		m_bPendingRockBattleReturnEvent = false;
 		Reset_Transition();
 		return true;
 	}
@@ -1036,9 +1229,15 @@ void CLevel_GamePlay::Tick_Gameplay(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_TAB) && nullptr != m_pMenu)
 	{
 		if (m_pMenu->Is_Open())
+		{
+			m_pGameInstance->Play(L"SFX/menu_close.wav", CHANNELID::UI, 0.7f);
 			m_pMenu->Close();
+		}
 		else if (!UI_Is_AnyOpen())
+		{
+			m_pGameInstance->Play(L"SFX/menu_open.wav", CHANNELID::UI, 0.7f);
 			m_pMenu->Open();
+		}
 	}
 
 #ifdef _DEBUG
@@ -1247,6 +1446,8 @@ void CLevel_GamePlay::Free()
 
 	m_pCursorSeq = nullptr;
 	m_pFadeBattleSeq = nullptr;
+	m_pFadeCutSceneSeq = nullptr;
+	m_pFadeCutSceneOutSeq = nullptr;
 	m_pMenu = nullptr;
 	m_pEntry = nullptr;
 	m_pEntrySeq = nullptr;

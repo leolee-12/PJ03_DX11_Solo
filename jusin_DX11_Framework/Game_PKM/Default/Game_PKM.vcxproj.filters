@@ -16,18 +16,6 @@
     <Filter Include="00. Levels\02. GamePlay">
       <UniqueIdentifier>{86f8bf21-e9a4-41c4-9202-a4ca4450888d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80. Study">
-      <UniqueIdentifier>{2167fda7-f196-44e9-b60b-39aea4afdf71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80. Study\01. Terrain">
-      <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80. Study\00. Player">
-      <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80. Study\03. Particles">
-      <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Levels\03. Battle">
       <UniqueIdentifier>{a1b486c3-6811-4b22-be00-ff1df523ef66}</UniqueIdentifier>
     </Filter>
@@ -208,9 +196,6 @@
     <Filter Include="98. ShaderFiles\04. Effect">
       <UniqueIdentifier>{cc50901e-7524-4cae-9772-5603c55f38f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Objects\03. Misc\MonsterBall">
-      <UniqueIdentifier>{9c363091-5ab4-4c1d-913f-463839c049f6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Objects\03. Misc\CaptureRing">
       <UniqueIdentifier>{e8b88cd0-8803-4981-8886-e69e89946b1c}</UniqueIdentifier>
     </Filter>
@@ -240,6 +225,21 @@
     </Filter>
     <Filter Include="04. Contents\06. Region">
       <UniqueIdentifier>{604ebcc2-b48c-4f46-8239-7a55b0e13910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Contents\00. GameActor\03. Capture\MonsterBall">
+      <UniqueIdentifier>{9c363091-5ab4-4c1d-913f-463839c049f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study">
+      <UniqueIdentifier>{2167fda7-f196-44e9-b60b-39aea4afdf71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study\01. Terrain">
+      <UniqueIdentifier>{8610b10c-0c5b-4a79-b56f-f772a3914509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study\00. Player">
+      <UniqueIdentifier>{d2f9b2d2-ad30-4e2c-834e-dcdbb8518f13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80. Study\03. Particles">
+      <UniqueIdentifier>{6f7f4dc0-f05c-4f5f-8df8-1e7ecd19c382}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -613,7 +613,7 @@
       <Filter>03. Components\00. VIBuffer\XZPlane</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MonsterBall.h">
-      <Filter>01. Objects\03. Misc\MonsterBall</Filter>
+      <Filter>04. Contents\00. GameActor\03. Capture\MonsterBall</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CaptureRing.h">
       <Filter>01. Objects\03. Misc\CaptureRing</Filter>
@@ -948,7 +948,7 @@
       <Filter>03. Components\00. VIBuffer\XZPlane</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonsterBall.cpp">
-      <Filter>01. Objects\03. Misc\MonsterBall</Filter>
+      <Filter>04. Contents\00. GameActor\03. Capture\MonsterBall</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CaptureRing.cpp">
       <Filter>01. Objects\03. Misc\CaptureRing</Filter>

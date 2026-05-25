@@ -163,6 +163,7 @@ public:
 	HRESULT Play_BGM(const _tchar* pSoundKey, _float fVolume = 1.f);
 	HRESULT Play_3D(const _tchar* pSoundKey, const _float3& vPosition, CHANNELID eChannelID = CHANNELID::SFX,
 		_float fVolume = 1.f, _float fMinDistance = 1.f, _float fMaxDistance = 100.f, _bool bLoop = false);
+	_float Get_SoundLengthSeconds(const _tchar* pSoundKey) const;
 
 	void Stop_Sound(CHANNELID eChannelID);
 	void Stop_Group(CHANNELID eChannelID);

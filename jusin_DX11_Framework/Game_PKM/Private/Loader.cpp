@@ -468,10 +468,6 @@ HRESULT CLoader::Ready_Resources_For_GamePlay()
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0121_00/pm0121_00.wmodel"); },
 		TEXT("Prototype_Component_Model_PM0121_00"));
 
-	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_PM0130_00,
-		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/pkm/PM0130_00/pm0130_00.wmodel"); },
-		TEXT("Prototype_Component_Model_PM0130_00"));
-
 	Enqueue_Prototype(ETOUI(LEVEL::STATIC), PROTO_COM_MODEL_HERO,
 		[this] { return CModel::Create(m_pDevice, m_pContext, "../../Resources/Models/people/hero/tr0001_00.wmodel"); },
 		TEXT("Prototype_Component_Model_Hero"));

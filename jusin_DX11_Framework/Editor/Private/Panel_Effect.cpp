@@ -585,6 +585,12 @@ void CPanel_Effect::Render_EmitterInspector()
 	if (ImGui::DragFloat("Cone Half Angle", &pEmitter->fEmitConeHalfAngle, 0.01f, 0.f, XM_PI, "%.3f"))
 		m_pSession->Mark_Dirty("Emitter cone changed");
 
+	if (ImGui::DragFloat3("Start Offset", &pEmitter->vStartOffset.x, 0.05f, -50.f, 50.f, "%.2f"))
+		m_pSession->Mark_Dirty("Emitter start offset changed");
+
+	if (ImGui::DragFloat3("Gravity", &pEmitter->vGravity.x, 0.1f, -100.f, 100.f, "%.2f"))
+		m_pSession->Mark_Dirty("Emitter gravity changed");
+
 	{
 			const char* pBillboardLabels[] = { "VIEW_ALIGNED", "AXIS_LOCKED", "FIXED_NORMAL", "VELOCITY_ALIGNED" };
 			_int iBillboard = static_cast<_int>(pEmitter->eBillboard);
@@ -654,7 +660,7 @@ void CPanel_Effect::Render_EmitterInspector()
 	if (ImGui::CollapsingHeader("Curves", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Draw_FloatCurveRow(pEmitter->curveSize, m_pSession, "Size Curve", "Size Pop", Set_SizePopCurve,
-			"Clear Size", "Size Keys", 0.f, 2.f, "Size curve preset changed", "Size curve cleared", "Size curve key changed");
+			"Clear Size", "Size Keys", 0.f, 100.f, "Size curve preset changed", "Size curve cleared", "Size curve key changed");
 		Draw_ColorCurveRow(pEmitter->curveColor, m_pSession, "Color Curve", "Fire Color",
 			"Clear Color", "Color Keys", "Color curve preset changed", "Color curve cleared", "Color curve key changed");
 		Draw_FloatCurveRow(pEmitter->curveAlpha, m_pSession, "Alpha Curve", "Fade Alpha", Set_FadeAlphaCurve,
@@ -785,7 +791,7 @@ void CPanel_Effect::Render_MeshInspector()
 		if (ImGui::CollapsingHeader("Curves##Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			Draw_FloatCurveRow(pMesh->curveScale, m_pSession, "Scale Curve", "Size Pop##MeshScale", Set_SizePopCurve, "Clear Scale",
-				"Scale Keys##Mesh", 0.f, 5.f, "Mesh scale curve preset changed", "Mesh scale curve cleared", "Mesh scale curve key changed", 0.001f, "%.3f");
+				"Scale Keys##Mesh", 0.f, 100.f, "Mesh scale curve preset changed", "Mesh scale curve cleared", "Mesh scale curve key changed", 0.001f, "%.3f");
 			Draw_ColorCurveRow(pMesh->curveColor, m_pSession, "Color Curve##Mesh", "Fire Color##Mesh", "Clear Color##Mesh",
 				"Color Keys##Mesh", "Mesh color curve preset changed", "Mesh color curve cleared", "Mesh color curve key changed");
 			Draw_FloatCurveRow(pMesh->curveAlpha, m_pSession, "Alpha Curve##Mesh", "Fade Alpha##Mesh", Set_FadeAlphaCurve, "Clear Alpha##Mesh",

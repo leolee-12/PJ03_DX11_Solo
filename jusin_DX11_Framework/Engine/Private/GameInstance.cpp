@@ -650,6 +650,11 @@ HRESULT CGameInstance::Play_3D(const _tchar* pSoundKey, const _float3& vPosition
 	return m_pSound_Manager->Play_3D(pSoundKey, vPosition, eChannelID, fVolume, fMinDistance, fMaxDistance, bLoop);
 }
 
+_float CGameInstance::Get_SoundLengthSeconds(const _tchar* pSoundKey) const
+{
+	return m_pSound_Manager->Get_SoundLengthSeconds(pSoundKey);
+}
+
 void CGameInstance::Stop_Sound(CHANNELID eChannelID)
 {
 	m_pSound_Manager->Stop_Sound(eChannelID);

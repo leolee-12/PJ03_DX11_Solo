@@ -62,7 +62,7 @@ HRESULT CPlayer_LGPE::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CellPos());
-
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
 	return S_OK;
 }
 
@@ -77,26 +77,6 @@ void CPlayer_LGPE::Priority_Update(_float fTimeDelta)
 
 void CPlayer_LGPE::Update(_float fTimeDelta)
 {
-	static _bool s_bTrailTestOn = false;   // 테스트용 1회 토글
-	if (!s_bTrailTestOn && m_pGameInstance->Key_Down(DIK_T))   // 키 API는 프로젝트 것으로
-	{
-		if (auto* pBody = dynamic_cast<CBody_Hero*>(m_PartObjects[PART_BODY]))
-		{
-			CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
-			tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::BONE;
-			tAttach.pOwner = pBody;                     // CBody 파생
-			tAttach.strBoneName = "RHand";       // ★ 실제 본 이름으로 교체 (예: 손/머리 본)
-			XMStoreFloat4x4(&tAttach.mLocalOffset, XMMatrixIdentity());
-
-			CEffect_Manager::GetInstance()->PlayAttached(
-				"BALL_TRAIL", tAttach,
-				static_cast<_uint>(m_pGameInstance->Get_CurrentLevel()),
-				LAYER_EFFECT);
-			s_bTrailTestOn = true;
-		}
-	}
-
-
 	// 1) 파츠 애니메이션 진행 : 이전 프레임에 애님 결정 -> RootMotionDelta 생성
 	m_PartObjects.for_each([&fTimeDelta](auto& Pair)
 		{
@@ -331,6 +311,10 @@ void CPlayer_LGPE::Try_Talk()
 	OutputDebugStringW(bResult
 		? L"[Player] TryInteract = true\n"
 		: L"[Player] TryInteract = false\n");
+
+	/* F 로 상호작용이 수락됐을 때, 메시지 진행(Enter/Space)과 동일한 확인음을 재생. */
+	if (true == bResult)
+		m_pGameInstance->Play(L"SFX/MsgBox_Enter.wav", CHANNELID::UI, 0.7f);
 }
 
 void CPlayer_LGPE::Update_TouchTriggers()

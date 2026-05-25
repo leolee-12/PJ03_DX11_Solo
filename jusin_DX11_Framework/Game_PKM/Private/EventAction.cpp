@@ -4,6 +4,8 @@
 #include "Spawn_Manager.h"
 #include "Actor_NPC.h"
 #include "Battle_AnimDef.h"
+#include "Player_Status.h"
+#include "PokemonData_Manager.h"
 
 #include "GameInstance.h"
 
@@ -207,6 +209,47 @@ namespace
 		_wstring strOut;
 		strOut.resize(static_cast<size_t>(iLength - 1));
 		MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, strOut.data(), iLength);
+
+		return strOut;
+	}
+
+	_string Decode_TextEscapes_(const _string& str)
+	{
+		_string strOut;
+		strOut.reserve(str.size());
+
+		for (size_t i = 0; i < str.size(); ++i)
+		{
+			if ('\\' != str[i] || i + 1 >= str.size())
+			{
+				strOut.push_back(str[i]);
+				continue;
+			}
+
+			const char chNext = str[++i];
+			switch (chNext)
+			{
+			case 'n':
+				strOut.push_back('\n');
+				break;
+			case 'r':
+				strOut.push_back('\r');
+				break;
+			case 't':
+				strOut.push_back('\t');
+				break;
+			case 'f':
+				strOut.push_back('\f');
+				break;
+			case '\\':
+				strOut.push_back('\\');
+				break;
+			default:
+				strOut.push_back('\\');
+				strOut.push_back(chNext);
+				break;
+			}
+		}
 
 		return strOut;
 	}
@@ -486,7 +529,7 @@ namespace
 
 		virtual HRESULT Initialize(const EVENT_STEP_DESC& tDesc) override
 		{
-			m_strText = To_Wide_(Read_String_(tDesc.Params, "Text", ""));
+			m_strText = To_Wide_(Decode_TextEscapes_(Read_String_(tDesc.Params, "Text", "")));
 			m_bWait = Read_Bool_(tDesc.Params, "Wait", true);
 
 			return true == m_strText.empty() ? E_FAIL : S_OK;
@@ -519,6 +562,124 @@ namespace
 	private:
 		_wstring m_strText;
 		_bool m_bWait = { true };
+	};
+
+	class CEventAction_PlayUISequence final : public CEventAction
+	{
+	public:
+		virtual EVENT_ACTION_KIND Get_Kind() const override { return EVENT_ACTION_KIND::PLAY_UI_SEQUENCE; }
+
+		virtual HRESULT Initialize(const EVENT_STEP_DESC& tDesc) override
+		{
+			const _string strSeq = Normalize_Token_(Read_String_(tDesc.Params, "Sequence", ""));
+
+			if ("UIFADEOUT" == strSeq)
+				m_bFadeOut = true;
+			else if ("UIFADE" == strSeq)
+				m_bFadeOut = false;
+			else
+				return E_FAIL;
+
+			m_bWait = Read_Bool_(tDesc.Params, "Wait", true);
+			return S_OK;
+		}
+
+		virtual HRESULT Start(EVENT_CONTEXT& tContext) override
+		{
+			if (nullptr == tContext.pLevelGamePlay)
+				return E_FAIL;
+
+			if (false == tContext.pLevelGamePlay->Play_CutsceneFade(m_bFadeOut))
+				return E_FAIL;
+
+			return S_OK;
+		}
+
+		virtual EVENT_PLAY_STATE Update(EVENT_CONTEXT& tContext, _float) override
+		{
+			if (false == m_bWait)
+				return EVENT_PLAY_STATE::FINISHED;
+
+			if (nullptr == tContext.pLevelGamePlay)
+				return EVENT_PLAY_STATE::FAILED;
+
+			return true == tContext.pLevelGamePlay->Is_CutsceneFade_Playing(m_bFadeOut)
+				? EVENT_PLAY_STATE::WAITING
+				: EVENT_PLAY_STATE::FINISHED;
+		}
+
+	private:
+		_bool m_bFadeOut = { false };
+		_bool m_bWait = { true };
+	};
+
+	class CEventAction_PlaySFX final : public CEventAction
+	{
+	public:
+		virtual EVENT_ACTION_KIND Get_Kind() const override { return EVENT_ACTION_KIND::PLAY_SFX; }
+
+		virtual HRESULT Initialize(const EVENT_STEP_DESC& tDesc) override
+		{
+			m_strKey = To_Wide_(Read_String_(tDesc.Params, "Key", ""));
+			if (true == m_strKey.empty())
+				m_strKey = To_Wide_(Read_String_(tDesc.Params, "Sound", ""));
+			if (true == m_strKey.empty())
+				return E_FAIL;
+
+			if (false == Parse_Float_(tDesc.Params, "Volume", m_fVolume))
+				m_fVolume = 1.f;
+			if (m_fVolume < 0.f)
+				m_fVolume = 0.f;
+
+			if (false == Parse_Float_(tDesc.Params, "Duration", m_fDurationOverride))
+				m_fDurationOverride = 0.f;
+			if (m_fDurationOverride < 0.f)
+				m_fDurationOverride = 0.f;
+
+			m_bWait = Read_Bool_(tDesc.Params, "Wait", false);
+			m_bBlockDialogueInput = Read_Bool_(tDesc.Params, "BlockDialogueInput", false);
+			return S_OK;
+		}
+
+		virtual HRESULT Start(EVENT_CONTEXT& tContext) override
+		{
+			if (nullptr == tContext.pGameInstance)
+				return E_FAIL;
+
+			if (FAILED(tContext.pGameInstance->Play(m_strKey.c_str(), CHANNELID::SFX, m_fVolume)))
+				return E_FAIL;
+
+			m_fDuration = (m_fDurationOverride > 0.f)
+				? m_fDurationOverride
+				: tContext.pGameInstance->Get_SoundLengthSeconds(m_strKey.c_str());
+
+			m_fElapsed = 0.f;
+
+			if (true == m_bBlockDialogueInput && nullptr != tContext.pLevelGamePlay && m_fDuration > 0.f)
+				tContext.pLevelGamePlay->Lock_DialogueInput(m_fDuration);
+
+			return S_OK;
+		}
+
+		virtual EVENT_PLAY_STATE Update(EVENT_CONTEXT&, _float fTimeDelta) override
+		{
+			if (false == m_bWait || m_fDuration <= 0.f)
+				return EVENT_PLAY_STATE::FINISHED;
+
+			m_fElapsed += fTimeDelta;
+			return (m_fElapsed >= m_fDuration)
+				? EVENT_PLAY_STATE::FINISHED
+				: EVENT_PLAY_STATE::WAITING;
+		}
+
+	private:
+		_wstring m_strKey;
+		_float m_fVolume = { 1.f };
+		_float m_fDurationOverride = { 0.f };
+		_float m_fDuration = { 0.f };
+		_float m_fElapsed = { 0.f };
+		_bool m_bWait = { false };
+		_bool m_bBlockDialogueInput = { false };
 	};
 
 	class CEventAction_CameraPush final : public CEventAction
@@ -711,6 +872,8 @@ namespace
 			if (false == Parse_Float3_(tDesc.Params, "LookOffset", m_vLookOffset))
 				m_vLookOffset = { 0.f, 1.2f, 0.f };
 
+			m_bLocal = Read_Bool_(tDesc.Params, "Local", false);
+
 			if (false == Parse_Float_(tDesc.Params, "Duration", m_fDuration))
 				m_fDuration = 0.f;
 
@@ -745,8 +908,26 @@ namespace
 			XMStoreFloat3(&m_vStartAt, vCurAt);
 
 			const _vector vActorPos = pActor->Get_Transform()->Get_State(STATE::POSITION);
-			const _vector vTargetEye = vActorPos + XMLoadFloat3(&m_vEyeOffset);
-			const _vector vTargetAt = vActorPos + XMLoadFloat3(&m_vLookOffset);
+
+			_vector vTargetEye, vTargetAt;
+
+			if (true == m_bLocal)
+			{
+				/* ì˜¤í”„ì…‹ì„ ì•¡í„°ì˜ ì •ë©´(RIGHT/UP/LOOK) ê¸°ì¤€ìœ¼ë¡œ íšŒì „ â†’ ì•¡í„°ê°€ ì–´ëŠ ë°©í–¥ì„
+				   ë³´ë“  ì •ë©´ ë“± ìƒëŒ€ ìœ„ì¹˜ë¡œ ì¹´ë©”ë¼ë¥¼ ìž¡ëŠ”ë‹¤. (ì›”ë“œ ì˜¤í”„ì…‹ì€ ì•¡í„° íšŒì „ ë¬´ì‹œ) */
+				CTransform* pActorTransform = pActor->Get_Transform();
+				const _vector vRight = XMVector3Normalize(pActorTransform->Get_State(STATE::RIGHT));
+				const _vector vUp = XMVector3Normalize(pActorTransform->Get_State(STATE::UP));
+				const _vector vLook = XMVector3Normalize(pActorTransform->Get_State(STATE::LOOK));
+
+				vTargetEye = vActorPos + vRight * m_vEyeOffset.x + vUp * m_vEyeOffset.y + vLook * m_vEyeOffset.z;
+				vTargetAt = vActorPos + vRight * m_vLookOffset.x + vUp * m_vLookOffset.y + vLook * m_vLookOffset.z;
+			}
+			else
+			{
+				vTargetEye = vActorPos + XMLoadFloat3(&m_vEyeOffset);
+				vTargetAt = vActorPos + XMLoadFloat3(&m_vLookOffset);
+			}
 
 			XMStoreFloat3(&m_vTargetEye, vTargetEye);
 			XMStoreFloat3(&m_vTargetAt, vTargetAt);
@@ -799,6 +980,7 @@ namespace
 		_wstring m_strActorAlias = { L"Player" };
 		_float3 m_vEyeOffset = { 0.f, 2.f, -4.f };
 		_float3 m_vLookOffset = { 0.f, 1.2f, 0.f };
+		_bool m_bLocal = { false };
 		_float m_fDuration = { 0.f };
 		_float m_fElapsed = { 0.f };
 		_string m_strEase = { "Linear" };
@@ -1514,8 +1696,8 @@ namespace
 			if (nullptr == tContext.pLevelGamePlay)
 				return E_FAIL;
 
-			/* Request_Battle()°¡ ÀüÈ¯¿ë LOCKED¸¦ ´Ù½Ã ¼³Á¤ÇÏ¹Ç·Î,
-			   ÀÌº¥Æ® ½ÃÄö½º°¡ Àâ°í ÀÖ´ø ÀÔ·Â Àá±ÝÀº ¸ÕÀú ÇØÁ¦ÇÑ´Ù. */
+			/* Request_Battle()ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ LOCKEDï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¹Ç·ï¿½,
+			   ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. */
 			if (nullptr != tContext.pGameInstance &&
 				true == tContext.bInputLockedByEvent)
 			{
@@ -1537,6 +1719,56 @@ namespace
 	private:
 		BATTLE_ENV m_tEnv = {};
 	};
+
+	class CEventAction_HealParty final : public CEventAction
+	{
+	public:
+		virtual EVENT_ACTION_KIND Get_Kind() const override { return EVENT_ACTION_KIND::HEAL_PARTY; }
+
+		virtual HRESULT Start(EVENT_CONTEXT& tContext) override
+		{
+			if (nullptr == tContext.pGameInstance)
+				return E_FAIL;
+
+			const list<CGameObject*>* pObjects =
+				tContext.pGameInstance->Get_ObjectList(ETOUI(LEVEL::STATIC), LAYER_PERSISTENT);
+			if (nullptr == pObjects || true == pObjects->empty())
+				return E_FAIL;
+
+			CPlayer_Status* pPlayerState = static_cast<CPlayer_Status*>(pObjects->front());
+			if (nullptr == pPlayerState)
+				return E_FAIL;
+
+			const CPokemonData_Manager* pDataMgr = CPokemonData_Manager::GetInstance();
+
+			PARTY& tParty = pPlayerState->Get_Party();
+			for (_uint iSlot = 0; iSlot < tParty.iCount; ++iSlot)
+			{
+				POKEMON_INSTANCE& tMon = tParty.arrSlots[iSlot];
+				if (0 == tMon.iSpeciesID)
+					continue;
+
+				tMon.iCurrentHP = tMon.iStat[static_cast<size_t>(STAT::HP)];
+
+				for (_uint iMove = 0; iMove < g_kMaxMovesPerPokemon; ++iMove)
+				{
+					if (0 == tMon.iMoves[iMove] || nullptr == pDataMgr)
+						continue;
+
+					const MOVE_DATA* pMove = pDataMgr->Find_Move(tMon.iMoves[iMove]);
+					if (nullptr != pMove)
+						tMon.iCurrentPP[iMove] = pMove->iMaxPP;
+				}
+			}
+
+			return S_OK;
+		}
+
+		virtual EVENT_PLAY_STATE Update(EVENT_CONTEXT&, _float) override
+		{
+			return EVENT_PLAY_STATE::FINISHED;
+		}
+	};
 }
 
 const _char* Game_PKM::Get_ActionKindName(EVENT_ACTION_KIND eKind)
@@ -1550,6 +1782,8 @@ const _char* Game_PKM::Get_ActionKindName(EVENT_ACTION_KIND eKind)
 	case EVENT_ACTION_KIND::WAIT_DIALOGUE:			return "WaitDialogue";
 	case EVENT_ACTION_KIND::MESSAGE_KEY:			return "MessageKey";
 	case EVENT_ACTION_KIND::MESSAGE_TEXT:			return "MessageText";
+	case EVENT_ACTION_KIND::PLAY_UI_SEQUENCE:		return "PlayUISequence";
+	case EVENT_ACTION_KIND::PLAY_SFX:				return "PlaySFX";
 	case EVENT_ACTION_KIND::CAMERA_PUSH:			return "CameraPush";
 	case EVENT_ACTION_KIND::CAMERA_POP:				return "CameraPop";
 	case EVENT_ACTION_KIND::CAMERA_SET_POSE:		return "CameraSetPose";
@@ -1566,6 +1800,7 @@ const _char* Game_PKM::Get_ActionKindName(EVENT_ACTION_KIND eKind)
 	case EVENT_ACTION_KIND::DESPAWN_ACTOR:			return "DespawnActor";
 	case EVENT_ACTION_KIND::BIND_ACTOR_BY_SPAWN_ID:	return "BindActorBySpawnID";
 	case EVENT_ACTION_KIND::REQUEST_BATTLE:			return "RequestBattle";
+	case EVENT_ACTION_KIND::HEAL_PARTY:			return "HealParty";
 	case EVENT_ACTION_KIND::DEBUG_LOG:				return "DebugLog";
 	default:										return "Unknown";
 	}
@@ -1603,6 +1838,14 @@ CEventAction* CEventAction::Create_Action(const EVENT_STEP_DESC& tDesc)
 
 	case EVENT_ACTION_KIND::MESSAGE_TEXT:
 		pAction = new CEventAction_MessageText;
+		break;
+
+	case EVENT_ACTION_KIND::PLAY_UI_SEQUENCE:
+		pAction = new CEventAction_PlayUISequence;
+		break;
+
+	case EVENT_ACTION_KIND::PLAY_SFX:
+		pAction = new CEventAction_PlaySFX;
 		break;
 
 	case EVENT_ACTION_KIND::CAMERA_PUSH:
@@ -1659,6 +1902,10 @@ CEventAction* CEventAction::Create_Action(const EVENT_STEP_DESC& tDesc)
 
 	case EVENT_ACTION_KIND::REQUEST_BATTLE:
 		pAction = new CEventAction_RequestBattle;
+		break;
+
+	case EVENT_ACTION_KIND::HEAL_PARTY:
+		pAction = new CEventAction_HealParty;
 		break;
 
 	default:

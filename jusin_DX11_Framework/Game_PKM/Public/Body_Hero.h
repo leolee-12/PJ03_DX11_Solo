@@ -22,8 +22,6 @@ public:
 	void Set_Pass(_uint iMatIdx, _uint iPassIdx) { m_RenderProfile.Set_Pass(iMatIdx, iPassIdx); }
 
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 

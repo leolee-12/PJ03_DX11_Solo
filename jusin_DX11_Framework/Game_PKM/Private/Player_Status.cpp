@@ -31,8 +31,8 @@ HRESULT CPlayer_Status::Initialize(void* pArg)
 
 	if (0 == m_tParty.iCount)
 	{
-		Acquire_Pokemon(25, 5, 0);
-		Acquire_Pokemon(59, 5, 0);
+		Acquire_Pokemon(25, 6, 0);
+		Acquire_Pokemon(59, 8, 0);
 	}
 
 	return S_OK;

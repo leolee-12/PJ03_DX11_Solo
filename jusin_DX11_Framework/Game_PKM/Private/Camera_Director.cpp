@@ -41,34 +41,19 @@ namespace
 
 		CAMERA_SHOT_DESC shot = {};
 
-		// 1) 공격자 정면에서 시작
 		shot.eType = CAMERA_SHOT_TYPE::CUT;
-		shot.fDuration = 0.4f;
+		shot.fDuration = 0.28f;
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::ATTACKER;
-		shot.vPositionOffset = MirrorXZ(_float3(1.5f, 1.1f, 1.9f), bMirror);
-		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.5f, 0.0f), bMirror);
+		shot.vPositionOffset = MirrorXZ(_float3(2.15f, 1.45f, 2.85f), bMirror);
+		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.65f, 0.0f), bMirror);
 		pSeq->Push_Shot(shot);
 
 		shot = {};
-		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
-		shot.fDuration = 0.45f;
-		shot.fBlendTime = 0.25f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = MirrorXZ(_float3(-0.7f, 1.4f, -2.8f), bMirror);
-		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.5f, 0.0f), bMirror);
-		pSeq->Push_Shot(shot);
-
-		shot = {};
-		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
-		shot.fDuration = 0.35f;
-		shot.fBlendTime = 0.18f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = MirrorXZ(_float3(0.35f, 1.05f, -1.75f), bMirror);
-		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.4f, 0.0f), bMirror);
+		shot.eType = CAMERA_SHOT_TYPE::RETURN_DEFAULT;
+		shot.fDuration = 0.25f;
+		shot.fBlendTime = 0.20f;
 		pSeq->Push_Shot(shot);
 
 		return pSeq;
@@ -82,34 +67,19 @@ namespace
 
 		CAMERA_SHOT_DESC shot = {};
 
-		// 1) 공격자 정면에서 시작
 		shot.eType = CAMERA_SHOT_TYPE::CUT;
-		shot.fDuration = 0.4f;
+		shot.fDuration = 0.28f;
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::ATTACKER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::ATTACKER;
-		shot.vPositionOffset = MirrorXZ(_float3(1.5f, 1.2f, 1.9f), bMirror);
-		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.5f, 0.0f), bMirror);
+		shot.vPositionOffset = MirrorXZ(_float3(2.15f, 1.55f, 2.85f), bMirror);
+		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.7f, 0.0f), bMirror);
 		pSeq->Push_Shot(shot);
 
 		shot = {};
-		shot.eType = CAMERA_SHOT_TYPE::FOLLOW_LOOKAT;
-		shot.fDuration = 0.65f;
-		shot.fBlendTime = 0.25f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = MirrorXZ(_float3(0.0f, 1.4f, -3.5f), bMirror);
-		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.5f, 0.0f), bMirror);
-		pSeq->Push_Shot(shot);
-
-		shot = {};
-		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
-		shot.fDuration = 0.35f;
-		shot.fBlendTime = 0.18f;
-		shot.eFollowTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.eLookAtTarget = CAMERA_TARGET_TYPE::DEFENDER;
-		shot.vPositionOffset = MirrorXZ(_float3(-0.84f, 1.12f, -1.54f), bMirror);
-		shot.vLookAtOffset = MirrorXZ(_float3(0.0f, 0.4f, 0.0f), bMirror);
+		shot.eType = CAMERA_SHOT_TYPE::RETURN_DEFAULT;
+		shot.fDuration = 0.25f;
+		shot.fBlendTime = 0.20f;
 		pSeq->Push_Shot(shot);
 
 		return pSeq;
@@ -159,7 +129,8 @@ namespace
 		CAMERA_TARGET_TYPE eTarget,
 		const _float3& vStartPositionOffset,
 		const _float3& vEndPositionOffset,
-		const _float3& vLookAtOffset)
+		const _float3& vLookAtOffset,
+		_float fHoldDuration = 0.f)
 	{
 		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
 		if (nullptr == pSeq)
@@ -185,6 +156,19 @@ namespace
 		shot.vLookAtOffset = vLookAtOffset;
 		pSeq->Push_Shot(shot);
 
+		if (fHoldDuration > 0.f)
+		{
+			shot = {};
+			shot.eType = CAMERA_SHOT_TYPE::FOLLOW_LOOKAT;
+			shot.fDuration = fHoldDuration;
+			shot.fBlendTime = 0.f;
+			shot.eFollowTarget = eTarget;
+			shot.eLookAtTarget = eTarget;
+			shot.vPositionOffset = vEndPositionOffset;
+			shot.vLookAtOffset = vLookAtOffset;
+			pSeq->Push_Shot(shot);
+		}
+
 		return pSeq;
 	}
 
@@ -201,8 +185,37 @@ namespace
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::OPPONENT_TRAINER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::OPPONENT_TRAINER;
-		shot.vPositionOffset = _float3(-0.5f, 1.0f, -2.2f);
-		shot.vLookAtOffset = _float3(0.0f, 1.05f, 0.0f);
+		shot.vPositionOffset = _float3(-0.75f, 1.25f, -3.45f);
+		shot.vLookAtOffset = _float3(0.0f, 0.85f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		return pSeq;
+	}
+
+	CCamera_Sequence* Build_OutroTrainer_OpponentFaint_Sequence()
+	{
+		CCamera_Sequence* pSeq = CCamera_Sequence::Create();
+		if (nullptr == pSeq)
+			return nullptr;
+
+		CAMERA_SHOT_DESC shot = {};
+		shot.eType = CAMERA_SHOT_TYPE::BLEND_TO;
+		shot.fDuration = 0.45f;
+		shot.fBlendTime = 0.35f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::OPPONENT_TRAINER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::OPPONENT_TRAINER;
+		shot.vPositionOffset = _float3(-0.85f, 1.20f, -3.15f);
+		shot.vLookAtOffset = _float3(0.0f, 0.85f, 0.0f);
+		pSeq->Push_Shot(shot);
+
+		shot = {};
+		shot.eType = CAMERA_SHOT_TYPE::FOLLOW_LOOKAT;
+		shot.fDuration = 6.0f;
+		shot.fBlendTime = 0.f;
+		shot.eFollowTarget = CAMERA_TARGET_TYPE::OPPONENT_TRAINER;
+		shot.eLookAtTarget = CAMERA_TARGET_TYPE::OPPONENT_TRAINER;
+		shot.vPositionOffset = _float3(-0.85f, 1.20f, -3.15f);
+		shot.vLookAtOffset = _float3(0.0f, 0.85f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		return pSeq;
@@ -214,15 +227,15 @@ namespace
 		if (nullptr == pSeq)
 			return nullptr;
 
-		// 1) 포켓몬만 보이는 타이트 샷 (이 동안 트레이너 노출이 화면 밖에서 일어남)
+		// 1) 포켓몬만 보이는 측면 타이트 샷 (이 동안 트레이너 노출이 화면 밖에서 일어남)
 		CAMERA_SHOT_DESC shot = {};
 		shot.eType = CAMERA_SHOT_TYPE::CUT;
 		shot.fDuration = 0.35f;
 		shot.fBlendTime = 0.f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.vPositionOffset = _float3(0.0f, 1.8f, -2.2f);
-		shot.vLookAtOffset = _float3(0.0f, 0.4f, 0.0f);
+		shot.vPositionOffset = _float3(-3.15f, 1.85f, 0.0f);
+		shot.vLookAtOffset = _float3(0.0f, 0.45f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		// 2) 전역 포즈로 줌아웃 (트레이너가 이미 제자리에 있어 pop 없이 등장)
@@ -232,8 +245,8 @@ namespace
 		shot.fBlendTime = 0.6f;
 		shot.eFollowTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
 		shot.eLookAtTarget = CAMERA_TARGET_TYPE::BATTLE_CENTER;
-		shot.vPositionOffset = _float3(-2.0f, 1.84f, -4.9f);
-		shot.vLookAtOffset = _float3(-0.3f, 0.0f, 0.0f);
+		shot.vPositionOffset = _float3(-2.35f, 2.55f, -6.25f);
+		shot.vLookAtOffset = _float3(-0.25f, 0.9f, 0.0f);
 		pSeq->Push_Shot(shot);
 
 		return pSeq;
@@ -261,22 +274,33 @@ namespace
 		case CAMERA_SEQUENCE_ID::SENDOUT_PLAYER:
 			return Build_SendOut_Sequence(
 				CAMERA_TARGET_TYPE::PLAYER_POKEMON,
-				_float3(-2.05f, 1.45f, 2.35f),
-				_float3(-2.55f, 1.65f, 3.00f),
-				_float3(0.0f, 0.65f, 0.0f));
+				_float3(1.55f, 1.70f, -2.55f),
+				_float3(1.95f, 1.90f, -3.15f),
+				_float3(0.0f, 0.60f, 0.0f));
 
 		case CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT:
 			return Build_SendOut_Sequence(
 				CAMERA_TARGET_TYPE::OPPONENT_POKEMON,
-				_float3(2.05f, 1.45f, -2.35f),
-				_float3(2.55f, 1.65f, -3.00f),
-				_float3(0.0f, 0.65f, 0.0f));
+				_float3(1.55f, 1.70f, -2.55f),
+				_float3(1.95f, 1.90f, -3.15f),
+				_float3(0.0f, 0.60f, 0.0f));
+
+		case CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT_INTRO_HOLD:
+			return Build_SendOut_Sequence(
+				CAMERA_TARGET_TYPE::OPPONENT_POKEMON,
+				_float3(1.55f, 1.70f, -2.55f),
+				_float3(1.95f, 1.90f, -3.15f),
+				_float3(0.0f, 0.60f, 0.0f),
+				8.0f);
 
 		case CAMERA_SEQUENCE_ID::INTRO_TRAINER_OPPONENT:
 			return Build_IntroTrainer_Opponent_Sequence();
 
 		case CAMERA_SEQUENCE_ID::INTRO_SETTLE:
 			return Build_IntroSettle_Sequence();
+
+		case CAMERA_SEQUENCE_ID::OUTRO_TRAINER_OPPONENT_FAINT:
+			return Build_OutroTrainer_OpponentFaint_Sequence();
 
 		case CAMERA_SEQUENCE_ID::NONE:
 		case CAMERA_SEQUENCE_ID::HIT_ONLY:

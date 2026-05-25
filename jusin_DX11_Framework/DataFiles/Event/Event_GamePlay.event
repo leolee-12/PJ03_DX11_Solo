@@ -45,22 +45,6 @@
       Step { Action = RestoreInput }
   }
 
-  Sequence TestActor
-  {
-      Trigger = Manual
-
-      Step { Action = LockInput }
-      Step { Action = SpawnNPC; NPCProfile = Doctor; Position = 15,0,-7; RotationY = 3.14; Alias = DoctorA }
-      Step { Action = WaitSeconds; Duration = 0.3 }
-      Step { Action = ActorFace; Actor = DoctorA; Target = Player; Wait = true }
-      Step { Action = ActorSetAnim; Actor = DoctorA; AnimKind = TALK; Loop = true; Blend = 0.2 }
-      Step { Action = MessageText; Text = Actor anim test; Wait = true }
-      Step { Action = ActorSetAnim; Actor = DoctorA; AnimKind = WALK; Loop = true }
-      Step { Action = ActorMoveTo; Actor = DoctorA; Position = 16,0,25; Speed = 2.0; ArrivalRadius = 0.2; EndAnim = IDLE }
-      Step { Action = DespawnActor; Actor = DoctorA }
-      Step { Action = RestoreInput }
-  }
-
   Sequence TestParallel
   {
       Trigger = Manual
@@ -86,6 +70,40 @@
       Step { Action = RequestBattle; Environment = GRASS; Rule = TRAINER_SINGLE; TrainerID = 1; BGResourceID = 0; ZoneID = 0; CanRun = false; CanCapture = false; ExpGain = true }
   }
 
+  Sequence Rock_PostBattleVictory
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      Step { Action = PlayUISequence; Sequence = UIFade; Wait = true }
+      StepGroup
+      { Mode = Parallel
+          Step { Action = MessageText; Text = 나를 이긴 증표로 포켓몬리그 공인\n회색배지를 수여할게!; Wait = true }
+          Step { Action = PlaySFX; Key = SFX/1-26. Obtained a Gym Badge!.mp3; Volume = 0.8; BlockDialogueInput = true; Wait = false }
+      }
+      Step { Action = MessageText; Text = 플레이어는 웅으로부터\n회색배지를 받았다!; Wait = true }
+      Step { Action = MessageText; Text = 나는 여기서 포켓몬을 키우는\n브리더가 되기 위해 수행을 하고 있어!; Wait = true }
+      Step { Action = MessageText; Text = 너는 강해지는 것이 목표니?\n그렇다면 다른 체육관에도 도전해봐!; Wait = true }
+      Step { Action = RestoreInput }
+  }
+
+  Sequence Nurse_HealTalk
+  {
+      Trigger = Manual
+
+      Step { Action = LockInput }
+      StepGroup
+      { Mode = Parallel
+          Step { Action = MessageText; Text = 안녕하세요! 포켓몬 센터입니다.; Wait = true }
+          Step { Action = PlaySFX; Key = SFX/1-12. Pokemon Healed.mp3; Volume = 0.8; Duration = 2.2; BlockDialogueInput = true; Wait = false }
+      }
+      Step { Action = HealParty }
+      Step { Action = MessageText; Text = 포켓몬을 회복시켜 드리겠습니다.; Wait = true }
+      Step { Action = MessageText; Text = 맡기신 포켓몬이\n모두 건강해졌습니다!; Wait = true }
+      Step { Action = MessageText; Text = 또 이용해 주세요!; Wait = true }
+      Step { Action = RestoreInput }
+  }
+
   Sequence TestCameraWorldMove
   {
       Trigger = Manual
@@ -99,28 +117,28 @@
       Step { Action = RestoreInput }
   }
 
-  Sequence TestScene_NPC_CameraMove
+  Sequence CutScene_PalletTown
   {
       Trigger = Manual
 
       Step { Action = LockInput }
       Step { Action = CameraPush }
-      Step { Action = BindActorBySpawnID; SpawnID = 200; Alias = NPC_A }
       Step { Action = BindActorBySpawnID; SpawnID = 201; Alias = NPC_B }
 
-      Step { Action = CameraSetPose; Eye = 14.3,3,-10.5; LookAt = 15.3,0,-6.5; Ease = Linear }
-      Step { Action = CameraMoveTo; Eye = 13.4,4.8,-13.9; LookAt = 15.3,0,-6.5; Duration = 2.0; Ease = SmoothStep }
+      Step { Action = CameraSetPose;    Eye = 14.3,3,-10.5; LookAt = 15.3,0,-6.5; Ease = Linear }
+      Step { Action = PlayUISequence; Sequence = UIFade; Wait = true }
+      Step { Action = CameraMoveTo;     Eye = 13.4,4.8,-13.9; LookAt = 15.3,0,-6.5; Duration = 2.5; Ease = SmoothStep }
 
       Step { Action = CameraSetPose; Eye = 12.8,1.3,-17.1; LookAt = 15,0,-12; Ease = Linear }
 
       StepGroup { Mode = Parallel
-          Step { Action = CameraMoveTo; Eye = 15.8,1.3,-18.1; LookAt = 18,0,-13; Duration = 3.0; Ease = SmoothStep }
-          Step { Action = ActorFace; Actor = NPC_A; Target = Player; Wait = true }
+          Step { Action = CameraMoveTo; Eye = 15.3,1.3,-18.1; LookAt = 17.5,0,-13; Duration = 3.0; Ease = SmoothStep }
+#         Step { Action = ActorFace; Actor = NPC_A; Target = Player; Wait = true }
       }
 
-      Step { Action = ActorSetAnim; Actor = NPC_A; AnimKind = TALK; Loop = false; Blend = 0.2 }
+#      Step { Action = ActorSetAnim; Actor = NPC_A; AnimKind = TALK; Loop = false; Blend = 0.2 }
       Step { Action = WaitSeconds; Duration = 1.0 }
-      Step { Action = ActorFaceYaw; Actor = NPC_A; Yaw = 3.1416; Wait = true }
+#      Step { Action = ActorFaceYaw; Actor = NPC_A; Yaw = 3.1416; Wait = true }
 
       Step { Action = CameraSetPose; Eye = 29.2,0.9,-21.3; LookAt = 22.7,1.85,-12.95; Ease = Linear }
 

@@ -26,25 +26,6 @@ HRESULT CBody_Hero::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBody_Hero::Update(_float fTimeDelta)
-{
-	//if (m_pGameInstance->Key_Down(DIK_Z))
-	//{
-	//	m_iDummy++;
-	//	if (m_iDummy > 77) m_iDummy = 0;
-	//	m_pModelCom->Set_AnimationIndex(m_iDummy, false, 0.2f);
-	//}
-
-	__super::Update(fTimeDelta);
-
-
-}
-
-void CBody_Hero::Late_Update(_float fTimeDelta)
-{
-	__super::Late_Update(fTimeDelta);
-}
-
 HRESULT CBody_Hero::Render()
 {
 	if (FAILED(__super::Bind_ShaderResources_Common()))
@@ -61,9 +42,6 @@ HRESULT CBody_Hero::Render()
 
 	if (FAILED(m_RenderProfile.Bind_AndDraw(m_pShaderCom, Slots, "g_BoneMatrices")))
 		return E_FAIL;
-
-	m_pGameInstance->Draw_Text(FONT_MALGUN, to_wstring(m_pModelCom->Get_CurrAnimIndex()).c_str(),
-		_float2{ 10.f, 10.f });
 
 	return S_OK;
 }

@@ -42,14 +42,24 @@ public:
 	_bool Is_Dialogue_Playing() const;
 	_bool Is_Dialogue_Done() const;
 	_bool Is_Event_Playing() const;
+	void Lock_DialogueInput(_float fSeconds);
 	void Close_Dialogue();
+
+	/* 컷신 페이드. bFadeOut=true 면 UI_FadeOut(투명→검정·유지), false 면 UI_Fade(검정→투명).
+	   두 오버레이는 상호 배타로, 하나를 재생하면 다른 하나는 즉시 숨긴다(검정↔검정 순간이라 비가시). */
+	_bool Play_CutsceneFade(_bool bFadeOut);
+	_bool Is_CutsceneFade_Playing(_bool bFadeOut) const;
 
 	CEvent_Manager* Get_EventManager() const { return m_pEventMgr; }
 
 private:
 	CUISequence* m_pRuntimeUI = { nullptr };
 	CUISequence* m_pCursorSeq = { nullptr };
-	CUISequence* m_pFadeBattleSeq = { nullptr };
+	CUISequence* m_pFadeCutSceneSeq = { nullptr }; // UI_Fade.uiseq
+	CUISequence* m_pFadeCutSceneOutSeq = { nullptr }; // UI_FadeOut.uiseq
+	CUISequence* m_pFadeBattleSeq = { nullptr };   // UI_FadeBattle.uiseq
+	CUISequence* m_pFadeCaptureSeq = { nullptr };  // UI_FadeCapture.uiseq
+	CUISequence* m_pTransitionFadeSeq = { nullptr };
 	CMenu* m_pMenu = { nullptr };
 	CEntry* m_pEntry = { nullptr };
 	CUISequence* m_pEntrySeq = { nullptr };
@@ -66,6 +76,8 @@ private:
 
 	vector<_wstring> m_DialoguePages;
 	_uint m_iDialoguePageIndex = { 0 };
+	_float m_fDialogueInputLockRemain = { 0.f };
+	_bool m_bPendingRockBattleReturnEvent = { false };
 
 	// F6 트랜지션 상태 머신
 	enum class TRANSITION_STATE { IDLE, BUSY, END };
@@ -77,6 +89,11 @@ private:
 
 	CTexture* m_pCloudTexture = { nullptr };
 	DECAL_PARAM m_CloudParam{};
+
+	// 포트폴리오 아웃트로 — END 키로 검정 페이드 + BGM 페이드아웃 (영상 종료 컷)
+	_bool  m_bOutroFading = { false };
+	_float m_fOutroElapsed = { 0.f };
+	static constexpr _float OUTRO_FADE_DURATION = 2.0f;
 
 #ifdef _DEBUG
 	OUTLINE_PARAM m_DebugOutlineParam{};
@@ -107,7 +124,9 @@ private:
 	_bool Tick_Event(_float fTimeDelta);
 	_bool Tick_Transition(_float fTimeDelta);
 	void Reset_Transition();
+	void Prime_CutsceneFadeInBlack();
 	void Tick_Gameplay(_float fTimeDelta);
+	void Tick_Outro(_float fTimeDelta);
 
 #ifdef _DEBUG
 	void Debug_Common();

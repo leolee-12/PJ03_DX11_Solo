@@ -8,7 +8,6 @@
         Kind = NPC
         NPCProfile = Doctor
         DialogueKey = dialogue_npc_doctor
-      	EventSequenceID = TestCamera
         Center = 20.0, 0.0, -2.5
         Size = 1.0, 1.0
         RotationY = 3.1416
@@ -66,6 +65,7 @@
         Kind = NPC
         NPCProfile = Nurse
         DialogueKey = dialogue_npc_nurse
+        EventSequenceID = Nurse_HealTalk
         Center = 15.5, 3.0, 51.5
         Size = 1.0, 1.0
         RotationY = 3.1416
@@ -90,20 +90,20 @@
         Respawn = false
     }
 
-      SpawnRect {
-          ID = 206
-          Kind = Trainer
-          NPCProfile = Water
-          DialogueKey = dialogue_trainer_water
-          TrainerID = 3
-          Center = 15.5, 3.0, 62.2
-          Size = 1.0, 1.0
-          RotationY = 3.1416
-          MaxAliveCount = 1
-          ProjectRadius = 2.0
-          SpawnOnLoad = true
-          Respawn = false
-      }
+#      SpawnRect {
+#          ID = 206
+#          Kind = Trainer
+#          NPCProfile = Water
+#          DialogueKey = dialogue_trainer_water
+#          TrainerID = 3
+#          Center = 15.5, 3.0, 62.2
+#          Size = 1.0, 1.0
+#          RotationY = 3.1416
+#          MaxAliveCount = 1
+#          ProjectRadius = 2.0
+#          SpawnOnLoad = true
+#          Respawn = false
+#      }
 
     SpawnRect {
         ID = 300
@@ -142,7 +142,7 @@ SpawnRect {
         Size = 12.5, 3.3
         RotationY = 0.0
         SpeciesID = 10
-        Level = 2
+        Level = 3
         MaxAliveCount = 3
         ProjectRadius = 3.0
         LeashRadius = 8.0
@@ -161,7 +161,7 @@ SpawnRect {
         Size = 5.5, 4.7
         RotationY = 0.0
         SpeciesID = 43
-        Level = 3
+        Level = 6
         MaxAliveCount = 3
         ProjectRadius = 3.0
         LeashRadius = 10.0
@@ -180,7 +180,7 @@ SpawnRect {
         Size = 6.5, 4.0
         RotationY = 0.0
         SpeciesID = 41
-        Level = 4
+        Level = 8
         MaxAliveCount = 2
         ProjectRadius = 3.0
         LeashRadius = 10.0

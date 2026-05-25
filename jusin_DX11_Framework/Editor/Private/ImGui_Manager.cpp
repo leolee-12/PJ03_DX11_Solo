@@ -234,9 +234,9 @@ HRESULT CImGui_Manager::Add_Panels()
 {
 	CPanel_Base* pInstance = nullptr;
 
-	pInstance = CPanel_OutLiner::Create();
-	if (nullptr == pInstance) return E_FAIL;
-	m_Panels[ETOUI(PANEL::OUTLINER)] = pInstance;
+	//pInstance = CPanel_OutLiner::Create();
+	//if (nullptr == pInstance) return E_FAIL;
+	//m_Panels[ETOUI(PANEL::OUTLINER)] = pInstance;
 
 	pInstance = CPanel_MapTool::Create();
 	if (nullptr == pInstance) return E_FAIL;

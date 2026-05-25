@@ -285,7 +285,6 @@ WNAME_TAG(PROTO_COM_MODEL_PM0059_00, L"Prototype_Component_Model_À©µð");
 WNAME_TAG(PROTO_COM_MODEL_PM0074_00, L"Prototype_Component_Model_²¿¸¶µ¹");
 WNAME_TAG(PROTO_COM_MODEL_PM0095_00, L"Prototype_Component_Model_·Õ½ºÅæ");
 WNAME_TAG(PROTO_COM_MODEL_PM0121_00, L"Prototype_Component_Model_¾ÆÄí½ºÅ¸");
-WNAME_TAG(PROTO_COM_MODEL_PM0130_00, L"Prototype_Component_Model_°¼¶óµµ½º");
 
 WNAME_TAG(PROTO_COM_MODEL_HERO, L"Prototype_Component_Model_Hero");
 WNAME_TAG(PROTO_COM_MODEL_HEROINE, L"Prototype_Component_Model_Heroine");
@@ -316,10 +315,13 @@ WNAME_TAG(PROTO_COM_MODEL_STATIC_CUBE, L"Prototype_Component_Model_Static_Cube")
 WNAME_TAG(PROTO_COM_MODEL_STATIC_CYLINDER, L"Prototype_Component_Model_Static_Cylinder");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_DF_BEAM, L"Prototype_Component_Model_Static_Df_Beam");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_RING, L"Prototype_Component_Model_Static_Ring");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_ROCK_SMASH, L"Prototype_Component_Model_Static_Rock_Smash");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_ROCK_SMASH2, L"Prototype_Component_Model_Static_Rock_Smash2");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_SONIC, L"Prototype_Component_Model_Static_Sonic");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_SPHERE, L"Prototype_Component_Model_Static_Sphere");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_STONE, L"Prototype_Component_Model_Static_Stone");
 WNAME_TAG(PROTO_COM_MODEL_STATIC_SURF, L"Prototype_Component_Model_Static_Surf");
+WNAME_TAG(PROTO_COM_MODEL_STATIC_WAVE, L"Prototype_Component_Model_Static_Wave");
 
 // Navigation & Collider
 WNAME_TAG(PROTO_COM_NAVIGATION_TERRAIN, L"Prototype_Component_Navigation_Terrain");

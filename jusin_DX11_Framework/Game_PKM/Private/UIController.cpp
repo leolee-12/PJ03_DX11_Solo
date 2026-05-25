@@ -52,6 +52,9 @@ void CUIController::Update(_float fTimeDelta)
 	   (어떤 항목은 다른 패널을 열고 메뉴는 그대로 두고 싶을 수 있음) */
 	if (m_pGroup->Was_Activated_This_Frame())
 	{
+		if (nullptr != m_pGameInstance)
+			m_pGameInstance->Play(L"SFX/button_select.wav", CHANNELID::UI, 0.7f);
+
 		if (m_fnOnActivate)
 			m_fnOnActivate(m_pGroup->Get_Activated_Index());
 	}
@@ -59,6 +62,9 @@ void CUIController::Update(_float fTimeDelta)
 	/* 취소 신호: 콜백 호출 후 자동으로 Close() */
 	if (m_pGroup->Was_Cancelled_This_Frame())
 	{
+		if (nullptr != m_pGameInstance)
+			m_pGameInstance->Play(L"SFX/menu_close.wav", CHANNELID::UI, 0.7f);
+
 		if (m_fnOnCancel)
 			m_fnOnCancel();
 		Close();

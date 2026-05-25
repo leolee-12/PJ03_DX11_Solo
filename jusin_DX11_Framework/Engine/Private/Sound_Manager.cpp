@@ -349,6 +349,23 @@ HRESULT CSound_Manager::Play_3D(const _tchar* pSoundKey, const _float3& vPositio
 	return S_OK;
 }
 
+_float CSound_Manager::Get_SoundLengthSeconds(const _tchar* pSoundKey) const
+{
+	if (nullptr == pSoundKey)
+		return 0.f;
+
+	auto iter = m_Sounds.find(pSoundKey);
+	if (iter == m_Sounds.end() || nullptr == iter->second)
+		return 0.f;
+
+	unsigned int iLengthMS = 0;
+	const FMOD_RESULT eResult = iter->second->getLength(&iLengthMS, FMOD_TIMEUNIT_MS);
+	if (FMOD_OK != eResult)
+		return 0.f;
+
+	return static_cast<_float>(iLengthMS) / 1000.f;
+}
+
 void CSound_Manager::Stop_Sound(CHANNELID eChannelID)
 {
 	if (nullptr == m_pSystem)
