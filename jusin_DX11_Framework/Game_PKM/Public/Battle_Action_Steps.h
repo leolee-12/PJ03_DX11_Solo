@@ -1,10 +1,12 @@
 ﻿#pragma once
 #include "IBattleAction_Step.h"
 #include "Effect_Defines.h"
+#include "Camera_Defines.h"
 
 NS_BEGIN(Game_PKM)
 class CMonsterBall;
 class CBattle_Trainer;
+class CEffect;
 /* SDelay
    - 순수 시간 대기. duration 초 경과 시 완료.
    - 메시지 사이 텀, anim 페이즈 사이 텀 등 페이싱 조절용. */
@@ -102,6 +104,28 @@ private:
     virtual void Free() override;
 };
 
+class STrainerFaint final : public IBattleAction_Step
+{
+private:
+    STrainerFaint();
+    virtual ~STrainerFaint() = default;
+
+public:
+    HRESULT Initialize(_uint iSide);
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    _uint m_iSide = { 0 };
+
+public:
+    static STrainerFaint* Create(_uint iSide);
+
+private:
+    virtual void Free() override;
+};
+
 class SSendOutBall final : public IBattleAction_Step
 {
 private:
@@ -109,7 +133,7 @@ private:
     virtual ~SSendOutBall() = default;
 
 public:
-    HRESULT Initialize(_uint iSide, _float fFlightDuration);
+    HRESULT Initialize(_uint iSide, _float fFlightDuration, CAMERA_SEQUENCE_ID eCameraSequence);
 
     virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
     virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
@@ -118,6 +142,7 @@ public:
 private:
     _uint m_iSide = { 0 };
     _float m_fFlightDuration = { 0.72f };
+    CAMERA_SEQUENCE_ID m_eCameraSequence = { CAMERA_SEQUENCE_ID::NONE };
     _float m_fElapsed = { 0.f };
     _bool m_bFinished = { false };
 
@@ -125,7 +150,8 @@ private:
     CMonsterBall* m_pBall = { nullptr }; // weak - Battle layer owns it
 
 public:
-    static SSendOutBall* Create(_uint iSide, _float fFlightDuration = 0.72f);
+    static SSendOutBall* Create(_uint iSide, _float fFlightDuration = 0.72f,
+        CAMERA_SEQUENCE_ID eCameraSequence = CAMERA_SEQUENCE_ID::NONE);
 
 private:
     virtual void Free() override;
@@ -138,7 +164,7 @@ private:
     virtual ~SPokemonEnter() = default;
 
 public:
-    HRESULT Initialize(_uint iSide);
+    HRESULT Initialize(_uint iSide, _float fHoldSeconds);
     virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
     virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
     virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
@@ -146,11 +172,13 @@ public:
 private:
     _uint m_iSide = { 0 };
     _float m_fGrace = { 0.f };
+    _float m_fHoldSeconds = { 2.f };
+    _bool m_bCryPlayed = { false };
     CBattle_Trainer* m_pHiddenTrainers[g_kBattleSideCount] = {};
     _bool m_bPrevTrainerVisible[g_kBattleSideCount] = {};
 
 public:
-    static SPokemonEnter* Create(_uint iSide);
+    static SPokemonEnter* Create(_uint iSide, _float fHoldSeconds = 2.f);
 
 private:
     void Restore_Trainers();
@@ -444,7 +472,9 @@ public:
 
 private:
     _float m_fGrace = { 0.f };
+    _uint  m_iFaintedSide = { g_kBattleSideCount };
     _bool  m_bPublished = { false };
+    _bool  m_bHitPlayed = { false };
 
 public:
     static SFaintCheck* Create();
@@ -511,12 +541,132 @@ private:
     EFFECT_VFX_TARGET   m_eTarget = { EFFECT_VFX_TARGET::ATTACKER };
     EFFECT_SLOT         m_eSlot = { EFFECT_SLOT::CENTER };
     _float3             m_vOffset = {};
+    CEffect*            m_pEffect = { nullptr };   // AddRef 로 공동 소유, Free 에서 정리
 
 public:
     static SPlayEffect* Create(const _string& strEffectID,
         EFFECT_VFX_TARGET eTarget,
         EFFECT_SLOT eSlot = EFFECT_SLOT::CENTER,
         const _float3& vOffset = {});
+
+private:
+    virtual void Free() override;
+};
+
+/* SPlayEffectProjectile
+     - strEffectID 이펙트를 공격자 pivot 에서 스폰해 방어자 pivot 까지 fTravel 초 동안 직선 이동.
+     - MATRIX attach 로 매 프레임 추종(CEffect::Late_Update). 도착 시 이펙트 Destroy 후 완료.
+     - 비행 중 이펙트가 자체 소멸해도 안전하도록 AddRef 로 공동 소유한다. */
+class SPlayEffectProjectile final : public IBattleAction_Step
+{
+private:
+    SPlayEffectProjectile();
+    virtual ~SPlayEffectProjectile() = default;
+
+public:
+    HRESULT Initialize(const _string& strEffectID,
+        EFFECT_SLOT eStartSlot, const _float3& vStartOffset,
+        EFFECT_SLOT eEndSlot, const _float3& vEndOffset,
+        _float fTravel);
+
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    void Update_Matrix(_float t);
+
+    _string         m_strEffectID = {};
+    EFFECT_SLOT     m_eStartSlot = { EFFECT_SLOT::CENTER };
+    EFFECT_SLOT     m_eEndSlot = { EFFECT_SLOT::CENTER };
+    _float3         m_vStartOffset = {};
+    _float3         m_vEndOffset = {};
+    _float          m_fTravel = { 0.3f };
+    _float          m_fElapsed = { 0.f };
+
+    _float3         m_vStartPos = {};
+    _float3         m_vEndPos = {};
+    _float4x4       m_mProjectile = {};        // CEffect 가 매 프레임 추종 (이 주소를 attach)
+    CEffect*        m_pEffect = { nullptr };   // AddRef 로 공동 소유
+    _bool           m_bFinished = { false };
+
+public:
+    static SPlayEffectProjectile* Create(const _string& strEffectID,
+        EFFECT_SLOT eStartSlot = EFFECT_SLOT::CENTER, const _float3& vStartOffset = {},
+        EFFECT_SLOT eEndSlot = EFFECT_SLOT::CENTER, const _float3& vEndOffset = {},
+        _float fTravel = 0.3f);
+
+private:
+    virtual void Free() override;
+};
+
+/* SPlaySFX
+      - 기술 사용 시 SFX 사운드 1회 재생 (CHANNELID::SFX).
+      - fDelay > 0 이면 그 시간만큼 대기 후 재생하고 완료 (블로킹 지연).
+        대기 동안 시퀀스가 멈추므로 VFX/데미지 대비 선후를 fDelay 로 맞춘다.
+      - fDelay == 0 이면 OnEnter 에서 즉시 재생 후 완료. */
+class SPlaySFX final : public IBattleAction_Step
+{
+private:
+    SPlaySFX();
+    virtual ~SPlaySFX() = default;
+
+public:
+    HRESULT Initialize(const _wstring& strSFXKey, _float fVolume, _float fDelay);
+
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    void Play_SFX();
+
+    _wstring m_strSFXKey = {};
+    _float   m_fVolume = { 1.f };
+    _float   m_fDelay = { 0.f };
+    _float   m_fElapsed = { 0.f };
+    _bool    m_bPlayed = { false };
+
+public:
+    static SPlaySFX* Create(const _wstring& strSFXKey, _float fVolume = 1.f, _float fDelay = 0.f);
+
+private:
+    virtual void Free() override;
+};
+
+/* SPlayCry
+     - 지정 side 배틀러의 종족 울음(Common/Happy)을 1회 재생.
+     - OnEnter 시점에 iSpeciesID 로 키를 해석하므로 교체/등장 등 동적 대상도 정확.
+     - 종족ID -> SFX/pv%04u_<Kind>_adpcm.wav. 보유 목록 외 종족은 pv0025 폴백.
+     - fDelay > 0 이면 그 시간만큼 대기 후 재생(블로킹 지연). */
+enum class CRY_KIND { COMMON, HAPPY };
+
+class SPlayCry final : public IBattleAction_Step
+{
+private:
+    SPlayCry();
+    virtual ~SPlayCry() = default;
+
+public:
+    HRESULT Initialize(_uint iSide, CRY_KIND eKind, _float fVolume, _float fDelay);
+
+    virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
+    virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
+    virtual _bool Is_Complete(const BATTLE_CONTEXT& ctx) const override;
+
+private:
+    void Play_Cry();
+
+    _uint    m_iSide = { 0 };
+    CRY_KIND m_eKind = { CRY_KIND::COMMON };
+    _float   m_fVolume = { 1.f };
+    _float   m_fDelay = { 0.f };
+    _float   m_fElapsed = { 0.f };
+    _bool    m_bPlayed = { false };
+    _wstring m_strKey = {};
+
+public:
+    static SPlayCry* Create(_uint iSide, CRY_KIND eKind, _float fVolume = 1.f, _float fDelay = 0.f);
 
 private:
     virtual void Free() override;

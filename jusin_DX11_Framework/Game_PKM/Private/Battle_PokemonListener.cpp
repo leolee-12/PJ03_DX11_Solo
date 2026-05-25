@@ -1,6 +1,7 @@
 #include "Battle_PokemonListener.h"
 #include "Battle_Pokemon.h"
 #include "Battle_Manager.h"
+#include "Battle_ActionSequencer.h"
 #include "Battler.h"
 #include "PokemonData_Manager.h"
 
@@ -27,6 +28,14 @@ void CBattle_PokemonListener::On_MoveUsed(const EVENT_MOVE_USED& tEvent)
 
 	if (tEvent.iSide != m_iSide)
 		return;
+
+	// 빗나가거나 타입 무효면 공격 애니 생략 (발성/결과 메시지는 별도로 출력됨)
+	if (nullptr != m_pManager)
+	{
+		const CBattle_ActionSequencer* pSeq = m_pManager->Get_Sequencer();
+		if (nullptr != pSeq && false == pSeq->Get_ActionData().Connects())
+			return;
+	}
 
 	ANIM_KIND eMoveAnimKind = ANIM_KIND::ATTACK_PHYSICAL;
 

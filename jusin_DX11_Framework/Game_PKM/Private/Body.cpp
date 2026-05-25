@@ -93,6 +93,8 @@ HRESULT CBody::Initialize(void* pArg)
 	else
 		m_bUseOutline = false;
 
+	m_iShadowPass = (PROTO_COM_SHADER_PLAYER_LGPE == m_strShaderProtoTag) ? 3 : 1;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -144,9 +146,8 @@ void CBody::Late_Update(_float fTimeDelta)
 {
 	__super::Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
 
-
-	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42,
-		m_CombinedWorldMatrix._43, 1.f);
+	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
+	
 	if (true == m_pGameInstance->isIn_Frustum_WorldSpace(vPos, 5.f))
 	{
 		m_pGameInstance->Add_RenderGroup(RENDERID::NONBLEND, this);
@@ -155,6 +156,11 @@ void CBody::Late_Update(_float fTimeDelta)
 		if (m_bUseOutline)
 			m_pGameInstance->Add_RenderGroup(RENDERID::OUTLINEMASK, this);
 	}
+}
+
+void CBody::Sync_CombinedWorldMatrix()
+{
+	__super::Compute_CombinedWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()));
 }
 
 HRESULT CBody::Render_OutlineMask()
@@ -172,6 +178,37 @@ HRESULT CBody::Render_OutlineMask()
 			return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Begin(m_iOutlineMaskPass)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CBody::Render_Shadow()
+{
+	// 그림자도 일반 렌더와 같은 결합행렬을 써야 위치가 일치한다. (Human은 애님별 회전 보정 포함)
+	const _matrix ShaderWorldMatrix = Resolve_ShaderWorldMatrix();
+
+	_float4x4 ShaderWorldFloat4x4{};
+	XMStoreFloat4x4(&ShaderWorldFloat4x4, ShaderWorldMatrix);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &ShaderWorldFloat4x4)))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Shadow_Transform(D3DTS::PROJ))))
+		return E_FAIL;
+
+	_uint iNumMeshes = static_cast<_uint>(m_pModelCom->Get_NumMeshes());
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
+		if (FAILED(m_pShaderCom->Begin(m_iShadowPass)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))

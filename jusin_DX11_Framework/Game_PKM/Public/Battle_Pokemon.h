@@ -57,6 +57,8 @@ public:
 	_bool Is_Anim_Finished() const { return ANIM_KIND::IDLE == m_eCurrentKind || ANIM_KIND::FAINT == m_eCurrentKind; }
 
 	void  Begin_SendOutAppear();
+	void  Begin_FaintDisappear(_float fDuration = 0.45f);
+	_bool Is_FaintDisappear_Finished() const { return false == m_bFaintDisappear; }
 	_float3 Get_EffectPivot() const;
 	_float3 Get_EffectPivot(EFFECT_SLOT eSlot, const _float3& vExtraOffset = {}) const;
 	void  Set_BattleVisible(_bool bVisible) { m_bBattleVisible = bVisible; }
@@ -81,10 +83,16 @@ private:
 	_float		m_fAnimDuration = { 0.f };  // 0 = loop, >0 = 시간 만료 후 자동 IDLE
 	_bool		m_bLockHeld = { false };
 	_bool		m_bBattleVisible = { true };
+	_bool		m_bFaintDisappear = { false };
+	_float		m_fFaintDisappearTimer = { 0.f };
+	_float		m_fFaintDisappearDuration = { 0.45f };
+	_float		m_fFaintDisappearStartScale = { 1.f };
 
 private:
 	HRESULT Ready_PartObjects();
 	void    Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration);
+	void	Reset_FaintDisappear();
+	void	Tick_FaintDisappear(_float fTimeDelta);
 	_float3 Get_SendOutEffectPos() const;
 
 public:

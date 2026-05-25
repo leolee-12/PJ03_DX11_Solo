@@ -85,6 +85,8 @@ namespace
 		case CAMERA_SEQUENCE_ID::BUFF_SELF: return TEXT("BUFF_SELF");
 		case CAMERA_SEQUENCE_ID::SENDOUT_PLAYER: return TEXT("SENDOUT_PLAYER");
 		case CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT: return TEXT("SENDOUT_OPPONENT");
+		case CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT_INTRO_HOLD: return TEXT("SENDOUT_OPPONENT_INTRO_HOLD");
+		case CAMERA_SEQUENCE_ID::OUTRO_TRAINER_OPPONENT_FAINT: return TEXT("OUTRO_TRAINER_OPPONENT_FAINT");
 		default: return TEXT("NONE");
 		}
 	}
@@ -281,45 +283,45 @@ HRESULT CLevel_Battle::Ready_Lights()
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
-	LightDesc.vPosition = _float4(-1.f, 1.f, -1.f, 1.f);
-	LightDesc.fRange = 15.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
-	LightDesc.vPosition = _float4(1.f, 1.f, -1.f, 1.f);
-	LightDesc.fRange = 15.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
-	LightDesc.vPosition = _float4(-1.f, 1.f, 1.f, 1.f);
-	LightDesc.fRange = 15.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
-
-	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
-	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
-	LightDesc.vPosition = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.fRange = 15.f;
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+//	LightDesc.eType = LIGHT::POINT;
+//	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+//	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
+//	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+//	LightDesc.vPosition = _float4(-1.f, 1.f, -1.f, 1.f);
+//	LightDesc.fRange = 15.f;
+//
+//	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+//		return E_FAIL;
+//
+//	LightDesc.eType = LIGHT::POINT;
+//	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+//	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
+//	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+//	LightDesc.vPosition = _float4(1.f, 1.f, -1.f, 1.f);
+//	LightDesc.fRange = 15.f;
+//
+//	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+//		return E_FAIL;
+//
+//	LightDesc.eType = LIGHT::POINT;
+//	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+//	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
+//	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+//	LightDesc.vPosition = _float4(-1.f, 1.f, 1.f, 1.f);
+//	LightDesc.fRange = 15.f;
+//
+//	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+//		return E_FAIL;
+//
+//	LightDesc.eType = LIGHT::POINT;
+//	LightDesc.vDiffuse = _float4(0.1f, 0.1f, 0.1f, 1.f);
+//	LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 1.f);
+//	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 1.f);
+//	LightDesc.vPosition = _float4(1.f, 1.f, 1.f, 1.f);
+//	LightDesc.fRange = 15.f;
+//
+//	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+//		return E_FAIL;
 
 	return S_OK;
 }
@@ -361,8 +363,8 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 	   호출 순서 — Set_Mode 가 먼저여야 Set_Default_Battle_Pose 가 즉시 Apply 됨
 	   (Camera_Director.cpp:Set_Default_Battle_Pose 의 mode 가드 참고). */
 	CAMERA_POSE def = {};
-	def.vPosition = _float3(-2.0f, 1.84f, -4.9f);
-	def.vLookAt = _float3(-0.3f, 0.0f, 0.0f);
+	def.vPosition = _float3(-2.35f, 2.55f, -6.25f);
+	def.vLookAt = _float3(-0.25f, 0.9f, 0.0f);
 	def.vUp = _float3(0.0f, 1.0f, 0.0f);
 	def.fFovY = 0.f;                            // M1: FOV 변경 없음 (§4.3)
 
@@ -376,6 +378,9 @@ HRESULT CLevel_Battle::Ready_Layer_Camera(WNameID strLayerTag)
 
 HRESULT CLevel_Battle::Ready_Layer_BackGround(WNameID strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_OBJ_SKY, ETOUI(LEVEL::BATTLE), strLayerTag)))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject(ETOUI(LEVEL::GAMEPLAY), PROTO_BMAP_GRASS, ETOUI(LEVEL::BATTLE), strLayerTag)))
 		return E_FAIL;
 

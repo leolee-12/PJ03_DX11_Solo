@@ -16,6 +16,44 @@
 #include "GameInstance.h"
 #include "Game_PKM_Tags.h"
 
+namespace
+{
+	// 보유 pv 울음 파일이 있는 종족만 자기 울음, 나머지는 pv0025(피카츄) 폴백.
+	_wstring Build_CryKey(_uint iSpeciesID, _bool bHappy)
+	{
+		static const _uint s_AvailableCries[] =
+		{ 1, 4, 7, 10, 25, 41, 43, 59, 74, 95, 121 };
+
+		_uint iCryID = 25u;
+		for (_uint id : s_AvailableCries)
+		{
+			if (id == iSpeciesID)
+			{
+				iCryID = iSpeciesID;
+				break;
+			}
+		}
+
+		_tchar szKey[64] = {};
+		swprintf_s(szKey, L"SFX/pv%04u_%s_adpcm.wav", iCryID, bHappy ? L"Happy" : L"Common");
+		return szKey;
+	}
+
+	constexpr _float FAINT_CAPTURE_HIT_DELAY = 0.65f;
+	constexpr _float FAINT_DISAPPEAR_DURATION = 0.45f;
+
+	// 빗나감(명중 실패)·타입 무효면 공격/피격 연출을 생략하기 위한 판정.
+	// 매니저/시퀀서가 없으면 게이팅 불가로 보고 기존 동작(연출 출력)을 유지한다.
+	_bool Move_Connects(const BATTLE_CONTEXT& ctx)
+	{
+		if (nullptr == ctx.pManager)
+			return true;
+
+		const CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+		return (nullptr == pSeq) ? true : pSeq->Get_ActionData().Connects();
+	}
+}
+
 #pragma region SDelay
 SDelay::SDelay()
 {
@@ -234,18 +272,76 @@ void STrainerThrow::Free()
 }
 #pragma endregion
 
+#pragma region STrainerFaint
+STrainerFaint::STrainerFaint()
+{
+}
+
+HRESULT STrainerFaint::Initialize(_uint iSide)
+{
+	if (iSide >= g_kBattleSideCount)
+		return E_FAIL;
+
+	m_iSide = iSide;
+	return S_OK;
+}
+
+void STrainerFaint::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	if (nullptr == ctx.pManager)
+		return;
+
+	CBattle_Trainer* pTrainer =
+		dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(m_iSide));
+
+	if (nullptr != pTrainer)
+		pTrainer->Play_Faint();
+}
+
+void STrainerFaint::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	(void)fTimeDelta;
+}
+
+_bool STrainerFaint::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return true;
+}
+
+STrainerFaint* STrainerFaint::Create(_uint iSide)
+{
+	STrainerFaint* pInstance = new STrainerFaint();
+
+	if (FAILED(pInstance->Initialize(iSide)))
+	{
+		MSG_BOX("Failed to Created : STrainerFaint");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void STrainerFaint::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
 #pragma region SSendOutBall
 SSendOutBall::SSendOutBall()
 {
 }
 
-HRESULT SSendOutBall::Initialize(_uint iSide, _float fFlightDuration)
+HRESULT SSendOutBall::Initialize(_uint iSide, _float fFlightDuration, CAMERA_SEQUENCE_ID eCameraSequence)
 {
 	if (iSide >= g_kBattleSideCount)
 		return E_FAIL;
 
 	m_iSide = iSide;
 	m_fFlightDuration = (fFlightDuration > 0.f) ? fFlightDuration : 0.72f;
+	m_eCameraSequence = eCameraSequence;
 	m_fElapsed = 0.f;
 	m_bFinished = false;
 	m_vTargetPos = {};
@@ -278,9 +374,11 @@ void SSendOutBall::OnEnter(const BATTLE_CONTEXT& ctx)
 	}
 
 	const CAMERA_SEQUENCE_ID eSequence =
-		(g_kBattleSide_Player == m_iSide)
-		? CAMERA_SEQUENCE_ID::SENDOUT_PLAYER
-		: CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT;
+		(CAMERA_SEQUENCE_ID::NONE != m_eCameraSequence)
+		? m_eCameraSequence
+		: ((g_kBattleSide_Player == m_iSide)
+			? CAMERA_SEQUENCE_ID::SENDOUT_PLAYER
+			: CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT);
 
 	CCamera_Director::GetInstance()->Play_Sequence(eSequence);
 
@@ -294,6 +392,7 @@ void SSendOutBall::OnEnter(const BATTLE_CONTEXT& ctx)
 	}
 
 	m_vTargetPos = pPokemon->Get_EffectPivot();
+	m_vTargetPos.y -= 0.25f;
 
 	const _float fSideSign =
 		(g_kBattleSide_Player == m_iSide) ? -1.f : 1.f;
@@ -302,6 +401,13 @@ void SSendOutBall::OnEnter(const BATTLE_CONTEXT& ctx)
 		m_vTargetPos.x + 0.85f * fSideSign,
 		m_vTargetPos.y + 0.65f,
 		m_vTargetPos.z + 1.35f * fSideSign);
+
+	_float3 vBallFaceTarget = vStartPos;
+	if (g_kBattleSide_Player == m_iSide || g_kBattleSide_Opponent == m_iSide)
+	{
+		vBallFaceTarget.x = m_vTargetPos.x - (vStartPos.x - m_vTargetPos.x);
+		vBallFaceTarget.z = m_vTargetPos.z - (vStartPos.z - m_vTargetPos.z);
+	}
 
 	CMonsterBall::MONSTER_BALL_DESC BallDesc{};
 	BallDesc.vSpawnPos = m_vTargetPos;
@@ -338,7 +444,7 @@ void SSendOutBall::OnEnter(const BATTLE_CONTEXT& ctx)
 
 	m_pBall = pBall;
 	m_pBall->Reset();
-	m_pBall->Play_BattleOpen(m_vTargetPos, vStartPos);
+	m_pBall->Play_BattleOpen(m_vTargetPos, vBallFaceTarget);
 }
 
 void SSendOutBall::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
@@ -376,11 +482,11 @@ _bool SSendOutBall::Is_Complete(const BATTLE_CONTEXT& ctx) const
 	return m_bFinished;
 }
 
-SSendOutBall* SSendOutBall::Create(_uint iSide, _float fFlightDuration)
+SSendOutBall* SSendOutBall::Create(_uint iSide, _float fFlightDuration, CAMERA_SEQUENCE_ID eCameraSequence)
 {
 	SSendOutBall* pInstance = new SSendOutBall();
 
-	if (FAILED(pInstance->Initialize(iSide, fFlightDuration)))
+	if (FAILED(pInstance->Initialize(iSide, fFlightDuration, eCameraSequence)))
 	{
 		MSG_BOX("Failed to Created : SSendOutBall");
 		Safe_Release(pInstance);
@@ -401,13 +507,15 @@ SPokemonEnter::SPokemonEnter()
 {
 }
 
-HRESULT SPokemonEnter::Initialize(_uint iSide)
+HRESULT SPokemonEnter::Initialize(_uint iSide, _float fHoldSeconds)
 {
 	if (iSide >= g_kBattleSideCount)
 		return E_FAIL;
 
 	m_iSide = iSide;
 	m_fGrace = 0.f;
+	m_fHoldSeconds = (fHoldSeconds > 0.f) ? fHoldSeconds : 0.f;
+
 	for (_uint i = 0; i < g_kBattleSideCount; ++i)
 	{
 		m_pHiddenTrainers[i] = nullptr;
@@ -420,6 +528,7 @@ HRESULT SPokemonEnter::Initialize(_uint iSide)
 void SPokemonEnter::OnEnter(const BATTLE_CONTEXT& ctx)
 {
 	m_fGrace = 0.f;
+	m_bCryPlayed = false;
 
 	if (nullptr == ctx.pManager)
 		return;
@@ -433,15 +542,29 @@ void SPokemonEnter::OnEnter(const BATTLE_CONTEXT& ctx)
 
 void SPokemonEnter::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
 {
-	(void)ctx;
 	m_fGrace += fTimeDelta;
+
+	// ball_absorb VFX(OnEnter) 직후 울음 - 홀드 길이와 무관하게 등장 직후 1회 재생
+	if (false == m_bCryPlayed && m_fGrace >= 0.3f)
+	{
+		_uint iSpecies = 25u;
+		CBattler* pBattler = ctx.Get_Self(m_iSide);
+		if (nullptr != pBattler && nullptr != pBattler->Get_Instance())
+			iSpecies = pBattler->Get_Instance()->iSpeciesID;
+
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		if (nullptr != pGameInstance)
+			pGameInstance->Play(Build_CryKey(iSpecies, true).c_str(), CHANNELID::SFX, 1.5f);
+
+		m_bCryPlayed = true;
+	}
 }
 
 _bool SPokemonEnter::Is_Complete(const BATTLE_CONTEXT& ctx) const
 {
 	(void)ctx;
 
-	return m_fGrace >= 2.f;
+	return m_fGrace >= m_fHoldSeconds;
 }
 
 void SPokemonEnter::Restore_Trainers()
@@ -459,11 +582,11 @@ void SPokemonEnter::Restore_Trainers()
 	}
 }
 
-SPokemonEnter* SPokemonEnter::Create(_uint iSide)
+SPokemonEnter* SPokemonEnter::Create(_uint iSide, _float fHoldSeconds)
 {
 	SPokemonEnter* pInstance = new SPokemonEnter();
 
-	if (FAILED(pInstance->Initialize(iSide)))
+	if (FAILED(pInstance->Initialize(iSide, fHoldSeconds)))
 	{
 		MSG_BOX("Failed to Created : SPokemonEnter");
 		Safe_Release(pInstance);
@@ -1004,6 +1127,22 @@ void SAccuracyCheck::OnEnter(const BATTLE_CONTEXT& ctx)
 	CBattler* pDefender = ctx.Get_Self(tData.iTargetSide);
 
 	tData.bAccuracyHit = BattleMath::Roll_Accuracy(pMove->iAccuracy, pAttacker, pDefender);
+
+	// 타입 상성 무효 사전 판정 (데미지 기술만). 데미지 계산 없이 타입 곱만으로 면역 여부 확정.
+	tData.bImmune = false;
+	if (MOVE_CATEGORY::STATUS != pMove->eCategory && 0 != pMove->iPower &&
+		nullptr != pDefender && nullptr != pDefender->Get_Instance())
+	{
+		const SPECIES_DATA* pSpecies = ctx.pDataMgr->Find_Species(pDefender->Get_Instance()->iSpeciesID);
+		if (nullptr != pSpecies)
+		{
+			const _float fType1 = ctx.pDataMgr->Get_TypeMultiplier(pMove->eType, pSpecies->eType1);
+			const _float fType2 = (TYPE::NONE == pSpecies->eType2)
+				? 1.f
+				: ctx.pDataMgr->Get_TypeMultiplier(pMove->eType, pSpecies->eType2);
+			tData.bImmune = ((fType1 * fType2) <= 0.f);
+		}
+	}
 }
 
 void SAccuracyCheck::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
@@ -1151,7 +1290,9 @@ SFaintCheck::SFaintCheck()
 void SFaintCheck::OnEnter(const BATTLE_CONTEXT& ctx)
 {
 	m_fGrace = 0.f;
+	m_iFaintedSide = g_kBattleSideCount;
 	m_bPublished = false;
+	m_bHitPlayed = false;
 
 	if (nullptr == ctx.pManager)
 		return;
@@ -1165,6 +1306,8 @@ void SFaintCheck::OnEnter(const BATTLE_CONTEXT& ctx)
 	if (false == tData.bFaintedThisHit)
 		return;
 
+	m_iFaintedSide = tData.iTargetSide;
+
 	if (nullptr != ctx.pDispatcher)
 	{
 		EVENT_POKEMON_FAINTED tEvent{};
@@ -1172,12 +1315,42 @@ void SFaintCheck::OnEnter(const BATTLE_CONTEXT& ctx)
 		ctx.pDispatcher->Publish(tEvent);
 		m_bPublished = true;
 	}
+
+	// 쓰러진 포켓몬의 Common 울음 1회 (capture_hit 는 Update 에서 약간 뒤에 재생)
+	CBattler* pFainted = ctx.Get_Self(tData.iTargetSide);
+	if (nullptr != pFainted && nullptr != pFainted->Get_Instance())
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		if (nullptr != pGameInstance)
+			pGameInstance->Play(Build_CryKey(pFainted->Get_Instance()->iSpeciesID, false).c_str(), CHANNELID::SFX, 0.8f);
+	}
 }
 
 void SFaintCheck::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
 {
-	(void)ctx;
 	m_fGrace += fTimeDelta;
+
+	if (m_bPublished && false == m_bHitPlayed && m_fGrace >= FAINT_CAPTURE_HIT_DELAY)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		if (nullptr != pGameInstance)
+			pGameInstance->Play(L"SFX/capture_hit.wav", CHANNELID::SFX, 0.8f);
+
+		if (nullptr != ctx.pManager && m_iFaintedSide < g_kBattleSideCount)
+		{
+			CBattle_Pokemon* pPokemon =
+				dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(m_iFaintedSide));
+			if (nullptr != pPokemon)
+			{
+				if (CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance())
+					pEffectMgr->PlayAt("ball_absorb", pPokemon->Get_EffectPivot());
+
+				pPokemon->Begin_FaintDisappear(FAINT_DISAPPEAR_DURATION);
+			}
+		}
+
+		m_bHitPlayed = true;
+	}
 }
 
 _bool SFaintCheck::Is_Complete(const BATTLE_CONTEXT& ctx) const
@@ -1185,8 +1358,19 @@ _bool SFaintCheck::Is_Complete(const BATTLE_CONTEXT& ctx) const
 	if (false == m_bPublished)
 		return true;
 
-	if (m_fGrace < 0.05f)
+	if (false == m_bHitPlayed)
 		return false;
+
+	if (m_fGrace < FAINT_CAPTURE_HIT_DELAY + FAINT_DISAPPEAR_DURATION)
+		return false;
+
+	if (nullptr != ctx.pManager && m_iFaintedSide < g_kBattleSideCount)
+	{
+		CBattle_Pokemon* pPokemon =
+			dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(m_iFaintedSide));
+		if (nullptr != pPokemon && false == pPokemon->Is_FaintDisappear_Finished())
+			return false;
+	}
 
 	if (nullptr != ctx.pMsg && ctx.pMsg->Is_Open())
 		return false;
@@ -1317,6 +1501,10 @@ void SPlayEffect::OnEnter(const BATTLE_CONTEXT& ctx)
 	if (nullptr == ctx.pManager)
 		return;
 
+	// 빗나감/타입 무효면 이펙트 생략
+	if (false == Move_Connects(ctx))
+		return;
+
 	const CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
 	if (nullptr == pSeq)
 		return;
@@ -1335,7 +1523,9 @@ void SPlayEffect::OnEnter(const BATTLE_CONTEXT& ctx)
 	if (nullptr == pEffectMgr)
 		return;
 
-	pEffectMgr->PlayAt(m_strEffectID, pPokemon->Get_EffectPivot(m_eSlot, m_vOffset));
+	m_pEffect = pEffectMgr->PlayAt(m_strEffectID, pPokemon->Get_EffectPivot(m_eSlot, m_vOffset));
+	if (nullptr != m_pEffect)
+		m_pEffect->AddRef();
 }
 
 void SPlayEffect::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
@@ -1365,6 +1555,319 @@ SPlayEffect* SPlayEffect::Create(const _string& strEffectID,
 }
 
 void SPlayEffect::Free()
+{
+	if (nullptr != m_pEffect)
+	{
+		m_pEffect->Stop();          // 추가 spawn 중단 → 잔여 입자 자연 소멸 후 자체 Set_Dead
+		Safe_Release(m_pEffect);    // 공동 소유 해제 (Layer ref 로 객체는 자연 종료까지 유지)
+	}
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SPlayEffectProjectile
+SPlayEffectProjectile::SPlayEffectProjectile()
+{
+}
+
+HRESULT SPlayEffectProjectile::Initialize(const _string& strEffectID,
+	EFFECT_SLOT eStartSlot, const _float3& vStartOffset,
+	EFFECT_SLOT eEndSlot, const _float3& vEndOffset,
+	_float fTravel)
+{
+	if (strEffectID.empty())
+		return E_FAIL;
+
+	m_strEffectID = strEffectID;
+	m_eStartSlot = eStartSlot;
+	m_vStartOffset = vStartOffset;
+	m_eEndSlot = eEndSlot;
+	m_vEndOffset = vEndOffset;
+	m_fTravel = (fTravel > 0.f) ? fTravel : 0.3f;
+	return S_OK;
+}
+
+void SPlayEffectProjectile::Update_Matrix(_float t)
+{
+	_vector vStart = XMLoadFloat3(&m_vStartPos);
+	_vector vEnd = XMLoadFloat3(&m_vEndPos);
+	_vector vPos = XMVectorLerp(vStart, vEnd, t);
+
+	XMStoreFloat4x4(&m_mProjectile, XMMatrixTranslationFromVector(vPos));
+}
+
+void SPlayEffectProjectile::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_fElapsed = 0.f;
+	m_bFinished = false;
+	m_pEffect = nullptr;
+
+	if (nullptr == ctx.pManager)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	// 빗나감/타입 무효면 투사체 생략 (즉시 완료 처리)
+	if (false == Move_Connects(ctx))
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	const CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+	if (nullptr == pSeq)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	const BATTLE_ACTION_DATA& tData = pSeq->Get_ActionData();
+
+	CBattle_Pokemon* pAttacker =
+		dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(tData.iActorSide));
+	CBattle_Pokemon* pDefender =
+		dynamic_cast<CBattle_Pokemon*>(ctx.pManager->Get_BattlerObj(tData.iTargetSide));
+
+	if (nullptr == pAttacker || nullptr == pDefender)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	m_vStartPos = pAttacker->Get_EffectPivot(m_eStartSlot, m_vStartOffset);
+	m_vEndPos = pDefender->Get_EffectPivot(m_eEndSlot, m_vEndOffset);
+	Update_Matrix(0.f);
+
+	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
+	if (nullptr == pEffectMgr)
+	{
+		m_bFinished = true;
+		return;
+	}
+
+	CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
+	tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::MATRIX;
+	tAttach.pSourceMatrix = &m_mProjectile;
+
+	m_pEffect = pEffectMgr->PlayAttached(m_strEffectID, tAttach);
+
+	// 비행 중 이펙트가 자체 소멸(auto-destroy)해도 포인터가 유효하도록 공동 소유
+	if (nullptr != m_pEffect)
+		m_pEffect->AddRef();
+	else
+		m_bFinished = true;   // 스폰 실패 — 비행 생략하고 다음 step 으로
+}
+
+void SPlayEffectProjectile::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+
+	if (m_bFinished)
+		return;
+
+	m_fElapsed += fTimeDelta;
+
+	_float t = m_fElapsed / m_fTravel;
+	if (t > 1.f)
+		t = 1.f;
+
+	Update_Matrix(t);
+
+	if (t >= 1.f)
+	{
+		// 도착 — 추종 매트릭스(m_mProjectile)를 더는 읽지 않도록 이펙트를 즉시 소멸시킨다.
+		// step 메모리는 액션 종료 시 일괄 해제되므로, 그 전에 이펙트를 정리해 dangling 을 막는다.
+		if (nullptr != m_pEffect)
+		{
+			m_pEffect->Destroy();
+			Safe_Release(m_pEffect);
+			m_pEffect = nullptr;   // 공동 소유 해제 완료 — Free 의 2차 release 차단
+		}
+		m_bFinished = true;
+	}
+}
+
+_bool SPlayEffectProjectile::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return m_bFinished;
+}
+
+SPlayEffectProjectile* SPlayEffectProjectile::Create(const _string& strEffectID,
+	EFFECT_SLOT eStartSlot, const _float3& vStartOffset,
+	EFFECT_SLOT eEndSlot, const _float3& vEndOffset,
+	_float fTravel)
+{
+	SPlayEffectProjectile* pInstance = new SPlayEffectProjectile();
+	if (FAILED(pInstance->Initialize(strEffectID, eStartSlot, vStartOffset,
+		eEndSlot, vEndOffset, fTravel)))
+	{
+		MSG_BOX("Failed to Created : SPlayEffectProjectile");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void SPlayEffectProjectile::Free()
+{
+	// 도착 전에 시퀀스가 정리되는 예외 경로 — 남은 이펙트를 안전하게 소멸시킨다.
+	if (nullptr != m_pEffect)
+	{
+		m_pEffect->Destroy();
+		Safe_Release(m_pEffect);
+	}
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SPlaySFX
+SPlaySFX::SPlaySFX()
+{
+}
+
+HRESULT SPlaySFX::Initialize(const _wstring& strSFXKey, _float fVolume, _float fDelay)
+{
+	if (strSFXKey.empty())
+		return E_FAIL;
+
+	m_strSFXKey = strSFXKey;
+	m_fVolume = fVolume;
+	m_fDelay = (fDelay > 0.f) ? fDelay : 0.f;
+	return S_OK;
+}
+
+void SPlaySFX::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_fElapsed = 0.f;
+	m_bPlayed = false;
+
+	// 빗나감/타입 무효면 사운드 생략 (즉시 완료 처리)
+	if (false == Move_Connects(ctx))
+	{
+		m_bPlayed = true;
+		return;
+	}
+
+	if (0.f == m_fDelay)
+		Play_SFX();
+}
+
+void SPlaySFX::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	if (m_bPlayed)
+		return;
+
+	m_fElapsed += fTimeDelta;
+	if (m_fElapsed >= m_fDelay)
+		Play_SFX();
+}
+
+_bool SPlaySFX::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return m_bPlayed;
+}
+
+void SPlaySFX::Play_SFX()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	if (nullptr != pGameInstance)
+		pGameInstance->Play(m_strSFXKey.c_str(), CHANNELID::SFX, m_fVolume);
+
+	m_bPlayed = true;
+}
+
+SPlaySFX* SPlaySFX::Create(const _wstring& strSFXKey, _float fVolume, _float fDelay)
+{
+	SPlaySFX* pInstance = new SPlaySFX();
+	if (FAILED(pInstance->Initialize(strSFXKey, fVolume, fDelay)))
+	{
+		MSG_BOX("Failed to Created : SPlaySFX");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void SPlaySFX::Free()
+{
+	__super::Free();
+}
+#pragma endregion
+
+#pragma region SPlayCry
+SPlayCry::SPlayCry()
+{
+}
+
+HRESULT SPlayCry::Initialize(_uint iSide, CRY_KIND eKind, _float fVolume, _float fDelay)
+{
+	if (iSide >= g_kBattleSideCount)
+		return E_FAIL;
+
+	m_iSide = iSide;
+	m_eKind = eKind;
+	m_fVolume = fVolume;
+	m_fDelay = (fDelay > 0.f) ? fDelay : 0.f;
+	return S_OK;
+}
+
+void SPlayCry::OnEnter(const BATTLE_CONTEXT& ctx)
+{
+	m_fElapsed = 0.f;
+	m_bPlayed = false;
+
+	_uint iSpeciesID = 25u;
+
+	CBattler* pBattler = ctx.Get_Self(m_iSide);
+	if (nullptr != pBattler && nullptr != pBattler->Get_Instance())
+		iSpeciesID = pBattler->Get_Instance()->iSpeciesID;
+
+	m_strKey = Build_CryKey(iSpeciesID, CRY_KIND::HAPPY == m_eKind);
+
+	if (0.f == m_fDelay)
+		Play_Cry();
+}
+
+void SPlayCry::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
+{
+	(void)ctx;
+	if (m_bPlayed)
+		return;
+
+	m_fElapsed += fTimeDelta;
+	if (m_fElapsed >= m_fDelay)
+		Play_Cry();
+}
+
+_bool SPlayCry::Is_Complete(const BATTLE_CONTEXT& ctx) const
+{
+	(void)ctx;
+	return m_bPlayed;
+}
+
+void SPlayCry::Play_Cry()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	if (nullptr != pGameInstance && false == m_strKey.empty())
+		pGameInstance->Play(m_strKey.c_str(), CHANNELID::SFX, m_fVolume);
+
+	m_bPlayed = true;
+}
+
+SPlayCry* SPlayCry::Create(_uint iSide, CRY_KIND eKind, _float fVolume, _float fDelay)
+{
+	SPlayCry* pInstance = new SPlayCry();
+	if (FAILED(pInstance->Initialize(iSide, eKind, fVolume, fDelay)))
+	{
+		MSG_BOX("Failed to Created : SPlayCry");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void SPlayCry::Free()
 {
 	__super::Free();
 }

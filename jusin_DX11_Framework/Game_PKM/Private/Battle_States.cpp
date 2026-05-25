@@ -1,4 +1,4 @@
-﻿#include "Battle_States.h"
+#include "Battle_States.h"
 #include "IBattleCommand.h"
 #include "Battle_Manager.h"
 #include "CommandQueue.h"
@@ -59,27 +59,28 @@ void CIntroState::OnEnter(const BATTLE_CONTEXT& ctx)
 			Safe_Release(pStep);
 		};
 
-	Push(SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID::INTRO_TRAINER_OPPONENT, false));   // 진입 시 상대 트레이너 클로즈업 (hold)
-	Push(SSetPlateVisible::Create(false));   // 인트로 동안 플레이트 숨김
+	Push(SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID::INTRO_TRAINER_OPPONENT, false));   // ?? ? ?? ???? ???? (hold)
+	Push(SSetPlateVisible::Create(false));   // ??? ?? ???? ??
 	Push(SDelay::Create(0.2f));
-	Push(SBattleText::Create(strTrainerName + TEXT("이(가) 승부를 걸어왔다!")));
+	Push(SBattleText::Create(strTrainerName + TEXT("��(��) �ºθ� �ɾ�Դ�!")));
 	Push(SCloseMsg::Create());
 	Push(SDelay::Create(0.2f));
 
-	Push(SBattleText::Create(strTrainerName + TEXT("은(는) ") + strOpponentPokemon + TEXT("을(를) 내보냈다!")));
-	Push(SSendOutBall::Create(g_kBattleSide_Opponent));
+	Push(SBattleText::Create(strTrainerName + TEXT("��(��) ") + strOpponentPokemon + TEXT("��(��) �����´�!")));
+	Push(SSendOutBall::Create(g_kBattleSide_Opponent, 0.72f, CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT_INTRO_HOLD));
+	Push(SPlaySFX::Create(L"SFX/capture_fail.wav", 0.8f));
 	Push(SPokemonEnter::Create(g_kBattleSide_Opponent));
 	Push(SCloseMsg::Create());
-	Push(SDelay::Create(0.2f));
 
-	Push(SBattleText::Create(TEXT("플레이어는 ") + strPlayerPokemon + TEXT("을(를) 내보냈다!")));
 	Push(SSendOutBall::Create(g_kBattleSide_Player));
+	Push(SPlaySFX::Create(L"SFX/capture_fail.wav", 0.8f));
 	Push(SPokemonEnter::Create(g_kBattleSide_Player));
+	Push(SBattleText::Create(TEXT("�÷��̾�� ") + strPlayerPokemon + TEXT("��(��) �����´�!")));
 	Push(SCloseMsg::Create());
 	Push(SDelay::Create(0.2f));
 
-	Push(SRevealTrainers::Create());         // 전역 복귀 시점에 양측 노출
-	Push(SSetPlateVisible::Create(true));    // 플레이트 표시
+	Push(SRevealTrainers::Create());         // ?? ?? ??? ?? ??
+	Push(SSetPlateVisible::Create(true));    // ???? ??
 	Push(SDone::Create());
 
 	pSeq->Submit();
@@ -140,10 +141,10 @@ void CInputPlayerState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
 	if (nullptr == ctx.pManager)
 		return;
 
-	// DIK_ESCAPE 는 Director 의 메뉴 Cancel 콜백이 단독 담당.
-	//  MAIN 에서 Cancel -> 도망(CRunCommand)
-	//  MOVE 에서 Cancel -> MAIN 복귀
-	// State 는 큐에 명령이 올라온 것만 감지해 다음 단계로 전이한다.
+	// DIK_ESCAPE ? Director ? ?? Cancel ??? ?? ??.
+	//  MAIN ?? Cancel -> ??(CRunCommand)
+	//  MOVE ?? Cancel -> MAIN ??
+	// State ? ?? ??? ??? ?? ??? ?? ??? ????.
 	CCommandQueue* pQueue = ctx.pManager->Get_Queue();
 	if (nullptr == pQueue || pQueue->Empty())
 		return;
@@ -295,7 +296,7 @@ void CResolveActionState::Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta)
 	if (ctx.pManager->Is_Pacing_Busy())
 		return;
 
-	// Sequencer 활성 중이면 다음 step 진행 대기
+	// Sequencer ?? ??? ?? step ?? ??
 	CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
 	if (nullptr != pSeq && pSeq->Is_Active())
 		return;
@@ -450,10 +451,10 @@ void CCheckEndState::Free()
 #pragma endregion
 
 #pragma region ForcedSwitchState
-// KO 후 강제 교체 등
-// - CBattle_Manager::Create_State 의 switch 에 해당 case 없음 (생성 경로 없음).
-// - CCheckEndState 도 이 상태로의 분기를 가지지 않음.
-// - Get_Phase 가 BATTLE_PHASE::CHECK_END 를 반환하는 것은 임시값
+// KO ? ?? ?? ?
+// - CBattle_Manager::Create_State ? switch ? ?? case ?? (?? ?? ??).
+// - CCheckEndState ? ? ???? ??? ??? ??.
+// - Get_Phase ? BATTLE_PHASE::CHECK_END ? ???? ?? ???
 CForcedSwitchState::CForcedSwitchState()
 {
 }
@@ -497,12 +498,12 @@ void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
 	{
 		const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
 		const _wstring strTrainerName = (nullptr != pTrainer)
-			? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
-		strSendOutMsg = strTrainerName + TEXT("은(는) ") + strPokemonName + TEXT("을(를) 내보냈다!");
+			? _wstring(pTrainer->szName) : _wstring(TEXT("??"));
+		strSendOutMsg = strTrainerName + TEXT("��(��) ") + strPokemonName + TEXT("��(��) �����´�!");
 	}
 	else
 	{
-		strSendOutMsg = _wstring(TEXT("플레이어는 ")) + strPokemonName + TEXT("을(를) 내보냈다!");
+		strSendOutMsg = _wstring(TEXT("�÷��̾�� ")) + strPokemonName + TEXT("��(��) �����´�!");
 	}
 
 	auto Push = [pSeq](IBattleAction_Step* pStep)
@@ -525,6 +526,7 @@ void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
 	if (bTrainerRule)
 		Push(SSendOutBall::Create(iSide));
 
+	Push(SPlaySFX::Create(L"SFX/capture_fail.wav", 0.8f));
 	Push(SPokemonEnter::Create(iSide));
 
 	if (bTrainerRule)
@@ -598,7 +600,7 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 	else if (false == bPlayerAlive && bOpponentAlive)
 		tEvent.iWinnerSide = g_kBattleSide_Opponent;
 	else
-		tEvent.iWinnerSide = g_kBattleSide_Player;  // 도망/Esc 등 무승부적 종료 - 임시로 Player 표기
+		tEvent.iWinnerSide = g_kBattleSide_Player;  // ??/Esc ? ???? ?? - ??? Player ??
 
 	ctx.pDispatcher->Publish(tEvent);
 
@@ -616,7 +618,7 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 
 	const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
 	const _wstring strTrainerName = (nullptr != pTrainer)
-		? _wstring(pTrainer->szName) : _wstring(TEXT("상대"));
+		? _wstring(pTrainer->szName) : _wstring(TEXT("??"));
 
 	auto Push = [pSeq](IBattleAction_Step* pStep)
 		{
@@ -632,15 +634,16 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 		? g_kBattleSide_Opponent
 		: g_kBattleSide_Player;
 
-	if (CBattle_Trainer* pLoser =
-		dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(iLoserSide)))
-	{
-		pLoser->Play_Faint();
-	}
-
 	if (g_kBattleSide_Player == tEvent.iWinnerSide)
 	{
-		Push(SBattleText::Create(strTrainerName + TEXT("과(와)의 승부에서 이겼다!")));
+		CGameInstance::GetInstance()->Play_BGM(L"BGM/1-25. Victory! (Gym Leader).mp3", 0.3f);
+
+		Push(SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID::OUTRO_TRAINER_OPPONENT_FAINT, false));
+		Push(SDelay::Create(0.35f));
+		Push(STrainerFaint::Create(g_kBattleSide_Opponent));
+		Push(SDelay::Create(1.15f));
+
+		Push(SBattleText::Create(strTrainerName + TEXT("��(��)�� �ºο��� �̰��!")));
 		Push(SCloseMsg::Create());
 		Push(SDelay::Create(0.2f));
 
@@ -658,7 +661,13 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 	}
 	else
 	{
-		Push(SBattleText::Create(_wstring(TEXT("눈앞이 캄캄해졌다..."))));
+		if (CBattle_Trainer* pLoser =
+			dynamic_cast<CBattle_Trainer*>(ctx.pManager->Get_TrainerObj(iLoserSide)))
+		{
+			pLoser->Play_Faint();
+		}
+
+		Push(SBattleText::Create(_wstring(TEXT("������ ����������..."))));
 		Push(SCloseMsg::Create());
 		Push(SDelay::Create(0.2f));
 	}

@@ -11,7 +11,7 @@ private:
 	virtual ~SCamera_PlaySequence() = default;
 
 public:
-	HRESULT Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait);
+	HRESULT Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait, _bool bRequireConnect);
 
 	virtual void  OnEnter(const BATTLE_CONTEXT& ctx) override;
 	virtual void  Update(const BATTLE_CONTEXT& ctx, _float fTimeDelta) override;
@@ -23,9 +23,10 @@ private:
 	_float m_fElapsed = { 0.f };
 	_bool  m_bRequested = { false };
 	_bool  m_bWait = { true };   // false면 시퀀스만 트리거하고 즉시 완료 (hold 연출용)
+	_bool  m_bRequireConnect = { false };   // true면 기술 명중+비면역(Connects)일 때만 재생
 
 public:
-	static SCamera_PlaySequence* Create(CAMERA_SEQUENCE_ID eID, _bool bWait = true);
+	static SCamera_PlaySequence* Create(CAMERA_SEQUENCE_ID eID, _bool bWait = true, _bool bRequireConnect = false);
 
 private:
 	virtual void Free() override;

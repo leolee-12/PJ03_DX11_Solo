@@ -21,16 +21,6 @@ namespace
 		if (MOVE_CATEGORY::STATUS == move.eCategory || 0 == move.iPower)
 			return CAMERA_SEQUENCE_ID::NONE;
 
-		switch (move.iMoveID)
-		{
-		case 157: // 스톤샤워
-		case 201: // 참방참방서핑
-			return CAMERA_SEQUENCE_ID::AREA_WIDE;
-
-		default:
-			break;
-		}
-
 		const _bool bPlayer = (g_kBattleSide_Player == desc.iActorSide);
 
 		switch (move.eCategory)
@@ -57,6 +47,15 @@ namespace
 		EFFECT_SLOT eDefenderSlot = { EFFECT_SLOT::CENTER };
 		_float3 vAttackerOffset = {};
 		_float3 vDefenderOffset = {};
+
+		// 투사체 — true 면 attacker 이펙트가 공격자→방어자로 fProjectileTravel 초 동안 날아간다.
+		_bool   bProjectile = { false };
+		_float  fProjectileTravel = { 0.3f };
+
+		// SFX — Sounds 루트 기준 상대경로(예: L"SFX/Moves/thunder_shock.wav"). 비면 미재생
+		_wstring strSFX = { L"SFX/Tackle.mp3" };
+		_float   fSFXVolume = { 1.f };
+		_float   fSFXDelay = { 0.f };          // SPlaySFX 블로킹 지연(초)
 	};
 
 	MOVE_VFX_PREFAB Resolve_MoveVFX(_uint iMoveID)
@@ -71,6 +70,83 @@ namespace
 			p.fAttackerDelay = 0.0f;
 			p.fBetweenDelay = 0.15f;
 			p.fPreDamageDelay = 0.10f;
+			p.strSFX = L"SFX/Thunder Shock.mp3";
+			p.fSFXVolume = 0.8f;
+			p.fSFXDelay = 0.0f;
+			return p;
+		}
+
+		case 52: // 불꽃세례
+		{
+			MOVE_VFX_PREFAB p{};
+			p.strAttacker = "AT_FIRE";
+			p.strDefender = "DF_FIRE";
+			p.bProjectile = true;   // at_fire 가 공격자→방어자로 날아간 뒤 df_fire 가 임팩트
+			p.fAttackerDelay = 0.0f;
+			p.fBetweenDelay = 0.15f;
+			p.fPreDamageDelay = 0.10f;
+			p.strSFX = L"SFX/Ember.mp3";       // TODO: SFX 경로 (Sounds 루트 기준)
+			p.fSFXVolume = 1.0f;
+			p.fSFXDelay = 0.0f;
+			return p;
+		}
+
+		case 55: // 물대포
+		{
+			MOVE_VFX_PREFAB p{};
+			p.strAttacker = "at_fire";
+			p.strDefender = "df_fire";
+			p.bProjectile = true;   // at_fire 가 공격자→방어자로 날아간 뒤 df_fire 가 임팩트
+			p.fAttackerDelay = 0.0f;
+			p.fBetweenDelay = 0.15f;
+			p.fPreDamageDelay = 0.10f;
+			p.strSFX = L"";       // TODO: SFX 경로 (Sounds 루트 기준)
+			p.fSFXVolume = 1.0f;
+			p.fSFXDelay = 0.0f;
+			return p;
+		}
+
+		case 88: // 돌떨구기
+		{
+			MOVE_VFX_PREFAB p{};
+			p.strAttacker = "";   // TODO: attacker 이펙트 ID
+			p.strDefender = "ROCK";   // TODO: defender 이펙트 ID
+			p.fAttackerDelay = 0.0f;
+			p.fBetweenDelay = 0.10f;
+			p.fPreDamageDelay = 0.25f;
+			p.strSFX = L"SFX/Rock Throw.mp3";       // TODO: SFX 경로 (Sounds 루트 기준)
+			p.fSFXVolume = 1.f;
+			p.fSFXDelay = 0.25f;
+			return p;
+		}
+
+		case 157: // 스톤샤워
+		{
+			MOVE_VFX_PREFAB p{};
+			p.strAttacker = "";   // TODO: attacker 이펙트 ID
+			p.strDefender = "";   // TODO: defender 이펙트 ID
+			p.fAttackerDelay = 0.0f;
+			p.fBetweenDelay = 0.15f;
+			p.fPreDamageDelay = 0.10f;
+			p.strSFX = L"";       // TODO: SFX 경로 (Sounds 루트 기준)
+			p.fSFXVolume = 1.0f;
+			p.fSFXDelay = 0.0f;
+			return p;
+		}
+
+		case 201: // 참방참방서핑
+		{
+			MOVE_VFX_PREFAB p{};
+			p.strAttacker = "at_surf";   // TODO: attacker 이펙트 ID
+			p.strDefender = "df_surf";   // TODO: defender 이펙트 ID
+			p.bProjectile = true;   // at_surf 가 공격자→방어자로 날아간 뒤 df_surf 가 임팩트
+			p.fAttackerDelay = 0.0f;
+			p.fBetweenDelay = 0.15f;
+			p.fPreDamageDelay = 0.10f;
+			p.strSFX = L"SFX/Surf.mp3";       // TODO: SFX 경로 (Sounds 루트 기준)
+			p.fSFXVolume = 1.0f;
+			p.fSFXDelay = 0.0f;
+			p.fProjectileTravel = 0.7f;
 			return p;
 		}
 
@@ -82,6 +158,9 @@ namespace
 			p.fAttackerDelay = 0.0f;
 			p.fBetweenDelay = 0.0f;
 			p.fPreDamageDelay = 0.0f;
+			p.strSFX = L"SFX/Tackle.mp3";
+			p.fSFXVolume = 0.8f;
+			p.fSFXDelay = 0.0f;
 			return p;
 		}
 		}
@@ -197,25 +276,37 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
 
 	const MOVE_VFX_PREFAB tVFX = Resolve_MoveVFX(iMoveID);
 
+	Push(SAccuracyCheck::Create());   // 발성·연출 전에 명중/타입무효 확정 (연출 게이팅용)
+
 	Push(SAnnounce::Create(m_tDesc.iActorSide, iMoveID));
 	Push(SDelay::Create(0.3f));
 	Push(SCloseMsg::Create());
 	Push(SDelay::Create(0.2f));
 
 	if (bUseCameraSequence)
-		Push(SCamera_PlaySequence::Create(eCameraSequence));
+		Push(SCamera_PlaySequence::Create(eCameraSequence, true, true));
 
-	Push(SAccuracyCheck::Create());
 	Push(SMissMessage::Create(m_tDesc.iActorSide, iMoveID));
+
+	// 기술 SFX — 시전(attacker VFX) 시점에 1회 재생. fSFXDelay 로 선후 미세조정(블로킹 지연)
+	if (false == tVFX.strSFX.empty())
+		Push(SPlaySFX::Create(tVFX.strSFX, tVFX.fSFXVolume, tVFX.fSFXDelay));
 
 	if (false == tVFX.strAttacker.empty())
 	{
 		if (tVFX.fAttackerDelay > 0.f)
 			Push(SDelay::Create(tVFX.fAttackerDelay));
 
-		Push(SPlayEffect::Create(
-			tVFX.strAttacker, EFFECT_VFX_TARGET::ATTACKER,
-			tVFX.eAttackerSlot, tVFX.vAttackerOffset));
+		if (tVFX.bProjectile)
+			Push(SPlayEffectProjectile::Create(
+				tVFX.strAttacker,
+				tVFX.eAttackerSlot, tVFX.vAttackerOffset,
+				tVFX.eDefenderSlot, tVFX.vDefenderOffset,
+				tVFX.fProjectileTravel));
+		else
+			Push(SPlayEffect::Create(
+				tVFX.strAttacker, EFFECT_VFX_TARGET::ATTACKER,
+				tVFX.eAttackerSlot, tVFX.vAttackerOffset));
 	}
 
 	if (tVFX.fBetweenDelay > 0.f)
@@ -233,9 +324,6 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
 
 	Push(SApplyDamage::Create());
 
-	if (bUseCameraSequence)
-		Push(SCamera_Shake::Create(0.08f, 35.f, 0.12f));
-
 	Push(SResultMessages::Create());
 	Push(SDelay::Create(0.2f));
 	Push(SCloseMsg::Create());
@@ -243,9 +331,6 @@ HRESULT CMoveCommand::Execute(const BATTLE_CONTEXT& ctx)
 	Push(SFaintCheck::Create());
 	Push(SDelay::Create(0.2f));
 	Push(SCloseMsg::Create());
-
-	if (bUseCameraSequence)
-		Push(SCamera_Return::Create(0.4f));
 
 	Push(SDone::Create());
 
@@ -379,6 +464,7 @@ HRESULT CSwitchCommand::Execute(const BATTLE_CONTEXT& ctx)
 	if (bTrainerRule)
 		Push(SSendOutBall::Create(m_tDesc.iActorSide));
 
+	Push(SPlaySFX::Create(L"SFX/capture_fail.wav", 0.8f));
 	Push(SPokemonEnter::Create(m_tDesc.iActorSide));
 
 	if (bTrainerRule)

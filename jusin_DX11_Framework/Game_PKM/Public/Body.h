@@ -33,6 +33,7 @@ protected:
 
 public:
 	const _float4x4* Get_CombinedWorldMatrixPtr() const { return &m_CombinedWorldMatrix; }
+	void Sync_CombinedWorldMatrix();   // 부모 World 기준 결합행렬 즉시 1회 갱신 (등장 첫 프레임 위치 튐 방지)
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	_bool Get_BoneWorldPosition(const _char* pBoneName, _float3* pOutPosition) const;
 	void Refresh_AnimationPose();
@@ -47,6 +48,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render_OutlineMask() override;
+	virtual HRESULT Render_Shadow() override;
 
 	void Set_UseOutline(_bool b) { m_bUseOutline = b; }
 
@@ -60,6 +62,7 @@ protected:
 	_bool m_bAnimFinishedThisFrame = { false };
 	_bool m_bUseOutline = { true };
 	_uint m_iOutlineMaskPass = { 0 };
+	_uint m_iShadowPass = { 1 };   // 셰이더별 Pass_Shadow 인덱스. Player_LGPE만 3, 나머지(Pokemon/Human/VtxAnimMesh)는 1
 
 protected:
 	HRESULT Ready_Components();

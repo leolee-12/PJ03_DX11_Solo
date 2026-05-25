@@ -85,6 +85,7 @@ HRESULT CBattle_Pokemon::Initialize(void* pArg)
 	const _float3& vPos = pDesc->vPos;
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), pDesc->fYaw);
+	Reset_FaintDisappear();
 
 	return S_OK;
 }
@@ -99,6 +100,7 @@ void CBattle_Pokemon::Update(_float fTimeDelta)
 		return;
 
 	__super::Update(fTimeDelta);
+	Tick_FaintDisappear(fTimeDelta);
 
 	if (m_fAnimDuration > 0.f)
 	{
@@ -140,10 +142,35 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 
 	// SPokemonEnter (Begin_SendOutAppear) 가 visible=true 로 다시 켤 때까지 숨김
 	m_bBattleVisible = false;
+	Reset_FaintDisappear();
+
+	auto ResetBattlePlacement = [this]()
+		{
+			if (nullptr == m_pManager || nullptr == m_pTransformCom)
+				return;
+
+			const _float3 vPos = m_pManager->Get_PokemonPos(m_iSide);
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_pManager->Get_PokemonYaw(m_iSide));
+		};
+
+	if (m_bLockHeld && nullptr != m_pManager)
+	{
+		m_pManager->Release_Pacing_Lock();
+		m_bLockHeld = false;
+	}
 
 	if (pSpecies->strModelTag == m_strSpeciesModelTag)
 	{
 		m_pInstance = pNewInstance;
+		ResetBattlePlacement();
+
+		if (nullptr != m_pBody)
+			m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::IDLE), true);
+
+		m_eCurrentKind = ANIM_KIND::IDLE;
+		m_fAnimTimer = 0.f;
+		m_fAnimDuration = 0.f;
 		return S_OK;
 	}
 
@@ -154,12 +181,6 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 	const CRenderRule* pRenderRule = pRuleManager->Find_PokemonRenderRule(pSpecies);
 	if (nullptr == pRenderRule)
 		return E_FAIL;
-
-	if (m_bLockHeld && nullptr != m_pManager)
-	{
-		m_pManager->Release_Pacing_Lock();
-		m_bLockHeld = false;
-	}
 
 	m_pBody = nullptr;
 
@@ -174,12 +195,7 @@ HRESULT CBattle_Pokemon::Apply_Switch(POKEMON_INSTANCE* pNewInstance)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
-	if (nullptr != m_pManager)
-	{
-		const _float3 vPos = m_pManager->Get_PokemonPos(m_iSide);
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_pManager->Get_PokemonYaw(m_iSide));
-	}
+	ResetBattlePlacement();
 
 	m_eCurrentKind = ANIM_KIND::IDLE;
 	m_fAnimTimer = 0.f;
@@ -203,7 +219,8 @@ void CBattle_Pokemon::Play_Enter()
 	if (nullptr != m_pBody)
 		m_pBody->Set_Anim(
 			BattleAnim::Find_AnimIndex(m_strSpeciesModelTag, ANIM_KIND::INTRO),
-			false);
+			false,
+			0.f);
 
 	m_eCurrentKind = ANIM_KIND::INTRO;
 	m_fAnimTimer = 0.f;
@@ -247,8 +264,15 @@ void CBattle_Pokemon::Return_To_Idle()
 
 void CBattle_Pokemon::Begin_SendOutAppear()
 {
-	if (false == m_bBattleVisible)
-		m_bBattleVisible = true;
+	Reset_FaintDisappear();
+
+	Play_Enter();
+
+	if (nullptr != m_pBody)
+	{
+		m_pBody->Refresh_AnimationPose();
+		m_pBody->Sync_CombinedWorldMatrix();   // visible 직전 포즈/결합행렬 동기화 - 큰 모델 첫 프레임 위치 튐 방지
+	}
 
 	CEffect_Manager* pEffectMgr = CEffect_Manager::GetInstance();
 	if (nullptr != pEffectMgr)
@@ -258,7 +282,22 @@ void CBattle_Pokemon::Begin_SendOutAppear()
 			Get_EffectPivot());
 	}
 
-	Play_Enter();
+	if (false == m_bBattleVisible)
+		m_bBattleVisible = true;
+}
+
+void CBattle_Pokemon::Begin_FaintDisappear(_float fDuration)
+{
+	if (nullptr == m_pTransformCom)
+		return;
+
+	const _float3 vScale = m_pTransformCom->Get_Scaled();
+
+	m_bBattleVisible = true;
+	m_bFaintDisappear = true;
+	m_fFaintDisappearTimer = 0.f;
+	m_fFaintDisappearDuration = (fDuration > 0.001f) ? fDuration : 0.001f;
+	m_fFaintDisappearStartScale = (vScale.x > 0.001f) ? vScale.x : 1.f;
 }
 
 _float3 CBattle_Pokemon::Get_EffectPivot() const
@@ -295,6 +334,48 @@ void CBattle_Pokemon::Play_Anim_NonLoop(ANIM_KIND eKind, _float fDuration)
 	{
 		m_pManager->Add_Pacing_Lock();
 		m_bLockHeld = true;
+	}
+}
+
+void CBattle_Pokemon::Reset_FaintDisappear()
+{
+	m_bFaintDisappear = false;
+	m_fFaintDisappearTimer = 0.f;
+	m_fFaintDisappearDuration = 0.45f;
+	m_fFaintDisappearStartScale = 1.f;
+
+	if (nullptr != m_pTransformCom)
+		m_pTransformCom->ScaleTo(1.f, 1.f, 1.f);
+}
+
+void CBattle_Pokemon::Tick_FaintDisappear(_float fTimeDelta)
+{
+	if (false == m_bFaintDisappear || nullptr == m_pTransformCom)
+		return;
+
+	m_fFaintDisappearTimer += fTimeDelta;
+
+	const _float fDuration =
+		(m_fFaintDisappearDuration > 0.001f) ? m_fFaintDisappearDuration : 0.001f;
+
+	_float fRatio = m_fFaintDisappearTimer / fDuration;
+	if (fRatio > 1.f)
+		fRatio = 1.f;
+
+	const _float fSmooth = fRatio * fRatio * (3.f - 2.f * fRatio);
+	_float fScale = m_fFaintDisappearStartScale * (1.f - fSmooth);
+	if (fScale < 0.001f)
+		fScale = 0.001f;
+
+	m_pTransformCom->ScaleTo(fScale, fScale, fScale);
+
+	if (fRatio >= 1.f)
+	{
+		m_bFaintDisappear = false;
+		m_fFaintDisappearTimer = 0.f;
+		m_fFaintDisappearStartScale = 1.f;
+		m_bBattleVisible = false;
+		m_pTransformCom->ScaleTo(1.f, 1.f, 1.f);
 	}
 }
 

@@ -1,12 +1,14 @@
 #include "Battle_Camera_Steps.h"
 #include "Camera_Director.h"
+#include "Battle_Manager.h"
+#include "Battle_ActionSequencer.h"
 
 #pragma region SCamera_PlaySequence
 SCamera_PlaySequence::SCamera_PlaySequence()
 {
 }
 
-HRESULT SCamera_PlaySequence::Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait)
+HRESULT SCamera_PlaySequence::Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait, _bool bRequireConnect)
 {
 	if (CAMERA_SEQUENCE_ID::NONE == eID)
 		return E_FAIL;
@@ -16,16 +18,23 @@ HRESULT SCamera_PlaySequence::Initialize(CAMERA_SEQUENCE_ID eID, _bool bWait)
 	m_fElapsed = 0.f;
 	m_bRequested = false;
 	m_bWait = bWait;
+	m_bRequireConnect = bRequireConnect;
 
 	return S_OK;
 }
 
 void SCamera_PlaySequence::OnEnter(const BATTLE_CONTEXT& ctx)
 {
-	(void)ctx;
-
 	m_fElapsed = 0.f;
 	m_bRequested = false;
+
+	// 기술 카메라: 빗나감/타입 무효면 연출 생략 (즉시 완료 처리)
+	if (m_bRequireConnect && nullptr != ctx.pManager)
+	{
+		const CBattle_ActionSequencer* pSeq = ctx.pManager->Get_Sequencer();
+		if (nullptr != pSeq && false == pSeq->Get_ActionData().Connects())
+			return;
+	}
 
 	CCamera_Director* pDirector = CCamera_Director::GetInstance();
 	m_fDuration = pDirector->Get_Sequence_Duration(m_eID);
@@ -57,11 +66,11 @@ _bool SCamera_PlaySequence::Is_Complete(const BATTLE_CONTEXT& ctx) const
 	return m_fElapsed >= m_fDuration;
 }
 
-SCamera_PlaySequence* SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID eID, _bool bWait)
+SCamera_PlaySequence* SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID eID, _bool bWait, _bool bRequireConnect)
 {
 	SCamera_PlaySequence* pInstance = new SCamera_PlaySequence();
 
-	if (FAILED(pInstance->Initialize(eID, bWait)))
+	if (FAILED(pInstance->Initialize(eID, bWait, bRequireConnect)))
 	{
 		MSG_BOX("Failed to Created : SCamera_PlaySequence");
 		Safe_Release(pInstance);

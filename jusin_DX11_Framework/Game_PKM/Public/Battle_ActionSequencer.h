@@ -21,9 +21,13 @@ struct BATTLE_ACTION_DATA
 	_uint  iMoveSlot = { 0 };
 
 	_bool  bAccuracyHit = { false };   // SAccuracyCheck 가 기록
+	_bool  bImmune = { false };        // SAccuracyCheck 가 기록 — 타입 상성상 무효(효과 0)
 	DAMAGE_PIPE_DATA tPipe = {};          // SApplyDamage 가 기록 (crit/effectiveness/final 등)
 	_ushort iAppliedDamage = { 0 };
 	_bool  bFaintedThisHit = { false };
+
+	// 명중 + 비면역일 때만 공격/피격 연출(애니·이펙트·사운드)을 출력한다.
+	_bool  Connects() const { return bAccuracyHit && (false == bImmune); }
 };
 
 /* CBattle_ActionSequencer
