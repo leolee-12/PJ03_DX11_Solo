@@ -4,6 +4,8 @@
 #include "Collider.h"
 #include "Bounding_Sphere.h"
 
+#include "Effect_Manager.h"
+
 namespace
 {
 	const _float4x4 g_IdentityMatrix =
@@ -99,6 +101,8 @@ void CMonsterBall::Update(_float fTimeDelta)
 	}
 #endif
 
+	const BALL_STATE ePrevState = m_eState;
+
 	switch (m_eState)
 	{
 	case BALL_STATE::READY:
@@ -132,6 +136,10 @@ void CMonsterBall::Update(_float fTimeDelta)
 	default:
 		break;
 	}
+
+	/* FLYING을 벗어나는 순간(명중·빗나감·DONE 모두) 트레일 정지. */
+	if (BALL_STATE::FLYING == ePrevState && BALL_STATE::FLYING != m_eState)
+		Stop_Trail();
 
 	Update_Collider();
 }
@@ -295,10 +303,14 @@ void CMonsterBall::Launch()
 	m_bShakeFinished = false;
 
 	OutputDebugStringW(L"[MonsterBall] READY -> FLYING (Show)\n");
+
+	Start_Trail();
 }
 
 void CMonsterBall::Reset()
 {
+	Stop_Trail();
+
 	m_eState = BALL_STATE::READY;
 	m_fElapsed = 0.f;
 	m_bWaitCloseAfterOpen = false;
@@ -345,10 +357,49 @@ void CMonsterBall::Show()
 	OutputDebugStringW(L"[MonsterBall] Show\n");
 }
 
+void CMonsterBall::Set_TrailEnabled(_bool bEnable)
+{
+	m_bTrailEnabled = bEnable;
+
+	if (false == bEnable)
+		Stop_Trail();                       // 끄면 비행 중이라도 즉시 정지
+	else if (BALL_STATE::FLYING == m_eState)
+		Start_Trail();                      // 비행 중 켜면 바로 시작
+}
+
+void CMonsterBall::Start_Trail()
+{
+	if (false == m_bTrailEnabled || nullptr != m_pTrailEffect)
+		return;
+
+	CEffect::EFFECT_DESC::ATTACH_INFO tAttach{};
+	tAttach.eKind = CEffect::EFFECT_DESC::ATTACH_INFO::KIND::MATRIX;
+	tAttach.pOwner = this;                          // 볼 소멸 감지 → 이펙트 자동 정리
+	tAttach.pSourceMatrix = &m_CombinedWorldMatrix; // 렌더에 쓰는 실제 월드행렬을 추종
+	XMStoreFloat4x4(&tAttach.mLocalOffset, XMMatrixIdentity());
+
+	m_pTrailEffect = CEffect_Manager::GetInstance()->PlayAttached(
+		"BALL_TRAIL", tAttach,
+		static_cast<_uint>(m_pGameInstance->Get_CurrentLevel()),
+		LAYER_EFFECT);
+}
+
+void CMonsterBall::Stop_Trail()
+{
+	/* borrowed 포인터 — Release 하지 않고 Stop만. 잔여 파티클은 자연 페이드 후 소멸. */
+	if (nullptr != m_pTrailEffect)
+	{
+		m_pTrailEffect->Stop();
+		m_pTrailEffect = nullptr;
+	}
+}
+
 void CMonsterBall::Trigger_Impact(const _float3& vTargetCenter)
 {
 	if (BALL_STATE::FLYING != m_eState)
 		return;
+
+	Stop_Trail();   // 몬스터와 충돌한 시점부터 트레일 정지
 
 	const _vector vTargetCenterV = XMLoadFloat3(&vTargetCenter);
 	const _vector vBallCenterV = XMLoadFloat3(&m_vCenterPos);
@@ -995,6 +1046,13 @@ CGameObject* CMonsterBall::Clone(void* pArg)
 
 void CMonsterBall::Free()
 {
+	/* 볼 소멸 시 dangling 추종행렬/owner deref 방지 — 즉시 제거. */
+	if (nullptr != m_pTrailEffect)
+	{
+		m_pTrailEffect->Destroy();
+		m_pTrailEffect = nullptr;
+	}
+
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);

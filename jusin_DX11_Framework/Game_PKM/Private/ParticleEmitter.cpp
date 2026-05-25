@@ -288,9 +288,9 @@ void CParticleEmitter::Spawn_One()
 
 	CParticle& Particle = m_Particles[m_iAliveCount];
 
-	Particle.vPosition = _float3(0.f, 0.f, 0.f);
+	Particle.vPosition = m_tDesc.vStartOffset;
 	Particle.vVelocity = Make_RandomVelocity();
-	Particle.vAcceleration = _float3(0.f, 0.f, 0.f);
+	Particle.vAcceleration = m_tDesc.vGravity;
 
 	if (m_tDesc.bWorldSpace)
 	{
@@ -299,6 +299,7 @@ void CParticleEmitter::Spawn_One()
 		// 위치: local spawn(0,0,0) → 현재 root world 위치, 속도: emit 방향을 world 회전으로
 		XMStoreFloat3(&Particle.vPosition, XMVector3TransformCoord(XMLoadFloat3(&Particle.vPosition), mWorld));
 		XMStoreFloat3(&Particle.vVelocity, XMVector3TransformNormal(XMLoadFloat3(&Particle.vVelocity), mWorld));
+		XMStoreFloat3(&Particle.vAcceleration, XMVector3TransformNormal(XMLoadFloat3(&Particle.vAcceleration), mWorld));
 	}
 
 	Particle.fSize = m_pGameInstance->Random(m_tDesc.vSizeRange.x, m_tDesc.vSizeRange.y);

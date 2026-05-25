@@ -42,6 +42,10 @@ struct EMITTER_DEFINITION
 	_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 	_float  fEmitConeHalfAngle = 0.f;
 
+	/* fall motion (root local): Mesh와 동일 규약 */
+	_float3 vStartOffset = { 0.f, 0.f, 0.f };
+	_float3 vGravity     = { 0.f, 0.f, 0.f };
+
 	/* 렌더 모드 */
 	BILLBOARD_MODE eBillboard = BILLBOARD_MODE::VIEW_ALIGNED;
 	_float3 vBillboardFixedAxis = { 0.f, 1.f, 0.f };
@@ -363,6 +367,10 @@ inline constexpr EFFECT_MESH_OPTION g_EffectMeshOptions[] =
 		"Prototype_Component_Model_Static_Df_Beam"),
 	EFFECT_MESH_OPTION_ROW("Ring", PROTO_COM_MODEL_STATIC_RING, "../../Resources/Models/StaticMeshs/ring.wmodel",
 		"Prototype_Component_Model_Static_Ring"),
+	EFFECT_MESH_OPTION_ROW("Rock Smash", PROTO_COM_MODEL_STATIC_ROCK_SMASH, "../../Resources/Models/StaticMeshs/rock_smash.wmodel",
+		"Prototype_Component_Model_Static_Rock_Smash"),
+	EFFECT_MESH_OPTION_ROW("Rock Smash 2", PROTO_COM_MODEL_STATIC_ROCK_SMASH2, "../../Resources/Models/StaticMeshs/rock_smash2.wmodel",
+		"Prototype_Component_Model_Static_Rock_Smash2"),
 	EFFECT_MESH_OPTION_ROW("Sonic", PROTO_COM_MODEL_STATIC_SONIC, "../../Resources/Models/StaticMeshs/sonic.wmodel",
 		"Prototype_Component_Model_Static_Sonic"),
 	EFFECT_MESH_OPTION_ROW("Sphere", PROTO_COM_MODEL_STATIC_SPHERE, "../../Resources/Models/StaticMeshs/sphere.wmodel",
@@ -371,6 +379,8 @@ inline constexpr EFFECT_MESH_OPTION g_EffectMeshOptions[] =
 		"Prototype_Component_Model_Static_Stone"),
 	EFFECT_MESH_OPTION_ROW("Surf", PROTO_COM_MODEL_STATIC_SURF, "../../Resources/Models/StaticMeshs/surf.wmodel",
 		"Prototype_Component_Model_Static_Surf"),
+	EFFECT_MESH_OPTION_ROW("Wave", PROTO_COM_MODEL_STATIC_WAVE, "../../Resources/Models/StaticMeshs/wave.wmodel",
+		"Prototype_Component_Model_Static_Wave"),
 };
 
 #undef EFFECT_MESH_OPTION_ROW
@@ -412,6 +422,8 @@ inline CParticleEmitter::EMITTER_DESC Make_EmitterDesc(const EMITTER_DEFINITION&
 	desc.vRotationSpeedRange = def.vRotationSpeedRange;
 	desc.vEmitDirection = def.vEmitDirection;
 	desc.fEmitConeHalfAngle = def.fEmitConeHalfAngle;
+	desc.vStartOffset = def.vStartOffset;
+	desc.vGravity = def.vGravity;
 	desc.eBillboard = def.eBillboard;
 	desc.vBillboardFixedAxis = def.vBillboardFixedAxis;
 	desc.eBlend = def.eBlend;
@@ -598,6 +610,11 @@ inline HRESULT Effect_ParseEmitterJson(const json& je, EMITTER_DEFINITION& out)
 		Effect_ReadFloat3(je["emitDirection"], out.vEmitDirection);
 
 	Effect_GetOpt(je, "emitConeHalfAngle", out.fEmitConeHalfAngle);
+
+	if (je.contains("startOffset"))
+		Effect_ReadFloat3(je["startOffset"], out.vStartOffset);
+	if (je.contains("gravity"))
+		Effect_ReadFloat3(je["gravity"], out.vGravity);
 
 	if (je.contains("billboard"))
 		out.eBillboard = Effect_BillboardFromString(je["billboard"].get<_string>());
@@ -814,6 +831,8 @@ inline json Effect_SerializeEmitterJson(const EMITTER_DEFINITION& emitter)
 	j["emitDirection"] = { emitter.vEmitDirection.x, emitter.vEmitDirection.y,
 emitter.vEmitDirection.z };
 	j["emitConeHalfAngle"] = emitter.fEmitConeHalfAngle;
+	j["startOffset"] = { emitter.vStartOffset.x, emitter.vStartOffset.y, emitter.vStartOffset.z };
+	j["gravity"] = { emitter.vGravity.x, emitter.vGravity.y, emitter.vGravity.z };
 	j["billboard"] = Effect_BillboardToString(emitter.eBillboard);
 	j["billboardFixedAxis"] = { emitter.vBillboardFixedAxis.x, emitter.vBillboardFixedAxis.y,
 emitter.vBillboardFixedAxis.z };

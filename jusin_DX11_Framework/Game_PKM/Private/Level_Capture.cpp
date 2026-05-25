@@ -113,6 +113,10 @@ void CLevel_Capture::Update(_float fTimeDelta)
 	if (nullptr == m_pCaptureManager)
 		return;
 
+	/* 디버그: B 키로 Ball_Trail On/Off 토글 */
+	if (nullptr != m_pMonsterBall && m_pGameInstance->Key_Down(DIK_B))
+		m_pMonsterBall->Set_TrailEnabled(!m_pMonsterBall->Is_TrailEnabled());
+
 	const CAPTURE_PHASE ePhaseBeforeUpdate = m_pCaptureManager->Get_Phase();
 
 	/* AIMING 에서만 좌클릭 = 볼 던지기. 재던지기 시 볼이 DONE 이면 Reset 선행. */
@@ -144,6 +148,19 @@ void CLevel_Capture::Update(_float fTimeDelta)
 
 	const CAPTURE_PHASE ePhaseAfterUpdate = m_pCaptureManager->Get_Phase();
 
+	/* 충돌 즉시(ball_absorb VFX 와 같은 프레임) capture_hit 재생.
+	   적중 플래그의 상승 엣지로 던지기당 1회만 울린다. */
+	const _bool bDidHit = m_pCaptureManager->Did_Hit();
+	if (false == m_bPrevDidHit && true == bDidHit)
+	{
+		m_pGameInstance->Play(L"SFX/capture_hit.wav", CHANNELID::SFX, 0.8f);
+
+		/* 피격 위치에서 멈춰 그 자리에서 흡수되도록 이동 정지. */
+		if (nullptr != m_pCaptureTarget)
+			m_pCaptureTarget->Set_MoveActive(false);
+	}
+	m_bPrevDidHit = bDidHit;
+
 	if (CAPTURE_PHASE::INTRO != ePhaseBeforeUpdate
 		&& CAPTURE_PHASE::INTRO == ePhaseAfterUpdate)
 	{
@@ -159,11 +176,22 @@ void CLevel_Capture::Update(_float fTimeDelta)
 
 		if (nullptr != m_pCaptureMenu)
 			m_pCaptureMenu->Open(true);
+
+		/* 재도전 시 중앙(누적시간 0)부터 종별 이동 재개. */
+		if (nullptr != m_pCaptureTarget)
+		{
+			m_pCaptureTarget->Reset_Move();
+			m_pCaptureTarget->Set_MoveActive(true);
+		}
 	}
 
 	if (CAPTURE_PHASE::STAGE != ePhaseBeforeUpdate
 		&& CAPTURE_PHASE::STAGE == ePhaseAfterUpdate)
 	{
+		/* 볼 안에 있는 동안(흡수~흔들기) 홈(중앙)에 둔다. break-out 등장 위치를 중앙으로. */
+		if (nullptr != m_pCaptureTarget)
+			m_pCaptureTarget->Reset_Move();
+
 		if (nullptr != m_pMonsterBall)
 			m_pMonsterBall->Hide();
 
@@ -186,6 +214,7 @@ void CLevel_Capture::Update(_float fTimeDelta)
 			&& CMonsterBall::BALL_STATE::DONE == m_pMonsterBall->Get_State())
 		{
 			m_pMonsterBall->Begin_OneShake(STAGE_SHAKE_DURATION, STAGE_SHAKE_ANGLE_DEG);
+			m_pGameInstance->Play(L"SFX/capture_shake.wav", CHANNELID::SFX, 0.8f);
 			m_iAppliedShakeIndex = iShakeIndex;
 		}
 	}
@@ -197,7 +226,16 @@ void CLevel_Capture::Update(_float fTimeDelta)
 	if (CAPTURE_PHASE::SUCCESS_VIEW != ePhaseBeforeUpdate
 		&& CAPTURE_PHASE::SUCCESS_VIEW == ePhaseAfterUpdate)
 	{
+		m_pGameInstance->Play(L"SFX/capture_success.wav", CHANNELID::SFX, 0.8f);
 		Begin_CaptureSuccessView();
+	}
+
+	/* break-out VFX(Begin_Appear -> ball_absorb)는 BREAK_VIEW 끝(=INTRO 복귀) 시점에 터진다.
+	   capture_fail 도 그 순간에 맞춰 재생한다. (이전엔 실패 판정 즉시 울려 VFX 보다 앞서 들렸음) */
+	if (CAPTURE_PHASE::BREAK_VIEW == ePhaseBeforeUpdate
+		&& CAPTURE_PHASE::INTRO == ePhaseAfterUpdate)
+	{
+		m_pGameInstance->Play(L"SFX/capture_fail.wav", CHANNELID::SFX, 0.8f);
 	}
 
 	if (CAPTURE_PHASE::AIMING != ePhaseBeforeUpdate
@@ -369,7 +407,15 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	if (nullptr == BodyDesc.pRenderRule)
 		return E_FAIL;
 
+	/* PM0043(좌우 달리기 패턴)만 루트모션 활성 - 달리기 애님의 이동을 위치에 반영. */
+	if (43 == m_tEnv.iSpeciesID)
+	{
+		BodyDesc.bEnableRootMotion = true;
+		BodyDesc.strRootMotionBoneName = "Origin";
+	}
+
 	CActor_CaptureTarget::ACTOR_CAPTURE_DESC TargetDesc{};
+	TargetDesc.fRotationPerSec = XMConvertToRadians(720.f);   // RUN_TURN 이 진행 방향으로 회전하도록(Face_Direction)
 	TargetDesc.iBodyProtoLevel = ETOUI(LEVEL::STATIC);
 	TargetDesc.iComponentLevel = ETOUI(LEVEL::GAMEPLAY);
 	TargetDesc.strBodyProtoTag = PROTO_OBJ_BODY_POKEMON;
@@ -389,10 +435,13 @@ HRESULT CLevel_Capture::Ready_Layer_Battler(WNameID strLayerTag)
 	if (nullptr == pTarget)
 		return E_FAIL;
 
-	/* 카메라 위치를 정면으로 보도록 회전.
+	/* 카메라 방향을 정면으로 보도록 회전하되, 수평면으로 투영해 상하 기울기(피치)는 제거.
+	   카메라 Eye 가 타깃보다 높아 그대로 LookAt 하면 타깃이 카메라 쪽으로 기울어진다.
 	   좌표는 Ready_Layer_Camera 의 vEye 와 동일해야 함 - 수동 동기화. */
-	const _vector vCamPos = XMVectorSetW(XMLoadFloat3(&CAPTURE_CAMERA_EYE), 1.f);
-	pTarget->Get_Transform()->LookAt(vCamPos);;
+	const _vector vTargetPos = pTarget->Get_Transform()->Get_State(STATE::POSITION);
+	const _vector vLookTarget = XMVectorSetW(
+		XMVectorSetY(XMLoadFloat3(&CAPTURE_CAMERA_EYE), XMVectorGetY(vTargetPos)), 1.f);
+	pTarget->Get_Transform()->LookAt(vLookTarget);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_Ex(CURRENT_LEVEL, strLayerTag, pTarget)))
 	{
@@ -541,6 +590,8 @@ HRESULT CLevel_Capture::Ready_Layer_UI(WNameID strLayerTag)
 					case CCapture_Menu::MENU::RUN:
 						/* 도망간다 - Request_Run() 로 FAIL_RUN + DONE 전이.
 						   Is_Done() 분기가 Pop_Level 실행. */
+						m_pGameInstance->Play(L"SFX/run.wav", CHANNELID::SFX, 0.8f);
+
 						if (nullptr != m_pCaptureManager)
 							m_pCaptureManager->Request_Run();
 						break;

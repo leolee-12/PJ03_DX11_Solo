@@ -49,6 +49,7 @@ private:
 	_float3 m_vStageCameraTargetAt = {};
 
 	_int    m_iAppliedShakeIndex = { -1 };
+	_bool   m_bPrevDidHit = { false };   // capture_hit SFX 를 충돌 순간 1회만 재생하기 위한 엣지 추적
 
 	CBattleMsg* m_pCaptureMsg = { nullptr };      // weak - UI Hub owns
 	_bool   m_bCaptureIntroMessageActive = { false };

@@ -30,6 +30,9 @@ public:
 		_float3 vEmitDirection = { 0.f, 1.f, 0.f };
 		_float  fEmitConeHalfAngle = 0.f;
 
+		_float3 vStartOffset = { 0.f, 0.f, 0.f };
+		_float3 vGravity     = { 0.f, 0.f, 0.f };
+
 		BILLBOARD_MODE eBillboard = BILLBOARD_MODE::VIEW_ALIGNED;
 		_float3        vBillboardFixedAxis = { 0.f, 1.f, 0.f };
 
@@ -55,7 +58,7 @@ public:
 
 		WNameID strTextureProtoTag = PROTO_COM_TEX_DUMMY_WHITE;
 		_uint   iTextureProtoLevel = ETOUI(LEVEL::STATIC);
-		class CTransform* pParentTransform = nullptr;  // M8: effect root transform °øÀ¯ (nullable)
+		class CTransform* pParentTransform = nullptr;  // M8: effect root transform ï¿½ï¿½ï¿½ï¿½ (nullable)
 	};
 
 private:

@@ -48,6 +48,9 @@ void CSky::Late_Update(_float fTimeDelta)
 
 HRESULT CSky::Render()
 {
+	m_pTransformCom->Set_State(STATE::POSITION,
+		XMLoadFloat4(m_pGameInstance->Get_CamPosition()));
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 

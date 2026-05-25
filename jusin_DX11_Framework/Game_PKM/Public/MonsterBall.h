@@ -9,6 +9,7 @@ class CCollider;
 NS_END
 
 NS_BEGIN(Game_PKM)
+class CEffect;
 
 /* -------------------------------------------------- */
 // CMonsterBall : Capture 레벨에서 던지는 몬스터볼
@@ -69,6 +70,9 @@ public:
 	void       Hide();     // 외부 가시성 false - Late_Update 의 RenderGroup 등록 차단
 	void       Show();     // 외부 가시성 true
 
+	void       Set_TrailEnabled(_bool bEnable);   // Ball_Trail 이펙트 On/Off
+	_bool      Is_TrailEnabled() const { return m_bTrailEnabled; }
+
 	void	Trigger_Impact(const _float3& vTargetCenter);   // FLYING 중 외부 충돌 신호로 IMPACT 전이
 	void	Begin_StageDrop(const _float3& vAirCenter, const _float3& vGroundCenter, const _float3& vFaceTarget, _float fDuration);
 	_bool	Is_DropDone() const { return m_bStageDropFinished; }
@@ -95,6 +99,9 @@ private:
 	_bool   m_bWaitCloseAfterOpen = { false };
 	_bool   m_bOpenFinished = { false };
 
+	CEffect* m_pTrailEffect = { nullptr };   // borrowed (Layer 소유) — Stop/Destroy만 호출
+	_bool    m_bTrailEnabled = { true };
+
 	_float3     m_vBounceStartCenter = {};
 	_float3     m_vBounceEndCenter = {};
 	_float      m_fBounceTime = 0.f;
@@ -120,6 +127,9 @@ private:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+
+	void    Start_Trail();
+	void    Stop_Trail();
 
 	void    Update_Ready(_float fTimeDelta);
 	void    Update_Flying(_float fTimeDelta);
