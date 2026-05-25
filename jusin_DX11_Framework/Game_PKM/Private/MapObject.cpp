@@ -187,10 +187,16 @@ HRESULT CMapObject::Render_Shadow()
 
 	size_t iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	/* 일반 렌더에서 Pass_Discard(2번)로 화면에서 제외되는 머티리얼은 그림자에서도 제외.
+	   패스는 머티리얼 단위라 보이는 메쉬 집합과 그림자 메쉬 집합이 일치한다. */
+	const auto& tTable = m_RenderProfile.Get_Table();
+	constexpr _uint MAP_PASS_DISCARD = 2;   // Shader_Map.hlsl: Pass_Discard
+
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		//if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
-		//	return E_FAIL;
+		const _uint iMatIdx = m_pModelCom->Get_MeshMaterialIndex(i);
+		if (iMatIdx < tTable.passes.size() && MAP_PASS_DISCARD == tTable.passes[iMatIdx])
+			continue;
 
 		if (FAILED(m_pShaderCom->Begin(1)))
 			return E_FAIL;

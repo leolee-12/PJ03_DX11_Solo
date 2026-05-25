@@ -26,6 +26,7 @@ public:
 	CAPTURE_RESULT		Get_Result() const { return m_eResult; }
 	_float				Get_PhaseElapsed() const { return m_fPhaseElapsed; }
 	_int				Get_ShakeIndex() const { return m_iShakeIdx; }
+	_bool				Did_Hit() const { return m_bHitThisThrow; }   // 이번 던지기에서 몬스터에 적중했는지(충돌 즉시 true)
 
 	HRESULT Initialize(const CAPTURE_ENV& tEnv);
 

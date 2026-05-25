@@ -5,6 +5,8 @@
 #include "GameInstance.h"
 #include "Effect_Manager.h"
 
+#include <cmath>
+
 CActor_CaptureTarget::CActor_CaptureTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CActor{ pDevice, pContext }
 {
@@ -46,6 +48,19 @@ HRESULT CActor_CaptureTarget::Initialize(void* pArg)
     m_pTransformCom->Set_State(STATE::POSITION,
         XMVectorSet(pDesc->vSpawnPos.x, pDesc->vSpawnPos.y, pDesc->vSpawnPos.z, 1.f));
 
+    m_vHomePos = pDesc->vSpawnPos;
+
+    switch (m_iSpeciesID)
+    {
+    case 10: m_eMoveType = CAPTURE_MOVE_TYPE::STAY;     break;   // PM0010 - 정지
+    case 43: m_eMoveType = CAPTURE_MOVE_TYPE::RUN_TURN; break;   // PM0043 - 좌우 달리기 + 턴
+    case 41: m_eMoveType = CAPTURE_MOVE_TYPE::BAT;      break;   // PM0041 - 박쥐 패턴
+    default: m_eMoveType = CAPTURE_MOVE_TYPE::STAY;     break;
+    }
+
+    /* RUN_TURN 의 달리기 속도(루트모션 델타 스케일). 다른 패턴은 미사용. */
+    m_Tuning.fRootMotionScale = BattleAnim::Find_RootMotionScale(m_strModelTag);
+
     Cache_Members();
     Rebuild_InteractionCache();
 
@@ -83,6 +98,8 @@ void CActor_CaptureTarget::Update(_float fTimeDelta)
             m_bAbsorbing = false;
     }
 
+    /* 이동은 Tick_Movement 에서. __super::Update(CActor) 가 파트 애님 갱신 후 호출하므로
+       루트모션 델타가 준비된 시점이며, 아래 콜라이더 갱신이 갱신된 위치를 따라간다. */
     __super::Update(fTimeDelta);
 
     if (nullptr != m_pColliderCom)
@@ -243,6 +260,113 @@ void CActor_CaptureTarget::Cache_BasisIfNeeded()
     XMStoreFloat3(&m_vLookUnit, XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK)));
 
     m_bBasisCached = true;
+}
+
+void CActor_CaptureTarget::Reset_Move()
+{
+    m_fMoveElapsed = 0.f;
+    m_iRunDir = 1;
+    m_pTransformCom->Set_State(STATE::POSITION,
+        XMVectorSet(m_vHomePos.x, m_vHomePos.y, m_vHomePos.z, 1.f));
+}
+
+void CActor_CaptureTarget::Tick_Movement(_float fTimeDelta)
+{
+    if (m_bAbsorbing || false == m_bMoveActive)
+        return;
+
+    switch (m_eMoveType)
+    {
+    case CAPTURE_MOVE_TYPE::BAT:
+    {
+        /* 위치만 갱신(회전/스케일은 LookAt·absorb 가 관리). 콜라이더는 Update 의 갱신이 따라감. */
+        m_fMoveElapsed += fTimeDelta;
+        const _float3 vOff = Compute_MoveOffset(m_fMoveElapsed);
+        m_pTransformCom->Set_State(STATE::POSITION,
+            XMVectorSet(m_vHomePos.x + vOff.x, m_vHomePos.y + vOff.y, m_vHomePos.z + vOff.z, 1.f));
+        break;
+    }
+    case CAPTURE_MOVE_TYPE::RUN_TURN:
+        Tick_RunTurn(fTimeDelta);
+        break;
+
+    default:   // STAY
+        break;
+    }
+}
+
+void CActor_CaptureTarget::Tick_RunTurn(_float fTimeDelta)
+{
+    if (nullptr == m_pBody)
+        return;
+
+    constexpr _float RUN_HALF_RANGE = 1.2f;   // 좌우 끝점(홈 기준)
+
+    const _float fOffX =
+        XMVectorGetX(m_pTransformCom->Get_State(STATE::POSITION)) - m_vHomePos.x;
+
+    /* 끝점 도달 시 방향 반전. 다음 Tick_RootMotionMovement 에서 180° 차이 ->
+       피벗(제자리 IDLE 회전) 후 반대로 달림. */
+    if (m_iRunDir > 0 && fOffX >= RUN_HALF_RANGE)       m_iRunDir = -1;
+    else if (m_iRunDir < 0 && fOffX <= -RUN_HALF_RANGE) m_iRunDir = 1;
+
+    /* 정확한 ±X 면 끝점 반전 시 Face_Direction 의 lerp 가 0을 통과하며 제자리 정지(180° degeneracy).
+       살짝 -Z(카메라 쪽) 바이어스를 줘 회피 → 턴이 카메라를 향하며 자연스럽게 돌아간다.
+       위치는 아래 z 클램프로 순수 좌우 유지. */
+    constexpr _float TURN_BIAS_Z = -0.2f;
+    const _vector vMoveDir = (m_iRunDir > 0)
+        ? XMVector3Normalize(XMVectorSet(1.f, 0.f, TURN_BIAS_Z, 0.f))
+        : XMVector3Normalize(XMVectorSet(-1.f, 0.f, TURN_BIAS_Z, 0.f));
+
+    /* 피벗(턴) 중이면 IDLE, 달리는 중이면 RUN. (Pivoting 은 직전 프레임 결과 - 1프레임 지연 무시 가능) */
+    const ANIM_KIND eKind = m_MoveState.Pivoting ? ANIM_KIND::IDLE : ANIM_KIND::RUN;
+    m_pBody->Set_Anim(BattleAnim::Find_AnimIndex(m_strModelTag, eKind), true);
+
+    Tick_RootMotionMovement(vMoveDir, true, m_pBody->Get_RootMotionDelta(), nullptr, fTimeDelta);
+
+    /* 좌우(X) 직선 유지 - y/z 드리프트 제거(평면 스테이지). */
+    _vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+    vPos = XMVectorSetY(vPos, m_vHomePos.y);
+    vPos = XMVectorSetZ(vPos, m_vHomePos.z);
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(vPos, 1.f));
+}
+
+_float3 CActor_CaptureTarget::Compute_MoveOffset(_float fElapsed) const
+{
+    if (CAPTURE_MOVE_TYPE::BAT != m_eMoveType)
+        return _float3(0.f, 0.f, 0.f);
+
+    /* 중앙 -> 좌상 -> 좌하 -> 우상 -> 우하 반복(빠르게). 각 도착점에서 약간 대기. 공중 호버. */
+    constexpr _float Tmove = 0.16f;   // 구간 이동 시간(짧을수록 빠름)
+    constexpr _float Tdwell = 0.22f;  // 도착점 대기 시간
+    constexpr _float A = 1.45f;       // 좌우(대각 도달점 더 멀게)
+    constexpr _float TOP = 1.75f;     // 위
+    constexpr _float BOT = 0.1f;      // 아래(바닥 위 유지)
+    constexpr _float MID = 0.85f;     // 중앙 높이(공중)
+
+    const _float3 W[5] =
+    {
+        _float3(0.f, MID, 0.f),    // 중앙
+        _float3(-A,  TOP, 0.f),    // 좌상
+        _float3(-A,  BOT, 0.f),    // 좌하
+        _float3( A,  TOP, 0.f),    // 우상
+        _float3( A,  BOT, 0.f),    // 우하
+    };
+
+    const _float fBeat = Tmove + Tdwell;
+    const _int   n = static_cast<_int>(floorf(fElapsed / fBeat));
+    const _float fPhase = fElapsed - static_cast<_float>(n) * fBeat;
+
+    const _int   i = ((n % 5) + 5) % 5;       // 현재 도착점에서 출발
+    const _int   j = (i + 1) % 5;             // 다음 도착점
+
+    /* 이동 구간이면 보간, 대기 구간이면 목적지(W[j])에 정지. */
+    const _float u = (fPhase < Tmove) ? (fPhase / Tmove) : 1.f;
+
+    return _float3(
+        W[i].x + (W[j].x - W[i].x) * u,
+        W[i].y + (W[j].y - W[i].y) * u,
+        0.f);
 }
 
 CActor_CaptureTarget* CActor_CaptureTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
