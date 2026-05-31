@@ -1,4 +1,4 @@
-﻿#include "UIEditorSession.h"
+#include "UIEditorSession.h"
 #include "UIPreviewHost.h"
 
 #include "GameInstance.h"

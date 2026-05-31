@@ -1,4 +1,4 @@
-﻿#include "UIPreviewHost.h"
+#include "UIPreviewHost.h"
 #include "UIEditorSession.h"
 #include "EditInstance.h"
 

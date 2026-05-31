@@ -15,7 +15,7 @@ HRESULT CInput_Device::Initialize(HINSTANCE hInst, HWND hWnd)
 {
 	m_hWnd = hWnd;
 
-	// DInput ÄÄ°´Ã¼¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö
+	// DInput ì»´ê°ì²´ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
 	if (FAILED(DirectInput8Create(	hInst,
 									DIRECTINPUT_VERSION,
 									IID_IDirectInput8,
@@ -23,32 +23,32 @@ HRESULT CInput_Device::Initialize(HINSTANCE hInst, HWND hWnd)
 									NULL)))
 									return E_FAIL;
 
-	// Å°º¸µå °´Ã¼ »ı¼º
+	// í‚¤ë³´ë“œ ê°ì²´ ìƒì„±
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, nullptr)))
 		return E_FAIL;
 
-	// »ı¼ºµÈ Å°º¸µå °´Ã¼ÀÇ ´ëÇÑ Á¤º¸¸¦ ÄÄ °´Ã¼¿¡°Ô Àü´ŞÇÏ´Â ÇÔ¼ö
+	// ìƒì„±ëœ í‚¤ë³´ë“œ ê°ì²´ì˜ ëŒ€í•œ ì •ë³´ë¥¼ ì»´ ê°ì²´ì—ê²Œ ì „ë‹¬í•˜ëŠ” í•¨ìˆ˜
 	m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ µ¶Á¡±ÇÀ» ¼³Á¤ÇØÁÖ´Â ÇÔ¼ö, (Å¬¶óÀÌ¾ğÆ®°¡ ¶°ÀÖ´Â »óÅÂ¿¡¼­ Å° ÀÔ·ÂÀ» ¹ŞÀ»Áö ¸»Áö¸¦ °áÁ¤ÇÏ´Â ÇÔ¼ö)
+	// ì¥ì¹˜ì— ëŒ€í•œ ë…ì ê¶Œì„ ì„¤ì •í•´ì£¼ëŠ” í•¨ìˆ˜, (í´ë¼ì´ì–¸íŠ¸ê°€ ë– ìˆëŠ” ìƒíƒœì—ì„œ í‚¤ ì…ë ¥ì„ ë°›ì„ì§€ ë§ì§€ë¥¼ ê²°ì •í•˜ëŠ” í•¨ìˆ˜)
 	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ access ¹öÀüÀ» ¹Ş¾Æ¿À´Â ÇÔ¼ö
+	// ì¥ì¹˜ì— ëŒ€í•œ access ë²„ì „ì„ ë°›ì•„ì˜¤ëŠ” í•¨ìˆ˜
 	m_pKeyBoard->Acquire();
 
 
 
-	// ¸¶¿ì½º °´Ã¼ »ı¼º
+	// ë§ˆìš°ìŠ¤ ê°ì²´ ìƒì„±
 	if (FAILED(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr)))
 		return E_FAIL;
 
-	// »ı¼ºµÈ ¸¶¿ì½º °´Ã¼ÀÇ ´ëÇÑ Á¤º¸¸¦ ÄÄ °´Ã¼¿¡°Ô Àü´ŞÇÏ´Â ÇÔ¼ö
+	// ìƒì„±ëœ ë§ˆìš°ìŠ¤ ê°ì²´ì˜ ëŒ€í•œ ì •ë³´ë¥¼ ì»´ ê°ì²´ì—ê²Œ ì „ë‹¬í•˜ëŠ” í•¨ìˆ˜
 	m_pMouse->SetDataFormat(&c_dfDIMouse);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ µ¶Á¡±ÇÀ» ¼³Á¤ÇØÁÖ´Â ÇÔ¼ö, Å¬¶óÀÌ¾ğÆ®°¡ ¶°ÀÖ´Â »óÅÂ¿¡¼­ Å° ÀÔ·ÂÀ» ¹ŞÀ»Áö ¸»Áö¸¦ °áÁ¤ÇÏ´Â ÇÔ¼ö
+	// ì¥ì¹˜ì— ëŒ€í•œ ë…ì ê¶Œì„ ì„¤ì •í•´ì£¼ëŠ” í•¨ìˆ˜, í´ë¼ì´ì–¸íŠ¸ê°€ ë– ìˆëŠ” ìƒíƒœì—ì„œ í‚¤ ì…ë ¥ì„ ë°›ì„ì§€ ë§ì§€ë¥¼ ê²°ì •í•˜ëŠ” í•¨ìˆ˜
 	m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
-	// ÀåÄ¡¿¡ ´ëÇÑ access ¹öÀüÀ» ¹Ş¾Æ¿À´Â ÇÔ¼ö
+	// ì¥ì¹˜ì— ëŒ€í•œ access ë²„ì „ì„ ë°›ì•„ì˜¤ëŠ” í•¨ìˆ˜
 	m_pMouse->Acquire();
 
 	Ready_KeyGroupMap();
@@ -120,14 +120,14 @@ _long CInput_Device::Mouse_Move(DIMM eMouseState)
 {
 	_uint iAllowed = KeyGroup::s_AllowedGroups[ETOUI(m_eInputState)];
 	if (!(KeyGroup::CAMERA & iAllowed))
-		return 0L;  // CAMERA ±×·ì Â÷´ÜµÈ »óÅÂ¸é 0 ¹İÈ¯
+		return 0L;  // CAMERA ê·¸ë£¹ ì°¨ë‹¨ëœ ìƒíƒœë©´ 0 ë°˜í™˜
 
 	return Get_DIMouseMove(eMouseState);
 }
 
 void CInput_Device::Update()
 {
-	// 0. Àı´ë Ä¿¼­ ÁÂÇ¥ Ä³½Ã (Key/Mouse °»½Å Àü)
+	// 0. ì ˆëŒ€ ì»¤ì„œ ì¢Œí‘œ ìºì‹œ (Key/Mouse ê°±ì‹  ì „)
 	{
 		POINT pt{};
 		if (m_hWnd && GetCursorPos(&pt) && ScreenToClient(m_hWnd, &pt))
@@ -152,23 +152,23 @@ void CInput_Device::Update()
 		}
 	}
 
-	// 1. ÀÌÀü »óÅÂ ÀúÀå
+	// 1. ì´ì „ ìƒíƒœ ì €ì¥
 	memcpy(m_byPrevKeyState, m_byKeyState, sizeof(m_byKeyState));
 	memcpy(m_byPrevMouseButtons, m_tMouseState.rgbButtons, sizeof(m_byPrevMouseButtons));
 
-	// 2. ÇöÀç »óÅÂ °»½Å
+	// 2. í˜„ì¬ ìƒíƒœ ê°±ì‹ 
 	HRESULT hr = m_pKeyBoard->GetDeviceState(256, m_byKeyState);
 	if(FAILED(hr))
-		m_pKeyBoard->Acquire(); // ÀÔ·Â ÀåÄ¡°¡ Æ÷Ä¿½º¸¦ ÀÒ¾úÀ» ¶§ ´Ù½Ã È¹µæ ½Ãµµ
+		m_pKeyBoard->Acquire(); // ì…ë ¥ ì¥ì¹˜ê°€ í¬ì»¤ìŠ¤ë¥¼ ìƒì—ˆì„ ë•Œ ë‹¤ì‹œ íšë“ ì‹œë„
 
 	hr = m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
 	if(FAILED(hr))
-		m_pMouse->Acquire(); // ÀÔ·Â ÀåÄ¡°¡ Æ÷Ä¿½º¸¦ ÀÒ¾úÀ» ¶§ ´Ù½Ã È¹µæ ½Ãµµ
+		m_pMouse->Acquire(); // ì…ë ¥ ì¥ì¹˜ê°€ í¬ì»¤ìŠ¤ë¥¼ ìƒì—ˆì„ ë•Œ ë‹¤ì‹œ íšë“ ì‹œë„
 }
 
 void CInput_Device::Ready_KeyGroupMap()
 {
-	// ÀÌµ¿
+	// ì´ë™
 	m_iKeyGroupMap[DIK_W] = KeyGroup::MOVEMENT;
 	m_iKeyGroupMap[DIK_A] = KeyGroup::MOVEMENT;
 	m_iKeyGroupMap[DIK_S] = KeyGroup::MOVEMENT;
@@ -178,7 +178,7 @@ void CInput_Device::Ready_KeyGroupMap()
 	m_iKeyGroupMap[DIK_DOWN] = KeyGroup::MOVEMENT;
 	m_iKeyGroupMap[DIK_RIGHT] = KeyGroup::MOVEMENT;
 
-	// ½Ã½ºÅÛ
+	// ì‹œìŠ¤í…œ
 	m_iKeyGroupMap[DIK_F1] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_F2] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_F3] = KeyGroup::SYSTEM;
@@ -213,12 +213,12 @@ void CInput_Device::Ready_KeyGroupMap()
 	m_iKeyGroupMap[DIK_9] = KeyGroup::SYSTEM;
 	m_iKeyGroupMap[DIK_0] = KeyGroup::SYSTEM;
 
-	// UI ³×ºñ°ÔÀÌ¼Ç
+	// UI ë„¤ë¹„ê²Œì´ì…˜
 	m_iKeyGroupMap[DIK_RETURN] = KeyGroup::UI_NAVIGATE;
 	m_iKeyGroupMap[DIK_TAB] = KeyGroup::UI_NAVIGATE;
 	m_iKeyGroupMap[DIK_SPACE] = KeyGroup::UI_NAVIGATE;
 
-	// µğ¹ö±×¿ë
+	// ë””ë²„ê·¸ìš©
 	m_iKeyGroupMap[DIK_Z] = KeyGroup::TOOL;
 	m_iKeyGroupMap[DIK_X] = KeyGroup::TOOL;
 	m_iKeyGroupMap[DIK_C] = KeyGroup::TOOL;

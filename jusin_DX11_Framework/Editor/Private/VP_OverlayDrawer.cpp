@@ -47,7 +47,7 @@ void CVP_OverlayDrawer::Draw(_bool bHovered)
 
 	const _int iSelected = pSess->Get_SelectedWidget();
 
-	// 1. ¸ðµç widget bounding
+	// 1. ëª¨ë“  widget bounding
 	for (_int idx : vZIdx)
 	{
 		if (idx < 0 || idx >= (_int)vWidgets.size())

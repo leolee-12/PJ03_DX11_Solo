@@ -64,14 +64,14 @@ private:
 	_float m_fBlendDuration = {};
 	_float m_fBlendElapsed = {};
 	vector<BONE_SRT> m_BlendSnapshots;
-	vector<_bool> m_BlendTargetMask;	// true : º¸°£ ´ë»ó
+	vector<_bool> m_BlendTargetMask;	// true : ë³´ê°„ ëŒ€ìƒ
 	const unordered_set<_uint>* m_pNextChanneledSet = { nullptr };
 
-	_uint m_iRootBoneIndex = { 0 };			// ¹ÙÀÌ³Ê¸®È­ ·ÎÁ÷¿¡¼­ Ç×»ó 0¹øÀ¸·Î µî·Ï
-	_bool m_bEnableRootMotion = { false };	// ·çÆ® ¸ğ¼Ç È°¼ºÈ­ ÇÃ·¡±×
+	_uint m_iRootBoneIndex = { 0 };			// ë°”ì´ë„ˆë¦¬í™” ë¡œì§ì—ì„œ í•­ìƒ 0ë²ˆìœ¼ë¡œ ë“±ë¡
+	_bool m_bEnableRootMotion = { false };	// ë£¨íŠ¸ ëª¨ì…˜ í™œì„±í™” í”Œë˜ê·¸
 	_bool m_bRootMotion3D = { false };
-	_float3 m_vRootMotionDelta = {};		// ÀÌ¹ø ÇÁ·¹ÀÓÀÇ ·çÆ® ÀÌµ¿ µ¨Å¸(·ÎÄÃ)
-	_float3 m_vPrevRootPos = {};			// ÀÌÀü ÇÁ·¹ÀÓ ·çÆ® À§Ä¡(µ¨Å¸ °è»ê¿ë)
+	_float3 m_vRootMotionDelta = {};		// ì´ë²ˆ í”„ë ˆì„ì˜ ë£¨íŠ¸ ì´ë™ ë¸íƒ€(ë¡œì»¬)
+	_float3 m_vPrevRootPos = {};			// ì´ì „ í”„ë ˆì„ ë£¨íŠ¸ ìœ„ì¹˜(ë¸íƒ€ ê³„ì‚°ìš©)
 
 private:
 	HRESULT Ready_Meshes(FILE* fp, _uint iNumMeshes);

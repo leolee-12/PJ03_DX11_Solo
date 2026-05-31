@@ -1,4 +1,4 @@
-﻿#include "Battle_Pokemon.h"
+#include "Battle_Pokemon.h"
 #include "Body_Pokemon.h"
 #include "Body.h"
 #include "PokemonData_Manager.h"

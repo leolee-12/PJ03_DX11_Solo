@@ -28,10 +28,10 @@ HRESULT CPanel_PlaceBrowser::Render()
 
 	ImGui::InputText("##filter", m_szFilter, 128);
 	ImGui::SameLine();
-	if (ImGui::Button(KOR("ÃÊ±âÈ­"))) m_szFilter[0] = '\0';
+	if (ImGui::Button(KOR("ì´ˆê¸°í™”"))) m_szFilter[0] = '\0';
 	ImGui::Separator();
 
-	static const _char* ppCategories[] = { KOR("UI"), KOR("¸Ê"),KOR("¸ÊOBJ"), KOR("NPC"), KOR("¸ó½ºÅÍ"), KOR("¾ÆÀÌÅÛ")};
+	static const _char* ppCategories[] = { KOR("UI"), KOR("ë§µ"),KOR("ë§µOBJ"), KOR("NPC"), KOR("ëª¬ìŠ¤í„°"), KOR("ì•„ì´í…œ")};
 
 	if (ImGui::BeginTabBar("##cat"))
 	{
@@ -56,9 +56,9 @@ void CPanel_PlaceBrowser::Register_Items()
 	m_AllItems =
 	{
 	{ ETOUI(LEVEL::LOGO),		PROTO_OBJ_BACKGROUND,	ETOUI(LEVEL::LOGO),		LAYER_BACKGROUND,	KOR("UI_Default"),		KOR("UI")},
-	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_TERRAIN,		ETOUI(LEVEL::GAMEPLAY),	LAYER_BACKGROUND,	KOR("¸Ê_Default"),		KOR("¸Ê") },
-	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_FORKLIFT,		ETOUI(LEVEL::GAMEPLAY),	LAYER_BACKGROUND,	KOR("Æ÷Å©¸®ÇÁÆ®"),		KOR("¸ó½ºÅÍ") },
-	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_MONSTER,		ETOUI(LEVEL::GAMEPLAY),	LAYER_MONSTER,		KOR("¸ó½ºÅÍ"),			KOR("¸ó½ºÅÍ") },
+	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_TERRAIN,		ETOUI(LEVEL::GAMEPLAY),	LAYER_BACKGROUND,	KOR("ë§µ_Default"),		KOR("ë§µ") },
+	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_FORKLIFT,		ETOUI(LEVEL::GAMEPLAY),	LAYER_BACKGROUND,	KOR("í¬í¬ë¦¬í”„íŠ¸"),		KOR("ëª¬ìŠ¤í„°") },
+	{ ETOUI(LEVEL::GAMEPLAY),	PROTO_OBJ_MONSTER,		ETOUI(LEVEL::GAMEPLAY),	LAYER_MONSTER,		KOR("ëª¬ìŠ¤í„°"),			KOR("ëª¬ìŠ¤í„°") },
 	};
 
 	for (auto& item : m_AllItems)
@@ -101,7 +101,7 @@ void CPanel_PlaceBrowser::Draw_Category(const _string& strCat)
 		if (ImGui::BeginDragDropSource())
 		{
 			ImGui::SetDragDropPayload("PLACE_ITEM", &pItem, sizeof(CATALOG_ITEM*));
-			ImGui::Text(KOR("¹èÄ¡: %s"), pItem->strDisplayName.c_str());
+			ImGui::Text(KOR("ë°°ì¹˜: %s"), pItem->strDisplayName.c_str());
 			ImGui::EndDragDropSource();
 		}
 	}
@@ -109,12 +109,12 @@ void CPanel_PlaceBrowser::Draw_Category(const _string& strCat)
 
 void CPanel_PlaceBrowser::Place_Object(const CATALOG_ITEM tItem)
 {
-	// EditInstance -> Object_Registry -> Clone + Add_Obj_Ex + ÃßÀû
+	// EditInstance -> Object_Registry -> Clone + Add_Obj_Ex + ì¶”ì 
 	m_pEditInstance->Register_Object(
 		tItem.iProtoLevel, tItem.strProtoTag,
 		tItem.iLayerLevel, tItem.strLayerTag, nullptr);
 
-	// ¼±ÅÃ »óÅÂ·Î ÀüÈ¯ (ÇÁ·ÎÆÛÆ¼ ÆíÁý±â Áï½Ã Ç¥½Ã)
+	// ì„ íƒ ìƒíƒœë¡œ ì „í™˜ (í”„ë¡œí¼í‹° íŽ¸ì§‘ê¸° ì¦‰ì‹œ í‘œì‹œ)
 	auto& objs = m_pEditInstance->Get_EditorObjects();
 	if (!objs.empty())
 		m_pEditInstance->Select(objs.back(), false);

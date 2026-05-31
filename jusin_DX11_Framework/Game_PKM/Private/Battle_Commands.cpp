@@ -1,4 +1,4 @@
-﻿#include "Battle_Commands.h"
+#include "Battle_Commands.h"
 #include "Battler.h"
 #include "PokemonData_Manager.h"
 #include "Battle_Targeting.h"

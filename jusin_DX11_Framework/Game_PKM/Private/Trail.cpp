@@ -105,7 +105,7 @@ void CTrail::Build_Ribbon()
 		vDir = XMVector3Normalize(vDir);
 		const _vector vRight = XMVector3Normalize(XMVector3Cross(vUp, vDir));
 
-		const _float t = m_Segments[i].fAge / fLife;       // 0=½Å±Ô .. 1=¼Ò¸êÁ÷Àü
+		const _float t = m_Segments[i].fAge / fLife;       // 0=ì‹ ê·œ .. 1=ì†Œë©¸ì§ì „
 		const _float fWidth = m_tDesc.fWidthStart + (m_tDesc.fWidthEnd - m_tDesc.fWidthStart) * t;
 		const _float fU = (iCount > 1) ? static_cast<_float>(i) / (iCount - 1) : 0.f;
 		const _float4 vColor = m_tDesc.curveColor.Sample(t);

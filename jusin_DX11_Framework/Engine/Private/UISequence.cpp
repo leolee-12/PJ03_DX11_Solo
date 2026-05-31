@@ -1,4 +1,4 @@
-﻿#include "UISequence.h"
+#include "UISequence.h"
 #include "UIAnimator.h"
 #include "UIContainer.h"
 #include "UIImage.h"

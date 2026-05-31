@@ -1,4 +1,4 @@
-﻿#include "UIController_Hub.h"
+#include "UIController_Hub.h"
 #include "UIController.h"
 #include "UIButton_Group.h"
 

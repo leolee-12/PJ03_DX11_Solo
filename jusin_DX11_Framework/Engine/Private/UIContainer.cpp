@@ -22,7 +22,7 @@ void CUIContainer::On_ViewportResized(_float2 vNewViewport)
 	__super::On_ViewportResized(vNewViewport);
 
 	for (auto* pChild : m_Children)
-	{	// ÀÚ½Äµé¿¡°Ô resize Àç±Í ÀüÆÄ
+	{	// ìì‹ë“¤ì—ê²Œ resize ì¬ê·€ ì „íŒŒ
 		if (pChild)
 			pChild->On_ViewportResized(vNewViewport);
 	}
@@ -260,7 +260,7 @@ _bool CUIContainer::Prepare_Adopt_Child(CUIObject* pChild)
 	if (nullptr == pChild || this == pChild)
 		return false;
 
-	if (dynamic_cast<CUISequence*>(pChild)) // Sequence ´Ù¸¥ ÄÁÅ×ÀÌ³ÊÀÇ ÀÚ½Ä ºÒ°¡(Sequence´Â Ç×»ó root)
+	if (dynamic_cast<CUISequence*>(pChild)) // Sequence ë‹¤ë¥¸ ì»¨í…Œì´ë„ˆì˜ ìì‹ ë¶ˆê°€(SequenceëŠ” í•­ìƒ root)
 		return false;
 
 	if (m_Children.end() != find(m_Children.begin(), m_Children.end(), pChild))

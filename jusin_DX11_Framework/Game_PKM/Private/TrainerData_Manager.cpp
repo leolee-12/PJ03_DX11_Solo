@@ -59,13 +59,13 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 	{
 		TRAINER_DATA tData{};
 		tData.iTrainerID = 1;
-		wcscpy_s(tData.szName, TEXT("¹İ¹ÙÁö ²¿¸¶ ´ëÁö"));
+		wcscpy_s(tData.szName, TEXT("ë°˜ë°”ì§€ ê¼¬ë§ˆ ëŒ€ì§€"));
 		tData.eAIType = TRAINER_AI::BASIC;
 		tData.iRewardMoney = 120;
 		tData.iRewardItemID = 0;
-		wcscpy_s(tData.szEncounterDialog, TEXT("Æ÷ÄÏ¸ó Æ®·¹ÀÌ³Ê³¢¸®\n´«°ú ´«ÀÌ ¸¶ÁÖÃÆ´Ù!\f³»°¡ ÁÁ¾ÆÇÏ´Â Æ÷ÄÏ¸ó°ú ½ÂºÎÇÏÀÚ!"));
-		wcscpy_s(tData.szVictoryDialog, TEXT("³» Æ÷ÄÏ¸ó ¾î¶§?\n°­ÇÏÁö!"));
-		wcscpy_s(tData.szDefeatDialog, TEXT("°­ÇÏ´Ù ³Ê!"));
+		wcscpy_s(tData.szEncounterDialog, TEXT("í¬ì¼“ëª¬ íŠ¸ë ˆì´ë„ˆë¼ë¦¬\nëˆˆê³¼ ëˆˆì´ ë§ˆì£¼ì³¤ë‹¤!\fë‚´ê°€ ì¢‹ì•„í•˜ëŠ” í¬ì¼“ëª¬ê³¼ ìŠ¹ë¶€í•˜ì!"));
+		wcscpy_s(tData.szVictoryDialog, TEXT("ë‚´ í¬ì¼“ëª¬ ì–´ë•Œ?\nê°•í•˜ì§€!"));
+		wcscpy_s(tData.szDefeatDialog, TEXT("ê°•í•˜ë‹¤ ë„ˆ!"));
 
 		tData.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		tData.strModelProtoTag = PROTO_COM_MODEL_PPL_SHORTPANTS;
@@ -88,13 +88,13 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 	{
 		TRAINER_DATA tData{};
 		tData.iTrainerID = 2;
-		wcscpy_s(tData.szName, TEXT("Ã¼À°°ü °üÀå ¿õ"));
+		wcscpy_s(tData.szName, TEXT("ì²´ìœ¡ê´€ ê´€ì¥ ì›…"));
 		tData.eAIType = TRAINER_AI::BASIC;
 		tData.iRewardMoney = 1920;
 		tData.iRewardItemID = 0;
-		wcscpy_s(tData.szEncounterDialog, TEXT("¿Ô±¸³ª!\n³ª´Â È¸»ö½ÃÆ¼ Æ÷ÄÏ¸óÃ¼À°°üÀÇ °üÀåÀÎ ¿õÀÌ¾ß!\f³ªÀÇ ±»Àº ÀÇÁö´Â ³» Æ÷ÄÏ¸ó¿¡°Ô¼­µµ µå·¯³ªÁö!\n´Ü´ÜÇÏ°í ÂüÀ»¼ºÀÌ °­ÇØ.\fÁÁ¾Æ!\nÀÚ ´ıº­¶ó!"));
-		wcscpy_s(tData.szVictoryDialog, TEXT("¹ÙÀ§Ã³·³ ´Ü´ÜÇÑ ½ÂºÎ¿´Áö!"));
-		wcscpy_s(tData.szDefeatDialog, TEXT("³Ê¸¦ ¾èÀâ¾Æ º» °Í °°±º"));
+		wcscpy_s(tData.szEncounterDialog, TEXT("ì™”êµ¬ë‚˜!\në‚˜ëŠ” íšŒìƒ‰ì‹œí‹° í¬ì¼“ëª¬ì²´ìœ¡ê´€ì˜ ê´€ì¥ì¸ ì›…ì´ì•¼!\fë‚˜ì˜ êµ³ì€ ì˜ì§€ëŠ” ë‚´ í¬ì¼“ëª¬ì—ê²Œì„œë„ ë“œëŸ¬ë‚˜ì§€!\në‹¨ë‹¨í•˜ê³  ì°¸ì„ì„±ì´ ê°•í•´.\fì¢‹ì•„!\nì ë¤ë²¼ë¼!"));
+		wcscpy_s(tData.szVictoryDialog, TEXT("ë°”ìœ„ì²˜ëŸ¼ ë‹¨ë‹¨í•œ ìŠ¹ë¶€ì˜€ì§€!"));
+		wcscpy_s(tData.szDefeatDialog, TEXT("ë„ˆë¥¼ ì–•ì¡ì•„ ë³¸ ê²ƒ ê°™êµ°"));
 
 		tData.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		tData.strModelProtoTag = PROTO_COM_MODEL_PPL_ROCK;
@@ -103,9 +103,9 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 			"../../Resources/Models/people/rock/rock_mapping.json");
 
 		PartyOps::Clear(tData.tParty);
-		if (FAILED(AddPokemon(tData, 74, 3)))   // ²¿¸¶µ¹
+		if (FAILED(AddPokemon(tData, 74, 3)))   // ê¼¬ë§ˆëŒ
 			return E_FAIL;
-		if (FAILED(AddPokemon(tData, 95, 11)))   // ·Õ½ºÅæ
+		if (FAILED(AddPokemon(tData, 95, 11)))   // ë¡±ìŠ¤í†¤
 			return E_FAIL;
 
 		if (!m_TrainerTable.emplace(tData.iTrainerID, tData).second)
@@ -115,13 +115,13 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 	{
 		TRAINER_DATA tData{};
 		tData.iTrainerID = 3;
-		wcscpy_s(tData.szName, TEXT("Ã¼À°°ü °üÀå ÀÌ½½"));
+		wcscpy_s(tData.szName, TEXT("ì²´ìœ¡ê´€ ê´€ì¥ ì´ìŠ¬"));
 		tData.eAIType = TRAINER_AI::BASIC;
 		tData.iRewardMoney = 3040;
 		tData.iRewardItemID = 0;
-		wcscpy_s(tData.szEncounterDialog, TEXT("³Ê!\f³Ê´Â Æ÷ÄÏ¸óÀ» Å°¿ï ¶§\n³Ê¸¸ÀÇ ¹æÄ§ÀÌ ÀÖ´Ï?\f³ªÀÇ ¹æÄ§Àº ¸»ÀÌÁö...\n¹°Å¸ÀÔ Æ÷ÄÏ¸óÀ¸·Î °ø°İÇÏ°í ...¶Ç °ø°İÇÏ´Â°Å¾ß!\fÀÚ! ¼¼°èÀÇ ¹Ì¼Ò³à\nÀÌ½½´ÔÀÌ »ó´ëÇØÁÙ°Ô!\f°¡¶ó!\n³» ±Í¿°µÕÀÌ!"));
-		wcscpy_s(tData.szVictoryDialog, TEXT("ÆÄµµÃ³·³ ÈÛ¾µ¾î Áá´Ù!"));
-		wcscpy_s(tData.szDefeatDialog, TEXT("À¸~ÀÀ...!\n³»°¡ Á®¹ö·È³×"));
+		wcscpy_s(tData.szEncounterDialog, TEXT("ë„ˆ!\fë„ˆëŠ” í¬ì¼“ëª¬ì„ í‚¤ìš¸ ë•Œ\në„ˆë§Œì˜ ë°©ì¹¨ì´ ìˆë‹ˆ?\fë‚˜ì˜ ë°©ì¹¨ì€ ë§ì´ì§€...\në¬¼íƒ€ì… í¬ì¼“ëª¬ìœ¼ë¡œ ê³µê²©í•˜ê³  ...ë˜ ê³µê²©í•˜ëŠ”ê±°ì•¼!\fì! ì„¸ê³„ì˜ ë¯¸ì†Œë…€\nì´ìŠ¬ë‹˜ì´ ìƒëŒ€í•´ì¤„ê²Œ!\fê°€ë¼!\në‚´ ê·€ì—¼ë‘¥ì´!"));
+		wcscpy_s(tData.szVictoryDialog, TEXT("íŒŒë„ì²˜ëŸ¼ íœ©ì“¸ì–´ ì¤¬ë‹¤!"));
+		wcscpy_s(tData.szDefeatDialog, TEXT("ìœ¼~ì‘...!\në‚´ê°€ ì ¸ë²„ë ¸ë„¤"));
 
 		tData.strBodyProtoTag = PROTO_OBJ_BODY_HUMAN;
 		tData.strModelProtoTag = PROTO_COM_MODEL_PPL_WATER;
@@ -130,9 +130,9 @@ HRESULT CTrainerData_Manager::Load_BuiltinSeed()
 			"../../Resources/Models/people/water/water_mapping.json");
 
 		PartyOps::Clear(tData.tParty);
-		if (FAILED(AddPokemon(tData, 7, 5)))    // ²¿ºÎ±â
+		if (FAILED(AddPokemon(tData, 7, 5)))    // ê¼¬ë¶€ê¸°
 			return E_FAIL;
-		if (FAILED(AddPokemon(tData, 121, 6))) // ¾ÆÄí½ºÅ¸
+		if (FAILED(AddPokemon(tData, 121, 6))) // ì•„ì¿ ìŠ¤íƒ€
 			return E_FAIL;
 
 		if (!m_TrainerTable.emplace(tData.iTrainerID, tData).second)

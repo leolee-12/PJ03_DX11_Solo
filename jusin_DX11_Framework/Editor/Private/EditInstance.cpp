@@ -53,7 +53,7 @@ void CEditInstance::Update_Editor(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F1))
 		m_bCameraEnabled = !m_bCameraEnabled;
 
-	{	// Esc·Î SCENE º¹±Í (text input Áß¿¡´Â ¹«½Ã)
+	{	// Escë¡œ SCENE ë³µê·€ (text input ì¤‘ì—ëŠ” ë¬´ì‹œ)
 		const ImGuiIO& io = ImGui::GetIO();
 		if (!io.WantCaptureKeyboard
 			&& m_pGameInstance->Key_Down(DIK_ESCAPE))
@@ -150,11 +150,11 @@ HRESULT CEditInstance::Begin_ViewportRender()
 	if (FAILED(pViewport->Begin_SceneRender()))
 		return E_FAIL;
 
-	// RT°¡ activeµÈ ½ÃÁ¡¿¡¼­ À§Á¬ Àç±¸¼º (UIObject°¡ viewport size¸¦ Ä¸Ã³ÇÏ±â ¶§¹®)
+	// RTê°€ activeëœ ì‹œì ì—ì„œ ìœ„ì ¯ ì¬êµ¬ì„± (UIObjectê°€ viewport sizeë¥¼ ìº¡ì²˜í•˜ê¸° ë•Œë¬¸)
 	if (m_pUIPreviewHost->Has_Rebuild_Pending())
-		m_pUIPreviewHost->Process_Rebuild_If_Pending();   // ³»ºÎ¿¡¼­ Rebuild() È£Ãâ
+		m_pUIPreviewHost->Process_Rebuild_If_Pending();   // ë‚´ë¶€ì—ì„œ Rebuild() í˜¸ì¶œ
 
-	// Late_Update¸¦ ¿©±â¼­ ºÎ¸£¸é GameInstance::Draw°¡ RENDERID::UI Å¥¸¦ ¼ÒºñÇÒ ¶§ Áï½Ã ±×·ÁÁü
+	// Late_Updateë¥¼ ì—¬ê¸°ì„œ ë¶€ë¥´ë©´ GameInstance::Drawê°€ RENDERID::UI íë¥¼ ì†Œë¹„í•  ë•Œ ì¦‰ì‹œ ê·¸ë ¤ì§
 	m_pUIPreviewHost->Render_Queue_Submit();
 	return S_OK;
 }

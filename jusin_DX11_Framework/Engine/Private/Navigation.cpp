@@ -255,10 +255,10 @@ _vector XM_CALLCONV CNavigation::Compute_SlidePos(_fvector vCurPos, _fvector vDe
 		if (m_Cells[iCellIdx]->Is_In(vDesiredPos, &iNeighbor, &vNorm))
 			return vCurPos;
 
-		if (-1 == iNeighbor)	// ÁøÂ¥ º®À» ¸¸³²
-			break;				// vNorm¿¡ ±× º® ¹ı¼±ÀÌ µé¾î ÀÖÀ½
+		if (-1 == iNeighbor)	// ì§„ì§œ ë²½ì„ ë§Œë‚¨
+			break;				// vNormì— ê·¸ ë²½ ë²•ì„ ì´ ë“¤ì–´ ìˆìŒ
 
-		iCellIdx = iNeighbor;	// ÀÌ¿ô ¼¿·Î °è¼Ó ÃßÀû
+		iCellIdx = iNeighbor;	// ì´ì›ƒ ì…€ë¡œ ê³„ì† ì¶”ì 
 	}
 
 	const _float fSlideScale = 0.5f;
@@ -266,7 +266,7 @@ _vector XM_CALLCONV CNavigation::Compute_SlidePos(_fvector vCurPos, _fvector vDe
 	_vector vSlideDelta = vDelta - XMVector3Dot(vDelta, vNorm) * vNorm;
 	_vector vSlidePos = vCurPos + vSlideDelta * fSlideScale;
 
-	// ÀÌµ¿ °¡´É ½Ã ½½¶óÀÌµå, ¾Æ´Ï¸é ¿ø À§Ä¡
+	// ì´ë™ ê°€ëŠ¥ ì‹œ ìŠ¬ë¼ì´ë“œ, ì•„ë‹ˆë©´ ì› ìœ„ì¹˜
 	return Is_Move(vSlidePos) ? vSlidePos : vCurPos;
 }
 
@@ -277,11 +277,11 @@ _bool CNavigation::Project_PointToNavigation(
 	if (nullptr == pOutNavPos || nullptr == pOutCellIndex)
 		return false;
 
-	(void)iAreaMask;   // 1Â÷ no-op
+	(void)iAreaMask;   // 1ì°¨ no-op
 
 	const _vector vPosVec = XMLoadFloat3(&vWorldPos);
 
-	// 1Â÷: XZ Æò¸é»ó Á÷Á¢ ¼¿ ³»ºÎ °Ë»ö.
+	// 1ì°¨: XZ í‰ë©´ìƒ ì§ì ‘ ì…€ ë‚´ë¶€ ê²€ìƒ‰.
 	const _int iDirect = Find_CellIndex_ByPos(vPosVec);
 	if (-1 != iDirect)
 	{
@@ -291,7 +291,7 @@ _bool CNavigation::Project_PointToNavigation(
 		return true;
 	}
 
-	// 2Â÷: fSearchRadius ¾È¿¡¼­ °¡Àå °¡±î¿î ¼¿ Áß½É.
+	// 2ì°¨: fSearchRadius ì•ˆì—ì„œ ê°€ì¥ ê°€ê¹Œìš´ ì…€ ì¤‘ì‹¬.
 	if (fSearchRadius <= 0.f)
 		return false;
 	const _float fRadiusSq = fSearchRadius * fSearchRadius;
@@ -328,7 +328,7 @@ _bool CNavigation::Project_PointToNavigation(
 _bool CNavigation::Is_Reachable(
 	_uint iStartCellIndex, _uint iGoalCellIndex, _uint iAreaMask) const
 {
-	(void)iAreaMask;   // 1Â÷ no-op
+	(void)iAreaMask;   // 1ì°¨ no-op
 
 	if (iStartCellIndex >= m_Cells.size()) return false;
 	if (iGoalCellIndex >= m_Cells.size()) return false;

@@ -50,8 +50,8 @@ namespace Engine
 	{
 		PLAY_ANIM,		// target->Get_Animator()->Play_Animation(AnimName, target)
 		SET_VISIBLE,	// target->Set_Visible(bVisible)
-		WAIT,			// fWaitSec °æ°ú ´ë±â
-		USE_CALLBACK,	// fnCallback È£Ãâ
+		WAIT,			// fWaitSec ê²½ê³¼ ëŒ€ê¸°
+		USE_CALLBACK,	// fnCallback í˜¸ì¶œ
 		EFFECT_PLAY,	// bound effect slot fire
 		EFFECT_STOP,	// bound effect slot release
 		BGM_PLAY,		// bound BGM slot fire

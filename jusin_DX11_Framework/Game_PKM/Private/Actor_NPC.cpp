@@ -1,4 +1,4 @@
-﻿#include "Actor_NPC.h"
+#include "Actor_NPC.h"
 #include "Body.h"
 #include "Interaction_Dialogue.h"
 #include "Interaction_DialogueBattle.h"

@@ -32,7 +32,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (nullptr != pArg)
 	{
 		auto	pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);
-		m_iFlag = pDesc->iFlag;	// ¿¬½À¿ë º¯¼ö(ÀÇ¹ÌX)
+		m_iFlag = pDesc->iFlag;	// ì—°ìŠµìš© ë³€ìˆ˜(ì˜ë¯¸X)
 	}
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);

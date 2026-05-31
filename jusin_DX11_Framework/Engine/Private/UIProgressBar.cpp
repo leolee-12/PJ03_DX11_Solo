@@ -1,4 +1,4 @@
-﻿#include "UIProgressBar.h"
+#include "UIProgressBar.h"
 
 #include "GameInstance.h"
 

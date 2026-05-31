@@ -1,4 +1,4 @@
-﻿#include "VP_PickingCtrl.h"
+#include "VP_PickingCtrl.h"
 #include "VP_CoordMapper.h"
 #include "EditInstance.h"
 

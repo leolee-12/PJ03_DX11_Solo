@@ -13,7 +13,7 @@ HRESULT XM_CALLCONV CModel_Loader::Export_Binary(const _char* pFbxPath, const _c
 	if (FAILED(Write_Binary(pOutputPath))) return E_FAIL;
 
 	_tchar szMsg[512] = {};
-	swprintf_s(szMsg, L"Export ¿Ï·á\n- Bones: %zu\n- Meshes: %zu\n- Materials: %zu\n- Animations: %zu\n", m_Bones.size(), m_Meshes.size(), m_Materials.size(), m_Animations.size());
+	swprintf_s(szMsg, L"Export ì™„ë£Œ\n- Bones: %zu\n- Meshes: %zu\n- Materials: %zu\n- Animations: %zu\n", m_Bones.size(), m_Meshes.size(), m_Materials.size(), m_Animations.size());
 	MessageBox(NULL, szMsg, L"System Message", MB_OK);
 
 	return S_OK;
@@ -51,28 +51,28 @@ HRESULT CModel_Loader::Initialize()
 
 HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, _fmatrix PreTransform) // ~ CModel::Initialize_Prototype()
 {
-	// 0. ¸â¹ö ÃÊ±âÈ­
+	// 0. ë©¤ë²„ ì´ˆê¸°í™”
 	Clear_Data();
 
-	// 1. º¯¼ö ÀúÀå
+	// 1. ë³€ìˆ˜ ì €ì¥
 	m_eType = eType;
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransform);
 	m_strFbxPath = pFbxPath;
 
-	// 2. iFlag ¼³Á¤
+	// 2. iFlag ì„¤ì •
 	_uint iFlag = { aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast };
 	if (m_eType == MODEL::NONANIM)
 		iFlag |= aiProcess_PreTransformVertices;
 
-	// 3. aiScene ·Îµå
+	// 3. aiScene ë¡œë“œ
 	m_pAIScene = m_Importer.ReadFile(m_strFbxPath.c_str(), iFlag);
 	if (nullptr == m_pAIScene)
 	{
-		MSG_BOX("Model_Loader : FBX ÆÄÀÏ ·Îµå ½ÇÆĞ");
+		MSG_BOX("Model_Loader : FBX íŒŒì¼ ë¡œë“œ ì‹¤íŒ¨");
 		return E_FAIL;
 	}
 
-	// 4. Bones, Meshes, Materials, Animations ÃßÃâ
+	// 4. Bones, Meshes, Materials, Animations ì¶”ì¶œ
 	m_Bones.reserve(m_pAIScene->mRootNode->mNumChildren * 5);
 	m_Meshes.reserve(m_pAIScene->mNumMeshes);
 	m_Materials.reserve(m_pAIScene->mNumMaterials);
@@ -80,14 +80,14 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 
 	if (FAILED(Extract_Bones(m_pAIScene->mRootNode, -1)))
 	{
-		MSG_BOX("Model_Loader : Bone ÃßÃâ ½ÇÆĞ");
+		MSG_BOX("Model_Loader : Bone ì¶”ì¶œ ì‹¤íŒ¨");
 		return E_FAIL;
 	}
 
-	// * ·çÆ®³ëµå¿¡ »çÀüº¯È¯ Àû¿ë
+	// * ë£¨íŠ¸ë…¸ë“œì— ì‚¬ì „ë³€í™˜ ì ìš©
 	if (m_Bones.empty())
 	{
-		MSG_BOX("Model_Loader : Bone ÃßÃâ °á°ú°¡ ¾øÀ½");
+		MSG_BOX("Model_Loader : Bone ì¶”ì¶œ ê²°ê³¼ê°€ ì—†ìŒ");
 		return E_FAIL;
 	}
 	
@@ -96,19 +96,19 @@ HRESULT XM_CALLCONV CModel_Loader::Load_FBX(const _char* pFbxPath, MODEL eType, 
 
 	if (FAILED(Extract_Meshes()))
 	{
-		MSG_BOX("Model_Loader : Mesh ÃßÃâ ½ÇÆĞ");
+		MSG_BOX("Model_Loader : Mesh ì¶”ì¶œ ì‹¤íŒ¨");
 		return E_FAIL;
 	}
 	if (FAILED(Extract_Materials()))
 	{
-		MSG_BOX("Model_Loader : Material ÃßÃâ ½ÇÆĞ");
+		MSG_BOX("Model_Loader : Material ì¶”ì¶œ ì‹¤íŒ¨");
 		return E_FAIL;
 	}
 	if (m_eType == MODEL::ANIM)
 	{
 		if (FAILED(Extract_Animations()))
 		{
-			MSG_BOX("Model_Loader : Animation ÃßÃâ ½ÇÆĞ");
+			MSG_BOX("Model_Loader : Animation ì¶”ì¶œ ì‹¤íŒ¨");
 			return E_FAIL;
 		}
 	}
@@ -131,10 +131,10 @@ HRESULT CModel_Loader::Generate_MappingJSON(const _char* pTexDir, const _char* p
 	namespace fs = std::filesystem;
 	json root;
 
-	// 1. ¸ğµ¨ Á¤º¸
+	// 1. ëª¨ë¸ ì •ë³´
 	root["model"] = fs::path(m_strFbxPath).stem().string();
 
-	// 2. ½½·Ô Á¤º¸ Âü°í
+	// 2. ìŠ¬ë¡¯ ì •ë³´ ì°¸ê³ 
 	root["slot_reference"] =
 	{
 			{ "1",  "DIFFUSE" },
@@ -149,7 +149,7 @@ HRESULT CModel_Loader::Generate_MappingJSON(const _char* pTexDir, const _char* p
 			{ "29", "LAYER_COLOR" }
 	};
 
-	// 3. ÅØ½ºÃ³ µğ·ºÅä¸® ³» ÆÄÀÏ ¸ñ·Ï
+	// 3. í…ìŠ¤ì²˜ ë””ë ‰í† ë¦¬ ë‚´ íŒŒì¼ ëª©ë¡
 	root["available_textures"] = json::array();
 	if (pTexDir != nullptr && fs::exists(pTexDir) && fs::is_directory(pTexDir))
 	{
@@ -161,19 +161,19 @@ HRESULT CModel_Loader::Generate_MappingJSON(const _char* pTexDir, const _char* p
 		sort(root["available_textures"].begin(), root["available_textures"].end());
 	}
 
-	// 4. ¸ÓÅ×¸®¾ó ¸ñ·Ï
+	// 4. ë¨¸í…Œë¦¬ì–¼ ëª©ë¡
 	root["materials"] = json::array();
 	for (_uint i = 0; i < static_cast<_uint>(m_Materials.size()); ++i)
 	{
 		json matEntry;
 		matEntry["index"] = i;
 
-		// ¸ÓÅ×¸®¾ó ÀÌ¸§ (Assimp)
+		// ë¨¸í…Œë¦¬ì–¼ ì´ë¦„ (Assimp)
 		aiString matName;
 		m_pAIScene->mMaterials[i]->Get(AI_MATKEY_NAME, matName);
 		matEntry["name"] = matName.C_Str();
 
-		// ÀÌ ¸ÓÅ×¸®¾óÀ» ÂüÁ¶ÇÏ´Â ¸Ş½¬ ¸ñ·Ï
+		// ì´ ë¨¸í…Œë¦¬ì–¼ì„ ì°¸ì¡°í•˜ëŠ” ë©”ì‰¬ ëª©ë¡
 		matEntry["meshes"] = json::array();
 		for (auto& mesh : m_Meshes)
 		{
@@ -181,13 +181,13 @@ HRESULT CModel_Loader::Generate_MappingJSON(const _char* pTexDir, const _char* p
 				matEntry["meshes"].push_back(mesh.szName);
 		}
 
-		// ÅØ½ºÃ³ ½½·Ô - Á÷Á¢ Ã¤¿ï °Í
+		// í…ìŠ¤ì²˜ ìŠ¬ë¡¯ - ì§ì ‘ ì±„ìš¸ ê²ƒ
 		matEntry["textures"] = json::object();
 
 		root["materials"].push_back(matEntry);
 	}
 
-	// 5. JSON ÆÄÀÏ Ãâ·Â
+	// 5. JSON íŒŒì¼ ì¶œë ¥
 	ofstream(pOutputPath) << root.dump(2);
 	return S_OK;
 }
@@ -197,14 +197,14 @@ HRESULT CModel_Loader::Apply_MappingJSON(const _char* pMappingJsonPath)
 	ifstream f(pMappingJsonPath);
 	if (!f.is_open())
 	{
-		MSG_BOX("Model_Loader : Mapping JSON ¿­±â ½ÇÆĞ");
+		MSG_BOX("Model_Loader : Mapping JSON ì—´ê¸° ì‹¤íŒ¨");
 		return E_FAIL;
 	}
 
 	json root = json::parse(f);
 	if (!root.contains("materials"))
 	{
-		MSG_BOX("Model_Loader : Mapping JSON¿¡ materials Å° ¾øÀ½");
+		MSG_BOX("Model_Loader : Mapping JSONì— materials í‚¤ ì—†ìŒ");
 		return E_FAIL;
 	}
 
@@ -213,11 +213,11 @@ HRESULT CModel_Loader::Apply_MappingJSON(const _char* pMappingJsonPath)
 		_uint idx = matEntry["index"].get<_uint>();
 		if (idx >= static_cast<_uint>(m_Materials.size())) continue;
 
-		// ±âÁ¸ µ¥ÀÌÅÍ ÃÊ±âÈ­
+		// ê¸°ì¡´ ë°ì´í„° ì´ˆê¸°í™”
 		for (auto& paths : m_Materials[idx].TexturePaths)
 			paths.clear();
 
-		// JSON¿¡¼­ ÀĞ¾î¼­ ¹èÁ¤
+		// JSONì—ì„œ ì½ì–´ì„œ ë°°ì •
 		if (!matEntry.contains("textures")) continue;
 
 		for (auto& [slotStr, files] : matEntry["textures"].items())
@@ -237,18 +237,18 @@ HRESULT CModel_Loader::Extract_Bones(aiNode* pAINode, _int iParentIndex)	// ~ CM
 {
 	WMODEL_BONE Bone = {};
 
-	// 1. Bone ÀÌ¸§, ParentIndex ÀúÀå
+	// 1. Bone ì´ë¦„, ParentIndex ì €ì¥
 	strcpy_s(Bone.szName, pAINode->mName.data);
 	Bone.iParentIndex = iParentIndex;
 
-	// 2. Transformation Çà·Ä ÀüÄ¡ ÈÄ ÀúÀå
+	// 2. Transformation í–‰ë ¬ ì „ì¹˜ í›„ ì €ì¥
 	memcpy(&Bone.transformation, &pAINode->mTransformation, sizeof(_float4x4));
 	XMStoreFloat4x4(&Bone.transformation, XMMatrixTranspose(XMLoadFloat4x4(&Bone.transformation)));
 
-	// 3. ÄÁÅ×ÀÌ³Ê¿¡ ÀúÀå
+	// 3. ì»¨í…Œì´ë„ˆì— ì €ì¥
 	m_Bones.push_back(Bone);
 
-	// 4. ÀÚ½Ä ³ëµå¿¡ ´ëÇØ¼­µµ Àç±ÍÀûÀ¸·Î Ã³¸®
+	// 4. ìì‹ ë…¸ë“œì— ëŒ€í•´ì„œë„ ì¬ê·€ì ìœ¼ë¡œ ì²˜ë¦¬
 	_int iMyIndex = static_cast<_int>(m_Bones.size()) - 1;
 	_uint iNumChildren = pAINode->mNumChildren;
 
@@ -263,11 +263,11 @@ HRESULT CModel_Loader::Extract_Bones(aiNode* pAINode, _int iParentIndex)	// ~ CM
 
 HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Ready_NonAnimMesh()/Ready_AnimMesh())
 {
-	// 0. °¢ ¸Ş½¬¿¡ ´ëÇØ ÀÛ¾÷
+	// 0. ê° ë©”ì‰¬ì— ëŒ€í•´ ì‘ì—…
 	_uint iNumMeshes = m_pAIScene->mNumMeshes;
 	_matrix PreTM = XMLoadFloat4x4(&m_PreTransformMatrix);
 
-	// 1. ¸Ş½¬ ÀÌ¸§, ÀçÁú ÀÎµ¦½º ÃßÃâ
+	// 1. ë©”ì‰¬ ì´ë¦„, ì¬ì§ˆ ì¸ë±ìŠ¤ ì¶”ì¶œ
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		WMODEL_MESH Mesh = {};
@@ -275,7 +275,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 		strcpy_s(Mesh.szName, pAIMesh->mName.data);
 		Mesh.iMaterialIndex = pAIMesh->mMaterialIndex;
 		
-		// 2. ÀÎµ¦½º µ¥ÀÌÅÍ ÃßÃâ
+		// 2. ì¸ë±ìŠ¤ ë°ì´í„° ì¶”ì¶œ
 		_uint iNumFaces = pAIMesh->mNumFaces;
 
 		for (_uint j = 0; j < iNumFaces; ++j)
@@ -286,7 +286,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 			Mesh.indices.push_back(AIFace.mIndices[2]);
 		}
 
-		// 3. ¹öÅØ½º µ¥ÀÌÅÍ ÃßÃâ
+		// 3. ë²„í…ìŠ¤ ë°ì´í„° ì¶”ì¶œ
 		_uint iNumVertices = pAIMesh->mNumVertices;
 
 		if (m_eType == MODEL::NONANIM)
@@ -302,7 +302,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				memcpy(&pVertices[j].vTangent, &pAIMesh->mTangents[j], sizeof(_float3));
 				memcpy(&pVertices[j].vBinormal, &pAIMesh->mBitangents[j], sizeof(_float3));
 
-				// PreTransform Àû¿ë
+				// PreTransform ì ìš©
 				XMStoreFloat3(&pVertices[j].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[j].vPosition), PreTM));
 				XMStoreFloat3(&pVertices[j].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[j].vNormal), PreTM));
 				XMStoreFloat3(&pVertices[j].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[j].vTangent), PreTM));
@@ -326,7 +326,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				memcpy(&pVertices[j].vBinormal, &pAIMesh->mBitangents[j], sizeof(_float3));
 			}
 
-			// 3-1. AnimMeshÀÎ °æ¿ì, Bone ÀÌ¸§, ÀÎµ¦½º, offsetMatrix ÃßÃâ
+			// 3-1. AnimMeshì¸ ê²½ìš°, Bone ì´ë¦„, ì¸ë±ìŠ¤, offsetMatrix ì¶”ì¶œ
 			_uint iNumBones = pAIMesh->mNumBones;
 			Mesh.boneIndices.reserve(iNumBones);
 			for (_uint j = 0; j < iNumBones; ++j)
@@ -344,7 +344,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&offsetMatrix)));
 				Mesh.offsetMatrices.push_back(offsetMatrix);
 
-				// 3-2. Bone ¿µÇâ ¹Ş´Â ¹öÅØ½ºÀÇ °¡ÁßÄ¡ ÀúÀå
+				// 3-2. Bone ì˜í–¥ ë°›ëŠ” ë²„í…ìŠ¤ì˜ ê°€ì¤‘ì¹˜ ì €ì¥
 				_uint iNumWeights = pAIBone->mNumWeights;
 
 				for (_uint k = 0; k < iNumWeights; ++k)
@@ -375,7 +375,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				}
 			}
 
-			// 3-3. BoneÀÌ ¾ø´Â °æ¿ì, ¿¹¿Ü Ã³¸®
+			// 3-3. Boneì´ ì—†ëŠ” ê²½ìš°, ì˜ˆì™¸ ì²˜ë¦¬
 			if (0 == iNumBones)
 			{
 				iNumBones = 1;
@@ -390,7 +390,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 				Mesh.offsetMatrices.push_back(OffsetMatrix);
 			}
 
-			// 3-4. weight Á¤±ÔÈ­ (fallback)
+			// 3-4. weight ì •ê·œí™” (fallback)
 			for (_uint v = 0; v < iNumVertices; ++v)
 			{
 				_float fSum =
@@ -412,7 +412,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 			Safe_Delete_Array(pVertices);
 		}
 
-		// 4. ¸Ş½¬¸¦ ÄÁÅ×ÀÌ³Ê¿¡ ÀúÀå
+		// 4. ë©”ì‰¬ë¥¼ ì»¨í…Œì´ë„ˆì— ì €ì¥
 		m_Meshes.push_back(Mesh);
 	}
 
@@ -421,7 +421,7 @@ HRESULT CModel_Loader::Extract_Meshes()	// ~ CMesh::Initialize_Prototype() (Read
 
 HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMaterial::Initialize_Prototype()
 {
-	// 0. °¢ ÀçÁú¿¡ ´ëÇØ ÀÛ¾÷
+	// 0. ê° ì¬ì§ˆì— ëŒ€í•´ ì‘ì—…
 	namespace fs = std::filesystem;
 	aiString AITexPath = {};
 	_uint iNumMaterials = m_pAIScene->mNumMaterials;
@@ -431,12 +431,12 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 		WMODEL_MATERIAL Material = {};
 		aiMaterial* pAIMaterial = m_pAIScene->mMaterials[i];
 
-		// 1. °¢ ÅØ½ºÃ³ Å¸ÀÔ¿¡ ´ëÇØ ÀÛ¾÷
+		// 1. ê° í…ìŠ¤ì²˜ íƒ€ì…ì— ëŒ€í•´ ì‘ì—…
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
 			if (j >= ETOUI(MATERIAL_TYPE::END)) continue;
 
-			// 2. ÅØ½ºÃ³¸¶´Ù °æ·Î ÃßÃâÇÏ¿© °æ·Î ÄÁÅ×ÀÌ³Ê¿¡ »ğÀÔ
+			// 2. í…ìŠ¤ì²˜ë§ˆë‹¤ ê²½ë¡œ ì¶”ì¶œí•˜ì—¬ ê²½ë¡œ ì»¨í…Œì´ë„ˆì— ì‚½ì…
 			_uint iNumTextures = pAIMaterial->GetTextureCount(static_cast<aiTextureType>(j));
 			Material.TexturePaths[j].reserve(iNumTextures);
 
@@ -450,7 +450,7 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 			}
 		}
 
-		// 3. ÀçÁú ÄÁÅ×ÀÌ³Ê¿¡ »ğÀÔ
+		// 3. ì¬ì§ˆ ì»¨í…Œì´ë„ˆì— ì‚½ì…
 		m_Materials.push_back(Material);
 	}
 
@@ -459,19 +459,19 @@ HRESULT CModel_Loader::Extract_Materials()	// ~ CModel::Ready_Materials() + CMat
 
 HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAnimation::Initialize + CChannel::Initialize
 {
-	// 0. °¢ ¾Ö´Ï¸ŞÀÌ¼Ç¿¡ ´ëÇØ ÀÛ¾÷
+	// 0. ê° ì• ë‹ˆë©”ì´ì…˜ì— ëŒ€í•´ ì‘ì—…
 	_uint iNumAnimations = m_pAIScene->mNumAnimations;
 
 	for (_uint i = 0; i < iNumAnimations; ++i)
 	{
-		// 1. ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ Name, Duration, TicksPerSecond Á¤º¸ ÀúÀå
+		// 1. ì• ë‹ˆë©”ì´ì…˜ì˜ Name, Duration, TicksPerSecond ì •ë³´ ì €ì¥
 		aiAnimation* pAIAnim = m_pAIScene->mAnimations[i];
 		WMODEL_ANIMATION Anim = {};
 		strcpy_s(Anim.szName, pAIAnim->mName.data);
 		Anim.fDuration = static_cast<_float>(pAIAnim->mDuration);
 		Anim.fTicksPerSecond = static_cast<_float>(pAIAnim->mTicksPerSecond);
 
-		// 2. °¢ Ã¤³Î¿¡ ´ëÇØ ÀÛ¾÷
+		// 2. ê° ì±„ë„ì— ëŒ€í•´ ì‘ì—…
 		_uint iNumChannels = pAIAnim->mNumChannels;
 		Anim.channels.reserve(iNumChannels);
 
@@ -506,7 +506,7 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 			Channel.rotationKeys.reserve(iNumRotationKeys);
 			Channel.positionKeys.reserve(iNumPositionKeys);
 
-			// 3. ½ºÄÉÀÏ Å° ÃßÃâ
+			// 3. ìŠ¤ì¼€ì¼ í‚¤ ì¶”ì¶œ
 			for (_uint k = 0; k < iNumScalingKeys; ++k)
 			{
 				SCALING_KEY key{};
@@ -517,7 +517,7 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 				Channel.scalingKeys.push_back(key);
 			}
 
-			// 4. È¸Àü Å° ÃßÃâ
+			// 4. íšŒì „ í‚¤ ì¶”ì¶œ
 			for (_uint k = 0; k < iNumRotationKeys; ++k)
 			{
 				ROTATION_KEY key{};
@@ -528,22 +528,22 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 				key.fTrackPosition = static_cast<_float>(pAINodeAnim->mRotationKeys[k].mTime);
 				Channel.rotationKeys.push_back(key);
 
-				// 4-1. È¸Àü Å°ÇÁ·¹ÀÓ ÀüÃ³¸® : hemisphere ÅëÀÏ
+				// 4-1. íšŒì „ í‚¤í”„ë ˆì„ ì „ì²˜ë¦¬ : hemisphere í†µì¼
 				if (k > 0)
 				{
 					_vector vPrevQuat = XMLoadFloat4(&Channel.rotationKeys[k - 1].vRotation);
 					_vector vCurrQuat = XMLoadFloat4(&Channel.rotationKeys[k].vRotation);
 
-					// ÀÌÀü Å°ÇÁ·¹ÀÓ°ú ³»ÀûÇßÀ» ¶§ À½¼öÀÌ¸é(´Ù¸¥ ¹İ±¸¿¡ ÀÖ´Ù¸é)
+					// ì´ì „ í‚¤í”„ë ˆì„ê³¼ ë‚´ì í–ˆì„ ë•Œ ìŒìˆ˜ì´ë©´(ë‹¤ë¥¸ ë°˜êµ¬ì— ìˆë‹¤ë©´)
 					if (XMVectorGetX(XMVector4Dot(vPrevQuat, vCurrQuat)) < 0.f)
 					{
-						vCurrQuat = XMVectorNegate(vCurrQuat);	// ¸ğµç ¼ººĞ¿¡ -1À» °öÇÔ
+						vCurrQuat = XMVectorNegate(vCurrQuat);	// ëª¨ë“  ì„±ë¶„ì— -1ì„ ê³±í•¨
 						XMStoreFloat4(&Channel.rotationKeys[k].vRotation, vCurrQuat);
 					}
 				}
 			}
 
-			// 5. À§Ä¡ Å° ÃßÃâ
+			// 5. ìœ„ì¹˜ í‚¤ ì¶”ì¶œ
 			for (_uint k = 0; k < iNumPositionKeys; ++k)
 			{
 				POSITION_KEY key{};
@@ -554,11 +554,11 @@ HRESULT CModel_Loader::Extract_Animations() // ~ CModel::Ready_Animations + CAni
 				Channel.positionKeys.push_back(key);
 			}
 
-			// 6. Ã¤³Î ÄÁÅ×ÀÌ³Ê¿¡ »ğÀÔ
+			// 6. ì±„ë„ ì»¨í…Œì´ë„ˆì— ì‚½ì…
 			Anim.channels.push_back(Channel);
 		}
 
-		// 7. ¾Ö´Ï¸ŞÀÌ¼Ç ÄÁÅ×ÀÌ³Ê¿¡ »ğÀÔ
+		// 7. ì• ë‹ˆë©”ì´ì…˜ ì»¨í…Œì´ë„ˆì— ì‚½ì…
 		m_Animations.push_back(Anim);
 	}
 
@@ -577,13 +577,13 @@ _int CModel_Loader::Find_BoneIndex(const _char* pBoneName) const
 
 HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 {
-	// 1. ÆÄÀÏ ¿­±â
+	// 1. íŒŒì¼ ì—´ê¸°
 	FILE* fp{};
 	errno_t errorOpen{};
 	if (0 != fopen_s(&fp, pOutputPath, "wb") || nullptr == fp)
 		return E_FAIL;
 
-	// 2. WMODEL_HEADER ¾²±â
+	// 2. WMODEL_HEADER ì“°ê¸°
 	WMODEL_HEADER header{};
 	memcpy(header.szMagic, "WMDL", 4);
 	header.iVersion = 2;
@@ -594,10 +594,10 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 	header.iNumAnimations = static_cast<_uint>(m_Animations.size());
 	fwrite(&header, sizeof(WMODEL_HEADER), 1, fp);
 
-	// 3. º» µ¥ÀÌÅÍ ¾²±â
+	// 3. ë³¸ ë°ì´í„° ì“°ê¸°
 	fwrite(m_Bones.data(), sizeof(WMODEL_BONE), m_Bones.size(), fp);
 
-	// 4. ÀçÁú µ¥ÀÌÅÍ ¾²±â
+	// 4. ì¬ì§ˆ ë°ì´í„° ì“°ê¸°
 	for (auto& material : m_Materials)
 	{
 		for (_uint i = 0; i < ETOUI(MATERIAL_TYPE::END); ++i)
@@ -614,14 +614,14 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 		}
 	}
 
-	// 5. ¸Ş½¬ µ¥ÀÌÅÍ ¾²±â
+	// 5. ë©”ì‰¬ ë°ì´í„° ì“°ê¸°
 	for (auto& mesh : m_Meshes)
 	{
 		fwrite(mesh.szName, 1, MAX_PATH, fp);
 		fwrite(&mesh.iMaterialIndex, sizeof(uint32_t), 1, fp);
 		_uint numVerts = static_cast<_uint>(m_eType == MODEL::NONANIM ? mesh.nonAnimVertices.size() : mesh.animVertices.size());
 		_uint numIdx = static_cast<_uint>(mesh.indices.size());
-		_uint numBones = static_cast<_uint>(mesh.boneIndices.size()); // (NONANIMÀÌ¸é 0)
+		_uint numBones = static_cast<_uint>(mesh.boneIndices.size()); // (NONANIMì´ë©´ 0)
 		fwrite(&numVerts, sizeof(_uint), 1, fp);
 		fwrite(&numIdx, sizeof(_uint), 1, fp);
 		fwrite(&numBones, sizeof(_uint), 1, fp);
@@ -640,7 +640,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 		fwrite(mesh.indices.data(), sizeof(_uint), numIdx, fp);
 	}
 
-	// 6. ¾Ö´Ï¸ŞÀÌ¼Ç µ¥ÀÌÅÍ ¾²±â
+	// 6. ì• ë‹ˆë©”ì´ì…˜ ë°ì´í„° ì“°ê¸°
 	for (auto& anim : m_Animations)
 	{
 		fwrite(anim.szName, 1, MAX_PATH, fp);
@@ -672,7 +672,7 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 		}
 	}
 
-	// 7. ÆÄÀÏ ´İ±â
+	// 7. íŒŒì¼ ë‹«ê¸°
 	fclose(fp);
 
 	return S_OK;
@@ -680,10 +680,10 @@ HRESULT CModel_Loader::Write_Binary(const _char* pOutputPath) const
 
 HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleCount) const
 {
-	// 1. json °´Ã¼ »ı¼º
+	// 1. json ê°ì²´ ìƒì„±
 	json root;
 
-	// 2. Çì´õ µ¥ÀÌÅÍ ¾²±â
+	// 2. í—¤ë” ë°ì´í„° ì“°ê¸°
 	root["header"] =
 	{
 		{ "magic",			"WMDL" },
@@ -695,7 +695,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		{ "numAnimations",	m_Animations.size() }
 	};
 
-	// 3. º» µ¥ÀÌÅÍ ¾²±â
+	// 3. ë³¸ ë°ì´í„° ì“°ê¸°
 	_uint iIndex{};
 
 	root["bones"] = json::array();
@@ -713,7 +713,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		root["bones"].push_back(bn_entry);
 	}
 
-	// 4. ÀçÁú µ¥ÀÌÅÍ ¾²±â
+	// 4. ì¬ì§ˆ ë°ì´í„° ì“°ê¸°
 	iIndex = 0;
 
 	root["materials"] = json::array();
@@ -733,7 +733,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		root["materials"].push_back(mat_entry);
 	}
 
-	// 5. ¸Ş½¬ µ¥ÀÌÅÍ ¾²±â
+	// 5. ë©”ì‰¬ ë°ì´í„° ì“°ê¸°
 	iIndex = 0;
 
 	root["meshes"] = json::array();
@@ -750,7 +750,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		root["meshes"].push_back(ms_entry);
 	}
 
-	// 6. ¾Ö´Ï¸ŞÀÌ¼Ç µ¥ÀÌÅÍ ¾²±â
+	// 6. ì• ë‹ˆë©”ì´ì…˜ ë°ì´í„° ì“°ê¸°
 	iIndex = 0;
 
 	root["animations"] = json::array();
@@ -796,7 +796,7 @@ HRESULT CModel_Loader::Write_JSON(const _char* pOutputPath, _uint iVertexSampleC
 		root["animations"].push_back(anim_entry);
 	}
 
-	// 7. json ³»º¸³»±â
+	// 7. json ë‚´ë³´ë‚´ê¸°
 	ofstream(pOutputPath) << root.dump(2);
 
 	return S_OK;

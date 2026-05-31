@@ -1,4 +1,4 @@
-﻿#include "Battle_CommandMenu.h"
+#include "Battle_CommandMenu.h"
 #include "UISequence.h"
 #include "UIButton.h"
 #include "UIButton_Group.h"

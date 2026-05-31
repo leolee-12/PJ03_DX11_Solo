@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Base.h"
 #include "UIButton_Group.h"
 #include "UISequence.h"

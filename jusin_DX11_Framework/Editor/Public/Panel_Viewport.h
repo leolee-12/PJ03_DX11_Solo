@@ -34,7 +34,7 @@ private:
 	CVP_UIEditCtrl* m_pUIEditCtrl = { nullptr };
 	CVP_OverlayDrawer* m_pOverlayDrawer = { nullptr };
 
-	ImVec2 m_vDocCanvasSize = {};	// πÆº≠ design canvas ≈©±‚
+	ImVec2 m_vDocCanvasSize = {};	// Î¨∏ÏÑú design canvas ÌÅ¨Í∏∞
 	static ImVec2 s_vFallBack0;
 	static ImVec2 s_vFallBack1;
 

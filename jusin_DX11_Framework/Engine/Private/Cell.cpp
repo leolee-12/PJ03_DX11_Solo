@@ -94,7 +94,7 @@ _float XM_CALLCONV CCell::Compute_Height(_fvector vTargetPos)
 	/* ax + by + cz + d = 0 */
 	/* y = (-ax -cz - d) / b */
 
-	if (fabsf(m_vPlane.y) < FLT_EPSILON)	// ³ª´©±â 0 fallback : y À§Ä¡ ±×´ë·Î
+	if (fabsf(m_vPlane.y) < FLT_EPSILON)	// ë‚˜ëˆ„ê¸° 0 fallback : y ìœ„ì¹˜ ê·¸ëŒ€ë¡œ
 		return XMVectorGetY(vTargetPos);
 
 	return (-m_vPlane.x * XMVectorGetX(vTargetPos) - m_vPlane.z * XMVectorGetZ(vTargetPos) - m_vPlane.w) / m_vPlane.y;

@@ -21,15 +21,15 @@ public:
 	HRESULT Initialize(	HWND hWnd, WINMODE isWindowed, _uint iWinSizeX, _uint iWinSizeY,
 						_Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 
-	HRESULT Clear_BackBuffer_View(const _float4* pClearColor);		// ¹é¹öÆÛ Áö¿ì±â
-	HRESULT Clear_DepthStencil_View();								// ±íÀÌ¹öÆÛ + ½ºÅÙ½Ç¹öÆÛ Áö¿ì±â
-	HRESULT Present();												// ¹é¹öÆÛ¸¦ ÇÁ·ĞÆ®¹öÆÛ·Î ±³Ã¼ (¹é¹öÆÛ¸¦ È­¸é¿¡ º¸¿©ÁØ´Ù)
-	HRESULT Resize_Backbuffer(_uint iNewWidth, _uint iNewHeight);	// È­¸é Å©±â º¯°æ
+	HRESULT Clear_BackBuffer_View(const _float4* pClearColor);		// ë°±ë²„í¼ ì§€ìš°ê¸°
+	HRESULT Clear_DepthStencil_View();								// ê¹Šì´ë²„í¼ + ìŠ¤í…ì‹¤ë²„í¼ ì§€ìš°ê¸°
+	HRESULT Present();												// ë°±ë²„í¼ë¥¼ í”„ë¡ íŠ¸ë²„í¼ë¡œ êµì²´ (ë°±ë²„í¼ë¥¼ í™”ë©´ì— ë³´ì—¬ì¤€ë‹¤)
+	HRESULT Resize_Backbuffer(_uint iNewWidth, _uint iNewHeight);	// í™”ë©´ í¬ê¸° ë³€ê²½
 
 private:
-	ID3D11Device* m_pDevice = { nullptr };			// COM°´Ã¼ »ı¼º °ü·Ã
-	ID3D11DeviceContext* m_pContext = { nullptr };	// COM°´Ã¼ ±â´É °ü·Ã
-	IDXGISwapChain* m_pSwapChain = { nullptr };		// ´õºí¹öÆÛ¸µ¿ë SwapChain°´Ã¼
+	ID3D11Device* m_pDevice = { nullptr };			// COMê°ì²´ ìƒì„± ê´€ë ¨
+	ID3D11DeviceContext* m_pContext = { nullptr };	// COMê°ì²´ ê¸°ëŠ¥ ê´€ë ¨
+	IDXGISwapChain* m_pSwapChain = { nullptr };		// ë”ë¸”ë²„í¼ë§ìš© SwapChainê°ì²´
 	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
 	ID3D11DepthStencilView* m_pDepthStencilView = { nullptr };
 

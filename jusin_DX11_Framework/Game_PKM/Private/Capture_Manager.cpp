@@ -1,4 +1,4 @@
-﻿#include "Capture_Manager.h"
+#include "Capture_Manager.h"
 #include "Actor_CaptureTarget.h"
 #include "MonsterBall.h"
 

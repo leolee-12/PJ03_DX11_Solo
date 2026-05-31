@@ -5,7 +5,7 @@ float4x4 g_WITMatrix;
 float g_fAlpha = 1.f;
 float g_fFarZ;
 
-// ÀçÁú
+// ìž¬ì§ˆ
 texture2D g_TexDiff;
 texture2D g_TexNorm;
 //vector g_vMtrlAmbt = vector(0.4f, 0.4f, 0.4f, 1.f);
@@ -89,7 +89,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
-	if (vMtrlDiff.a < 0.1f)	// ÀÏÁ¤ a°ª ¹Ì¸¸Àº ¹ö¸² (¾ËÆÄÅ×½ºÆ®)
+	if (vMtrlDiff.a < 0.1f)	// ì¼ì • aê°’ ë¯¸ë§Œì€ ë²„ë¦¼ (ì•ŒíŒŒí…ŒìŠ¤íŠ¸)
 		discard;
 
 	vector vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex);

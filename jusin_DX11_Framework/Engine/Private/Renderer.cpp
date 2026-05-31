@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "GameObject.h"
 #include "GameInstance.h"
+#include "Profiler_Manager.h"
 
 CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -85,7 +86,7 @@ HRESULT CRenderer::Resize()
 	_uint iNewWidth = static_cast<_uint>(vViewportDesc.x);
 	_uint iNewHeight = static_cast<_uint>(vViewportDesc.y);
 
-	// RT »ý¼º
+	// RT ìƒì„±
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TARGET_DIFFUSE, iNewWidth, iNewHeight,
 		DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
@@ -118,7 +119,7 @@ HRESULT CRenderer::Resize()
 		return E_FAIL;
 	if (FAILED(Ready_DepthStencil_Buffer()))
 		return E_FAIL;
-	// MRT·Î ¹­±â
+	// MRTë¡œ ë¬¶ê¸°
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_DIFFUSE)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(MRT_GAMEOBJECTS, TARGET_NORMAL)))
@@ -191,6 +192,10 @@ void CRenderer::Add_DebugComponent(CComponent* pComponent)
 
 HRESULT CRenderer::Render_Priority()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_Priority");
+	PROFILE_SET_PASS(EPROFILE_PASS::PRIORITY);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::PRIORITY)].size());
+
 	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::PRIORITY)])
 	{
 		if (nullptr != pRenderObject)
@@ -206,6 +211,11 @@ HRESULT CRenderer::Render_Priority()
 
 HRESULT CRenderer::Render_Shadow()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_Shadow");
+	PROFILE_GPU_SCOPE(L"GPU_Render_Shadow");
+	PROFILE_SET_PASS(EPROFILE_PASS::SHADOW);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::SHADOW)].size());
+
 	if (FAILED(m_pGameInstance->Begin_MRT(MRT_SHADOWOBJECTS, m_pMaxDSV)))
 		return E_FAIL;
 
@@ -233,6 +243,11 @@ HRESULT CRenderer::Render_Shadow()
 
 HRESULT CRenderer::Render_NonBlend()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_NonBlend");
+	PROFILE_GPU_SCOPE(L"GPU_Render_NonBlend");
+	PROFILE_SET_PASS(EPROFILE_PASS::NONBLEND);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::NONBLEND)].size());
+
 	if (FAILED(m_pGameInstance->Begin_MRT(MRT_GAMEOBJECTS)))
 		return E_FAIL;
 
@@ -256,6 +271,10 @@ HRESULT CRenderer::Render_NonBlend()
 
 HRESULT CRenderer::Render_OutlineMask()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_OutlineMask");
+	PROFILE_SET_PASS(EPROFILE_PASS::OUTLINEMASK);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::OUTLINEMASK)].size());
+
 	if (FAILED(m_pGameInstance->Begin_MRT(MRT_OUTLINEMASK)))
 		return E_FAIL;
 
@@ -277,6 +296,10 @@ HRESULT CRenderer::Render_OutlineMask()
 
 HRESULT CRenderer::Render_Lights()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_Lights");
+	PROFILE_GPU_SCOPE(L"GPU_Render_Lights");
+	PROFILE_SET_PASS(EPROFILE_PASS::LIGHTS);
+
 	if (FAILED(m_pGameInstance->Begin_MRT(MRT_LIGHTACC)))
 		return E_FAIL;
 
@@ -316,6 +339,10 @@ HRESULT CRenderer::Render_Lights()
 
 HRESULT CRenderer::Render_Combined(_bool m_bUseShadow)
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_Combined");
+	PROFILE_GPU_SCOPE(L"GPU_Render_Combined");
+	PROFILE_SET_PASS(EPROFILE_PASS::COMBINED);
+
 	if (FAILED(m_pGameInstance->Begin_MRT(MRT_POSTPROCESS_IN)))
 		return E_FAIL;
 
@@ -415,6 +442,9 @@ HRESULT CRenderer::Render_Combined(_bool m_bUseShadow)
 
 HRESULT CRenderer::Render_PostProcess()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_PostProcess");
+	PROFILE_SET_PASS(EPROFILE_PASS::POSTPROCESS);
+
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_COMBINED, m_pShader_PostProcess, "g_TexCombined")))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TARGET_NORMAL, m_pShader_PostProcess, "g_TexNorm")))
@@ -484,6 +514,10 @@ HRESULT CRenderer::Render_PostProcess()
 
 HRESULT CRenderer::Render_NonLight()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_NonLight");
+	PROFILE_SET_PASS(EPROFILE_PASS::NONLIGHT);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::NONLIGHT)].size());
+
 	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::NONLIGHT)])
 	{
 		if (nullptr != pRenderObject)
@@ -499,6 +533,11 @@ HRESULT CRenderer::Render_NonLight()
 
 HRESULT CRenderer::Render_Blend()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_Blend");
+	PROFILE_GPU_SCOPE(L"GPU_Render_Blend");
+	PROFILE_SET_PASS(EPROFILE_PASS::BLEND);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::BLEND)].size());
+
 	for (auto& pRenderObject : m_RenderObjects[ETOUI(RENDERID::BLEND)])
 	{
 		if (nullptr != pRenderObject)
@@ -514,6 +553,11 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_UI");
+	PROFILE_GPU_SCOPE(L"GPU_Render_UI");
+	PROFILE_SET_PASS(EPROFILE_PASS::UI);
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::OBJECTS, (_uint)m_RenderObjects[ETOUI(RENDERID::UI)].size());
+
 	auto& UIList = m_RenderObjects[ETOUI(RENDERID::UI)];
 
 	UIList.sort([](CGameObject* pL, CGameObject* pR)
@@ -583,6 +627,9 @@ HRESULT CRenderer::Change_ViewportDesc(_uint iWidth, _uint iHeight)
 
 HRESULT CRenderer::Render_Debug()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Render_Debug");
+	PROFILE_SET_PASS(EPROFILE_PASS::DEBUGRENDER);
+
 	for (auto& pDebugCom : m_DebugComponents)
 	{
 		pDebugCom->Render();

@@ -1,4 +1,4 @@
-﻿#include "GameInstance.h"
+#include "GameInstance.h"
 #include "Graphic_Device.h"
 #include "Timer_Manager.h"
 #include "Level_Manager.h"
@@ -10,6 +10,7 @@
 #include "Font_Manager.h"
 #include "Target_Manager.h"
 #include "Sound_Manager.h"
+#include "Profiler_Manager.h"
 #include "Picking.h"
 #include "Shadow.h"
 #include "Frustum.h"
@@ -102,6 +103,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pShadow)
 		return E_FAIL;
 
+	m_pProfiler_Manager = CProfiler_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pProfiler_Manager)
+		return E_FAIL;
+
 	m_pFrustum = CFrustum::Create();
 	if (nullptr == m_pFrustum)
 		return E_FAIL;
@@ -112,6 +117,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
 	m_pInput_Device->Update();
+
+#if PROFILE_ENABLE
+	if (CProfiler_Manager* pProfiler = CProfiler_Manager::Get())
+		pProfiler->Handle_Input();
+#endif
 	//m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
@@ -129,6 +139,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 HRESULT CGameInstance::Begin_Draw()
 {
+	PROFILE_CPU_SCOPE(L"CPU_BeginDraw");
+
 	_float4 vColor = _float4(0.f, 0.f, 1.f, 1.f);
 
 	if (FAILED(m_pGraphic_Device->Clear_BackBuffer_View(&vColor)))
@@ -142,22 +154,32 @@ HRESULT CGameInstance::Begin_Draw()
 
 HRESULT CGameInstance::Draw()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Draw_Total");
+	PROFILE_GPU_SCOPE(L"GPU_Frame_Total");
+
 #ifdef _DEBUG
 	LARGE_INTEGER Freq{}, Begin{}, AfterRenderer{}, AfterLevel{};
 	QueryPerformanceFrequency(&Freq);
 	QueryPerformanceCounter(&Begin);
 #endif
 
-	if (FAILED(m_pRenderer->Draw()))
-		return E_FAIL;
+	{
+		PROFILE_CPU_SCOPE(L"CPU_Renderer_Draw");
+		if (FAILED(m_pRenderer->Draw()))
+			return E_FAIL;
+	}
 
 #ifdef _DEBUG
 	QueryPerformanceCounter(&AfterRenderer);
 	m_fDebugRendererMS = Debug_ElapsedMS(Begin, AfterRenderer, Freq);
 #endif
 
-	if (FAILED(m_pLevel_Manager->Render()))
-		return E_FAIL;
+	{
+		PROFILE_CPU_SCOPE(L"CPU_Level_Render");
+		PROFILE_SET_PASS(EPROFILE_PASS::LEVEL);
+		if (FAILED(m_pLevel_Manager->Render()))
+			return E_FAIL;
+	}
 
 #ifdef _DEBUG
 	QueryPerformanceCounter(&AfterLevel);
@@ -165,11 +187,18 @@ HRESULT CGameInstance::Draw()
 	m_fDebugDrawMS = Debug_ElapsedMS(Begin, AfterLevel, Freq);
 #endif
 
+#if PROFILE_ENABLE
+	if (CProfiler_Manager* pProfiler = CProfiler_Manager::Get())
+		pProfiler->RenderOverlay();
+#endif
+
 	return S_OK;
 }
 
 HRESULT CGameInstance::End_Draw()
 {
+	PROFILE_CPU_SCOPE(L"CPU_Present");
+
 	return m_pGraphic_Device->Present();
 }
 
@@ -186,6 +215,8 @@ void CGameInstance::Clear_Resources(_int iLevelIndex)
 void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pMainCamera);
+
+	Safe_Release(m_pProfiler_Manager);
 
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pShadow);
@@ -534,6 +565,10 @@ _float2 CGameInstance::Measure_Text(const WNameID strFontTag, const _tchar* pTex
 
 HRESULT XM_CALLCONV CGameInstance::Draw_Text(const WNameID strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, const _float2& vScale)
 {
+	PROFILE_CPU_SCOPE(L"CPU_Draw_Text");
+
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::TEXT_DRAWCALLS, 1);
+
 	return m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, vScale);
 }
 #pragma endregion

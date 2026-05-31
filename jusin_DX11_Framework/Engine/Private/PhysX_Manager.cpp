@@ -27,7 +27,7 @@ void CPhysX_Manager::Simulate(_float fTimeDelta)
 
 void CPhysX_Manager::Free()
 {
-    // ¿ª¼ø ÇØÁ¦
+    // ì—­ìˆœ í•´ì œ
     if (m_pScene) m_pScene->release();
     if (m_pPhysics) m_pPhysics->release();
     if (m_pFoundation) m_pFoundation->release();

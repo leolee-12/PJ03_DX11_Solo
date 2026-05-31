@@ -20,7 +20,7 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& Prototype)
 
 HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 {
-	// 1. ³ôÀÌ¸Ê ÆÄÀÏ ·Îµå
+	// 1. ë†’ì´ë§µ íŒŒì¼ ë¡œë“œ
 	_ulong dwByte = {};
 	HANDLE hFile = CreateFile(m_strHeightMapFilePath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 	
@@ -44,7 +44,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 
 
 
-	// 2. VB Á¤º¸ ¼¼ÆÃ
+	// 2. VB ì •ë³´ ì„¸íŒ…
 	m_iNumVertexBuffers = 1;
 	m_iVertexStride = sizeof(VTXNORTEX);
 	m_iNumIndices = (m_iNumVerticesX - 1) * (m_iNumVerticesZ - 1) * 2 * 3;
@@ -80,7 +80,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 
 
 
-	// 3. IB Á¤º¸ ¼¼ÆÃ ¹× ¹öÅØ½º ¹ı¼± ¼¼ÆÃ
+	// 3. IB ì •ë³´ ì„¸íŒ… ë° ë²„í…ìŠ¤ ë²•ì„  ì„¸íŒ…
 	D3D11_BUFFER_DESC IndexBufferDesc{};
 	IndexBufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
 	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -115,8 +115,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 
 			vSour = XMLoadFloat3(&pVertices[iIndices[1]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
 			vDest = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[1]].vPosition);
-			//vTriNorm = XMVector3Normalize(XMVector3Cross(vSour, vDest));	// Á¤±ÔÈ­ÇÒ °æ¿ì, »ï°¢Çü ¸éÀû º° °¡ÁßÄ¡°¡ ¹İ¿µµÇÁö ¾ÊÀ½ : ±Õµî Æò±Õ ¹æ½Ä
-			vTriNorm = XMVector3Cross(vSour, vDest);	// Á¤±ÔÈ­ÇÏÁö ¾ÊÀ¸¸é »ï°¢Çü ¸éÀû¿¡ ºñ·ÊÇÏ´Â ¿ÜÀû º¤ÅÍÀÇ Å©±â°¡ ±×´ë·Î ¹İ¿µ : ¸éÀû °¡Áß ¹æ½Ä
+			//vTriNorm = XMVector3Normalize(XMVector3Cross(vSour, vDest));	// ì •ê·œí™”í•  ê²½ìš°, ì‚¼ê°í˜• ë©´ì  ë³„ ê°€ì¤‘ì¹˜ê°€ ë°˜ì˜ë˜ì§€ ì•ŠìŒ : ê· ë“± í‰ê·  ë°©ì‹
+			vTriNorm = XMVector3Cross(vSour, vDest);	// ì •ê·œí™”í•˜ì§€ ì•Šìœ¼ë©´ ì‚¼ê°í˜• ë©´ì ì— ë¹„ë¡€í•˜ëŠ” ì™¸ì  ë²¡í„°ì˜ í¬ê¸°ê°€ ê·¸ëŒ€ë¡œ ë°˜ì˜ : ë©´ì  ê°€ì¤‘ ë°©ì‹
 
 			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vTriNorm);
 			XMStoreFloat3(&pVertices[iIndices[1]].vNormal, XMLoadFloat3(&pVertices[iIndices[1]].vNormal) + vTriNorm);
@@ -139,13 +139,13 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype()
 
 
 
-	// 4. ¹ı¼±º¤ÅÍ Á¤±ÔÈ­
+	// 4. ë²•ì„ ë²¡í„° ì •ê·œí™”
 	for (size_t i = 0; i < m_iNumVertices; i++)
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
 
 
 
-	// 5. VB, IB »ı¼º
+	// 5. VB, IB ìƒì„±
 	D3D11_SUBRESOURCE_DATA VertexInitialData{};
 	VertexInitialData.pSysMem = pVertices;
 

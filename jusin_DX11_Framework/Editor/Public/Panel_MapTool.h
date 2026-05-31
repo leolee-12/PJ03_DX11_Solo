@@ -32,18 +32,18 @@ public:
 private:
 	_bool m_bNavEditMode = { false };
 	NAV_TOOL_MODE m_eToolMode = { NAV_TOOL_MODE::POINT };
-	_int m_iSelectedCell = { -1 };	// ¼±ÅÃµÈ ¼¿ ÀÎµ¦½º (-1 = ¾øÀ½)
-	_int m_iDragVertex = { -1 };	// µå·¡±× ÁßÀÎ ²ÀÁşÁ¡ (0~2, -1 = ¾øÀ½)
+	_int m_iSelectedCell = { -1 };	// ì„ íƒëœ ì…€ ì¸ë±ìŠ¤ (-1 = ì—†ìŒ)
+	_int m_iDragVertex = { -1 };	// ë“œë˜ê·¸ ì¤‘ì¸ ê¼­ì§“ì  (0~2, -1 = ì—†ìŒ)
 	_bool m_bDragging = { false };
 	_float3 m_vDragHitPos = {};
 	_bool m_bHasDragHit = { false };
 	_float m_fSnapRadius = { 0.3f };
 
-	// ÆíÁı µ¥ÀÌÅÍ
-	vector<_float3> m_PendingPoints;		// ÃÖ´ë 2°³ ´©Àû
-	vector<array<_float3, 3>> m_NavCells;	// È®Á¤µÈ ¼¿µé
+	// í¸ì§‘ ë°ì´í„°
+	vector<_float3> m_PendingPoints;		// ìµœëŒ€ 2ê°œ ëˆ„ì 
+	vector<array<_float3, 3>> m_NavCells;	// í™•ì •ëœ ì…€ë“¤
 
-	// ÆÄÀÏ °æ·Î (char: ImGui InputText¿ë)
+	// íŒŒì¼ ê²½ë¡œ (char: ImGui InputTextìš©)
 	_char m_szNavSavePath[260] = {};
 
 private:
@@ -53,8 +53,8 @@ private:
 	ImVec2 Project_To_Screen(const _float3& vWorldPos) const;
 	void Save_NavMesh();
 	void Load_NavMesh();
-	_int HitTest_Cell(const _float3& vWorldPos) const;							// Å¬¸¯ À§Ä¡°¡ ¾î´À ¼¿ ¾ÈÀÎÁö
-	_int HitTest_Vertex(const _float3& vWorldPos, _int* pOutCellIdx) const;	// ±ÙÁ¢ ²ÀÁşÁ¡ Ã£±â
+	_int HitTest_Cell(const _float3& vWorldPos) const;							// í´ë¦­ ìœ„ì¹˜ê°€ ì–´ëŠ ì…€ ì•ˆì¸ì§€
+	_int HitTest_Vertex(const _float3& vWorldPos, _int* pOutCellIdx) const;	// ê·¼ì ‘ ê¼­ì§“ì  ì°¾ê¸°
 	void Update_SharedVertex(const _float3& vOld, const _float3& vNew);
 
 

@@ -49,7 +49,7 @@ HRESULT CPanel_OutLiner::Render()
 
 	if (ImGui::BeginPopup("##rename_popup") && m_pRenameTarget)
 	{
-		ImGui::Text(KOR("»õ ÀÌ¸§:"));
+		ImGui::Text(KOR("ìƒˆ ì´ë¦„:"));
 		if (ImGui::InputText("##rename", m_szRenameBuffer, 128,
 			ImGuiInputTextFlags_EnterReturnsTrue))
 		{
@@ -70,8 +70,8 @@ void CPanel_OutLiner::Draw_ObjectNode(CGameObject* pObj)
 	const _bool bSelected = m_pEditInstance->Is_Selected(pObj);
 	string strName = WtoS(pObj->Get_Name());
 
-	// °Ë»ö : °Ë»ö¾î ÀÖÀ¸¸é ÀÌ¸§¿¡ Æ÷ÇÔµÇÁö ¾Ê´Â ¿ÀºêÁ§Æ® ½ºÅµ
-	if (!Passes_Filter(strName)) // ¡ç ÀÎ¶óÀÎ Áßº¹ ·ÎÁ÷ Á¦°Å, ÇÔ¼ö »ç¿ë
+	// ê²€ìƒ‰ : ê²€ìƒ‰ì–´ ìˆìœ¼ë©´ ì´ë¦„ì— í¬í•¨ë˜ì§€ ì•ŠëŠ” ì˜¤ë¸Œì íŠ¸ ìŠ¤í‚µ
+	if (!Passes_Filter(strName)) // â† ì¸ë¼ì¸ ì¤‘ë³µ ë¡œì§ ì œê±°, í•¨ìˆ˜ ì‚¬ìš©
 		return;
 
 	ImGuiTreeNodeFlags iNodeFlags =
@@ -83,7 +83,7 @@ void CPanel_OutLiner::Draw_ObjectNode(CGameObject* pObj)
 
 	_bool bOpen = ImGui::TreeNodeEx((void*)pObj, iNodeFlags, "%s", strName.c_str());
 
-	// ÁÂÅ¬¸¯ : ¼±ÅÃ/ÇØÁ¦, Ctrl+ÁÂÅ¬¸¯ : ¸ÖÆ¼ ¼±ÅÃ
+	// ì¢Œí´ë¦­ : ì„ íƒ/í•´ì œ, Ctrl+ì¢Œí´ë¦­ : ë©€í‹° ì„ íƒ
 	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 	{
 		if (bSelected)
@@ -92,7 +92,7 @@ void CPanel_OutLiner::Draw_ObjectNode(CGameObject* pObj)
 			m_pEditInstance->Select(pObj, ImGui::GetIO().KeyCtrl);
 	}
 
-	// ¿ìÅ¬¸¯ : ¸Ş´º
+	// ìš°í´ë¦­ : ë©”ë‰´
 	if (ImGui::BeginPopupContextItem())
 	{
 		Draw_ContextMenu(pObj);
@@ -105,23 +105,23 @@ void CPanel_OutLiner::Draw_ObjectNode(CGameObject* pObj)
 
 void CPanel_OutLiner::Draw_ContextMenu(CGameObject* pObj)
 {
-	// ÀÌ¸§ º¯°æ
-	if (ImGui::MenuItem(KOR("ÀÌ¸§ º¯°æ")))
+	// ì´ë¦„ ë³€ê²½
+	if (ImGui::MenuItem(KOR("ì´ë¦„ ë³€ê²½")))
 	{
 		m_pRenameTarget = pObj;
-		// ÇöÀç ÀÌ¸§À» ¹öÆÛ¿¡ º¹»çÇØ¼­ ÆË¾÷ InputText¿¡ Ç¥½Ã
+		// í˜„ì¬ ì´ë¦„ì„ ë²„í¼ì— ë³µì‚¬í•´ì„œ íŒì—… InputTextì— í‘œì‹œ
 		strncpy_s(m_szRenameBuffer, WtoS(pObj->Get_Name()).c_str(), 127);
 		m_bOpenRenamePopup = true;
 	}
 
-	// º¹Á¦: µ¿ÀÏ Å¸ÀÔ Clone ÈÄ ¿¡µğÅÍ ·¹Áö½ºÆ®¸®¿¡ µî·Ï
-	if (ImGui::MenuItem(KOR("º¹Á¦")))
+	// ë³µì œ: ë™ì¼ íƒ€ì… Clone í›„ ì—ë””í„° ë ˆì§€ìŠ¤íŠ¸ë¦¬ì— ë“±ë¡
+	if (ImGui::MenuItem(KOR("ë³µì œ")))
 	{
 		m_pEditInstance->Clone_Object(pObj);
 	}
 
-	// »èÁ¦
-	if (ImGui::MenuItem(KOR("»èÁ¦")))
+	// ì‚­ì œ
+	if (ImGui::MenuItem(KOR("ì‚­ì œ")))
 	{
 		m_pEditInstance->Deselect(pObj);
 		m_pEditInstance->Unregister_Object(pObj);
@@ -135,7 +135,7 @@ _bool CPanel_OutLiner::Passes_Filter(const _string& strName)
 	_string lower_name = strName;
 	_string lower_buf = m_szSearchBuffer;
 	transform(lower_name.begin(), lower_name.end(), lower_name.begin(),
-		[](unsigned char c) { return (char)::tolower(c); }); // ¡ç unsigned char Ä³½ºÆ®
+		[](unsigned char c) { return (char)::tolower(c); }); // â† unsigned char ìºìŠ¤íŠ¸
 	transform(lower_buf.begin(), lower_buf.end(), lower_buf.begin(),
 		[](unsigned char c) { return (char)::tolower(c); });
 

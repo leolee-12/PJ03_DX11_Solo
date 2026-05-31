@@ -17,7 +17,7 @@ HRESULT CShadow::Set_ShadowLight(const SHADOW_LIGHT_DESC& ShadowDesc)
 	XMStoreFloat4x4(&m_TransformStateMatrices[ETOUI(D3DTS::PROJ)],
 		XMMatrixOrthographicLH(50.f, 50.f, ShadowDesc.fNear, ShadowDesc.fFar));
 
-	// Follow ÁØºñ : ±¤¿ø ¹æÇâ+°Å¸® º¸°ü, ¸Å ÇÁ·¹ÀÓ °»½Å ½ÃÀÛ
+	// Follow ì¤€ë¹„ : ê´‘ì› ë°©í–¥+ê±°ë¦¬ ë³´ê´€, ë§¤ í”„ë ˆìž„ ê°±ì‹  ì‹œìž‘
 	_float4 vDir;
 	XMStoreFloat4(&vDir, XMVectorSubtract(XMLoadFloat4(&ShadowDesc.vEye), XMLoadFloat4(&ShadowDesc.vAt)));
 	m_vEyeOffset = _float3{ vDir.x, vDir.y, vDir.z };
@@ -35,7 +35,7 @@ void CShadow::Update()
 {
 	if (!m_bFollow) return;
 
-	// Ä«¸Þ¶ó ¿ùµå À§Ä¡ Follow
+	// ì¹´ë©”ë¼ ì›”ë“œ ìœ„ì¹˜ Follow
 	const _float4* pCamPos = m_pGameInstance->Get_CamPosition();
 	_vector vAt = XMVectorSet(pCamPos->x, pCamPos->y, pCamPos->z, 1.f);
 	_vector vEye = XMVectorAdd(vAt, XMVectorSet(m_vEyeOffset.x, m_vEyeOffset.y, m_vEyeOffset.z, 0.f));

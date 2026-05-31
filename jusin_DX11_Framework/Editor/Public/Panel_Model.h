@@ -25,7 +25,7 @@ private:
 
 	_char m_szTexDir[MAX_PATH] = {};
 	_char m_szMappingJsonPath[MAX_PATH] = {};
-	_char m_szPrevFbxPath[MAX_PATH] = {};   // ÀÌÀü FBX °æ·Î ÃßÀû¿ë
+	_char m_szPrevFbxPath[MAX_PATH] = {};   // ì´ì „ FBX ê²½ë¡œ ì¶”ì ìš©
 	_bool m_bMappingGenerated = { false };
 
 public:

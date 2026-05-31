@@ -13,7 +13,7 @@ HRESULT CLevel_Manager::Change_Level(_int iNewLevelIndex, CLevel* pNewLevel)
     if (nullptr == pNewLevel)
         return E_FAIL;
 
-    /* ½ºÅÃ ÀüÃ¼¸¦ À§¿¡¼­ºÎÅÍ Á¤¸® */
+    /* ìŠ¤íƒ ì „ì²´ë¥¼ ìœ„ì—ì„œë¶€í„° ì •ë¦¬ */
     while (false == m_LevelStack.empty())
     {
         LEVEL_ENTRY& top = m_LevelStack.back();
@@ -22,7 +22,7 @@ HRESULT CLevel_Manager::Change_Level(_int iNewLevelIndex, CLevel* pNewLevel)
         m_LevelStack.pop_back();
     }
 
-    /* »õ ·¹º§À» ½ºÅÃ¿¡ push */
+    /* ìƒˆ ë ˆë²¨ì„ ìŠ¤íƒì— push */
     LEVEL_ENTRY entry{ iNewLevelIndex, pNewLevel };
     m_LevelStack.push_back(entry);
 
@@ -36,7 +36,7 @@ HRESULT CLevel_Manager::Push_Level(_int iLevelIndex, CLevel* pNewLevel)
     if (nullptr == pNewLevel)
         return E_FAIL;
 
-    /* Á÷Àü topÀÌ ÀÖÀ¸¸é OnPause È£Ãâ */
+    /* ì§ì „ topì´ ìˆìœ¼ë©´ OnPause í˜¸ì¶œ */
     if (false == m_LevelStack.empty())
     {
         CLevel* pPrevTop = m_LevelStack.back().pLevel;
@@ -54,17 +54,17 @@ HRESULT CLevel_Manager::Push_Level(_int iLevelIndex, CLevel* pNewLevel)
 
 HRESULT CLevel_Manager::Pop_Level()
 {
-    /* ½ºÅÃÀÌ ºñ¾ú°Å³ª 1´ÜÀÌ¸é pop ºÒ°¡ */
+    /* ìŠ¤íƒì´ ë¹„ì—ˆê±°ë‚˜ 1ë‹¨ì´ë©´ pop ë¶ˆê°€ */
     if (m_LevelStack.size() < 2)
         return E_FAIL;
 
-    /* ÇöÀç top Á¤¸® */
+    /* í˜„ì¬ top ì •ë¦¬ */
     LEVEL_ENTRY top = m_LevelStack.back();
     m_pGameInstance->Clear_Resources(top.iLevelIndex);
     Safe_Release(top.pLevel);
     m_LevelStack.pop_back();
 
-    /* »õ top resume */
+    /* ìƒˆ top resume */
     LEVEL_ENTRY& newTop = m_LevelStack.back();
     if (nullptr != newTop.pLevel)
         newTop.pLevel->OnResume();
@@ -84,11 +84,11 @@ CLevel* CLevel_Manager::Get_CurrentLevelPtr() const
 
 _bool CLevel_Manager::Is_Level_Active(_uint iLevel) const
 {
-    /* STATIC(0¹ø ½½·Ô)Àº Ç×»ó È°¼º (¿µ¼Ó) */
+    /* STATIC(0ë²ˆ ìŠ¬ë¡¯)ì€ í•­ìƒ í™œì„± (ì˜ì†) */
     if (0u == iLevel)
         return true;
 
-    /* ½ºÅÃ top°ú °°Àº ½½·ÔÀÌ¸é È°¼º. ±× ¿Ü(paused ÁßÀÎ º£ÀÌ½º)´Â ºñÈ°¼º. */
+    /* ìŠ¤íƒ topê³¼ ê°™ì€ ìŠ¬ë¡¯ì´ë©´ í™œì„±. ê·¸ ì™¸(paused ì¤‘ì¸ ë² ì´ìŠ¤)ëŠ” ë¹„í™œì„±. */
     if (false == m_LevelStack.empty() &&
         static_cast<_int>(iLevel) == m_LevelStack.back().iLevelIndex)
         return true;
@@ -127,9 +127,9 @@ void CLevel_Manager::Free()
 {
     __super::Free();
 
-    /* ½ºÅÃÀÇ ¸ğµç ·¹º§ Release.
-       Clear_Resources´Â Release_Engine Èå¸§¿¡¼­ °¢ ¸Å´ÏÀúÀÇ Free°¡ ÀÚÃ¼ Ã»¼ÒÇÏ¹Ç·Î
-       ¿©±â¼­ Áßº¹ È£ÃâÇÏÁö ¾Ê´Â´Ù (±âÁ¸ Á¤Ã¥°ú µ¿ÀÏ). */
+    /* ìŠ¤íƒì˜ ëª¨ë“  ë ˆë²¨ Release.
+       Clear_ResourcesëŠ” Release_Engine íë¦„ì—ì„œ ê° ë§¤ë‹ˆì €ì˜ Freeê°€ ìì²´ ì²­ì†Œí•˜ë¯€ë¡œ
+       ì—¬ê¸°ì„œ ì¤‘ë³µ í˜¸ì¶œí•˜ì§€ ì•ŠëŠ”ë‹¤ (ê¸°ì¡´ ì •ì±…ê³¼ ë™ì¼). */
     for (auto it = m_LevelStack.rbegin(); it != m_LevelStack.rend(); ++it)
         Safe_Release(it->pLevel);
     m_LevelStack.clear();

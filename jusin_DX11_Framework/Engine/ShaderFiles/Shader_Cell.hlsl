@@ -15,13 +15,13 @@ struct VS_OUT
 };
     
 
-/* Á¤Á¡¼ÎÀÌ´õ : Á¤Á¡ µ¥ÀÌÅÍÀÇ º¯È¯ °úÁ¤À» ¼öÇàÇÑ´Ù. */
+/* ì •ì ì…°ì´ë” : ì •ì  ë°ì´í„°ì˜ ë³€í™˜ ê³¼ì •ì„ ìˆ˜í–‰í•œë‹¤. */
 
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
     
-    /* ¿ùµåº¯È¯, ºä º­È¯, Åõ¿µº¯È¯ */ 
+    /* ì›”ë“œë³€í™˜, ë·° ë²¼í™˜, íˆ¬ì˜ë³€í™˜ */ 
     float4 vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     vPosition = mul(vPosition, g_ViewMatrix);
     vPosition = mul(vPosition, g_ProjMatrix);
@@ -42,7 +42,7 @@ struct PS_OUT
 };
     
 
-/* ÇÈ¼¿¼ÎÀÌ´õ : ÇÈ¼¿ÀÇ ÃÖÁ¾ÀûÀÎ »öÀ» °áÁ¤ÇØÁØ´Ù. */
+/* í”½ì…€ì…°ì´ë” : í”½ì…€ì˜ ìµœì¢…ì ì¸ ìƒ‰ì„ ê²°ì •í•´ì¤€ë‹¤. */
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;

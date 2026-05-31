@@ -1,4 +1,4 @@
-﻿#include "UITween.h"
+#include "UITween.h"
 #include "UIObject.h"
 
 HRESULT CUITween::Initialize(CUIObject* pOwner, const UITWEEN_DESC& tDesc)

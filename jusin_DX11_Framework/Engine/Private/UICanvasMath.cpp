@@ -6,11 +6,11 @@ namespace UICanvasMath
 {
 	namespace
 	{
-		// policy∫∞ design -> renderø° ¿˚øÎ«“ effective scale.
-		// - STRETCH       : x=scaleX, y=scaleY (∫Ò±’µÓ)
-		// - MATCH_WIDTH   : x=y=scaleX (∞°∑Œ ±‚¡ÿ fit, ºº∑Œ letterbox)
-		// - MATCH_HEIGHT  : x=y=scaleY (ºº∑Œ ±‚¡ÿ fit, ∞°∑Œ letterbox)
-		// - UNIFORM_FIT   : x=y=uniformScale (æÁ¬  letterbox)
+		// policyÎ≥Ñ design -> renderÏóê Ï†ÅÏö©Ìï† effective scale.
+		// - STRETCH       : x=scaleX, y=scaleY (ÎπÑÍ∑†Îì±)
+		// - MATCH_WIDTH   : x=y=scaleX (Í∞ÄÎ°ú Í∏∞Ï§Ä fit, ÏÑ∏Î°ú letterbox)
+		// - MATCH_HEIGHT  : x=y=scaleY (ÏÑ∏Î°ú Í∏∞Ï§Ä fit, Í∞ÄÎ°ú letterbox)
+		// - UNIFORM_FIT   : x=y=uniformScale (ÏñëÏ™Ω letterbox)
 		inline void Get_PolicyScale(UI_SCALE_POLICY ePolicy, const UICANVAS_TRANSFORM& t, _float& fOutScaleX, _float& fOutScaleY)
 		{
 			switch (ePolicy)

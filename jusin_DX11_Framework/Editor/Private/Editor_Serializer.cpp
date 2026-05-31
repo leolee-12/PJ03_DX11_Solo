@@ -1,4 +1,4 @@
-﻿#include "Editor_Serializer.h"
+#include "Editor_Serializer.h"
 #include "EditInstance.h"
 
 namespace Helper

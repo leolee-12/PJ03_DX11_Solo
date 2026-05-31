@@ -1,4 +1,4 @@
-﻿#include "Loader.h"
+#include "Loader.h"
 
 #include <chrono>
 #include <sstream>

@@ -1,5 +1,6 @@
 #include "VIBuffer_Point_Instance.h"
 #include "GameInstance.h"
+#include "Profiler_Manager.h"
 
 CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const POINT_INSTANCE_DESC& tDesc)
 	: CVIBuffer_Instance{ pDevice, pContext }
@@ -146,6 +147,8 @@ HRESULT CVIBuffer_Point_Instance::Render()
 		return S_OK;
 
 	m_pContext->DrawInstanced(m_iVertexCountPerInstance, m_iNumInstances, 0, 0);
+
+	PROFILE_DRAW_INSTANCED(m_iVertexCountPerInstance, m_iNumInstances, m_ePrimitiveType);
 
 	return S_OK;
 }

@@ -44,7 +44,7 @@ _bool CInteraction_Encounter::CanInteract(const INTERACTION_CONTEXT& ctx) const
 	if (!Supports(ctx.eEvent))
 		return false;
 
-	// TODO: ¾î´ðÅÍ µµÀÔ ÈÄ
+	// TODO: ì–´ëŒ‘í„° ë„ìž… í›„
 	// if (m_pGameInstance->Get_SceneService()->Is_ChangingScene())
 	//     return false;
 	// if (m_pGameInstance->Get_EncounterService()->Is_Locked())
@@ -60,8 +60,8 @@ void CInteraction_Encounter::Execute(const INTERACTION_CONTEXT& ctx)
 		m_iSpeciesID, m_iLevel);
 	OutputDebugStringW(szLog);
 
-	/* ÇöÀç È°¼º ·¹º§ÀÌ GAMEPLAY ÀÏ ¶§¸¸ Capture ÁøÀÔ ¿äÃ».
-	   GAMEPLAY ¿Ü »óÅÂ¿¡¼­ Wild ¾×ÅÍ¿¡ ´ê´Â °æ·Î´Â Á¤»ó µ¿¼±ÀÌ ¾Æ´Ï¹Ç·Î ¹«½Ã. */
+	/* í˜„ìž¬ í™œì„± ë ˆë²¨ì´ GAMEPLAY ì¼ ë•Œë§Œ Capture ì§„ìž… ìš”ì²­.
+	   GAMEPLAY ì™¸ ìƒíƒœì—ì„œ Wild ì•¡í„°ì— ë‹¿ëŠ” ê²½ë¡œëŠ” ì •ìƒ ë™ì„ ì´ ì•„ë‹ˆë¯€ë¡œ ë¬´ì‹œ. */
 	CLevel* pCurrent = m_pGameInstance->Get_CurrentLevelPtr();
 	CLevel_GamePlay* pGamePlay = dynamic_cast<CLevel_GamePlay*>(pCurrent);
 	if (nullptr == pGamePlay)
@@ -73,8 +73,8 @@ void CInteraction_Encounter::Execute(const INTERACTION_CONTEXT& ctx)
 	CAPTURE_ENV tEnv = {};
 	tEnv.iSpeciesID = m_iSpeciesID;
 	tEnv.iLevel = m_iLevel;
-	tEnv.iInitialBallItemID = 0;   // ÈÄ¼Ó ´ÜÀ§¿¡¼­ ¾ß»ý ¾×ÅÍ ±âº» º¼ ID ·Î Ã¤¿ò
-	tEnv.iZoneID = 0;   // ÈÄ¼Ó ´ÜÀ§¿¡¼­ GAMEPLAY ÀÇ ÇöÀç Á¸ ID ÁÖÀÔ
+	tEnv.iInitialBallItemID = 0;   // í›„ì† ë‹¨ìœ„ì—ì„œ ì•¼ìƒ ì•¡í„° ê¸°ë³¸ ë³¼ ID ë¡œ ì±„ì›€
+	tEnv.iZoneID = 0;   // í›„ì† ë‹¨ìœ„ì—ì„œ GAMEPLAY ì˜ í˜„ìž¬ ì¡´ ID ì£¼ìž…
 
 	pGamePlay->Request_Capture(tEnv, ctx.pTarget);
 }

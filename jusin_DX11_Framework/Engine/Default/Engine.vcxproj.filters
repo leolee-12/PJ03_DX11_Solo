@@ -396,6 +396,9 @@
     <ClInclude Include="..\Public\QuadTree.h">
       <Filter>07. Component\VIBuffer\QuadTree</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Profiler_Defines.h" />
+    <ClInclude Include="..\Public\Profiler_Manager.h" />
+    <ClInclude Include="..\Public\RenderOptimizeOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -599,6 +602,7 @@
     <ClCompile Include="..\Private\QuadTree.cpp">
       <Filter>07. Component\VIBuffer\QuadTree</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Profiler_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ShaderFiles\Engine_Shader_Defines.hlsli">

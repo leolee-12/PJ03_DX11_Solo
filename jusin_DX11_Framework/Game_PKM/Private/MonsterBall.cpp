@@ -1,4 +1,4 @@
-﻿#include "MonsterBall.h"
+#include "MonsterBall.h"
 #include "GameInstance.h"
 
 #include "Collider.h"

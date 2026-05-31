@@ -14,7 +14,7 @@ HRESULT CTimer::Ready_Timer()
 	QueryPerformanceCounter(&m_FrameTime);	// 1077
 	QueryPerformanceCounter(&m_LastTime);	// 1085
 	QueryPerformanceCounter(&m_FixTime);	// 1090
-	QueryPerformanceFrequency(&m_CpuTick);	// cpu tick °ªÀ» ¾ò¾î¿À´Â ÇÔ¼ö
+	QueryPerformanceFrequency(&m_CpuTick);	// cpu tick ê°’ì„ ì–»ì–´ì˜¤ëŠ” í•¨ìˆ˜
 
 	return S_OK;
 }

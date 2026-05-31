@@ -1,4 +1,4 @@
-﻿#include "Level_Capture.h"
+#include "Level_Capture.h"
 #include "Game_API.h"
 #include "Battle_AnimDef.h"
 #include "PokemonData_Manager.h"

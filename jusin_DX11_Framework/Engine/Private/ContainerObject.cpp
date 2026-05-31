@@ -82,12 +82,12 @@ void XM_CALLCONV CContainerObject::Tick_RootMotionMovement(_fvector vMoveDir, _b
 
 	if (!m_MoveState.Pivoting)
 	{
-		if (fDot < m_Tuning.fPivotEnterDot)     // ≈´ ∞¢µµ∑Œ »∏¿¸ Ω√¿€ -> ««π˛
+		if (fDot < m_Tuning.fPivotEnterDot)     // ÌÅ∞ Í∞ÅÎèÑÎ°ú ÌöåÏ†Ñ ÏãúÏûë -> ÌîºÎ≤ó
 			m_MoveState.Pivoting = true;
 	}
 	else
 	{
-		if (fDot > m_Tuning.fPivotExitDot)      // ∞≈¿« ¡§∑ƒ øœ∑· -> «ÿ¡¶
+		if (fDot > m_Tuning.fPivotExitDot)      // Í±∞Ïùò Ï†ïÎ†¨ ÏôÑÎ£å -> Ìï¥Ï†ú
 			m_MoveState.Pivoting = false;
 	}
 
@@ -95,7 +95,7 @@ void XM_CALLCONV CContainerObject::Tick_RootMotionMovement(_fvector vMoveDir, _b
 
 	_vector vRaw = m_Tuning.fRootMotionScale * XMLoadFloat3(&vRawRootMotionDelta);
 	_vector vSmoothed = XMLoadFloat3(&m_MoveState.vSmoothedLocalDelta);
-	_float  fAlpha = 1.f - expf(-m_Tuning.fDeltaSmoothingPerSec * fTimeDelta); // «¡∑π¿”∑π¿Ã∆Æ µ∂∏≥
+	_float  fAlpha = 1.f - expf(-m_Tuning.fDeltaSmoothingPerSec * fTimeDelta); // ÌîÑÎ†àÏûÑÎ†àÏù¥Ìä∏ ÎèÖÎ¶Ω
 	vSmoothed = XMVectorLerp(vSmoothed, vRaw, fAlpha);
 	XMStoreFloat3(&m_MoveState.vSmoothedLocalDelta, vSmoothed);
 

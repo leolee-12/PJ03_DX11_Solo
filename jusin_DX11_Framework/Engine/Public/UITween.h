@@ -30,12 +30,12 @@ public:
 	void Stop() { m_bFinished = true; }
 
 private:
-	class CUIObject* m_pOwner = { nullptr };  // base ops¿ë
+	class CUIObject* m_pOwner = { nullptr };  // base opsìš©
 
 	UITWEEN_DESC m_tDesc;
 	_float m_fElapsed = { 0.f };
 	_bool m_bFinished = { false };
-	_bool m_bForward = { true };   // PINGPONG ¹æÇâ
+	_bool m_bForward = { true };   // PINGPONG ë°©í–¥
 
 private:
 	_float Evaluate_Ease(_float t) const;

@@ -178,7 +178,7 @@ void CTransform::Go_Right(_float fTimeDelta)
 
 void CTransform::Move_Delta(_fvector vLocalDelta, CNavigation* pNavigation, _bool bSnapY)
 {
-	// 1) ½ºÄÉÀÏ ºĞ¸®µÈ È¸ÀüÇà·Ä·Î delta -> ¿ùµå
+	// 1) ìŠ¤ì¼€ì¼ ë¶„ë¦¬ëœ íšŒì „í–‰ë ¬ë¡œ delta -> ì›”ë“œ
 	_vector vRight	= XMVector3Normalize(Get_State(STATE::RIGHT));
 	_vector vUp		= XMVector3Normalize(Get_State(STATE::UP));
 	_vector vLook	= XMVector3Normalize(Get_State(STATE::LOOK));
@@ -191,15 +191,15 @@ void CTransform::Move_Delta(_fvector vLocalDelta, CNavigation* pNavigation, _boo
 
 	_vector vDesired = Get_State(STATE::POSITION) + XMVector3TransformNormal(vLocalDelta, matRot);
 
-	// 2) XZ ¼¿ ÆÇÁ¤ (¼¿ ÀüÀÌ °»½Å Æ÷ÇÔ, Áö»ó/°øÁß °øÅë)
+	// 2) XZ ì…€ íŒì • (ì…€ ì „ì´ ê°±ì‹  í¬í•¨, ì§€ìƒ/ê³µì¤‘ ê³µí†µ)
 	if (nullptr != pNavigation)
 		vDesired = pNavigation->Compute_SlidePos(Get_State(STATE::POSITION), vDesired);
 
-	// 3) Y Ã³¸® (¼¿ ±â¹İ)
+	// 3) Y ì²˜ë¦¬ (ì…€ ê¸°ë°˜)
 	if (bSnapY && nullptr != pNavigation)
-		Set_State(STATE::POSITION, pNavigation->Compute_Height(vDesired));	// ¼¿ÀÇ Y°ª »ç¿ë
+		Set_State(STATE::POSITION, pNavigation->Compute_Height(vDesired));	// ì…€ì˜ Yê°’ ì‚¬ìš©
 	else
-		Set_State(STATE::POSITION, vDesired);	// ·çÆ®¸ğ¼ÇÀÇ Y ÀÌµ¿·® »ç¿ë
+		Set_State(STATE::POSITION, vDesired);	// ë£¨íŠ¸ëª¨ì…˜ì˜ Y ì´ë™ëŸ‰ ì‚¬ìš©
 }
 
 void XM_CALLCONV CTransform::Chase(_fvector vGoal, _float fTimeDelta, _float fLimit, CNavigation* pNavigation)
@@ -224,7 +224,7 @@ void XM_CALLCONV CTransform::Face_Direction(_fvector vCurLook, _fvector vTargetD
 
 	_vector vTgtLook = XMVector3Normalize(XMVectorSet(XMVectorGetX(vTargetDir), 0.f, XMVectorGetZ(vTargetDir), 0.f));
 
-	// ÀÌ¹Ì Á¤·ÄµÈ »óÅÂ¸é Á¶±â Á¾·á
+	// ì´ë¯¸ ì •ë ¬ëœ ìƒíƒœë©´ ì¡°ê¸° ì¢…ë£Œ
 	_float fDot = XMVectorGetX(XMVector3Dot(vCurLook, vTgtLook));
 	if (fDot > 0.9999f)
 		return;

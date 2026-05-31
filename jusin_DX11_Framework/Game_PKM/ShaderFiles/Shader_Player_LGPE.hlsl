@@ -5,7 +5,7 @@ float4x4 g_WITMatrix;
 vector g_vCamPos;
 float g_fFarZ;
 
-// ÀçÁú
+// ìž¬ì§ˆ
 texture2D g_TexDiff;
 texture2D g_TexSpec;
 texture2D g_TexAmbt;
@@ -82,7 +82,7 @@ struct PS_OUT
 
 };
 
-PS_OUT PS_DS(PS_IN In)	// 0¹ø ÆÐ½º
+PS_OUT PS_DS(PS_IN In)	// 0ë²ˆ íŒ¨ìŠ¤
 {
 	PS_OUT Out;
 
@@ -97,7 +97,7 @@ PS_OUT PS_DS(PS_IN In)	// 0¹ø ÆÐ½º
 	return Out;
 }
 
-PS_OUT PS_DSEL(PS_IN In)	// 1¹ø ÆÐ½º
+PS_OUT PS_DSEL(PS_IN In)	// 1ë²ˆ íŒ¨ìŠ¤
 {
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
@@ -117,7 +117,7 @@ PS_OUT PS_DSEL(PS_IN In)	// 1¹ø ÆÐ½º
 	return Out;
 }
 
-PS_OUT PS_DSAAA(PS_IN In)	// 2¹ø ÆÐ½º
+PS_OUT PS_DSAAA(PS_IN In)	// 2ë²ˆ íŒ¨ìŠ¤
 {
 	PS_OUT Out;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);

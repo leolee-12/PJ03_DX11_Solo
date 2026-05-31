@@ -22,8 +22,8 @@ private:
 	_float4x4				m_TransformStateMatrices[ETOUI(D3DTS::END)] = {};
 	_float					m_fFarZ = {};
 
-	_float3					m_vEyeOffset = {};		// ±¤¿ø ¹æÇâ + °Å¸® (Á¤±ÔÈ­X)
-	_bool					m_bFollow = { false };	// Set ÀÌÈÄ Follow ½ÃÀÛ
+	_float3					m_vEyeOffset = {};		// ê´‘ì› ë°©í–¥ + ê±°ë¦¬ (ì •ê·œí™”X)
+	_bool					m_bFollow = { false };	// Set ì´í›„ Follow ì‹œì‘
 
 public:
 	static CShadow* Create();

@@ -1,4 +1,4 @@
-﻿#ifndef Editor_UI_h__
+#ifndef Editor_UI_h__
 #define Editor_UI_h__
 #include "UIContainer.h"
 #include "UIImage.h"

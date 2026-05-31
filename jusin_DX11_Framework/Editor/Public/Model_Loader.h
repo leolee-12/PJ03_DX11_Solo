@@ -51,7 +51,7 @@ private:
 private:
 	HRESULT Initialize();
 	
-	// ÃßÃâ ±â´É
+	// ì¶”ì¶œ ê¸°ëŠ¥
 	HRESULT Extract_Bones(aiNode* pNode, _int iParentIndex);
 	HRESULT Extract_Meshes();
 	HRESULT Extract_Materials();

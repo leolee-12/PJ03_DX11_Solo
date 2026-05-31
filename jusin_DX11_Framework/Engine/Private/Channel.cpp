@@ -34,24 +34,24 @@ void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _f
 
 _vector CChannel::Interpolate_Scale(_float fCurrTrackPos) const
 {
-	// ºñ¾îÀÖÀ¸¸é Default°ªÀ¸·Î fallback
+	// ë¹„ì–´ìˆìœ¼ë©´ Defaultê°’ìœ¼ë¡œ fallback
 	if (m_ScalingKeys.empty())
 		return XMLoadFloat3(&m_DefaultScale);
 
-	// Å°ÇÁ·¹ÀÓÀÌ ÇÏ³ªÀÌ°Å³ª, Ã¹ ¹øÂ° Ä­ÀÌ¶ó¸é Ã¹ ¹øÂ° Å°ÇÁ·¹ÀÓ »ç¿ë
+	// í‚¤í”„ë ˆì„ì´ í•˜ë‚˜ì´ê±°ë‚˜, ì²« ë²ˆì§¸ ì¹¸ì´ë¼ë©´ ì²« ë²ˆì§¸ í‚¤í”„ë ˆì„ ì‚¬ìš©
 	if (m_ScalingKeys.size() == 1 || fCurrTrackPos <= m_ScalingKeys[0].fTrackPosition)
 		return XMLoadFloat3(&m_ScalingKeys[0].vScale);
 
-	// ¸¶Áö¸· Å°ÇÁ·¹ÀÓ ÀÌÈÄ¶ó¸é ¸¶Áö¸· Å°ÇÁ·¹ÀÓ »ç¿ë
+	// ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ ì´í›„ë¼ë©´ ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ ì‚¬ìš©
 	if (fCurrTrackPos >= m_ScalingKeys.back().fTrackPosition)
 		return XMLoadFloat3(&m_ScalingKeys.back().vScale);
 
-	// ¾ÕµÚ Å°ÇÁ·¹ÀÓÀ» ÀÌ¿ëÇÏ¿© º¸°£
+	// ì•ë’¤ í‚¤í”„ë ˆì„ì„ ì´ìš©í•˜ì—¬ ë³´ê°„
 	_uint idx = Find_KeyIndex(m_ScalingKeys, fCurrTrackPos);
 	const SCALING_KEY& tPrevKey = m_ScalingKeys[idx];
 	const SCALING_KEY& tCurrKey = m_ScalingKeys[idx + 1];
 
-	// ºĞ¸ğ°¡ 0ÀÎ °æ¿ì¿¡ ´ëÇÑ fallback
+	// ë¶„ëª¨ê°€ 0ì¸ ê²½ìš°ì— ëŒ€í•œ fallback
 	_float fDenom = tCurrKey.fTrackPosition - tPrevKey.fTrackPosition;
 	if (fabsf(fDenom) < 1e-6f)
 		return XMLoadFloat3(&tCurrKey.vScale);
@@ -62,24 +62,24 @@ _vector CChannel::Interpolate_Scale(_float fCurrTrackPos) const
 
 _vector CChannel::Interpolate_Rotation(_float fCurrTrackPos) const
 {
-	// ºñ¾îÀÖÀ¸¸é Default°ªÀ¸·Î fallback
+	// ë¹„ì–´ìˆìœ¼ë©´ Defaultê°’ìœ¼ë¡œ fallback
 	if (m_RotationKeys.empty())
 		return XMLoadFloat4(&m_DefaultRotation);
 
-	// Å°ÇÁ·¹ÀÓÀÌ ÇÏ³ªÀÌ°Å³ª, Ã¹ ¹øÂ° Ä­ÀÌ¶ó¸é Ã¹ ¹øÂ° Å°ÇÁ·¹ÀÓ »ç¿ë
+	// í‚¤í”„ë ˆì„ì´ í•˜ë‚˜ì´ê±°ë‚˜, ì²« ë²ˆì§¸ ì¹¸ì´ë¼ë©´ ì²« ë²ˆì§¸ í‚¤í”„ë ˆì„ ì‚¬ìš©
 	if (m_RotationKeys.size() == 1 || fCurrTrackPos <= m_RotationKeys[0].fTrackPosition)
 		return XMLoadFloat4(&m_RotationKeys[0].vRotation);
 
-	// ¸¶Áö¸· Å°ÇÁ·¹ÀÓ ÀÌÈÄ¶ó¸é ¸¶Áö¸· Å°ÇÁ·¹ÀÓ »ç¿ë
+	// ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ ì´í›„ë¼ë©´ ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ ì‚¬ìš©
 	if (fCurrTrackPos >= m_RotationKeys.back().fTrackPosition)
 		return XMLoadFloat4(&m_RotationKeys.back().vRotation);
 
-	// ¾ÕµÚ Å°ÇÁ·¹ÀÓÀ» ÀÌ¿ëÇÏ¿© º¸°£
+	// ì•ë’¤ í‚¤í”„ë ˆì„ì„ ì´ìš©í•˜ì—¬ ë³´ê°„
 	_uint idx = Find_KeyIndex(m_RotationKeys, fCurrTrackPos);
 	const ROTATION_KEY& tPrevKey = m_RotationKeys[idx];
 	const ROTATION_KEY& tCurrKey = m_RotationKeys[idx + 1];
 
-	// ºĞ¸ğ°¡ 0ÀÎ °æ¿ì¿¡ ´ëÇÑ fallback
+	// ë¶„ëª¨ê°€ 0ì¸ ê²½ìš°ì— ëŒ€í•œ fallback
 	_float fDenom = tCurrKey.fTrackPosition - tPrevKey.fTrackPosition;
 	if (fabsf(fDenom) < 1e-6f)
 		return XMLoadFloat4(&tCurrKey.vRotation);
@@ -89,41 +89,41 @@ _vector CChannel::Interpolate_Rotation(_float fCurrTrackPos) const
 	_vector vPrevQuat = XMLoadFloat4(&tPrevKey.vRotation);
 	_vector vCurrQuat = XMLoadFloat4(&tCurrKey.vRotation);
 
-	// È¸ÀüÀÇ °æ¿ì °°Àº ¹İ±¸ÀÎÁö Ã¼Å©(ÀüÃ³¸®¿Í ÇÔ²² ´õºí Ã¼Å©)
+	// íšŒì „ì˜ ê²½ìš° ê°™ì€ ë°˜êµ¬ì¸ì§€ ì²´í¬(ì „ì²˜ë¦¬ì™€ í•¨ê»˜ ë”ë¸” ì²´í¬)
 	if (XMVectorGetX(XMVector4Dot(vPrevQuat, vCurrQuat)) < 0.f)
 		vCurrQuat = XMVectorNegate(vCurrQuat);
 
-	// ÄõÅÍ´Ï¾ğÀº Slerp or Nlerp
+	// ì¿¼í„°ë‹ˆì–¸ì€ Slerp or Nlerp
 	return XMQuaternionNormalize(XMQuaternionSlerp(vPrevQuat, vCurrQuat, fRatio));
 }
 
 _vector CChannel::Interpolate_Position(_float fCurrTrackPos) const
 {
-	// ºñ¾îÀÖÀ¸¸é Default°ªÀ¸·Î fallback
+	// ë¹„ì–´ìˆìœ¼ë©´ Defaultê°’ìœ¼ë¡œ fallback
 	if (m_PositionKeys.empty())
 		return XMVectorSetW(XMLoadFloat3(&m_DefaultTranslation), 1.f);
 
-	// Å°ÇÁ·¹ÀÓÀÌ ÇÏ³ªÀÌ°Å³ª, Ã¹ ¹øÂ° Ä­ÀÌ¶ó¸é Ã¹ ¹øÂ° Å°ÇÁ·¹ÀÓ »ç¿ë
+	// í‚¤í”„ë ˆì„ì´ í•˜ë‚˜ì´ê±°ë‚˜, ì²« ë²ˆì§¸ ì¹¸ì´ë¼ë©´ ì²« ë²ˆì§¸ í‚¤í”„ë ˆì„ ì‚¬ìš©
 	if (m_PositionKeys.size() == 1 || fCurrTrackPos <= m_PositionKeys[0].fTrackPosition)
 		return XMVectorSetW(XMLoadFloat3(&m_PositionKeys[0].vTranslation), 1.f);
 
-	// ¸¶Áö¸· Å°ÇÁ·¹ÀÓ ÀÌÈÄ¶ó¸é ¸¶Áö¸· Å°ÇÁ·¹ÀÓ »ç¿ë
+	// ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ ì´í›„ë¼ë©´ ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ ì‚¬ìš©
 	if (fCurrTrackPos >= m_PositionKeys.back().fTrackPosition)
 		return XMVectorSetW(XMLoadFloat3(&m_PositionKeys.back().vTranslation), 1.f);
 
-	// ¾ÕµÚ Å°ÇÁ·¹ÀÓÀ» ÀÌ¿ëÇÏ¿© º¸°£
+	// ì•ë’¤ í‚¤í”„ë ˆì„ì„ ì´ìš©í•˜ì—¬ ë³´ê°„
 	_uint idx = Find_KeyIndex(m_PositionKeys, fCurrTrackPos);
 	const POSITION_KEY& tPrevKey = m_PositionKeys[idx];
 	const POSITION_KEY& tCurrKey = m_PositionKeys[idx + 1];
 
-	// ºĞ¸ğ°¡ 0ÀÎ °æ¿ì¿¡ ´ëÇÑ fallback
+	// ë¶„ëª¨ê°€ 0ì¸ ê²½ìš°ì— ëŒ€í•œ fallback
 	_float fDenom = tCurrKey.fTrackPosition - tPrevKey.fTrackPosition;
 	if (fabsf(fDenom) < 1e-6f)
 		return XMLoadFloat3(&tCurrKey.vTranslation);
 
 	_float fRatio = (fCurrTrackPos - tPrevKey.fTrackPosition) / fDenom;
 
-	// ÀÌµ¿ÀÇ °æ¿ì, º¤ÅÍÀÇ w°ª Ã¤¿öÁÖ±â
+	// ì´ë™ì˜ ê²½ìš°, ë²¡í„°ì˜ wê°’ ì±„ì›Œì£¼ê¸°
 	_vector vPrevPos = XMVectorSetW(XMLoadFloat3(&tPrevKey.vTranslation), 1.f);
 	_vector vCurrPos = XMVectorSetW(XMLoadFloat3(&tCurrKey.vTranslation), 1.f);
 

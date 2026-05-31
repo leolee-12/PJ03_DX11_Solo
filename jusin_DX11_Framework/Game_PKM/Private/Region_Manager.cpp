@@ -7,7 +7,7 @@ CRegion_Manager::CRegion_Manager()
 
 HRESULT CRegion_Manager::Initialize()
 {
-	Clear();   // ÀçÁøÀÔ ¾ÈÀü¼º
+	Clear();   // ì¬ì§„ì… ì•ˆì „ì„±
 
 	m_pGameInstance = CGameInstance::GetInstance();   // weak
 	if (nullptr == m_pGameInstance)
@@ -45,12 +45,12 @@ void CRegion_Manager::Update()
 
 	const _uint iResolved = Resolve_Region(vPos);
 
-	if (INVALID_REGION_ID == iResolved)   // ¾î´À Áö¿ª »ç°¢Çü¿¡µµ ¾øÀ½ ¡æ Á÷Àü Áö¿ª À¯Áö
+	if (INVALID_REGION_ID == iResolved)   // ì–´ëŠ ì§€ì—­ ì‚¬ê°í˜•ì—ë„ ì—†ìŒ â†’ ì§ì „ ì§€ì—­ ìœ ì§€
 		return;
 	if (iResolved == m_iCurrentRegionID)
 		return;
 
-	// Ã¹ ÁøÀÔ(Á÷Àü INVALID)Àº BGM¸¸ ±ò°í ¹è³Ê´Â ¶ç¿ìÁö ¾Ê´Â´Ù.
+	// ì²« ì§„ì…(ì§ì „ INVALID)ì€ BGMë§Œ ê¹”ê³  ë°°ë„ˆëŠ” ë„ìš°ì§€ ì•ŠëŠ”ë‹¤.
 	const _bool bInitial = (INVALID_REGION_ID == m_iCurrentRegionID);
 	Enter_Region(iResolved, false == bInitial);
 }
@@ -161,5 +161,5 @@ void CRegion_Manager::Free()
 
 	m_fnOnRegionChanged = nullptr;
 	m_Regions.clear();
-	m_pGameInstance = nullptr;   // weak - Release ÇÏÁö ¾ÊÀ½
+	m_pGameInstance = nullptr;   // weak - Release í•˜ì§€ ì•ŠìŒ
 }

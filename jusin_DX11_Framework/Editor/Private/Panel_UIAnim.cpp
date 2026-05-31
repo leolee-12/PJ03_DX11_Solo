@@ -1,4 +1,4 @@
-﻿#include "Panel_UIAnim.h"
+#include "Panel_UIAnim.h"
 #include "UIEditorSession.h"
 #include "UIPreviewHost.h"
 

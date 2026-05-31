@@ -1,4 +1,4 @@
-﻿#include "Level_GamePlay.h"
+#include "Level_GamePlay.h"
 #include "Camera_Free.h"
 #include "Player_LGPE.h"
 #include "UIButton_Glow.h"

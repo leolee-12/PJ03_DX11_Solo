@@ -1,4 +1,4 @@
-﻿#include "Level_Battle.h"
+#include "Level_Battle.h"
 #include "Battle_Manager.h"
 #include "Player_Status.h"
 #include "PokemonData_Manager.h"

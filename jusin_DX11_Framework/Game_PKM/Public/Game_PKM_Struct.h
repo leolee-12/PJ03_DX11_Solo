@@ -1,4 +1,4 @@
-﻿#ifndef Game_PKM_Struct_h__
+#ifndef Game_PKM_Struct_h__
 #define Game_PKM_Struct_h__
 
 NS_BEGIN(Game_PKM)

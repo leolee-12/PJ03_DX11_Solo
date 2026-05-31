@@ -1,4 +1,4 @@
-﻿#include "Material.h"
+#include "Material.h"
 #include "Build_Mode.h"
 #include "Shader.h"
 

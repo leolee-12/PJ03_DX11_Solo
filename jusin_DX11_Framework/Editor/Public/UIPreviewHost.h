@@ -32,12 +32,12 @@ public:
 	const vector<CUIObject*>& Get_Widgets() const;
 
 	HRESULT Initialize();
-	void Tick(_float fTimeDelta);	// Update_Editor ¾È¿¡¼­ È£Ãâ
-	void Render_Queue_Submit();		// Late_Update È£Ãâ (RT active ÈÄ)
-	HRESULT Rebuild();				// ÇöÀç doc·Î Àç±¸¼º
+	void Tick(_float fTimeDelta);	// Update_Editor ì•ˆì—ì„œ í˜¸ì¶œ
+	void Render_Queue_Submit();		// Late_Update í˜¸ì¶œ (RT active í›„)
+	HRESULT Rebuild();				// í˜„ì¬ docë¡œ ì¬êµ¬ì„±
 	void Mark_Rebuild_Pending() { m_bRebuildPending = true; }
 	_bool Has_Rebuild_Pending() const { return m_bRebuildPending; }
-	void Process_Rebuild_If_Pending();	// RT active ÈÄ È£Ãâ
+	void Process_Rebuild_If_Pending();	// RT active í›„ í˜¸ì¶œ
 
 	void Play();
 	void Pause();
@@ -46,7 +46,7 @@ public:
 	void Restart();
 
 	CUIObject* Find_Runtime(const _string& strId) const;
-	_string Hit_Test_TopMost(const ImVec2& vDocXY) const;	// z-order ¿ì¼±, hit widgetÀÇ ID ¹İÈ¯, ¾øÀ¸¸é ºó ¹®ÀÚ¿­
+	_string Hit_Test_TopMost(const ImVec2& vDocXY) const;	// z-order ìš°ì„ , hit widgetì˜ ID ë°˜í™˜, ì—†ìœ¼ë©´ ë¹ˆ ë¬¸ìì—´
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };
@@ -61,10 +61,10 @@ private:
 	UI_PREVIEW_MODE m_eMode = UI_PREVIEW_MODE::LAYOUT;
 	UI_PREVIEW_STATE m_eState = UI_PREVIEW_STATE::IDLE;
 
-	_bool m_bRebuildPending = { true };	// Ã¹ ÇÁ·¹ÀÓ¿¡ build
+	_bool m_bRebuildPending = { true };	// ì²« í”„ë ˆì„ì— build
 	ImVec2 m_vLastViewportSize = { 0.f, 0.f };
 
-	vector<_int> m_vZOrderIdx;	// tick ½Ã »ç¿ë
+	vector<_int> m_vZOrderIdx;	// tick ì‹œ ì‚¬ìš©
 
 	_int m_iLastSelWidget = { -2 };
 	_int m_iLastSelAnim = { -2 };

@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "Bone.h"
 #include "Animation.h"
+#include "Profiler_Manager.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath)
 	: CComponent{ pDevice, pContext }
@@ -18,9 +19,9 @@ CModel::CModel(const CModel& Prototype)
 	, m_iNumBones{ Prototype.m_iNumBones }
 	, m_iNumMaterials{ Prototype.m_iNumMaterials }
 	, m_Materials{ Prototype.m_Materials }
-	//, m_Bones{ Prototype.m_Bones } ±íÀºº¹»ç
+	//, m_Bones{ Prototype.m_Bones } ê¹Šì€ë³µì‚¬
 	, m_iNumAnimations{ Prototype.m_iNumAnimations }
-	//, m_Animations{ Prototype.m_Animations } ±íÀºº¹»ç
+	//, m_Animations{ Prototype.m_Animations } ê¹Šì€ë³µì‚¬
 	, m_iRootBoneIndex{ Prototype.m_iRootBoneIndex }
 {
 	for (auto& pPrototypeAnimation : Prototype.m_Animations)
@@ -110,26 +111,26 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 		return;
 	}
 
-	// 1. º¤ÅÍ ÁØºñ
-	m_BlendSnapshots.resize(m_Bones.size()); // resize : Å©±â¸¸ Á¶Àı
-	m_BlendTargetMask.assign(m_Bones.size(), false); // assign : size ¹× ÃÊ±â°ª Àç¼³Á¤
+	// 1. ë²¡í„° ì¤€ë¹„
+	m_BlendSnapshots.resize(m_Bones.size()); // resize : í¬ê¸°ë§Œ ì¡°ì ˆ
+	m_BlendTargetMask.assign(m_Bones.size(), false); // assign : size ë° ì´ˆê¸°ê°’ ì¬ì„¤ì •
 
-	// 2. »õ ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ Ã¤³Î º» ÁıÇÕ Ä³½Ì
+	// 2. ìƒˆ ì• ë‹ˆë©”ì´ì…˜ì˜ ì±„ë„ ë³¸ ì§‘í•© ìºì‹±
 	m_pNextChanneledSet = m_Animations[iIndex]->Get_ChanneledBoneIndicesPtr();
 
-	// 3. ½º³À¼¦ Ä¸Ã³
-	if (m_isBlending) // 3-1. ÀçÀüÈ¯(ÀüÈ¯ Áß ´Ù½Ã ÀüÈ¯)
+	// 3. ìŠ¤ëƒ…ìƒ· ìº¡ì²˜
+	if (m_isBlending) // 3-1. ì¬ì „í™˜(ì „í™˜ ì¤‘ ë‹¤ì‹œ ì „í™˜)
 	{
 		for (_uint i = 0; i < m_iNumBones; ++i)
 		{
-			_bool wasBlending = m_BlendTargetMask[i];	// ÀÌÀü ºí·»µå¿¡¼­ º¸°£ ÁßÀÌ¾ú´Â Áö
-			_bool isInNext = { false };					// ´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼Ç¿¡ ¼ÓÇÏ´Â Áö
+			_bool wasBlending = m_BlendTargetMask[i];	// ì´ì „ ë¸”ë Œë“œì—ì„œ ë³´ê°„ ì¤‘ì´ì—ˆëŠ” ì§€
+			_bool isInNext = { false };					// ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜ì— ì†í•˜ëŠ” ì§€
 
 			if (m_pNextChanneledSet->find(i) != m_pNextChanneledSet->end())
 				isInNext = true;
 
 			if (!wasBlending && !isInNext)
-			{	// µÑ ´Ù ¾Æ´Ï¸é º¸°£ÇÒ ÇÊ¿ä ¾øÀ½
+			{	// ë‘˜ ë‹¤ ì•„ë‹ˆë©´ ë³´ê°„í•  í•„ìš” ì—†ìŒ
 				m_BlendTargetMask[i] = false;
 				continue;
 			}
@@ -139,7 +140,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 		}
 	}
 	else
-	{	// 3-2. ÀÏ¹İ ÀüÈ¯
+	{	// 3-2. ì¼ë°˜ ì „í™˜
 		if (m_iCurrentAnimationIndex >= m_iNumAnimations)
 			return;
 
@@ -147,8 +148,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 
 		for (_uint i = 0; i < m_iNumBones; ++i)
 		{
-			_bool isInPrev = { false };	// ÀÌÀü ¾Ö´Ï¸ŞÀÌ¼Ç¿¡ ¼ÓÇÏ´Â Áö
-			_bool isInNext = { false };	// ´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼Ç¿¡ ¼ÓÇÏ´Â Áö
+			_bool isInPrev = { false };	// ì´ì „ ì• ë‹ˆë©”ì´ì…˜ì— ì†í•˜ëŠ” ì§€
+			_bool isInNext = { false };	// ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜ì— ì†í•˜ëŠ” ì§€
 
 			if (pPrevChanneledSet->find(i) != pPrevChanneledSet->end())
 				isInPrev = true;
@@ -157,21 +158,21 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fBlendDuratio
 				isInNext = true;
 
 			if (!isInPrev && !isInNext)
-			{	// µÑ ´Ù ¾Æ´Ï¸é º¸°£ÇÒ ÇÊ¿ä ¾øÀ½
+			{	// ë‘˜ ë‹¤ ì•„ë‹ˆë©´ ë³´ê°„í•  í•„ìš” ì—†ìŒ
 				m_BlendTargetMask[i] = false;
 				continue;
 			}
 
 			m_BlendTargetMask[i] = true;
 
-			if (isInPrev)	// ÀÌÀü ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ »ç¿ëÇß´Ù¸é Transformation(AnimatedLocal)À» ½º³À¼¦
+			if (isInPrev)	// ì´ì „ ì• ë‹ˆë©”ì´ì…˜ì´ ì‚¬ìš©í–ˆë‹¤ë©´ Transformation(AnimatedLocal)ì„ ìŠ¤ëƒ…ìƒ·
 				m_Bones[i]->Decompose_Transformation(m_BlendSnapshots[i]);
-			else			// ÀÌÀü ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ »ç¿ëÇÏÁö ¾Ê¾Ò´Ù¸é BindPose¸¦ ½º³À¼¦
+			else			// ì´ì „ ì• ë‹ˆë©”ì´ì…˜ì´ ì‚¬ìš©í•˜ì§€ ì•Šì•˜ë‹¤ë©´ BindPoseë¥¼ ìŠ¤ëƒ…ìƒ·
 				m_Bones[i]->Decompose_BindPose(m_BlendSnapshots[i]);
 		}
 	}
 
-	// 4. ºí·»µå »óÅÂ·Î ÀüÈ¯
+	// 4. ë¸”ë Œë“œ ìƒíƒœë¡œ ì „í™˜
 	m_isBlending = true;
 	m_fBlendDuration = fBlendDuration;
 	m_fBlendElapsed = 0.f;
@@ -212,13 +213,13 @@ void CModel::Set_EnableRootMotion(_bool bEnable)
 
 HRESULT CModel::Initialize_Prototype()
 {
-	// 0. ÆÄÀÏ ¿­±â
+	// 0. íŒŒì¼ ì—´ê¸°
 	FILE* fp{};
 	errno_t errorOpen{};
 	if (0 != fopen_s(&fp, m_pModelFilePath.c_str(), "rb") || nullptr == fp)
 		return E_FAIL;
 
-	// 1. Çì´õ ÀĞ±â + °ËÁõ
+	// 1. í—¤ë” ì½ê¸° + ê²€ì¦
 	WMODEL_HEADER tHeader{};
 	fread(&tHeader, sizeof(WMODEL_HEADER), 1, fp);
 
@@ -250,7 +251,7 @@ HRESULT CModel::Initialize_Prototype()
 		}
 	}
 
-	// ÆÄÀÏ ´İ±â
+	// íŒŒì¼ ë‹«ê¸°
 	fclose(fp);
 
 	return S_OK;
@@ -263,17 +264,17 @@ HRESULT CModel::Initialize(void* pArg)
 
 _bool CModel::Play_Animation(_float fTimeDelta)
 {
-	// 1. ¾Ö´Ï¸ŞÀÌ¼Ç °»½Å : ½Ã°£ ÀüÁø, Ã¤³Î °»½Å
+	// 1. ì• ë‹ˆë©”ì´ì…˜ ê°±ì‹  : ì‹œê°„ ì „ì§„, ì±„ë„ ê°±ì‹ 
 	_uint iAnimResult = m_Animations[m_iCurrentAnimationIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_isAnimLoop);
 
-	// 2. ºí·»µå »óÅÂÀÎ °æ¿ì ºí·»µå ·ÎÁ÷ ¼öÇà
+	// 2. ë¸”ë Œë“œ ìƒíƒœì¸ ê²½ìš° ë¸”ë Œë“œ ë¡œì§ ìˆ˜í–‰
 	if (m_isBlending)
 		Update_Blend(fTimeDelta);
 
-	// 3. ·çÆ® ¸ğ¼Ç ÃßÃâ
+	// 3. ë£¨íŠ¸ ëª¨ì…˜ ì¶”ì¶œ
 	if (m_bEnableRootMotion)
 	{
-		// 3-1. ÇöÀç RootPos ÃßÃâ
+		// 3-1. í˜„ì¬ RootPos ì¶”ì¶œ
 		_float4x4& rootMat = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
 		_float3 vCurrRootPos =
 		{
@@ -282,19 +283,19 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 			rootMat._43
 		};
 
-		// 3-2. µ¨Å¸ °è»ê
+		// 3-2. ë¸íƒ€ ê³„ì‚°
 		if (ETOUI(ANIM_UPDATE_RESULT::LOOP_WRAPPED) == iAnimResult)
-		{	// ·çÇÁ ·¦ ½Ã µ¨Å¸ ¹ö¸²
+		{	// ë£¨í”„ ë© ì‹œ ë¸íƒ€ ë²„ë¦¼
 			m_vRootMotionDelta = {};
 		}
 		else
-		{	// ·çÇÁ ·¦ ¾Æ´Ò ¶§ : ÇöÀç - ÀÌÀü
+		{	// ë£¨í”„ ë© ì•„ë‹ ë•Œ : í˜„ì¬ - ì´ì „
 			m_vRootMotionDelta.x = vCurrRootPos.x - m_vPrevRootPos.x;
 			m_vRootMotionDelta.y = m_bRootMotion3D ? (vCurrRootPos.y - m_vPrevRootPos.y) : 0.f;
 			m_vRootMotionDelta.z = -(vCurrRootPos.z - m_vPrevRootPos.z);
 		}
 
-		// 3-3. ÀÌÀü ÇÁ·¹ÀÓ °»½Å ¹× ·çÆ®º» ·ÎÄÃ ÀÌµ¿ Á¦°Å
+		// 3-3. ì´ì „ í”„ë ˆì„ ê°±ì‹  ë° ë£¨íŠ¸ë³¸ ë¡œì»¬ ì´ë™ ì œê±°
 		m_vPrevRootPos = vCurrRootPos;
 
 		if (m_bRootMotion3D)
@@ -312,11 +313,11 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 	else
 		m_vRootMotionDelta = {};
 
-	// 4. Combined Çà·Ä °»½Å
+	// 4. Combined í–‰ë ¬ ê°±ì‹ 
 	for (auto& pBone : m_Bones)
 		pBone->Update_CombinedTransformMatrices(m_Bones);
 
-	// 5. ¹İÈ¯ °ª °áÁ¤ : ºí·»µå ÁßÀÌ¸é AnimÁ¾·á º¸·ù
+	// 5. ë°˜í™˜ ê°’ ê²°ì • : ë¸”ë Œë“œ ì¤‘ì´ë©´ Animì¢…ë£Œ ë³´ë¥˜
 	if (m_isBlending)
 		return false;
 
@@ -329,7 +330,7 @@ void CModel::Update_Blend(_float fTimeDelta)
 
 	_float fRatio = (m_fBlendDuration > 0.f) ? clamp(m_fBlendElapsed / m_fBlendDuration, 0.f, 1.f) : 1.f;
 
-	// ¼±Çü º¸°£ ´ë½Å ease µî Àû¿ë °¡´É
+	// ì„ í˜• ë³´ê°„ ëŒ€ì‹  ease ë“± ì ìš© ê°€ëŠ¥
 	// fRatio = fRatio * fRatio * (3.f - 2.f * fRatio);	// smoothstep
 
 	for (_uint i = 0; i < m_iNumBones; ++i)
@@ -337,18 +338,18 @@ void CModel::Update_Blend(_float fTimeDelta)
 		if (!m_BlendTargetMask[i])
 			continue;
 
-		// 2-1. ºí·»µå Å¸°Ù ¼³Á¤
+		// 2-1. ë¸”ë Œë“œ íƒ€ê²Ÿ ì„¤ì •
 		BONE_SRT tTargetSRT;
 		auto iter = m_pNextChanneledSet->find(i);
-		if (iter != m_pNextChanneledSet->end())	// ´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼Ç¿¡¼­ »ç¿ëµÉ º»ÀÎ °æ¿ì
+		if (iter != m_pNextChanneledSet->end())	// ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜ì—ì„œ ì‚¬ìš©ë  ë³¸ì¸ ê²½ìš°
 			m_Bones[i]->Decompose_Transformation(tTargetSRT);
-		else									// ´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼Ç¿¡¼­ »ç¿ëµÇÁö ¾ÊÀ» º»ÀÎ °æ¿ì
+		else									// ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜ì—ì„œ ì‚¬ìš©ë˜ì§€ ì•Šì„ ë³¸ì¸ ê²½ìš°
 			m_Bones[i]->Decompose_BindPose(tTargetSRT);
 
-		// 2-2. ºí·»µå ¼Ò½º ¼³Á¤
+		// 2-2. ë¸”ë Œë“œ ì†ŒìŠ¤ ì„¤ì •
 		BONE_SRT& tSourceSRT = m_BlendSnapshots[i];
 
-		// 2-3. º¸°£ ¼öÇà
+		// 2-3. ë³´ê°„ ìˆ˜í–‰
 		_vector vScale = XMVectorLerp(XMLoadFloat3(&tSourceSRT.vScale), XMLoadFloat3(&tTargetSRT.vScale), fRatio);
 
 		_vector vSrcQuat = XMLoadFloat4(&tSourceSRT.vRotation);
@@ -359,11 +360,11 @@ void CModel::Update_Blend(_float fTimeDelta)
 
 		_vector vTranslation = XMVectorLerp(XMLoadFloat3(&tSourceSRT.vTranslation), XMLoadFloat3(&tTargetSRT.vTranslation), fRatio);
 
-		// 2-4. º»¿¡ ±â·Ï
+		// 2-4. ë³¸ì— ê¸°ë¡
 		m_Bones[i]->Set_TransformationMatrix(XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation));
 	}
 
-	// 2-5. ½Ã°£ ÃÊ°ú ½Ã ºí·»µå »óÅÂ Á¾·á
+	// 2-5. ì‹œê°„ ì´ˆê³¼ ì‹œ ë¸”ë Œë“œ ìƒíƒœ ì¢…ë£Œ
 	if (fRatio >= 1.f)
 	{
 		m_isBlending = false;
@@ -387,6 +388,9 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, MATERIAL_TYPE eType, _uint iIndex)
 {
+	PROFILE_CPU_SCOPE(L"CPU_Model_BindMaterial");
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::MATERIAL_BIND, 1);
+
 	if (iMeshIndex >= m_iNumMeshes)
 		return E_FAIL;
 
@@ -399,6 +403,8 @@ HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uin
 
 HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, _uint iMeshIndex)
 {
+	PROFILE_CPU_SCOPE(L"CPU_Model_BindBoneMatrices");
+
 	if (iMeshIndex >= m_iNumMeshes)
 		return E_FAIL;
 
@@ -451,7 +457,7 @@ HRESULT CModel::Ready_Meshes(FILE* fp, _uint iNumMeshes)
 
 HRESULT CModel::Ready_Materials(FILE* fp, _uint iNumMaterials)
 {
-	// º£ÀÌ½º µğ·ºÅÍ¸®
+	// ë² ì´ìŠ¤ ë””ë ‰í„°ë¦¬
 	_string baseDir = filesystem::path(m_pModelFilePath).parent_path().string() + "/";
 
 	m_iNumMaterials = iNumMaterials;
@@ -473,7 +479,7 @@ HRESULT CModel::Ready_Materials(FILE* fp, _uint iNumMaterials)
 
 				string path(len, '\0');
 				fread(path.data(), 1, len, fp);
-				path.resize(strlen(path.c_str()));  // null Á¦°Å
+				path.resize(strlen(path.c_str()));  // null ì œê±°
 				tMat.TexturePaths[j].push_back(path);
 			}
 		}

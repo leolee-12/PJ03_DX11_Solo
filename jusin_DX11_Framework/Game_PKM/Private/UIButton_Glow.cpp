@@ -41,7 +41,7 @@ HRESULT CUIButton_Glow::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	// __super::Initialize¿¡¼­ ¿À¹ö¶óÀÌµåµÈ Ready_Components°¡ È£ÃâµÊ
+	// __super::Initializeì—ì„œ ì˜¤ë²„ë¼ì´ë“œëœ Ready_Componentsê°€ í˜¸ì¶œë¨
 	return S_OK;
 }
 

@@ -1,4 +1,4 @@
-﻿#include "Spawn_Manager.h"
+#include "Spawn_Manager.h"
 #include "PokemonData_Manager.h"
 #include "RenderRule_Manager.h"
 #include "Actor_WildPokemon.h"

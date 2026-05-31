@@ -28,7 +28,7 @@ HRESULT CVIBuffer_Trail::Initialize_Prototype()
 
 HRESULT CVIBuffer_Trail::Initialize(void* /*pArg*/)
 {
-	/* ÀÎ½ºÅÏ½º¸¶´Ù ÀÚ±â dynamic VB (¸Å ÇÁ·¹ÀÓ WRITE_DISCARD mapÇÏ¹Ç·Î °øÀ¯ ºÒ°¡) */
+	/* ì¸ìŠ¤í„´ìŠ¤ë§ˆë‹¤ ìžê¸° dynamic VB (ë§¤ í”„ë ˆìž„ WRITE_DISCARD mapí•˜ë¯€ë¡œ ê³µìœ  ë¶ˆê°€) */
 	if (FAILED(m_pDevice->CreateBuffer(&m_VBDesc, nullptr, &m_pVB)))
 		return E_FAIL;
 	return S_OK;
@@ -51,7 +51,7 @@ HRESULT CVIBuffer_Trail::Update_Vertices(const VTXTRAIL* pVertices, _uint iNumVe
 
 HRESULT CVIBuffer_Trail::Render()
 {
-	if (m_iNumVertices < 3) return S_OK;   // strip ÃÖ¼Ò »ï°¢Çü 1°³
+	if (m_iNumVertices < 3) return S_OK;   // strip ìµœì†Œ ì‚¼ê°í˜• 1ê°œ
 	m_pContext->Draw(m_iNumVertices, 0);
 	return S_OK;
 }

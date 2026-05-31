@@ -7,7 +7,7 @@ NS_BEGIN(Game_PKM)
 class CVIBuffer_Trail final : public CVIBuffer
 {
 public:
-	static constexpr _uint iMaxVertices = 256;   // 128 segment ¡¿ 2
+	static constexpr _uint iMaxVertices = 256;   // 128 segment Ã— 2
 
 private:
 	CVIBuffer_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

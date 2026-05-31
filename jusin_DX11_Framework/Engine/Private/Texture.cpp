@@ -1,4 +1,4 @@
-﻿#include "Texture.h"
+#include "Texture.h"
 #include "Build_Mode.h"
 #include "GameInstance.h"
 

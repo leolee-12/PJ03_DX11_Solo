@@ -12,11 +12,11 @@ NS_BEGIN(Game_PKM)
 
 class CBattle_Manager;
 
-/* UI_BattleMove.uiseq Àü¿ë ÄÁÆ®·Ñ·¯.
-   - 4±â¼ú ¹öÆ° ÀÔ·Â Ã³¸® (LINEAR + WrapAround)
-   - ¸Å ÇÁ·¹ÀÓ ÇÃ·¹ÀÌ¾î Ãø Æ÷ÄÏ¸óÀÇ ±â¼ú ÀÌ¸§ / PP / Å¸ÀÔ ¾ÆÀÌÄÜ lazy °»½Å
-   - ºó ½½·ÔÀº ¹öÆ°/ÅØ½ºÆ®/¾ÆÀÌÄÜ ¸ğµÎ Set_Visible(false)
-   - PP 0 ½½·Ô ¼±ÅÃ Á¦ÇÑÀº Director °¡ ÈÄÃ³¸® (º» ¸Ş´º´Â Ç¥½Ã Ã¥ÀÓ¸¸). */
+/* UI_BattleMove.uiseq ì „ìš© ì»¨íŠ¸ë¡¤ëŸ¬.
+   - 4ê¸°ìˆ  ë²„íŠ¼ ì…ë ¥ ì²˜ë¦¬ (LINEAR + WrapAround)
+   - ë§¤ í”„ë ˆì„ í”Œë ˆì´ì–´ ì¸¡ í¬ì¼“ëª¬ì˜ ê¸°ìˆ  ì´ë¦„ / PP / íƒ€ì… ì•„ì´ì½˜ lazy ê°±ì‹ 
+   - ë¹ˆ ìŠ¬ë¡¯ì€ ë²„íŠ¼/í…ìŠ¤íŠ¸/ì•„ì´ì½˜ ëª¨ë‘ Set_Visible(false)
+   - PP 0 ìŠ¬ë¡¯ ì„ íƒ ì œí•œì€ Director ê°€ í›„ì²˜ë¦¬ (ë³¸ ë©”ë‰´ëŠ” í‘œì‹œ ì±…ì„ë§Œ). */
 class CBattle_MoveMenu final : public CUIController
 {
 public:

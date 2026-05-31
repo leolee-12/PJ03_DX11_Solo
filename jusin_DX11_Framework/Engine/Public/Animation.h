@@ -21,11 +21,11 @@ public:
 
 private:
 	_char m_szName[MAX_PATH] = {};
-	_float m_fDuration = {};				/* ÇöÀç ¾Ö´Ï¸ŞÀÌ¼ÇÆ®·¢ ÃÑ ±æÀÌ.  */
-	_float m_fTicksPerSecond = {};			/* ÇöÀç Æ®·¢ÀÇ ÃÊ´ç Àç»ı ¼Óµµ. */
-	_float m_fCurrentTrackPosition = {};	/* ÇöÀç Àç»ı À§Ä¡. */
+	_float m_fDuration = {};				/* í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜íŠ¸ë™ ì´ ê¸¸ì´.  */
+	_float m_fTicksPerSecond = {};			/* í˜„ì¬ íŠ¸ë™ì˜ ì´ˆë‹¹ ì¬ìƒ ì†ë„. */
+	_float m_fCurrentTrackPosition = {};	/* í˜„ì¬ ì¬ìƒ ìœ„ì¹˜. */
 
-	_uint m_iNumChannels = {};				/* ÇöÀç ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ Àç»ıÀ» À§ÇØ »óÅÂ¸¦ Á¦¾îÇØ¾ßÇÏ´Â »ÀÀÇ °¹¼ö */
+	_uint m_iNumChannels = {};				/* í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜ì˜ ì¬ìƒì„ ìœ„í•´ ìƒíƒœë¥¼ ì œì–´í•´ì•¼í•˜ëŠ” ë¼ˆì˜ ê°¯ìˆ˜ */
 	vector<class CChannel*>	m_Channels;
 	unordered_set<_uint> m_ChanneledBoneIndices;
 

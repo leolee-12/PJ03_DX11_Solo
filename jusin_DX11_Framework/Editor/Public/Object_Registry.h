@@ -22,9 +22,9 @@ public:
 
 	HRESULT Initialize();
 
-	void Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);    // ¹èÄ¡ ½Ã È£Ãâ
-	void Unregister_Object(CGameObject* pObj);  // »èÁ¦ ½Ã È£Ãâ
-	void Clone_Object(CGameObject* pObj); // º¹Á¦ ½Ã È£Ãâ
+	void Register_Object(_uint iProtoLevel, WNameID strProtoTag, _uint iLayerLevel, WNameID strLayerTag, void* pArg);    // ë°°ì¹˜ ì‹œ í˜¸ì¶œ
+	void Unregister_Object(CGameObject* pObj);  // ì‚­ì œ ì‹œ í˜¸ì¶œ
+	void Clone_Object(CGameObject* pObj); // ë³µì œ ì‹œ í˜¸ì¶œ
 	void Sync_LevelObjects(_uint iLevel);
 
 private:

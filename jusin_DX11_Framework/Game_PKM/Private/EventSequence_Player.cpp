@@ -321,7 +321,7 @@ CEventSequence_Player* CEventSequence_Player::Create(const CEvent_Definition* pS
 
 void CEventSequence_Player::Free()
 {
-    Cancel(true);   // ¼Ë´Ù¿î ¸ðµå: GameInstance/Input_Device È£Ãâ skip
+    Cancel(true);   // ì…§ë‹¤ìš´ ëª¨ë“œ: GameInstance/Input_Device í˜¸ì¶œ skip
     m_pSequence = nullptr;
 
     __super::Free();

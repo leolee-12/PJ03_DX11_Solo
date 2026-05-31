@@ -383,7 +383,7 @@ void CSound_Manager::Stop_Sound(CHANNELID eChannelID)
 	bool bPlaying = false;
 	FMOD_RESULT eResult = pChannel->isPlaying(&bPlaying);
 
-	// invalid handle / ÀÌ¹Ì Á¤Áö -> Á¶¿ëÈ÷ Á¤¸®¸¸
+	// invalid handle / ì´ë¯¸ ì •ì§€ -> ì¡°ìš©ížˆ ì •ë¦¬ë§Œ
 	if (FMOD_OK == eResult && bPlaying)
 	{
 		eResult = pChannel->stop();

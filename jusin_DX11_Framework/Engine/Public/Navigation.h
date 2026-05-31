@@ -32,9 +32,9 @@ public:
 	_int XM_CALLCONV Find_CellIndex_ByPos(_fvector vWorldPos) const;
 	_vector XM_CALLCONV Compute_SlidePos(_fvector vCurPos, _fvector vDesiredPos);
 
-	/* -------- Spawn/Wander Äõ¸® (S1 Ãß°¡) --------
-   È£ÃâÀÚ (CSpawn_Manager µî) °¡ m_iCurrentCellIndex ¿Í ¹«°üÇÏ°Ô »ç¿ëÇÒ ¼ö ÀÖµµ·Ï
-   ¸ğµÎ const ¸Ş¼­µå. iAreaMask ´Â 1Â÷ no-op. */
+	/* -------- Spawn/Wander ì¿¼ë¦¬ (S1 ì¶”ê°€) --------
+   í˜¸ì¶œì (CSpawn_Manager ë“±) ê°€ m_iCurrentCellIndex ì™€ ë¬´ê´€í•˜ê²Œ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡
+   ëª¨ë‘ const ë©”ì„œë“œ. iAreaMask ëŠ” 1ì°¨ no-op. */
 	_bool Project_PointToNavigation(
 		const _float3& vWorldPos, _float fSearchRadius, _uint iAreaMask,
 		_float3* pOutNavPos, _uint* pOutCellIndex) const;

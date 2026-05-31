@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "PartObject.h"
 #include "Game_PKM_Defines.h"
 

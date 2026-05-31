@@ -1,4 +1,4 @@
-﻿#include "Game_API.h"
+#include "Game_API.h"
 #include "Level_Loading.h"
 #include "SharedTexture_Manager.h"
 #include "UIButton_Glow.h"

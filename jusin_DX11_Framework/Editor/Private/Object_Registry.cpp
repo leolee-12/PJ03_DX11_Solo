@@ -26,20 +26,20 @@ void CObject_Registry::Register_Object(_uint iProtoLevel, WNameID strProtoTag, _
 	if (nullptr == pObj) return;
 
 	pObj->Set_Name(Make_UniqueName(StoW(pObj->Get_TypeName())));
-	m_pGameInstance->Add_GameObject_Ex(iLayerLevel, strLayerTag, pObj);	// ·¹ÀÌ¾î¿¡ µî·Ï
+	m_pGameInstance->Add_GameObject_Ex(iLayerLevel, strLayerTag, pObj);	// ë ˆì´ì–´ì— ë“±ë¡
 	m_Records.push_back({ iProtoLevel, strProtoTag, iLayerLevel, strLayerTag, pObj });
-	m_EditorObjects.push_back(pObj);	// ¿¡µğÅÍ Æ®·¡Å·
+	m_EditorObjects.push_back(pObj);	// ì—ë””í„° íŠ¸ë˜í‚¹
 
 	EDITOR_OBJECT_ENTRY tEntry{};
 	if (TryBuildEditorEntry(pObj, &tEntry))
 		m_EditorEntries.push_back(tEntry);
 
-	Safe_AddRef(pObj); // Editor ÂüÁ¶
+	Safe_AddRef(pObj); // Editor ì°¸ì¡°
 }
 
 void CObject_Registry::Unregister_Object(CGameObject* pObj)
 {
-	// ¡ç Ãß°¡
+	// â† ì¶”ê°€
 	auto rIter = find_if(m_Records.begin(), m_Records.end(),
 		[pObj](const OBJ_RECORD& record) { return record.pObj == pObj; });
 	if (rIter != m_Records.end())
@@ -54,8 +54,8 @@ void CObject_Registry::Unregister_Object(CGameObject* pObj)
 	if (entryIter != m_EditorEntries.end())
 		m_EditorEntries.erase(entryIter);
 
-	pObj->Set_Dead(); // DEAD -> Layer¿¡¼­ Á¦°Å
-	m_pEditInstance->Deselect(pObj); // ¼±ÅÃ ÇØÁ¦
+	pObj->Set_Dead(); // DEAD -> Layerì—ì„œ ì œê±°
+	m_pEditInstance->Deselect(pObj); // ì„ íƒ í•´ì œ
 }
 
 void CObject_Registry::Clone_Object(CGameObject* pObj)

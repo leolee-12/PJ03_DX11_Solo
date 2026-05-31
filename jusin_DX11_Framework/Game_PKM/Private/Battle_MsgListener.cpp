@@ -1,4 +1,4 @@
-﻿#include "Battle_MsgListener.h"
+#include "Battle_MsgListener.h"
 #include "Battle_Manager.h"
 #include "BattleMsg.h"
 #include "Battler.h"

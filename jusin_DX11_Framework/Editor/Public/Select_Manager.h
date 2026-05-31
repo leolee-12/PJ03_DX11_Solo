@@ -17,17 +17,17 @@ private:
 public:
 	HRESULT Initialize();
 
-	// ¼±ÅÃ Á¶ÀÛ
+	// ì„ íƒ ì¡°ì‘
 	void Select(CGameObject* pObj, bool bMultiSelect = false);
 	void Deselect(CGameObject* pObj);
 	void Clear();
 
-	// Á¶È¸
+	// ì¡°íšŒ
 	const vector<CGameObject*>& Get_Selected() const { return m_Selected; }
-	CGameObject* Get_Primary() const;   // m_Selected[0], ¾øÀ¸¸é nullptr
+	CGameObject* Get_Primary() const;   // m_Selected[0], ì—†ìœ¼ë©´ nullptr
 	bool Is_Selected(CGameObject* pObj) const;
 
-	// º¯°æ ÅëÁö Äİ¹é (ÆĞ³Î µî·Ï¿ë)
+	// ë³€ê²½ í†µì§€ ì½œë°± (íŒ¨ë„ ë“±ë¡ìš©)
 	void Register_Callback(const _string& strKey, SelectionChangedCB cb);
 	void Unregister_Callback(const _string& strKey);
 
@@ -35,7 +35,7 @@ private:
 	vector<CGameObject*> m_Selected;
 	unordered_map<_string, SelectionChangedCB> m_Callbacks;
 
-	void Notify();  // µî·ÏµÈ Äİ¹é ÀüºÎ È£Ãâ
+	void Notify();  // ë“±ë¡ëœ ì½œë°± ì „ë¶€ í˜¸ì¶œ
 
 public:
 	static CSelect_Manager* Create();

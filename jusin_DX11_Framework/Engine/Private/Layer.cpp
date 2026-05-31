@@ -11,7 +11,7 @@ CComponent* CLayer::Get_Component(const WNameID strComponentTag, _uint iIndex)
 		return nullptr;
 
 	auto iter = m_GameObjects.begin();
-	std::advance(iter, iIndex); // ÄÁÅ×ÀÌ³Ê¿¡ µû¶ó ÃÖÀû ¹æ½ÄÀ¸·Î µ¿ÀÛ
+	std::advance(iter, iIndex); // ì»¨í…Œì´ë„ˆì— ë”°ë¼ ìµœì  ë°©ì‹ìœ¼ë¡œ ë™ìž‘
 	return (*iter)->Find_Component(strComponentTag);
 }
 

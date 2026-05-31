@@ -15,14 +15,14 @@ public:
 	const _float4* Get_CamPosition() const { return &m_vCamPosition; }
 
 	void XM_CALLCONV Set_CameraWorld(_fmatrix StateMatrix)
-	{	// CamWorld¸¦ ¹Ş¾Æ TSInv[VIEW]¿¡ ÀúÀå, ¿ªÇà·Ä ±¸ÇØ¼­ TS[VIEW]¿¡ ÀúÀå, CamPos ÀúÀå
+	{	// CamWorldë¥¼ ë°›ì•„ TSInv[VIEW]ì— ì €ì¥, ì—­í–‰ë ¬ êµ¬í•´ì„œ TS[VIEW]ì— ì €ì¥, CamPos ì €ì¥
 		XMStoreFloat4x4(&m_TransformStateInverseMatrices[ETOUI(D3DTS::VIEW)], StateMatrix);
 		XMStoreFloat4x4(&m_TransformStateMatrices[ETOUI(D3DTS::VIEW)], XMMatrixInverse(nullptr, StateMatrix));
 		memcpy(&m_vCamPosition, &m_TransformStateInverseMatrices[ETOUI(D3DTS::VIEW)]._41, sizeof m_vCamPosition);
 	}
 
 	void XM_CALLCONV Set_Projection(_fmatrix StateMatrix)
-	{	// ProjMatrix¸¦ ¹Ş¾Æ TS[PROJ]¿¡ ÀúÀå, ¿ªÇà·Ä ±¸ÇØ¼­ TSInv[PROJ]¿¡ ÀúÀå
+	{	// ProjMatrixë¥¼ ë°›ì•„ TS[PROJ]ì— ì €ì¥, ì—­í–‰ë ¬ êµ¬í•´ì„œ TSInv[PROJ]ì— ì €ì¥
 		XMStoreFloat4x4(&m_TransformStateMatrices[ETOUI(D3DTS::PROJ)], StateMatrix);
 		XMStoreFloat4x4(&m_TransformStateInverseMatrices[ETOUI(D3DTS::PROJ)], XMMatrixInverse(nullptr, StateMatrix));
 	}

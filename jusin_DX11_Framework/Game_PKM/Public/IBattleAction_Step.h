@@ -5,10 +5,10 @@
 NS_BEGIN(Game_PKM)
 
 /* IBattleAction_Step
-   - ½ÃÄö¼­(CBattle_ActionSequencer)°¡ ¼øÂ÷ ½ÇÇàÇÏ´Â ÇÑ ´Ü°è.
-   - °¢ step Àº ÀÚÃ¼ »óÅÂ(Å¸ÀÌ¸Ó µî)¸¦ º¸À¯ÇÏ°í Is_Complete °¡ true °¡ µÉ ¶§±îÁö
-	 ¸Å ÇÁ·¹ÀÓ Update È£ÃâÀ» ¹Ş´Â´Ù.
-   - ¿Ï·á ÆÇÁ¤Àº ½Ã°£ / ÆäÀÌ½Ì ¶ô / ¿ÜºÎ ½ÅÈ£ µî step Á¾·ùº° ÀÚÀ¯. */
+   - ì‹œí€€ì„œ(CBattle_ActionSequencer)ê°€ ìˆœì°¨ ì‹¤í–‰í•˜ëŠ” í•œ ë‹¨ê³„.
+   - ê° step ì€ ìì²´ ìƒíƒœ(íƒ€ì´ë¨¸ ë“±)ë¥¼ ë³´ìœ í•˜ê³  Is_Complete ê°€ true ê°€ ë  ë•Œê¹Œì§€
+	 ë§¤ í”„ë ˆì„ Update í˜¸ì¶œì„ ë°›ëŠ”ë‹¤.
+   - ì™„ë£Œ íŒì •ì€ ì‹œê°„ / í˜ì´ì‹± ë½ / ì™¸ë¶€ ì‹ í˜¸ ë“± step ì¢…ë¥˜ë³„ ììœ . */
 	class IBattleAction_Step abstract : public CBase
 {
 protected:

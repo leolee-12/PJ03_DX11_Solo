@@ -15,7 +15,7 @@
 
 namespace
 {
-	// uiseq À§Á¬ id ¸ÅÇÎ. uiseq ÀÇ displayName/id °¡ ¹Ù²î¸é º» ¹è¿­¸¸ °»½Å.
+	// uiseq ìœ„ì ¯ id ë§¤í•‘. uiseq ì˜ displayName/id ê°€ ë°”ë€Œë©´ ë³¸ ë°°ì—´ë§Œ ê°±ì‹ .
 	constexpr const _char* s_PlateIds[6] =
 	{ "widget_001", "widget_002", "widget_003", "widget_004", "widget_005", "widget_006" };
 	constexpr const _char* s_NumberIds[6] =
@@ -59,7 +59,7 @@ void CEntry::Set_Mode(ENTRY_MODE eMode)
 
 void CEntry::Update(_float fTimeDelta)
 {
-	// º£ÀÌ½º Update ´Â Cancel ½Ã ¹«Á¶°Ç Close. Selected Èí¼ö°¡ ÇÊ¿äÇÏ¿© ºĞ±â¸¦ Á÷Á¢ Ã³¸®.
+	// ë² ì´ìŠ¤ Update ëŠ” Cancel ì‹œ ë¬´ì¡°ê±´ Close. Selected í¡ìˆ˜ê°€ í•„ìš”í•˜ì—¬ ë¶„ê¸°ë¥¼ ì§ì ‘ ì²˜ë¦¬.
 	if (false == m_bOpen)
 		return;
 

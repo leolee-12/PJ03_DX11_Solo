@@ -5,6 +5,7 @@
 #include "SharedTexture_Manager.h"
 
 #include "GameInstance.h"
+#include "Profiler_Manager.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -51,19 +52,29 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Update(_float fTimeDelta)
 {
+	PROFILE_FRAME_BEGIN();
+
+	PROFILE_CPU_SCOPE(L"CPU_Update_Total");
+
 	m_pGameInstance->Update_Engine(fTimeDelta);
 }
 
 HRESULT CMainApp::Render()
 {
-	if (FAILED(m_pGameInstance->Begin_Draw()))
-		return E_FAIL;
+	{
+		PROFILE_CPU_SCOPE(L"CPU_Render_Total");
 
-	if (FAILED(m_pGameInstance->Draw()))
-		return E_FAIL;
+		if (FAILED(m_pGameInstance->Begin_Draw()))
+			return E_FAIL;
 
-	if (FAILED(m_pGameInstance->End_Draw()))
-		return E_FAIL;
+		if (FAILED(m_pGameInstance->Draw()))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->End_Draw()))
+			return E_FAIL;
+	}
+
+	PROFILE_FRAME_END();
 
 	return S_OK;
 }

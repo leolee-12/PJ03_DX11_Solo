@@ -33,7 +33,7 @@ HRESULT CPanel_Property::Render()
 		return S_OK;
 	}
 
-	// ¼±ÅÃ °´Ã¼°¡ ¹Ù²ğ ¶§¸¸ ¹öÆÛ µ¿±âÈ­
+	// ì„ íƒ ê°ì²´ê°€ ë°”ë€” ë•Œë§Œ ë²„í¼ ë™ê¸°í™”
 	if (m_pSelected != m_pLastSelected)
 	{
 		strncpy_s(m_szNameBuffer, WtoS(m_pSelected->Get_Name()).c_str(), 255);
@@ -76,9 +76,9 @@ void CPanel_Property::Draw_Transform(CTransform* pTransformCom)
 	}
 
 	bool bChanged = false;
-	bChanged |= ImGui::DragFloat3(KOR("À§Ä¡"), pPos, 0.05f);
-	bChanged |= ImGui::DragFloat3(KOR("È¸Àü"), pRot, 0.5f, -360.f, 360.f, "%.1f¡Æ");
-	bChanged |= ImGui::DragFloat3(KOR("½ºÄÉÀÏ"), pScale, 0.01f, 0.001f, 100.f);
+	bChanged |= ImGui::DragFloat3(KOR("ìœ„ì¹˜"), pPos, 0.05f);
+	bChanged |= ImGui::DragFloat3(KOR("íšŒì „"), pRot, 0.5f, -360.f, 360.f, "%.1fÂ°");
+	bChanged |= ImGui::DragFloat3(KOR("ìŠ¤ì¼€ì¼"), pScale, 0.01f, 0.001f, 100.f);
 
 	if (bChanged)
 	{

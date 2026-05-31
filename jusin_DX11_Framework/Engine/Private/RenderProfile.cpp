@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Shader.h"
 #include "RenderRule.h"
+#include "Profiler_Manager.h"
 
 HRESULT CRenderProfile::Build(CModel* pModel, const CRenderRule* pRule)
 {
@@ -51,6 +52,8 @@ HRESULT CRenderProfile::Bind_AndDraw(
 	const vector<_bool>* pVisibleMask,
 	_uint* pDrawnMeshCount)
 {
+	PROFILE_CPU_SCOPE(L"CPU_RenderProfile_BindAndDraw");
+
 	if (nullptr == m_pModel || nullptr == pShader)
 		return E_FAIL;
 

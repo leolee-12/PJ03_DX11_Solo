@@ -25,7 +25,7 @@ enum class ANIM_KIND : _ubyte
     EVENT_2 = 17,
     EVENT_3 = 18,
 
-    ATTACK = ATTACK_PHYSICAL, // ±âÁ¸ È£Ãâ È£È¯¿ë
+    ATTACK = ATTACK_PHYSICAL, // ê¸°ì¡´ í˜¸ì¶œ í˜¸í™˜ìš©
     END = 19
 };
 

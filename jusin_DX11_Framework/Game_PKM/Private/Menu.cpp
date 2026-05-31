@@ -1,4 +1,4 @@
-﻿#include "Menu.h"
+#include "Menu.h"
 #include "UISequence.h"
 #include "UIButton.h"
 #include "UIButton_Group.h"

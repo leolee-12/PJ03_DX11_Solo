@@ -45,8 +45,8 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Push_Tip(const _float3& vWorldPos);   // Æ¯¼ö ÄÉÀÌ½º ¿ÜºÎ push
-	void Stop() { m_bStopped = true; }          // »õ tip Áß´Ü ¡æ ÀÚ¿¬ ¼Ò¸ê
+	void Push_Tip(const _float3& vWorldPos);   // íŠ¹ìˆ˜ ì¼€ì´ìŠ¤ ì™¸ë¶€ push
+	void Stop() { m_bStopped = true; }          // ìƒˆ tip ì¤‘ë‹¨ â†’ ìì—° ì†Œë©¸
 
 private:
 	HRESULT Ready_Components();

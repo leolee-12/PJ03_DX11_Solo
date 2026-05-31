@@ -111,7 +111,7 @@ float ExtractSpcLine(float fSpcRaw)
 }
 
 float g_fAmbtMapStrength = 0.2f;
-float g_fAmbtChromaStrength = 0.0f; // ÀÏ´Ü 0 ±ÇÀå. »ö°¨ ÇÊ¿äÇÏ¸é 0.05~0.15
+float g_fAmbtChromaStrength = 0.0f; // ì¼ë‹¨ 0 ê¶Œìž¥. ìƒ‰ê° í•„ìš”í•˜ë©´ 0.05~0.15
 
 // AO fallback
 float g_fAOStrength = 0.5f;
@@ -121,7 +121,7 @@ float3 DecodeAmbtMap(float3 vAmbtRaw)
 {
 	vAmbtRaw = saturate(vAmbtRaw);
 
-	// AO fallback path: AO´Â º¸Åë grayscale.
+	// AO fallback path: AOëŠ” ë³´í†µ grayscale.
 	// 1 = no occlusion, 0 = occluded.
 	float fGrayRange = max(vAmbtRaw.r, max(vAmbtRaw.g, vAmbtRaw.b))
 					- min(vAmbtRaw.r, min(vAmbtRaw.g, vAmbtRaw.b));
@@ -137,7 +137,7 @@ float3 DecodeAmbtMap(float3 vAmbtRaw)
 	{
 		float fAmbt = dot(vAmbtRaw, float3(0.299f, 0.587f, 0.114f));
 
-		// ³Ê¹« ³·Àº °ªÀÌ ÀüÃ¼ »öÀ» °úÇÏ°Ô Á×ÀÌÁö ¾Êµµ·Ï Á¦ÇÑ
+		// ë„ˆë¬´ ë‚®ì€ ê°’ì´ ì „ì²´ ìƒ‰ì„ ê³¼í•˜ê²Œ ì£½ì´ì§€ ì•Šë„ë¡ ì œí•œ
 		fAmbt = lerp(1.f, fAmbt, g_fAmbtMapStrength);
 		fResult = max(fAmbt, 0.85f);
 	}
@@ -160,18 +160,18 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
 
-	// Åõ¿µ
+	// íˆ¬ì˜
 	vector vWorldPos;
 	vWorldPos.x = In.vTex.x * 2.f - 1.f;
 	vWorldPos.y = In.vTex.y * -2.f + 1.f;
 	vWorldPos.z = vDepthDesc.x;
 	vWorldPos.w = 1.f;
 
-	// ºä
+	// ë·°
 	vWorldPos *= fViewZ;
 	vWorldPos = mul(vWorldPos, g_ProjInvMatrix);
 
-	// ¿ùµå
+	// ì›”ë“œ
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 
 	float3 N = normalize(vNormal.xyz);
@@ -180,7 +180,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	float3 H = normalize(L + V);
 	float fNdotL = saturate(dot(N, L));
 
-	// Half-Lambert: ¶óÀÌÆ® ¸é ¶Ç·Ç, ¹Ý´ë ¸é ºÎµå·´°Ô
+	// Half-Lambert: ë¼ì´íŠ¸ ë©´ ë˜ë ·, ë°˜ëŒ€ ë©´ ë¶€ë“œëŸ½ê²Œ
 	float fHalfLambert = fNdotL * 0.5f + 0.5f;
 	fHalfLambert *= fHalfLambert;
 
@@ -237,18 +237,18 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
 	
-	// Åõ¿µ
+	// íˆ¬ì˜
 	vector vWorldPos;
 	vWorldPos.x = In.vTex.x * 2.f - 1.f;
 	vWorldPos.y = -(In.vTex.y * 2.f - 1.f);
 	vWorldPos.z = vDepthDesc.x;
 	vWorldPos.w = 1.f;
 
-	// ºä
+	// ë·°
 	vWorldPos *= fViewZ;
 	vWorldPos = mul(vWorldPos, g_ProjInvMatrix);
 
-	// ¿ùµå
+	// ì›”ë“œ
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 
 	float3 N = normalize(vNormal.xyz);
@@ -337,7 +337,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
 	PS_OUT_BACKBUFFER Out;
 
-	// Diffuse + Shade -> ÃÖÁ¾ »ö»ó °áÁ¤
+	// Diffuse + Shade -> ìµœì¢… ìƒ‰ìƒ ê²°ì •
 	vector vDiffuse = g_TexDiff.Sample(PointSampler, In.vTex);
 	if (0.5f > vDiffuse.a)
 		discard;
@@ -360,7 +360,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED_SHADOW(PS_IN In)
 {
 	PS_OUT_BACKBUFFER Out;
 
-	// Diffuse + Shade -> ÃÖÁ¾ »ö»ó °áÁ¤
+	// Diffuse + Shade -> ìµœì¢… ìƒ‰ìƒ ê²°ì •
 	vector vDiffuse = g_TexDiff.Sample(PointSampler, In.vTex);
 	if (0.5f > vDiffuse.a)
 		discard;
@@ -369,41 +369,41 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED_SHADOW(PS_IN In)
 	vector vSpec = g_TexSpec.Sample(PointSampler, In.vTex);
 	Out.vBackBuffer = vDiffuse * vShade + vSpec;
 
-	// ±×¸²ÀÚ ¹Ý¿µ
+	// ê·¸ë¦¼ìž ë°˜ì˜
 	vector vDepthDesc = g_TexDepth.Sample(PointSampler, In.vTex);
 	float fViewZ = vDepthDesc.y * g_fFarZ;
 
 	vector vWorldPos;
 
-	// - Åõ¿µ ½ºÆäÀÌ½º À§Ä¡
+	// - íˆ¬ì˜ ìŠ¤íŽ˜ì´ìŠ¤ ìœ„ì¹˜
 	vWorldPos.x = In.vTex.x * 2.f - 1.f;
 	vWorldPos.y = In.vTex.y * -2.f + 1.f;
 	vWorldPos.z = vDepthDesc.x;
 	vWorldPos.w = 1.f;
 
-	// - ºä ½ºÆäÀÌ½º À§Ä¡
+	// - ë·° ìŠ¤íŽ˜ì´ìŠ¤ ìœ„ì¹˜
 	vWorldPos *= fViewZ;
 	vWorldPos = mul(vWorldPos, g_ProjInvMatrix);
 
-	// - ¿ùµå ½ºÆäÀÌ½º À§Ä¡ -> ±¤¿ø ½ÃÁ¡ Clip ½ºÆäÀÌ½º
+	// - ì›”ë“œ ìŠ¤íŽ˜ì´ìŠ¤ ìœ„ì¹˜ -> ê´‘ì› ì‹œì  Clip ìŠ¤íŽ˜ì´ìŠ¤
 	vWorldPos = mul(vWorldPos, g_ViewInvMatrix);
 	float3 vDecalWorldPos = vWorldPos.xyz;
 	vWorldPos = mul(vWorldPos, g_SLViewMatrix);
 	vWorldPos = mul(vWorldPos, g_SLProjMatrix);
 
-	// Á÷±³Åõ¿µ: w=1, NDC z ±×´ë·Î »ç¿ë
+	// ì§êµíˆ¬ì˜: w=1, NDC z ê·¸ëŒ€ë¡œ ì‚¬ìš©
 	float fLightNDCZ = vWorldPos.z / vWorldPos.w;
 
 	float2 vTexcoord;
 	vTexcoord.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;	/* -1 ~ 1 => 0 ~ 1 */
 	vTexcoord.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;   /* 1 ~ -1 => 0 ~ 1 */
 
-	// ±×¸²ÀÚ ¸Ê ÅØ¼¿ Å©±â
+	// ê·¸ë¦¼ìž ë§µ í…ì…€ í¬ê¸°
 	float fW, fH;
 	g_TexLightDepth.GetDimensions(fW, fH);
 	float2 vTexelSize = float2(1.f / fW, 1.f / fH);
 
-	// 3x3 PCF (°¢ ÅÇÀº ÇÏµå¿þ¾î 2x2 PCF -> ½ÇÈ¿ 4x4)
+	// 3x3 PCF (ê° íƒ­ì€ í•˜ë“œì›¨ì–´ 2x2 PCF -> ì‹¤íš¨ 4x4)
 	float fLitFactor = 0.f;
 	[unroll]
 		for (int y = -1; y <= 1; ++y)
@@ -418,7 +418,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED_SHADOW(PS_IN In)
 		}
 	fLitFactor /= 9.f;
 
-	// Contrast remap: ±íÀº ±×¸²ÀÚ/¿ÏÀü ºûÀº Å¬·¥ÇÁ, °æ°è¸¸ S-Ä¿ºê·Î ºÎµå·´°Ô
+	// Contrast remap: ê¹Šì€ ê·¸ë¦¼ìž/ì™„ì „ ë¹›ì€ í´ëž¨í”„, ê²½ê³„ë§Œ S-ì»¤ë¸Œë¡œ ë¶€ë“œëŸ½ê²Œ
 	fLitFactor = smoothstep(0.f, 1.f, fLitFactor);
 	Out.vBackBuffer = Out.vBackBuffer * lerp(0.65f, 1.0f, fLitFactor);
 

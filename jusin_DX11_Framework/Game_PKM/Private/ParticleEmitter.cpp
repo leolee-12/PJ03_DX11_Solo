@@ -1,4 +1,4 @@
-﻿#include "ParticleEmitter.h"
+#include "ParticleEmitter.h"
 #include "VIBuffer_Particle3D_Instance.h"
 
 #include "GameInstance.h"

@@ -95,7 +95,7 @@ void CInteraction_DialogueBattle::Execute(const INTERACTION_CONTEXT& ctx)
 	_bool bStarted = false;
 
 	if (true == m_strDialogueKey.empty())
-		bStarted = pGamePlay->Start_Dialogue_Text(L"�ºδ�!");
+		bStarted = pGamePlay->Start_Dialogue_Text(L"승부다!");
 	else
 		bStarted = pGamePlay->Start_Dialogue(m_strDialogueKey);
 

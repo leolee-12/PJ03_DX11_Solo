@@ -7,13 +7,13 @@ vector g_vCamPos;
 vector g_vBrushPos = float4(20.f, 0.f, 20.f, 1.f);
 float g_fBrushRange = 10.f;
 
-// ±¤¿ø
+// ê´‘ì›
 vector g_vLightDir;
 vector g_vLightDiff;
 vector g_vLightAmbt;
 vector g_vLightSpec;
 
-// ÀçÁú
+// ì¬ì§ˆ
 texture2D g_TexDiff[2];
 texture2D g_TexMask;
 texture2D g_TexBrush;
@@ -80,16 +80,16 @@ PS_OUT PS_MAIN(PS_IN In)	// Phong Model
 	vector vReflect = reflect(Light, Normal);
 	float fSpec = pow(max(dot(vView, normalize(vReflect)), 0.f), 50.f);
 
-	// ---------- Phong ¸ğµ¨ ----------
+	// ---------- Phong ëª¨ë¸ ----------
 	float fShade = max(dot(Light * -1.f, Normal), 0.f);
 	vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
 	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff;
 	vector Spec = (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	Out.vCol = saturate(Diff + Ambt + Spec);
-	// Á¤È®ÇÑ Phong ¸ğµ¨Àº Diff + Ambt + SpecÀÌÁö¸¸, Ambt¿¡ vMtrlDiff¸¦ °öÇØÁÖ¸é Á» ´õ ÀÚ¿¬½º·¯¿î °á°ú°¡ ³ª¿È (Ambtµµ ÅØ½ºÃ³ »ö»ó°ª¿¡ ºñ·ÊÇÏµµ·Ï)
+	// ì •í™•í•œ Phong ëª¨ë¸ì€ Diff + Ambt + Specì´ì§€ë§Œ, Ambtì— vMtrlDiffë¥¼ ê³±í•´ì£¼ë©´ ì¢€ ë” ìì—°ìŠ¤ëŸ¬ìš´ ê²°ê³¼ê°€ ë‚˜ì˜´ (Ambtë„ í…ìŠ¤ì²˜ ìƒ‰ìƒê°’ì— ë¹„ë¡€í•˜ë„ë¡)
 	// --------------------------------
 
-	// ---------- ÇĞ¿ø ¸ğµ¨ -----------
+	// ---------- í•™ì› ëª¨ë¸ -----------
 	//vector vShade = max(dot(Light * -1.f, Normal), 0.f) + (g_vLightAmbt * g_vMtrlAmbt);
 	//Out.vCol = g_vLightDiff * vMtrlDiff * saturate(vShade) + (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	// --------------------------------
@@ -127,15 +127,15 @@ PS_OUT PS_MAIN_BLINNPHONG(PS_IN In)	// Blinn-Phong Model
 	vector vHalf = normalize((-Light) + vView);
 	float fSpec = pow(max(dot(Normal, vHalf), 0.f), 150.f);
 
-	// ---------- Blinn-Phong ¸ğµ¨ ----------
+	// ---------- Blinn-Phong ëª¨ë¸ ----------
 	float fShade = max(dot(Light * -1.f, Normal), 0.f);
 	vector Diff = (g_vLightDiff * vMtrlDiff) * fShade;
-	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff; // Ambt*TexDiff º¸Á¤
+	vector Ambt = (g_vLightAmbt * g_vMtrlAmbt) * vMtrlDiff; // Ambt*TexDiff ë³´ì •
 	vector Spec = (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	Out.vCol = saturate(Diff + Ambt + Spec);
 	// --------------------------------
 
-	// ---------- ÇĞ¿ø ¸ğµ¨ -----------
+	// ---------- í•™ì› ëª¨ë¸ -----------
 	//vector vShade = max(dot(Light * -1.f, Normal), 0.f) + (g_vLightAmbt * g_vMtrlAmbt);
 	//Out.vCol = g_vLightDiff * vMtrlDiff * saturate(vShade) + (g_vLightSpec * g_vMtrlSpec) * fSpec;
 	// --------------------------------

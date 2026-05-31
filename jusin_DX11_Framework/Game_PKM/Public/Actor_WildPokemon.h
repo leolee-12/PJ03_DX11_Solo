@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actor.h"
 #include "Body.h"
 #include "Spawn_Defines.h"

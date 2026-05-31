@@ -5,7 +5,7 @@ float4x4 g_WITMatrix;
 vector g_vCamPos;
 float g_fFarZ;
 
-// ÀçÁú
+// ìž¬ì§ˆ
 texture2D g_TexDiff;
 texture2D g_TexSpec;
 texture2D g_TexAmbt;
@@ -80,7 +80,7 @@ struct PS_OUT
 
 };
 
-PS_OUT PS_MAIN(PS_IN In)	// 0¹ø ÆÐ½º
+PS_OUT PS_MAIN(PS_IN In)	// 0ë²ˆ íŒ¨ìŠ¤
 {
 	PS_OUT Out;
 	
@@ -95,7 +95,7 @@ PS_OUT PS_MAIN(PS_IN In)	// 0¹ø ÆÐ½º
 	return Out;
 }
 
-PS_OUT PS_DA(PS_IN In)	// 2¹ø ÆÐ½º
+PS_OUT PS_DA(PS_IN In)	// 2ë²ˆ íŒ¨ìŠ¤
 {
 	PS_OUT Out;
 
@@ -110,7 +110,7 @@ PS_OUT PS_DA(PS_IN In)	// 2¹ø ÆÐ½º
 	return Out;
 }
 
-PS_OUT PS_DIFF(PS_IN In)	// 3¹ø ÆÐ½º
+PS_OUT PS_DIFF(PS_IN In)	// 3ë²ˆ íŒ¨ìŠ¤
 {
 	PS_OUT Out;
 

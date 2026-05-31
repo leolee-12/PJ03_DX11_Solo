@@ -1,4 +1,4 @@
-﻿#include "UIImage.h"
+#include "UIImage.h"
 #include "GameInstance.h"
 #include "SharedTextureBinder.h"
 

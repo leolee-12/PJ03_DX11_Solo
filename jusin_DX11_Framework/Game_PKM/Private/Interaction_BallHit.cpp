@@ -39,13 +39,13 @@ _bool CInteraction_BallHit::CanInteract(const INTERACTION_CONTEXT& ctx) const
     if (!Supports(ctx.eEvent))
         return false;
 
-    // TODO: ¸Å´ÏÀú°¡ SHAKE/RESULT ÆäÀÌÁî ÁøÇà ÁßÀÌ¸é false (ÀÌ¹ø ´ÜÀ§¿¡¼­´Â ÀÏ´Ü Åë°ú)
+    // TODO: ë§¤ë‹ˆì €ê°€ SHAKE/RESULT í˜ì´ì¦ˆ ì§„í–‰ ì¤‘ì´ë©´ false (ì´ë²ˆ ë‹¨ìœ„ì—ì„œëŠ” ì¼ë‹¨ í†µê³¼)
     return true;
 }
 
 void CInteraction_BallHit::Execute(const INTERACTION_CONTEXT& ctx)
 {
-    // TODO: Capture_Manager ¿Í °áÇÕ ÈÄ ¸Å´ÏÀú¿¡ hit Åëº¸ (Request_Throw ÀÇ ÈÄ¼Ó ¹ßÈ­)
+    // TODO: Capture_Manager ì™€ ê²°í•© í›„ ë§¤ë‹ˆì €ì— hit í†µë³´ (Request_Throw ì˜ í›„ì† ë°œí™”)
     OutputDebugStringW(L"[Interaction_BallHit] hit (stub)\n");
 }
 

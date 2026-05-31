@@ -20,20 +20,20 @@ public:
 	HRESULT Register_Region(const REGION_RECT_DESC& tDesc);
 	void    Clear();
 
-	// ¸Å ÇÁ·¹ÀÓ ÇÃ·¹ÀÌ¾î À§Ä¡·Î ÇöÀç Áö¿ª ÆÇÁ¤. º¯°æ ½Ã BGM ±³Ã¼ + º¯°æ ÈÅ ¹ßµ¿.
+	// ë§¤ í”„ë ˆì„ í”Œë ˆì´ì–´ ìœ„ì¹˜ë¡œ í˜„ì¬ ì§€ì—­ íŒì •. ë³€ê²½ ì‹œ BGM êµì²´ + ë³€ê²½ í›… ë°œë™.
 	void    Update();
 
-	// ·¹º§ ·Îµå Á÷ÈÄ 1È¸. ÃÊ±â Áö¿ª È®Á¤ + BGM Àç»ı(¹è³Ê ÈÅÀº ¹ßµ¿ÇÏÁö ¾ÊÀ½).
+	// ë ˆë²¨ ë¡œë“œ ì§í›„ 1íšŒ. ì´ˆê¸° ì§€ì—­ í™•ì • + BGM ì¬ìƒ(ë°°ë„ˆ í›…ì€ ë°œë™í•˜ì§€ ì•ŠìŒ).
 	void    Resolve_Initial();
 
-	// ¹èÆ²/Ä¸Ã³ º¹±Í µî¿¡¼­ ÇöÀç Áö¿ª BGM Àç»ı(ÆÇÁ¤/ÈÅ ¾øÀ½).
+	// ë°°í‹€/ìº¡ì²˜ ë³µê·€ ë“±ì—ì„œ í˜„ì¬ ì§€ì—­ BGM ì¬ìƒ(íŒì •/í›… ì—†ìŒ).
 	void    Play_Current_BGM() const;
 
 	_uint   Get_Current_RegionID() const { return m_iCurrentRegionID; }
 	const REGION_RECT_DESC* Find_Region(_uint iRegionID) const;
 	const REGION_RECT_DESC* Get_Current_Region() const { return Find_Region(m_iCurrentRegionID); }
 
-	// U4 ¿¡¼­ »ç¿ëÀÚ ¹è³Ê¸¦ ¿¬°áÇÏ´Â ÁöÁ¡. ÀÎÀÚ´Â ÀÌÀü Áö¿ª, »õ·Î ÁøÀÔÇÑ Áö¿ª.
+	// U4 ì—ì„œ ì‚¬ìš©ì ë°°ë„ˆë¥¼ ì—°ê²°í•˜ëŠ” ì§€ì . ì¸ìëŠ” ì´ì „ ì§€ì—­, ìƒˆë¡œ ì§„ì…í•œ ì§€ì—­.
 	void    Set_OnRegionChanged(function<void(const REGION_RECT_DESC*, const REGION_RECT_DESC&)> fnCallback)
 	{
 		m_fnOnRegionChanged = std::move(fnCallback);
@@ -44,8 +44,8 @@ public:
 
 private:
 	_bool   Get_PlayerPosition(_float3& vOut) const;
-	_uint   Resolve_Region(const _float3& vPlayerPos) const;   // °ãÄ§ ½Ã ¿ì¼±¼øÀ§ ³ôÀº Áö¿ª
-	void    Enter_Region(_uint iNewRegionID, _bool bNotify);   // BGM ±³Ã¼ + (¿É¼Ç)ÈÅ
+	_uint   Resolve_Region(const _float3& vPlayerPos) const;   // ê²¹ì¹¨ ì‹œ ìš°ì„ ìˆœìœ„ ë†’ì€ ì§€ì—­
+	void    Enter_Region(_uint iNewRegionID, _bool bNotify);   // BGM êµì²´ + (ì˜µì…˜)í›…
 
 private:
 	CGameInstance* m_pGameInstance = { nullptr };   // weak

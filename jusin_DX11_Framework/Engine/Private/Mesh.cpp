@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Bone.h"
 #include "Shader.h"
+#include "Profiler_Manager.h"
 
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const WMODEL_MESH& tMeshData)
 	: CVIBuffer{ pDevice, pContext }
@@ -18,13 +19,13 @@ CMesh::CMesh(const CMesh& Prototype)
 
 HRESULT CMesh::Initialize_Prototype()
 {
-	// ∞¯≈Î º≥¡§
+	// Í≥µÌÜµ ÏÑ§Ï†ï
 	m_iNumVertexBuffers = 1;
 	m_iIndexStride = 4;
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	// ∆ƒ¿œ µ•¿Ã≈Õ∑Œ √ ±‚»≠
+	// ÌååÏùº Îç∞Ïù¥ÌÑ∞Î°ú Ï¥àÍ∏∞Ìôî
 	strcpy_s(m_szName, m_tMesh.szName);
 	m_iMaterialIndex = m_tMesh.iMaterialIndex;
 	m_iNumIndices = static_cast<_uint>(m_tMesh.indices.size());
@@ -42,7 +43,7 @@ HRESULT CMesh::Initialize_Prototype()
 		? m_tMesh.nonAnimVertices.size()
 		: m_tMesh.animVertices.size());
 
-	// ∏∂øÏΩ∫ ««≈∑øÎ µ•¿Ã≈Õ ƒ≥ΩÃ
+	// ÎßàÏö∞Ïä§ ÌîºÌÇπÏö© Îç∞Ïù¥ÌÑ∞ Ï∫êÏã±
 	if (m_eType == MODEL::NONANIM)
 	{
 		m_vecPositions.resize(m_tMesh.nonAnimVertices.size());
@@ -69,7 +70,7 @@ HRESULT CMesh::Initialize_Prototype()
 			sizeof(XMFLOAT3));
 	}
 
-	// VB ª˝º∫
+	// VB ÏÉùÏÑ±
 	D3D11_BUFFER_DESC VertexBufferDesc{};
 	VertexBufferDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -86,7 +87,7 @@ HRESULT CMesh::Initialize_Prototype()
 	if (FAILED(hr))
 		return E_FAIL;
 
-	// IB ª˝º∫
+	// IB ÏÉùÏÑ±
 	D3D11_BUFFER_DESC IndexBufferDesc{};
 	IndexBufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
 	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -124,6 +125,8 @@ HRESULT CMesh::Initialize(void* pArg)
 
 HRESULT CMesh::Bind_BoneMatrices(CShader* pShader, const _char* pConstName, vector<class CBone*>& Bones)
 {
+	PROFILE_CPU_SCOPE(L"CPU_Mesh_BindBoneMatrices");
+
 	for (size_t i = 0; i < m_iNumBones; i++)
 	{
 		XMStoreFloat4x4(&m_BoneMatrices[i],

@@ -10,7 +10,7 @@ class ENGINE_DLL CGameObject abstract : public CBase
 public:
 	struct GAMEOBJECT_DESC : public CTransform::TRANSFORM_DESC
 	{
-		_float3 vSpawnPos = {};	// ¿ùµå ÁÂÇ¥
+		_float3 vSpawnPos = {};	// ì›”ë“œ ì¢Œí‘œ
 		_uint iFlag = { ObjFlag::ACTIVE };
 	};
 

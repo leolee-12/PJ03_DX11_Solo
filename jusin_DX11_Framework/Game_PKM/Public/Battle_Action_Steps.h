@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IBattleAction_Step.h"
 #include "Effect_Defines.h"
 #include "Camera_Defines.h"

@@ -1,4 +1,4 @@
-﻿#include "CustomFont.h"
+#include "CustomFont.h"
 
 CCustomFont::CCustomFont(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }

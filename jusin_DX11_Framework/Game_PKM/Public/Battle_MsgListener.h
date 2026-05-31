@@ -7,10 +7,10 @@ class CBattle_Manager;
 class CBattleMsg;
 
 /* CBattle_MsgListener */
-// - Dispatcher ±¸µ¶ÀÚ. BATTLE_EVENT_* ¸¦ ¹Ş¾Æ CBattleMsg ¿¡ Ç¥½ÃÇÒ ÇÑ±Û ¸Ş½ÃÁö·Î º¯È¯ÇÑ´Ù.
-// - ¿¬¼Ó ¹ßÇàµÇ´Â ÀÌº¥Æ®´Â Å¥¿¡ ÀûÀçÇÏ°í ÇÏ³ª¾¿ Ç¥½ÃÇÑ´Ù.
-// - Ç¥½Ã Áß¿¡´Â CBattle_Manager ¿¡ ÆäÀÌ½Ì ¶ôÀ» Àâ¾Æ State ÀüÀÌ¸¦ º¸·ù½ÃÅ²´Ù.
-// - CBattle_Manager / CBattleMsg ´Â weak ÂüÁ¶ (¼ÒÀ¯ÀÚ: CLevel_Battle).
+// - Dispatcher êµ¬ë…ì. BATTLE_EVENT_* ë¥¼ ë°›ì•„ CBattleMsg ì— í‘œì‹œí•  í•œê¸€ ë©”ì‹œì§€ë¡œ ë³€í™˜í•œë‹¤.
+// - ì—°ì† ë°œí–‰ë˜ëŠ” ì´ë²¤íŠ¸ëŠ” íì— ì ì¬í•˜ê³  í•˜ë‚˜ì”© í‘œì‹œí•œë‹¤.
+// - í‘œì‹œ ì¤‘ì—ëŠ” CBattle_Manager ì— í˜ì´ì‹± ë½ì„ ì¡ì•„ State ì „ì´ë¥¼ ë³´ë¥˜ì‹œí‚¨ë‹¤.
+// - CBattle_Manager / CBattleMsg ëŠ” weak ì°¸ì¡° (ì†Œìœ ì: CLevel_Battle).
 class CBattle_MsgListener final : public CBattle_EventListenerBase
 {
 private:
@@ -43,10 +43,10 @@ private:
 	std::queue<_wstring>    m_qMessages;
 	_bool	m_bLockHeld = { false };
 
-	_float	m_fInterMessageDelay = { 1.2f };        // ¸Ş½ÃÁö Ç¥½Ã
+	_float	m_fInterMessageDelay = { 1.2f };        // ë©”ì‹œì§€ í‘œì‹œ
 	_float	m_fWaitTimer = { 0.f };
 	_bool	m_bWaiting = { false };
-	_bool	m_bMessageWaitConsumed = { false };     // ÇöÀç ¸Ş½ÃÁö
+	_bool	m_bMessageWaitConsumed = { false };     // í˜„ì¬ ë©”ì‹œì§€
 
 public:
 	static CBattle_MsgListener* Create();

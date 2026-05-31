@@ -78,8 +78,8 @@ void CBattle_Trainer::Tick_Movement(_float fTimeDelta)
 
 void CBattle_Trainer::Play_Intro()
 {
-	// INTRO´Â loop°¡ ¾Æ´Ï¶ó ¸¶Áö¸· ÀÚ¼¼¿¡¼­ hold.
-	// THROW°¡ ½ÃÀÛµÇ±â Àü±îÁö ÀÌ ÀÚ¼¼¸¦ À¯ÁöÇÑ´Ù.
+	// INTROëŠ” loopê°€ ì•„ë‹ˆë¼ ë§ˆì§€ë§‰ ìžì„¸ì—ì„œ hold.
+	// THROWê°€ ì‹œìž‘ë˜ê¸° ì „ê¹Œì§€ ì´ ìžì„¸ë¥¼ ìœ ì§€í•œë‹¤.
 	Play_Anim_NonLoop(ANIM_KIND::INTRO, 0.f);
 }
 

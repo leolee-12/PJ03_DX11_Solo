@@ -13,7 +13,7 @@ CVIBuffer_Cell::CVIBuffer_Cell(const CVIBuffer_Cell& Prototype)
 
 HRESULT CVIBuffer_Cell::Initialize_Prototype()
 {
-	// 1. ∞Ì¿Ø µ•¿Ã≈Õ √ ±‚»≠
+	// 1. Í≥†Ïú† Îç∞Ïù¥ÌÑ∞ Ï¥àÍ∏∞Ìôî
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 3;
 	m_iVertexStride = sizeof(VTXPOS);
@@ -26,7 +26,7 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype()
 
 
 
-	// 2. VB ª˝º∫
+	// 2. VB ÏÉùÏÑ±
 	D3D11_BUFFER_DESC VertexBufferDesc{};
 	VertexBufferDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
 	VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -53,7 +53,7 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype()
 
 
 
-	// 3. IB ª˝º∫
+	// 3. IB ÏÉùÏÑ±
 	D3D11_BUFFER_DESC IndexBufferDesc{};
 	IndexBufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
 	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;

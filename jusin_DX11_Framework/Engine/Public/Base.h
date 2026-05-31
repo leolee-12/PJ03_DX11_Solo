@@ -2,7 +2,7 @@
 #include "Engine_Defines.h"
 
 /* ------------------------------------------------------------ */
-// CBase : RefCnt °ü¸® ±â´ÉÀ» ¸ğµç ÀÚ½Ä Å¬·¡½º¿¡°Ô »ó¼Ó½ÃÅ´
+// CBase : RefCnt ê´€ë¦¬ ê¸°ëŠ¥ì„ ëª¨ë“  ìì‹ í´ë˜ìŠ¤ì—ê²Œ ìƒì†ì‹œí‚´
 /* ------------------------------------------------------------ */
 
 NS_BEGIN(Engine)
@@ -15,10 +15,10 @@ protected:
 	virtual ~CBase() = default;
 	
 public:
-	/* RefCnt Áõ°¡ */
+	/* RefCnt ì¦ê°€ */
 	_uint AddRef();
 
-	/* RefCnt °¨¼Ò or °´Ã¼ »èÁ¦ */
+	/* RefCnt ê°ì†Œ or ê°ì²´ ì‚­ì œ */
 	_uint Release();
 
 protected:

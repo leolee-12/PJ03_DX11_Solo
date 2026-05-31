@@ -6,7 +6,7 @@
 
 namespace
 {
-	// ¼ÎÀÌ´õ ½Ä fPulse = 0.5 + 0.5*sin(phase) °¡ 1.0 ÀÌ µÇµµ·Ï °íÁ¤. (Selected Ç¥ÇöÀ» Á¤Àû Åä±Û·Î¸¸ »ç¿ë)
+	// ì…°ì´ë” ì‹ fPulse = 0.5 + 0.5*sin(phase) ê°€ 1.0 ì´ ë˜ë„ë¡ ê³ ì •. (Selected í‘œí˜„ì„ ì •ì  í† ê¸€ë¡œë§Œ ì‚¬ìš©)
 	constexpr _float kStaticPhase = 1.5707963f;
 	constexpr _float kGlowPulseSpeed = 6.f;
 	constexpr _float kGlowFadeSpeed = 8.f;

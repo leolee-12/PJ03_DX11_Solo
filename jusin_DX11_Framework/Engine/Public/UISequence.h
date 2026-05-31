@@ -10,7 +10,7 @@ public:
 
 	struct UISEQ_EVENT_CONTEXT
 	{
-		CUIObject* pTarget = nullptr;    // ºñ¼ÒÀ¯
+		CUIObject* pTarget = nullptr;    // ë¹„ì†Œìœ 
 		_string strSlotId{};
 		_string strTargetId{};
 		_float fSequenceTime = 0.f;
@@ -28,18 +28,18 @@ public:
 	struct UISEQ_STEP
 	{
 		UI_SEQ_STEP_KIND eKind{ UI_SEQ_STEP_KIND::WAIT };
-		class CUIObject* pTarget{ nullptr };     // ºñ¼ÒÀ¯
+		class CUIObject* pTarget{ nullptr };     // ë¹„ì†Œìœ 
 
-		_string strTargetId{};                   // ½½·Ô/µğ¹ö±×¿ë ¿øº» targetId
-		_string strSlotId{};                     // ¿ÜºÎ ½½·Ô ID
+		_string strTargetId{};                   // ìŠ¬ë¡¯/ë””ë²„ê·¸ìš© ì›ë³¸ targetId
+		_string strSlotId{};                     // ì™¸ë¶€ ìŠ¬ë¡¯ ID
 
 		_wstring strAnimName{};
 		_float fWaitSec{ 0.f };
 		_bool bVisible{ true };
 		function<void()> fnCallback{};
-		_bool bJoinPrev{ false };                // true¸é ÀÌÀü step°ú µ¿ÀÏ ÇÁ·¹ÀÓ ³» ¿¬¼â
+		_bool bJoinPrev{ false };                // trueë©´ ì´ì „ stepê³¼ ë™ì¼ í”„ë ˆì„ ë‚´ ì—°ì‡„
 
-		_bool bRequired{ false };                // ¹Ì¹ÙÀÎµù/Å¸°Ù ´©¶ô ½Ã °­ÇÑ °æ°í¿ë
+		_bool bRequired{ false };                // ë¯¸ë°”ì¸ë”©/íƒ€ê²Ÿ ëˆ„ë½ ì‹œ ê°•í•œ ê²½ê³ ìš©
 	};
 
 	struct UISEQUENCE_DESC : public CUIContainer::UICONTAINER_DESC
@@ -57,18 +57,18 @@ public:
 	virtual _string Get_TypeName() const override { return "UISequence"; }
 	CUIObject* Find_Widget(const _string& strId) const;
 
-	// -- Á¶È¸ --
+	// -- ì¡°íšŒ --
 	const vector<UISEQ_STEP>& Get_Steps() const { return m_Steps; }
 	_int   Get_Cursor() const { return m_iCursor; }
 	_float Get_Timer()  const { return m_fTimer; }
 
-	// -- ÆíÁı(Àç»ı Áß¿¡´Â ¸ğµÎ false ¹İÈ¯) --
+	// -- í¸ì§‘(ì¬ìƒ ì¤‘ì—ëŠ” ëª¨ë‘ false ë°˜í™˜) --
 	_bool  Insert_Step(_int iIndex, const UISEQ_STEP& step);
 	_bool  Remove_Step(_int iIndex);
 	_bool  Move_Step(_int iFrom, _int iTo);
 	_bool  Update_Step(_int iIndex, const UISEQ_STEP& step);
 
-	// -- ½ºÅ©·´(Play Áß¿¡¸¸ ÀÇ¹Ì) --
+	// -- ìŠ¤í¬ëŸ½(Play ì¤‘ì—ë§Œ ì˜ë¯¸) --
 	void   Seek_ToStep(_int iIndex);
 	void   Set_Timer(_float fTimer);
 
@@ -76,12 +76,12 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void    Update(_float fTimeDelta) override;
 
-	_bool Append(const UISEQ_STEP& step);	// bJoinPrev=false °­Á¦
-	_bool Join(const UISEQ_STEP& step);		// bJoinPrev=true °­Á¦
+	_bool Append(const UISEQ_STEP& step);	// bJoinPrev=false ê°•ì œ
+	_bool Join(const UISEQ_STEP& step);		// bJoinPrev=true ê°•ì œ
 	void Play();
 	void Stop();
 	_bool Is_Playing() const { return m_bPlaying; }
-	_bool Clear_Timeline();					// Play ÁßÀÌ ¾Æ´Ò ¶§¸¸ È£Ãâ
+	_bool Clear_Timeline();					// Play ì¤‘ì´ ì•„ë‹ ë•Œë§Œ í˜¸ì¶œ
 
 	void Bind_Slot(
 		const _string& strSlotId,
@@ -118,7 +118,7 @@ private:
 	_bool  m_bPlaying = { false };
 	_bool  m_bStepStarted = { false };
 
-	unordered_map<_string, class CUIObject*> m_mapById;   // weak (child°¡ owner)
+	unordered_map<_string, class CUIObject*> m_mapById;   // weak (childê°€ owner)
 	unordered_map<_string, UISEQ_SLOT_BINDING> m_SlotBindings;
 	unordered_set<_string> m_ActiveReleaseSlots;
 

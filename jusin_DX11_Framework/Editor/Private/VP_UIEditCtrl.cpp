@@ -48,7 +48,7 @@ void CVP_UIEditCtrl::Handle_UIPick()
 
 	pSess->Set_SelectedWidget(iIdx);
 
-	// drag ½ÃÀÛ »óÅÂ Ä¸Ã³
+	// drag ì‹œìž‘ ìƒíƒœ ìº¡ì²˜
 	const auto& tBase = Get_BaseDesc(pSess->Get_Doc().vWidgets[iIdx]);
 	m_bUIDragging = true;
 	m_strDragId = strHit;
@@ -74,7 +74,7 @@ void CVP_UIEditCtrl::Handle_UIDrag()
 	auto* pSess = m_pEditInstance->Get_UISession();
 	if (!pHost || !pSess) { m_bUIDragging = false; return; }
 
-	// ¸¶¿ì½º ¶¼¸é Á¾·á
+	// ë§ˆìš°ìŠ¤ ë–¼ë©´ ì¢…ë£Œ
 	if (!m_pGameInstance->Mouse_Pressing(DIMB::LBUTTON))
 	{
 		m_bUIDragging = false;
@@ -84,7 +84,7 @@ void CVP_UIEditCtrl::Handle_UIDrag()
 	const _int iIdx = pSess->Find_WidgetIndexById(m_strDragId);
 	if (iIdx < 0) { m_bUIDragging = false; return; }
 
-	// doc ÁÂÇ¥°è µ¨Å¸ °è»ê
+	// doc ì¢Œí‘œê³„ ë¸íƒ€ ê³„ì‚°
 	if (!m_pMapper) { m_bUIDragging = false; return; }
 
 	const ImVec2 vMouse = ImGui::GetMousePos();
@@ -107,7 +107,7 @@ void CVP_UIEditCtrl::Handle_UIDrag()
 		tBase.fCenterY = m_fDragStartCenterY + dy;
 	}
 
-	// runtime widget¿¡ Áï½Ã ¹Ý¿µ (rebuild È¸ÇÇ)
+	// runtime widgetì— ì¦‰ì‹œ ë°˜ì˜ (rebuild íšŒí”¼)
 	if (CUIObject* p = pHost->Find_Runtime(m_strDragId))
 	{
 		if (m_bDragWasAnchored)

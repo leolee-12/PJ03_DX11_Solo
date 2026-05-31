@@ -3,14 +3,14 @@
 
 namespace Engine
 {
-	// 1. ¹®ÀÚ¿­ ID º¯È¯
+	// 1. ë¬¸ìì—´ ID ë³€í™˜
 	typedef unsigned char	_uint8;
 	typedef unsigned int	_uint32;
 
 	using WNameID = _uint32;
 	inline constexpr WNameID INVALID_TAG = static_cast<WNameID>(-1);
 
-	// FNV-1a 32bit Hash - constexpr ¿¬»ê °¡´É, Ãæµ¹ È®·ü ³·À½
+	// FNV-1a 32bit Hash - constexpr ì—°ì‚° ê°€ëŠ¥, ì¶©ëŒ í™•ë¥  ë‚®ìŒ
 	constexpr WNameID WName(const wchar_t* wStr, size_t iLength) noexcept
 	{
 		unsigned int hash = 2166136261u;
@@ -52,7 +52,7 @@ namespace Engine
 
 
 
-	// 2. ¹®ÀÚ¿­ ÄÁÅ×ÀÌ³Ê
+	// 2. ë¬¸ìì—´ ì»¨í…Œì´ë„ˆ
 	static constexpr size_t DEFAULT_THRESHOLD = 8;
 	static constexpr size_t ALWAYS_HASHMAP = 0;
 
@@ -230,7 +230,7 @@ namespace Engine
 		void clear() { m_Map.clear(); }
 	};
 
-	// 3. ¹®ÀÚ¿­ µğ¹ö±×¿ë ¸Ş¼­µå
+	// 3. ë¬¸ìì—´ ë””ë²„ê·¸ìš© ë©”ì„œë“œ
 #ifdef _DEBUG
 
 	struct WNameRegistry
@@ -247,7 +247,7 @@ namespace Engine
 			return id;
 		}
 
-		static const wchar_t* Lookup(WNameID id)	// ¿øº» ¹®ÀÚ¿­ È®ÀÎ
+		static const wchar_t* Lookup(WNameID id)	// ì›ë³¸ ë¬¸ìì—´ í™•ì¸
 		{
 			auto it = Get().find(id);
 			return it != Get().end() ? it->second.c_str() : L"<unknown>";
@@ -262,7 +262,7 @@ namespace Engine
 		}
 	};
 
-	// ·±Å¸ÀÓ ¹®ÀÚ¿­·Î ID »ı¼º ½Ã ÀÚµ¿ µî·Ï
+	// ëŸ°íƒ€ì„ ë¬¸ìì—´ë¡œ ID ìƒì„± ì‹œ ìë™ ë“±ë¡
 	inline WNameID WNameRT(const wstring& wStr)
 	{
 		WNameID id = WName(wStr.c_str(), wStr.size());
@@ -272,7 +272,7 @@ namespace Engine
 		{
 			if (it->second != wStr)
 			{
-				// °°Àº ID¿¡ ´Ù¸¥ ¹®ÀÚ¿­ÀÌ µî·ÏµÇ¾î ÀÖÀ¸¸é ÇØ½Ã Ãæµ¹
+				// ê°™ì€ IDì— ë‹¤ë¥¸ ë¬¸ìì—´ì´ ë“±ë¡ë˜ì–´ ìˆìœ¼ë©´ í•´ì‹œ ì¶©ëŒ
 				assert(it->second == wStr && "WName hash collision detected!");
 			}
 		}
@@ -283,10 +283,10 @@ namespace Engine
 		return id;
 	}
 
-	// ·±Å¸ÀÓ »ç¿ë ¿ëµµ ~ Editor µî
+	// ëŸ°íƒ€ì„ ì‚¬ìš© ìš©ë„ ~ Editor ë“±
 #define WNAME(wStr) ::Engine::WNameRT(wStr)
 
-	// ÄÄÆÄÀÏ Å¸ÀÓ »ç¿ë ¿ëµµ ~ Tags.h
+	// ì»´íŒŒì¼ íƒ€ì„ ì‚¬ìš© ìš©ë„ ~ Tags.h
 #define WNAME_TAG(name, wStr)							\
 	inline constexpr WNameID name = WName(wStr);		\
 	inline const WNameAutoReg name##_reg_(name, wStr);
@@ -300,7 +300,7 @@ namespace Engine
 
 #endif	// _DEBUG
 
-	// 4. ¹®ÀÚ¿­ °ü·Ã ºñ¸â¹ö ÇÔ¼ö
+	// 4. ë¬¸ìì—´ ê´€ë ¨ ë¹„ë©¤ë²„ í•¨ìˆ˜
 	inline string WtoS(const wstring& wStr)
 	{
 		if (wStr.empty()) return {};

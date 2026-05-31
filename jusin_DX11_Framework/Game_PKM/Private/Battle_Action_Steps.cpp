@@ -1,4 +1,4 @@
-﻿#include "Battle_Action_Steps.h"
+#include "Battle_Action_Steps.h"
 #include "BattleMsg.h"
 #include "Battle_EventDispatcher.h"
 #include "Battle_Manager.h"

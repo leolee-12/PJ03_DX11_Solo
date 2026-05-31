@@ -101,7 +101,7 @@ PS_OUT PS_FADEBATTLE(PS_IN In)
 
 technique11 DefaultTechnique
 {
-pass Pass_Single        // 0: ´ÜÀÏ ÀÌ¹ÌÁö
+pass Pass_Single        // 0: ë‹¨ì¼ ì´ë¯¸ì§€
 		{
 				SetRasterizerState(RS_Cull_None);
 				SetDepthStencilState(DSS_Z_Disable, 0);
@@ -111,7 +111,7 @@ pass Pass_Single        // 0: ´ÜÀÏ ÀÌ¹ÌÁö
 				PixelShader = compile ps_5_0 PS_MAIN_SINGLE();
 		}
 
-		pass Pass_Mirror_V      // 1: »óÇÏ´ëÄª
+		pass Pass_Mirror_V      // 1: ìƒí•˜ëŒ€ì¹­
 		{
 				SetRasterizerState(RS_Cull_None);
 				SetDepthStencilState(DSS_Z_Disable, 0);
@@ -121,7 +121,7 @@ pass Pass_Single        // 0: ´ÜÀÏ ÀÌ¹ÌÁö
 				PixelShader = compile ps_5_0 PS_MAIN_MIRROR_V();
 		}
 
-		pass Pass_Mirror_H      // 2: ÁÂ¿ì´ëÄª
+		pass Pass_Mirror_H      // 2: ì¢Œìš°ëŒ€ì¹­
 		{
 				SetRasterizerState(RS_Cull_None);
 				SetDepthStencilState(DSS_Z_Disable, 0);
@@ -131,7 +131,7 @@ pass Pass_Single        // 0: ´ÜÀÏ ÀÌ¹ÌÁö
 				PixelShader = compile ps_5_0 PS_MAIN_MIRROR_H();
 		}
 
-		pass Pass_Mirror_Quad   // 3: 4¹æÇâ ´ëÄª
+		pass Pass_Mirror_Quad   // 3: 4ë°©í–¥ ëŒ€ì¹­
 		{
 				SetRasterizerState(RS_Cull_None);
 				SetDepthStencilState(DSS_Z_Disable, 0);

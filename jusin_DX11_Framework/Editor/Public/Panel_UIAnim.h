@@ -21,11 +21,11 @@ private:
 private:
 	void Draw_Header();
 	void Draw_PreviewBar();
-	void Draw_Animations();	// º±≈√ widget¿« animation/track ∆Ì¡˝
+	void Draw_Animations();	// ÏÑ†ÌÉù widgetÏùò animation/track Ìé∏Ïßë
 	void Draw_AnimationList(UISEQ_WIDGET_NODE& tWidget);
 	void Draw_TrackList(UISEQ_WIDGET_NODE& tWidget, UISEQ_ANIMATION_NODE& tAnim);
 	void Draw_TrackInspector(UISEQ_WIDGET_NODE& tWidget, CUITween::UITWEEN_DESC& tTrack);
-	void Draw_Timeline();	// doc-level steps ∆Ì¡˝
+	void Draw_Timeline();	// doc-level steps Ìé∏Ïßë
 	void Draw_StepInspector(UISEQ_STEP_NODE& tStep);
 
 public:

@@ -1,4 +1,4 @@
-﻿#include "Battle_AnimDef.h"
+#include "Battle_AnimDef.h"
 #include "Game_PKM_Tags.h"
 
 namespace

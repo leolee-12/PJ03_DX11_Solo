@@ -7,19 +7,19 @@ NS_BEGIN(Game_PKM)
 
 enum class CAPTURE_RESULT : _ubyte
 {
-    NONE,           // ¹Ì°áÁ¤ (RESULT ÆäÀÌÁî ÀÌÀü)
-    SUCCESS,        // Æ÷È¹ ¼º°ø
-    FAIL_BREAK,     // º¼ Å»Ãâ (È®·ü ½ÇÆÐ)
-    FAIL_RUN,       // Æ÷ÄÏ¸ó µµÁÖ (Æ¯Á¤ Á¶°Ç)
+    NONE,           // ë¯¸ê²°ì • (RESULT íŽ˜ì´ì¦ˆ ì´ì „)
+    SUCCESS,        // í¬íš ì„±ê³µ
+    FAIL_BREAK,     // ë³¼ íƒˆì¶œ (í™•ë¥  ì‹¤íŒ¨)
+    FAIL_RUN,       // í¬ì¼“ëª¬ ë„ì£¼ (íŠ¹ì • ì¡°ê±´)
     END
 };
 
 struct CAPTURE_ENV
 {
-	_uint iSpeciesID;          // Æ÷È¹ ´ë»ó ¾ß»ý Æ÷ÄÏ¸ó species ID
-	_uint iLevel;              // Æ÷È¹ ´ë»ó ·¹º§
-	_uint iInitialBallItemID;  // ½ÃÀÛ ½Ã ÀÚµ¿ ¼±ÅÃµÉ º¼ ¾ÆÀÌÅÛ ID (0 = ¹ÌÁöÁ¤ -> ÀÎº¥Åä¸® ±âº»)
-	_uint iZoneID;             // Æ÷È¹ È®·ü º¸Á¤¿ë Á¸ ID (0 = º¸Á¤ ¾øÀ½)
+	_uint iSpeciesID;          // í¬íš ëŒ€ìƒ ì•¼ìƒ í¬ì¼“ëª¬ species ID
+	_uint iLevel;              // í¬íš ëŒ€ìƒ ë ˆë²¨
+	_uint iInitialBallItemID;  // ì‹œìž‘ ì‹œ ìžë™ ì„ íƒë  ë³¼ ì•„ì´í…œ ID (0 = ë¯¸ì§€ì • -> ì¸ë²¤í† ë¦¬ ê¸°ë³¸)
+	_uint iZoneID;             // í¬íš í™•ë¥  ë³´ì •ìš© ì¡´ ID (0 = ë³´ì • ì—†ìŒ)
 };
 
 enum class CAPTURE_PHASE : _ubyte

@@ -1,4 +1,4 @@
-﻿#include "EditorApp.h"
+#include "EditorApp.h"
 #include "EditInstance.h"
 
 #include "Game_API.h"

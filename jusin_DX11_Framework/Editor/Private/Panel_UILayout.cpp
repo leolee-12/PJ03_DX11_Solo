@@ -1,4 +1,4 @@
-﻿#include "Panel_UILayout.h"
+#include "Panel_UILayout.h"
 #include "UIEditorSession.h"
 #include "EditInstance.h"
 

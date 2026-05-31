@@ -8,9 +8,9 @@ NS_BEGIN(Engine)
 
 namespace UICanvasMath
 {
-	// Design canvas -> actual viewport ¸ÅÇÎ Á¤º¸¸¦ ºôµåÇÑ´Ù.
-	// °á°ú UICANVAS_TRANSFORMÀº scaleX/scaleY/uniformScale, canvasOffsetX/Y,
-	// renderWidth/renderHeight¸¦ ´ã´Â´Ù (Engine_UI.h Á¤ÀÇ¿Í µ¿ÀÏ).
+	// Design canvas -> actual viewport ë§¤í•‘ ì •ë³´ë¥¼ ë¹Œë“œí•œë‹¤.
+	// ê²°ê³¼ UICANVAS_TRANSFORMì€ scaleX/scaleY/uniformScale, canvasOffsetX/Y,
+	// renderWidth/renderHeightë¥¼ ë‹´ëŠ”ë‹¤ (Engine_UI.h ì •ì˜ì™€ ë™ì¼).
 	ENGINE_DLL UICANVAS_TRANSFORM Build_UITransform(
 		_float fDesignWidth,
 		_float fDesignHeight,
@@ -18,13 +18,13 @@ namespace UICanvasMath
 		_float fActualHeight,
 		UI_SCALE_POLICY ePolicy);
 
-	// Design ÁÂÇ¥(¹®¼­ ±âÁØ) -> Render(actual viewport) ÁÂÇ¥
+	// Design ì¢Œí‘œ(ë¬¸ì„œ ê¸°ì¤€) -> Render(actual viewport) ì¢Œí‘œ
 	ENGINE_DLL _float2 Design_To_RenderPoint(
 		const _float2& vDesignPoint,
 		const UICANVAS_TRANSFORM& tTransform,
 		UI_SCALE_POLICY ePolicy);
 
-	// Viewport(actual viewport) ÁÂÇ¥ -> Design ÁÂÇ¥
+	// Viewport(actual viewport) ì¢Œí‘œ -> Design ì¢Œí‘œ
 	ENGINE_DLL _float2 Viewport_To_DesignPoint(
 		const _float2& vViewportPoint,
 		const UICANVAS_TRANSFORM& tTransform,

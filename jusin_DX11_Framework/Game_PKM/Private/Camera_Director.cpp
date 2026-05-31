@@ -1,4 +1,4 @@
-﻿#include "Camera_Director.h"
+#include "Camera_Director.h"
 #include "Camera_Free.h"
 #include "Camera_Sequence.h"
 #include "Battle_Manager.h"

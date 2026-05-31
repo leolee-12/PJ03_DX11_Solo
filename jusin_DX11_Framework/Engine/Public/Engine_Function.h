@@ -3,8 +3,8 @@
 
 namespace Engine
 {
-	// ÅÛÇÃ¸´Àº ±â´ÉÀÇ Á¤ÇØÁ®ÀÖÀ¸³ª ÀÚ·áÇüÀº Á¤ÇØÁ®ÀÖÁö ¾ÊÀº °Í
-	// ±â´ÉÀ» ÀÎ½ºÅÏ½ºÈ­ ÇÏ±â À§ÇÏ¿© ¸¸µé¾îµÎ´Â Æ²
+	// í…œí”Œë¦¿ì€ ê¸°ëŠ¥ì˜ ì •í•´ì ¸ìˆìœ¼ë‚˜ ìë£Œí˜•ì€ ì •í•´ì ¸ìˆì§€ ì•Šì€ ê²ƒ
+	// ê¸°ëŠ¥ì„ ì¸ìŠ¤í„´ìŠ¤í™” í•˜ê¸° ìœ„í•˜ì—¬ ë§Œë“¤ì–´ë‘ëŠ” í‹€
 
 	template<typename T>
 	void	Safe_Delete(T& Pointer)
@@ -87,9 +87,9 @@ namespace Engine
 #endif
     }
 
-	// ¿øº» ÅØ½ºÃ³ °æ·Î -> dds ÇÏÀ§ Æú´õ °æ·Î
-	// °¡µå: ÀÌ¹Ì .dds È®ÀåÀÚ¸é ±×´ë·Î ¹İÈ¯ (½ºÄ«ÀÌ¹Ú½º µî º¸È£)
-	// ¿¹: ¡¦/model_name/foo.png -> ¡¦/model_name/dds/foo.dds
+	// ì›ë³¸ í…ìŠ¤ì²˜ ê²½ë¡œ -> dds í•˜ìœ„ í´ë” ê²½ë¡œ
+	// ê°€ë“œ: ì´ë¯¸ .dds í™•ì¥ìë©´ ê·¸ëŒ€ë¡œ ë°˜í™˜ (ìŠ¤ì¹´ì´ë°•ìŠ¤ ë“± ë³´í˜¸)
+	// ì˜ˆ: â€¦/model_name/foo.png -> â€¦/model_name/dds/foo.dds
 	inline wstring Convert_PathToDDS(const wstring& origPath)
 	{
 		namespace fs = std::filesystem;

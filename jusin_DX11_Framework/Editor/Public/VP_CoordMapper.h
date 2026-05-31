@@ -13,14 +13,14 @@ private:
 public:
     HRESULT Initialize();
 
-    // ¸Å ÇÁ·¹ÀÓ °»½Å (panelÀÌ letterbox °áÁ¤ Á÷ÈÄ È£Ãâ)
+    // ë§¤ í”„ë ˆì„ ê°±ì‹  (panelì´ letterbox ê²°ì • ì§í›„ í˜¸ì¶œ)
     void Update(const ImVec2& vDisplayPos,
         const ImVec2& vDisplaySize,
         const ImVec2& vRTSize,
         const ImVec2& vDocSize,
         UI_SCALE_POLICY ePolicy);
 
-    // ÁÂÇ¥ º¯È¯
+    // ì¢Œí‘œ ë³€í™˜
     ImVec2 ScreenToDoc(const ImVec2& vScreen) const;
     void   DocRectToScreen(const _float4& rcDoc, ImVec2* pOutMin, ImVec2* pOutMax) const;
 

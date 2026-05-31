@@ -1,4 +1,4 @@
-﻿#include "UIController.h"
+#include "UIController.h"
 #include "GameInstance.h"
 #include "UISequence.h"
 

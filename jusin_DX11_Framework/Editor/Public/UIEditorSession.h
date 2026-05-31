@@ -20,7 +20,7 @@ private:
 public:
 	// document accessors
 	const UISEQ_DOC& Get_Doc() const { return m_Doc; }
-	UISEQ_DOC& Get_DocMutable() { return m_Doc; }   // ÆĞ³ÎÀÌ Á÷Á¢ ÆíÁıÇÒ ¶§
+	UISEQ_DOC& Get_DocMutable() { return m_Doc; }   // íŒ¨ë„ì´ ì§ì ‘ í¸ì§‘í•  ë•Œ
 	const _string& Get_DocPath() const { return m_strDocPath; }
 	const _string& Get_Status()  const { return m_strStatus; }
 	void  Set_DocPath(const _string& s) { m_strDocPath = s; }
@@ -54,13 +54,13 @@ public:
 	void Duplicate_Widget(_int iWidgetIndex);
 	void Erase_Widget(_int iWidgetIndex);
 	void Mark_Dirty(const char* pszReason);
-	void Mark_Dirty_Property(const char* pszReason);	// Dirty¸¸, rebuild È¸ÇÇ
+	void Mark_Dirty_Property(const char* pszReason);	// Dirtyë§Œ, rebuild íšŒí”¼
 	const UISEQ_WIDGET_NODE* Find_WidgetById(const _string& strId) const;
 	_bool Apply_StepTargetFallback(UISEQ_STEP_NODE& tStep) const;
 
-	HRESULT Save(const _string& strPath);   // EditInstance::Save_UISequence È£Ãâ
-	HRESULT Load(const _string& strPath);   // È£Ãâ ÈÄ Sanitize + Normalize
-	HRESULT New_Doc();                      // Reset_Doc ·¡ÆÛ
+	HRESULT Save(const _string& strPath);   // EditInstance::Save_UISequence í˜¸ì¶œ
+	HRESULT Load(const _string& strPath);   // í˜¸ì¶œ í›„ Sanitize + Normalize
+	HRESULT New_Doc();                      // Reset_Doc ë˜í¼
 
 private:
 	ID3D11Device* m_pDevice = { nullptr };

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Battle_EventListenerBase.h"
 
 NS_BEGIN(Game_PKM)

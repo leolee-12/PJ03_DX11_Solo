@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actor.h"
 #include "Game_PKM_Defines.h"
 #include "Battle_Session.h"

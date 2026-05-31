@@ -1,6 +1,6 @@
 #include "Engine_Shader_Defines.hlsli"
 
-float4x4 g_WorldMatrix;   // identity (ribbonÀº ÀÌ¹Ì world space)
+float4x4 g_WorldMatrix;   // identity (ribbonì€ ì´ë¯¸ world space)
 float4x4 g_ViewMatrix;
 float4x4 g_ProjMatrix;
 texture2D g_Texture;

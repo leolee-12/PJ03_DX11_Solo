@@ -1,4 +1,4 @@
-﻿#include "Effect_Mesh.h"
+#include "Effect_Mesh.h"
 
 #include "GameInstance.h"
 

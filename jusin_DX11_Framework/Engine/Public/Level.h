@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.h"
 
-/* Å¬¶óÀÌ¾ğÆ® °³¹ßÀÚ°¡ Á¦ÀÛÇÒ ¸ğµç ·¹º§Å¬·¡½ºÀÇ ºÎ¸ğ°¡ µÇ´Â Å¬·¡½º */
+/* í´ë¼ì´ì–¸íŠ¸ ê°œë°œìê°€ ì œì‘í•  ëª¨ë“  ë ˆë²¨í´ë˜ìŠ¤ì˜ ë¶€ëª¨ê°€ ë˜ëŠ” í´ë˜ìŠ¤ */
 
 NS_BEGIN(Engine)
 
@@ -16,8 +16,8 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	virtual void OnPause() {};	// º» ·¹º§ÀÌ ½ºÅÃ »ó¿¡¼­ paused »óÅÂ·Î ÁøÀÔÇÒ ¶§ È£Ãâ(À§¿¡ »õ ·¹º§ÀÌ push)
-	virtual void OnResume() {};	// º» ·¹º§ÀÌ ½ºÅÃ »ó¿¡¼­ ´Ù½Ã topÀÌ µÉ ¶§ È£Ãâ (À§ÀÇ ·¹º§ÀÌ pop)
+	virtual void OnPause() {};	// ë³¸ ë ˆë²¨ì´ ìŠ¤íƒ ìƒì—ì„œ paused ìƒíƒœë¡œ ì§„ì…í•  ë•Œ í˜¸ì¶œ(ìœ„ì— ìƒˆ ë ˆë²¨ì´ push)
+	virtual void OnResume() {};	// ë³¸ ë ˆë²¨ì´ ìŠ¤íƒ ìƒì—ì„œ ë‹¤ì‹œ topì´ ë  ë•Œ í˜¸ì¶œ (ìœ„ì˜ ë ˆë²¨ì´ pop)
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };

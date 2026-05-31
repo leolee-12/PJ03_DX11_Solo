@@ -1,4 +1,5 @@
-﻿#include "Shader.h"
+#include "Shader.h"
+#include "Profiler_Manager.h"
 
 namespace
 {
@@ -270,6 +271,8 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::SHADER_BEGIN, 1);
+
 
 	return S_OK;
 }
@@ -310,6 +313,7 @@ HRESULT CShader::Bind_SRV(const _char* pConstName, ID3D11ShaderResourceView* pSR
 	if (!pSRVariable->IsValid())
 		return E_FAIL;
 
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::TEXTURE_BIND, 1);
 	return pSRVariable->SetResource(pSRV);
 }
 
@@ -323,6 +327,7 @@ HRESULT CShader::Bind_SRVs(const _char* pConstName, ID3D11ShaderResourceView** p
 	if (!pSRVariable->IsValid())
 		return E_FAIL;
 
+	PROFILE_COUNTER_ADD(EPROFILE_COUNTER::TEXTURE_BIND, 1);
 	return pSRVariable->SetResourceArray(ppSRVArray, 0, iNumSRVs);
 }
 

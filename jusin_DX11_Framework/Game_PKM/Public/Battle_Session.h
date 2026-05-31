@@ -24,14 +24,14 @@ namespace VolatileFlag
 {
 	enum : _uint
 	{
-		CONFUSION = 1u << 0,		// È¥¶õ
-		LEECH_SEED = 1u << 1,		// ¾¾»Ñ¸®±â
-		ENCORE = 1u << 2,			// ¾ÞÄÝ
-		TAUNT = 1u << 3,			// µµ¹ß
-		DISABLE = 1u << 4,			// »ç½½¹­±â
-		FLINCH = 1u << 5,			// Ç®Á×À½
-		SUBSTITUTE = 1u << 6,		// ´ëÅ¸Ãâµ¿
-		FOCUS_ENERGY = 1u << 7,		// ±âÃæÀü
+		CONFUSION = 1u << 0,		// í˜¼ëž€
+		LEECH_SEED = 1u << 1,		// ì”¨ë¿Œë¦¬ê¸°
+		ENCORE = 1u << 2,			// ì•µì½œ
+		TAUNT = 1u << 3,			// ë„ë°œ
+		DISABLE = 1u << 4,			// ì‚¬ìŠ¬ë¬¶ê¸°
+		FLINCH = 1u << 5,			// í’€ì£½ìŒ
+		SUBSTITUTE = 1u << 6,		// ëŒ€íƒ€ì¶œë™
+		FOCUS_ENERGY = 1u << 7,		// ê¸°ì¶©ì „
 	};
 
 	inline constexpr _uint VOLATILE_TURN_SLOT_COUNT = 8;

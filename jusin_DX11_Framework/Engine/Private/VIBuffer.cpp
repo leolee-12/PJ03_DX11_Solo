@@ -1,4 +1,5 @@
 #include "VIBuffer.h"
+#include "Profiler_Manager.h"
 
 CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -50,7 +51,7 @@ HRESULT CVIBuffer::Bind_Resources()
 	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
 	m_pContext->IASetPrimitiveTopology(m_ePrimitiveType);
 
-	//m_pContext->IASetInputLayout(m_pInputLayout); //m_pDevice->CreateInputLayout(); ÇÊ¿ä
+	//m_pContext->IASetInputLayout(m_pInputLayout); //m_pDevice->CreateInputLayout(); í•„ìš”
 
 	return S_OK;
 }
@@ -58,6 +59,8 @@ HRESULT CVIBuffer::Bind_Resources()
 HRESULT CVIBuffer::Render()
 {
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
+
+	PROFILE_DRAW_INDEXED(m_iNumIndices, m_ePrimitiveType);
 
 	return S_OK;
 }

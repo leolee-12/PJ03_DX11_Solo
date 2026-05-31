@@ -44,7 +44,7 @@ _bool CUIAnimator::Rename_Animation(const _wstring& strOld, const _wstring& strN
 
 void CUIAnimator::Clear_Animations()
 {
-	// È°¼º TweenÀº °ª º¹»çº»À» Áã°í ÀÖÀ¸¹Ç·Î ¾ÈÀü. ´Ü ÀÌ¸§ ¼Ò½º´Â ºñ°Ô µÊ.
+	// í™œì„± Tweenì€ ê°’ ë³µì‚¬ë³¸ì„ ì¥ê³  ìˆìœ¼ë¯€ë¡œ ì•ˆì „. ë‹¨ ì´ë¦„ ì†ŒìŠ¤ëŠ” ë¹„ê²Œ ë¨.
 	m_NamedAnimations.clear();
 }
 
@@ -135,7 +135,7 @@ void CUIAnimator::Play_Animation(const _wstring& strName)
 	auto iter = m_NamedAnimations.find(strName);
 	if (iter == m_NamedAnimations.end()) return;
 
-	// µ¿ÀÏ source ÀÇ active tween ÀÚµ¿ Á¤Áö (Áßº¹ Àç»ı ½Ã ÁßÃ¸ ¹æÁö)
+	// ë™ì¼ source ì˜ active tween ìë™ ì •ì§€ (ì¤‘ë³µ ì¬ìƒ ì‹œ ì¤‘ì²© ë°©ì§€)
 	if (Is_Animation_Active(strName))
 		Stop_Animation(strName);
 
@@ -167,7 +167,7 @@ _int CUIAnimator::Activate_Tween(const CUITween::UITWEEN_DESC& tDesc, const _wst
 	ACTIVE_TWEEN entry{};
 	entry.iHandle = m_iNextHandle++;
 	entry.strSource = strName;
-	entry.pTween = pTween;  // Create ¹İÈ¯ ½Ã refcount=1, Ãß°¡ AddRef ºÒÇÊ¿ä
+	entry.pTween = pTween;  // Create ë°˜í™˜ ì‹œ refcount=1, ì¶”ê°€ AddRef ë¶ˆí•„ìš”
 	m_ActiveTweens.push_back(entry);
 
 	return entry.iHandle;

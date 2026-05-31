@@ -8,7 +8,7 @@ class CInteraction_BallHit final : public CInteraction
 public:
     struct INTERACTION_BALLHIT_DESC
     {
-        _uint iBallItemID = { 0 };   // ¿¹: ¸ó½ºÅÍº¼ / ½´ÆÛº¼ / ¸¶½ºÅÍº¼ ½Äº°
+        _uint iBallItemID = { 0 };   // ì˜ˆ: ëª¬ìŠ¤í„°ë³¼ / ìŠˆí¼ë³¼ / ë§ˆìŠ¤í„°ë³¼ ì‹ë³„
     };
 
 private:

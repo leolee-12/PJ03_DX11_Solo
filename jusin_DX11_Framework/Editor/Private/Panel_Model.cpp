@@ -25,7 +25,7 @@ HRESULT CPanel_Model::Render()
 {
     if (!Begin_Panel()) { End_Panel(); return S_OK; }
 
-	/* -- 1. FBX ÆÄÀÏ ¼±ÅÃ ------------------------- */
+	/* -- 1. FBX íŒŒì¼ ì„ íƒ ------------------------- */
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 36.f);
 	ImGui::InputText("##fbx_path", m_szFbxPath, MAX_PATH, ImGuiInputTextFlags_ReadOnly);
 	ImGui::SameLine(0.f, 4.f);
@@ -34,7 +34,7 @@ HRESULT CPanel_Model::Render()
 		Open_FileDialog(m_szFbxPath, MAX_PATH, "FBX Files\0*.fbx\0All Files\0*.*\0");
 	}
 
-	// FBX °æ·Î°¡ ¹Ù²î¾úÀ¸¸é ³ª¸ÓÁö °æ·Î ÀÚµ¿ °»½Å
+	// FBX ê²½ë¡œê°€ ë°”ë€Œì—ˆìœ¼ë©´ ë‚˜ë¨¸ì§€ ê²½ë¡œ ìë™ ê°±ì‹ 
 	if (strcmp(m_szFbxPath, m_szPrevFbxPath) != 0 && m_szFbxPath[0] != '\0')
 	{
 		namespace fs = std::filesystem;
@@ -51,7 +51,7 @@ HRESULT CPanel_Model::Render()
 		strcpy_s(m_szPrevFbxPath, m_szFbxPath);
 	}
 
-	/* -- 2. ¸ğµ¨ Å¸ÀÔ ¼±ÅÃ ------------------------ */
+	/* -- 2. ëª¨ë¸ íƒ€ì… ì„ íƒ ------------------------ */
 	_int iType = ETOI(m_eType);
 	ImGui::Text("Type :");
 	ImGui::SameLine();
@@ -60,12 +60,12 @@ HRESULT CPanel_Model::Render()
 	ImGui::RadioButton("ANIM", &iType, ETOI(MODEL::ANIM));
 	m_eType = static_cast<MODEL>(iType);
 
-	/* -- 3. PreTransform ÆÄ¶ó¹ÌÅÍ ----------------- */
+	/* -- 3. PreTransform íŒŒë¼ë¯¸í„° ----------------- */
 	ImGui::InputFloat("Scale", &m_fScale, 0.001f, 0.01f, "%.4f");
 	ImGui::InputFloat("Rotation X", &m_fRotationX, 1.f, 10.f, "%.1f deg");
 	ImGui::InputFloat("Rotation Y", &m_fRotationY, 1.f, 10.f, "%.1f deg");
 	ImGui::InputFloat("Rotation Z", &m_fRotationZ, 1.f, 10.f, "%.1f deg");
-	/* -- 4. Load ¹öÆ° ----------------------------- */
+	/* -- 4. Load ë²„íŠ¼ ----------------------------- */
 	ImGui::BeginDisabled(m_szFbxPath[0] == '\0');
 	if (ImGui::Button("[Load FBX]"))
 	{
@@ -97,7 +97,7 @@ HRESULT CPanel_Model::Render()
 
 	ImGui::Spacing();
 
-	/* -- 6. º» ¸ñ·Ï (½ºÅ©·Ñ) ---------------------- */
+	/* -- 6. ë³¸ ëª©ë¡ (ìŠ¤í¬ë¡¤) ---------------------- */
 	ImGui::Text("Bone List");
 	if (ImGui::BeginChild("##Bone List", ImVec2(0, 160), ImGuiChildFlags_Borders))
 	{
@@ -112,10 +112,10 @@ HRESULT CPanel_Model::Render()
 
 	ImGui::EndChild();
 
-	/* -- 7. ¸ÓÅ×¸®¾ó ¼öÁ¤ -------------------------------- */
+	/* -- 7. ë¨¸í…Œë¦¬ì–¼ ìˆ˜ì • -------------------------------- */
 	ImGui::SeparatorText("Material Mapping");
 
-	// ÅØ½ºÃ³ µğ·ºÅä¸®
+	// í…ìŠ¤ì²˜ ë””ë ‰í† ë¦¬
 	ImGui::Text("Tex Dir");
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 36.f);
 	ImGui::InputText("##tex_dir", m_szTexDir, MAX_PATH, ImGuiInputTextFlags_ReadOnly);
@@ -123,7 +123,7 @@ HRESULT CPanel_Model::Render()
 	if (ImGui::Button("...##tex"))
 		Open_FolderDialog(m_szTexDir, MAX_PATH);
 
-	// Mapping JSON °æ·Î
+	// Mapping JSON ê²½ë¡œ
 	ImGui::Text("Mapping JSON");
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 	ImGui::InputText("##mapping_json", m_szMappingJsonPath, MAX_PATH);
@@ -131,7 +131,7 @@ HRESULT CPanel_Model::Render()
 	if (ImGui::Button("...##json"))
 		Open_FileDialog(m_szMappingJsonPath, MAX_PATH, "JSON Files\0*.json\0All Files\0*.*\0");
 
-	// Generate ¹öÆ°
+	// Generate ë²„íŠ¼
 	ImGui::BeginDisabled(!m_pEditInstance->Is_ModelLoaded()
 		|| m_szTexDir[0] == '\0'
 		|| m_szMappingJsonPath[0] == '\0');
@@ -144,7 +144,7 @@ HRESULT CPanel_Model::Render()
 		if (fs::exists(m_szMappingJsonPath))
 		{
 			int result = MessageBox(NULL,
-				L"ÀÌ¹Ì Mapping JSONÀÌ Á¸ÀçÇÕ´Ï´Ù.\nµ¤¾î¾²½Ã°Ú½À´Ï±î?",
+				L"ì´ë¯¸ Mapping JSONì´ ì¡´ì¬í•©ë‹ˆë‹¤.\në®ì–´ì“°ì‹œê² ìŠµë‹ˆê¹Œ?",
 				L"Warning", MB_YESNO | MB_ICONWARNING | MB_SETFOREGROUND);
 			bProceed = (result == IDYES);
 		}

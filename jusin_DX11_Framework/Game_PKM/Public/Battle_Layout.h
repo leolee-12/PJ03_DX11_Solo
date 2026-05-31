@@ -7,10 +7,10 @@ NS_BEGIN(Game_PKM)
 
 /*
  * Battle_Layout
- * - ÇÑ ÆÇ ¹èÆ²ÀÇ Ç¥Çö °èÃþ ÁÂÇ¥(Æ®·¹ÀÌ³Ê/Æ÷ÄÏ¸ó ¹èÄ¡ À§Ä¡, Yaw)¸¦ ·ê/»çÀÌµå/½½·Ô ÀÎµ¦½º·Î Á¶È¸ÇÏ´Â ÇÔ¼ö ¸ðÀ½.
- * - µµ¸ÞÀÎ »óÅÂ(Battle_Session.h)¿Í Ç¥Çö ÁÂÇ¥¸¦ ºÐ¸®ÇÏ±â À§ÇØ º°µµ Çì´õ·Î µÐ´Ù.
- * - ÇöÀç´Â ½Ì±Û ·ê 4Á¾(WILD_SINGLE, TRAINER_SINGLE, CUTSCENE, TUTORIAL) ÁÂÇ¥¸¸ Á¤ÀÇ.
- *   ´õºí/Æ®¸®ÇÃ/·¹ÀÌµå Ãß°¡ ½Ã º» Çì´õ ³»ºÎ ºÐ±â¸¸ È®Àå.
+ * - í•œ íŒ ë°°í‹€ì˜ í‘œí˜„ ê³„ì¸µ ì¢Œí‘œ(íŠ¸ë ˆì´ë„ˆ/í¬ì¼“ëª¬ ë°°ì¹˜ ìœ„ì¹˜, Yaw)ë¥¼ ë£°/ì‚¬ì´ë“œ/ìŠ¬ë¡¯ ì¸ë±ìŠ¤ë¡œ ì¡°íšŒí•˜ëŠ” í•¨ìˆ˜ ëª¨ìŒ.
+ * - ë„ë©”ì¸ ìƒíƒœ(Battle_Session.h)ì™€ í‘œí˜„ ì¢Œí‘œë¥¼ ë¶„ë¦¬í•˜ê¸° ìœ„í•´ ë³„ë„ í—¤ë”ë¡œ ë‘”ë‹¤.
+ * - í˜„ìž¬ëŠ” ì‹±ê¸€ ë£° 4ì¢…(WILD_SINGLE, TRAINER_SINGLE, CUTSCENE, TUTORIAL) ì¢Œí‘œë§Œ ì •ì˜.
+ *   ë”ë¸”/íŠ¸ë¦¬í”Œ/ë ˆì´ë“œ ì¶”ê°€ ì‹œ ë³¸ í—¤ë” ë‚´ë¶€ ë¶„ê¸°ë§Œ í™•ìž¥.
  */
 
 namespace BattleLayout
@@ -54,7 +54,7 @@ namespace BattleLayout
 			return vSingleTrainerPos[iSafeSide];
 
 		case BATTLE_RULE::TRAINER_DOUBLE:
-			/* TODO: ´õºí ¹èÆ² ½½·Ô À§Ä¡ Ãß°¡ ½Ã iSlotIndex ºÐ±â */
+			/* TODO: ë”ë¸” ë°°í‹€ ìŠ¬ë¡¯ ìœ„ì¹˜ ì¶”ê°€ ì‹œ iSlotIndex ë¶„ê¸° */
 			return vSingleTrainerPos[iSafeSide];
 
 		default:
@@ -77,7 +77,7 @@ namespace BattleLayout
 			return vSinglePokemonPos[iSafeSide];
 
 		case BATTLE_RULE::TRAINER_DOUBLE:
-			/* TODO: ´õºí ¹èÆ² ½½·Ô À§Ä¡ Ãß°¡ ½Ã iSlotIndex ºÐ±â */
+			/* TODO: ë”ë¸” ë°°í‹€ ìŠ¬ë¡¯ ìœ„ì¹˜ ì¶”ê°€ ì‹œ iSlotIndex ë¶„ê¸° */
 			return vSinglePokemonPos[iSafeSide];
 
 		default:

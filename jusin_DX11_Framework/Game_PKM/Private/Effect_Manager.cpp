@@ -1,4 +1,4 @@
-﻿#include "Effect_Manager.h"
+#include "Effect_Manager.h"
 #include "Effect.h"
 #include "GameInstance.h"
 

@@ -4,7 +4,7 @@ float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_WITMatrix;
 float g_fFarZ;
 
-// ÀçÁú
+// ìž¬ì§ˆ
 texture2D g_TexDiff;
 texture2D g_TexDiff2;
 texture2D g_TexDiff3;

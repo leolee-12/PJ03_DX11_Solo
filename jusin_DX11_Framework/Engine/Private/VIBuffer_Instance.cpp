@@ -1,4 +1,5 @@
 #include "VIBuffer_Instance.h"
+#include "Profiler_Manager.h"
 
 CVIBuffer_Instance::CVIBuffer_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
@@ -60,6 +61,8 @@ HRESULT CVIBuffer_Instance::Render()
 		return S_OK;
 
 	m_pContext->DrawIndexedInstanced(m_iIndexCountPerInstance, m_iNumInstances, 0, 0, 0);
+
+	PROFILE_DRAW_INDEXED_INSTANCED(m_iIndexCountPerInstance, m_iNumInstances, m_ePrimitiveType);
 
 	return S_OK;
 }

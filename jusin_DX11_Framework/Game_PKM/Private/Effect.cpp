@@ -1,4 +1,4 @@
-﻿#include "Effect.h"
+#include "Effect.h"
 #include "ParticleEmitter.h"
 #include "Effect_Mesh.h"
 #include "Body.h"

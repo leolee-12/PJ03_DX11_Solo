@@ -6,28 +6,28 @@
 
 NS_BEGIN(Game_PKM)
 
-inline constexpr _uint INVALID_REGION_ID = 0;   // 0 = ¹ÌÁöÁ¤
+inline constexpr _uint INVALID_REGION_ID = 0;   // 0 = ë¯¸ì§€ì •
 
 struct REGION_RECT_DESC
 {
 	_uint   iRegionID = { INVALID_REGION_ID };
 
-	_tchar  szRegionName[64] = {};               // ¹è³Ê Ç¥½Ã¿ë ÀÌ¸§
-	_tchar  szBGM[128] = {};                     // Play_BGM Å° (¿¹: L"BGM/1-04. Pallet Town Theme.mp3")
-		_float  fBGMVolume = { 0.3f };               // ±âÁ¸ Play_BGM È£Ãâ°ú µ¿ÀÏ ±âº»°ª
+	_tchar  szRegionName[64] = {};               // ë°°ë„ˆ í‘œì‹œìš© ì´ë¦„
+	_tchar  szBGM[128] = {};                     // Play_BGM í‚¤ (ì˜ˆ: L"BGM/1-04. Pallet Town Theme.mp3")
+		_float  fBGMVolume = { 0.3f };               // ê¸°ì¡´ Play_BGM í˜¸ì¶œê³¼ ë™ì¼ ê¸°ë³¸ê°’
 
-	_float3 vCenter = {};                        // ¿ùµå ÁÂÇ¥ (XZ »ç¿ë)
-	_float2 vSize = { 1.f, 1.f };                // °¡·Î(X)/¼¼·Î(Z) ÀüÃ¼ Å©±â
-	_float  fRotationY = { 0.f };                // ¶óµğ¾È
+	_float3 vCenter = {};                        // ì›”ë“œ ì¢Œí‘œ (XZ ì‚¬ìš©)
+	_float2 vSize = { 1.f, 1.f };                // ê°€ë¡œ(X)/ì„¸ë¡œ(Z) ì „ì²´ í¬ê¸°
+	_float  fRotationY = { 0.f };                // ë¼ë””ì•ˆ
 
-	_uint   iPriority = { 0 };                   // »ç°¢Çü °ãÄ§ ½Ã ³ôÀº °ª ¿ì¼±
+	_uint   iPriority = { 0 };                   // ì‚¬ê°í˜• ê²¹ì¹¨ ì‹œ ë†’ì€ ê°’ ìš°ì„ 
 };
 
 static_assert(std::is_trivially_copyable_v<REGION_RECT_DESC>,
 	"REGION_RECT_DESC must remain trivially copyable for future file serialization.");
 
-// ¿ùµå ÁÂÇ¥°¡ Áö¿ª »ç°¢Çü(XZ, fRotationY È¸Àü) ¾È¿¡ ÀÖ´ÂÁö °Ë»ç.
-// SpawnMath::Is_PointInsideRectXZ ¿Í µ¿ÀÏÇÑ ¼ö½ÄÀÌ³ª, SPAWN_RECT_DESC ÀÇÁ¸À» ÇÇÇÏ·Á º°µµ Á¤ÀÇ.
+// ì›”ë“œ ì¢Œí‘œê°€ ì§€ì—­ ì‚¬ê°í˜•(XZ, fRotationY íšŒì „) ì•ˆì— ìˆëŠ”ì§€ ê²€ì‚¬.
+// SpawnMath::Is_PointInsideRectXZ ì™€ ë™ì¼í•œ ìˆ˜ì‹ì´ë‚˜, SPAWN_RECT_DESC ì˜ì¡´ì„ í”¼í•˜ë ¤ ë³„ë„ ì •ì˜.
 inline _bool Is_PointInsideRegionXZ(const _float3& vWorldPos, const REGION_RECT_DESC& tDesc)
 {
 	const _vector vDelta = XMLoadFloat3(&vWorldPos) - XMLoadFloat3(&tDesc.vCenter);

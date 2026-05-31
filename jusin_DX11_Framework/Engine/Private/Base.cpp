@@ -19,19 +19,19 @@ _uint CBase::Release()
 	_uint iCur = m_iRefCnt.load(std::memory_order_acquire);
 	while (0 != iCur)
 	{
-		//iCur != 0 ÀÌ¸é -1 ½Ãµµ
-		// - ¼º°ø : °¨»ê Àü °ª ¹İÈ¯
-		// - ½ÇÆĞ : iCur¿¡ ½ÇÁ¦ °ªÀÌ ´Ù½Ã Ã¤¿öÁö°í Àç°Ë»ç
+		//iCur != 0 ì´ë©´ -1 ì‹œë„
+		// - ì„±ê³µ : ê°ì‚° ì „ ê°’ ë°˜í™˜
+		// - ì‹¤íŒ¨ : iCurì— ì‹¤ì œ ê°’ì´ ë‹¤ì‹œ ì±„ì›Œì§€ê³  ì¬ê²€ì‚¬
 		if (m_iRefCnt.compare_exchange_weak(
 			iCur, iCur - 1,
-			std::memory_order_acq_rel,   // ¼º°ø ½Ã: °¨»ê °á°ú¸¦ ´Ù¸¥ ½º·¹µå°¡ º¸µµ·Ï
-			std::memory_order_acquire))  // ½ÇÆĞ ½Ã: ÃÖ½Å curÀ» ÀĞ¾î¿À´Â ¿ëµµ
+			std::memory_order_acq_rel,   // ì„±ê³µ ì‹œ: ê°ì‚° ê²°ê³¼ë¥¼ ë‹¤ë¥¸ ìŠ¤ë ˆë“œê°€ ë³´ë„ë¡
+			std::memory_order_acquire))  // ì‹¤íŒ¨ ì‹œ: ìµœì‹  curì„ ì½ì–´ì˜¤ëŠ” ìš©ë„
 		{
 			return iCur;
 		}
 	}
 
-	// iCur == 0ÀÌ È®Á¤µÈ »óÅÂ : »èÁ¦
+	// iCur == 0ì´ í™•ì •ëœ ìƒíƒœ : ì‚­ì œ
 	Free();
 	delete this;
 	return 0;

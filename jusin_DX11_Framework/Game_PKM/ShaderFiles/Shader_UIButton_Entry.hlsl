@@ -2,10 +2,10 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D g_TexMask;   // ÇüÅÂ ¸¶½ºÅ© (Entry_Plate BASE)
-texture2D g_TexLine;   // Å×µÎ¸® (Entry_Plate LINE)
+texture2D g_TexMask;   // í˜•íƒœ ë§ˆìŠ¤í¬ (Entry_Plate BASE)
+texture2D g_TexLine;   // í…Œë‘ë¦¬ (Entry_Plate LINE)
 texture2D g_TexGlow;   // Selected glow (Entry_Plate GLOW)
-texture2D g_TexDiff;   // »ö»ó Diffuse (Entry_BG_Plate)
+texture2D g_TexDiff;   // ìƒ‰ìƒ Diffuse (Entry_BG_Plate)
 
 float4 g_vColDiff = float4(1.f, 1.f, 1.f, 1.f);
 float4 g_vColLine = float4(1.f, 1.f, 1.f, 1.f);
@@ -71,13 +71,13 @@ PS_OUT PS_MAIN(PS_IN In)
 	float  fLineA = g_TexLine.Sample(ClampSampler, maskUV).a;
 	float3 vDiff = g_TexDiff.Sample(ClampSampler, In.vTex).rgb;
 
-	// b = Èò»ö ¸¶½ºÅ©, g = ¿¬µÎ ¸¶½ºÅ© (ÅØ½ºÃ³¸¦ »öÀÌ ¾Æ´Ñ °¡ÁßÄ¡·Î »ç¿ë)
-	float wWhite = vDiff.b * 2.f;   // Èò»ö °¡Áß (>1 ¡æ ¿¬µÎº¸´Ù Èò»ö ¿ì¼¼)
+	// b = í°ìƒ‰ ë§ˆìŠ¤í¬, g = ì—°ë‘ ë§ˆìŠ¤í¬ (í…ìŠ¤ì²˜ë¥¼ ìƒ‰ì´ ì•„ë‹Œ ê°€ì¤‘ì¹˜ë¡œ ì‚¬ìš©)
+	float wWhite = vDiff.b * 2.f;   // í°ìƒ‰ ê°€ì¤‘ (>1 â†’ ì—°ë‘ë³´ë‹¤ í°ìƒ‰ ìš°ì„¸)
 	float wGreen = vDiff.g;
 	float t = wWhite / max(wWhite + wGreen, 1e-4f);
 	vDiff = lerp(float3(0.45f, 1.0f, 0.40f), float3(1.f, 1.f, 1.f), t);
 
-	// ¸¶½ºÅ©(BASE) ¿µ¿ª¿£ Diffuse »ö, Line ¿µ¿ª¿£ g_vColLine
+	// ë§ˆìŠ¤í¬(BASE) ì˜ì—­ì—” Diffuse ìƒ‰, Line ì˜ì—­ì—” g_vColLine
 	float3 cMix = lerp(vDiff * g_vColDiff.rgb, g_vColLine.rgb, fLineA);
 	float  aMix = max(fMaskA, fLineA);
 

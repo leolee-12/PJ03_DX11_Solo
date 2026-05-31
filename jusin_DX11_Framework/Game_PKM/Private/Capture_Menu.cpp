@@ -1,4 +1,4 @@
-﻿#include "Capture_Menu.h"
+#include "Capture_Menu.h"
 #include "UIButton_Group.h"
 #include "Actor_CaptureTarget.h"
 #include "PokemonData_Manager.h"

@@ -1,4 +1,4 @@
-﻿#include "Player_LGPE.h"
+#include "Player_LGPE.h"
 #include "Body_Hero.h"
 #include "Actor.h"
 #include "Interaction.h"

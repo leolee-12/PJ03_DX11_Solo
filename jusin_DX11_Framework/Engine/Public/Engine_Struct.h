@@ -86,7 +86,7 @@ namespace Engine
 		}
 	};
 
-	// ¹öÅØ½º ±¸Á¶Ã¼
+	// ë²„í…ìŠ¤ êµ¬ì¡°ì²´
 	struct VTXPOS
 	{
 		XMFLOAT3 vPosition;
@@ -227,12 +227,12 @@ namespace Engine
 
 
 
-	// ¹ÙÀÌ³Ê¸® ¸ğµ¨ °ü·Ã
+	// ë°”ì´ë„ˆë¦¬ ëª¨ë¸ ê´€ë ¨
 	struct WMODEL_HEADER
 	{
 		char szMagic[4];			// "WMDL"
-		uint32_t iVersion;       // Æ÷¸Ë ¹öÀü
-		uint32_t iModelType;     // MODEL enum °ª
+		uint32_t iVersion;       // í¬ë§· ë²„ì „
+		uint32_t iModelType;     // MODEL enum ê°’
 		uint32_t iNumMeshes;
 		uint32_t iNumMaterials;
 		uint32_t iNumBones;
@@ -250,11 +250,11 @@ namespace Engine
 	{
 		char szName[MAX_PATH];
 		uint32_t iMaterialIndex;
-		vector<VTXMESH> nonAnimVertices;		// NONANIM Àü¿ë
-		vector<VTXANIMMESH> animVertices;		// ANIM Àü¿ë
+		vector<VTXMESH> nonAnimVertices;		// NONANIM ì „ìš©
+		vector<VTXANIMMESH> animVertices;		// ANIM ì „ìš©
 		vector<uint32_t> indices;
-		vector<uint32_t> boneIndices;			// ANIM Àü¿ë
-		vector<XMFLOAT4X4> offsetMatrices;		// ANIM Àü¿ë
+		vector<uint32_t> boneIndices;			// ANIM ì „ìš©
+		vector<XMFLOAT4X4> offsetMatrices;		// ANIM ì „ìš©
 	};
 
 	struct WMODEL_MATERIAL
@@ -283,7 +283,7 @@ namespace Engine
 
 
 
-	// ·çÆ®¸ğ¼Ç ÀÌµ¿- °ü·Ã
+	// ë£¨íŠ¸ëª¨ì…˜ ì´ë™- ê´€ë ¨
 	struct MOVEMENT_TUNING
 	{
 		float fRootMotionScale = { 0.013f };

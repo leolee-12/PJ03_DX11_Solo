@@ -1,4 +1,4 @@
-﻿#include "Panel_Viewport.h"
+#include "Panel_Viewport.h"
 #include "EditInstance.h"
 #include "UIEditorSession.h"
 #include "VP_RenderTarget.h"

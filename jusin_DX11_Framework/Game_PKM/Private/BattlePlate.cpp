@@ -1,4 +1,4 @@
-﻿#include "BattlePlate.h"
+#include "BattlePlate.h"
 #include "Battle_Manager.h"
 #include "Battler.h"
 #include "UIImage.h"

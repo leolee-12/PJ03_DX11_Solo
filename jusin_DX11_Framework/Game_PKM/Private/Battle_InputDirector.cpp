@@ -1,4 +1,4 @@
-﻿#include "Battle_InputDirector.h"
+#include "Battle_InputDirector.h"
 #include "Battle_Manager.h"
 #include "Battle_CommandMenu.h"
 #include "Battle_MoveMenu.h"

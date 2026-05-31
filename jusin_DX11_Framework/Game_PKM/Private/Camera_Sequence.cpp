@@ -2,7 +2,7 @@
 
 HRESULT CCamera_Sequence::Initialize()
 {
-	/* M3 ½ÃÁ¡ º°µµ ÃÊ±âÈ­ ¾øÀ½. M9 JSON ·Îµå µµÀÔ ½Ã º» ÇÔ¼ö¿¡¼­ Ã³¸® °¡´É. */
+	/* M3 ì‹œì  ë³„ë„ ì´ˆê¸°í™” ì—†ìŒ. M9 JSON ë¡œë“œ ë„ì… ì‹œ ë³¸ í•¨ìˆ˜ì—ì„œ ì²˜ë¦¬ ê°€ëŠ¥. */
 	return S_OK;
 }
 
@@ -16,7 +16,7 @@ void CCamera_Sequence::Tick(_float fTimeDelta)
 	if (m_bFinished)
 		return;
 
-	/* ºó ½ÃÄö½º ¶Ç´Â cursor °¡ ÀÌ¹Ì ³¡À» Áö³­ °æ¿ì Áï½Ã finished Ã³¸®. */
+	/* ë¹ˆ ì‹œí€€ìŠ¤ ë˜ëŠ” cursor ê°€ ì´ë¯¸ ëì„ ì§€ë‚œ ê²½ìš° ì¦‰ì‹œ finished ì²˜ë¦¬. */
 	if (m_iCursor >= m_Shots.size())
 	{
 		m_bFinished = true;
@@ -25,8 +25,8 @@ void CCamera_Sequence::Tick(_float fTimeDelta)
 
 	m_fElapsedInShot += fTimeDelta;
 
-	/* ÇöÀç shot ÀÇ fDuration °æ°ú ½Ã ´ÙÀ½ cursor ·Î. ÀÜ¿© ½Ã°£Àº ´Ü¼øÈ­ À§ÇØ 0 À¸·Î ¸®¼Â.
-	   1ÇÁ·¹ÀÓ dt °¡ fDuration º¸´Ù Å« ºñÁ¤»ó ÄÉÀÌ½º´Â ´ÙÀ½ Tick È£Ãâ¿¡¼­ µ¿ÀÏ ºĞ±â·Î ÀÚ¿¬ ÁøÇà. */
+	/* í˜„ì¬ shot ì˜ fDuration ê²½ê³¼ ì‹œ ë‹¤ìŒ cursor ë¡œ. ì”ì—¬ ì‹œê°„ì€ ë‹¨ìˆœí™” ìœ„í•´ 0 ìœ¼ë¡œ ë¦¬ì…‹.
+	   1í”„ë ˆì„ dt ê°€ fDuration ë³´ë‹¤ í° ë¹„ì •ìƒ ì¼€ì´ìŠ¤ëŠ” ë‹¤ìŒ Tick í˜¸ì¶œì—ì„œ ë™ì¼ ë¶„ê¸°ë¡œ ìì—° ì§„í–‰. */
 	if (m_fElapsedInShot >= m_Shots[m_iCursor].fDuration)
 	{
 		m_iCursor += 1;
@@ -49,7 +49,7 @@ void CCamera_Sequence::Reset()
 	m_iCursor = 0;
 	m_fElapsedInShot = 0.f;
 	m_bFinished = false;
-	/* m_Shots ÀÚÃ¼´Â À¯Áö. µ¿ÀÏ ½ÃÄö½º¸¦ Ã³À½ºÎÅÍ ´Ù½Ã Àç»ı. */
+	/* m_Shots ìì²´ëŠ” ìœ ì§€. ë™ì¼ ì‹œí€€ìŠ¤ë¥¼ ì²˜ìŒë¶€í„° ë‹¤ì‹œ ì¬ìƒ. */
 }
 
 _float CCamera_Sequence::Get_Total_Duration() const

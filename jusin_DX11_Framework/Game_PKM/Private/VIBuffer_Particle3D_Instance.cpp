@@ -1,4 +1,4 @@
-﻿#include "VIBuffer_Particle3D_Instance.h"
+#include "VIBuffer_Particle3D_Instance.h"
 #include "GameInstance.h"
 
 CVIBuffer_Particle3D_Instance::CVIBuffer_Particle3D_Instance(ID3D11Device* pDevice,

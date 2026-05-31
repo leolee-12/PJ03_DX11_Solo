@@ -18,7 +18,7 @@ struct OBJ_RECORD
 
 struct EFFECT_PRESET
 {
-	/* ÇâÈÄ Ã¤¿ò */
+	/* í–¥í›„ ì±„ì›€ */
 };
 
 struct CATALOG_ITEM

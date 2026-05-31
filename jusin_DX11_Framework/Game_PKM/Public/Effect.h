@@ -13,17 +13,17 @@ class CEffect final : public CGameObject
 public:
 	struct EFFECT_DESC final : public CGameObject::GAMEOBJECT_DESC
 	{
-		const EFFECT_DEFINITION* pDefinition = nullptr;	// weak (Manager º¸À¯)
-		_uint   iSpawnLevel = 0;						// emitterµéÀÌ spawnµÉ level index
-		WNameID strLayerTag = { INVALID_TAG };			// emitterµéÀÌ µé¾î°¥ Layer
+		const EFFECT_DEFINITION* pDefinition = nullptr;	// weak (Manager ë³´ìœ )
+		_uint   iSpawnLevel = 0;						// emitterë“¤ì´ spawnë  level index
+		WNameID strLayerTag = { INVALID_TAG };			// emitterë“¤ì´ ë“¤ì–´ê°ˆ Layer
 
 		struct ATTACH_INFO
 		{
 			enum class KIND { NONE, BONE, MATRIX } eKind = KIND::NONE;
-			class CGameObject*	pOwner = nullptr;			// BONE ¸ğµå¿¡¼­ owner Is_Dead °¨Áö¿ë (MATRIX / NONEÀº nullable)
-			string				strBoneName = "";			// BONE ¸ğµå¿¡¼­ »ç¿ë
-			const _float4x4*	pSourceMatrix = nullptr;	// MATRIX ¸ğµå¿¡¼­ »ç¿ë
-			_float4x4			mLocalOffset = {};			// identity default ±ÇÀå
+			class CGameObject*	pOwner = nullptr;			// BONE ëª¨ë“œì—ì„œ owner Is_Dead ê°ì§€ìš© (MATRIX / NONEì€ nullable)
+			string				strBoneName = "";			// BONE ëª¨ë“œì—ì„œ ì‚¬ìš©
+			const _float4x4*	pSourceMatrix = nullptr;	// MATRIX ëª¨ë“œì—ì„œ ì‚¬ìš©
+			_float4x4			mLocalOffset = {};			// identity default ê¶Œì¥
 		};
 
 		ATTACH_INFO tAttach = {};
@@ -43,13 +43,13 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void  Stop();         // Ãß°¡ spawn ¸ØÃã (ÀÚ¿¬ ¼Ò¸ê ´ë±â)
-	void  Destroy();      // Áï½Ã Á¦°Å
+	void  Stop();         // ì¶”ê°€ spawn ë©ˆì¶¤ (ìì—° ì†Œë©¸ ëŒ€ê¸°)
+	void  Destroy();      // ì¦‰ì‹œ ì œê±°
 
 private:
 	EFFECT_DESC m_tDesc = {};
 	const EFFECT_DEFINITION*	m_pDefinition = nullptr;
-	vector<CParticleEmitter*>	m_Emitters;		// borrowed (Layer°¡ ref º¸À¯)
+	vector<CParticleEmitter*>	m_Emitters;		// borrowed (Layerê°€ ref ë³´ìœ )
 	vector<CEffect_Mesh*>		m_MeshEmitters;	// borrowed
 	vector<CTrail*>				m_Trails;		// borrowed
 	EFFECT_DESC::ATTACH_INFO	m_tAttach = {};

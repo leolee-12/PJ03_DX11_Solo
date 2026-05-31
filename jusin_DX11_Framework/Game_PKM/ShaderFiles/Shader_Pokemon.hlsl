@@ -6,7 +6,7 @@ vector g_vCamPos;
 float g_fFarZ;
 float g_fShadowFarZ;
 
-// ¿Á¡˙
+// Ïû¨Ïßà
 texture2D g_TexDiff;
 texture2D g_TexAO;
 texture2D g_TexNorm;
@@ -20,7 +20,7 @@ float4 g_vLymColorG = float4(0.f, 1.f, 0.f, 1.f);
 float4 g_vLymColorB = float4(0.f, 0.f, 1.f, 1.f);
 float4 g_vLymColorA = float4(1.f, 1.f, 1.f, 1.f);
 
-float4 g_vEyeHighlightColor = float4(1.f, 1.f, 1.f, 1.f);  // mask »Ú ∫Œ∫– ªˆ (∫∏≈Î »Úªˆ)
+float4 g_vEyeHighlightColor = float4(1.f, 1.f, 1.f, 1.f);  // mask Ìù∞ Î∂ÄÎ∂Ñ ÏÉâ (Î≥¥ÌÜµ Ìù∞ÏÉâ)
 
 float4x4 g_BoneMatrices[512];
 
@@ -150,7 +150,7 @@ float3 ApplyYellowBodyTone(float3 vBase)
 	return lerp(vBase, saturate(vToned), fYellowToneMask);
 }
 
-PS_OUT PS_Default(PS_IN In)	// 0π¯ ∆–Ω∫
+PS_OUT PS_Default(PS_IN In)	// 0Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -171,7 +171,7 @@ PS_OUT_SHADOW PS_SHADOW(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_DANR(PS_IN In)	// 2π¯ ∆–Ω∫
+PS_OUT PS_DANR(PS_IN In)	// 2Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 	
@@ -179,7 +179,7 @@ PS_OUT PS_DANR(PS_IN In)	// 2π¯ ∆–Ω∫
 	if (vMtrlDiff.a < 0.1f)
 		discard;
 
-	// Normal ±∏º∫
+	// Normal Íµ¨ÏÑ±
 	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
 	float3 vNormal;
 	vNormal.xy = vNormDesc.xy;
@@ -202,14 +202,14 @@ PS_OUT PS_DANR(PS_IN In)	// 2π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_DALNR(PS_IN In)	// 3π¯ ∆–Ω∫
+PS_OUT PS_DALNR(PS_IN In)	// 3Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 	vector vMtrlDiff = g_TexDiff.Sample(LinearSamplerBias, In.vTex);
 	if (vMtrlDiff.a < 0.1f)
 		discard;
 
-	// Normal ±∏º∫
+	// Normal Íµ¨ÏÑ±
 	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
 	float3 vNormal;
 	vNormal.xy = vNormDesc.xy;
@@ -232,7 +232,7 @@ PS_OUT PS_DALNR(PS_IN In)	// 3π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_DLN(PS_IN In)	// 4π¯ ∆–Ω∫
+PS_OUT PS_DLN(PS_IN In)	// 4Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -240,11 +240,11 @@ PS_OUT PS_DLN(PS_IN In)	// 4π¯ ∆–Ω∫
 	float4 vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 	float4 vLym = g_TexLycl.Sample(LinearSampler, In.vTex);
 
-	// Lym «ÿºÆ
+	// Lym Ìï¥ÏÑù
 	float3 vRegionColor = ResolveLymColor(vLym) * vMtrlDiff.rgb;
 	float3 vEyeColor = vRegionColor;
 
-	// Normal ±∏º∫
+	// Normal Íµ¨ÏÑ±
 	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
 	float3 vEyeNormal;
 	vEyeNormal.xy = vNormDesc.xy;
@@ -266,7 +266,7 @@ PS_OUT PS_DLN(PS_IN In)	// 4π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_DLMN(PS_IN In)	// 5π¯ ∆–Ω∫
+PS_OUT PS_DLMN(PS_IN In)	// 5Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -276,12 +276,12 @@ PS_OUT PS_DLMN(PS_IN In)	// 5π¯ ∆–Ω∫
 	float4 vLym = g_TexLycl.Sample(LinearSampler, In.vTex);
 	float fHighlightMask = saturate(fMask);
 
-	// Lym «ÿºÆ
+	// Lym Ìï¥ÏÑù
 	float3 vRegionColor = ResolveLymColor(vLym) * vMtrlDiff.rgb;
 	float3 vHighlightColor = g_vEyeHighlightColor.rgb * vMtrlDiff.rgb;
 	float3 vEyeColor = lerp(vRegionColor, vHighlightColor, fHighlightMask);
 
-	// Normal ±∏º∫
+	// Normal Íµ¨ÏÑ±
 	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
 	float3 vEyeNormal;
 	vEyeNormal.xy = vNormDesc.xy;
@@ -303,7 +303,7 @@ PS_OUT PS_DLMN(PS_IN In)	// 5π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_DL(PS_IN In)	// 6π¯ ∆–Ω∫
+PS_OUT PS_DL(PS_IN In)	// 6Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -318,7 +318,7 @@ PS_OUT PS_DL(PS_IN In)	// 6π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_D_MIRROR(PS_IN In)	// 7π¯ ∆–Ω∫
+PS_OUT PS_D_MIRROR(PS_IN In)	// 7Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 	float2 vUV = ResolveMirrorTextureUV(In.vTex);
@@ -332,27 +332,27 @@ PS_OUT PS_D_MIRROR(PS_IN In)	// 7π¯ ∆–Ω∫
 
 float PingPong01(float x)
 {
-	// Blender Math Ping-Pong, Scale = 1.0 ¥Î¿¿
-	// x: ¿”¿« ¿‘∑¬
-	// return: 0 -> 1 -> 0 -> 1 «¸≈¬ π›∫π
+	// Blender Math Ping-Pong, Scale = 1.0 ÎåÄÏùë
+	// x: ÏûÑÏùò ÏûÖÎ†•
+	// return: 0 -> 1 -> 0 -> 1 ÌòïÌÉú Î∞òÎ≥µ
 	x = frac(x * 0.5f) * 2.0f;
 	return 1.0f - abs(x - 1.0f);
 }
 
 float2 ResolvePass8TexVector(float2 uv)
 {
-	// Blender Mapping ≥ÎµÂ
+	// Blender Mapping ÎÖ∏Îìú
 	// Scale X = 2.0, Y = 1.0
 	uv.x *= 2.0f;
 
-	// Blender Math ≥ÎµÂ
+	// Blender Math ÎÖ∏Îìú
 	// Operation = Ping-Pong, Scale = 1.0
 	uv.x = PingPong01(uv.x);
 
 	return uv;
 }
 
-PS_OUT PS_D_ADJUST(PS_IN In)	// 8π¯ ∆–Ω∫
+PS_OUT PS_D_ADJUST(PS_IN In)	// 8Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -366,7 +366,7 @@ PS_OUT PS_D_ADJUST(PS_IN In)	// 8π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_DLN2(PS_IN In)	// 4π¯ ∆–Ω∫
+PS_OUT PS_DLN2(PS_IN In)	// 4Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -374,11 +374,11 @@ PS_OUT PS_DLN2(PS_IN In)	// 4π¯ ∆–Ω∫
 	float4 vMtrlDiff = g_TexDiff.Sample(LinearSampler, In.vTex);
 	float4 vLym = g_TexLycl.Sample(LinearSampler, In.vTex);
 
-	// Lym «ÿºÆ
+	// Lym Ìï¥ÏÑù
 	float3 vRegionColor = ResolveLymColor(vLym) * vMtrlDiff.rgb;
 	float3 vEyeColor = 1.f - saturate(vRegionColor);
 
-	// Normal ±∏º∫
+	// Normal Íµ¨ÏÑ±
 	float2 vNormDesc = g_TexNorm.Sample(LinearSampler, In.vTex).rg * 2.0f - 1.0f;
 	float3 vEyeNormal;
 	vEyeNormal.xy = vNormDesc.xy;
@@ -400,7 +400,7 @@ PS_OUT PS_DLN2(PS_IN In)	// 4π¯ ∆–Ω∫
 	return Out;
 }
 
-PS_OUT PS_DL_IRIS(PS_IN In)	// 10π¯ ∆–Ω∫
+PS_OUT PS_DL_IRIS(PS_IN In)	// 10Î≤à Ìå®Ïä§
 {
 	PS_OUT Out = (PS_OUT)0;
 	float2 vUV = ResolvePass8TexVector(In.vTex);
@@ -419,7 +419,7 @@ PS_OUT PS_DL_IRIS(PS_IN In)	// 10π¯ ∆–Ω∫
 	return Out;
 }
 
-float4 PS_OUTLINEMASK(PS_IN In) : SV_TARGET	// 11π¯ ∆–Ω∫
+float4 PS_OUTLINEMASK(PS_IN In) : SV_TARGET	// 11Î≤à Ìå®Ïä§
 {
 	return float4(1.f, 0.f, 0.f, 0.f);
 }
@@ -496,7 +496,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_DL();
 	}
-	pass Pass_D_Mirror		// 7. col + Mirror ƒ≥≈Õ««
+	pass Pass_D_Mirror		// 7. col + Mirror Ï∫êÌÑ∞Ìîº
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -506,7 +506,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_D_MIRROR();
 	}
-	pass Pass_DL_Adjust		// 8. col + Adjust æ∆ƒÌΩ∫≈∏
+	pass Pass_DL_Adjust		// 8. col + Adjust ÏïÑÏø†Ïä§ÌÉÄ
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);

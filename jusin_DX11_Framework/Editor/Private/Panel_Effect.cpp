@@ -1,4 +1,4 @@
-﻿#include "Panel_Effect.h"
+#include "Panel_Effect.h"
 #include "EditInstance.h"
 #include "EffectEditorSession.h"
 

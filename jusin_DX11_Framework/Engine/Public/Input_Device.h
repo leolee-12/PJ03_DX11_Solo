@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifndef InputDev_h__
 #define InputDev_h__
 

@@ -1,4 +1,4 @@
-﻿#include "Actor_WildPokemon.h"
+#include "Actor_WildPokemon.h"
 #include "Body.h"
 #include "Interaction_Encounter.h"
 #include "Battle_AnimDef.h"

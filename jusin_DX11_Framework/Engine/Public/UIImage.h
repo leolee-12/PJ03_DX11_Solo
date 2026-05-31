@@ -43,8 +43,8 @@ public:
 	// Sprite anim
 	void Set_SpriteAnim(_bool bEnabled, _float fFrameDuration, _bool bLoop = true);
 	virtual void Set_SpriteTickAllowed(_bool bAllowed) override { m_bSpriteTickAllowed = bAllowed; }
-	/* sprite ÇÁ·¹ÀÓ ÀÎµ¦½º / ´©Àû½Ã°£À» 0 À¸·Î °­Á¦ ¸®¼Â.
-   ½ÃÄö½º µÎ ¹øÂ° Àç»ı ½Ã Ã¹ Àç»ıÀÇ ³¡ ÇÁ·¹ÀÓ¿¡ ¸Ó¹«´Â Çö»ó ¹æÁö. */
+	/* sprite í”„ë ˆì„ ì¸ë±ìŠ¤ / ëˆ„ì ì‹œê°„ì„ 0 ìœ¼ë¡œ ê°•ì œ ë¦¬ì…‹.
+   ì‹œí€€ìŠ¤ ë‘ ë²ˆì§¸ ì¬ìƒ ì‹œ ì²« ì¬ìƒì˜ ë í”„ë ˆì„ì— ë¨¸ë¬´ëŠ” í˜„ìƒ ë°©ì§€. */
 	void Reset_SpriteAnim();
 
 	const vector<UI_SHARED_TEXTURE_BINDING_DESC>& Get_SharedTextureBindings() const { return m_SharedTextureBindings; }

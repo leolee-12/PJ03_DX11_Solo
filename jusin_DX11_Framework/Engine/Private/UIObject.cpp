@@ -1,4 +1,4 @@
-﻿#include "UIObject.h"
+#include "UIObject.h"
 #include "UIAnimator.h"
 #include "UICanvasMath.h"
 #include "GameInstance.h"

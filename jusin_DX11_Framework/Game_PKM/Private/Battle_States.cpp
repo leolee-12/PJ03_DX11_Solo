@@ -62,11 +62,11 @@ void CIntroState::OnEnter(const BATTLE_CONTEXT& ctx)
 	Push(SCamera_PlaySequence::Create(CAMERA_SEQUENCE_ID::INTRO_TRAINER_OPPONENT, false));   // ?? ? ?? ???? ???? (hold)
 	Push(SSetPlateVisible::Create(false));   // ??? ?? ???? ??
 	Push(SDelay::Create(0.2f));
-	Push(SBattleText::Create(strTrainerName + TEXT("ÀÌ(°¡) ½ÂºÎ¸¦ °É¾î¿Ô´Ù!")));
+	Push(SBattleText::Create(strTrainerName + TEXT("ì´(ê°€) ìŠ¹ë¶€ë¥¼ ê±¸ì–´ì™”ë‹¤!")));
 	Push(SCloseMsg::Create());
 	Push(SDelay::Create(0.2f));
 
-	Push(SBattleText::Create(strTrainerName + TEXT("Àº(´Â) ") + strOpponentPokemon + TEXT("À»(¸¦) ³»º¸³Â´Ù!")));
+	Push(SBattleText::Create(strTrainerName + TEXT("ì€(ëŠ”) ") + strOpponentPokemon + TEXT("ì„(ë¥¼) ë‚´ë³´ëƒˆë‹¤!")));
 	Push(SSendOutBall::Create(g_kBattleSide_Opponent, 0.72f, CAMERA_SEQUENCE_ID::SENDOUT_OPPONENT_INTRO_HOLD));
 	Push(SPlaySFX::Create(L"SFX/capture_fail.wav", 0.8f));
 	Push(SPokemonEnter::Create(g_kBattleSide_Opponent));
@@ -75,7 +75,7 @@ void CIntroState::OnEnter(const BATTLE_CONTEXT& ctx)
 	Push(SSendOutBall::Create(g_kBattleSide_Player));
 	Push(SPlaySFX::Create(L"SFX/capture_fail.wav", 0.8f));
 	Push(SPokemonEnter::Create(g_kBattleSide_Player));
-	Push(SBattleText::Create(TEXT("ÇÃ·¹ÀÌ¾î´Â ") + strPlayerPokemon + TEXT("À»(¸¦) ³»º¸³Â´Ù!")));
+	Push(SBattleText::Create(TEXT("í”Œë ˆì´ì–´ëŠ” ") + strPlayerPokemon + TEXT("ì„(ë¥¼) ë‚´ë³´ëƒˆë‹¤!")));
 	Push(SCloseMsg::Create());
 	Push(SDelay::Create(0.2f));
 
@@ -499,11 +499,11 @@ void CForcedSwitchState::OnEnter(const BATTLE_CONTEXT& ctx)
 		const TRAINER_DATA* pTrainer = ctx.pManager->Get_OpponentTrainer();
 		const _wstring strTrainerName = (nullptr != pTrainer)
 			? _wstring(pTrainer->szName) : _wstring(TEXT("??"));
-		strSendOutMsg = strTrainerName + TEXT("Àº(´Â) ") + strPokemonName + TEXT("À»(¸¦) ³»º¸³Â´Ù!");
+		strSendOutMsg = strTrainerName + TEXT("ì€(ëŠ”) ") + strPokemonName + TEXT("ì„(ë¥¼) ë‚´ë³´ëƒˆë‹¤!");
 	}
 	else
 	{
-		strSendOutMsg = _wstring(TEXT("ÇÃ·¹ÀÌ¾î´Â ")) + strPokemonName + TEXT("À»(¸¦) ³»º¸³Â´Ù!");
+		strSendOutMsg = _wstring(TEXT("í”Œë ˆì´ì–´ëŠ” ")) + strPokemonName + TEXT("ì„(ë¥¼) ë‚´ë³´ëƒˆë‹¤!");
 	}
 
 	auto Push = [pSeq](IBattleAction_Step* pStep)
@@ -643,7 +643,7 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 		Push(STrainerFaint::Create(g_kBattleSide_Opponent));
 		Push(SDelay::Create(1.15f));
 
-		Push(SBattleText::Create(strTrainerName + TEXT("°ú(¿Í)ÀÇ ½ÂºÎ¿¡¼­ ÀÌ°å´Ù!")));
+		Push(SBattleText::Create(strTrainerName + TEXT("ê³¼(ì™€)ì˜ ìŠ¹ë¶€ì—ì„œ ì´ê²¼ë‹¤!")));
 		Push(SCloseMsg::Create());
 		Push(SDelay::Create(0.2f));
 
@@ -667,7 +667,7 @@ void COutroState::OnEnter(const BATTLE_CONTEXT& ctx)
 			pLoser->Play_Faint();
 		}
 
-		Push(SBattleText::Create(_wstring(TEXT("´«¾ÕÀÌ ±ô±ôÇØÁ³´Ù..."))));
+		Push(SBattleText::Create(_wstring(TEXT("ëˆˆì•ì´ ê¹œê¹œí•´ì¡Œë‹¤..."))));
 		Push(SCloseMsg::Create());
 		Push(SDelay::Create(0.2f));
 	}

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Base.h"
 #include "Game_PKM_Defines.h"
 #include "Camera_Defines.h"

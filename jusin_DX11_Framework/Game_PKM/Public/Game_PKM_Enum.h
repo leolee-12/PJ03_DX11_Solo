@@ -10,17 +10,17 @@ namespace Navigation
 	enum NAV_CELL_OPTION : _uint
 	{
 		NAV_NONE			= 0,
-		NAV_GROUND			= 1 << 0,   // Áö¸é : Walkable
-		NAV_GRASS			= 1 << 1,   // Ç®½£ : ¾ß»ýÆ÷ÄÏ¸ó ÃâÇö
-		NAV_WATER			= 1 << 2,   // ¹°	: ÀÏ¹ÝÀûÀ¸·Î ÀÌµ¿ ºÒ°¡
-		NAV_LEDGE			= 1 << 3,   // ¾ð´ö : ÇÑ ¹æÇâÀ¸·Î¸¸ ÀÌµ¿ °¡´É
-		NAV_SECOND_FLOOR	= 1 << 4,   // 2Ãþ  : ´Ù¸®, Ãþ°è µî
+		NAV_GROUND			= 1 << 0,   // ì§€ë©´ : Walkable
+		NAV_GRASS			= 1 << 1,   // í’€ìˆ² : ì•¼ìƒí¬ì¼“ëª¬ ì¶œí˜„
+		NAV_WATER			= 1 << 2,   // ë¬¼	: ì¼ë°˜ì ìœ¼ë¡œ ì´ë™ ë¶ˆê°€
+		NAV_LEDGE			= 1 << 3,   // ì–¸ë• : í•œ ë°©í–¥ìœ¼ë¡œë§Œ ì´ë™ ê°€ëŠ¥
+		NAV_SECOND_FLOOR	= 1 << 4,   // 2ì¸µ  : ë‹¤ë¦¬, ì¸µê³„ ë“±
 	};
 }
 
 enum class TEXTURE_SAMPLE_MODE : _uint { SINGLE, BI_HORIZONTAL, BI_VERTICAL, QUAD, END };
 
-// Æ÷ÄÏ¸ó Å¸ÀÔ
+// í¬ì¼“ëª¬ íƒ€ìž…
 enum class TYPE : _uint32
 {
 	NONE = 0,

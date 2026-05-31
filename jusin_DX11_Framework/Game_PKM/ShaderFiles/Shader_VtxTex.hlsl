@@ -44,7 +44,7 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT Out;
 	Out.vCol = g_Texture.Sample(LinearSampler, In.vTex);
 
-	if (Out.vCol.a < 0.1f)	// ÀÏÁ¤ a°ª ¹Ì¸¸Àº ¹ö¸² (¾ËÆÄÅ×½ºÆ®)
+	if (Out.vCol.a < 0.1f)	// ì¼ì • aê°’ ë¯¸ë§Œì€ ë²„ë¦¼ (ì•ŒíŒŒí…ŒìŠ¤íŠ¸)
 		discard;
 
 	return Out;

@@ -14,7 +14,7 @@ public:
 	{
 		MATERIAL_TYPE eType = { MATERIAL_TYPE::DIFFUSE };
 		const _char* pConstName = { nullptr };
-		_int iTextureIndex = { -1 };	// -1ÀÌ¸é ±âÁ¸ variant / 0ÀÌ»óÀÌ¸é ¸í½ÃÇÑ index »ç¿ë
+		_int iTextureIndex = { -1 };	// -1ì´ë©´ ê¸°ì¡´ variant / 0ì´ìƒì´ë©´ ëª…ì‹œí•œ index ì‚¬ìš©
 	 };
 
 public:

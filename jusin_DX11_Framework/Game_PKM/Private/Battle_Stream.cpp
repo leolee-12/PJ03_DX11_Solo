@@ -23,7 +23,7 @@ void Serialize(IStream& Stream, POKEMON_INSTANCE& v)
 	Stream.IO(&v.eStatus, sizeof(v.eStatus));
 	Serialize(Stream, v.iHeldItemID);
 
-	/* iStatÀº Ä³½ÃÀÌ¹Ç·Î ÀúÀåÇÏÁö ¾Ê´Â´Ù. ·Îµå ÈÄ Recalc_All_Stats·Î Àç°è»ê. */
+	/* iStatì€ ìºì‹œì´ë¯€ë¡œ ì €ì¥í•˜ì§€ ì•ŠëŠ”ë‹¤. ë¡œë“œ í›„ Recalc_All_Statsë¡œ ì¬ê³„ì‚°. */
 
 	Serialize(Stream, v.iOriginalTrainerID);
 	Serialize(Stream, v.iCapturedAtZoneID);

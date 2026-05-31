@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "GameObject.h"
 #include "Prototype_Manager.h"
 
@@ -199,6 +199,7 @@ private:
 	class CCamera*				m_pMainCamera = { nullptr };
 	class ISharedTextureBinder* m_pSharedTextureBinder = { nullptr };
 	class CSound_Manager*		m_pSound_Manager = { nullptr };
+	class CProfiler_Manager*	m_pProfiler_Manager = { nullptr };
 
 	_float2						m_vViewportSize{};
 	_bool						m_bDebug = { false };

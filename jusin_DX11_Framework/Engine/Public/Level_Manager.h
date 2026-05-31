@@ -2,11 +2,11 @@
 #include "Base.h"
 
 /* -------------------------------------------------- */
-// ·¹º§ ¸Å´ÏÀú
-// - º¸°ü ÁßÀÎ ·¹º§ÀÇ ¹İº¹ÀûÀÎ Update, Render¸¦ ¼öÇà
-// - ÇöÀç ÇÒ´çµÈ ·¹º§ÀÇ ÁÖ¼Ò¸¦ º¸°ü
-// - ¿øÈ°ÇÑ ·¹º§ ±³Ã¼ÀÛ¾÷ ¼öÇà
-// (·¹º§ ±³Ã¼ ½Ã ÀÌÀü ·¹º§ »èÁ¦, ±âÁ¸ ·¹º§¿ë ÀÚ¿øÀ» Á¤¸®)
+// ë ˆë²¨ ë§¤ë‹ˆì €
+// - ë³´ê´€ ì¤‘ì¸ ë ˆë²¨ì˜ ë°˜ë³µì ì¸ Update, Renderë¥¼ ìˆ˜í–‰
+// - í˜„ì¬ í• ë‹¹ëœ ë ˆë²¨ì˜ ì£¼ì†Œë¥¼ ë³´ê´€
+// - ì›í™œí•œ ë ˆë²¨ êµì²´ì‘ì—… ìˆ˜í–‰
+// (ë ˆë²¨ êµì²´ ì‹œ ì´ì „ ë ˆë²¨ ì‚­ì œ, ê¸°ì¡´ ë ˆë²¨ìš© ìì›ì„ ì •ë¦¬)
 /* -------------------------------------------------- */
 
 NS_BEGIN(Engine)
@@ -31,9 +31,9 @@ public:
 	CLevel* Get_CurrentLevelPtr() const;
 	_bool Is_Level_Active(_uint iLevel) const;
 
-	HRESULT Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);	// ½ºÅÃ Á¤¸® ÈÄ »õ ·¹º§·Î ½ÃÀÛ
-	HRESULT Push_Level(_int iLevelIndex, class CLevel* pNewLevel);		// »õ ·¹º§À» ½ºÅÃ top¿¡ push(Á÷Àü topÀº OnPause)
-	HRESULT Pop_Level();												// ÇöÀç topÀ» Á¤¸® ÈÄ pop(»õ·Î¿î topÀº OnResume)
+	HRESULT Change_Level(_int iNewLevelIndex, class CLevel* pNewLevel);	// ìŠ¤íƒ ì •ë¦¬ í›„ ìƒˆ ë ˆë²¨ë¡œ ì‹œì‘
+	HRESULT Push_Level(_int iLevelIndex, class CLevel* pNewLevel);		// ìƒˆ ë ˆë²¨ì„ ìŠ¤íƒ topì— push(ì§ì „ topì€ OnPause)
+	HRESULT Pop_Level();												// í˜„ì¬ topì„ ì •ë¦¬ í›„ pop(ìƒˆë¡œìš´ topì€ OnResume)
 	void	Update(_float fTimeDelta);
 	HRESULT	Render();
 
@@ -41,7 +41,7 @@ public:
 private:
 	CGameInstance*		m_pGameInstance = { nullptr };
 	vector<LEVEL_ENTRY>	m_LevelStack;
-	_int				m_iCurrentLevelIndex = { -1 };   // ½ºÅÃ topÀÇ ÀÎµ¦½º Ä³½Ì
+	_int				m_iCurrentLevelIndex = { -1 };   // ìŠ¤íƒ topì˜ ì¸ë±ìŠ¤ ìºì‹±
 
 public:
 	static CLevel_Manager* Create();

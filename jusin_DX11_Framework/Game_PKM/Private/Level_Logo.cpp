@@ -47,7 +47,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 
 		LEVEL_ENTRY_DESC tEntry{};
 		tEntry.eNextLevelID = LEVEL::GAMEPLAY;
-		tEntry.bAutoAdvance = false;   // Ç® ½ÃÄö½º °ËÁõ ½Ã ÀÚµ¿ ÀüÀÌ. ¼öµ¿ SPACE µ¿ÀÛÀÌ ÇÊ¿äÇÏ¸é false.
+		tEntry.bAutoAdvance = false;   // í’€ ì‹œí€€ìŠ¤ ê²€ì¦ ì‹œ ìžë™ ì „ì´. ìˆ˜ë™ SPACE ë™ìž‘ì´ í•„ìš”í•˜ë©´ false.
 
 		if (SUCCEEDED(m_pGameInstance->Change_Level(
 			ETOI(LEVEL::LOADING),
@@ -63,7 +63,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 HRESULT CLevel_Logo::Render()
 {
 #ifdef _DEBUG
-	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("·Î°í·¹º§ÀÔ´Ï´Ù."));
+	SetWindowText(m_pGameInstance->Get_HWND(), TEXT("ë¡œê³ ë ˆë²¨ìž…ë‹ˆë‹¤."));
 #endif
 
 	return S_OK;

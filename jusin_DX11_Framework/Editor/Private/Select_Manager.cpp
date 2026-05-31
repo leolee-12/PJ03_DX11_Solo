@@ -15,13 +15,13 @@ void CSelect_Manager::Select(CGameObject* pObj, bool bMultiSelect)
 		m_Selected.push_back(pObj);
 	}
 	else
-	{   // Å½»ö
+	{   // íƒìƒ‰
 		auto iter = find(m_Selected.begin(), m_Selected.end(), pObj);
 
 		if (iter != m_Selected.end())
-			m_Selected.erase(iter); // ÀÌ¹Ì ¼±ÅÃµÈ °´Ã¼¸é ¼±ÅÃ ÇØÁ¦
+			m_Selected.erase(iter); // ì´ë¯¸ ì„ íƒëœ ê°ì²´ë©´ ì„ íƒ í•´ì œ
 		else
-			m_Selected.push_back(pObj); // ¾øÀ¸¸é Ãß°¡
+			m_Selected.push_back(pObj); // ì—†ìœ¼ë©´ ì¶”ê°€
 	}
 
 	Notify();
@@ -31,15 +31,15 @@ void CSelect_Manager::Deselect(CGameObject* pObj)
 {
 	auto iter = find(m_Selected.begin(), m_Selected.end(), pObj);
 
-	if (iter == m_Selected.end()) return;   // ¾øÀ¸¸é return
+	if (iter == m_Selected.end()) return;   // ì—†ìœ¼ë©´ return
 
-	m_Selected.erase(iter); // ÀÖÀ¸¸é ¼±ÅÃ ÇØÁ¦ ÈÄ Notify
+	m_Selected.erase(iter); // ìˆìœ¼ë©´ ì„ íƒ í•´ì œ í›„ Notify
 	Notify();
 }
 
 void CSelect_Manager::Clear()
 {
-	if (m_Selected.empty()) return; // ºñ¾îÀÖÀ¸¸é return (ºÒÇÊ¿äÇÑ Äİ¹é ¹æÁö)
+	if (m_Selected.empty()) return; // ë¹„ì–´ìˆìœ¼ë©´ return (ë¶ˆí•„ìš”í•œ ì½œë°± ë°©ì§€)
 
 	m_Selected.clear();
 	Notify();
@@ -53,22 +53,22 @@ CGameObject* CSelect_Manager::Get_Primary() const
 bool CSelect_Manager::Is_Selected(CGameObject* pObj) const
 {
 	return find(m_Selected.cbegin(), m_Selected.cend(), pObj) != m_Selected.cend();
-	// cbegin, cend´Â const_iterator ¹İÈ¯ : °¡¸®Å°´Â ´ë»ó ¼öÁ¤ ºÒ°¡
+	// cbegin, cendëŠ” const_iterator ë°˜í™˜ : ê°€ë¦¬í‚¤ëŠ” ëŒ€ìƒ ìˆ˜ì • ë¶ˆê°€
 }
 
 void CSelect_Manager::Register_Callback(const _string& strKey, SelectionChangedCB cb)
 {
 	m_Callbacks.insert_or_assign(strKey, move(cb));
-	// insert_or_assign : strKey°¡ ÀÌ¹Ì ÀÖÀ¸¸é cb·Î µ¤¾î¾²±â, ¾øÀ¸¸é »õ·Î Ãß°¡ (Áßº¹ ¹æÁö) - move·Î cb Àü´ŞÇÏ¿© ºÒÇÊ¿äÇÑ º¹»ç ¹æÁö
-	// * operator[] : strKey°¡ ÀÌ¹Ì ÀÖÀ¸¸é cb·Î µ¤¾î¾²±â, ¾øÀ¸¸é »õ·Î Ãß°¡ (Áßº¹ ¹æÁö) - value_type º¹»ç ¹ß»ı
-	// * insert : strKey ÀÌ¹Ì Á¸ÀçÇÏ¸é »ğÀÔ ½ÇÆĞ (¹İÈ¯°ªÀ¸·Î ¼º°ø ¿©ºÎ ¾Ë ¼ö ÀÖÀ½)
-	// * emplace : strKey ÀÌ¹Ì Á¸ÀçÇÏ¸é ¹«½Ã
+	// insert_or_assign : strKeyê°€ ì´ë¯¸ ìˆìœ¼ë©´ cbë¡œ ë®ì–´ì“°ê¸°, ì—†ìœ¼ë©´ ìƒˆë¡œ ì¶”ê°€ (ì¤‘ë³µ ë°©ì§€) - moveë¡œ cb ì „ë‹¬í•˜ì—¬ ë¶ˆí•„ìš”í•œ ë³µì‚¬ ë°©ì§€
+	// * operator[] : strKeyê°€ ì´ë¯¸ ìˆìœ¼ë©´ cbë¡œ ë®ì–´ì“°ê¸°, ì—†ìœ¼ë©´ ìƒˆë¡œ ì¶”ê°€ (ì¤‘ë³µ ë°©ì§€) - value_type ë³µì‚¬ ë°œìƒ
+	// * insert : strKey ì´ë¯¸ ì¡´ì¬í•˜ë©´ ì‚½ì… ì‹¤íŒ¨ (ë°˜í™˜ê°’ìœ¼ë¡œ ì„±ê³µ ì—¬ë¶€ ì•Œ ìˆ˜ ìˆìŒ)
+	// * emplace : strKey ì´ë¯¸ ì¡´ì¬í•˜ë©´ ë¬´ì‹œ
 }
 
 void CSelect_Manager::Unregister_Callback(const _string& strKey)
 {
 	m_Callbacks.erase(strKey);
-	// erase : strKey°¡ ÀÖÀ¸¸é »èÁ¦, ¾øÀ¸¸é ¹«½ÃÇÏ°í 0 ¹İÈ¯ (find ºÒÇÊ¿ä)
+	// erase : strKeyê°€ ìˆìœ¼ë©´ ì‚­ì œ, ì—†ìœ¼ë©´ ë¬´ì‹œí•˜ê³  0 ë°˜í™˜ (find ë¶ˆí•„ìš”)
 }
 
 void CSelect_Manager::Notify()
@@ -94,7 +94,7 @@ void CSelect_Manager::Free()
 {
 	__super::Free();
 
-	// °´Ã¼ÀÇ ¼±ÅÃ ¿©ºÎ¸¸ °ü¸®, ¼ÒÀ¯±ÇÀº ¾øÀ¸¹Ç·Î ÇØÁ¦X
+	// ê°ì²´ì˜ ì„ íƒ ì—¬ë¶€ë§Œ ê´€ë¦¬, ì†Œìœ ê¶Œì€ ì—†ìœ¼ë¯€ë¡œ í•´ì œX
 	m_Selected.clear();
 	m_Callbacks.clear();
 }

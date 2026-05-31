@@ -23,7 +23,7 @@ void CVP_CoordMapper::Update(const ImVec2& vDisplayPos, const ImVec2& vDisplaySi
 
 ImVec2 CVP_CoordMapper::ScreenToDoc(const ImVec2& vScreen) const
 {
-	// screen -> RT (display ¡ê RT ºñÀ²)
+	// screen -> RT (display â†” RT ë¹„ìœ¨)
 	const _float fRTx = (m_vDisplaySize.x > 0.f)
 		? (vScreen.x - m_vDisplayPos.x) * (m_vRTSize.x / m_vDisplaySize.x)
 		: 0.f;
@@ -31,7 +31,7 @@ ImVec2 CVP_CoordMapper::ScreenToDoc(const ImVec2& vScreen) const
 		? (vScreen.y - m_vDisplayPos.y) * (m_vRTSize.y / m_vDisplaySize.y)
 		: 0.f;
 
-	// Viewport -> Doc(canvas º¯È¯)
+	// Viewport -> Doc(canvas ë³€í™˜)
 		const _float2 vDoc = UICanvasMath::Viewport_To_DesignPoint(
 			_float2(fRTx, fRTy), m_tTransform, m_ePolicy);
 
@@ -46,7 +46,7 @@ void CVP_CoordMapper::DocRectToScreen(const _float4& rcDoc, ImVec2* pOutMin, ImV
 	// Doc -> RT rect
 	const _float4 vRT = UICanvasMath::Design_To_RenderRect(rcDoc, m_tTransform, m_ePolicy);
 
-	// RT -> Screen (display ¡ê RT ºñÀ²)
+	// RT -> Screen (display â†” RT ë¹„ìœ¨)
 	const _float fSx = (m_vRTSize.x > 0.f) ? m_vDisplaySize.x / m_vRTSize.x : 1.f;
 	const _float fSy = (m_vRTSize.y > 0.f) ? m_vDisplaySize.y / m_vRTSize.y : 1.f;
 

@@ -51,9 +51,9 @@ private:
 	mutable std::mutex m_ErrorMutex;
 	_wstring m_strLastErrorTask = {};
 
-	_uint					m_iTotalCount = { 0 };		// ¸ŞÀÎ¸¸ ¾²¹Ç·Î ÀÏ¹İ _uint OK
+	_uint					m_iTotalCount = { 0 };		// ë©”ì¸ë§Œ ì“°ë¯€ë¡œ ì¼ë°˜ _uint OK
 	std::atomic<_uint>		m_iCompletedCount = { 0 };
-	std::atomic<bool>		m_bHasError = { false };	// ½ÇÆĞ ½Ã±×³Î
+	std::atomic<bool>		m_bHasError = { false };	// ì‹¤íŒ¨ ì‹œê·¸ë„
 	std::vector<HANDLE>		m_Threads;
 
 private:

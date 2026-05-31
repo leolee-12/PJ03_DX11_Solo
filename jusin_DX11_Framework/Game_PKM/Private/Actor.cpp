@@ -119,7 +119,7 @@ void CActor::Rebuild_InteractionCache()
 void CActor::Free()
 {
 	m_pBody = nullptr;
-	// m_Interactions / m_pBody´Â Ä³½ÃÀÌ¹Ç·Î º°µµ release ¾øÀ½ (¼ÒÀ¯´Â m_Components / m_PartObject)
+	// m_Interactions / m_pBodyëŠ” ìºì‹œì´ë¯€ë¡œ ë³„ë„ release ì—†ìŒ (ì†Œìœ ëŠ” m_Components / m_PartObject)
 	m_Interactions.clear();
 
 	__super::Free();

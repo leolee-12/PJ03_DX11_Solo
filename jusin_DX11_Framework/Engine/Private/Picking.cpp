@@ -39,18 +39,18 @@ _bool CPicking::Picking(_float4& Out)
 {
 	_float2 vViewportDesc = m_pGameInstance->Get_ViewportSize();
 
-	// 1. ¸¶¿ì½º À§Ä¡ ¾ò±â
+	// 1. ë§ˆìš°ìŠ¤ ìœ„ì¹˜ ì–»ê¸°
 	::POINT ptMouse{};
 	GetCursorPos(&ptMouse);
 	ScreenToClient(m_hWnd, &ptMouse);
 
-	// 2. °æ°è °Ë»ç
+	// 2. ê²½ê³„ ê²€ì‚¬
 	if (ptMouse.x < 0 || ptMouse.y < 0 ||
 		ptMouse.x >= static_cast<LONG>(vViewportDesc.x) ||
 		ptMouse.y >= static_cast<LONG>(vViewportDesc.y))
 		return false;
 
-	// 3. ¸¶¿ì½º À§Ä¡ 1ÇÈ¼¿¸¸ RT·ÎºÎÅÍ Staging¿¡ º¹»ç
+	// 3. ë§ˆìš°ìŠ¤ ìœ„ì¹˜ 1í”½ì…€ë§Œ RTë¡œë¶€í„° Stagingì— ë³µì‚¬
 	D3D11_BOX srcBox{};
 	srcBox.left = static_cast<_uint>(ptMouse.x);
 	srcBox.top = static_cast<_uint>(ptMouse.y);
@@ -62,7 +62,7 @@ _bool CPicking::Picking(_float4& Out)
 	if (FAILED(m_pGameInstance->Copy_RT_SubResource(TARGET_PICKPOS, m_pTexture2D, &srcBox)))
 		return false;
 
-	// 4. 1ÇÈ¼¿ Map + Read-Only
+	// 4. 1í”½ì…€ Map + Read-Only
 	D3D11_MAPPED_SUBRESOURCE SubResource{};
 	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_READ, 0, &SubResource)))
 		return false;

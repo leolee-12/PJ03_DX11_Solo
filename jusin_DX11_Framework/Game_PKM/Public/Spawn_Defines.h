@@ -1,4 +1,4 @@
-﻿#ifndef Spawn_Defines_h__
+#ifndef Spawn_Defines_h__
 #define Spawn_Defines_h__
 
 #include <type_traits>
