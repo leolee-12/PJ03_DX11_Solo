@@ -421,5 +421,10 @@ FodyWeavers.xsd
 # Resources
 [Rr]esources/
 
-# Claude
-.[Cc]laude/
+# Personal
+[Dd]ocs/
+CLAUDE.md
+AGENTS.md
+.claude/
+.agents/
+skills-lock.json
